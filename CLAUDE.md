@@ -16,10 +16,11 @@ ever ships as its own real model, gets a name of its own too, not a
   on purpose (derived from private notes, and just weights).
 - `ada-1-adapter/` (Qwen2.5-0.5B) is the real Samantha. A second base
   (Qwen3.5-0.8B, `ada-1b-adapter/`) was tried for Phase 3 comparison but
-  pushed the machine into near-OOM twice and got paused, this Mac Mini
-  is memory-tight (2GB) once a second model download + training pass
-  stacks on top of everything else running. Never run two mlx_lm.lora
-  jobs at once. Check free memory before starting any run.
+  pushed the machine into near-OOM twice and got paused. This Mac Mini
+  has 16GB total, but a second model's download plus a training pass,
+  stacked on top of everything else running, was enough to drive free
+  memory down to a couple GB and crash. Never run two mlx_lm.lora jobs
+  at once. Check free memory before starting any run.
 - `scratch/` is a second, unrelated track: a genuine from-scratch
   character-level transformer with zero borrowed weights, kept deliberately
   tiny. It will not be fluent. That's the point, it proves we can build one
