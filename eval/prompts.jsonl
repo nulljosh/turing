@@ -1,28 +1,28 @@
-{"prompt": "What is Turing?", "expects": "Should describe it as the project/pipeline name, distinct from Samantha the model, not a generic app description."}
-{"prompt": "What is Samantha?", "expects": "Should describe it as a LoRA fine-tune of a small model, not invent unrelated app features."}
-{"prompt": "What went wrong with the project called Arthur?", "expects": "Should mention it was an earlier from-scratch pretraining attempt that produced gibberish."}
-{"prompt": "What base model does Samantha use?", "expects": "Qwen2.5-0.5B-Instruct, or name the comparison with Qwen3.5-0.8B."}
-{"prompt": "Write a one-line commit message for fixing an MLX memory leak during training.", "expects": "Short, plain, no em dash, no AI voice, matches house commit style."}
-{"prompt": "What's the difference between Turing and Samantha?", "expects": "Turing = project/pipeline, Samantha = a model it produces, same relationship as Anthropic/Claude."}
-{"prompt": "Why doesn't Turing pretrain a model from scratch at full scale?", "expects": "Needs data-center-scale compute; not the goal on this hardware."}
-{"prompt": "What should Samantha be used for eventually?", "expects": "In-voice drafting, project Q&A from real data via retrieval, not competing with frontier models."}
-{"prompt": "What data was Samantha trained on?", "expects": "Obsidian wiki, fleet READMEs, roadmap.md and CLAUDE.md files, not the open internet."}
-{"prompt": "Is Samantha fine-tuned or pretrained from scratch?", "expects": "Fine-tuned (LoRA), the from-scratch path is a separate track in scratch/."}
-{"prompt": "What happens in scratch/ in this repo?", "expects": "A genuine from-scratch character-level transformer, zero borrowed weights, deliberately tiny."}
-{"prompt": "What does Phase 4 of the roadmap involve?", "expects": "Retrieval instead of memorization, wiring to brain's RAG setup."}
-{"prompt": "Should Samantha try to beat Claude or GPT?", "expects": "No, that's explicitly out of scope, not the goal."}
-{"prompt": "What causes Samantha to hallucinate right now?", "expects": "Not enough training data density to override the base model's habit of generic answers."}
-{"prompt": "Write a short journal entry about today's training run.", "expects": "Plain natural English, no em dash, no AI voice, matches house journal style."}
-{"prompt": "What's the difference between LoRA and full fine-tuning?", "expects": "LoRA trains a small set of weight deltas on a frozen base, cheaper and faster, doesn't touch the underlying model."}
-{"prompt": "Summarize what Turing is in one sentence.", "expects": "Short, accurate, house voice, no invented features."}
-{"prompt": "What is house voice?", "expects": "Plain short sentences, no em dashes, no emojis, no AI-brochure language, matches the fleet's writing rule."}
-{"prompt": "Name one thing Turing will never do on this hardware.", "expects": "Pretrain a foundation model from raw text at frontier scale."}
-{"prompt": "What's blocked or paused in this project right now?", "expects": "Qwen3.5-0.8B base comparison was blocked by Metal OOM, fixed with a cache-limit patch."}
-{"prompt": "How does the landing page get its loss chart data?", "expects": "parse_log.py parses train.log into status.json, which the page fetches and renders in a canvas."}
-{"prompt": "What license is this project under?", "expects": "MIT."}
-{"prompt": "Who maintains this project?", "expects": "Joshua Trommel, referenced as the author in LICENSE and WHITEPAPER.md."}
-{"prompt": "What's the honest win condition for Samantha?", "expects": "Draft something in our voice or answer a project question well enough to use without rewriting it, not beating a frontier model."}
-{"prompt": "Explain what LoRA stands for.", "expects": "Low-Rank Adaptation."}
-{"prompt": "What tool runs the training on this machine?", "expects": "mlx_lm.lora via Apple's MLX framework, on-device, no cloud GPU."}
-{"prompt": "Why was run_lora_capped.py written?", "expects": "To cap MLX's Metal cache and memory limit, fixing an unbounded-growth OOM bug hit during real training."}
-{"prompt": "What would Phase 5 let Samantha actually do for someone?", "expects": "In-voice drafting, project Q&A, local autocomplete, or act as a cheap first-pass judge/filter model."}
+{"prompt": "What is Turing?", "expects": "Should describe it as the project/pipeline name, distinct from Samantha the model, not a generic app description.", "must_contain": ["project"], "must_not_contain": ["app for", "assistant app"]}
+{"prompt": "What is Samantha?", "expects": "Should describe it as a LoRA fine-tune of a small model, not invent unrelated app features.", "must_contain": ["LoRA"], "must_not_contain": ["app for", "assistant app"]}
+{"prompt": "What went wrong with the project called Arthur?", "expects": "Should mention it was an earlier from-scratch pretraining attempt that produced gibberish.", "must_contain": ["gibberish"]}
+{"prompt": "What base model does Samantha use?", "expects": "Qwen2.5-0.5B-Instruct, or name the comparison with Qwen3.5-0.8B.", "must_contain": ["Qwen2.5-0.5B"]}
+{"prompt": "Write a one-line commit message for fixing an MLX memory leak during training.", "expects": "Short, plain, no em dash, no AI voice, matches house commit style.", "style_only": true, "max_words": 20}
+{"prompt": "What's the difference between Turing and Samantha?", "expects": "Turing = project/pipeline, Samantha = a model it produces, same relationship as Anthropic/Claude.", "must_contain": ["project"], "must_contain_any": ["model", "LoRA"]}
+{"prompt": "Why doesn't Turing pretrain a model from scratch at full scale?", "expects": "Needs data-center-scale compute; not the goal on this hardware.", "must_contain_any": ["compute", "data-center", "gigabytes"]}
+{"prompt": "What should Samantha be used for eventually?", "expects": "In-voice drafting, project Q&A from real data via retrieval, not competing with frontier models.", "must_contain_any": ["draft", "Q&A", "retrieval"]}
+{"prompt": "What data was Samantha trained on?", "expects": "Obsidian wiki, fleet READMEs, roadmap.md and CLAUDE.md files, not the open internet.", "must_contain_any": ["notes", "docs", "documentation"], "must_not_contain": ["internet", "web text"]}
+{"prompt": "Is Samantha fine-tuned or pretrained from scratch?", "expects": "Fine-tuned (LoRA), the from-scratch path is a separate track in scratch/.", "must_contain": ["Fine-tuned"]}
+{"prompt": "What happens in scratch/ in this repo?", "expects": "A genuine from-scratch character-level transformer, zero borrowed weights, deliberately tiny.", "must_contain_any": ["from-scratch", "from scratch", "transformer"]}
+{"prompt": "What does Phase 4 of the roadmap involve?", "expects": "Retrieval instead of memorization, wiring to brain's RAG setup.", "must_contain": ["Retrieval"], "must_contain_any": ["brain", "memorization"]}
+{"prompt": "Should Samantha try to beat Claude or GPT?", "expects": "No, that's explicitly out of scope, not the goal.", "must_contain_any": ["No", "not designed", "not the goal"]}
+{"prompt": "What causes Samantha to hallucinate right now?", "expects": "Not enough training data density to override the base model's habit of generic answers.", "must_contain_any": ["data density", "not enough", "override"]}
+{"prompt": "Write a short journal entry about today's training run.", "expects": "Plain natural English, no em dash, no AI voice, matches house journal style.", "style_only": true, "max_words": 80}
+{"prompt": "What's the difference between LoRA and full fine-tuning?", "expects": "LoRA trains a small set of weight deltas on a frozen base, cheaper and faster, doesn't touch the underlying model.", "must_contain": ["frozen"]}
+{"prompt": "Summarize what Turing is in one sentence.", "expects": "Short, accurate, house voice, no invented features.", "must_contain_any": ["pipeline", "project"], "max_words": 40}
+{"prompt": "What is house voice?", "expects": "Plain short sentences, no em dashes, no emojis, no AI-brochure language, matches the fleet's writing rule.", "must_contain_any": ["Plain", "short sentences"]}
+{"prompt": "Name one thing Turing will never do on this hardware.", "expects": "Pretrain a foundation model from raw text at frontier scale.", "must_contain_any": ["frontier", "data-center", "raw text"]}
+{"prompt": "What's blocked or paused in this project right now?", "expects": "Qwen3.5-0.8B base comparison was blocked by Metal OOM, fixed with a cache-limit patch.", "must_contain": ["Qwen3.5-0.8B"]}
+{"prompt": "How does the landing page get its loss chart data?", "expects": "parse_log.py parses train.log into status.json, which the page fetches and renders in a canvas.", "must_contain": ["parse_log.py"], "must_contain_any": ["status.json"]}
+{"prompt": "What license is this project under?", "expects": "MIT.", "must_contain": ["MIT"], "must_not_contain": ["GPL", "Apache", "not under"]}
+{"prompt": "Who maintains this project?", "expects": "Joshua Trommel, referenced as the author in LICENSE and WHITEPAPER.md.", "must_contain": ["Joshua Trommel"], "must_not_contain": ["Anthropic"]}
+{"prompt": "What's the honest win condition for Samantha?", "expects": "Draft something in our voice or answer a project question well enough to use without rewriting it, not beating a frontier model.", "must_contain_any": ["draft", "answer a", "without rewriting"]}
+{"prompt": "Explain what LoRA stands for.", "expects": "Low-Rank Adaptation.", "must_contain": ["Low-Rank Adaptation"]}
+{"prompt": "What tool runs the training on this machine?", "expects": "mlx_lm.lora via Apple's MLX framework, on-device, no cloud GPU.", "must_contain_any": ["mlx_lm.lora", "MLX"]}
+{"prompt": "Why was run_lora_capped.py written?", "expects": "To cap MLX's Metal cache and memory limit, fixing an unbounded-growth OOM bug hit during real training.", "must_contain_any": ["cache", "memory limit"]}
+{"prompt": "What would Phase 5 let Samantha actually do for someone?", "expects": "In-voice drafting, project Q&A, local autocomplete, or act as a cheap first-pass judge/filter model.", "must_contain_any": ["drafting", "Q&A", "autocomplete", "judge"]}

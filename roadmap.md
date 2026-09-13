@@ -41,6 +41,10 @@ More backlog, same honest scope, feel-like-a-real-assistant not compete-with-Cla
 - [x] A `--json` flag on `ask.py` for programmatic use: `./.venv/bin/python ask.py --json "question"` prints `{"question","answer","sources"}` instead of the human-readable format, so a future menu-bar app or bot can call it without scraping stdout
 - [ ] Re-run the full 28-prompt eval after every real change to `ask.py`/`chat.py`, not just after training runs, generation-side tuning affects the score too
 
+Real QA infrastructure, 2026-09-13: every prior eval round meant reading 28 free-text answers by hand and judging correctness by feel. Built `eval/score.py` instead: each `prompts.jsonl` entry now carries objective pass criteria (`must_contain`, `must_contain_any`, `must_not_contain`, style limits for generative prompts). Run `./.venv/bin/python eval/score.py` for a real number, `--verbose` for the per-prompt breakdown, exits nonzero on any failure so it could gate a commit hook later.
+
+First automated run: **23/28 (82%)**. Caught a real bug the eyeball method missed: `faq_match()`'s lexical similarity (`difflib`) sometimes matches the *wrong* FAQ entry when two questions share surface wording but differ in meaning ("what should Samantha be used for eventually" matched to the "beat Claude/GPT" entry instead of the Phase 5 entry). Tried a token-overlap (Jaccard) alternative, didn't cleanly fix it either, both are lexical, not semantic. Real fix needs actual semantic similarity (embeddings, e.g. reusing `brain`'s search infra scoped to just `FAQ.md`'s pairs), that's real follow-up work, not a threshold tweak.
+
 ### Phase 6: Distillation, not scale (month 4+, optional/ambitious)
 Instead of chasing bigger bases, use a frontier model (Claude) to generate high-quality synthetic training examples in our exact style, then distill that into Samantha. This is literally how most useful small models are built today, nobody pretrains from raw internet text anymore if they can help it.
 
