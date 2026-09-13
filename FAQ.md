@@ -104,6 +104,10 @@ No. Training runs entirely on-device via Apple's MLX framework, no cloud GPU, no
 
 Yes. `FAQ.md` is a plain markdown file, `faq_match()` in `ask.py` re-parses it fresh on every question, no rebuild step. Add a new `## Your question here` header followed by a paragraph answer, in the same style as every existing entry, and it's immediately queryable.
 
+## What happens if a question isn't in FAQ.md and isn't covered by the project docs either?
+
+It falls through to retrieval plus generation, brain's index is searched for the closest real passages it has, then the base model generates an answer from that context. Quality varies at that point, that's the honest ceiling this whole project has been documenting, not a special error case.
+
 ## Can Samantha answer general-knowledge questions, not just project facts?
 
 Yes, for clean factual/definitional queries ("what's the capital of France"), via a DuckDuckGo-instant-answer-then-Wikipedia-summary fallback (`general_knowledge()` in ask.py, reusing nimble's existing pattern). It's genuinely unreliable for ambiguous subjects (picked Tchaikovsky's overture over Shakespeare's play for "who wrote Romeo and Juliet") or current-events facts like who currently holds an office, those need a data source with an explicit up-to-date field, which this doesn't have. It never fires on project questions, an explicit keyword gate keeps "Turing" (also Alan Turing's name) from getting hijacked by unrelated Wikipedia articles.

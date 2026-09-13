@@ -6,3 +6,7 @@
 {"prompt": "What happens if brain.heyitsmejosh.com is down?", "expects": "Retrieval-dependent answers would fail or fall back to generation without real context; not something the codebase currently handles gracefully.", "must_not_contain": ["automatically switches", "no impact"]}
 {"prompt": "Can I add my own FAQ entries?", "expects": "Yes, FAQ.md is a plain markdown file with ## Question headers, just edit it.", "must_contain_any": ["FAQ.md", "markdown", "edit"]}
 {"prompt": "Does Samantha know about events after its training data cutoff?", "expects": "No inherent awareness; the general_knowledge fallback can look up current facts live via DuckDuckGo/Wikipedia for non-project questions.", "must_contain_any": ["DuckDuckGo", "Wikipedia", "no"]}
+{"prompt": "Is scratch/ actually usable for anything right now?", "expects": "No, it's deliberately tiny and not fluent, proof of concept only.", "must_not_contain": ["yes, it is fluent", "production-ready"]}
+{"prompt": "What happens if I ask a question that isn't in FAQ.md and isn't covered by the project docs either?", "expects": "Falls through to retrieval + generation from the base model, quality varies, that's the honest ceiling.", "must_contain_any": ["generat", "retriev"]}
+{"prompt": "Does this project cost money to run day to day?", "expects": "No ongoing training cost (local MLX), brain's Cloudflare Workers AI usage is the only real running cost and it's minimal.", "must_not_contain": ["monthly subscription", "expensive"]}
+
