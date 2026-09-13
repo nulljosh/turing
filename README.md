@@ -60,6 +60,14 @@ No daemon, no cron, training runs when invoked, not on a schedule.
 
 Retrieves real passages from `brain`'s live index (not memorized weights) and answers from them, with sources. This is the actual working answer to "why does Samantha hallucinate", see `roadmap.md`'s Phase 4 entry.
 
+## QA
+
+`eval/score.py` gives a real number instead of eyeballing free-text answers: `./.venv/bin/python eval/score.py` (add `eval/prompts-holdout.jsonl` as an argument to run the held-out set instead). To have it gate commits automatically, one-time setup, git doesn't track `.git/hooks/` itself so this doesn't happen on a fresh clone without it:
+
+```
+ln -sf ../../hooks/pre-commit .git/hooks/pre-commit
+```
+
 ## More
 
 - [`roadmap.md`](roadmap.md): the honest phase-by-phase plan and the progress log, run by run

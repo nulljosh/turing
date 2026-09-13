@@ -31,9 +31,9 @@ def parse():
         "roadmap": [
             {"phase": 0, "name": "Pipeline proof", "done": True},
             {"phase": 1, "name": "More data, same model", "done": True},
-            {"phase": 2, "name": "Evaluate like it matters", "done": False},
+            {"phase": 2, "name": "Evaluate like it matters", "done": True},
             {"phase": 3, "name": "Bigger base, same recipe", "done": False},
-            {"phase": 4, "name": "Retrieval instead of memorization", "done": False},
+            {"phase": 4, "name": "Retrieval instead of memorization", "done": True},
             {"phase": 5, "name": "Give it a job", "done": False},
             {"phase": 6, "name": "Distillation, not scale", "done": False},
         ],

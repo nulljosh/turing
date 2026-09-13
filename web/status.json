@@ -109,7 +109,7 @@
     {
       "phase": 2,
       "name": "Evaluate like it matters",
-      "done": false
+      "done": true
     },
     {
       "phase": 3,
@@ -119,7 +119,7 @@
     {
       "phase": 4,
       "name": "Retrieval instead of memorization",
-      "done": false
+      "done": true
     },
     {
       "phase": 5,

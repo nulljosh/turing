@@ -1,0 +1,16 @@
+#!/bin/bash
+# Runs eval/score.py only when a change could plausibly move the score,
+# so unrelated commits (docs, landing page CSS, etc.) aren't slowed down.
+# A regression here means don't commit it silently, roadmap.md's whole
+# point tonight was "catch this stuff before it ships".
+
+changed=$(git diff --cached --name-only)
+if echo "$changed" | grep -qE '^(ask\.py|chat\.py|FAQ\.md|eval/prompts\.jsonl)$'; then
+  echo "eval-relevant file changed, running eval/score.py..."
+  if ! ./.venv/bin/python eval/score.py; then
+    echo ""
+    echo "eval/score.py failed. Commit blocked."
+    echo "If this is expected (e.g. you're mid-fix across commits), commit with --no-verify."
+    exit 1
+  fi
+fi
