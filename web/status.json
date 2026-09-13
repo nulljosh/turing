@@ -1,228 +1,72 @@
 {
-  "model": "Ada-1",
+  "model": "Samantha-1",
   "project": "Turing",
   "base": "Qwen2.5-0.5B-Instruct-4bit",
   "train_loss": [
     {
       "iter": 10,
-      "loss": 3.903
+      "loss": 3.546
     },
     {
       "iter": 20,
-      "loss": 3.737
-    },
-    {
-      "iter": 30,
-      "loss": 3.511
-    },
-    {
-      "iter": 40,
-      "loss": 3.339
-    },
-    {
-      "iter": 50,
-      "loss": 3.313
-    },
-    {
-      "iter": 60,
-      "loss": 3.356
-    },
-    {
-      "iter": 70,
-      "loss": 3.324
-    },
-    {
-      "iter": 80,
-      "loss": 3.478
-    },
-    {
-      "iter": 90,
-      "loss": 3.3
-    },
-    {
-      "iter": 100,
-      "loss": 3.352
-    },
-    {
-      "iter": 110,
-      "loss": 3.253
-    },
-    {
-      "iter": 120,
-      "loss": 3.401
-    },
-    {
-      "iter": 130,
-      "loss": 3.292
-    },
-    {
-      "iter": 140,
-      "loss": 3.208
-    },
-    {
-      "iter": 150,
-      "loss": 3.203
-    },
-    {
-      "iter": 160,
-      "loss": 2.847
-    },
-    {
-      "iter": 170,
-      "loss": 3.174
-    },
-    {
-      "iter": 180,
-      "loss": 3.18
-    },
-    {
-      "iter": 190,
-      "loss": 3.066
-    },
-    {
-      "iter": 200,
-      "loss": 3.249
-    },
-    {
-      "iter": 210,
-      "loss": 2.915
-    },
-    {
-      "iter": 220,
-      "loss": 3.255
-    },
-    {
-      "iter": 230,
-      "loss": 2.972
-    },
-    {
-      "iter": 240,
-      "loss": 2.833
-    },
-    {
-      "iter": 250,
-      "loss": 3.154
-    },
-    {
-      "iter": 260,
-      "loss": 3.092
-    },
-    {
-      "iter": 270,
-      "loss": 2.835
-    },
-    {
-      "iter": 280,
-      "loss": 2.99
-    },
-    {
-      "iter": 290,
-      "loss": 2.926
-    },
-    {
-      "iter": 300,
-      "loss": 2.869
-    },
-    {
-      "iter": 310,
-      "loss": 3.088
-    },
-    {
-      "iter": 320,
-      "loss": 2.886
-    },
-    {
-      "iter": 330,
-      "loss": 3.256
-    },
-    {
-      "iter": 340,
-      "loss": 3.203
-    },
-    {
-      "iter": 350,
-      "loss": 2.998
-    },
-    {
-      "iter": 360,
-      "loss": 2.804
-    },
-    {
-      "iter": 370,
-      "loss": 2.837
-    },
-    {
-      "iter": 380,
-      "loss": 3.061
-    },
-    {
-      "iter": 390,
-      "loss": 3.29
-    },
-    {
-      "iter": 400,
-      "loss": 2.885
-    },
-    {
-      "iter": 410,
-      "loss": 3.235
-    },
-    {
-      "iter": 420,
       "loss": 3.238
     },
     {
-      "iter": 430,
-      "loss": 3.066
+      "iter": 30,
+      "loss": 2.949
     },
     {
-      "iter": 440,
-      "loss": 3.21
+      "iter": 40,
+      "loss": 3.171
     },
     {
-      "iter": 450,
-      "loss": 3.244
+      "iter": 50,
+      "loss": 3.131
     },
     {
-      "iter": 460,
-      "loss": 3.267
+      "iter": 60,
+      "loss": 3.06
     },
     {
-      "iter": 470,
-      "loss": 2.984
+      "iter": 70,
+      "loss": 2.947
     },
     {
-      "iter": 480,
-      "loss": 2.928
+      "iter": 80,
+      "loss": 3.16
     },
     {
-      "iter": 490,
-      "loss": 2.984
+      "iter": 90,
+      "loss": 2.734
     },
     {
-      "iter": 500,
-      "loss": 2.957
+      "iter": 100,
+      "loss": 2.895
+    },
+    {
+      "iter": 110,
+      "loss": 2.797
+    },
+    {
+      "iter": 120,
+      "loss": 2.622
+    },
+    {
+      "iter": 130,
+      "loss": 2.813
+    },
+    {
+      "iter": 140,
+      "loss": 3.07
     }
   ],
   "val_loss": [
     {
       "iter": 1,
-      "loss": 3.658
-    },
-    {
-      "iter": 200,
-      "loss": 2.992
-    },
-    {
-      "iter": 400,
-      "loss": 3.081
-    },
-    {
-      "iter": 500,
-      "loss": 2.986
+      "loss": 3.7
     }
   ],
-  "status": "done",
+  "status": "training",
   "roadmap": [
     {
       "phase": 0,

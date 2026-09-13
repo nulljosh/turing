@@ -9,17 +9,17 @@
 [![repo size](https://img.shields.io/github/repo-size/nulljosh/turing)](https://github.com/nulljosh/turing)
 [![last commit](https://img.shields.io/github/last-commit/nulljosh/turing)](https://github.com/nulljosh/turing/commits/main)
 
-Building small language models in the open. First model: **Ada-1**.
+Building small language models in the open. First model: **Samantha-1**.
 
 Live status page: [turing.heyitsmejosh.com](https://turing.heyitsmejosh.com)
 
-**Turing vs. Ada-1:** Turing is the project, the pipeline, the repo, this whole effort. Ada-1 is a model Turing produces. Same relationship as Anthropic and Claude (or a Claude model like Haiku/Fable): the project name is fixed, model names change as new ones ship. Turing will likely produce more than one model over time; each gets its own name, Turing stays Turing.
+**Turing vs. Samantha-1:** Turing is the project, the pipeline, the repo, this whole effort. Samantha-1 is a model Turing produces. Same relationship as Anthropic and Claude (or a Claude model like Haiku/Fable): the project name is fixed, model names change as new ones ship. Turing will likely produce more than one model over time; each gets its own name, Turing stays Turing.
 
 ## Why
 
 Tried this before under the name Arthur, trained a model from scratch and it spat out gibberish after a few days. Wrong approach: from-scratch pretraining needs gigabytes of clean text and a lot of compute to stop being noise. Restarted as Turing with a different plan.
 
-## What Ada-1 is
+## What Samantha-1 is
 
 A LoRA fine-tune of `Qwen2.5-0.5B-Instruct-4bit` (small enough to train on-device on an M4), trained on this codebase's own Obsidian wiki and project READMEs, so it actually knows the projects and writes in house voice, instead of learning language from zero.
 
@@ -82,7 +82,7 @@ See `index.html` / status.json for live loss numbers.
 
 Tried running a second base (`Qwen3.5-0.8B-4bit`) alongside the 0.5B to compare quality before committing to one. Three failures in a row: two system-memory crashes, then a Metal (GPU) out-of-memory error mid-step even with plenty of free RAM. That last one is the real signal, it's not a "too many things running" problem, the model plus training state genuinely doesn't fit this machine's unified memory comfortably during backprop. Not retrying blind.
 
-- `ada-1-adapter/` = LoRA on `Qwen2.5-0.5B-Instruct-4bit`, done and stable, this is the real Ada-1 for now.
+- `ada-1-adapter/` = LoRA on `Qwen2.5-0.5B-Instruct-4bit`, done and stable, this is the real Samantha-1 for now.
 - `ada-1b-adapter/` = LoRA on `Qwen3.5-0.8B-4bit`, abandoned on this hardware. Revisit only with a smaller batch size / gradient accumulation tuned down, or on different hardware, not a blind retry.
 
 ## Progress log
@@ -92,7 +92,7 @@ Tried running a second base (`Qwen3.5-0.8B-4bit`) alongside the 0.5B to compare 
 
 ## A note on benchmarking
 
-Ada-1's base model *is* Qwen2.5-0.5B, LoRA only adds a small trained delta on top of it. So "beat Qwen" isn't really a fair or even coherent bar; a LoRA fine-tune of Qwen can't outperform Qwen in general, only on the narrow thing it was fine-tuned for (writing in our voice, knowing our projects). The real benchmark is: does the fine-tuned version answer our own questions better than stock Qwen does. That's what Phase 2 (eval prompts) is for.
+Samantha-1's base model *is* Qwen2.5-0.5B, LoRA only adds a small trained delta on top of it. So "beat Qwen" isn't really a fair or even coherent bar; a LoRA fine-tune of Qwen can't outperform Qwen in general, only on the narrow thing it was fine-tuned for (writing in our voice, knowing our projects). The real benchmark is: does the fine-tuned version answer our own questions better than stock Qwen does. That's what Phase 2 (eval prompts) is for.
 
 ## Roadmap (honest version)
 
@@ -121,7 +121,7 @@ Once retrieval works, point it at concrete, boring, checkable tasks:
 - **A judge/filter model**, small models are cheap enough to run on every commit or PR as a first-pass linter before anything hits a bigger model
 
 ### Phase 6: Distillation, not scale (month 4+, optional/ambitious)
-Instead of chasing bigger bases, use a frontier model (Claude) to generate high-quality synthetic training examples in our exact style, then distill that into Ada-1. This is literally how most useful small models are built today, nobody pretrains from raw internet text anymore if they can help it.
+Instead of chasing bigger bases, use a frontier model (Claude) to generate high-quality synthetic training examples in our exact style, then distill that into Samantha-1. This is literally how most useful small models are built today, nobody pretrains from raw internet text anymore if they can help it.
 
 ### What we will never do on this budget
 Pretrain a foundation model from raw text at frontier scale. That needs a data-center, a research team, and normally $10M+ in compute even for a "small" frontier-adjacent model. Not the plan, the plan is a small model that's genuinely ours and genuinely useful, which is a completely different (and completely reachable) goal.

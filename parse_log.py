@@ -16,7 +16,7 @@ def parse():
             val.append({"iter": int(m.group(1)), "loss": float(m.group(2))})
     done = "Saved final" in open(LOG, errors="ignore").read() or "Saving final" in open(LOG, errors="ignore").read()
     status = {
-        "model": "Ada-1",
+        "model": "Samantha-1",
         "project": "Turing",
         "base": "Qwen2.5-0.5B-Instruct-4bit",
         "train_loss": train,
