@@ -26,3 +26,4 @@
 {"prompt": "What tool runs the training on this machine?", "expects": "mlx_lm.lora via Apple's MLX framework, on-device, no cloud GPU.", "must_contain_any": ["mlx_lm.lora", "MLX"]}
 {"prompt": "Why was run_lora_capped.py written?", "expects": "To cap MLX's Metal cache and memory limit, fixing an unbounded-growth OOM bug hit during real training.", "must_contain_any": ["cache", "memory limit"]}
 {"prompt": "What would Phase 5 let Samantha actually do for someone?", "expects": "In-voice drafting, project Q&A, local autocomplete, or act as a cheap first-pass judge/filter model.", "must_contain_any": ["drafting", "Q&A", "autocomplete", "judge"]}
+{"prompt": "How long does it take to get an answer, and how much memory does it use?", "expects": "About 0.04s/26MB for an FAQ match, about 2s/570MB when it falls through to generation.", "must_contain_any": ["0.04", "2 second", "26MB", "570MB"]}

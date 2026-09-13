@@ -136,6 +136,10 @@ The model runs locally via MLX on this Mac Mini, it isn't servable from a static
 
 About 24 out of 28 on the hand-written eval set (`eval/prompts.jsonl`), after the FAQ-matcher landed. See `eval/` for every run's actual numbers and honest writeup, including the failed attempts that got there. What's still wrong is genuinely generative prompts (write a commit message, write a journal entry), which correctly don't FAQ-match since they're not factual lookups, that's the real remaining ceiling: 0.5B generation quality, not retrieval or facts.
 
+## How long does a question actually take to answer, and how much memory does it use?
+
+Measured directly on this Mac Mini: an FAQ-matched question (no model load at all) answers in about 0.04 seconds using about 26MB. A question that falls through to retrieval plus generation takes about 2 seconds and peaks around 570MB, mostly the base model loading into memory. Neither is slow enough to need a persistent server process, that's why `ask.py` is invoked fresh each time instead of running as a daemon.
+
 ## How does ask.py decide when to trust a FAQ match versus generate an answer?
 
 A similarity score (Python's difflib, comparing the question to every FAQ question) has to clear a threshold (0.55) before the FAQ answer is used. Below that, it falls through to retrieval plus generation instead, so a genuinely novel question doesn't get force-matched to an unrelated FAQ entry.
