@@ -186,6 +186,63 @@ def normalize_query(query):
     return stripped or query
 
 
+_WHO_PREFIX = re.compile(r"^who(?:'s|\s+(?:is|are|was|were))\s+", re.I)
+
+
+def current_officeholder(query):
+    """DDG/Wikipedia summaries describe the office, not who holds it right
+    now (documented limitation, see FAQ.md). Wikidata's structured claims
+    fix this for "who is the president/prime minister/king of X" style
+    questions: find the position entity, read its P1308 (officeholder)
+    claim, skip any claim that has a P582 (end time) qualifier since that
+    means someone already replaced them.
+
+    Only fires on "who is/who's" questions, not a general lookup, so it
+    stays a narrow fix for the pattern it actually solves.
+
+    Picking the right claim: fixed-term offices (president, etc.) have
+    Wikidata's expected end-of-term date pre-filled on the *current*
+    holder too, so "no end date" isn't a valid current-holder signal.
+    Wikidata's own `rank: preferred` is, that is exactly how its editors
+    flag which value among several historical ones is current.
+    """
+    if not _WHO_PREFIX.match(query.strip()):
+        return None, None
+    # normalize_query's own prefix regex expects a second verb after "who's"
+    # ("who's is"), which never happens for a contraction, so strip the
+    # who-prefix here first instead of relying on it.
+    office = _WHO_PREFIX.sub("", query.strip()).rstrip("?").strip()
+    office = re.sub(r"^the\s+", "", office, flags=re.I)
+
+    hits = http_json(
+        f"https://www.wikidata.org/w/api.php?action=wbsearchentities&search={urllib.parse.quote(office)}"
+        "&language=en&format=json&limit=1"
+    )
+    hits = (hits or {}).get("search", [])
+    if not hits:
+        return None, None
+    entity_id = hits[0]["id"]
+
+    claims = http_json(
+        f"https://www.wikidata.org/w/api.php?action=wbgetclaims&entity={entity_id}&property=P1308&format=json"
+    )
+    p1308 = (claims or {}).get("claims", {}).get("P1308", [])
+    current = next((c for c in p1308 if c.get("rank") == "preferred"), None)
+    if not current:
+        current = next((c for c in p1308 if "P582" not in c.get("qualifiers", {})), None)
+    if not current:
+        return None, None
+    holder_id = current["mainsnak"]["datavalue"]["value"]["id"]
+
+    entities = http_json(
+        f"https://www.wikidata.org/w/api.php?action=wbgetentities&ids={holder_id}&props=labels&languages=en&format=json"
+    )
+    label = (entities or {}).get("entities", {}).get(holder_id, {}).get("labels", {}).get("en", {}).get("value")
+    if not label:
+        return None, None
+    return f"{label} ({hits[0]['label']}).", "Wikidata"
+
+
 def general_knowledge(query):
     """Same pattern as nimble/docs/engine.js's ddg()/wiki(): DuckDuckGo's
     Instant Answer API first, Wikipedia's summary API as fallback. No API
@@ -196,6 +253,10 @@ def general_knowledge(query):
     most non-trivial or opinion-flavored queries, so this rarely fires on
     a project-specific question by accident, only clear factual ones.
     """
+    holder, src = current_officeholder(query)
+    if holder:
+        return holder, src
+
     normalized = normalize_query(query)
 
     d = http_json(f"https://api.duckduckgo.com/?q={urllib.parse.quote(normalized)}&format=json&no_html=1&skip_disambig=1")

@@ -110,7 +110,11 @@ It falls through to retrieval plus generation, brain's index is searched for the
 
 ## Can Samantha answer general-knowledge questions, not just project facts?
 
-Yes, for clean factual/definitional queries ("what's the capital of France"), via a DuckDuckGo-instant-answer-then-Wikipedia-summary fallback (`general_knowledge()` in ask.py, reusing nimble's existing pattern). It's genuinely unreliable for ambiguous subjects (picked Tchaikovsky's overture over Shakespeare's play for "who wrote Romeo and Juliet") or current-events facts like who currently holds an office, those need a data source with an explicit up-to-date field, which this doesn't have. It never fires on project questions, an explicit keyword gate keeps "Turing" (also Alan Turing's name) from getting hijacked by unrelated Wikipedia articles.
+Yes, for clean factual/definitional queries ("what's the capital of France"), via a DuckDuckGo-instant-answer-then-Wikipedia-summary fallback (`general_knowledge()` in ask.py, reusing nimble's existing pattern). It's genuinely unreliable for ambiguous subjects (picked Tchaikovsky's overture over Shakespeare's play for "who wrote Romeo and Juliet" on one search, a different wrong answer on the next, Wikipedia's own search ranking is what varies here, not this code). It never fires on project questions, an explicit keyword gate keeps "Turing" (also Alan Turing's name) from getting hijacked by unrelated Wikipedia articles.
+
+## Can it answer "who's the president" or "who's the prime minister of X" correctly?
+
+Yes, as of 2026-09-13. DDG and a plain Wikipedia summary both describe the office, never today's actual holder, that was a real limitation for months. Fixed with `current_officeholder()`: for a "who is/who's the X" question, it looks up the office in Wikidata and reads its officeholder claim directly, picking whichever claim Wikidata's own editors marked `rank: preferred`, that is literally how Wikidata flags which value is current among several historical ones (a fixed-term office like the presidency pre-fills an expected end-of-term date even on the sitting holder, so "no end date" alone isn't a safe signal, only the rank is). Tested against "who is the president of the united states" (correctly returns the sitting president) and "who's the prime minister of canada" (correctly returns Mark Carney). Facts like this can go stale after the next election, that's an accepted limitation of any live lookup, not a bug, Wikidata's own edits are what keep it current.
 
 ## What would Phase 5 let Samantha actually do for someone?
 
