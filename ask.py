@@ -49,8 +49,33 @@ def search(query, limit=3):
     return (own + other)[:limit]
 
 
+import re
+
+# precision-sensitive facts: generation invents plausible-but-wrong specifics
+# for these even with the right source in context (see eval/results-2026-09-13-rag2.md),
+# so pull the answer straight from the retrieved text instead of trusting the model
+EXTRACTORS = [
+    (re.compile(r"\blicen[cs]e\b", re.I), re.compile(r"\b(MIT|Apache-2\.0|GPL-?v?\d|BSD-\d-Clause)\b")),
+    (re.compile(r"\bwhat tool\b.*\btrain", re.I), re.compile(r"`(mlx_lm\.lora|mlx-lm|run_lora_capped\.py)`")),
+    (re.compile(r"\bLoRA\b.*\bstand", re.I), re.compile(r"Low-Rank Adaptation")),
+]
+
+
+def try_extract(question, results):
+    for q_pat, a_pat in EXTRACTORS:
+        if q_pat.search(question):
+            for r in results:
+                m = a_pat.search(r["text"])
+                if m:
+                    return m.group(0)
+    return None
+
+
 def ask(question):
     results = search(question)
+    extracted = try_extract(question, results)
+    if extracted:
+        return extracted, [r["source"] for r in results]
     context = "\n\n---\n\n".join(r["text"][:800] for r in results)
     prompt = f"{SYSTEM}\n\nContext:\n{context}\n\nQuestion: {question}"
     out = subprocess.run(
