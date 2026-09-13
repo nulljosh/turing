@@ -7,7 +7,7 @@ examples reliably learns style but not facts. This is the fix: keep facts
 in brain's live index, let the model reason over retrieved context instead
 of trying to recall them from weights. See roadmap.md, run 6.
 """
-import json, os, subprocess, sys, urllib.parse, urllib.request
+import json, os, re, subprocess, sys, urllib.parse, urllib.request
 
 BRAIN_ENV = os.path.expanduser("~/Documents/Code/brain/.env.local")
 BRAIN_URL = "https://brain.heyitsmejosh.com/api/search"
@@ -48,8 +48,6 @@ def search(query, limit=3):
     other = [r for r in results if "/turing/" not in r["source"]]
     return (own + other)[:limit]
 
-
-import re
 
 # precision-sensitive facts: generation invents plausible-but-wrong specifics
 # for these even with the right source in context (see eval/results-2026-09-13-rag2.md),
@@ -93,8 +91,15 @@ def ask(question):
 
 
 if __name__ == "__main__":
-    q = " ".join(sys.argv[1:]) or "What is Turing?"
+    args = sys.argv[1:]
+    as_json = "--json" in args
+    if as_json:
+        args = [a for a in args if a != "--json"]
+    q = " ".join(args) or "What is Turing?"
     answer, sources = ask(q)
-    print(f"Q: {q}\n\nA: {answer}\n\nSources:")
-    for s in sources:
-        print(f"  {s}")
+    if as_json:
+        print(json.dumps({"question": q, "answer": answer, "sources": sources}))
+    else:
+        print(f"Q: {q}\n\nA: {answer}\n\nSources:")
+        for s in sources:
+            print(f"  {s}")

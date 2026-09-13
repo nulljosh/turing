@@ -32,6 +32,12 @@ Concrete backlog, honest scope (this makes it *feel* like a real assistant to us
 - [x] A short system prompt / persona: `SYSTEM` constant in `ask.py`, shared by `chat.py`'s multi-turn loop too, so both don't quietly drift into different personalities
 - [x] Extractive fallback for precision-sensitive questions: a small regex table (`EXTRACTORS` in `ask.py`) matches the question to a fact pattern (license, training tool, what LoRA stands for) and pulls the answer straight from retrieved text, skipping generation entirely. Tested: "What license is this project under?" now returns "MIT" correctly and instantly, it previously invented "GNU GPLv2" every run. Small, bounded fix, not a general solution, extend the table as more precision failures show up in eval/.
 
+More backlog, same honest scope, feel-like-a-real-assistant not compete-with-Claude:
+- [ ] Extend `EXTRACTORS` with the other precision failures from `eval/results-2026-09-13-rag2.md`: exact blocker reason, exact loss-chart pipeline (`parse_log.py` → `status.json`), who maintains the project
+- [ ] `chat.py`: strip the model's own repeated-turn artifacts (it sometimes echoes "User: ...Samantha:" back into its own answer), a cheap post-processing trim, not a training fix
+- [x] A `--json` flag on `ask.py` for programmatic use: `./.venv/bin/python ask.py --json "question"` prints `{"question","answer","sources"}` instead of the human-readable format, so a future menu-bar app or bot can call it without scraping stdout
+- [ ] Re-run the full 28-prompt eval after every real change to `ask.py`/`chat.py`, not just after training runs, generation-side tuning affects the score too
+
 ### Phase 6: Distillation, not scale (month 4+, optional/ambitious)
 Instead of chasing bigger bases, use a frontier model (Claude) to generate high-quality synthetic training examples in our exact style, then distill that into Samantha. This is literally how most useful small models are built today, nobody pretrains from raw internet text anymore if they can help it.
 
