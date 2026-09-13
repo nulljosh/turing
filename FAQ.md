@@ -126,7 +126,7 @@ Eventually: in-voice drafting, project Q&A from real data via retrieval, local a
 
 ## What is chat.py?
 
-A multi-turn conversation loop on top of ask.py's retrieval. Same underlying model and same FAQ-matching/retrieval/generation chain, but it carries the last few exchanges as short-term memory, so a follow-up question like "what's its first model called" correctly resolves "its" to whatever was discussed a turn earlier, instead of needing every question spelled out standalone.
+A multi-turn conversation loop on top of ask.py's retrieval. Same underlying model and same FAQ-matching/general-knowledge/retrieval/generation chain, but it carries the last few exchanges as short-term memory, so a follow-up question like "what's its first model called" correctly resolves "its" to whatever was discussed a turn earlier, instead of needing every question spelled out standalone. Until 2026-09-13 it only had FAQ-matching and retrieval, not general-knowledge, so it couldn't answer "who's the president" even though ask.py could, that gap is now closed.
 
 ## What is the FAQ-matcher?
 
