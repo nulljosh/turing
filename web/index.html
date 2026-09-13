@@ -149,6 +149,11 @@
         <p class="graph-explainer">No live in-browser demo, the model runs locally via MLX, not servable from this static page without real hosting infra. Run it yourself: <code>./.venv/bin/python chat.py</code> after cloning the repo. 29 of 29 on the hand-written eval set, 12 of 12 on a separate held-out set (automated scoring, not eyeballed), still shaky on genuinely generative tasks like drafting new text and on ambiguous general-knowledge questions, see <code>eval/</code> for the honest numbers.</p>
       </section>
 
+      <section>
+        <h2>The big idea</h2>
+        <p>Retrieval currently only searches this project's own docs on purpose, but its RAG index already spans the whole ~50-repo fleet. The real leveraged version isn't a bigger model, it's a wider index: drop that bias and this becomes a small local assistant that can answer questions across every project, not just this one. Not started yet, a real scope change, tracked in the README and roadmap as it develops.</p>
+      </section>
+
       <footer>
         <a href="https://github.com/nulljosh/turing">Source</a> · README has the full write-up.
       </footer>

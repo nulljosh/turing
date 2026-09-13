@@ -2,7 +2,7 @@
 
 # Turing
 
-[![version](https://img.shields.io/badge/version-v0.5.3-blue)](https://github.com/nulljosh/turing/releases)
+[![version](https://img.shields.io/badge/version-v0.5.4-blue)](https://github.com/nulljosh/turing/releases)
 [![test](https://github.com/nulljosh/turing/actions/workflows/test.yml/badge.svg)](https://github.com/nulljosh/turing/actions/workflows/test.yml)
 ![license](https://img.shields.io/badge/license-MIT-green) [![GitHub](https://img.shields.io/badge/GitHub-nulljosh%2Fturing-black?logo=github)](https://github.com/nulljosh/turing)
 ![base model](https://img.shields.io/badge/base-Qwen2.5--0.5B-blue)
@@ -68,6 +68,10 @@ Retrieves real passages from `brain`'s live index (not memorized weights) and an
 ```
 ln -sf ../../hooks/pre-commit .git/hooks/pre-commit
 ```
+
+## The big idea
+
+`ask.py`'s retrieval currently biases every query toward Turing's own docs on purpose, `brain`'s index already spans the whole ~50-repo fleet, but this project deliberately only searches its own slice of it. The real leveraged version of this isn't a bigger model, it's a wider index: drop that bias and Samantha becomes a small local assistant that can answer "what's blocked right now" or "what's Curbfind's ASC id" across every project, not just this one. Not started, a real scope change (would need its own eval pass so fleet-wide answers don't regress Turing-specific ones), tracked here and in `roadmap.md` as it develops.
 
 ## Versioning
 
