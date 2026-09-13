@@ -308,6 +308,21 @@ def is_project_question(question):
     return any(kw in q for kw in PROJECT_KEYWORDS)
 
 
+_QUESTION_SHAPE = re.compile(
+    r"^(who|what|when|where|why|how|is|are|was|were|does|do|did|can|could|will|should)\b",
+    re.I,
+)
+
+
+def is_question(text):
+    # general_knowledge hits DDG/Wikipedia, which sometimes returns a
+    # loosely-related instant answer for an imperative instruction too
+    # ("write a commit message for X" once matched Wikipedia's "Git"
+    # article). Only real questions should reach it, not task prompts.
+    text = text.strip()
+    return text.endswith("?") or bool(_QUESTION_SHAPE.match(text))
+
+
 def ask(question):
     # "who is/who's the X" questions about a live office (president, prime
     # minister, etc.) can never have a correct static FAQ answer, the real
@@ -324,7 +339,7 @@ def ask(question):
     if faq_answer:
         return faq_answer, ["~/Documents/Code/turing/FAQ.md"]
 
-    if not is_project_question(question):
+    if not is_project_question(question) and is_question(question):
         gk_answer, gk_source = general_knowledge(question)
         if gk_answer:
             return gk_answer, [gk_source]

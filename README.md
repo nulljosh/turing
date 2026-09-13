@@ -2,7 +2,7 @@
 
 # Turing
 
-[![version](https://img.shields.io/badge/version-v0.6.0-blue)](https://github.com/nulljosh/turing/releases)
+[![version](https://img.shields.io/badge/version-v0.6.1-blue)](https://github.com/nulljosh/turing/releases)
 [![test](https://github.com/nulljosh/turing/actions/workflows/test.yml/badge.svg)](https://github.com/nulljosh/turing/actions/workflows/test.yml)
 ![license](https://img.shields.io/badge/license-MIT-green) [![GitHub](https://img.shields.io/badge/GitHub-nulljosh%2Fturing-black?logo=github)](https://github.com/nulljosh/turing)
 ![base model](https://img.shields.io/badge/base-Qwen2.5--0.5B-blue)
@@ -83,3 +83,4 @@ ln -sf ../../hooks/pre-commit .git/hooks/pre-commit
 - [`TROUBLESHOOTING.md`](TROUBLESHOOTING.md): real bugs hit and how they were actually fixed
 - [`eval/`](eval): the real quality bar, prompts + scored results, not just loss numbers
 - [`WHITEPAPER.md`](WHITEPAPER.md): the short technical writeup
+- [`TRAINING_EXAMPLES.md`](TRAINING_EXAMPLES.md): real instruction/response training pairs (task style, not facts), harvested from this repo's own commit history

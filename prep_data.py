@@ -12,12 +12,13 @@ a tiny fraction of the data and the model learned "fleet README voice" instead
 of actual Turing/Samantha facts. This version fixes that: own docs repeated
 (oversampled) so they dominate, fleet docs capped to a small fixed sample.
 """
-import json, glob, os, random, subprocess
+import json, glob, os, random, re, subprocess
 
 OUT = os.path.expanduser("~/Documents/Code/turing/data/train.jsonl")
 VAULT = os.path.expanduser("~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Code")
 CODE = os.path.expanduser("~/Documents/Code")
 TURING = os.path.expanduser("~/Documents/Code/turing")
+EXAMPLES = os.path.expanduser("~/Documents/Code/turing/TRAINING_EXAMPLES.md")
 
 OWN_REPEATS = 3        # how many times to repeat this repo's own docs (10x caused overfitting/collapse, see eval run 3)
 FLEET_CAP = 100         # max chunks pulled from the rest of the fleet + wiki
@@ -33,6 +34,31 @@ def to_chat(topic, content):
             {"role": "assistant", "content": content},
         ]
     }
+
+def read_examples(path):
+    # Real instruction/response pairs (e.g. "write a commit message" ->
+    # an actual past commit message), not "tell me about X" facts. The
+    # generic to_chat() template can't represent a task instruction, so
+    # this parses TRAINING_EXAMPLES.md's own "## instruction" / response
+    # pairs directly into chat turns, same header style as FAQ.md.
+    try:
+        out = subprocess.run(["cat", path], capture_output=True, timeout=5)
+        text = out.stdout.decode(errors="ignore")
+    except Exception:
+        return []
+    parts = re.split(r"^## (.+)$", text, flags=re.M)[1:]
+    examples = []
+    for i in range(0, len(parts) - 1, 2):
+        instruction, response = parts[i].strip(), parts[i + 1].strip()
+        if instruction and response:
+            examples.append({
+                "messages": [
+                    {"role": "user", "content": instruction},
+                    {"role": "assistant", "content": response},
+                ]
+            })
+    return examples
+
 
 def read_chunks(path, topic):
     # VAULT is a live iCloud folder, an evicted (not locally downloaded)
@@ -53,10 +79,12 @@ def read_chunks(path, topic):
 
 def collect():
     own_paths = glob.glob(f"{TURING}/*.md") + glob.glob(f"{TURING}/eval/*.md")
+    own_paths = [p for p in own_paths if p != EXAMPLES]
     own_examples = []
     for p in own_paths:
         topic = "Samantha" if "WHITEPAPER" in p or "README" in p else "Turing"
         own_examples += read_chunks(p, topic)
+    own_examples += read_examples(EXAMPLES)
 
     fleet_paths = []
     fleet_paths += glob.glob(f"{VAULT}/**/*.md", recursive=True)

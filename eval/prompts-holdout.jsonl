@@ -10,4 +10,5 @@
 {"prompt": "What happens if I ask a question that isn't in FAQ.md and isn't covered by the project docs either?", "expects": "Falls through to retrieval + generation from the base model, quality varies, that's the honest ceiling.", "must_contain_any": ["generat", "retriev"]}
 {"prompt": "Does this project cost money to run day to day?", "expects": "No ongoing training cost (local MLX), brain's Cloudflare Workers AI usage is the only real running cost and it's minimal.", "must_not_contain": ["monthly subscription", "expensive"]}
 {"prompt": "who's the prime minister of canada", "expects": "Mark Carney, via a Wikidata current-officeholder lookup, not a generic office description.", "must_contain": ["Carney"]}
+{"prompt": "Write a one-line commit message for adding dark mode support.", "expects": "A short generated commit-style line, not a hijacked Wikipedia article about Git.", "must_not_contain": ["Linus Torvalds", "distributed version control"]}
 

@@ -110,7 +110,7 @@ It falls through to retrieval plus generation, brain's index is searched for the
 
 ## Can Samantha answer general-knowledge questions, not just project facts?
 
-Yes, for clean factual/definitional queries ("what's the capital of France"), via a DuckDuckGo-instant-answer-then-Wikipedia-summary fallback (`general_knowledge()` in ask.py, reusing nimble's existing pattern). It's genuinely unreliable for ambiguous subjects (picked Tchaikovsky's overture over Shakespeare's play for "who wrote Romeo and Juliet" on one search, a different wrong answer on the next, Wikipedia's own search ranking is what varies here, not this code). It never fires on project questions, an explicit keyword gate keeps "Turing" (also Alan Turing's name) from getting hijacked by unrelated Wikipedia articles.
+Yes, for clean factual/definitional queries ("what's the capital of France"), via a DuckDuckGo-instant-answer-then-Wikipedia-summary fallback (`general_knowledge()` in ask.py, reusing nimble's existing pattern). It's genuinely unreliable for ambiguous subjects (picked Tchaikovsky's overture over Shakespeare's play for "who wrote Romeo and Juliet" on one search, a different wrong answer on the next, Wikipedia's own search ranking is what varies here, not this code). It never fires on project questions, an explicit keyword gate keeps "Turing" (also Alan Turing's name) from getting hijacked by unrelated Wikipedia articles. It also never fires on a task instruction ("write a commit message for X"), only on something actually shaped like a question, `is_question()` gates it after a task prompt once got hijacked into Wikipedia's Git article.
 
 ## Can it answer "who's the president" or "who's the prime minister of X" correctly?
 
@@ -138,7 +138,7 @@ The model runs locally via MLX on this Mac Mini, it isn't servable from a static
 
 ## What's the current eval score?
 
-28 out of 29 on the hand-written eval set, 12 out of 12 on the held-out set, as of the 2026-09-13 retrain on doubled training data (28 to 55 own-doc chunks). The one miss is a genuinely generative prompt (write a one-line commit message), which correctly doesn't FAQ-match since it's not a factual lookup, that's the real remaining ceiling: 0.5B generation quality, not retrieval or facts. See `eval/` for every run's actual numbers and honest writeup, including the failed attempts that got there.
+29 out of 29 on the hand-written eval set, 13 out of 13 on the held-out set, as of the second 2026-09-13 retrain, which added real instruction/response training examples (`TRAINING_EXAMPLES.md`, harvested from this repo's own git history) instead of only "tell me about X" facts. That fixed a real regression from the retrain just before it (a "write a commit message" prompt had started rambling in FAQ-doc voice). See `eval/` for every run's actual numbers and honest writeup, including the failed attempts that got there.
 
 ## How long does a question actually take to answer, and how much memory does it use?
 
