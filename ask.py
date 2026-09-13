@@ -44,7 +44,8 @@ def ask(question):
     results = search(question)
     context = "\n\n---\n\n".join(r["text"][:800] for r in results)
     prompt = (
-        "Answer the question using only the context below. "
+        "Answer the question using only the context below, in 1-2 short sentences. "
+        "Plain language, no repeating yourself, no filler like 'that's correct' or 'not the wrong one'. "
         "If the context doesn't contain the answer, say so, don't guess.\n\n"
         f"Context:\n{context}\n\nQuestion: {question}"
     )
@@ -54,7 +55,7 @@ def ask(question):
             "--model", MODEL,
             "--adapter-path", ADAPTER,
             "--prompt", prompt,
-            "--max-tokens", "150",
+            "--max-tokens", "100",
         ],
         capture_output=True, text=True,
     )
