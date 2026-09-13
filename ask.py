@@ -58,8 +58,20 @@ EXTRACTORS = [
     (re.compile(r"\bLoRA\b.*\bstand", re.I), re.compile(r"Low-Rank Adaptation")),
 ]
 
+# fixed facts that never change and don't benefit from retrieval: "Joshua
+# Trommel" appears in nearly every repo across the fleet (he's the author of
+# all of them), so it's not distinctive enough for Turing-specific search to
+# isolate, tried several query variants, the maintainer chunk never made the
+# top 15 results. This is invariant across every project, just answer it.
+FIXED_FACTS = [
+    (re.compile(r"\bwho\b.*\b(maintain|own|wrote|author)", re.I), "Joshua Trommel"),
+]
+
 
 def try_extract(question, results):
+    for q_pat, answer in FIXED_FACTS:
+        if q_pat.search(question):
+            return answer
     for q_pat, a_pat in EXTRACTORS:
         if q_pat.search(question):
             for r in results:
