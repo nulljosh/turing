@@ -1,6 +1,9 @@
 .venv/
 data/
-ada-1-adapter/
+*-adapter/
+*.resilient.log
 train.log
+train-1b.log
+scratch/scratch.log
 __pycache__/
 .wrangler/
