@@ -2,7 +2,7 @@
 
 # Turing
 
-[![version](https://img.shields.io/badge/version-v0.4.0-blue)](https://github.com/nulljosh/turing/releases)
+[![version](https://img.shields.io/badge/version-v0.4.1-blue)](https://github.com/nulljosh/turing/releases)
 ![license](https://img.shields.io/badge/license-MIT-green) [![GitHub](https://img.shields.io/badge/GitHub-nulljosh%2Fturing-black?logo=github)](https://github.com/nulljosh/turing)
 ![base model](https://img.shields.io/badge/base-Qwen2.5--0.5B-blue)
 ![platform](https://img.shields.io/badge/platform-Apple%20Silicon%20(MLX)-lightgrey)
