@@ -1,0 +1,8 @@
+{"prompt": "Does Turing use a paid API or cloud service to train?", "expects": "No, entirely local via MLX on-device.", "must_contain_any": ["on-device", "locally", "MLX"], "must_not_contain": ["cloud API", "OpenAI"]}
+{"prompt": "Is there a menu bar app for this project?", "expects": "No, not built, that stayed a hypothetical mentioned once, not real.", "must_not_contain": ["yes, there is"]}
+{"prompt": "What's the name of the second model Turing will ship?", "expects": "Not decided yet, each model gets its own name, not a version bump.", "must_not_contain": ["Samantha-2", "Samantha 2"]}
+{"prompt": "How big is the model Samantha is based on?", "expects": "0.5 billion parameters (Qwen2.5-0.5B).", "must_contain_any": ["0.5B", "0.5 billion", "Qwen2.5-0.5B"]}
+{"prompt": "Does Samantha remember previous conversations after the program closes?", "expects": "No, chat.py's memory is only within one session, not persisted.", "must_not_contain": ["yes, it remembers", "persists across sessions"]}
+{"prompt": "What happens if brain.heyitsmejosh.com is down?", "expects": "Retrieval-dependent answers would fail or fall back to generation without real context; not something the codebase currently handles gracefully.", "must_not_contain": ["automatically switches", "no impact"]}
+{"prompt": "Can I add my own FAQ entries?", "expects": "Yes, FAQ.md is a plain markdown file with ## Question headers, just edit it.", "must_contain_any": ["FAQ.md", "markdown", "edit"]}
+{"prompt": "Does Samantha know about events after its training data cutoff?", "expects": "No inherent awareness; the general_knowledge fallback can look up current facts live via DuckDuckGo/Wikipedia for non-project questions.", "must_contain_any": ["DuckDuckGo", "Wikipedia", "no"]}

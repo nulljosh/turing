@@ -46,7 +46,9 @@ def check(answer, spec):
 
 def main():
     verbose = "--verbose" in sys.argv
-    prompts = [json.loads(l) for l in open(PROMPTS) if l.strip()]
+    path_args = [a for a in sys.argv[1:] if not a.startswith("--")]
+    path = path_args[0] if path_args else PROMPTS
+    prompts = [json.loads(l) for l in open(path) if l.strip()]
     passed, failed = 0, []
 
     for spec in prompts:

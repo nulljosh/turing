@@ -96,6 +96,14 @@ The `Qwen3.5-0.8B` base comparison (Phase 3) is paused after three crashes, the 
 
 Retrieval instead of memorization: wiring Samantha to `brain` (the existing RAG-over-notes project) so it answers from live retrieved documents instead of trying to recall facts from its own trained weights. Confirmed working on 2026-09-13, this whole FAQ is part of what makes that retrieval accurate.
 
+## Does Turing use a paid API or cloud service to train?
+
+No. Training runs entirely on-device via Apple's MLX framework, no cloud GPU, no API cost. The only paid-adjacent thing involved is `brain`'s Cloudflare Workers AI usage for retrieval embeddings, which is separate infrastructure, not part of training itself.
+
+## Can I add my own FAQ entries?
+
+Yes. `FAQ.md` is a plain markdown file, `faq_match()` in `ask.py` re-parses it fresh on every question, no rebuild step. Add a new `## Your question here` header followed by a paragraph answer, in the same style as every existing entry, and it's immediately queryable.
+
 ## Can Samantha answer general-knowledge questions, not just project facts?
 
 Yes, for clean factual/definitional queries ("what's the capital of France"), via a DuckDuckGo-instant-answer-then-Wikipedia-summary fallback (`general_knowledge()` in ask.py, reusing nimble's existing pattern). It's genuinely unreliable for ambiguous subjects (picked Tchaikovsky's overture over Shakespeare's play for "who wrote Romeo and Juliet") or current-events facts like who currently holds an office, those need a data source with an explicit up-to-date field, which this doesn't have. It never fires on project questions, an explicit keyword gate keeps "Turing" (also Alan Turing's name) from getting hijacked by unrelated Wikipedia articles.
