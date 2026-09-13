@@ -94,8 +94,8 @@ LoRA fine-tune of a small open base (Qwen2.5-0.5B-Instruct) on our own Obsidian 
 ### Phase 1: More data, same model (weeks 1-3)
 Feed it everything: journal entries, commit messages, project READMEs/WHITEPAPERs, roadmap.md files, notes vault, even old Slack/iMessage exports if we want the voice right. Thousands of chunks instead of hundreds. Re-run LoRA. This is the single highest-leverage step, small models improve far more from 10x the data than from 10x the iterations.
 
-### Phase 2: Evaluate like it matters (weeks 2-4, parallel with Phase 1)
-Stop trusting loss numbers alone. Write 20-30 real prompts we'd actually ask it ("summarize this project", "write a commit message in our voice", "what's blocked on Joshua right now") and manually score outputs before/after each retrain. A model that "trains" but never gets graded is a number going down, not progress.
+### Phase 2: Evaluate like it matters (weeks 2-4, parallel with Phase 1), started
+`eval/prompts.jsonl` has 8 real prompts so far (target 20-30), `eval/run_eval.py` generates against any adapter. First run (`eval/results-2026-09-13.md`): 1/8 on-target, the rest hallucinate confident-sounding wrong answers. That's the real baseline now, not loss numbers.
 
 ### Phase 3: Bigger base, same recipe (month 2)
 Once the pipeline is boring and repeatable, try a bigger base. Candidates as of Sept 2026: `Qwen3.5-0.8B` (direct successor to what we're using now), `SmolLM2-1.7B` (fully open training recipe, worth it if transparency matters to us), `Llama-3.2-1B-Instruct` (solid middle ground, ~1GB at Q4). Bigger model = slower training, more memory, better baseline fluency. Compare quality per minute of training against the 0.5B, there's a real chance the 0.5B fine-tuned on great data beats a bigger base fine-tuned on so-so data.
