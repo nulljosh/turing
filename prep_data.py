@@ -12,7 +12,7 @@ a tiny fraction of the data and the model learned "fleet README voice" instead
 of actual Turing/Samantha facts. This version fixes that: own docs repeated
 (oversampled) so they dominate, fleet docs capped to a small fixed sample.
 """
-import json, glob, os, random
+import json, glob, os, random, subprocess
 
 OUT = os.path.expanduser("~/Documents/Code/turing/data/train.jsonl")
 VAULT = os.path.expanduser("~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Code")
@@ -35,8 +35,16 @@ def to_chat(topic, content):
     }
 
 def read_chunks(path, topic):
+    # VAULT is a live iCloud folder, an evicted (not locally downloaded)
+    # file can block a read for a long time waiting on a fetch, and it's
+    # blocked deep enough (iCloud file provider IPC) that an in-process
+    # signal.alarm() doesn't actually interrupt it, confirmed by watching
+    # one stay stuck 140s+ past a 5s alarm. A subprocess can be killed
+    # outright regardless of what it's blocked on, so shell out to `cat`
+    # with a hard timeout instead of reading in-process.
     try:
-        text = open(path, errors="ignore").read().strip()
+        out = subprocess.run(["cat", path], capture_output=True, timeout=5)
+        text = out.stdout.decode(errors="ignore").strip()
     except Exception:
         return []
     if len(text) < 100:
