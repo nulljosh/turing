@@ -46,6 +46,12 @@ Rerun training for more iterations anytime, always through `run_lora_capped.py`,
   --adapter-path ./ada-1-adapter
 ```
 
+For a long unattended run, use `train_resilient.sh` instead, it wraps the above with auto-restart-on-crash (with backoff), a memory check before each attempt, and resumes from the last checkpoint instead of starting over. Still no daemon, you run it and it exits when done or out of retries:
+
+```
+./train_resilient.sh mlx-community/Qwen2.5-0.5B-Instruct-4bit ./ada-1-adapter 500
+```
+
 ## Troubleshooting: MLX memory crashes on long runs
 
 Ran into this training the Qwen3.5-0.8B comparison base, worth knowing if you hit it too. Two distinct failure modes, easy to confuse:
