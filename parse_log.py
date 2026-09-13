@@ -1,20 +1,26 @@
 """Parse mlx_lm train.log into status.json (loss history) for the landing page."""
 import re, json, os
 
-LOG = os.path.expanduser("~/Documents/Code/turing/train.log")
+LOG = os.path.expanduser("~/Documents/Code/turing/ada-1-adapter.resilient.log")
 OUT = os.path.expanduser("~/Documents/Code/turing/web/status.json")
 
 train_re = re.compile(r"Iter (\d+): Train loss ([\d.]+)")
 val_re = re.compile(r"Iter (\d+): Val loss ([\d.]+)")
 
 def parse():
+    text = open(LOG, errors="ignore").read()
+    # the resilient wrapper appends every run to the same file and iter numbers
+    # restart at 1 each run, only chart the most recent run's segment
+    starts = [m.start() for m in re.finditer(r"attempt \d+: starting", text)]
+    text = text[starts[-1]:] if starts else text
+
     train, val = [], []
-    for line in open(LOG, errors="ignore"):
+    for line in text.splitlines():
         for m in train_re.finditer(line):
             train.append({"iter": int(m.group(1)), "loss": float(m.group(2))})
         for m in val_re.finditer(line):
             val.append({"iter": int(m.group(1)), "loss": float(m.group(2))})
-    done = "Saved final" in open(LOG, errors="ignore").read() or "Saving final" in open(LOG, errors="ignore").read()
+    done = "Saved final" in text or "Saving final" in text
     status = {
         "model": "Samantha",
         "project": "Turing",
