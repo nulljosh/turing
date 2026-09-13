@@ -12,6 +12,10 @@ Samantha is the first model Turing produced. It is a LoRA fine-tune of `Qwen2.5-
 
 The same relationship as Anthropic and Claude, or Anthropic and one specific Claude model like Haiku or Fable. The project name stays fixed. Each model Turing produces gets its own name, not a version-bumped name like "Samantha-2". The next model will have a different name entirely, chosen for whatever it is actually built for.
 
+## Why doesn't Turing pretrain a model from scratch at full scale?
+
+Needs data-center-scale compute: gigabytes of clean text and enough GPU time to make noise start looking like language. That's a research-lab budget, not a single Mac Mini's. Arthur (see next answer) already proved what happens when you try it anyway on consumer hardware, gibberish, no working checkpoint. Turing's answer is LoRA fine-tuning an already-trained small base model instead, which needs a tiny fraction of the data and compute.
+
 ## What went wrong with Arthur?
 
 Arthur was an earlier attempt at this same idea, months before Turing. Arthur tried to pretrain a language model completely from scratch on a single Mac, with no borrowed base weights. After a few days of training it produced gibberish. The project was abandoned. The lesson from Arthur is the reason Turing exists: pretraining from raw text at any useful scale needs gigabytes of clean data and real compute, more than a single consumer machine can provide in a reasonable timeframe. Turing's answer to that lesson is LoRA fine-tuning a small existing base model instead of training one from zero.
@@ -79,6 +83,10 @@ Joshua Trommel, listed as the author in `LICENSE` and `WHITEPAPER.md`.
 ## What's blocked or paused right now?
 
 The `Qwen3.5-0.8B` base comparison (Phase 3) is paused after three crashes, the last being a real Metal/GPU memory-fit problem rather than a background-process conflict. Phase 2 (real eval prompts) is active but the model still scores poorly, see the eval/ folder's run-by-run results for the honest numbers.
+
+## What does Phase 4 of the roadmap involve?
+
+Retrieval instead of memorization: wiring Samantha to `brain` (the existing RAG-over-notes project) so it answers from live retrieved documents instead of trying to recall facts from its own trained weights. Confirmed working on 2026-09-13, this whole FAQ is part of what makes that retrieval accurate.
 
 ## What would Phase 5 let Samantha actually do for someone?
 
