@@ -44,6 +44,15 @@
       .bg-nodes svg:nth-child(4){top:20%;left:78%;width:100px;animation-duration:52s;animation-delay:-14s}
       @keyframes drift{0%,100%{transform:translate(0,0) rotate(0deg)}50%{transform:translate(14px,-18px) rotate(6deg)}}
       .graph-explainer{font-size:13px;color:var(--muted);margin-top:10px}
+      .roadmap{display:flex;flex-direction:column;gap:0;margin-top:8px}
+      .rm-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);font-size:14px}
+      .rm-item:last-child{border-bottom:none}
+      .rm-dot{width:9px;height:9px;border-radius:50%;flex:0 0 auto;background:var(--line)}
+      .rm-item.done .rm-dot{background:#2e9e4a}
+      .rm-item.current .rm-dot{background:var(--fg)}
+      .rm-item.done{color:var(--fg)}
+      .rm-item:not(.done):not(.current){color:var(--muted)}
+      .rm-tag{margin-left:auto;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
     </style>
   </head>
   <body>
@@ -73,6 +82,13 @@
       </section>
 
       <section>
+        <h2>Roadmap</h2>
+        <div class="card">
+          <div class="roadmap" id="roadmap"></div>
+        </div>
+      </section>
+
+      <section>
         <h2>What this is</h2>
         <p>Ada-1 is a LoRA fine-tune of a small open base model, trained on the project's own Obsidian wiki and READMEs so it actually knows the codebase and writes in house voice. No from-scratch pretraining — that path was tried once (project code name Arthur) and produced gibberish. This time: small model, real data, short loop, iterate.</p>
       </section>
@@ -92,6 +108,16 @@
         document.getElementById('base').textContent = s.base;
         document.getElementById('iters').textContent = s.train_loss.length ? s.train_loss[s.train_loss.length-1].iter : 0;
         document.getElementById('loss').textContent = s.train_loss.length ? s.train_loss[s.train_loss.length-1].loss.toFixed(3) : '—';
+
+        if (s.roadmap) {
+          const rm = document.getElementById('roadmap');
+          const firstNotDone = s.roadmap.findIndex(p => !p.done);
+          rm.innerHTML = s.roadmap.map((p, i) => {
+            const cls = p.done ? 'done' : (i === firstNotDone ? 'current' : '');
+            const tag = p.done ? 'done' : (i === firstNotDone ? 'now' : '');
+            return `<div class="rm-item ${cls}"><span class="rm-dot"></span><span>Phase ${p.phase}: ${p.name}</span>${tag ? `<span class="rm-tag">${tag}</span>` : ''}</div>`;
+          }).join('');
+        }
 
         const c = document.getElementById('chart'), ctx = c.getContext('2d');
         const dpr = window.devicePixelRatio || 1;

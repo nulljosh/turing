@@ -5,94 +5,203 @@
   "train_loss": [
     {
       "iter": 10,
-      "loss": 3.101
+      "loss": 3.903
     },
     {
       "iter": 20,
-      "loss": 3.308
+      "loss": 3.737
     },
     {
       "iter": 30,
-      "loss": 2.931
+      "loss": 3.511
     },
     {
       "iter": 40,
-      "loss": 2.214
+      "loss": 3.339
     },
     {
       "iter": 50,
-      "loss": 2.435
+      "loss": 3.313
     },
     {
       "iter": 60,
-      "loss": 3.395
+      "loss": 3.356
     },
     {
       "iter": 70,
-      "loss": 2.352
+      "loss": 3.324
     },
     {
       "iter": 80,
-      "loss": 2.773
+      "loss": 3.478
     },
     {
       "iter": 90,
-      "loss": 2.301
+      "loss": 3.3
     },
     {
       "iter": 100,
-      "loss": 2.406
+      "loss": 3.352
     },
     {
       "iter": 110,
-      "loss": 2.532
+      "loss": 3.253
     },
     {
       "iter": 120,
-      "loss": 2.188
+      "loss": 3.401
     },
     {
       "iter": 130,
-      "loss": 2.361
+      "loss": 3.292
     },
     {
       "iter": 140,
-      "loss": 2.201
+      "loss": 3.208
     },
     {
       "iter": 150,
-      "loss": 3.071
+      "loss": 3.203
     },
     {
       "iter": 160,
-      "loss": 2.856
+      "loss": 2.847
     },
     {
       "iter": 170,
-      "loss": 2.288
+      "loss": 3.174
     },
     {
       "iter": 180,
-      "loss": 2.147
+      "loss": 3.18
     },
     {
       "iter": 190,
-      "loss": 2.575
+      "loss": 3.066
     },
     {
       "iter": 200,
-      "loss": 1.938
+      "loss": 3.249
+    },
+    {
+      "iter": 210,
+      "loss": 2.915
+    },
+    {
+      "iter": 220,
+      "loss": 3.255
+    },
+    {
+      "iter": 230,
+      "loss": 2.972
+    },
+    {
+      "iter": 240,
+      "loss": 2.833
+    },
+    {
+      "iter": 250,
+      "loss": 3.154
+    },
+    {
+      "iter": 260,
+      "loss": 3.092
+    },
+    {
+      "iter": 270,
+      "loss": 2.835
+    },
+    {
+      "iter": 280,
+      "loss": 2.99
+    },
+    {
+      "iter": 290,
+      "loss": 2.926
+    },
+    {
+      "iter": 300,
+      "loss": 2.869
+    },
+    {
+      "iter": 310,
+      "loss": 3.088
+    },
+    {
+      "iter": 320,
+      "loss": 2.886
+    },
+    {
+      "iter": 330,
+      "loss": 3.256
+    },
+    {
+      "iter": 340,
+      "loss": 3.203
+    },
+    {
+      "iter": 350,
+      "loss": 2.998
+    },
+    {
+      "iter": 360,
+      "loss": 2.804
+    },
+    {
+      "iter": 370,
+      "loss": 2.837
+    },
+    {
+      "iter": 380,
+      "loss": 3.061
     }
   ],
   "val_loss": [
     {
       "iter": 1,
-      "loss": 2.01
+      "loss": 3.658
     },
     {
       "iter": 200,
-      "loss": 0.853
+      "loss": 2.992
     }
   ],
-  "status": "done"
+  "status": "training",
+  "roadmap": [
+    {
+      "phase": 0,
+      "name": "Pipeline proof",
+      "done": true
+    },
+    {
+      "phase": 1,
+      "name": "More data, same model",
+      "done": true
+    },
+    {
+      "phase": 2,
+      "name": "Evaluate like it matters",
+      "done": false
+    },
+    {
+      "phase": 3,
+      "name": "Bigger base, same recipe",
+      "done": false
+    },
+    {
+      "phase": 4,
+      "name": "Retrieval instead of memorization",
+      "done": false
+    },
+    {
+      "phase": 5,
+      "name": "Give it a job",
+      "done": false
+    },
+    {
+      "phase": 6,
+      "name": "Distillation, not scale",
+      "done": false
+    }
+  ]
 }
