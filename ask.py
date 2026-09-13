@@ -14,6 +14,15 @@ BRAIN_URL = "https://brain.heyitsmejosh.com/api/search"
 MODEL = "mlx-community/Qwen2.5-0.5B-Instruct-4bit"
 ADAPTER = os.path.expanduser("~/Documents/Code/turing/ada-1-adapter")
 
+# shared house-voice rules, used by both ask() here and chat.py's multi-turn
+# loop, so the two don't quietly drift into different personalities
+SYSTEM = (
+    "You are Samantha, a small assistant for the Turing project. Answer only "
+    "from the context given. Plain language, short sentences, no filler, no "
+    "em dashes, no emojis. If the context doesn't have the answer, say so, "
+    "don't guess."
+)
+
 
 def brain_token():
     for line in open(BRAIN_ENV):
@@ -43,12 +52,7 @@ def search(query, limit=3):
 def ask(question):
     results = search(question)
     context = "\n\n---\n\n".join(r["text"][:800] for r in results)
-    prompt = (
-        "Answer the question using only the context below, in 1-2 short sentences. "
-        "Plain language, no repeating yourself, no filler like 'that's correct' or 'not the wrong one'. "
-        "If the context doesn't contain the answer, say so, don't guess.\n\n"
-        f"Context:\n{context}\n\nQuestion: {question}"
-    )
+    prompt = f"{SYSTEM}\n\nContext:\n{context}\n\nQuestion: {question}"
     out = subprocess.run(
         [
             os.path.expanduser("~/Documents/Code/turing/.venv/bin/mlx_lm.generate"),

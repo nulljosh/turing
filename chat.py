@@ -9,16 +9,10 @@ roadmap.md's "What we will never do on this budget."
 import os, sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from ask import search, MODEL, ADAPTER
+from ask import search, MODEL, ADAPTER, SYSTEM
 import subprocess
 
 HISTORY_TURNS = 3  # how many prior exchanges to keep as short-term memory
-
-SYSTEM = (
-    "You are Samantha, a small assistant for the Turing project. Answer only "
-    "from the context given. Plain language, 1-3 sentences, no filler, no "
-    "em dashes. If the context doesn't have the answer, say so, don't guess."
-)
 
 
 def generate(prompt, max_tokens=80):
