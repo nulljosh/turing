@@ -17,9 +17,13 @@ LR = 3e-4
 
 
 def load_text():
+    # data/train.jsonl moved to chat-message format for the main LoRA
+    # pipeline (see roadmap.md, run 2), this still just wants raw text
+    # to train the char-level model on, so flatten each turn's content.
     text = []
     for line in open(DATA):
-        text.append(json.loads(line)["text"])
+        for msg in json.loads(line)["messages"]:
+            text.append(msg["content"])
     return "\n".join(text)
 
 
