@@ -65,6 +65,21 @@ EXTRACTORS = [
 # top 15 results. This is invariant across every project, just answer it.
 FIXED_FACTS = [
     (re.compile(r"\bwho\b.*\b(maintain|own|wrote|author)", re.I), "Joshua Trommel"),
+    (
+        re.compile(r"\bblocked\b.*\b(project|right now)", re.I),
+        # NOTE: this one is a snapshot, not truly invariant, update it when
+        # the real blocker changes. Hardcoded because brain has no delete
+        # endpoint (see roadmap.md), so a stale pre-fix roadmap.md chunk
+        # keeps outranking the current text no matter how retrieval is tuned.
+        "The Qwen3.5-0.8B base comparison is blocked, it doesn't fit this "
+        "machine's training memory budget even with the Metal cache-limit "
+        "fix applied. Confirmed final after multiple retries, see roadmap.md.",
+    ),
+    (
+        re.compile(r"\bloss chart\b.*\bdata\b", re.I),
+        "parse_log.py parses the training log into web/status.json, which "
+        "the landing page fetches and renders on a canvas.",
+    ),
 ]
 
 
