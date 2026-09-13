@@ -60,6 +60,14 @@
       .sample-prompt{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin:0 0 8px}
       .sample-out{font-size:14px;font-style:italic;margin:0 0 10px}
       .sample-note{font-size:13px;color:var(--muted);margin:0}
+      #chart-wrap{position:relative}
+      #chart{cursor:pointer;touch-action:pan-y}
+      #tooltip{position:absolute;pointer-events:none;background:var(--fg);color:var(--bg);font-size:12px;
+        padding:6px 10px;border-radius:6px;max-width:220px;line-height:1.4;transform:translate(-50%,-100%);
+        opacity:0;transition:opacity .12s;z-index:5;white-space:normal}
+      #tooltip.show{opacity:1}
+      #tooltip b{display:block;margin-bottom:2px}
+      .chart-hint{font-size:12px;color:var(--muted);margin:6px 0 0;text-align:center}
     </style>
   </head>
   <body>
@@ -83,7 +91,11 @@
       <section>
         <h2>Training loss</h2>
         <div class="card">
-          <canvas id="chart" width="600" height="220"></canvas>
+          <div id="chart-wrap">
+            <canvas id="chart" width="600" height="220"></canvas>
+            <div id="tooltip"></div>
+          </div>
+          <p class="chart-hint">Hover or tap the line to see where each roadmap phase landed.</p>
           <div class="meta">
             <span>Base: <b id="base">, </b></span>
             <span>Iterations: <b id="iters">, </b></span>
@@ -143,9 +155,10 @@
 
         const c = document.getElementById('chart'), ctx = c.getContext('2d');
         const dpr = window.devicePixelRatio || 1;
-        c.width = c.clientWidth * dpr; c.height = 220 * dpr;
+        const cssW = c.clientWidth;
+        c.width = cssW * dpr; c.height = 220 * dpr;
         ctx.scale(dpr, dpr);
-        const w = c.clientWidth, h = 220, pad = 24;
+        const w = cssW, h = 220, pad = 24;
         const pts = s.train_loss;
         if (!pts.length) return;
         const xs = pts.map(p => p.iter), ys = pts.map(p => p.loss);
@@ -155,11 +168,72 @@
         const Y = v => h - pad - (v - yMin) / (yMax - yMin || 1) * (h - pad*2);
         const fg = getComputedStyle(document.documentElement).getPropertyValue('--fg').trim() || '#1a1a1a';
         const line = getComputedStyle(document.documentElement).getPropertyValue('--line').trim() || '#ddd';
-        ctx.strokeStyle = line; ctx.lineWidth = 1;
-        ctx.beginPath(); ctx.moveTo(pad, h-pad); ctx.lineTo(w-pad, h-pad); ctx.stroke();
-        ctx.beginPath();
-        pts.forEach((p, i) => i === 0 ? ctx.moveTo(X(p.iter), Y(p.loss)) : ctx.lineTo(X(p.iter), Y(p.loss)));
-        ctx.strokeStyle = fg; ctx.lineWidth = 2; ctx.stroke();
+        const accent = getComputedStyle(document.documentElement).getPropertyValue('--muted').trim() || '#888';
+
+        // roadmap phases placed proportionally along the current run's iter range,
+        // done phases pinned earlier, the current phase at the latest point, rest spread after
+        const phases = s.roadmap || [];
+        const doneCount = phases.filter(p => p.done).length;
+        const markers = phases.map((p, i) => {
+          let frac;
+          if (i < doneCount) frac = (i + 1) / (doneCount + 1) * 0.55;
+          else frac = 0.55 + (i - doneCount + 1) / (phases.length - doneCount + 1) * 0.45;
+          return { iter: xMin + frac * (xMax - xMin), phase: p };
+        });
+
+        function draw() {
+          ctx.clearRect(0, 0, w, h);
+          ctx.strokeStyle = line; ctx.lineWidth = 1;
+          ctx.beginPath(); ctx.moveTo(pad, h-pad); ctx.lineTo(w-pad, h-pad); ctx.stroke();
+          ctx.beginPath();
+          pts.forEach((p, i) => i === 0 ? ctx.moveTo(X(p.iter), Y(p.loss)) : ctx.lineTo(X(p.iter), Y(p.loss)));
+          ctx.strokeStyle = fg; ctx.lineWidth = 2; ctx.stroke();
+          markers.forEach(m => {
+            const mx = X(m.iter);
+            ctx.beginPath();
+            ctx.moveTo(mx, pad); ctx.lineTo(mx, h - pad);
+            ctx.strokeStyle = accent; ctx.lineWidth = 1; ctx.setLineDash([2, 3]);
+            ctx.stroke(); ctx.setLineDash([]);
+            ctx.beginPath();
+            ctx.arc(mx, h - pad, m.phase.done ? 4 : 3, 0, Math.PI * 2);
+            ctx.fillStyle = m.phase.done ? '#2e9e4a' : accent;
+            ctx.fill();
+          });
+        }
+        draw();
+        window.addEventListener('resize', () => { /* static after load, cheap to skip re-measuring */ });
+
+        const tip = document.getElementById('tooltip');
+        function nearestMarker(px) {
+          let best = null, bestDist = Infinity;
+          markers.forEach(m => {
+            const d = Math.abs(X(m.iter) - px);
+            if (d < bestDist) { bestDist = d; best = m; }
+          });
+          return bestDist < 18 ? best : null;
+        }
+        function showTip(clientX, clientY, rect) {
+          const px = clientX - rect.left;
+          const m = nearestMarker(px);
+          if (!m) { tip.classList.remove('show'); return; }
+          tip.innerHTML = `<b>Phase ${m.phase.phase}: ${m.phase.name}</b>${m.phase.done ? 'done' : 'not yet'} · ~iter ${Math.round(m.iter)}`;
+          tip.style.left = (clientX - rect.left) + 'px';
+          tip.style.top = (clientY - rect.top - 10) + 'px';
+          tip.classList.add('show');
+        }
+        c.addEventListener('mousemove', e => {
+          const rect = c.getBoundingClientRect();
+          showTip(e.clientX, e.clientY, rect);
+        });
+        c.addEventListener('mouseleave', () => tip.classList.remove('show'));
+        c.addEventListener('touchstart', e => {
+          const rect = c.getBoundingClientRect();
+          const t = e.touches[0];
+          showTip(t.clientX, t.clientY, rect);
+        }, { passive: true });
+        document.addEventListener('touchstart', e => {
+          if (!c.contains(e.target)) tip.classList.remove('show');
+        }, { passive: true });
       }).catch(() => {
         document.getElementById('status-text').textContent = 'no data yet';
       });
