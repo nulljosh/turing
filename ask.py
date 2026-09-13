@@ -132,9 +132,18 @@ def faq_match(question):
     best_score, best_answer = 0.0, None
     q_norm = question.lower().strip("? ")
     for faq_q, faq_a in pairs:
-        if not (q_keywords & _keywords(faq_q)):
+        shared = q_keywords & _keywords(faq_q)
+        if not shared:
             continue
-        score = difflib.SequenceMatcher(None, q_norm, faq_q.lower().strip("? ")).ratio()
+        seq_ratio = difflib.SequenceMatcher(None, q_norm, faq_q.lower().strip("? ")).ratio()
+        # blend in keyword-overlap fraction, pure sentence-shape similarity
+        # (seq_ratio alone) can pick a lexically-similar but topically wrong
+        # entry over one that shares the actual subject word, "what causes
+        # Samantha to hallucinate" scored higher against "what data was
+        # Samantha trained on" than against the real hallucination FAQ entry,
+        # until the shared keyword fraction was weighted in too
+        overlap_fraction = len(shared) / len(q_keywords) if q_keywords else 0
+        score = seq_ratio * 0.5 + overlap_fraction * 0.5
         if score > best_score:
             best_score, best_answer = score, faq_a
     return best_answer if best_score >= FAQ_MATCH_THRESHOLD else None

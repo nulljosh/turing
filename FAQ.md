@@ -4,6 +4,10 @@
 
 Turing is the project: the pipeline, the repo, this whole effort to build small language models on consumer hardware. It is not a model itself. Turing is fixed as a name, the way Anthropic is fixed as a company name.
 
+## Summarize what Turing is in one sentence.
+
+Turing is a pipeline for building small language models on consumer hardware.
+
 ## What is Samantha?
 
 Samantha is the first model Turing produced. It is a LoRA fine-tune of `Qwen2.5-0.5B-Instruct-4bit`, trained mostly on this project's own docs, plus a small capped sample of the wider fleet for house voice. Samantha is not pretrained from scratch, it starts from an already-trained small open model and adjusts it with a small set of trainable weight deltas.
@@ -28,6 +32,10 @@ Arthur was an earlier attempt at this same idea, months before Turing. Arthur tr
 
 Yes. `Qwen3.5-0.8B-4bit` was tried as a Phase 3 comparison, to see if a bigger base earns its extra cost before committing to one. It caused three crashes in a row on this machine (two plain out-of-memory crashes, then a Metal/GPU out-of-memory error mid-backprop even with plenty of free system RAM). That comparison is paused, not abandoned, `ada-1b-adapter/` holds its unfinished state. It would need a smaller batch size or different hardware to revisit properly, not a blind retry.
 
+## What's the difference between LoRA and full fine-tuning?
+
+LoRA (Low-Rank Adaptation) trains a small set of weight deltas on top of a frozen, already-trained base model, cheaper, faster, and it never touches or retrains the base model's own weights. Full fine-tuning retrains all of a model's weights directly, which needs far more memory, compute, and data to avoid destroying what the base model already knew. Samantha uses LoRA.
+
 ## Is Samantha fine-tuned or pretrained from scratch?
 
 Fine-tuned. LoRA (Low-Rank Adaptation) trains a small set of weight deltas on top of a frozen, already-trained base model. It never retrains the base model's own weights from zero. The from-scratch idea (what Arthur tried, and what failed) lives on in this repo as a separate, deliberately small experiment, see the next answer.
@@ -40,7 +48,7 @@ A second, independent track alongside the main LoRA pipeline: a genuine from-scr
 
 Primarily this repo's own docs (README, WHITEPAPER, roadmap.md, TROUBLESHOOTING.md, this FAQ, and eval result writeups), repeated a few times so they are not drowned out. A capped sample of the wider ~50-repo fleet's READMEs, roadmap.md files, and CLAUDE.md files, and a slice of the personal Obsidian wiki, is mixed in for house voice and variety, but capped so it cannot dominate the training data the way it did in an earlier run (see roadmap.md's progress log, run 3).
 
-## Why does Samantha sometimes make things up?
+## Why does Samantha hallucinate, or sometimes make things up?
 
 Not enough real, distinct training content yet to override the base model's habit of answering "what is X" questions with a plausible-sounding, generic, confident answer. Five training runs on 2026-09-13 confirmed this is the actual bottleneck, not the training format (fixed in run 2), not which fleet projects were included (fixed in run 3), not how aggressively existing content was repeated (tuned in runs 4 and 5). More genuinely distinct real content, like this FAQ, is the real fix, not another resampling trick.
 
@@ -95,6 +103,10 @@ Yes, for clean factual/definitional queries ("what's the capital of France"), vi
 ## What would Phase 5 let Samantha actually do for someone?
 
 In-voice drafting (journal entries, commit messages, README sections in house style), answering project-status questions from real data via retrieval instead of memorized weights, local autocomplete that never touches the network, or acting as a cheap first-pass judge/filter model on every commit or PR before anything reaches a bigger model.
+
+## What should Samantha be used for eventually, and what will Turing never do on this hardware?
+
+Eventually: in-voice drafting, project Q&A from real data via retrieval, local autocomplete, or acting as a cheap first-pass judge/filter model, not competing with frontier models. Never, on this Mac Mini: pretrain a foundation model from raw text at frontier scale, that needs data-center-scale compute and a research team's budget, not a personal project's. Beating Claude or GPT was never the goal.
 
 ## What is chat.py?
 
