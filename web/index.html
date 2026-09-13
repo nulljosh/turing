@@ -35,14 +35,28 @@
       p{font-size:15px}
       footer{margin-top:56px;font-size:13px;color:var(--muted)}
       a{color:inherit}
+      .bg-nodes{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
+      .bg-nodes svg{position:absolute;opacity:.06;animation:drift 40s ease-in-out infinite}
+      @media (prefers-color-scheme: dark){.bg-nodes svg{opacity:.1}}
+      .bg-nodes svg:nth-child(1){top:8%;left:6%;width:120px;animation-duration:34s}
+      .bg-nodes svg:nth-child(2){top:60%;left:82%;width:90px;animation-duration:46s;animation-delay:-8s}
+      .bg-nodes svg:nth-child(3){top:78%;left:12%;width:70px;animation-duration:38s;animation-delay:-20s}
+      .bg-nodes svg:nth-child(4){top:20%;left:78%;width:100px;animation-duration:52s;animation-delay:-14s}
+      @keyframes drift{0%,100%{transform:translate(0,0) rotate(0deg)}50%{transform:translate(14px,-18px) rotate(6deg)}}
+      .graph-explainer{font-size:13px;color:var(--muted);margin-top:10px}
     </style>
   </head>
   <body>
+    <div class="bg-nodes" aria-hidden="true">
+      <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="20" cy="20" r="4"/><circle cx="70" cy="35" r="4"/><circle cx="45" cy="70" r="4"/><circle cx="80" cy="80" r="4"/><path d="M20 20L70 35M70 35L45 70M45 70L20 20M45 70L80 80"/></svg>
+      <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="15" cy="50" r="4"/><circle cx="50" cy="15" r="4"/><circle cx="85" cy="50" r="4"/><circle cx="50" cy="85" r="4"/><path d="M15 50L50 15M50 15L85 50M85 50L50 85M50 85L15 50M15 50L85 50"/></svg>
+      <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="30" cy="30" r="4"/><circle cx="70" cy="20" r="4"/><circle cx="60" cy="70" r="4"/><path d="M30 30L70 20M70 20L60 70M60 70L30 30"/></svg>
+      <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="25" cy="25" r="4"/><circle cx="75" cy="25" r="4"/><circle cx="75" cy="75" r="4"/><circle cx="25" cy="75" r="4"/><circle cx="50" cy="50" r="4"/><path d="M25 25L50 50M75 25L50 50M75 75L50 50M25 75L50 50"/></svg>
+    </div>
     <div class="wrap">
       <header>
         <h1>Turing</h1>
         <p class="sub">Building small language models in the open. First model: <b>Ada-1</b>.</p>
-        <div class="status"><span class="dot training" id="dot"></span><span id="status-text">loading…</span></div>
       </header>
 
       <section>
@@ -54,12 +68,18 @@
             <span>Iterations: <b id="iters">—</b></span>
             <span>Latest train loss: <b id="loss">—</b></span>
           </div>
+          <p class="graph-explainer">Lower is better. "Loss" is how surprised the model is by the actual next word each time it guesses — a falling line means it's getting less surprised, i.e. learning the pattern of our own writing. Bouncy is normal on a small dataset; it should smooth out as more data comes in.</p>
         </div>
       </section>
 
       <section>
         <h2>What this is</h2>
         <p>Ada-1 is a LoRA fine-tune of a small open base model, trained on the project's own Obsidian wiki and READMEs so it actually knows the codebase and writes in house voice. No from-scratch pretraining — that path was tried once (project code name Arthur) and produced gibberish. This time: small model, real data, short loop, iterate.</p>
+      </section>
+
+      <section>
+        <h2>Try it</h2>
+        <p>A chat demo goes here once Ada-1 is actually good enough to be worth talking to. Right now it's still learning to finish a sentence — check back after a few more training rounds.</p>
       </section>
 
       <footer>
@@ -72,8 +92,6 @@
         document.getElementById('base').textContent = s.base;
         document.getElementById('iters').textContent = s.train_loss.length ? s.train_loss[s.train_loss.length-1].iter : 0;
         document.getElementById('loss').textContent = s.train_loss.length ? s.train_loss[s.train_loss.length-1].loss.toFixed(3) : '—';
-        document.getElementById('status-text').textContent = s.status === 'done' ? 'training complete' : (s.status === 'training' ? 'training in progress' : 'starting');
-        document.getElementById('dot').classList.toggle('training', s.status === 'training');
 
         const c = document.getElementById('chart'), ctx = c.getContext('2d');
         const dpr = window.devicePixelRatio || 1;
