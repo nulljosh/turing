@@ -62,7 +62,7 @@ Retrieves real passages from `brain`'s live index (not memorized weights) and an
 
 ## QA
 
-`eval/score.py` gives a real number instead of eyeballing free-text answers: `./.venv/bin/python eval/score.py` (add `eval/prompts-holdout.jsonl` as an argument to run the held-out set instead). To have it gate commits automatically, one-time setup, git doesn't track `.git/hooks/` itself so this doesn't happen on a fresh clone without it:
+`eval/score.py` gives a real number instead of eyeballing free-text answers: `./.venv/bin/python eval/score.py` (add `eval/prompts-holdout.jsonl` as an argument to run the held-out set instead). `test_chat.py` checks chat.py's own logic (history handling, scaffold-stripping) with no model calls needed: `./.venv/bin/python test_chat.py`. To have both gate commits automatically, one-time setup, git doesn't track `.git/hooks/` itself so this doesn't happen on a fresh clone without it:
 
 ```
 ln -sf ../../hooks/pre-commit .git/hooks/pre-commit

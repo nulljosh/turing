@@ -14,3 +14,13 @@ if echo "$changed" | grep -qE '^(ask\.py|chat\.py|FAQ\.md|eval/prompts\.jsonl)$'
     exit 1
   fi
 fi
+
+if echo "$changed" | grep -qE '^chat\.py$'; then
+  echo "chat.py changed, running test_chat.py..."
+  if ! ./.venv/bin/python test_chat.py > /dev/null; then
+    echo ""
+    echo "test_chat.py failed. Commit blocked."
+    echo "If this is expected, commit with --no-verify."
+    exit 1
+  fi
+fi
