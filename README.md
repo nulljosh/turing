@@ -44,6 +44,15 @@ No daemon, no cron — training runs when invoked, not on a schedule.
 
 See `index.html` / status.json for live loss numbers.
 
+## Progress log
+
+- **2026-09-13, run 1:** 588 lines (wiki + READMEs), 200 iters. Loss bounced 2.2-3.4, no clean convergence — too little data. Proved the pipeline works end to end, no gibberish (unlike Arthur).
+- **2026-09-13, run 2:** widened sources to roadmap.md + CLAUDE.md across the fleet, 2054 lines, 500 iters, in progress. Val loss down from 3.66 → 2.99 by iter 200.
+
+## A note on benchmarking
+
+Ada-1's base model *is* Qwen2.5-0.5B — LoRA only adds a small trained delta on top of it. So "beat Qwen" isn't really a fair or even coherent bar; a LoRA fine-tune of Qwen can't outperform Qwen in general, only on the narrow thing it was fine-tuned for (writing in our voice, knowing our projects). The real benchmark is: does the fine-tuned version answer our own questions better than stock Qwen does. That's what Phase 2 (eval prompts) is for.
+
 ## Roadmap (honest version)
 
 Anthropic spends billions of dollars and years with thousands of GPUs on foundation models. That's not this. Transformers themselves are only from 2017 (the "Attention Is All You Need" paper) — the whole field is young enough that a lot of useful ground is still coverable by one person on a Mac Mini, as long as the goal is calibrated to the hardware.
