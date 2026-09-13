@@ -2,7 +2,7 @@
 
 # Turing
 
-![version](https://img.shields.io/badge/version-phase%200-blue)
+![version](https://img.shields.io/badge/version-phase%201-blue)
 ![license](https://img.shields.io/badge/license-MIT-green) [![GitHub](https://img.shields.io/badge/GitHub-nulljosh%2Fturing-black?logo=github)](https://github.com/nulljosh/turing)
 ![base model](https://img.shields.io/badge/base-Qwen2.5--0.5B-blue)
 ![platform](https://img.shields.io/badge/platform-Apple%20Silicon%20(MLX)-lightgrey)
@@ -30,6 +30,8 @@ prep_data.py    -> data/train.jsonl, data/valid.jsonl   (wiki + READMEs, chunked
 mlx_lm.lora     -> ada-1-adapter/                        (LoRA weights)
 parse_log.py    -> status.json                           (loss history for the landing page)
 ```
+
+Full diagram: [`architecture.svg`](architecture.svg) (includes the parallel from-scratch path under `scratch/`).
 
 Rerun training for more iterations anytime:
 
