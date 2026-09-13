@@ -1,0 +1,85 @@
+# FAQ
+
+## What is Turing?
+
+Turing is the project: the pipeline, the repo, this whole effort to build small language models on consumer hardware. It is not a model itself. Turing is fixed as a name, the way Anthropic is fixed as a company name.
+
+## What is Samantha?
+
+Samantha is the first model Turing produced. It is a LoRA fine-tune of `Qwen2.5-0.5B-Instruct-4bit`, trained mostly on this project's own docs, plus a small capped sample of the wider fleet for house voice. Samantha is not pretrained from scratch, it starts from an already-trained small open model and adjusts it with a small set of trainable weight deltas.
+
+## What is the relationship between Turing and Samantha?
+
+The same relationship as Anthropic and Claude, or Anthropic and one specific Claude model like Haiku or Fable. The project name stays fixed. Each model Turing produces gets its own name, not a version-bumped name like "Samantha-2". The next model will have a different name entirely, chosen for whatever it is actually built for.
+
+## What went wrong with Arthur?
+
+Arthur was an earlier attempt at this same idea, months before Turing. Arthur tried to pretrain a language model completely from scratch on a single Mac, with no borrowed base weights. After a few days of training it produced gibberish. The project was abandoned. The lesson from Arthur is the reason Turing exists: pretraining from raw text at any useful scale needs gigabytes of clean data and real compute, more than a single consumer machine can provide in a reasonable timeframe. Turing's answer to that lesson is LoRA fine-tuning a small existing base model instead of training one from zero.
+
+## What base model does Samantha use?
+
+`Qwen2.5-0.5B-Instruct-4bit`, downloaded from Hugging Face via the `mlx-community` org, run through Apple's MLX framework on-device.
+
+## Was another base model tried?
+
+Yes. `Qwen3.5-0.8B-4bit` was tried as a Phase 3 comparison, to see if a bigger base earns its extra cost before committing to one. It caused three crashes in a row on this machine (two plain out-of-memory crashes, then a Metal/GPU out-of-memory error mid-backprop even with plenty of free system RAM). That comparison is paused, not abandoned, `ada-1b-adapter/` holds its unfinished state. It would need a smaller batch size or different hardware to revisit properly, not a blind retry.
+
+## Is Samantha fine-tuned or pretrained from scratch?
+
+Fine-tuned. LoRA (Low-Rank Adaptation) trains a small set of weight deltas on top of a frozen, already-trained base model. It never retrains the base model's own weights from zero. The from-scratch idea (what Arthur tried, and what failed) lives on in this repo as a separate, deliberately small experiment, see the next answer.
+
+## What is scratch/ in this repo?
+
+A second, independent track alongside the main LoRA pipeline: a genuine from-scratch character-level transformer, built and trained with zero borrowed weights. Its own tiny architecture (`scratch/model.py`), its own training loop (`scratch/train.py`). It will not be fluent, that is expected and intentional, it is small on purpose. The point of `scratch/` is proving Turing can build a model from nothing without repeating Arthur's failure (gibberish for days with no working checkpoint), not proving it can compete with the LoRA path.
+
+## What data was Samantha trained on?
+
+Primarily this repo's own docs (README, WHITEPAPER, roadmap.md, TROUBLESHOOTING.md, this FAQ, and eval result writeups), repeated a few times so they are not drowned out. A capped sample of the wider ~50-repo fleet's READMEs, roadmap.md files, and CLAUDE.md files, and a slice of the personal Obsidian wiki, is mixed in for house voice and variety, but capped so it cannot dominate the training data the way it did in an earlier run (see roadmap.md's progress log, run 3).
+
+## Why does Samantha sometimes make things up?
+
+Not enough real, distinct training content yet to override the base model's habit of answering "what is X" questions with a plausible-sounding, generic, confident answer. Five training runs on 2026-09-13 confirmed this is the actual bottleneck, not the training format (fixed in run 2), not which fleet projects were included (fixed in run 3), not how aggressively existing content was repeated (tuned in runs 4 and 5). More genuinely distinct real content, like this FAQ, is the real fix, not another resampling trick.
+
+## Should Samantha try to beat Claude or GPT?
+
+No. Samantha's base model is Qwen2.5-0.5B, so a LoRA fine-tune of it cannot outperform Qwen in general, only on the narrow thing it was actually fine-tuned for. The real benchmark is whether the fine-tuned version answers questions about this project better than the stock base model does, not whether it beats a frontier lab's model. Beating a frontier model was never the goal, see roadmap.md's "What we will never do on this budget" section.
+
+## What is the honest win condition?
+
+Ask Samantha to draft something in house voice, or answer a real question about one of these projects, and have the answer be good enough to use without rewriting it. Not "beat GPT."
+
+## What is house voice?
+
+Plain, short sentences. No em dashes anywhere, in code, UI, or prose. No emojis. No AI-brochure language like "leverage", "seamlessly", or "robust" used as filler. Say the problem, then the thing, then stop. This rule applies fleet-wide across every project, not just Turing.
+
+## What tool actually runs training?
+
+`mlx_lm.lora`, run through Apple's MLX framework, entirely on-device on this Mac Mini. No cloud GPU, no API cost. Always invoked through `run_lora_capped.py`, a thin wrapper that sets a Metal cache limit and memory limit before calling `mlx_lm.lora`'s own unmodified entry point, see TROUBLESHOOTING.md for why that wrapper exists.
+
+## Why was run_lora_capped.py written?
+
+MLX's lazy-evaluation graph caches intermediate Metal (GPU) buffers, and on a memory-constrained machine during a long sustained training loop, that cache can grow without bound and eventually cause an out-of-memory crash mid-run, even with a small batch size and gradient checkpointing already enabled. This happened three times during Phase 3's base-model comparison before the cause was found. `run_lora_capped.py` calls `mx.set_cache_limit()` and `mx.set_memory_limit()` before training starts, capping both explicitly. It does not patch the `mlx-lm` package itself, so it survives package upgrades.
+
+## What is train_resilient.sh?
+
+A wrapper around `run_lora_capped.py` for long unattended runs: it checks free memory before each attempt, auto-restarts on crash with a backoff delay, resumes from the last saved checkpoint instead of starting over, and gives up after a capped number of retries. It is not a daemon, it runs once when invoked and exits when the training finishes or the retries run out.
+
+## How does the landing page get its loss chart data?
+
+`parse_log.py` parses the most recent training run's log (previously `train.log`, now `ada-1-adapter.resilient.log` since training moved to the resilient wrapper) into `web/status.json`. The landing page fetches that file and renders the loss curve and roadmap-phase markers on a canvas, no charting library.
+
+## What license is this project under?
+
+MIT.
+
+## Who maintains this project?
+
+Joshua Trommel, listed as the author in `LICENSE` and `WHITEPAPER.md`.
+
+## What's blocked or paused right now?
+
+The `Qwen3.5-0.8B` base comparison (Phase 3) is paused after three crashes, the last being a real Metal/GPU memory-fit problem rather than a background-process conflict. Phase 2 (real eval prompts) is active but the model still scores poorly, see the eval/ folder's run-by-run results for the honest numbers.
+
+## What would Phase 5 let Samantha actually do for someone?
+
+In-voice drafting (journal entries, commit messages, README sections in house style), answering project-status questions from real data via retrieval instead of memorized weights, local autocomplete that never touches the network, or acting as a cheap first-pass judge/filter model on every commit or PR before anything reaches a bigger model.
