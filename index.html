@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Turing</title>
+    <meta name="theme-color" content="#1a1a1a">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Turing">
+    <meta property="og:title" content="Turing — Ada-1">
+    <meta property="og:description" content="A small language model, trained in the open, from scratch.">
+    <style>
+      :root{--bg:#fafafa;--fg:#1a1a1a;--muted:#6b6b6b;--line:#dcdcdc;--accent:#1a1a1a}
+      @media (prefers-color-scheme: dark){
+        :root{--bg:#141414;--fg:#eaeaea;--muted:#9a9a9a;--line:#333;--accent:#eaeaea}
+      }
+      *{box-sizing:border-box}
+      body{margin:0;background:var(--bg);color:var(--fg);font-family:-apple-system,Helvetica,Arial,sans-serif;
+        padding:0 20px 64px;line-height:1.5}
+      .wrap{max-width:640px;margin:0 auto}
+      header{padding:64px 0 24px}
+      h1{font-size:28px;margin:0 0 4px;letter-spacing:-0.02em}
+      .sub{color:var(--muted);font-size:15px;margin:0}
+      .status{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);
+        border:1px solid var(--line);border-radius:999px;padding:4px 12px;margin-top:16px}
+      .dot{width:7px;height:7px;border-radius:50%;background:#2e9e4a}
+      .dot.training{animation:pulse 1.6s infinite}
+      @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+      section{margin-top:40px}
+      h2{font-size:14px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:0 0 12px}
+      .card{border:1px solid var(--line);border-radius:10px;padding:20px}
+      canvas{width:100%;height:220px;display:block}
+      .meta{display:flex;flex-wrap:wrap;gap:24px;font-size:13px;color:var(--muted);margin-top:12px}
+      .meta b{color:var(--fg);font-weight:600}
+      p{font-size:15px}
+      footer{margin-top:56px;font-size:13px;color:var(--muted)}
+      a{color:inherit}
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <h1>Turing</h1>
+        <p class="sub">Building small language models in the open. First model: <b>Ada-1</b>.</p>
+        <div class="status"><span class="dot training" id="dot"></span><span id="status-text">loading…</span></div>
+      </header>
+
+      <section>
+        <h2>Training loss</h2>
+        <div class="card">
+          <canvas id="chart" width="600" height="220"></canvas>
+          <div class="meta">
+            <span>Base: <b id="base">—</b></span>
+            <span>Iterations: <b id="iters">—</b></span>
+            <span>Latest train loss: <b id="loss">—</b></span>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>What this is</h2>
+        <p>Ada-1 is a LoRA fine-tune of a small open base model, trained on the project's own Obsidian wiki and READMEs so it actually knows the codebase and writes in house voice. No from-scratch pretraining — that path was tried once (project code name Arthur) and produced gibberish. This time: small model, real data, short loop, iterate.</p>
+      </section>
+
+      <footer>
+        <a href="https://github.com/nulljosh/turing">Source</a> · README has the full write-up.
+      </footer>
+    </div>
+
+    <script>
+      fetch('status.json').then(r => r.json()).then(s => {
+        document.getElementById('base').textContent = s.base;
+        document.getElementById('iters').textContent = s.train_loss.length ? s.train_loss[s.train_loss.length-1].iter : 0;
+        document.getElementById('loss').textContent = s.train_loss.length ? s.train_loss[s.train_loss.length-1].loss.toFixed(3) : '—';
+        document.getElementById('status-text').textContent = s.status === 'done' ? 'training complete' : (s.status === 'training' ? 'training in progress' : 'starting');
+        document.getElementById('dot').classList.toggle('training', s.status === 'training');
+
+        const c = document.getElementById('chart'), ctx = c.getContext('2d');
+        const dpr = window.devicePixelRatio || 1;
+        c.width = c.clientWidth * dpr; c.height = 220 * dpr;
+        ctx.scale(dpr, dpr);
+        const w = c.clientWidth, h = 220, pad = 24;
+        const pts = s.train_loss;
+        if (!pts.length) return;
+        const xs = pts.map(p => p.iter), ys = pts.map(p => p.loss);
+        const xMin = Math.min(...xs), xMax = Math.max(...xs, 1);
+        const yMin = Math.min(...ys) * 0.95, yMax = Math.max(...ys) * 1.05;
+        const X = i => pad + (i - xMin) / (xMax - xMin || 1) * (w - pad*2);
+        const Y = v => h - pad - (v - yMin) / (yMax - yMin || 1) * (h - pad*2);
+        const fg = getComputedStyle(document.documentElement).getPropertyValue('--fg').trim() || '#1a1a1a';
+        const line = getComputedStyle(document.documentElement).getPropertyValue('--line').trim() || '#ddd';
+        ctx.strokeStyle = line; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(pad, h-pad); ctx.lineTo(w-pad, h-pad); ctx.stroke();
+        ctx.beginPath();
+        pts.forEach((p, i) => i === 0 ? ctx.moveTo(X(p.iter), Y(p.loss)) : ctx.lineTo(X(p.iter), Y(p.loss)));
+        ctx.strokeStyle = fg; ctx.lineWidth = 2; ctx.stroke();
+      }).catch(() => {
+        document.getElementById('status-text').textContent = 'no data yet';
+      });
+    </script>
+  </body>
+</html>

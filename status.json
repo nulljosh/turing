@@ -1,0 +1,98 @@
+{
+  "model": "Ada-1",
+  "project": "Turing",
+  "base": "Qwen2.5-0.5B-Instruct-4bit",
+  "train_loss": [
+    {
+      "iter": 10,
+      "loss": 3.101
+    },
+    {
+      "iter": 20,
+      "loss": 3.308
+    },
+    {
+      "iter": 30,
+      "loss": 2.931
+    },
+    {
+      "iter": 40,
+      "loss": 2.214
+    },
+    {
+      "iter": 50,
+      "loss": 2.435
+    },
+    {
+      "iter": 60,
+      "loss": 3.395
+    },
+    {
+      "iter": 70,
+      "loss": 2.352
+    },
+    {
+      "iter": 80,
+      "loss": 2.773
+    },
+    {
+      "iter": 90,
+      "loss": 2.301
+    },
+    {
+      "iter": 100,
+      "loss": 2.406
+    },
+    {
+      "iter": 110,
+      "loss": 2.532
+    },
+    {
+      "iter": 120,
+      "loss": 2.188
+    },
+    {
+      "iter": 130,
+      "loss": 2.361
+    },
+    {
+      "iter": 140,
+      "loss": 2.201
+    },
+    {
+      "iter": 150,
+      "loss": 3.071
+    },
+    {
+      "iter": 160,
+      "loss": 2.856
+    },
+    {
+      "iter": 170,
+      "loss": 2.288
+    },
+    {
+      "iter": 180,
+      "loss": 2.147
+    },
+    {
+      "iter": 190,
+      "loss": 2.575
+    },
+    {
+      "iter": 200,
+      "loss": 1.938
+    }
+  ],
+  "val_loss": [
+    {
+      "iter": 1,
+      "loss": 2.01
+    },
+    {
+      "iter": 200,
+      "loss": 0.853
+    }
+  ],
+  "status": "done"
+}
