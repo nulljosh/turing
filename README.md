@@ -48,12 +48,12 @@ No daemon, no cron, training runs when invoked, not on a schedule.
 
 See `index.html` / status.json for live loss numbers.
 
-## Base model comparison (Phase 3, paused)
+## Base model comparison (Phase 3, blocked on this hardware)
 
-Tried running a second base (`Qwen3.5-0.8B-4bit`) alongside the 0.5B to compare quality before committing to one. It pushed the Mac Mini into near-OOM twice (the machine has 2GB, tight for a second model download + training pass on top of everything else running), so it's paused rather than fought. Stability over an early experiment.
+Tried running a second base (`Qwen3.5-0.8B-4bit`) alongside the 0.5B to compare quality before committing to one. Three failures in a row: two system-memory crashes, then a Metal (GPU) out-of-memory error mid-step even with plenty of free RAM. That last one is the real signal, it's not a "too many things running" problem, the model plus training state genuinely doesn't fit this machine's unified memory comfortably during backprop. Not retrying blind.
 
 - `ada-1-adapter/` = LoRA on `Qwen2.5-0.5B-Instruct-4bit`, done and stable, this is the real Ada-1 for now.
-- `ada-1b-adapter/` = LoRA on `Qwen3.5-0.8B-4bit`, killed mid-run by a memory-safety watcher before it finished even one checkpoint. Revisit once actual Phase 2 eval prompts exist to justify spending the memory headroom on it.
+- `ada-1b-adapter/` = LoRA on `Qwen3.5-0.8B-4bit`, abandoned on this hardware. Revisit only with a smaller batch size / gradient accumulation tuned down, or on different hardware, not a blind retry.
 
 ## Progress log
 
