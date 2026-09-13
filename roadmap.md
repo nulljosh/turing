@@ -28,7 +28,7 @@ Once retrieval works, point it at concrete, boring, checkable tasks:
 
 Concrete backlog, honest scope (this makes it *feel* like a real assistant to use, it does not and cannot make a 0.5B model "as good as Claude/GPT", see Phase 6/"never do" below):
 - [x] `chat.py`: multi-turn CLI loop on top of `ask.py`, conversation history carried between turns, not just one-shot Q&A. Tested: correctly resolved a pronoun ("its first model") from the prior turn without being told what it referred to.
-- [ ] Wire the landing page's "Try it" placeholder to an actual working demo once `chat.py` exists
+- [x] Wire the landing page's "Try it" placeholder to real, current retrieval-augmented output. No live in-browser demo (the model runs locally via MLX, would need real hosting infra to serve from a static Cloudflare Worker page), so it points to `chat.py` for a real local session instead of faking one.
 - [ ] A short system prompt / persona: house voice rules baked into every `ask.py` call, not just training data
 - [ ] Extractive fallback for precision-sensitive questions (exact filenames, exact status): quote the source line directly instead of letting the model paraphrase and risk inventing details, per the generation-quality ceiling found in `eval/results-2026-09-13-rag2.md`
 
