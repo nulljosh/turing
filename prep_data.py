@@ -1,4 +1,4 @@
-"""Samantha-1 training data: Obsidian wiki + project READMEs/WHITEPAPERs + small wikitext sample.
+"""Samantha training data: Obsidian wiki + project READMEs/WHITEPAPERs + small wikitext sample.
 
 Chat-formatted, not raw text. mlx_lm.generate queries the model through its
 chat template at inference; training on raw {"text": ...} continuations

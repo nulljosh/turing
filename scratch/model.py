@@ -1,4 +1,4 @@
-"""Samantha-1-scratch: a small transformer, trained from zero. No borrowed weights.
+"""Samantha-scratch: a small transformer, trained from zero. No borrowed weights.
 
 Character-level GPT, MLX (Apple Silicon). Deliberately tiny, this won't be
 fluent, it's a real working model with genuinely our own parameters, not a

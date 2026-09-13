@@ -2,7 +2,7 @@
 
 **v0.1** | September 2026
 
-Turing is a pipeline for building small language models on consumer hardware. Its first model, Samantha-1, is a LoRA fine-tune of a small open base, trained on this project's own notes and documentation instead of the open internet, so it inherits house voice instead of generic web text.
+Turing is a pipeline for building small language models on consumer hardware. Its first model, Samantha, is a LoRA fine-tune of a small open base, trained on this project's own notes and documentation instead of the open internet, so it inherits house voice instead of generic web text.
 
 ## The core mechanic
 
@@ -27,7 +27,7 @@ Training runs entirely on-device via Apple's MLX framework, no cloud GPU, no API
 
 ## Where this goes
 
-Samantha-1 alone won't out-argue a frontier model, and that was never the goal. The plan (see README roadmap) is retrieval-augmented: keep the model small and fast, wire it to the project's existing RAG system for facts, and let the fine-tune carry only voice and reasoning style. That combination, small trained model + good retrieval, is closer to how production small-model systems actually work than a bigger model with neither.
+Samantha alone won't out-argue a frontier model, and that was never the goal. The plan (see README roadmap) is retrieval-augmented: keep the model small and fast, wire it to the project's existing RAG system for facts, and let the fine-tune carry only voice and reasoning style. That combination, small trained model + good retrieval, is closer to how production small-model systems actually work than a bigger model with neither.
 
 ---
 MIT License, 2026 Joshua Trommel.

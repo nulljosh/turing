@@ -7,7 +7,7 @@
     <meta name="theme-color" content="#1a1a1a">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Turing">
-    <meta property="og:title" content="Turing, Samantha-1">
+    <meta property="og:title" content="Turing, Samantha">
     <meta property="og:description" content="A small language model, trained in the open, from scratch.">
     <style>
       :root{--bg:#fafafa;--fg:#1a1a1a;--muted:#6b6b6b;--line:#dcdcdc;--accent:#1a1a1a}
@@ -107,9 +107,9 @@
         <p class="sub">Building small language models in the open.</p>
         <div class="name-split">
           <div><span class="name-label">Project</span><b>Turing</b></div>
-          <div><span class="name-label">Model</span><b>Samantha-1</b></div>
+          <div><span class="name-label">Model</span><b>Samantha</b></div>
         </div>
-        <p class="sub" style="margin-top:10px">Turing = the lab. Samantha-1 = the model it made. Same split as Anthropic = the company, Claude = the model.</p>
+        <p class="sub" style="margin-top:10px">Turing = the lab. Samantha = the model it made. Same split as Anthropic = the company, Claude = the model.</p>
       </header>
 
       <section>
@@ -131,14 +131,14 @@
 
       <section>
         <h2>What this is</h2>
-        <p>Samantha-1 is a LoRA fine-tune of a small open base model, trained on the project's own Obsidian wiki and READMEs so it actually knows the codebase and writes in house voice. No from-scratch pretraining, that path was tried once (project code name Arthur) and produced gibberish. This time: small model, real data, short loop, iterate.</p>
+        <p>Samantha is a LoRA fine-tune of a small open base model, trained on the project's own Obsidian wiki and READMEs so it actually knows the codebase and writes in house voice. No from-scratch pretraining, that path was tried once (project code name Arthur) and produced gibberish. This time: small model, real data, short loop, iterate.</p>
       </section>
 
       <section>
         <h2>Sample outputs</h2>
         <div class="card">
-          <p class="sample-prompt">Prompt: "What is Samantha-1?"</p>
-          <p class="sample-out">"Samantha-1 is a personal assistant app designed for Android and iOS devices. It is a standalone app that runs on the device itself, not on a cloud server..."</p>
+          <p class="sample-prompt">Prompt: "What is Samantha?"</p>
+          <p class="sample-out">"Samantha is a personal assistant app designed for Android and iOS devices. It is a standalone app that runs on the device itself, not on a cloud server..."</p>
           <p class="sample-note">LoRA fine-tune (Qwen2.5-0.5B base), after 500 iters on 2054 lines. Coherent, but still making things up rather than answering from our actual data, this is exactly what Phase 2 eval is meant to catch and fix.</p>
         </div>
         <div class="card" style="margin-top:12px">
