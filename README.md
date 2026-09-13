@@ -48,6 +48,15 @@ No daemon, no cron, training runs when invoked, not on a schedule.
 
 See `index.html` / status.json for live loss numbers.
 
+## Base model comparison (Phase 3, started early)
+
+Running the same dataset through a second base in parallel with the 0.5B, to see if a bigger base actually earns its extra weight/slowness before committing to one:
+
+- `ada-1-adapter/` = LoRA on `Qwen2.5-0.5B-Instruct-4bit` (original)
+- `ada-1b-adapter/` = LoRA on `Qwen3.5-0.8B-4bit` (candidate from Phase 3 research)
+
+Whichever wins on the Phase 2 eval prompts becomes the actual Ada-1 base going forward. Losing run stays in git history, not deleted, so the comparison is auditable.
+
 ## Progress log
 
 - **2026-09-13, run 1:** 588 lines (wiki + READMEs), 200 iters. Loss bounced 2.2-3.4, no clean convergence, too little data. Proved the pipeline works end to end, no gibberish (unlike Arthur).
