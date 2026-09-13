@@ -9,7 +9,7 @@ roadmap.md's "What we will never do on this budget."
 import os, sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from ask import search, try_extract, MODEL, ADAPTER, SYSTEM
+from ask import search, try_extract, faq_match, MODEL, ADAPTER, SYSTEM
 import subprocess
 
 HISTORY_TURNS = 3  # how many prior exchanges to keep as short-term memory
@@ -62,14 +62,18 @@ def chat():
             break
         if not question or question.lower() in ("exit", "quit"):
             break
-        results = search(question)
-        extracted = try_extract(question, results)
-        if extracted:
-            answer = extracted
+        faq_answer = faq_match(question)
+        if faq_answer:
+            answer = faq_answer
         else:
-            context = "\n\n---\n\n".join(r["text"][:800] for r in results)
-            prompt = build_prompt(history, context, question)
-            answer = clean(generate(prompt), question)
+            results = search(question)
+            extracted = try_extract(question, results)
+            if extracted:
+                answer = extracted
+            else:
+                context = "\n\n---\n\n".join(r["text"][:800] for r in results)
+                prompt = build_prompt(history, context, question)
+                answer = clean(generate(prompt), question)
         print(f"Samantha: {answer}\n")
         history.append((question, answer))
 

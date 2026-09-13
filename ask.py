@@ -7,7 +7,7 @@ examples reliably learns style but not facts. This is the fix: keep facts
 in brain's live index, let the model reason over retrieved context instead
 of trying to recall them from weights. See roadmap.md, run 6.
 """
-import json, os, re, subprocess, sys, urllib.parse, urllib.request
+import difflib, json, os, re, subprocess, sys, urllib.parse, urllib.request
 
 BRAIN_ENV = os.path.expanduser("~/Documents/Code/brain/.env.local")
 BRAIN_URL = "https://brain.heyitsmejosh.com/api/search"
@@ -83,6 +83,43 @@ FIXED_FACTS = [
 ]
 
 
+FAQ_PATH = os.path.expanduser("~/Documents/Code/turing/FAQ.md")
+FAQ_MATCH_THRESHOLD = 0.55  # below this, a "match" is more likely coincidence than intent
+
+
+def load_faq():
+    """Parse FAQ.md's `## Question` / answer paragraph pairs. Structural fix for
+    the whack-a-mole FIXED_FACTS approach: instead of hand-writing one entry per
+    failing eval prompt, any question close enough to an existing FAQ entry gets
+    that FAQ's real answer directly, no generation, no chance to invent details.
+    """
+    if not os.path.exists(FAQ_PATH):
+        return []
+    text = open(FAQ_PATH).read()
+    pairs = []
+    for block in re.split(r"\n## ", text)[1:]:
+        lines = block.split("\n", 1)
+        if len(lines) < 2:
+            continue
+        question, rest = lines[0].strip(), lines[1].strip()
+        if question and rest:
+            pairs.append((question, rest))
+    return pairs
+
+
+def faq_match(question):
+    pairs = load_faq()
+    if not pairs:
+        return None
+    best_score, best_answer = 0.0, None
+    q_norm = question.lower().strip("? ")
+    for faq_q, faq_a in pairs:
+        score = difflib.SequenceMatcher(None, q_norm, faq_q.lower().strip("? ")).ratio()
+        if score > best_score:
+            best_score, best_answer = score, faq_a
+    return best_answer if best_score >= FAQ_MATCH_THRESHOLD else None
+
+
 def try_extract(question, results):
     for q_pat, answer in FIXED_FACTS:
         if q_pat.search(question):
@@ -97,6 +134,9 @@ def try_extract(question, results):
 
 
 def ask(question):
+    faq_answer = faq_match(question)
+    if faq_answer:
+        return faq_answer, ["~/Documents/Code/turing/FAQ.md"]
     results = search(question)
     extracted = try_extract(question, results)
     if extracted:
