@@ -34,7 +34,8 @@ Concrete backlog, honest scope (this makes it *feel* like a real assistant to us
 
 More backlog, same honest scope, feel-like-a-real-assistant not compete-with-Claude:
 - [ ] Extend `EXTRACTORS` with the other precision failures from `eval/results-2026-09-13-rag2.md`: exact blocker reason, exact loss-chart pipeline (`parse_log.py` → `status.json`), who maintains the project
-- [ ] `chat.py`: strip the model's own repeated-turn artifacts (it sometimes echoes "User: ...Samantha:" back into its own answer), a cheap post-processing trim, not a training fix
+- [x] `chat.py`: strip the model's own repeated-turn artifacts (`clean()` trims anything after a re-echoed "User:"/"Samantha:" marker), and wired the same `try_extract()` fallback chat.py was skipping entirely, chat.py now gets the license/LoRA/tool wins for free too
+- [ ] New regression found in the 2026-09-13 post-extractor eval rerun: "who maintains this project" now confidently answers "Anthropic" (wrong, should be Joshua Trommel). Not caused by the extractors (no maintainer pattern added), likely index/context noise. Needs its own investigation, not chased tonight.
 - [x] A `--json` flag on `ask.py` for programmatic use: `./.venv/bin/python ask.py --json "question"` prints `{"question","answer","sources"}` instead of the human-readable format, so a future menu-bar app or bot can call it without scraping stdout
 - [ ] Re-run the full 28-prompt eval after every real change to `ask.py`/`chat.py`, not just after training runs, generation-side tuning affects the score too
 

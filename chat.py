@@ -9,10 +9,20 @@ roadmap.md's "What we will never do on this budget."
 import os, sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from ask import search, MODEL, ADAPTER, SYSTEM
+from ask import search, try_extract, MODEL, ADAPTER, SYSTEM
 import subprocess
 
 HISTORY_TURNS = 3  # how many prior exchanges to keep as short-term memory
+
+
+def clean(answer, question):
+    # the model sometimes echoes the prompt scaffold ("User: ...\nSamantha:")
+    # back into its own answer, especially near the max-token cutoff
+    for marker in ("\nUser:", "\nSamantha:", "User:", "Samantha:"):
+        idx = answer.find(marker)
+        if idx > 0:
+            answer = answer[:idx]
+    return answer.strip()
 
 
 def generate(prompt, max_tokens=80):
@@ -53,9 +63,13 @@ def chat():
         if not question or question.lower() in ("exit", "quit"):
             break
         results = search(question)
-        context = "\n\n---\n\n".join(r["text"][:800] for r in results)
-        prompt = build_prompt(history, context, question)
-        answer = generate(prompt)
+        extracted = try_extract(question, results)
+        if extracted:
+            answer = extracted
+        else:
+            context = "\n\n---\n\n".join(r["text"][:800] for r in results)
+            prompt = build_prompt(history, context, question)
+            answer = clean(generate(prompt), question)
         print(f"Samantha: {answer}\n")
         history.append((question, answer))
 
