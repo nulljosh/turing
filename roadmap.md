@@ -19,12 +19,18 @@ Started early, blocked on this hardware: `Qwen3.5-0.8B-4bit` caused three crashe
 ### Phase 4: Retrieval instead of memorization (month 2-3)
 Don't try to cram every project fact into model weights, that's what causes hallucination and stale knowledge. Wire it to `brain` (the existing RAG-over-notes setup) so the model reasons over live retrieved context instead of "remembering" it. Small fine-tuned model + good retrieval beats a bigger model with neither. This is the actual production architecture, not a toy.
 
-### Phase 5: Give it a job (month 3+)
+### Phase 5: Give it a job (month 3+), started
 Once retrieval works, point it at concrete, boring, checkable tasks:
 - **In-voice drafting**, journal entries, commit messages, README sections in house style (no em dash, no AI voice, sans-serif brain already enforced elsewhere, teach the model the same rules)
 - **Project Q&A**, "what's the status of Epiphany", answered from the wiki instead of us re-reading MEMORY.md
 - **Local autocomplete**, a tiny always-available model that doesn't hit the network, for quick text expansion
 - **A judge/filter model**, small models are cheap enough to run on every commit or PR as a first-pass linter before anything hits a bigger model
+
+Concrete backlog, honest scope (this makes it *feel* like a real assistant to use, it does not and cannot make a 0.5B model "as good as Claude/GPT", see Phase 6/"never do" below):
+- [x] `chat.py`: multi-turn CLI loop on top of `ask.py`, conversation history carried between turns, not just one-shot Q&A. Tested: correctly resolved a pronoun ("its first model") from the prior turn without being told what it referred to.
+- [ ] Wire the landing page's "Try it" placeholder to an actual working demo once `chat.py` exists
+- [ ] A short system prompt / persona: house voice rules baked into every `ask.py` call, not just training data
+- [ ] Extractive fallback for precision-sensitive questions (exact filenames, exact status): quote the source line directly instead of letting the model paraphrase and risk inventing details, per the generation-quality ceiling found in `eval/results-2026-09-13-rag2.md`
 
 ### Phase 6: Distillation, not scale (month 4+, optional/ambitious)
 Instead of chasing bigger bases, use a frontier model (Claude) to generate high-quality synthetic training examples in our exact style, then distill that into Samantha. This is literally how most useful small models are built today, nobody pretrains from raw internet text anymore if they can help it.
