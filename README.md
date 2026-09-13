@@ -31,7 +31,11 @@ mlx_lm.lora     -> ada-1-adapter/                        (LoRA weights)
 parse_log.py    -> status.json                           (loss history for the landing page)
 ```
 
-Full diagram: [`architecture.svg`](architecture.svg) (includes the parallel from-scratch path under `scratch/`).
+## Architecture
+
+<img src="architecture.svg" width="600">
+
+Includes the parallel from-scratch path under `scratch/`.
 
 Rerun training for more iterations anytime, always through `run_lora_capped.py`, not raw `mlx_lm.lora` (see Troubleshooting below for why):
 
