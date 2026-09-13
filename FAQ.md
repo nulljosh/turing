@@ -91,3 +91,23 @@ Retrieval instead of memorization: wiring Samantha to `brain` (the existing RAG-
 ## What would Phase 5 let Samantha actually do for someone?
 
 In-voice drafting (journal entries, commit messages, README sections in house style), answering project-status questions from real data via retrieval instead of memorized weights, local autocomplete that never touches the network, or acting as a cheap first-pass judge/filter model on every commit or PR before anything reaches a bigger model.
+
+## What is chat.py?
+
+A multi-turn conversation loop on top of ask.py's retrieval. Same underlying model and same FAQ-matching/retrieval/generation chain, but it carries the last few exchanges as short-term memory, so a follow-up question like "what's its first model called" correctly resolves "its" to whatever was discussed a turn earlier, instead of needing every question spelled out standalone.
+
+## What is the FAQ-matcher?
+
+`faq_match()` in ask.py: parses this file's own `## Question` headers and answer paragraphs, fuzzy-matches an incoming question against them, and returns the real answer verbatim when confident, skipping retrieval and generation entirely. Added 2026-09-13 after hand-writing one-off fixes for failing eval questions turned into whack-a-mole. Jumped the eval score from about 10 out of 28 correct to about 24 out of 28 in one change, the single biggest win of that session. The lesson: a well-maintained FAQ beats fancier retrieval or training tricks for the questions people actually ask most.
+
+## Why is there no live chat demo on the landing page?
+
+The model runs locally via MLX on this Mac Mini, it isn't servable from a static Cloudflare Worker page without real hosting infrastructure (a running inference server, not just static files). Building that is real, separate infrastructure work, not attempted yet. Run `chat.py` locally instead for a real session.
+
+## What's the current eval score?
+
+About 24 out of 28 on the hand-written eval set (`eval/prompts.jsonl`), after the FAQ-matcher landed. See `eval/` for every run's actual numbers and honest writeup, including the failed attempts that got there. What's still wrong is genuinely generative prompts (write a commit message, write a journal entry), which correctly don't FAQ-match since they're not factual lookups, that's the real remaining ceiling: 0.5B generation quality, not retrieval or facts.
+
+## How does ask.py decide when to trust a FAQ match versus generate an answer?
+
+A similarity score (Python's difflib, comparing the question to every FAQ question) has to clear a threshold (0.55) before the FAQ answer is used. Below that, it falls through to retrieval plus generation instead, so a genuinely novel question doesn't get force-matched to an unrelated FAQ entry.
