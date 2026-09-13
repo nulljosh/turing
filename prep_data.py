@@ -19,8 +19,8 @@ VAULT = os.path.expanduser("~/Library/Mobile Documents/iCloud~md~obsidian/Docume
 CODE = os.path.expanduser("~/Documents/Code")
 TURING = os.path.expanduser("~/Documents/Code/turing")
 
-OWN_REPEATS = 6       # how many times to repeat this repo's own docs
-FLEET_CAP = 400        # max chunks pulled from the rest of the fleet + wiki
+OWN_REPEATS = 3        # how many times to repeat this repo's own docs (10x caused overfitting/collapse, see eval run 3)
+FLEET_CAP = 100         # max chunks pulled from the rest of the fleet + wiki
 
 def chunks(text, n=1500):
     for i in range(0, len(text), n):
