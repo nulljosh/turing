@@ -9,7 +9,7 @@ roadmap.md's "What we will never do on this budget."
 import os, sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from ask import search, try_extract, faq_match, general_knowledge, is_project_question, MODEL, ADAPTER, SYSTEM
+from ask import search, try_extract, faq_match, general_knowledge, is_project_question, current_officeholder, _WHO_PREFIX, MODEL, ADAPTER, SYSTEM
 import subprocess
 
 HISTORY_TURNS = 3  # how many prior exchanges to keep as short-term memory
@@ -62,11 +62,18 @@ def chat():
             break
         if not question or question.lower() in ("exit", "quit"):
             break
-        faq_answer = faq_match(question)
+        holder_answer = None
+        if not is_project_question(question) and _WHO_PREFIX.match(question.strip()):
+            holder_answer = current_officeholder(question)[0]
+
+        faq_answer = None if holder_answer else faq_match(question)
         gk_answer = None
-        if not faq_answer and not is_project_question(question):
+        if not holder_answer and not faq_answer and not is_project_question(question):
             gk_answer = general_knowledge(question)[0]
-        if faq_answer:
+
+        if holder_answer:
+            answer = holder_answer
+        elif faq_answer:
             answer = faq_answer
         elif gk_answer:
             answer = gk_answer

@@ -111,6 +111,7 @@ _STOPWORDS = {
     "a", "an", "the", "is", "are", "was", "were", "what", "who", "why", "how",
     "does", "do", "did", "this", "that", "it", "its", "to", "for", "of", "in",
     "on", "at", "be", "used", "let", "and", "or", "not", "with", "right", "now",
+    "current",
 }
 
 
@@ -297,6 +298,17 @@ def is_project_question(question):
 
 
 def ask(question):
+    # "who is/who's the X" questions about a live office (president, prime
+    # minister, etc.) can never have a correct static FAQ answer, the real
+    # answer changes over time. Try this before faq_match, not after,
+    # otherwise a coincidental lexical match (e.g. "current president" vs.
+    # the FAQ's own "current eval score" entry) can win by accident. See
+    # roadmap.md for the false-positive this caught.
+    if not is_project_question(question) and _WHO_PREFIX.match(question.strip()):
+        holder, holder_source = current_officeholder(question)
+        if holder:
+            return holder, [holder_source]
+
     faq_answer = faq_match(question)
     if faq_answer:
         return faq_answer, ["~/Documents/Code/turing/FAQ.md"]
