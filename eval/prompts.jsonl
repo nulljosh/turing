@@ -6,3 +6,23 @@
 {"prompt": "What's the difference between Turing and Ada-1?", "expects": "Turing = project/pipeline, Ada-1 = a model it produces, same relationship as Anthropic/Claude."}
 {"prompt": "Why doesn't Turing pretrain a model from scratch at full scale?", "expects": "Needs data-center-scale compute; not the goal on this hardware."}
 {"prompt": "What should Ada-1 be used for eventually?", "expects": "In-voice drafting, project Q&A from real data via retrieval, not competing with frontier models."}
+{"prompt": "What data was Ada-1 trained on?", "expects": "Obsidian wiki, fleet READMEs, roadmap.md and CLAUDE.md files, not the open internet."}
+{"prompt": "Is Ada-1 fine-tuned or pretrained from scratch?", "expects": "Fine-tuned (LoRA), the from-scratch path is a separate track in scratch/."}
+{"prompt": "What happens in scratch/ in this repo?", "expects": "A genuine from-scratch character-level transformer, zero borrowed weights, deliberately tiny."}
+{"prompt": "What does Phase 4 of the roadmap involve?", "expects": "Retrieval instead of memorization, wiring to brain's RAG setup."}
+{"prompt": "Should Ada-1 try to beat Claude or GPT?", "expects": "No, that's explicitly out of scope, not the goal."}
+{"prompt": "What causes Ada-1 to hallucinate right now?", "expects": "Not enough training data density to override the base model's habit of generic answers."}
+{"prompt": "Write a short journal entry about today's training run.", "expects": "Plain natural English, no em dash, no AI voice, matches house journal style."}
+{"prompt": "What's the difference between LoRA and full fine-tuning?", "expects": "LoRA trains a small set of weight deltas on a frozen base, cheaper and faster, doesn't touch the underlying model."}
+{"prompt": "Summarize what Turing is in one sentence.", "expects": "Short, accurate, house voice, no invented features."}
+{"prompt": "What is house voice?", "expects": "Plain short sentences, no em dashes, no emojis, no AI-brochure language, matches the fleet's writing rule."}
+{"prompt": "Name one thing Turing will never do on this hardware.", "expects": "Pretrain a foundation model from raw text at frontier scale."}
+{"prompt": "What's blocked or paused in this project right now?", "expects": "Qwen3.5-0.8B base comparison was blocked by Metal OOM, fixed with a cache-limit patch."}
+{"prompt": "How does the landing page get its loss chart data?", "expects": "parse_log.py parses train.log into status.json, which the page fetches and renders in a canvas."}
+{"prompt": "What license is this project under?", "expects": "MIT."}
+{"prompt": "Who maintains this project?", "expects": "Joshua Trommel, referenced as the author in LICENSE and WHITEPAPER.md."}
+{"prompt": "What's the honest win condition for Ada-1?", "expects": "Draft something in our voice or answer a project question well enough to use without rewriting it, not beating a frontier model."}
+{"prompt": "Explain what LoRA stands for.", "expects": "Low-Rank Adaptation."}
+{"prompt": "What tool runs the training on this machine?", "expects": "mlx_lm.lora via Apple's MLX framework, on-device, no cloud GPU."}
+{"prompt": "Why was run_lora_capped.py written?", "expects": "To cap MLX's Metal cache and memory limit, fixing an unbounded-growth OOM bug hit during real training."}
+{"prompt": "What would Phase 5 let Ada-1 actually do for someone?", "expects": "In-voice drafting, project Q&A, local autocomplete, or act as a cheap first-pass judge/filter model."}
