@@ -13,7 +13,7 @@ Building small language models in the open. First model: **Samantha**.
 
 Live status page: [turing.heyitsmejosh.com](https://turing.heyitsmejosh.com)
 
-**Turing vs. Samantha:** Turing is the project, the pipeline, the repo, this whole effort. Samantha is a model Turing produces. Same relationship as Anthropic and Claude (or a Claude model like Haiku/Fable): the project name is fixed, model names change as new ones ship. Turing will likely produce more than one model over time; each gets its own name, Turing stays Turing.
+**Turing vs. Samantha:** Turing is the project, the pipeline, the repo, this whole effort. Samantha is a model Turing produces. Same relationship as Anthropic and Claude (or a Claude model like Haiku/Fable): the project name is fixed, model names change as new ones ship. Each future model gets its own name too, not "Samantha-2".
 
 ## Why
 
@@ -21,12 +21,14 @@ Tried this before under the name Arthur, trained a model from scratch and it spa
 
 ## What Samantha is
 
-A LoRA fine-tune of `Qwen2.5-0.5B-Instruct-4bit` (small enough to train on-device on an M4), trained on this codebase's own Obsidian wiki and project READMEs, so it actually knows the projects and writes in house voice, instead of learning language from zero.
+A LoRA fine-tune of `Qwen2.5-0.5B-Instruct-4bit` (small enough to train on-device on an M4), trained mostly on this project's own docs (not the whole fleet, see `prep_data.py`), chat-formatted so training actually matches how it's queried at inference.
+
+Samantha's base model *is* Qwen2.5-0.5B, LoRA only adds a small trained delta on top of it. So "beat Qwen" isn't a fair or coherent bar, a LoRA fine-tune of Qwen can't outperform Qwen in general, only on the narrow thing it was fine-tuned for. The real benchmark is whether the fine-tuned version answers our own questions better than stock Qwen does. See `eval/` for that.
 
 ## Pipeline
 
 ```
-prep_data.py    -> data/train.jsonl, data/valid.jsonl   (wiki + READMEs, chunked)
+prep_data.py    -> data/train.jsonl, data/valid.jsonl   (own docs oversampled, fleet capped, chat-formatted)
 mlx_lm.lora     -> ada-1-adapter/                        (LoRA weights)
 parse_log.py    -> status.json                           (loss history for the landing page)
 ```
@@ -35,9 +37,9 @@ parse_log.py    -> status.json                           (loss history for the l
 
 <img src="architecture.svg" width="600">
 
-Includes the parallel from-scratch path under `scratch/`.
+Includes the parallel from-scratch path under `scratch/`, a genuine zero-borrowed-weights character-level transformer, deliberately tiny and not meant to be fluent.
 
-Rerun training for more iterations anytime, always through `run_lora_capped.py`, not raw `mlx_lm.lora` (see Troubleshooting below for why):
+## Training
 
 ```
 ./.venv/bin/python run_lora_capped.py --model mlx-community/Qwen2.5-0.5B-Instruct-4bit \
@@ -46,85 +48,13 @@ Rerun training for more iterations anytime, always through `run_lora_capped.py`,
   --adapter-path ./ada-1-adapter
 ```
 
-For a long unattended run, use `train_resilient.sh` instead, it wraps the above with auto-restart-on-crash (with backoff), a memory check before each attempt, and resumes from the last checkpoint instead of starting over. Still no daemon, you run it and it exits when done or out of retries:
-
-```
-./train_resilient.sh mlx-community/Qwen2.5-0.5B-Instruct-4bit ./ada-1-adapter 500
-```
-
-## Troubleshooting: MLX memory crashes on long runs
-
-Ran into this training the Qwen3.5-0.8B comparison base, worth knowing if you hit it too. Two distinct failure modes, easy to confuse:
-
-**1. Straightforward OOM at startup.** Free system RAM too low before you even start (check with `vm_stat`, or just `top`). Fix: close other memory-heavy apps, or lower `--batch-size` and `--max-seq-length`, or add `--grad-checkpoint`. Standard stuff.
-
-**2. Metal cache growing unbounded across iterations.** This one's sneakier: training starts fine, memory looks healthy, then climbs steadily iteration over iteration until it OOMs mid-run, even with `--batch-size 1` and `--grad-checkpoint` already set. This happened to us three times before we found the cause. MLX's lazy-eval graph caches intermediate Metal buffers and doesn't automatically release them fast enough during a long training loop on a memory-constrained machine. It's not a bug in `mlx_lm.lora`, it's a real gap between "how MLX's cache is meant to behave" (release under pressure) and "how it actually behaves during a tight sustained loop" on a machine this small.
-
-**Fix:** cap the cache explicitly with `mx.set_cache_limit()` before training starts. `run_lora_capped.py` in this repo does exactly that:
-
-```python
-import mlx.core as mx
-mx.set_cache_limit(512 * 1024 * 1024)   # 512MB cache cap
-mx.set_memory_limit(4 * 1024 * 1024 * 1024)  # 4GB hard working-set ceiling
-from mlx_lm.lora import main
-main()
-```
-
-It imports `mlx_lm.lora`'s own `main()` unmodified, just sets the caps first. No patch to the `mlx-lm` package itself, so it survives `pip install --upgrade mlx-lm` with zero maintenance. If you don't have this problem (more RAM, smaller model), the caps are cheap insurance, not a real cost.
+For a long unattended run, use `train_resilient.sh` instead (auto-restart on crash, resumes from checkpoint). Always go through `run_lora_capped.py`, never raw `mlx_lm.lora`, see `TROUBLESHOOTING.md` for why.
 
 No daemon, no cron, training runs when invoked, not on a schedule.
 
-## Status
+## More
 
-See `index.html` / status.json for live loss numbers.
-
-## Base model comparison (Phase 3, blocked on this hardware)
-
-Tried running a second base (`Qwen3.5-0.8B-4bit`) alongside the 0.5B to compare quality before committing to one. Three failures in a row: two system-memory crashes, then a Metal (GPU) out-of-memory error mid-step even with plenty of free RAM. That last one is the real signal, it's not a "too many things running" problem, the model plus training state genuinely doesn't fit this machine's unified memory comfortably during backprop. Not retrying blind.
-
-- `ada-1-adapter/` = LoRA on `Qwen2.5-0.5B-Instruct-4bit`, done and stable, this is the real Samantha for now.
-- `ada-1b-adapter/` = LoRA on `Qwen3.5-0.8B-4bit`, abandoned on this hardware. Revisit only with a smaller batch size / gradient accumulation tuned down, or on different hardware, not a blind retry.
-
-## Progress log
-
-- **2026-09-13, run 1:** 588 lines (wiki + READMEs), 200 iters. Loss bounced 2.2-3.4, no clean convergence, too little data. Proved the pipeline works end to end, no gibberish (unlike Arthur).
-- **2026-09-13, run 2:** widened sources to roadmap.md + CLAUDE.md across the fleet, 2054 lines, 500 iters, in progress. Val loss down from 3.66 → 2.99 by iter 200.
-
-## A note on benchmarking
-
-Samantha's base model *is* Qwen2.5-0.5B, LoRA only adds a small trained delta on top of it. So "beat Qwen" isn't really a fair or even coherent bar; a LoRA fine-tune of Qwen can't outperform Qwen in general, only on the narrow thing it was fine-tuned for (writing in our voice, knowing our projects). The real benchmark is: does the fine-tuned version answer our own questions better than stock Qwen does. That's what Phase 2 (eval prompts) is for.
-
-## Roadmap (honest version)
-
-Anthropic spends billions of dollars and years with thousands of GPUs on foundation models. That's not this. Transformers themselves are only from 2017 (the "Attention Is All You Need" paper), the whole field is young enough that a lot of useful ground is still coverable by one person on a Mac Mini, as long as the goal is calibrated to the hardware.
-
-### Phase 0: Pipeline proof (now, days)
-LoRA fine-tune of a small open base (Qwen2.5-0.5B-Instruct) on our own Obsidian wiki + project READMEs. 588 lines of data, 200 iterations, runs in minutes on the M4. Goal: prove the loop works end to end (data → train → adapter → serve), not quality. This is where we are, loss bouncing between 2.2 and 3.4, which is expected on this little data.
-
-### Phase 1: More data, same model (weeks 1-3)
-Feed it everything: journal entries, commit messages, project READMEs/WHITEPAPERs, roadmap.md files, notes vault, even old Slack/iMessage exports if we want the voice right. Thousands of chunks instead of hundreds. Re-run LoRA. This is the single highest-leverage step, small models improve far more from 10x the data than from 10x the iterations.
-
-### Phase 2: Evaluate like it matters (weeks 2-4, parallel with Phase 1), started
-`eval/prompts.jsonl` has 8 real prompts so far (target 20-30), `eval/run_eval.py` generates against any adapter. First run (`eval/results-2026-09-13.md`): 1/8 on-target, the rest hallucinate confident-sounding wrong answers. That's the real baseline now, not loss numbers.
-
-### Phase 3: Bigger base, same recipe (month 2)
-Once the pipeline is boring and repeatable, try a bigger base. Candidates as of Sept 2026: `Qwen3.5-0.8B` (direct successor to what we're using now), `SmolLM2-1.7B` (fully open training recipe, worth it if transparency matters to us), `Llama-3.2-1B-Instruct` (solid middle ground, ~1GB at Q4). Bigger model = slower training, more memory, better baseline fluency. Compare quality per minute of training against the 0.5B, there's a real chance the 0.5B fine-tuned on great data beats a bigger base fine-tuned on so-so data.
-
-### Phase 4: Retrieval instead of memorization (month 2-3)
-Don't try to cram every project fact into model weights, that's what causes hallucination and stale knowledge. Wire it to `brain` (the existing RAG-over-notes setup) so the model reasons over live retrieved context instead of "remembering" it. Small fine-tuned model + good retrieval beats a bigger model with neither. This is the actual production architecture, not a toy.
-
-### Phase 5: Give it a job (month 3+)
-Once retrieval works, point it at concrete, boring, checkable tasks:
-- **In-voice drafting**, journal entries, commit messages, README sections in house style (no em dash, no AI voice, sans-serif brain already enforced elsewhere, teach the model the same rules)
-- **Project Q&A**, "what's the status of Epiphany", answered from the wiki instead of us re-reading MEMORY.md
-- **Local autocomplete**, a tiny always-available model that doesn't hit the network, for quick text expansion
-- **A judge/filter model**, small models are cheap enough to run on every commit or PR as a first-pass linter before anything hits a bigger model
-
-### Phase 6: Distillation, not scale (month 4+, optional/ambitious)
-Instead of chasing bigger bases, use a frontier model (Claude) to generate high-quality synthetic training examples in our exact style, then distill that into Samantha. This is literally how most useful small models are built today, nobody pretrains from raw internet text anymore if they can help it.
-
-### What we will never do on this budget
-Pretrain a foundation model from raw text at frontier scale. That needs a data-center, a research team, and normally $10M+ in compute even for a "small" frontier-adjacent model. Not the plan, the plan is a small model that's genuinely ours and genuinely useful, which is a completely different (and completely reachable) goal.
-
-### Win condition
-Not "beat GPT." Win condition is: ask it to draft something in our voice, or answer a question about one of our own projects, and the answer is actually good enough to use without rewriting it.
+- [`roadmap.md`](roadmap.md): the honest phase-by-phase plan and the progress log, run by run
+- [`TROUBLESHOOTING.md`](TROUBLESHOOTING.md): real bugs hit and how they were actually fixed
+- [`eval/`](eval): the real quality bar, prompts + scored results, not just loss numbers
+- [`WHITEPAPER.md`](WHITEPAPER.md): the short technical writeup
