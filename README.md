@@ -2,7 +2,7 @@
 
 # Turing
 
-![version](https://img.shields.io/badge/version-phase%204-blue)
+[![version](https://img.shields.io/badge/version-v0.4.0-blue)](https://github.com/nulljosh/turing/releases)
 ![license](https://img.shields.io/badge/license-MIT-green) [![GitHub](https://img.shields.io/badge/GitHub-nulljosh%2Fturing-black?logo=github)](https://github.com/nulljosh/turing)
 ![base model](https://img.shields.io/badge/base-Qwen2.5--0.5B-blue)
 ![platform](https://img.shields.io/badge/platform-Apple%20Silicon%20(MLX)-lightgrey)
@@ -67,6 +67,10 @@ Retrieves real passages from `brain`'s live index (not memorized weights) and an
 ```
 ln -sf ../../hooks/pre-commit .git/hooks/pre-commit
 ```
+
+## Versioning
+
+`VERSION` holds the real number, semver. PATCH for a bug fix, MINOR for a new capability (a new fallback, a new pipeline stage), MAJOR once this leaves 0.x. Bumped and tagged (`vX.Y.Z`) after a batch of real, tested changes land, not per commit, with a matching [GitHub release](https://github.com/nulljosh/turing/releases) whose notes say what actually changed. `roadmap.md`'s progress log has the honest detail behind every bump.
 
 ## More
 
