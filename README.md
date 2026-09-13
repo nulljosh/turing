@@ -48,14 +48,12 @@ No daemon, no cron, training runs when invoked, not on a schedule.
 
 See `index.html` / status.json for live loss numbers.
 
-## Base model comparison (Phase 3, started early)
+## Base model comparison (Phase 3, paused)
 
-Running the same dataset through a second base in parallel with the 0.5B, to see if a bigger base actually earns its extra weight/slowness before committing to one:
+Tried running a second base (`Qwen3.5-0.8B-4bit`) alongside the 0.5B to compare quality before committing to one. It pushed the Mac Mini into near-OOM twice (the machine has 2GB, tight for a second model download + training pass on top of everything else running), so it's paused rather than fought. Stability over an early experiment.
 
-- `ada-1-adapter/` = LoRA on `Qwen2.5-0.5B-Instruct-4bit` (original)
-- `ada-1b-adapter/` = LoRA on `Qwen3.5-0.8B-4bit` (candidate from Phase 3 research)
-
-Whichever wins on the Phase 2 eval prompts becomes the actual Ada-1 base going forward. Losing run stays in git history, not deleted, so the comparison is auditable.
+- `ada-1-adapter/` = LoRA on `Qwen2.5-0.5B-Instruct-4bit`, done and stable, this is the real Ada-1 for now.
+- `ada-1b-adapter/` = LoRA on `Qwen3.5-0.8B-4bit`, killed mid-run by a memory-safety watcher before it finished even one checkpoint. Revisit once actual Phase 2 eval prompts exist to justify spending the memory headroom on it.
 
 ## Progress log
 
