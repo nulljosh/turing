@@ -2,7 +2,7 @@
 
 # Turing
 
-![version](https://img.shields.io/badge/version-phase%201-blue)
+![version](https://img.shields.io/badge/version-phase%204-blue)
 ![license](https://img.shields.io/badge/license-MIT-green) [![GitHub](https://img.shields.io/badge/GitHub-nulljosh%2Fturing-black?logo=github)](https://github.com/nulljosh/turing)
 ![base model](https://img.shields.io/badge/base-Qwen2.5--0.5B-blue)
 ![platform](https://img.shields.io/badge/platform-Apple%20Silicon%20(MLX)-lightgrey)
@@ -51,6 +51,14 @@ Includes the parallel from-scratch path under `scratch/`, a genuine zero-borrowe
 For a long unattended run, use `train_resilient.sh` instead (auto-restart on crash, resumes from checkpoint). Always go through `run_lora_capped.py`, never raw `mlx_lm.lora`, see `TROUBLESHOOTING.md` for why.
 
 No daemon, no cron, training runs when invoked, not on a schedule.
+
+## Ask it something
+
+```
+./.venv/bin/python ask.py "What is Turing?"
+```
+
+Retrieves real passages from `brain`'s live index (not memorized weights) and answers from them, with sources. This is the actual working answer to "why does Samantha hallucinate", see `roadmap.md`'s Phase 4 entry.
 
 ## More
 
