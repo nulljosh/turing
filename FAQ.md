@@ -138,7 +138,7 @@ The model runs locally via MLX on this Mac Mini, it isn't servable from a static
 
 ## What's the current eval score?
 
-About 24 out of 28 on the hand-written eval set (`eval/prompts.jsonl`), after the FAQ-matcher landed. See `eval/` for every run's actual numbers and honest writeup, including the failed attempts that got there. What's still wrong is genuinely generative prompts (write a commit message, write a journal entry), which correctly don't FAQ-match since they're not factual lookups, that's the real remaining ceiling: 0.5B generation quality, not retrieval or facts.
+28 out of 29 on the hand-written eval set, 12 out of 12 on the held-out set, as of the 2026-09-13 retrain on doubled training data (28 to 55 own-doc chunks). The one miss is a genuinely generative prompt (write a one-line commit message), which correctly doesn't FAQ-match since it's not a factual lookup, that's the real remaining ceiling: 0.5B generation quality, not retrieval or facts. See `eval/` for every run's actual numbers and honest writeup, including the failed attempts that got there.
 
 ## How long does a question actually take to answer, and how much memory does it use?
 
