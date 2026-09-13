@@ -57,6 +57,9 @@
       .name-split div{display:flex;flex-direction:column;gap:2px}
       .name-label{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
       .name-split b{font-size:16px}
+      .sample-prompt{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin:0 0 8px}
+      .sample-out{font-size:14px;font-style:italic;margin:0 0 10px}
+      .sample-note{font-size:13px;color:var(--muted);margin:0}
     </style>
   </head>
   <body>
@@ -103,8 +106,18 @@
       </section>
 
       <section>
-        <h2>Try it</h2>
-        <p>A chat demo goes here once Ada-1 is actually good enough to be worth talking to. Right now it's still learning to finish a sentence, check back after a few more training rounds.</p>
+        <h2>Sample outputs</h2>
+        <div class="card">
+          <p class="sample-prompt">Prompt: "What is Ada-1?"</p>
+          <p class="sample-out">"Ada-1 is a personal assistant app designed for Android and iOS devices. It is a text-based chatbot that can answer questions, provide information, and perform tasks on your behalf..."</p>
+          <p class="sample-note">LoRA fine-tune (Qwen2.5-0.5B base). Coherent, but still leaning on the base model's own knowledge more than ours.</p>
+        </div>
+        <div class="card" style="margin-top:12px">
+          <p class="sample-prompt">Prompt: "Turing is"</p>
+          <p class="sample-out">"Turing is a state and a service the same and a state and a real the same a state as a service..."</p>
+          <p class="sample-note">From-scratch model (scratch/, zero borrowed weights). Real words, correct spelling, no coherence yet, stuck in a loop. This is what "from zero" actually looks like at this stage.</p>
+        </div>
+        <p class="graph-explainer">A live chat demo goes here once one of these is actually worth talking to. Not yet, honestly.</p>
       </section>
 
       <footer>
