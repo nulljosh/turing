@@ -25,14 +25,22 @@ SYSTEM = (
 
 
 def brain_token():
-    for line in open(BRAIN_ENV):
-        if line.strip().startswith("BRAIN_TOKEN"):
-            return line.strip().split("=", 1)[1].strip().strip('"')
-    raise RuntimeError("BRAIN_TOKEN not found in brain/.env.local")
+    try:
+        for line in open(BRAIN_ENV):
+            if line.strip().startswith("BRAIN_TOKEN"):
+                return line.strip().split("=", 1)[1].strip().strip('"')
+    except FileNotFoundError:
+        pass
+    return None
 
 
 def search(query, limit=3):
+    # brain is a private, personal RAG service, a fresh clone of this repo
+    # won't have brain/.env.local at all. Degrade to no retrieval context
+    # instead of crashing, generation still runs, just without sources.
     token = brain_token()
+    if not token:
+        return []
     # bias the embedding itself toward this project, brain's index spans
     # ~50 other repos and a generic question often matches them just as
     # well as it matches Turing's own docs
@@ -42,8 +50,11 @@ def search(query, limit=3):
         "authorization": f"Bearer {token}",
         "user-agent": "turing-ask/1.0",
     })
-    with urllib.request.urlopen(req, timeout=15) as r:
-        results = json.load(r)["results"]
+    try:
+        with urllib.request.urlopen(req, timeout=15) as r:
+            results = json.load(r)["results"]
+    except Exception:
+        return []
     own = [r for r in results if "/turing/" in r["source"]]
     other = [r for r in results if "/turing/" not in r["source"]]
     return (own + other)[:limit]
