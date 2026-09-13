@@ -36,13 +36,14 @@
       footer{margin-top:56px;font-size:13px;color:var(--muted)}
       a{color:inherit}
       .bg-nodes{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
-      .bg-nodes svg{position:absolute;opacity:.06;animation:drift 40s ease-in-out infinite}
+      .bg-nodes svg{position:absolute;opacity:.06;animation:drift 40s ease-in-out infinite;
+        --px:0px;--py:0px;transform:translate(var(--px),var(--py));transition:transform .4s ease-out}
       @media (prefers-color-scheme: dark){.bg-nodes svg{opacity:.1}}
       .bg-nodes svg:nth-child(1){top:8%;left:6%;width:120px;animation-duration:34s}
       .bg-nodes svg:nth-child(2){top:60%;left:82%;width:90px;animation-duration:46s;animation-delay:-8s}
       .bg-nodes svg:nth-child(3){top:78%;left:12%;width:70px;animation-duration:38s;animation-delay:-20s}
       .bg-nodes svg:nth-child(4){top:20%;left:78%;width:100px;animation-duration:52s;animation-delay:-14s}
-      @keyframes drift{0%,100%{transform:translate(0,0) rotate(0deg)}50%{transform:translate(14px,-18px) rotate(6deg)}}
+      @keyframes drift{0%,100%{translate:0 0}50%{translate:14px -18px}}
       .graph-explainer{font-size:13px;color:var(--muted);margin-top:10px}
       .roadmap{display:flex;flex-direction:column;gap:0;margin-top:8px}
       .rm-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);font-size:14px}
@@ -77,6 +78,29 @@
       <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="30" cy="30" r="4"/><circle cx="70" cy="20" r="4"/><circle cx="60" cy="70" r="4"/><path d="M30 30L70 20M70 20L60 70M60 70L30 30"/></svg>
       <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="25" cy="25" r="4"/><circle cx="75" cy="25" r="4"/><circle cx="75" cy="75" r="4"/><circle cx="25" cy="75" r="4"/><circle cx="50" cy="50" r="4"/><path d="M25 25L50 50M75 25L50 50M75 75L50 50M25 75L50 50"/></svg>
     </div>
+    <script>
+      (function () {
+        var nodes = document.querySelectorAll('.bg-nodes svg');
+        var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (reduceMotion) return;
+        function apply(nx, ny) {
+          nodes.forEach(function (el, i) {
+            var depth = (i + 1) * 6;
+            el.style.setProperty('--px', (nx * depth) + 'px');
+            el.style.setProperty('--py', (ny * depth) + 'px');
+          });
+        }
+        window.addEventListener('mousemove', function (e) {
+          var nx = (e.clientX / window.innerWidth - 0.5);
+          var ny = (e.clientY / window.innerHeight - 0.5);
+          apply(nx, ny);
+        }, { passive: true });
+        window.addEventListener('deviceorientation', function (e) {
+          if (e.gamma == null || e.beta == null) return;
+          apply(e.gamma / 90, (e.beta - 45) / 90);
+        }, { passive: true });
+      })();
+    </script>
     <div class="wrap">
       <header>
         <h1>Turing</h1>
@@ -102,13 +126,6 @@
             <span>Latest train loss: <b id="loss">, </b></span>
           </div>
           <p class="graph-explainer">Lower is better. "Loss" is how surprised the model is by the actual next word each time it guesses, a falling line means it's getting less surprised, i.e. learning the pattern of our own writing. Bouncy is normal on a small dataset; it should smooth out as more data comes in.</p>
-        </div>
-      </section>
-
-      <section>
-        <h2>Roadmap</h2>
-        <div class="card">
-          <div class="roadmap" id="roadmap"></div>
         </div>
       </section>
 
@@ -142,16 +159,6 @@
         document.getElementById('base').textContent = s.base;
         document.getElementById('iters').textContent = s.train_loss.length ? s.train_loss[s.train_loss.length-1].iter : 0;
         document.getElementById('loss').textContent = s.train_loss.length ? s.train_loss[s.train_loss.length-1].loss.toFixed(3) : 'n/a';
-
-        if (s.roadmap) {
-          const rm = document.getElementById('roadmap');
-          const firstNotDone = s.roadmap.findIndex(p => !p.done);
-          rm.innerHTML = s.roadmap.map((p, i) => {
-            const cls = p.done ? 'done' : (i === firstNotDone ? 'current' : '');
-            const tag = p.done ? 'done' : (i === firstNotDone ? 'now' : '');
-            return `<div class="rm-item ${cls}"><span class="rm-dot"></span><span>Phase ${p.phase}: ${p.name}</span>${tag ? `<span class="rm-tag">${tag}</span>` : ''}</div>`;
-          }).join('');
-        }
 
         const c = document.getElementById('chart'), ctx = c.getContext('2d');
         const dpr = window.devicePixelRatio || 1;
