@@ -107,13 +107,33 @@ def load_faq():
     return pairs
 
 
+_STOPWORDS = {
+    "a", "an", "the", "is", "are", "was", "were", "what", "who", "why", "how",
+    "does", "do", "did", "this", "that", "it", "its", "to", "for", "of", "in",
+    "on", "at", "be", "used", "let", "and", "or", "not", "with", "right", "now",
+}
+
+
+def _keywords(s):
+    return {w for w in re.findall(r"[a-z0-9]+", s.lower()) if len(w) > 3 and w not in _STOPWORDS}
+
+
 def faq_match(question):
+    """Structural similarity alone (difflib) false-positives on unrelated
+    questions that happen to share sentence shape, "what is the capital of
+    France" scored 0.62 against "What's the current eval score?" purely from
+    "what is/'s the ... of/eval" pattern overlap, nothing to do with meaning.
+    Require actual shared keywords too, not just matching sentence structure.
+    """
     pairs = load_faq()
     if not pairs:
         return None
+    q_keywords = _keywords(question)
     best_score, best_answer = 0.0, None
     q_norm = question.lower().strip("? ")
     for faq_q, faq_a in pairs:
+        if not (q_keywords & _keywords(faq_q)):
+            continue
         score = difflib.SequenceMatcher(None, q_norm, faq_q.lower().strip("? ")).ratio()
         if score > best_score:
             best_score, best_answer = score, faq_a
@@ -133,10 +153,89 @@ def try_extract(question, results):
     return None
 
 
+def http_json(url, timeout=8):
+    req = urllib.request.Request(url, headers={"user-agent": "turing-ask/1.0"})
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as r:
+            return json.load(r)
+    except Exception:
+        return None
+
+
+_QUESTION_PREFIX = re.compile(
+    r"^(what'?s?|who'?s?|when'?s?|where'?s?|why|how)\s+(is|are|was|were|does|do|did)\s+(the\s+)?",
+    re.I,
+)
+
+
+def normalize_query(query):
+    """Strip leading question-word filler before hitting search APIs. "what is
+    the capital of France" full-text-searches worse on Wikipedia than the
+    stripped "capital of France", filler words dilute relevance ranking.
+    """
+    stripped = _QUESTION_PREFIX.sub("", query.strip()).rstrip("?").strip()
+    return stripped or query
+
+
+def general_knowledge(query):
+    """Same pattern as nimble/docs/engine.js's ddg()/wiki(): DuckDuckGo's
+    Instant Answer API first, Wikipedia's summary API as fallback. No API
+    key, no proxy needed here since this runs server-side, not a browser
+    (nimble needs ANSWER_PROXY only to dodge CORS in-browser).
+
+    Deliberately conservative: DDG's instant-answer API returns empty for
+    most non-trivial or opinion-flavored queries, so this rarely fires on
+    a project-specific question by accident, only clear factual ones.
+    """
+    normalized = normalize_query(query)
+
+    d = http_json(f"https://api.duckduckgo.com/?q={urllib.parse.quote(normalized)}&format=json&no_html=1&skip_disambig=1")
+    if d:
+        for field, src_field in (("Answer", None), ("AbstractText", "AbstractSource"), ("Definition", "DefinitionSource")):
+            text = d.get(field)
+            if text:
+                src = d.get(src_field) if src_field else "DuckDuckGo"
+                return text.strip(), src or "DuckDuckGo"
+
+    s = http_json(f"https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch={urllib.parse.quote(normalized)}&format=json&srlimit=1&origin=*")
+    title = (s or {}).get("query", {}).get("search", [{}])
+    title = title[0].get("title") if title else None
+    if title:
+        summary = http_json(f"https://en.wikipedia.org/api/rest_v1/page/summary/{urllib.parse.quote(title)}")
+        extract = (summary or {}).get("extract")
+        if extract:
+            return extract.strip(), f"Wikipedia: {title}"
+    return None, None
+
+
+# if the question mentions any of these, it's about this project, never
+# route it to general_knowledge. Retrieval-score thresholds turned out
+# unreliable here: search()'s query-biasing prefix ("Turing Samantha LoRA
+# project: ...") inflates every result's similarity score roughly equally,
+# so an unrelated question still shows turing/ sources ranked high. An
+# explicit keyword gate is more honest than tuning a fragile threshold.
+PROJECT_KEYWORDS = {
+    "turing", "samantha", "arthur", "lora", "faq", "roadmap", "ask.py",
+    "chat.py", "brain", "mlx", "qwen", "phase", "whitepaper", "readme",
+    "claude.md", "extractor", "fixed_fact", "faq_match", "adapter",
+}
+
+
+def is_project_question(question):
+    q = question.lower()
+    return any(kw in q for kw in PROJECT_KEYWORDS)
+
+
 def ask(question):
     faq_answer = faq_match(question)
     if faq_answer:
         return faq_answer, ["~/Documents/Code/turing/FAQ.md"]
+
+    if not is_project_question(question):
+        gk_answer, gk_source = general_knowledge(question)
+        if gk_answer:
+            return gk_answer, [gk_source]
+
     results = search(question)
     extracted = try_extract(question, results)
     if extracted:

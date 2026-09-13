@@ -88,6 +88,10 @@ The `Qwen3.5-0.8B` base comparison (Phase 3) is paused after three crashes, the 
 
 Retrieval instead of memorization: wiring Samantha to `brain` (the existing RAG-over-notes project) so it answers from live retrieved documents instead of trying to recall facts from its own trained weights. Confirmed working on 2026-09-13, this whole FAQ is part of what makes that retrieval accurate.
 
+## Can Samantha answer general-knowledge questions, not just project facts?
+
+Yes, for clean factual/definitional queries ("what's the capital of France"), via a DuckDuckGo-instant-answer-then-Wikipedia-summary fallback (`general_knowledge()` in ask.py, reusing nimble's existing pattern). It's genuinely unreliable for ambiguous subjects (picked Tchaikovsky's overture over Shakespeare's play for "who wrote Romeo and Juliet") or current-events facts like who currently holds an office, those need a data source with an explicit up-to-date field, which this doesn't have. It never fires on project questions, an explicit keyword gate keeps "Turing" (also Alan Turing's name) from getting hijacked by unrelated Wikipedia articles.
+
 ## What would Phase 5 let Samantha actually do for someone?
 
 In-voice drafting (journal entries, commit messages, README sections in house style), answering project-status questions from real data via retrieval instead of memorized weights, local autocomplete that never touches the network, or acting as a cheap first-pass judge/filter model on every commit or PR before anything reaches a bigger model.
