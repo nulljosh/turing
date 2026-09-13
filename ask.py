@@ -24,13 +24,20 @@ def brain_token():
 
 def search(query, limit=3):
     token = brain_token()
-    url = f"{BRAIN_URL}?q={urllib.parse.quote(query)}&limit={limit}"
+    # bias the embedding itself toward this project, brain's index spans
+    # ~50 other repos and a generic question often matches them just as
+    # well as it matches Turing's own docs
+    biased_query = f"Turing Samantha LoRA project: {query}"
+    url = f"{BRAIN_URL}?q={urllib.parse.quote(biased_query)}&limit={max(limit * 3, 10)}"
     req = urllib.request.Request(url, headers={
         "authorization": f"Bearer {token}",
         "user-agent": "turing-ask/1.0",
     })
     with urllib.request.urlopen(req, timeout=15) as r:
-        return json.load(r)["results"]
+        results = json.load(r)["results"]
+    own = [r for r in results if "/turing/" in r["source"]]
+    other = [r for r in results if "/turing/" not in r["source"]]
+    return (own + other)[:limit]
 
 
 def ask(question):
