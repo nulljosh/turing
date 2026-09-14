@@ -171,13 +171,40 @@ def faq_match(question):
     France" scored 0.62 against "What's the current eval score?" purely from
     "what is/'s the ... of/eval" pattern overlap, nothing to do with meaning.
     Require actual shared keywords too, not just matching sentence structure.
+
+    Flat keyword-overlap fraction has its own version of the same bug when
+    two entries share the same *number* of keywords: it can't tell a shared
+    common word from a shared rare, distinctive one. Confirmed live:
+    "Is this project blocked?" (shares only "project" with one entry,
+    "blocked" with another, one word each either way) scored higher against
+    "Who maintains this project?" than against the actually-correct "What's
+    blocked or paused right now?", purely from coincidental sentence-shape
+    overlap. "project" appears in 4/37 FAQ questions, "blocked" in 1/37,
+    "blocked" is the far stronger signal, but a flat count treats them the
+    same.
+
+    Tried weighting the whole overlap score by inverse document frequency
+    first: it fixed this case but broke another, "difference"/"between"
+    (each in only 1-2 FAQ questions, high weight) coincidentally outscored
+    the actually-correct "turing"+"samantha"+"between" match, because a
+    small 37-entry corpus doesn't have enough data for word rarity alone to
+    reliably mean "topically distinctive" (a phrasing quirk can be just as
+    rare as a real content word). So: keep flat overlap_fraction as the
+    primary signal (already correct whenever the shared-keyword *count*
+    actually differs, don't fix what isn't broken), and use rarity only as
+    a tie-break for when two entries share the exact same number of words,
+    which is the one situation flat counting genuinely can't resolve.
     """
     pairs = load_faq()
     if not pairs:
         return None
+    doc_freq = {}
+    for faq_q, _ in pairs:
+        for kw in _keywords(faq_q):
+            doc_freq[kw] = doc_freq.get(kw, 0) + 1
     q_keywords = _keywords(question)
-    best_score, best_answer = 0.0, None
     q_norm = question.lower().strip("? ")
+    best_key, best_score, best_answer = None, 0.0, None
     for faq_q, faq_a in pairs:
         shared = q_keywords & _keywords(faq_q)
         if not shared:
@@ -191,9 +218,19 @@ def faq_match(question):
         # until the shared keyword fraction was weighted in too
         overlap_fraction = len(shared) / len(q_keywords) if q_keywords else 0
         score = seq_ratio * 0.5 + overlap_fraction * 0.5
-        if score > best_score:
-            best_score, best_answer = score, faq_a
+        # a word absent from every FAQ question (df 0) is rarer than any
+        # word that appears even once, treat it as df 1 instead of crashing
+        rarity = max(1.0 / doc_freq.get(kw, 1) for kw in shared)
+        key = (round(overlap_fraction, 6), round(rarity, 6), score)
+        if best_key is None or key > best_key:
+            best_key, best_score, best_answer = key, score, faq_a
     return best_answer if best_score >= FAQ_MATCH_THRESHOLD else None
+
+
+_CANT_PIN_DOWN = (
+    "I don't have that pinned down confidently from what's currently "
+    "indexed, not going to guess at the specifics."
+)
 
 
 def try_extract(question, results):
@@ -206,6 +243,17 @@ def try_extract(question, results):
                 m = a_pat.search(r["text"])
                 if m:
                     return m.group(0)
+            # Confirmed live: "What tool trains the adapter?" matches this
+            # EXTRACTOR's question shape, but the top retrieved chunks
+            # didn't happen to contain the fact (it lives in a real FAQ.md
+            # entry, "## What tool actually runs training?", that just
+            # didn't rank in the top results for this phrasing). Falling
+            # through to generation here produced a real hallucination
+            # ("Adversarial Training for Speech, ATR", fabricated). This
+            # file's own top comment says generation invents wrong
+            # specifics for exactly these precision-sensitive facts, so
+            # once we know we're in that category, don't let it guess.
+            return _CANT_PIN_DOWN
     return None
 
 
@@ -331,10 +379,19 @@ def general_knowledge(query):
 # project: ...") inflates every result's similarity score roughly equally,
 # so an unrelated question still shows turing/ sources ranked high. An
 # explicit keyword gate is more honest than tuning a fragile threshold.
+#
+# "project"/"repo"/"repository" belong here too: confirmed live that
+# "Is this project blocked?" was missing every named keyword, fell through
+# to general_knowledge, and Wikipedia confidently returned "List of
+# websites blocked in mainland China", a completely unrelated wrong
+# answer. There's no other project this CLI could mean by "this project",
+# so the bare deictic word is itself a reliable project-scope signal, not
+# just the named entities.
 PROJECT_KEYWORDS = {
     "turing", "samantha", "arthur", "lora", "faq", "roadmap", "ask.py",
     "chat.py", "brain", "mlx", "qwen", "phase", "whitepaper", "readme",
     "claude.md", "extractor", "fixed_fact", "faq_match", "adapter",
+    "project", "repo", "repository",
 }
 
 

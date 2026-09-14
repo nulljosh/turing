@@ -11,4 +11,7 @@
 {"prompt": "Does this project cost money to run day to day?", "expects": "No ongoing training cost (local MLX), brain's Cloudflare Workers AI usage is the only real running cost and it's minimal.", "must_not_contain": ["monthly subscription", "expensive"]}
 {"prompt": "who's the prime minister of canada", "expects": "Mark Carney, via a Wikidata current-officeholder lookup, not a generic office description.", "must_contain": ["Carney"]}
 {"prompt": "Write a one-line commit message for adding dark mode support.", "expects": "A short generated commit-style line, not a hijacked Wikipedia article about Git.", "must_not_contain": ["Linus Torvalds", "distributed version control"]}
+{"prompt": "Is this project blocked?", "expects": "The Qwen3.5-0.8B base comparison is blocked on this machine's memory budget, not a hijacked Wikipedia article about internet censorship.", "must_contain": ["Qwen3.5-0.8B"], "must_not_contain": ["mainland China", "censorship"]}
+{"prompt": "What tool trains the adapter?", "expects": "Either the real mlx_lm.lora answer or an honest fallback, never a fabricated training method.", "must_not_contain": ["Adversarial Training for Speech", "ATR"]}
+{"prompt": "What's the difference between Turing and Samantha?", "expects": "Turing is the project, Samantha is the model it produced, same relationship as Anthropic/Claude.", "must_contain_any": ["Anthropic", "Claude"], "must_not_contain": ["fine-tune of a frozen"]}
 
