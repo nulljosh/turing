@@ -14,6 +14,8 @@ import subprocess
 
 HISTORY_TURNS = 3  # how many prior exchanges to keep as short-term memory
 
+EXIT_WORDS = ("exit", "quit", "bye", "q")  # natural quit phrasings that should stop the loop, not get generated on
+
 
 def project_scope(question, topic_active):
     """is_project_question() only looks at the current question's own
@@ -148,7 +150,7 @@ def chat():
         except (EOFError, KeyboardInterrupt):
             print()
             break
-        if not question or question.lower() in ("exit", "quit"):
+        if not question or question.lower() in EXIT_WORDS:
             break
         answer, topic_active = answer_turn(question, history, topic_active)
         print(f"Samantha: {answer}\n")
@@ -182,7 +184,7 @@ def tui():
             except KeyboardInterrupt:
                 break
             curses.noecho()
-            if not question or question.lower() in ("exit", "quit"):
+            if not question or question.lower() in EXIT_WORDS:
                 break
             lines.append(f"You: {question}")
             stdscr.erase()
