@@ -1,0 +1,4 @@
+#!/bin/sh
+# Boot straight into Samantha. `./samantha` for plain CLI, `./samantha --tui` for the curses TUI.
+cd "$(dirname "$0")"
+exec .venv/bin/python3 chat.py "$@"

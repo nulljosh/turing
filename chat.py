@@ -89,6 +89,39 @@ def build_prompt(history, context, question):
     return "\n".join(parts)
 
 
+def answer_turn(question, history, topic_active):
+    """One turn of the conversation: (question, history, topic_active) in,
+    (answer, updated topic_active) out. Shared by the plain CLI and the TUI
+    so the two never drift into different answer logic.
+    """
+    project_scoped, topic_active = project_scope(question, topic_active)
+    holder_answer = None
+    if not project_scoped and _WHO_PREFIX.match(question.strip()):
+        holder_answer = current_officeholder(question)[0]
+
+    faq_answer = None if holder_answer else faq_match(question)
+    gk_answer = None
+    if not holder_answer and not faq_answer and not project_scoped and is_question(question):
+        gk_answer = general_knowledge(question)[0]
+
+    if holder_answer:
+        answer = holder_answer
+    elif faq_answer:
+        answer = faq_answer
+    elif gk_answer:
+        answer = gk_answer
+    else:
+        results = search(question)
+        extracted = try_extract(question, results)
+        if extracted:
+            answer = extracted
+        else:
+            context = "\n\n---\n\n".join(r["text"][:800] for r in results)
+            prompt = build_prompt(history, context, question)
+            answer = clean(generate(prompt), question)
+    return answer, topic_active
+
+
 def chat():
     history = []
     topic_active = False
@@ -101,34 +134,54 @@ def chat():
             break
         if not question or question.lower() in ("exit", "quit"):
             break
-        project_scoped, topic_active = project_scope(question, topic_active)
-        holder_answer = None
-        if not project_scoped and _WHO_PREFIX.match(question.strip()):
-            holder_answer = current_officeholder(question)[0]
-
-        faq_answer = None if holder_answer else faq_match(question)
-        gk_answer = None
-        if not holder_answer and not faq_answer and not project_scoped and is_question(question):
-            gk_answer = general_knowledge(question)[0]
-
-        if holder_answer:
-            answer = holder_answer
-        elif faq_answer:
-            answer = faq_answer
-        elif gk_answer:
-            answer = gk_answer
-        else:
-            results = search(question)
-            extracted = try_extract(question, results)
-            if extracted:
-                answer = extracted
-            else:
-                context = "\n\n---\n\n".join(r["text"][:800] for r in results)
-                prompt = build_prompt(history, context, question)
-                answer = clean(generate(prompt), question)
+        answer, topic_active = answer_turn(question, history, topic_active)
         print(f"Samantha: {answer}\n")
         history.append((question, answer))
 
 
+def tui():
+    import curses
+
+    def run(stdscr):
+        curses.curs_set(1)
+        stdscr.scrollok(True)
+        history = []
+        topic_active = False
+        lines = ["Samantha (Turing project assistant). Ctrl+C or type 'exit' to quit.", ""]
+
+        def redraw():
+            stdscr.erase()
+            h, w = stdscr.getmaxyx()
+            for i, line in enumerate(lines[-(h - 2):]):
+                stdscr.addstr(i, 0, line[: w - 1])
+            stdscr.addstr(h - 1, 0, "You: ")
+            stdscr.refresh()
+
+        while True:
+            redraw()
+            curses.echo()
+            h, _ = stdscr.getmaxyx()
+            try:
+                question = stdscr.getstr(h - 1, 5).decode().strip()
+            except KeyboardInterrupt:
+                break
+            curses.noecho()
+            if not question or question.lower() in ("exit", "quit"):
+                break
+            lines.append(f"You: {question}")
+            stdscr.erase()
+            stdscr.addstr(0, 0, "thinking...")
+            stdscr.refresh()
+            answer, topic_active = answer_turn(question, history, topic_active)
+            history.append((question, answer))
+            for l in (f"Samantha: {answer}", ""):
+                lines.extend(l.split("\n"))
+
+    curses.wrapper(run)
+
+
 if __name__ == "__main__":
-    chat()
+    if "--tui" in sys.argv:
+        tui()
+    else:
+        chat()

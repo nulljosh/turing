@@ -147,3 +147,11 @@ Measured directly on this Mac Mini: an FAQ-matched question (no model load at al
 ## How does ask.py decide when to trust a FAQ match versus generate an answer?
 
 A similarity score (Python's difflib, comparing the question to every FAQ question) has to clear a threshold (0.55) before the FAQ answer is used. Below that, it falls through to retrieval plus generation instead, so a genuinely novel question doesn't get force-matched to an unrelated FAQ entry.
+
+## How do I boot into Samantha and chat with her?
+
+Run `./samantha` from the turing repo root. It activates the venv and launches `chat.py`'s plain text loop, type a question, get an answer, `exit` or Ctrl+C to quit.
+
+## Is there a TUI, not just a plain CLI?
+
+Yes. `./samantha --tui` launches a full-screen curses interface (`chat.py`'s `tui()` function, stdlib `curses`, no new dependency), same conversation logic as the plain CLI, just a scrolling full-screen view instead of line-by-line prints. `./samantha` with no flag stays plain-text.
