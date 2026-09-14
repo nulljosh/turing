@@ -387,11 +387,17 @@ def general_knowledge(query):
 # answer. There's no other project this CLI could mean by "this project",
 # so the bare deictic word is itself a reliable project-scope signal, not
 # just the named entities.
+#
+# "model" too: confirmed live that "Is the model good?" (a natural
+# follow-up in a Samantha conversation) matched none of the named
+# keywords either, and Wikipedia confidently returned the "Bill Emerson
+# Good Samaritan Food Donation Act", a completely unrelated law. Same
+# reasoning as "project": there's no other model this CLI could mean.
 PROJECT_KEYWORDS = {
     "turing", "samantha", "arthur", "lora", "faq", "roadmap", "ask.py",
     "chat.py", "brain", "mlx", "qwen", "phase", "whitepaper", "readme",
     "claude.md", "extractor", "fixed_fact", "faq_match", "adapter",
-    "project", "repo", "repository",
+    "project", "repo", "repository", "model",
 }
 
 
