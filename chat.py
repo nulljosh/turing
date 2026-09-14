@@ -110,11 +110,11 @@ def answer_turn(question, history, topic_active):
     holder_answer = None
     if not project_scoped and _WHO_PREFIX.match(question.strip()):
         holder_answer, holder_source = current_officeholder(question)
-        # same honesty rule as ask.py: a failed lookup admits the outage
-        # instead of falling through to an FAQ entry that describes the
-        # feature rather than answering the question
+        # same rule as ask.py: a failed lookup must not fall through to an
+        # FAQ entry describing the feature, but the encyclopedia can still
+        # answer a "who is <person>" question, so only decline if it can't
         if not holder_answer and holder_source is UNREACHABLE:
-            holder_answer = LOOKUP_FAILED
+            holder_answer = general_knowledge(question, skip_officeholder=True)[0] or LOOKUP_FAILED
 
     faq_answer = None if holder_answer else faq_match(question)
     gk_answer = None

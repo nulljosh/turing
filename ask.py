@@ -529,7 +529,59 @@ def current_officeholder(query):
     return f"{label} ({hits[0]['label']}).", "Wikidata"
 
 
-def general_knowledge(query):
+_ARITH_WORDS = (
+    (r"\b(?:times|multiplied by)\b", "*"),
+    (r"\bplus\b", "+"),
+    (r"\bminus\b", "-"),
+    (r"\b(?:divided by|over)\b", "/"),
+    (r"\bx\b", "*"),
+)
+_ARITH_OK = re.compile(r"^[\d\s+\-*/().]+$")
+
+
+def arithmetic(query):
+    """Answer plain arithmetic locally and exactly.
+
+    "what is 2+2" used to be sent to the web like any other question, and
+    came back as a Danganronpa game; "what is 10 times 7" came back as The
+    New York Times (the word "times" matched a newspaper). Both are
+    confident wrong answers to questions with one exact answer, which no
+    search engine should ever have been asked in the first place.
+
+    Evaluated by walking a parsed AST with an explicit node whitelist, not
+    eval(), so a crafted "question" can't execute anything. Anything that
+    isn't purely numbers and operators returns None and falls through.
+    """
+    import ast
+
+    expr = _QUESTION_PREFIX.sub("", query.strip().rstrip("?")).strip()
+    expr = re.sub(r"^(?:what\s+(?:is|are)|calculate|compute)\s+", "", expr, flags=re.I).strip()
+    for pattern, symbol in _ARITH_WORDS:
+        expr = re.sub(pattern, symbol, expr, flags=re.I)
+    expr = expr.strip()
+    if not expr or not _ARITH_OK.match(expr) or not any(c.isdigit() for c in expr):
+        return None
+    if not any(op in expr for op in "+-*/"):
+        return None  # a bare number isn't a question
+
+    allowed = (ast.Expression, ast.BinOp, ast.UnaryOp, ast.Constant,
+               ast.Add, ast.Sub, ast.Mult, ast.Div, ast.USub, ast.UAdd)
+    try:
+        tree = ast.parse(expr, mode="eval")
+        for node in ast.walk(tree):
+            if not isinstance(node, allowed):
+                return None
+            if isinstance(node, ast.Constant) and not isinstance(node.value, (int, float)):
+                return None
+        value = eval(compile(tree, "<arithmetic>", "eval"), {"__builtins__": {}}, {})
+    except Exception:
+        return None
+    if isinstance(value, float) and value.is_integer():
+        value = int(value)
+    return f"{expr} = {value}"
+
+
+def general_knowledge(query, skip_officeholder=False):
     """Same pattern as nimble/docs/engine.js's ddg()/wiki(): DuckDuckGo's
     Instant Answer API first, Wikipedia's summary API as fallback. No API
     key, no proxy needed here since this runs server-side, not a browser
@@ -539,9 +591,17 @@ def general_knowledge(query):
     most non-trivial or opinion-flavored queries, so this rarely fires on
     a project-specific question by accident, only clear factual ones.
     """
-    holder, src = current_officeholder(query)
-    if holder:
-        return holder, src
+    # skip_officeholder avoids a second identical Wikidata round trip when
+    # the caller has already tried it. That matters under rate limiting,
+    # which is exactly when this path runs.
+    exact = arithmetic(query)
+    if exact:
+        return exact, "arithmetic"
+
+    if not skip_officeholder:
+        holder, src = current_officeholder(query)
+        if holder:
+            return holder, src
 
     normalized = normalize_query(query)
 
@@ -559,9 +619,38 @@ def general_knowledge(query):
     if title:
         summary = http_json(f"https://en.wikipedia.org/api/rest_v1/page/summary/{urllib.parse.quote(title)}")
         extract = (summary or {}).get("extract")
-        if extract:
+        if extract and _wikipedia_answer_is_plausible(query, title, extract):
             return extract.strip(), f"Wikipedia: {title}"
     return None, None
+
+
+# Wikipedia's fulltext search ranks by title match, so a question phrased
+# as a sentence finds anything *named* like the sentence. Measured live:
+# "what color is the sky" returned a country album titled "What Color Is
+# Your Sky", "how many days are in a week" returned Bodybuilding.com, "what
+# is the largest planet in the solar system" returned a software-licenses
+# listing. Each is a confident wrong answer, the failure class this project
+# treats as worse than any miss.
+#
+# A question asking "how many X" or "what color/year/temperature" wants a
+# fact, and the article that answers it almost always names the subject.
+# When the top hit shares none of the question's content words, it is a
+# title coincidence, so decline instead. This cannot make a right answer
+# wrong, it only converts confident nonsense into an honest miss.
+_FACT_SHAPED = re.compile(r"^(?:how many|how much|what (?:color|colour|year|time|temperature))\b", re.I)
+
+
+def _wikipedia_answer_is_plausible(query, title, extract):
+    subject = _keywords(query) - _keywords("what is are the a an how many much of in")
+    if not subject:
+        return True
+    haystack = _keywords(f"{title} {extract[:300]}")
+    if subject & haystack:
+        return True
+    # no shared subject word at all: only tolerate it for open-ended
+    # questions, never for a fact-shaped one where a wrong article reads
+    # as a confident answer
+    return not _FACT_SHAPED.match(query.strip())
 
 
 # if the question mentions any of these, it's about this project, never
@@ -624,11 +713,19 @@ def ask(question):
         if holder:
             return holder, [holder_source]
         # The lookup was attempted and the network failed, as opposed to
-        # this simply not being an officeholder question. Falling through
-        # here is what let FAQ.md answer with its own description of this
-        # feature. Admitting the outage is the only honest option, the real
-        # answer changes over time and nothing local can stand in for it.
+        # this simply not being an officeholder question. What must not
+        # happen is FAQ.md answering with its own description of this
+        # feature. But declining outright here was too broad: current_
+        # officeholder() fires on every "who is X", not just offices, so a
+        # throttled Wikidata made "who is steve jobs" decline even though
+        # Wikipedia answers it perfectly. Caught by eval/basic_questions.py,
+        # where running 19 questions in a row rate-limited Wikidata and all
+        # four person questions declined at once. Skip the FAQ, still let
+        # the encyclopedia try, and only admit defeat if it has nothing.
         if holder_source is UNREACHABLE:
+            gk_answer, gk_source = general_knowledge(question, skip_officeholder=True)
+            if gk_answer:
+                return gk_answer, [gk_source]
             return LOOKUP_FAILED, []
 
     faq_answer = faq_match(question)
