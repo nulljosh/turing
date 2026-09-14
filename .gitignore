@@ -7,3 +7,4 @@ train-1b.log
 scratch/scratch.log
 __pycache__/
 .wrangler/
+.faq_embeddings.json

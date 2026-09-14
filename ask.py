@@ -7,7 +7,7 @@ examples reliably learns style but not facts. This is the fix: keep facts
 in brain's live index, let the model reason over retrieved context instead
 of trying to recall them from weights. See roadmap.md, run 6.
 """
-import difflib, json, os, re, subprocess, sys, urllib.parse, urllib.request
+import difflib, hashlib, json, math, os, re, subprocess, sys, urllib.parse, urllib.request
 
 BRAIN_ENV = os.path.expanduser("~/Documents/Code/brain/.env.local")
 BRAIN_URL = "https://brain.heyitsmejosh.com/api/search"
@@ -161,6 +161,93 @@ _STOPWORDS = {
 }
 
 
+EMBED_MODEL = "nomic-embed-text"
+EMBED_URL = "http://localhost:11434/api/embed"
+EMBED_THRESHOLD = 0.70
+EMBED_CACHE = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".faq_embeddings.json")
+
+
+def _embed(texts, timeout=8):
+    """Embed via the local Ollama daemon. Returns None on any failure, which
+    is a real and expected case (fresh clone, Ollama not installed or not
+    running, model not pulled), never an error, the caller falls back to
+    lexical matching. Timeout is deliberately short: a warm request is 0.07s,
+    but the very first one after the model unloads costs ~10s to load, and
+    hanging the CLI that long is worse than one lexically-matched answer
+    while Ollama warms up in the background.
+    """
+    try:
+        req = urllib.request.Request(
+            EMBED_URL,
+            data=json.dumps({"model": EMBED_MODEL, "input": texts}).encode(),
+            headers={"Content-Type": "application/json"},
+        )
+        return json.load(urllib.request.urlopen(req, timeout=timeout))["embeddings"]
+    except Exception:
+        return None
+
+
+def _faq_vectors(headers):
+    """FAQ header embeddings, computed once and cached to disk. Keyed by a
+    hash of the headers themselves so editing FAQ.md invalidates the cache
+    automatically, no manual rebuild step to forget.
+    """
+    key = hashlib.sha256("\n".join(headers).encode()).hexdigest()
+    try:
+        cached = json.load(open(EMBED_CACHE))
+        if cached.get("key") == key:
+            return cached["vectors"]
+    except Exception:
+        pass
+    # building the cache is a one-time cost, worth waiting out a model load
+    vectors = _embed(headers, timeout=120)
+    if vectors is None:
+        return None
+    try:
+        json.dump({"key": key, "vectors": vectors}, open(EMBED_CACHE, "w"))
+    except OSError:
+        pass  # a read-only checkout still works, just recomputes each run
+    return vectors
+
+
+def _cosine(a, b):
+    dot = sum(x * y for x, y in zip(a, b))
+    na = math.sqrt(sum(x * x for x in a))
+    nb = math.sqrt(sum(y * y for y in b))
+    return dot / (na * nb) if na and nb else 0.0
+
+
+def semantic_faq_match(question, pairs):
+    """Match a question to a FAQ entry by meaning instead of shared letters.
+
+    Measured against eval/faq_paraphrase.py's 16 natural rephrasings, which
+    lexical matching only got 5 of: embeddings get 12 at this threshold with
+    zero wrong entries and zero out-of-scope false positives. It resolves
+    exactly the cases no amount of lexical tuning could, "who works on this"
+    to "Who maintains this project?" (no shared word at all), and it cleanly
+    separates the pair that had precision and recall deadlocked, "why did
+    arthur fail" scores 0.85 while "is my sink blocked right now" scores
+    0.657, below the line, where lexically the two are the same shape.
+
+    Threshold 0.70 rather than the 0.68 that scored one better: the highest
+    out-of-scope score measured was 0.657, and this project treats a
+    confident wrong answer as worse than a miss, so the extra margin is
+    worth one recall point.
+    """
+    vectors = _faq_vectors([q for q, _ in pairs])
+    if not vectors:
+        return None
+    qv = _embed([question])
+    if not qv:
+        return None
+    best_score, best_answer = 0.0, None
+    for (_, answer), vec in zip(pairs, vectors):
+        score = _cosine(qv[0], vec)
+        if score > best_score:
+            best_score, best_answer = score, answer
+    return best_answer if best_score >= EMBED_THRESHOLD else None
+
+
 def _stem(w):
     """Crude suffix stripping so a question and a FAQ header that use the
     same word in different forms still count as sharing it.
@@ -226,6 +313,15 @@ def faq_match(question):
     pairs = load_faq()
     if not pairs:
         return None
+    # Semantic first, it beats the lexical path 12/16 to 5/16 on real
+    # rephrasings. Falling through rather than returning on a semantic miss
+    # is deliberate: the two approaches fail on different questions, and the
+    # lexical path is precision-hardened (0/8 on the out-of-scope set), so
+    # the union costs nothing measured and catches what embeddings rank just
+    # under threshold. Falls through for free when Ollama isn't running.
+    semantic = semantic_faq_match(question, pairs)
+    if semantic:
+        return semantic
     doc_freq = {}
     for faq_q, _ in pairs:
         for kw in _keywords(faq_q):

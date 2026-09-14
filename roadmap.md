@@ -127,6 +127,22 @@ Found a real latent bug auditing `FIXED_FACTS`: the who-maintains pattern (`who.
 
   Standing conclusion: remaining recall needs real embeddings. Cheap lexical wins are now exhausted, 5/16 is the honest ceiling for this approach.
 
+- **2026-09-14, semantic FAQ matching shipped: recall 5/16 to 13/16, the wall came down.** Two independent measurements this session concluded lexical matching had nothing left (see the two entries above). Built the real fix.
+
+  Picked the tool by measuring rather than assuming. oMLX on :8000 is already warm and exposes `/v1/embeddings`, but rejects the Qwen chat models with "is not an embedding model", so it needs a dedicated one either way. Ollama is already on this machine (powering Conveyer and the cheap-fix skill), so pulled `nomic-embed-text`, 274MB, 768 dimensions. Measured latency before building anything: **0.069s warm, 10.5s cold** (model load). Warm is the same order as the 0.04s lexical path, so the fast path survives.
+
+  Swept the cosine threshold on the same 16 paraphrases plus the 8 out-of-scope questions: 0.68 gives 13/16 with 0 false positives, 0.70 gives 12/16, and the highest out-of-scope score measured is 0.657 ("is my sink blocked right now"). **Took 0.70, not the better-scoring 0.68**, for margin: this project treats a confident wrong answer as strictly worse than a miss, and 0.023 of headroom on an 8-sample precision set is too thin to trust.
+
+  The deadlock from the previous entry is genuinely resolved, not worked around. "why did arthur fail" scores 0.850 and "is my sink blocked right now" scores 0.657, cleanly separated, where lexically both are one rare shared word plus one unknown word and no rule could tell them apart. Cases with literally zero shared vocabulary now work: "who works on this" to "Who maintains this project?" (0.735), "what do you use to train it" to "What tool actually runs training?" (0.764).
+
+  Semantic runs first, lexical still runs on a semantic miss. The union measured better than either alone (13/16 vs 12/16 semantic, 5/16 lexical) because they fail on different questions, and the lexical path is already precision-hardened to 0/8, so the fall-through costs nothing. FAQ header vectors are cached to a gitignored `.faq_embeddings.json` keyed by a hash of the headers, so editing FAQ.md invalidates it automatically with no rebuild step to forget.
+
+  Degradation was tested, not assumed: with nothing listening on the embed port and no cache file, `faq_match()` still answers correctly via the lexical path in 0.01s. A fresh clone with no Ollama behaves exactly as it did yesterday. Query timeout is a deliberate 8s, shorter than the 10.5s cold load, so the worst case is one lexically-matched answer while Ollama warms in the background rather than a 10-second hang.
+
+  **Final: 13/16 recall (from 3/16 when this session started), 0 wrong entries, 0/8 false positives, 29/29 + 18/18 + 11/11.**
+
+  Remaining 3 misses, honestly: "does it have a full screen terminal ui" (0.492, the entry says "TUI" and the embedding model doesn't expand the acronym), "what counts as success here" (0.616), "does training cost money" (ranks the training-tool entry above the cost entry). All are genuine semantic near-misses, not bugs, and all are below threshold rather than confidently wrong, which is the correct failure direction.
+
 ### Phase 6: Distillation, not scale (month 4+, optional/ambitious)
 Instead of chasing bigger bases, use a frontier model (Claude) to generate high-quality synthetic training examples in our exact style, then distill that into Samantha. This is literally how most useful small models are built today, nobody pretrains from raw internet text anymore if they can help it.
 
