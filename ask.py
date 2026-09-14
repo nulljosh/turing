@@ -817,6 +817,15 @@ def general_knowledge(query, skip_officeholder=False):
     s = http_json(f"https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch={urllib.parse.quote(normalized)}&format=json&srlimit=1&origin=*")
     title = (s or {}).get("query", {}).get("search", [{}])
     title = title[0].get("title") if title else None
+    if not title:
+        # borrowed from nimble/docs/engine.js's wiki(): fulltext search and
+        # prefix search are separate endpoints, and opensearch finds titles
+        # fulltext misses entirely
+        o = http_json(f"https://en.wikipedia.org/w/api.php?action=opensearch&search={urllib.parse.quote(normalized)}&limit=1&format=json&origin=*")
+        try:
+            title = o[1][0]
+        except Exception:
+            title = None
     if title:
         summary = http_json(f"https://en.wikipedia.org/api/rest_v1/page/summary/{urllib.parse.quote(title)}")
         extract = (summary or {}).get("extract")
@@ -846,8 +855,33 @@ def general_knowledge(query, skip_officeholder=False):
 # wrong, it only converts confident nonsense into an honest miss.
 _FACT_SHAPED = re.compile(r"^(?:how many|how much|what (?:color|colour|year|time|temperature))\b", re.I)
 
+# Questions that want a number back. nimble/docs/engine.js:206 states the
+# principle this encodes: "A model's number is an unsourced guess: for
+# numeric answers prefer DDG when it has one." The same idea applies to an
+# encyclopedia summary, which often describes a subject rather than
+# answering a measurement. A value-seeking question answered with prose
+# containing no digit at all is the topic, not the answer, so decline rather
+# than sound confident.
+#
+# Worth recording honestly: this guard was written believing "how tall is
+# mount everest" was such a case, because the first part of the summary
+# reads "Its height was most recently measured in 2020..." and looked like
+# it trailed off. Checking the whole extract rather than its opening showed
+# it does give the figure, "8,848.86 m". That question was already answered
+# correctly and an earlier roadmap entry saying otherwise was wrong. The
+# guard still earns its place for summaries with no number at all, but the
+# example that motivated it did not hold up.
+_WANTS_NUMBER = re.compile(
+    r"^(?:how (?:many|much|tall|long|old|far|fast|deep|high|wide|big))\b"
+    r"|^what (?:year|percentage)\b"
+    r"|\b(?:boiling|melting|freezing) point\b",
+    re.I,
+)
+
 
 def _wikipedia_answer_is_plausible(query, title, extract):
+    if _WANTS_NUMBER.search(query.strip()) and not any(c.isdigit() for c in extract):
+        return False
     subject = _keywords(query) - _keywords("what is are the a an how many much of in")
     if not subject:
         return True
