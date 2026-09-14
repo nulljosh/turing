@@ -106,6 +106,27 @@ def test_officeholder_empty_result_is_not_treated_as_an_outage():
         ask.http_json = real
 
 
+def test_topic_switch_breaks_out_of_a_sticky_project_topic():
+    # real bug: the sticky flag had no exit except a who-query, so "what is
+    # turing" then "what is the capital of japan" answered "the project."
+    scoped, active = project_scope("What is Turing?", False)
+    assert scoped and active
+    scoped, active = project_scope("what is the capital of japan", active)
+    assert not scoped and not active
+    # and the conversation can come back to the project afterwards
+    scoped, active = project_scope("what is samantha", active)
+    assert scoped and active
+
+
+def test_topic_switch_does_not_break_a_keywordless_project_followup():
+    # the case the sticky flag exists for must survive: this follow-up has
+    # no project keyword, but shares "match" with the project vocabulary
+    scoped, active = project_scope("What is the FAQ matcher?", False)
+    assert scoped and active
+    scoped, active = project_scope("How confident does a match need to be?", active)
+    assert scoped and active
+
+
 def test_pronoun_followup_resolves_to_last_general_knowledge_subject():
     # real bug: "who is steve jobs" answered correctly, then "what company
     # did he found" returned the 1997 slasher film "I Know What You Did Last

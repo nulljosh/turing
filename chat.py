@@ -9,7 +9,7 @@ roadmap.md's "What we will never do on this budget."
 import os, re, sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from ask import search, try_extract, faq_match, general_knowledge, is_project_question, is_question, current_officeholder, _WHO_PREFIX, _QUESTION_PREFIX, UNREACHABLE, LOOKUP_FAILED, MODEL, ADAPTER, SYSTEM
+from ask import search, try_extract, faq_match, general_knowledge, is_project_question, is_question, current_officeholder, _WHO_PREFIX, _QUESTION_PREFIX, _keywords, project_vocabulary, UNREACHABLE, LOOKUP_FAILED, MODEL, ADAPTER, SYSTEM
 import subprocess
 
 HISTORY_TURNS = 3  # how many prior exchanges to keep as short-term memory
@@ -50,6 +50,22 @@ def project_scope(question, topic_active):
     is_current = is_project_question(question)
     active = topic_active or is_current
     who_query = bool(_WHO_PREFIX.match(question.strip()))
+
+    # Second carve-out, same spirit as the who-query one: the sticky flag
+    # had no way out except a "who is the current X" question, so a genuine
+    # change of subject got swallowed. Confirmed live, "what is turing"
+    # followed by "what is the capital of japan" answered "the project."
+    # A question whose content words are *all* absent from the project's own
+    # vocabulary is a topic change, not a keywordless follow-up. This is the
+    # same foreign-word test that fixed faq_match's false positives, and it
+    # can't break the case the sticky flag exists for: "How confident does a
+    # match need to be?" shares "match", "what if I don't pass any flags"
+    # shares "flags".
+    if active and not is_current:
+        words = _keywords(question)
+        if words and not (words & project_vocabulary()):
+            return False, False
+
     return (is_current or (active and not who_query)), active
 
 

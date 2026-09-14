@@ -191,6 +191,12 @@ Everything measured before tonight was about the project's own docs or FAQ phras
 
   16/16 + 29/29 + 13/16. The holdout run shows 17/18 with "who's the prime minister of canada" missing "Carney", verified as Wikidata rate limiting and not a regression: a direct call returns `UNREACHABLE`, and the answer is the honest decline, which is correct behaviour under an outage.
 
+- **2026-09-14, the sticky topic flag had no exit, so it swallowed genuine topic changes.** Live: "what is turing" answered correctly, then "what is the capital of japan" answered **"the project."** The v0.7.3 sticky flag was built so a keywordless follow-up stays in project scope, and its only carve-out was a "who is the current X" query. Any other change of subject was trapped.
+
+  Fixed with a second carve-out using the same foreign-word test that fixed `faq_match`'s false positives: if a question's content words are *all* absent from the project's own vocabulary, it's a topic change, so drop scope. First attempt built that vocabulary from FAQ questions *and* answers, and it didn't work, because the answers discuss their own examples (a past write-up mentions "the capital of France"), so "capital" counted as project vocabulary. Headers are what the FAQ is about; answer prose can mention anything. Questions only.
+
+  Verified all four directions: the switch now breaks out, the conversation can come back to the project afterwards ("what is samantha" re-enters scope), and both cases the sticky flag exists for still hold ("How confident does a match need to be?" shares "match", "what if I don't pass any flags" shares "flags"). Two tests added. 18/18 + 29/29 + 18/18 + 13/16, with Wikidata recovered so the holdout is back to a clean 18/18.
+
 - **Open decision, deliberately not taken unilaterally: should general knowledge route to a local 8B?** `llama3.1:8b` and `qwen3:8b` are already on this machine and would answer all 19 correctly. It is architecturally consistent (the chain already delegates facts to non-Samantha sources, and it stays on-device, no frontier API), but it would make Samantha a thin router over a model 16x her size, which cuts against what this project is. Flagging it as Joshua's call rather than quietly changing what Samantha means.
 
 ### Phase 6: Distillation, not scale (month 4+, optional/ambitious)

@@ -248,6 +248,33 @@ def semantic_faq_match(question, pairs):
     return best_answer if best_score >= EMBED_THRESHOLD else None
 
 
+_PROJECT_VOCAB = None
+
+
+def project_vocabulary():
+    """Every content word the project's own FAQ uses, stemmed and cached.
+
+    Used to tell a genuine topic change from a keywordless follow-up: a
+    question whose content words are *all* absent from this vocabulary is
+    not a continuation of a project conversation, whatever the sticky flag
+    currently says.
+    """
+    global _PROJECT_VOCAB
+    if _PROJECT_VOCAB is None:
+        # Questions only, deliberately. Including answer text made the
+        # vocabulary far too broad: FAQ answers discuss their own examples
+        # ("the capital of France" appears in the write-up of a past false
+        # positive), so "capital" counted as project vocabulary and "what is
+        # the capital of japan" still read as a project follow-up. Headers
+        # are what the FAQ is *about*; answers are prose that can mention
+        # anything.
+        vocab = set()
+        for question, _ in load_faq():
+            vocab |= _keywords(question)
+        _PROJECT_VOCAB = vocab | {_stem(k) for k in PROJECT_KEYWORDS}
+    return _PROJECT_VOCAB
+
+
 def _stem(w):
     """Crude suffix stripping so a question and a FAQ header that use the
     same word in different forms still count as sharing it.
