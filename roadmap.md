@@ -74,6 +74,8 @@ First automated run: **23/28 (82%)**. Caught a real bug the eyeball method misse
 
   Also worth noting honestly: this retrain's resilient wrapper needed 6 attempts before starting, not because of a crash, its own pre-flight memory check (`MIN_FREE_MB=500`) correctly waited out a real low-memory moment on the machine (148MB free at one point) with backoff instead of starting into an OOM. Working as designed, not a new bug.
 
+Removed `eval/run_eval_rag.py`: predates `eval/score.py`, prints prompt/expect/got with no scoring, genuinely superseded by `eval/score.py --verbose` (same output plus real pass/fail). Confirmed zero references anywhere before deleting, dead code, not a stale-but-linked tool.
+
 ### Phase 6: Distillation, not scale (month 4+, optional/ambitious)
 Instead of chasing bigger bases, use a frontier model (Claude) to generate high-quality synthetic training examples in our exact style, then distill that into Samantha. This is literally how most useful small models are built today, nobody pretrains from raw internet text anymore if they can help it.
 
