@@ -31,6 +31,19 @@ if echo "$changed" | grep -qE '^(ask\.py|FAQ\.md)$'; then
   fi
 fi
 
+if echo "$changed" | grep -qE '^(serve\.py|ask\.py)$'; then
+  echo "serve.py/ask.py changed, running test_nimble.py..."
+  # proves Samantha is still callable as a pluggable engine by other apps.
+  # ask.py counts because serve.py is a thin wrapper over ask(), so an
+  # ask.py change can break the integration without touching serve.py.
+  if ! ./.venv/bin/python test_nimble.py; then
+    echo ""
+    echo "test_nimble.py failed, the Nimble integration is broken. Commit blocked."
+    echo "If this is expected, commit with --no-verify."
+    exit 1
+  fi
+fi
+
 if echo "$changed" | grep -qE '^chat\.py$'; then
   echo "chat.py changed, running test_chat.py..."
   if ! ./.venv/bin/python test_chat.py > /dev/null; then

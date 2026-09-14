@@ -163,3 +163,7 @@ Yes. `./samantha --tui` launches a full-screen curses interface (`chat.py`'s `tu
 ## What happens if I run ./samantha with no flags at all?
 
 Plain-text mode, the default. No flag means the ordinary line-by-line CLI (`chat.py`'s `chat()` function), not the TUI. Only `--tui` changes that.
+
+## Can Samantha be used from other apps, not just the terminal?
+
+Yes. `./.venv/bin/python serve.py` serves her over the OpenAI chat API shape on port 8127 (`POST /v1/chat/completions`, `GET /v1/models`), which is the one wire format most local-LLM tooling already speaks. Nimble needs no code changes at all: pick its Ollama engine and set the base URL to `http://localhost:8127`. A question Samantha declines comes back as the literal string `UNKNOWN`, which is Nimble's own signal to fall through to another engine rather than showing a refusal as if it were an answer. Run `./.venv/bin/python test_nimble.py` to check the pipe still works; it starts the server itself, sends the exact request Nimble builds, and parses the reply the way Nimble does.
