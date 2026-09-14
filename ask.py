@@ -65,8 +65,15 @@ def search(query, limit=3):
 # so pull the answer straight from the retrieved text instead of trusting the model
 EXTRACTORS = [
     (re.compile(r"\blicen[cs]e\b", re.I), re.compile(r"\b(MIT|Apache-2\.0|GPL-?v?\d|BSD-\d-Clause)\b")),
-    (re.compile(r"\bwhat tool\b.*\btrain", re.I), re.compile(r"`(mlx_lm\.lora|mlx-lm|run_lora_capped\.py)`")),
-    (re.compile(r"\bLoRA\b.*\bstand", re.I), re.compile(r"Low-Rank Adaptation")),
+    # Same order-dependency bug as the FIXED_FACTS fixes: the old ".*" forms
+    # required "train" to appear after "what tool" / "stand" after "LoRA",
+    # so natural rephrasings ("The training uses what tool?", "What does
+    # the acronym stand for, LoRA?") never matched and fell through to
+    # generation, which this file's own comment says invents wrong specifics
+    # for exactly these facts. Confirmed both misses before the fix.
+    # Lookaheads make order irrelevant, same fix as the rest of this file.
+    (re.compile(r"(?=.*\bwhat tool\b)(?=.*\btrain)", re.I), re.compile(r"`(mlx_lm\.lora|mlx-lm|run_lora_capped\.py)`")),
+    (re.compile(r"(?=.*\bLoRA\b)(?=.*\bstand)", re.I), re.compile(r"Low-Rank Adaptation")),
 ]
 
 # fixed facts that never change and don't benefit from retrieval: "Joshua
@@ -109,7 +116,13 @@ FIXED_FACTS = [
         "fix applied. Confirmed final after multiple retries, see roadmap.md.",
     ),
     (
-        re.compile(r"\bloss chart\b.*\bdata\b", re.I),
+        # Third instance of the exact same order bug as the who-wrote and
+        # blocked fixes above: the old ".*" pattern required "data" to
+        # appear *after* "loss chart", so "What data feeds the loss chart?",
+        # a completely natural phrasing of the same real question, never
+        # matched. Confirmed before the fix. Lookahead makes order
+        # irrelevant, same fix shape as the other two.
+        re.compile(r"(?=.*\bloss chart\b)(?=.*\bdata\b)", re.I),
         "parse_log.py parses the training log into web/status.json, which "
         "the landing page fetches and renders on a canvas.",
     ),
