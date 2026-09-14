@@ -5,93 +5,93 @@
   "train_loss": [
     {
       "iter": 10,
-      "loss": 3.547
+      "loss": 2.43
     },
     {
       "iter": 20,
-      "loss": 3.041
+      "loss": 2.305
     },
     {
       "iter": 30,
-      "loss": 3.187
+      "loss": 2.392
     },
     {
       "iter": 40,
-      "loss": 2.987
+      "loss": 1.646
     },
     {
       "iter": 50,
-      "loss": 2.49
+      "loss": 1.669
     },
     {
       "iter": 60,
-      "loss": 2.306
+      "loss": 2.073
     },
     {
       "iter": 70,
-      "loss": 2.54
+      "loss": 1.523
     },
     {
       "iter": 80,
-      "loss": 2.335
+      "loss": 2.125
     },
     {
       "iter": 90,
-      "loss": 2.092
+      "loss": 2.078
     },
     {
       "iter": 100,
-      "loss": 1.817
+      "loss": 2.304
     },
     {
       "iter": 110,
-      "loss": 1.951
+      "loss": 1.902
     },
     {
       "iter": 120,
-      "loss": 1.962
+      "loss": 1.696
     },
     {
       "iter": 130,
-      "loss": 1.478
+      "loss": 1.481
     },
     {
       "iter": 140,
-      "loss": 1.651
+      "loss": 1.551
     },
     {
       "iter": 150,
-      "loss": 1.283
+      "loss": 1.145
     },
     {
       "iter": 160,
-      "loss": 1.327
+      "loss": 1.532
     },
     {
       "iter": 170,
-      "loss": 1.474
+      "loss": 1.929
     },
     {
       "iter": 180,
-      "loss": 1.31
+      "loss": 2.164
     },
     {
       "iter": 190,
-      "loss": 1.011
+      "loss": 1.507
     },
     {
       "iter": 200,
-      "loss": 1.334
+      "loss": 1.654
     }
   ],
   "val_loss": [
     {
       "iter": 1,
-      "loss": 3.998
+      "loss": 2.104
     },
     {
       "iter": 200,
-      "loss": 2.145
+      "loss": 1.918
     }
   ],
   "status": "done",
