@@ -215,6 +215,12 @@ Everything measured before tonight was about the project's own docs or FAQ phras
 
   Fixed, plus `access-control-max-age` so browsers stop re-preflighting every call. Added a preflight check to `test_nimble.py` and then **verified the check can actually fail**: removed `allow-methods`, watched it report "a browser caller would be blocked" and exit 1, restored it, watched it pass. A test that has never failed isn't evidence of anything. 18/18 + 29/29 + 13/16 + Nimble 6/6.
 
+- **2026-09-14, new failure class: Wikipedia disambiguation pages.** Live-tested a batch of ordinary questions. "what do bees make" returned **"Bees Make Honey may refer to:Bees Make Honey (band), British band"**, a disambiguation page served as an answer. These are lists of things sharing a name and are never an answer to anything, and Wikipedia labels them itself (`type: "disambiguation"` on the summary endpoint), so rejecting them needs no heuristic at all. Fixed, and added the question to `eval/basic_questions.py` as a regression case. It now declines honestly rather than naming a band, which is the correct direction even though it is still not the right answer.
+
+  Same batch, same known ceiling, logged not chased: "largest country in the world" returns a ranked-list article, "when was the internet invented" returns **Al Gore**, and "how tall is mount everest" returns the Everest article whose summary says "Its height was most recently..." without the number. All three are the search-summary architecture answering "here is the topic" to a question asking "here is the value", which is the documented Phase 7 ceiling.
+
+  18/18 + 29/29 + 13/16 + Nimble 6/6.
+
 - **Open decision, deliberately not taken unilaterally: should general knowledge route to a local 8B?** `llama3.1:8b` and `qwen3:8b` are already on this machine and would answer all 19 correctly. It is architecturally consistent (the chain already delegates facts to non-Samantha sources, and it stays on-device, no frontier API), but it would make Samantha a thin router over a model 16x her size, which cuts against what this project is. Flagging it as Joshua's call rather than quietly changing what Samantha means.
 
 ### Phase 6: Distillation, not scale (month 4+, optional/ambitious)

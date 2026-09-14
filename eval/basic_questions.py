@@ -38,6 +38,9 @@ CASES = [
     ("what year did world war 2 end", ["1945"]),
     ("what is the chemical symbol for gold", ["au"]),
     ("how many sides does a triangle have", ["3", "three"]),
+    # regression: this hit a Wikipedia disambiguation page ("Bees Make Honey
+    # may refer to:"), which is a list of names, never an answer
+    ("what do bees make", ["honey"]),
     # "who is <person>" is the single most likely thing anyone types first
     ("who is steve jobs", ["apple"]),
     ("who is albert einstein", ["physicist", "relativity"]),

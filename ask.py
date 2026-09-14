@@ -676,6 +676,12 @@ def general_knowledge(query, skip_officeholder=False):
     if title:
         summary = http_json(f"https://en.wikipedia.org/api/rest_v1/page/summary/{urllib.parse.quote(title)}")
         extract = (summary or {}).get("extract")
+        # A disambiguation page is a list of things sharing a name, never an
+        # answer to anything. Confirmed live: "what do bees make" returned
+        # "Bees Make Honey may refer to:Bees Make Honey (band), British
+        # band". Wikipedia labels these itself, so this needs no heuristic.
+        if (summary or {}).get("type") == "disambiguation":
+            extract = None
         if extract and _wikipedia_answer_is_plausible(query, title, extract):
             return extract.strip(), f"Wikipedia: {title}"
     return None, None
