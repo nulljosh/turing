@@ -119,6 +119,22 @@ def answer_turn(question, history, topic_active):
             context = "\n\n---\n\n".join(r["text"][:800] for r in results)
             prompt = build_prompt(history, context, question)
             answer = clean(generate(prompt), question)
+
+    # topic_active is meant to track "has this conversation actually been
+    # about the project so far", not just "did the current question's own
+    # wording contain a project keyword". A question can be genuinely
+    # project-scoped (it FAQ-matched, or retrieval/generation answered it
+    # from project docs) without tripping is_project_question()'s keyword
+    # list, e.g. "how do I boot into you". Before this fix, a follow-up to
+    # exactly that kind of question ("what if I don't pass any flags") had
+    # no keyword of its own either, topic_active was still False, and it
+    # fell through to general_knowledge(), which returned an unrelated and
+    # genuinely alarming Wikipedia result (ISIS flag history) for a
+    # question that was actually about command-line flags. Latch
+    # topic_active on however the answer actually got produced, not just
+    # on re-deriving scope from the current question's words.
+    if faq_answer or (not holder_answer and not gk_answer and answer):
+        topic_active = True
     return answer, topic_active
 
 

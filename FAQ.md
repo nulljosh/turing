@@ -155,3 +155,7 @@ Run `./samantha` from the turing repo root. It activates the venv and launches `
 ## Is there a TUI, not just a plain CLI?
 
 Yes. `./samantha --tui` launches a full-screen curses interface (`chat.py`'s `tui()` function, stdlib `curses`, no new dependency), same conversation logic as the plain CLI, just a scrolling full-screen view instead of line-by-line prints. `./samantha` with no flag stays plain-text.
+
+## What happens if I run ./samantha with no flags at all?
+
+Plain-text mode, the default. No flag means the ordinary line-by-line CLI (`chat.py`'s `chat()` function), not the TUI. Only `--tui` changes that.
