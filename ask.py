@@ -621,6 +621,33 @@ def arithmetic(query):
     return f"{expr} = {value}"
 
 
+_CLOCK_PATTERNS = (
+    (re.compile(r"\bwhat(?:'s| is)?\s+(?:the\s+)?time\b", re.I), "%-I:%M %p"),
+    (re.compile(r"\bwhat\s+year\b", re.I), "%Y"),
+    (re.compile(r"\bwhat\s+month\b", re.I), "%B %Y"),
+    (re.compile(r"\bwhat\s+day(?:\s+of\s+the\s+week)?\s+is\s+it\b", re.I), "%A"),
+    (re.compile(r"\bwhat(?:'s| is)?\s+(?:today'?s?\s+)?(?:the\s+)?date\b", re.I), "%A, %B %-d, %Y"),
+    (re.compile(r"\bwhat\s+is\s+today\b", re.I), "%A, %B %-d, %Y"),
+)
+
+
+def clock(query):
+    """Answer date and time questions from the system clock.
+
+    The machine knows what day it is; no search engine should be asked.
+    Confirmed live: "what year is it" returned Wikipedia's **Flat Earth**
+    article, because a question about the year has no searchable subject and
+    the fulltext match landed on "Earth". Same category as arithmetic, one
+    exact answer available locally, so it never reaches the network.
+    """
+    import datetime
+
+    for pattern, fmt in _CLOCK_PATTERNS:
+        if pattern.search(query):
+            return datetime.datetime.now().strftime(fmt)
+    return None
+
+
 def general_knowledge(query, skip_officeholder=False):
     """Same pattern as nimble/docs/engine.js's ddg()/wiki(): DuckDuckGo's
     Instant Answer API first, Wikipedia's summary API as fallback. No API
@@ -637,6 +664,10 @@ def general_knowledge(query, skip_officeholder=False):
     exact = arithmetic(query)
     if exact:
         return exact, "arithmetic"
+
+    exact = clock(query)
+    if exact:
+        return exact, "system clock"
 
     # A question with no content word left after stopwords has nothing to
     # look up, and both DDG and Wikipedia will happily title-match it to
@@ -755,13 +786,24 @@ _QUESTION_SHAPE = re.compile(
 )
 
 
+# "tell me about X" is a request to look something up, not a task to
+# perform, but it has no question mark and starts with a verb, so the
+# question-shape test rejected it. Confirmed live: "tell me about
+# photosynthesis" was declined as out of scope, an obviously answerable
+# question. Kept as an explicit short list rather than loosening the rule,
+# because the rule exists to stop "write a commit message for X" reaching
+# Wikipedia and matching its Git article.
+_LOOKUP_IMPERATIVE = re.compile(r"^(?:tell me about|explain|describe|define)\b", re.I)
+
+
 def is_question(text):
     # general_knowledge hits DDG/Wikipedia, which sometimes returns a
     # loosely-related instant answer for an imperative instruction too
     # ("write a commit message for X" once matched Wikipedia's "Git"
     # article). Only real questions should reach it, not task prompts.
     text = text.strip()
-    return text.endswith("?") or bool(_QUESTION_SHAPE.match(text))
+    return (text.endswith("?") or bool(_QUESTION_SHAPE.match(text))
+            or bool(_LOOKUP_IMPERATIVE.match(text)))
 
 
 def ask(question):

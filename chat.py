@@ -9,7 +9,7 @@ roadmap.md's "What we will never do on this budget."
 import os, re, sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from ask import search, try_extract, faq_match, general_knowledge, is_project_question, is_question, current_officeholder, _WHO_PREFIX, _QUESTION_PREFIX, _keywords, project_vocabulary, OUT_OF_SCOPE, UNREACHABLE, LOOKUP_FAILED, MODEL, ADAPTER, SYSTEM
+from ask import search, try_extract, faq_match, general_knowledge, is_project_question, is_question, current_officeholder, _WHO_PREFIX, _QUESTION_PREFIX, _keywords, project_vocabulary, clock, arithmetic, OUT_OF_SCOPE, UNREACHABLE, LOOKUP_FAILED, MODEL, ADAPTER, SYSTEM
 import subprocess
 
 HISTORY_TURNS = 3  # how many prior exchanges to keep as short-term memory
@@ -68,6 +68,13 @@ def project_scope(question, topic_active):
 _PRONOUN = re.compile(r"\b(?:he|him|his|she|hers|they|them|their|its|it)\b", re.I)
 
 
+def self_contained(question):
+    """True when the question answers itself locally (clock, arithmetic).
+    Such a question never refers back to an earlier turn, and never supplies
+    a subject a later turn could refer back to."""
+    return bool(clock(question) or arithmetic(question))
+
+
 def subject_of(question):
     """The thing a question was about, for resolving the next question's
     pronoun against. Reuses ask.py's own prefix regexes rather than a new
@@ -95,6 +102,14 @@ def resolve_followup(question, last_subject):
     query name its subject, and leaves the rest of the sentence intact.
     """
     if not last_subject or not _PRONOUN.search(question):
+        return question
+    # "it" in "what day is it" or "what is 2+2, is it 4" is a dummy subject,
+    # not a reference to anything earlier. These questions answer themselves
+    # from the clock or a calculator, so substituting into them can only
+    # corrupt them. Confirmed live: "what year is it" then "what day is it"
+    # became "what day is what year is it", which re-matched the year
+    # pattern and answered 2026 twice.
+    if self_contained(question):
         return question
     return _PRONOUN.sub(last_subject, question, count=1)
 
@@ -239,7 +254,7 @@ def answer_turn(question, history, topic_active, last_subject=None):
         topic_active = True
     # remember the subject only while the conversation is off-project, so a
     # stale person never gets substituted into a later project question
-    if holder_answer or gk_answer:
+    if (holder_answer or gk_answer) and not self_contained(question):
         last_subject = subject_of(question) or last_subject
     elif topic_active:
         last_subject = None

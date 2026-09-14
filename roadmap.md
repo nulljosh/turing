@@ -221,6 +221,16 @@ Everything measured before tonight was about the project's own docs or FAQ phras
 
   18/18 + 29/29 + 13/16 + Nimble 6/6.
 
+- **2026-09-14, three more real bugs from four ordinary questions.** Tested statements and non-question shapes for the first time.
+
+  **"what year is it" returned Wikipedia's Flat Earth article.** A date question has no searchable subject, so the fulltext match landed on "Earth". The machine has a clock; no search engine should ever have been asked. Added `clock()`, same category as `arithmetic()`, answering year, month, day, time and date locally and exactly, before anything touches the network.
+
+  **"tell me about photosynthesis" was declined as out of scope.** `is_question()` rejected it because it has no question mark and starts with a verb. That test exists for a real reason (it stops "write a commit message for X" reaching Wikipedia and matching the Git article), so rather than loosening it, added a short explicit list of lookup imperatives: tell me about, explain, describe, define. Verified the original case still declines: "write a commit message for adding dark mode" stays out.
+
+  **Then the clock fix exposed a third bug in the pronoun resolution I added earlier tonight.** "what year is it" then "what day is it" answered **2026 twice**. Two causes compounding: `subject_of("what year is it")` couldn't strip anything and returned the whole question as the "subject", then `resolve_followup` substituted it into the next question, producing "what day is what year is it", which re-matched the year pattern. The "it" in these questions is a dummy subject, not a reference to a previous turn. Added `self_contained()`, a question answerable locally by clock or arithmetic never refers back and never supplies a subject to refer back to, so it is skipped on both sides of the resolution. Verified clock questions and genuine pronoun follow-ups ("who is steve jobs" then "what company did he found") both work.
+
+  18/18 + 29/29 + 13/16 + Nimble 6/6. Holdout shows 17/18 on the Carney prompt, verified as Wikidata rate limiting again (a direct call returns UNREACHABLE), not a regression.
+
 - **Open decision, deliberately not taken unilaterally: should general knowledge route to a local 8B?** `llama3.1:8b` and `qwen3:8b` are already on this machine and would answer all 19 correctly. It is architecturally consistent (the chain already delegates facts to non-Samantha sources, and it stays on-device, no frontier API), but it would make Samantha a thin router over a model 16x her size, which cuts against what this project is. Flagging it as Joshua's call rather than quietly changing what Samantha means.
 
 ### Phase 6: Distillation, not scale (month 4+, optional/ambitious)
