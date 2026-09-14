@@ -239,6 +239,12 @@ Everything measured before tonight was about the project's own docs or FAQ phras
 
   18/18 + 29/29 + 18/18 + 13/16 + Nimble 6/6.
 
+- **2026-09-14, CI had been red on every push and the cause was a hardcoded home path.** `test_scope_stays_active_across_keywordless_followup` failed on GitHub while passing locally. `FAQ_PATH` (and `ADAPTER`, and both `mlx_lm.generate` calls) pointed at an absolute `~/Documents/Code/turing/...`, so on a runner the FAQ loaded as an empty list, `project_vocabulary()` came back with no FAQ words in it, and the topic-change carve-out added earlier tonight concluded every question was a change of subject. The test was right; the paths were wrong.
+
+  Not just a CI problem: any clone anywhere but that exact directory was silently degraded, which is a real portability bug the test happened to catch. All project-local paths now derive from `REPO = os.path.dirname(os.path.abspath(__file__))`.
+
+  Verified properly rather than by assumption. A plain `git clone` on this machine passes *for the wrong reason*, since `~/Documents/Code/turing/FAQ.md` still exists and the absolute path resolves. Re-ran with a fake `HOME` instead: the old hardcoded path reproduces CI's exact `AssertionError`, the new path passes 18/18.
+
 - **Open decision, deliberately not taken unilaterally: should general knowledge route to a local 8B?** `llama3.1:8b` and `qwen3:8b` are already on this machine and would answer all 19 correctly. It is architecturally consistent (the chain already delegates facts to non-Samantha sources, and it stays on-device, no frontier API), but it would make Samantha a thin router over a model 16x her size, which cuts against what this project is. Flagging it as Joshua's call rather than quietly changing what Samantha means.
 
 ### Phase 6: Distillation, not scale (month 4+, optional/ambitious)

@@ -9,10 +9,17 @@ of trying to recall them from weights. See roadmap.md, run 6.
 """
 import difflib, hashlib, json, math, os, re, subprocess, sys, urllib.parse, urllib.request
 
+# Every project-local path derives from this file, never from a hardcoded
+# ~/Documents/Code/turing. That absolute path meant a clone anywhere else
+# silently loaded an empty FAQ: CI failed on a topic-scope test for exactly
+# that reason, because project_vocabulary() came back with no FAQ words in
+# it and every question looked like a change of subject.
+REPO = os.path.dirname(os.path.abspath(__file__))
+
 BRAIN_ENV = os.path.expanduser("~/Documents/Code/brain/.env.local")
 BRAIN_URL = "https://brain.heyitsmejosh.com/api/search"
 MODEL = "mlx-community/Qwen2.5-0.5B-Instruct-4bit"
-ADAPTER = os.path.expanduser("~/Documents/Code/turing/ada-1-adapter")
+ADAPTER = os.path.join(REPO, "ada-1-adapter")
 
 # shared house-voice rules, used by both ask() here and chat.py's multi-turn
 # loop, so the two don't quietly drift into different personalities
@@ -129,7 +136,7 @@ FIXED_FACTS = [
 ]
 
 
-FAQ_PATH = os.path.expanduser("~/Documents/Code/turing/FAQ.md")
+FAQ_PATH = os.path.join(REPO, "FAQ.md")
 FAQ_MATCH_THRESHOLD = 0.55  # below this, a "match" is more likely coincidence than intent
 
 
@@ -172,7 +179,7 @@ _STOPWORDS = {
 EMBED_MODEL = "nomic-embed-text"
 EMBED_URL = "http://localhost:11434/api/embed"
 EMBED_THRESHOLD = 0.70
-EMBED_CACHE = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".faq_embeddings.json")
+EMBED_CACHE = os.path.join(REPO, ".faq_embeddings.json")
 
 
 def _embed(texts, timeout=8):
@@ -947,7 +954,7 @@ def ask(question):
 
     faq_answer = faq_match(question)
     if faq_answer:
-        return faq_answer, ["~/Documents/Code/turing/FAQ.md"]
+        return faq_answer, [FAQ_PATH]
 
     if not is_project_question(question) and is_question(question):
         gk_answer, gk_source = general_knowledge(question)
@@ -970,7 +977,7 @@ def ask(question):
     prompt = f"{SYSTEM}\n\nContext:\n{context}\n\nQuestion: {question}"
     out = subprocess.run(
         [
-            os.path.expanduser("~/Documents/Code/turing/.venv/bin/mlx_lm.generate"),
+            os.path.join(REPO, ".venv/bin/mlx_lm.generate"),
             "--model", MODEL,
             "--adapter-path", ADAPTER,
             "--prompt", prompt,

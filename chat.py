@@ -144,7 +144,7 @@ def clean(answer, question):
 def generate(prompt, max_tokens=80):
     out = subprocess.run(
         [
-            os.path.expanduser("~/Documents/Code/turing/.venv/bin/mlx_lm.generate"),
+            os.path.join(os.path.dirname(os.path.abspath(__file__)), ".venv/bin/mlx_lm.generate"),
             "--model", MODEL,
             "--adapter-path", ADAPTER,
             "--prompt", prompt,
