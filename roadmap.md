@@ -285,6 +285,10 @@ Eight runs established what this project keeps relearning: a 0.5B LoRA absorbs s
 
   Wired into `prep_data.py` as an optional source, so a fresh clone with no `data/` still trains.
 
+- **Retrain attempted 2026-09-14 and correctly refused to start: only ~0.4GB free.** `prep_data.py` rebuilt cleanly with the harvested pairs included (295 own chunks x3 plus 100 fleet chunks, 985 total, up from 55 own chunks). But this machine has crashed mid-backprop from a clean 6.4GB free, so starting a run at 0.4GB would have taken the Mac down rather than produced a model. Deferred rather than attempted. **Next session: check free memory first, then `train_resilient.sh` (it has its own MIN_FREE_MB pre-flight and will wait out a low-memory moment with backoff).**
+
+- **Trap to remember before measuring any new adapter:** `ask.py` now caches generation output keyed by prompt hash, so a fresh adapter measured against a warm cache returns the *old* adapter's answers. Delete `.http_cache.json` before scoring a retrain.
+
 - Not yet done: the retrain itself, and a held-out check that the harvested pairs improve commit-message quality without regressing the FAQ/retrieval paths. More data has made things *worse* before (run 7), so this needs measuring, not assuming.
 
 ### Phase 6: Distillation, not scale (month 4+, optional/ambitious)
