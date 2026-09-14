@@ -9,7 +9,7 @@ roadmap.md's "What we will never do on this budget."
 import os, sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from ask import search, try_extract, faq_match, general_knowledge, is_project_question, is_question, current_officeholder, _WHO_PREFIX, MODEL, ADAPTER, SYSTEM
+from ask import search, try_extract, faq_match, general_knowledge, is_project_question, is_question, current_officeholder, _WHO_PREFIX, UNREACHABLE, LOOKUP_FAILED, MODEL, ADAPTER, SYSTEM
 import subprocess
 
 HISTORY_TURNS = 3  # how many prior exchanges to keep as short-term memory
@@ -109,7 +109,12 @@ def answer_turn(question, history, topic_active):
     project_scoped, topic_active = project_scope(question, topic_active)
     holder_answer = None
     if not project_scoped and _WHO_PREFIX.match(question.strip()):
-        holder_answer = current_officeholder(question)[0]
+        holder_answer, holder_source = current_officeholder(question)
+        # same honesty rule as ask.py: a failed lookup admits the outage
+        # instead of falling through to an FAQ entry that describes the
+        # feature rather than answering the question
+        if not holder_answer and holder_source is UNREACHABLE:
+            holder_answer = LOOKUP_FAILED
 
     faq_answer = None if holder_answer else faq_match(question)
     gk_answer = None

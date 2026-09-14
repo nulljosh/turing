@@ -405,13 +405,24 @@ def try_extract(question, results):
     return None
 
 
-def http_json(url, timeout=8):
+FETCH_FAILED = object()  # sentinel: the request itself failed, not "no result"
+
+
+def http_json(url, timeout=8, on_error=None):
+    """Returns parsed JSON, or `on_error` if the request failed.
+
+    The default keeps every existing caller unchanged, but a caller that
+    needs to tell "the network is down" apart from "the service answered,
+    and the answer was empty" can pass `on_error=FETCH_FAILED`. Collapsing
+    both into None is what let a transient Wikidata outage masquerade as
+    "this isn't an officeholder question", see current_officeholder.
+    """
     req = urllib.request.Request(url, headers={"user-agent": "turing-ask/1.0"})
     try:
         with urllib.request.urlopen(req, timeout=timeout) as r:
             return json.load(r)
     except Exception:
-        return None
+        return on_error
 
 
 _QUESTION_PREFIX = re.compile(
@@ -430,6 +441,12 @@ def normalize_query(query):
 
 
 _WHO_PREFIX = re.compile(r"^who(?:'s|\s+(?:is|are|was|were))\s+", re.I)
+
+UNREACHABLE = "__lookup_unreachable__"  # source marker, not a real source
+LOOKUP_FAILED = (
+    "I couldn't reach Wikidata to look that up just now, so I don't know "
+    "who currently holds it. Not going to guess at a name."
+)
 
 
 def current_officeholder(query):
@@ -465,18 +482,33 @@ def current_officeholder(query):
     # now" by definition (see current_officeholder's own docstring).
     office = re.sub(r"^(?:(?:the|current|present|sitting)\s+)+", "", office, flags=re.I)
 
+    # A failed request and a genuine "Wikidata has no such office" both used
+    # to return None here, and the caller could only read that as "not an
+    # officeholder question, carry on". Confirmed live with Wikidata stubbed
+    # out: "who is the current prime minister of canada" fell through and
+    # answered with FAQ.md's own entry *describing this very feature* ("Yes,
+    # as of 2026-09-13. DDG and a plain Wikipedia summary both describe the
+    # office..."), documentation about itself presented as the answer. The
+    # v0.7.4 entry logged this as a known resilience gap and left it. Keep
+    # the two apart so a transient outage can be admitted instead of faked.
     hits = http_json(
         f"https://www.wikidata.org/w/api.php?action=wbsearchentities&search={urllib.parse.quote(office)}"
-        "&language=en&format=json&limit=1"
+        "&language=en&format=json&limit=1",
+        on_error=FETCH_FAILED,
     )
+    if hits is FETCH_FAILED:
+        return None, UNREACHABLE
     hits = (hits or {}).get("search", [])
     if not hits:
         return None, None
     entity_id = hits[0]["id"]
 
     claims = http_json(
-        f"https://www.wikidata.org/w/api.php?action=wbgetclaims&entity={entity_id}&property=P1308&format=json"
+        f"https://www.wikidata.org/w/api.php?action=wbgetclaims&entity={entity_id}&property=P1308&format=json",
+        on_error=FETCH_FAILED,
     )
+    if claims is FETCH_FAILED:
+        return None, UNREACHABLE
     p1308 = (claims or {}).get("claims", {}).get("P1308", [])
     current = next((c for c in p1308 if c.get("rank") == "preferred"), None)
     if not current:
@@ -486,8 +518,11 @@ def current_officeholder(query):
     holder_id = current["mainsnak"]["datavalue"]["value"]["id"]
 
     entities = http_json(
-        f"https://www.wikidata.org/w/api.php?action=wbgetentities&ids={holder_id}&props=labels&languages=en&format=json"
+        f"https://www.wikidata.org/w/api.php?action=wbgetentities&ids={holder_id}&props=labels&languages=en&format=json",
+        on_error=FETCH_FAILED,
     )
+    if entities is FETCH_FAILED:
+        return None, UNREACHABLE
     label = (entities or {}).get("entities", {}).get(holder_id, {}).get("labels", {}).get("en", {}).get("value")
     if not label:
         return None, None
@@ -588,6 +623,13 @@ def ask(question):
         holder, holder_source = current_officeholder(question)
         if holder:
             return holder, [holder_source]
+        # The lookup was attempted and the network failed, as opposed to
+        # this simply not being an officeholder question. Falling through
+        # here is what let FAQ.md answer with its own description of this
+        # feature. Admitting the outage is the only honest option, the real
+        # answer changes over time and nothing local can stand in for it.
+        if holder_source is UNREACHABLE:
+            return LOOKUP_FAILED, []
 
     faq_answer = faq_match(question)
     if faq_answer:

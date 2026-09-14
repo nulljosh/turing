@@ -5,7 +5,7 @@ once when the indentation bug got fixed (see roadmap.md).
 
 Usage: ./.venv/bin/python test_chat.py
 """
-from chat import clean, build_prompt, HISTORY_TURNS, project_scope
+from chat import clean, build_prompt, HISTORY_TURNS, project_scope, answer_turn
 
 
 def test_clean_strips_echoed_user_turn():
@@ -76,6 +76,34 @@ def test_scope_officeholder_overrides_active_topic():
 def test_scope_direct_keyword_match_without_prior_history():
     scoped, active = project_scope("What is its first model called?", False)
     assert scoped and active
+
+
+def test_officeholder_outage_admits_it_instead_of_answering_from_faq():
+    # A dead Wikidata used to look identical to "not an officeholder
+    # question", so the question fell through and FAQ.md answered with its
+    # own description of this feature. Stays offline: the stub makes every
+    # request fail, so this never touches the network.
+    import ask
+    real = ask.http_json
+    ask.http_json = lambda url, timeout=8, on_error=None: on_error
+    try:
+        answer, _ = answer_turn("who is the current prime minister of canada", [], False)
+        assert answer == ask.LOOKUP_FAILED, answer
+    finally:
+        ask.http_json = real
+
+
+def test_officeholder_empty_result_is_not_treated_as_an_outage():
+    # the other half of the same distinction: a request that succeeds and
+    # simply finds no office must still fall through normally, or every
+    # "who is ..." question would start claiming the network is down
+    import ask
+    real = ask.http_json
+    ask.http_json = lambda url, timeout=8, on_error=None: {"search": []}
+    try:
+        assert ask.current_officeholder("who is the wizard of oz") == (None, None)
+    finally:
+        ask.http_json = real
 
 
 if __name__ == "__main__":
