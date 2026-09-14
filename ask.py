@@ -205,9 +205,33 @@ def faq_match(question):
     q_keywords = _keywords(question)
     q_norm = question.lower().strip("? ")
     best_key, best_score, best_answer = None, 0.0, None
+    # A question's rarest content word is what it's actually about. If that
+    # word appears in no FAQ question at all (document frequency 0), the
+    # question is about something this FAQ has never heard of, and any
+    # match is coming from generic filler overlap. Confirmed live, both
+    # returning confident project answers to questions about other things:
+    # "is my sink blocked right now" matched "What's blocked or paused
+    # right now?" on the single word "blocked" ("sink" is unknown), and
+    # "what is the difference between python and javascript" matched
+    # "What's the actual difference between ask.py and chat.py?" on
+    # "difference" alone. The earlier 2026-09-14 fix for the sink case
+    # patched FIXED_FACTS only, this sibling path had the identical bug.
+    # Requiring the match to share one of the question's minimum-df words
+    # kills both: when the rarest words are unknown, nothing can share them.
+    foreign = {kw for kw in q_keywords if kw not in doc_freq}
     for faq_q, faq_a in pairs:
         shared = q_keywords & _keywords(faq_q)
-        if not shared:
+        # A question carrying more words this FAQ has never seen than words
+        # it shares with an entry is a question about something else, and
+        # the match is riding on generic filler. First attempt vetoed on
+        # the rarest word being unknown at all, which killed recall outright
+        # (3/16 to 0/16 on the paraphrase set): ordinary verbs like "come"
+        # are unknown too, without being what the question is about. Counting
+        # them against the shared words instead separates the two cases,
+        # a real paraphrase shares several project words and drags in an
+        # incidental unknown verb, an off-topic question shares one generic
+        # word and drags in its own real subject.
+        if not shared or len(foreign) >= len(shared):
             continue
         seq_ratio = difflib.SequenceMatcher(None, q_norm, faq_q.lower().strip("? ")).ratio()
         # blend in keyword-overlap fraction, pure sentence-shape similarity
