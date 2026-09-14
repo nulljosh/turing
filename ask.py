@@ -307,7 +307,15 @@ def current_officeholder(query):
     # ("who's is"), which never happens for a contraction, so strip the
     # who-prefix here first instead of relying on it.
     office = _WHO_PREFIX.sub("", query.strip()).rstrip("?").strip()
-    office = re.sub(r"^the\s+", "", office, flags=re.I)
+    # confirmed live: "who is the CURRENT prime minister of Canada" broke
+    # the Wikidata entity search entirely (silently returned no hits,
+    # since Wikidata's entity is just "Prime Minister of Canada", not
+    # "current prime minister of Canada"), which then fell through to a
+    # wrong FAQ answer describing this very feature instead of using it.
+    # Strip these filler words too, not just "the", they add no entity
+    # identity of their own, every officeholder answer is already "as of
+    # now" by definition (see current_officeholder's own docstring).
+    office = re.sub(r"^(?:(?:the|current|present|sitting)\s+)+", "", office, flags=re.I)
 
     hits = http_json(
         f"https://www.wikidata.org/w/api.php?action=wbsearchentities&search={urllib.parse.quote(office)}"

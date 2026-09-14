@@ -15,4 +15,5 @@
 {"prompt": "What tool trains the adapter?", "expects": "Either the real mlx_lm.lora answer or an honest fallback, never a fabricated training method.", "must_not_contain": ["Adversarial Training for Speech", "ATR"]}
 {"prompt": "What's the difference between Turing and Samantha?", "expects": "Turing is the project, Samantha is the model it produced, same relationship as Anthropic/Claude.", "must_contain_any": ["Anthropic", "Claude"], "must_not_contain": ["fine-tune of a frozen"]}
 {"prompt": "Is the model good?", "expects": "Some honest answer about Samantha's real quality, not a hijacked Wikipedia article about an unrelated law.", "must_not_contain": ["Good Samaritan", "Food Donation"]}
+{"prompt": "Who is the current prime minister of Canada?", "expects": "Mark Carney, via Wikidata, not the FAQ entry that just describes this feature.", "must_contain": ["Carney"], "must_not_contain": ["Wikidata's own", "rank: preferred"]}
 
