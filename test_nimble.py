@@ -95,6 +95,25 @@ def main():
         if not answer or "4" not in answer:
             failures.append(f"arithmetic failed: {answer!r}")
 
+        # Nimble's web build (docs/engine.js) calls this from a browser, so
+        # the CORS preflight has to pass or that build simply cannot reach
+        # Samantha. Checked here because it is invisible over plain curl:
+        # the native build worked fine while allow-methods was missing.
+        preflight = urllib.request.Request(
+            BASE + "/v1/chat/completions", method="OPTIONS",
+            headers={"Origin": "http://localhost:8080",
+                     "Access-Control-Request-Method": "POST",
+                     "Access-Control-Request-Headers": "content-type"},
+        )
+        with urllib.request.urlopen(preflight, timeout=5) as r:
+            cors = {k.lower(): v for k, v in r.headers.items()}
+        if "*" not in cors.get("access-control-allow-origin", ""):
+            failures.append("preflight missing access-control-allow-origin")
+        if "POST" not in cors.get("access-control-allow-methods", "").upper():
+            failures.append("preflight does not allow POST, a browser caller would be blocked")
+        if "content-type" not in cors.get("access-control-allow-headers", "").lower():
+            failures.append("preflight does not allow the content-type header")
+
         # the contract that matters for a pluggable engine: a decline must
         # read as UNKNOWN so Nimble falls through instead of rendering a
         # refusal sentence as though it were the answer
@@ -109,7 +128,7 @@ def main():
     if failures:
         print(f"\n{len(failures)} Nimble integration check(s) failed")
         return 1
-    print("Nimble integration OK: models, project Q, general Q, arithmetic, UNKNOWN fallback")
+    print("Nimble integration OK: models, project Q, general Q, arithmetic, CORS preflight, UNKNOWN fallback")
     return 0
 
 

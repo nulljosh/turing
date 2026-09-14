@@ -47,10 +47,18 @@ class Handler(BaseHTTPRequestHandler):
         self.send_response(status)
         self.send_header("content-type", "application/json")
         self.send_header("content-length", str(len(body)))
-        # a browser-based caller (Nimble's web build) is same-origin-blocked
-        # without this, and this only ever listens on localhost
+        # A browser-based caller (Nimble's web build at docs/engine.js) is
+        # same-origin-blocked without these, and this only ever listens on
+        # localhost. allow-methods is not optional: a POST carrying
+        # content-type: application/json triggers a preflight, and Chrome
+        # rejects the preflight outright if the response doesn't name the
+        # method. Confirmed missing here, which meant the native Nimble
+        # build worked over HTTP while the web build could not have called
+        # this at all.
         self.send_header("access-control-allow-origin", "*")
+        self.send_header("access-control-allow-methods", "GET, POST, OPTIONS")
         self.send_header("access-control-allow-headers", "content-type, authorization")
+        self.send_header("access-control-max-age", "86400")
         self.end_headers()
         self.wfile.write(body)
 
