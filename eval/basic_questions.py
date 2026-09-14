@@ -60,14 +60,15 @@ def main():
 
     right = declined = wrong = 0
     for i, (question, accepted) in enumerate(CASES):
-        # Wikidata and Wikipedia both rate-limit, and this harness fires
-        # several requests per question. Run flat out and the run throttles
-        # *itself* partway through: measured 16/19 and 11/19 on identical
-        # code, with all four "who is <person>" questions declining in the
-        # second run purely from 429s. A score that swings on request
-        # pacing is not a measurement, so pace it.
+        # Pacing exists because Wikidata and Wikipedia both rate-limit, and
+        # a self-throttled run is not a measurement: identical code scored
+        # 16/19 and then 9/20 purely on 429s. ask.py now caches successful
+        # lookups to disk for a day, so a rerun makes no requests at all and
+        # only genuinely new questions ever reach the network. That made the
+        # 3s pace mostly dead time, so it is 1s now, enough to stay polite
+        # on a cold first run.
         if i:
-            time.sleep(3.0)
+            time.sleep(1.0)
         answer = (ask(question)[0] or "").strip()
         low = answer.lower()
         if any(a.lower() in low for a in accepted):

@@ -7,7 +7,7 @@ examples reliably learns style but not facts. This is the fix: keep facts
 in brain's live index, let the model reason over retrieved context instead
 of trying to recall them from weights. See roadmap.md, run 6.
 """
-import difflib, hashlib, json, math, os, re, subprocess, sys, urllib.parse, urllib.request
+import difflib, hashlib, json, math, os, re, subprocess, sys, time, urllib.parse, urllib.request
 
 # Every project-local path derives from this file, never from a hardcoded
 # ~/Documents/Code/turing. That absolute path meant a clone anywhere else
@@ -57,11 +57,16 @@ def search(query, limit=3):
         "authorization": f"Bearer {token}",
         "user-agent": "turing-ask/1.0",
     })
-    try:
-        with urllib.request.urlopen(req, timeout=15) as r:
-            results = json.load(r)["results"]
-    except Exception:
-        return []
+    cached = _cache_get(url)
+    if cached is not None:
+        results = cached
+    else:
+        try:
+            with urllib.request.urlopen(req, timeout=15) as r:
+                results = json.load(r)["results"]
+        except Exception:
+            return []
+        _cache_put(url, results)
     own = [r for r in results if "/turing/" in r["source"]]
     other = [r for r in results if "/turing/" not in r["source"]]
     return (own + other)[:limit]
@@ -450,8 +455,52 @@ def try_extract(question, results):
 FETCH_FAILED = object()  # sentinel: the request itself failed, not "no result"
 
 
+HTTP_CACHE = os.path.join(REPO, ".http_cache.json")
+HTTP_CACHE_TTL = 24 * 60 * 60  # a Wikipedia summary does not change hourly
+_http_cache = None
+
+
+def _cache_load():
+    global _http_cache
+    if _http_cache is None:
+        try:
+            _http_cache = json.load(open(HTTP_CACHE))
+        except Exception:
+            _http_cache = {}
+    return _http_cache
+
+
+def _cache_get(url):
+    entry = _cache_load().get(hashlib.sha256(url.encode()).hexdigest())
+    if not entry:
+        return None
+    if time.time() - entry.get("t", 0) > HTTP_CACHE_TTL:
+        return None
+    return entry.get("body")
+
+
+def _cache_put(url, body):
+    cache = _cache_load()
+    cache[hashlib.sha256(url.encode()).hexdigest()] = {"t": time.time(), "body": body}
+    try:
+        json.dump(cache, open(HTTP_CACHE, "w"))
+    except OSError:
+        pass  # a read-only checkout still works, it just refetches
+
+
 def http_json(url, timeout=8, on_error=None):
     """Returns parsed JSON, or `on_error` if the request failed.
+
+    Successful responses are cached on disk for a day. Wikipedia summaries
+    and Wikidata claims do not change hour to hour, and re-fetching them is
+    what got this session rate-limited by *both* services badly enough that
+    an eval run scored 9/20 through a dead network while the code was fine.
+    Caching is the actual fix for that, not pacing: a repeated question
+    costs nothing, and a rerun of the eval suite hits the network only for
+    questions it has never asked before.
+
+    Failures are deliberately never cached, so a throttled minute doesn't
+    get frozen in for a day.
 
     The default keeps every existing caller unchanged, but a caller that
     needs to tell "the network is down" apart from "the service answered,
@@ -459,12 +508,17 @@ def http_json(url, timeout=8, on_error=None):
     both into None is what let a transient Wikidata outage masquerade as
     "this isn't an officeholder question", see current_officeholder.
     """
+    cached = _cache_get(url)
+    if cached is not None:
+        return cached
     req = urllib.request.Request(url, headers={"user-agent": "turing-ask/1.0"})
     try:
         with urllib.request.urlopen(req, timeout=timeout) as r:
-            return json.load(r)
+            body = json.load(r)
     except Exception:
         return on_error
+    _cache_put(url, body)
+    return body
 
 
 _QUESTION_PREFIX = re.compile(
@@ -1034,6 +1088,12 @@ def ask(question):
         return OUT_OF_SCOPE, []
     context = "\n\n---\n\n".join(r["text"][:800] for r in results)
     prompt = f"{SYSTEM}\n\nContext:\n{context}\n\nQuestion: {question}"
+    # generation is a ~2s subprocess that reloads the model every call, and
+    # the same prompt always yields the same text, so cache it like a fetch
+    cache_key = f"generate::{ADAPTER}::100::{prompt}"
+    cached = _cache_get(cache_key)
+    if cached is not None:
+        return cached, [r["source"] for r in results]
     out = subprocess.run(
         [
             os.path.join(REPO, ".venv/bin/mlx_lm.generate"),
@@ -1045,6 +1105,8 @@ def ask(question):
         capture_output=True, text=True,
     )
     gen = out.stdout.split("==========")[1].strip() if "==========" in out.stdout else out.stdout.strip()
+    if gen:
+        _cache_put(cache_key, gen)
     return gen, [r["source"] for r in results]
 
 

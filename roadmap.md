@@ -261,6 +261,16 @@ Everything measured before tonight was about the project's own docs or FAQ phras
 
   Verified after: with Wikipedia recovered, "how many sides does a triangle have" and "what is the chemical symbol for gold" both answer again, confirming those declines were throttling rather than the code. 18/18 + 29/29 + 18/18 + 13/16 + Nimble 6/6. **The 9/20 number itself should not be quoted**, it was measured through a throttled network; the next clean run needs a genuinely rested one.
 
+- **2026-09-14, cached every slow path, which fixes the rate-limiting problem at its root.** Pacing the eval harness treated the symptom. The real issue was refetching identical URLs: a Wikipedia summary does not change hour to hour, and re-asking for it is what got both Wikidata and Wikipedia throttling this session badly enough that a run scored 9/20 through a dead network while the code was fine.
+
+  `http_json()` now caches successful responses to disk for a day, keyed by URL. Failures are deliberately never cached, so a throttled minute can't freeze in for 24 hours. Measured: a repeated question went 0.93s to 0.04s, and a rerun of the eval suite makes no network requests at all for questions it has already asked. Pacing dropped from 3s to 1s as a result, only relevant on a cold first run.
+
+  Extended to the other two slow paths on the same principle: brain's RAG search (a 15s-timeout network call) and `mlx_lm.generate` (a ~2s subprocess that reloads the model every time and returns the same text for the same prompt).
+
+  **First clean measurement since: 13/20 right, 0 declined.** Trustworthy now in a way none of the recent numbers were.
+
+  Also chased what looked like a fresh bug, "how many sides does a triangle have" declining while answering fine in isolation, and traced it to the throttled window rather than the code. The cache is what stops that class of phantom bug recurring.
+
 - **Open decision, deliberately not taken unilaterally: should general knowledge route to a local 8B?** `llama3.1:8b` and `qwen3:8b` are already on this machine and would answer all 19 correctly. It is architecturally consistent (the chain already delegates facts to non-Samantha sources, and it stays on-device, no frontier API), but it would make Samantha a thin router over a model 16x her size, which cuts against what this project is. Flagging it as Joshua's call rather than quietly changing what Samantha means.
 
 ### Phase 6: Distillation, not scale (month 4+, optional/ambitious)

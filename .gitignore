@@ -8,3 +8,4 @@ scratch/scratch.log
 __pycache__/
 .wrangler/
 .faq_embeddings.json
+.http_cache.json
