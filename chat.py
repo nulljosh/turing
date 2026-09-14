@@ -9,7 +9,7 @@ roadmap.md's "What we will never do on this budget."
 import os, re, sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from ask import search, try_extract, faq_match, general_knowledge, is_project_question, is_question, current_officeholder, _WHO_PREFIX, _QUESTION_PREFIX, _keywords, project_vocabulary, clock, arithmetic, convert, local_answer, OUT_OF_SCOPE, UNREACHABLE, LOOKUP_FAILED, MODEL, ADAPTER, SYSTEM
+from ask import search, try_extract, faq_match, general_knowledge, is_project_question, is_question, current_officeholder, _WHO_PREFIX, _QUESTION_PREFIX, _keywords, project_vocabulary, clock, arithmetic, convert, local_answer, NETWORK_DOWN, OUT_OF_SCOPE, UNREACHABLE, LOOKUP_FAILED, MODEL, ADAPTER, SYSTEM
 import subprocess
 
 HISTORY_TURNS = 3  # how many prior exchanges to keep as short-term memory
@@ -201,7 +201,9 @@ def answer_turn(question, history, topic_active, last_subject=None):
     faq_answer = None if holder_answer else faq_match(question)
     gk_answer = None
     if not holder_answer and not faq_answer and not project_scoped and is_question(question):
-        gk_answer = general_knowledge(question)[0]
+        gk_answer, gk_source = general_knowledge(question)
+        if not gk_answer and gk_source is UNREACHABLE:
+            gk_answer = NETWORK_DOWN
 
     if holder_answer:
         answer = holder_answer

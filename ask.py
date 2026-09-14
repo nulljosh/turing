@@ -490,6 +490,11 @@ OUT_OF_SCOPE = (
     "this project, so I'm not going to make something up."
 )
 
+NETWORK_DOWN = (
+    "I couldn't reach the web to look that up just now, so I don't know. "
+    "Not going to guess."
+)
+
 LOOKUP_FAILED = (
     "I couldn't reach Wikidata to look that up just now, so I don't know "
     "who currently holds it. Not going to guess at a name."
@@ -630,8 +635,13 @@ def arithmetic(query):
 
 _CLOCK_PATTERNS = (
     (re.compile(r"\bwhat(?:'s| is)?\s+(?:the\s+)?time\b", re.I), "%-I:%M %p"),
-    (re.compile(r"\bwhat\s+year\b", re.I), "%Y"),
-    (re.compile(r"\bwhat\s+month\b", re.I), "%B %Y"),
+    # These must be present-tense only. The first version matched a bare
+    # "what year", so "what year did world war 2 end" confidently answered
+    # **2026**, the current year, to a historical question. Require an
+    # explicit "is it"/"is this"/"are we in" so a question about some other
+    # year falls through to a real lookup.
+    (re.compile(r"\bwhat(?:'s| is)?\s+(?:the\s+)?year\s+(?:is\s+it|is\s+this|are\s+we\s+in)\b|\bwhat\s+year\s+is\s+it\b", re.I), "%Y"),
+    (re.compile(r"\bwhat\s+month\s+is\s+it\b", re.I), "%B %Y"),
     (re.compile(r"\bwhat\s+day(?:\s+of\s+the\s+week)?\s+is\s+it\b", re.I), "%A"),
     (re.compile(r"\bwhat(?:'s| is)?\s+(?:today'?s?\s+)?(?:the\s+)?date\b", re.I), "%A, %B %-d, %Y"),
     (re.compile(r"\bwhat\s+is\s+today\b", re.I), "%A, %B %-d, %Y"),
@@ -798,7 +808,12 @@ def general_knowledge(query, skip_officeholder=False):
 
     normalized = normalize_query(query)
 
-    d = http_json(f"https://api.duckduckgo.com/?q={urllib.parse.quote(normalized)}&format=json&no_html=1&skip_disambig=1")
+    reachable = False
+    d = http_json(f"https://api.duckduckgo.com/?q={urllib.parse.quote(normalized)}&format=json&no_html=1&skip_disambig=1", on_error=FETCH_FAILED)
+    if d is FETCH_FAILED:
+        d = None
+    else:
+        reachable = True
     if d:
         for field, src_field in (("Answer", None), ("AbstractText", "AbstractSource"), ("Definition", "DefinitionSource")):
             text = d.get(field)
@@ -814,7 +829,11 @@ def general_knowledge(query, skip_officeholder=False):
     # frequently *related but wrong* rather than better. It also tripled
     # request volume, which made Wikipedia's rate limiting fire mid-eval and
     # turned the score itself unreliable. Reverted, measured, documented.
-    s = http_json(f"https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch={urllib.parse.quote(normalized)}&format=json&srlimit=1&origin=*")
+    s = http_json(f"https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch={urllib.parse.quote(normalized)}&format=json&srlimit=1&origin=*", on_error=FETCH_FAILED)
+    if s is FETCH_FAILED:
+        s = None
+    else:
+        reachable = True
     title = (s or {}).get("query", {}).get("search", [{}])
     title = title[0].get("title") if title else None
     if not title:
@@ -837,7 +856,13 @@ def general_knowledge(query, skip_officeholder=False):
             extract = None
         if extract and _wikipedia_answer_is_plausible(query, title, extract):
             return extract.strip(), f"Wikipedia: {title}"
-    return None, None
+    # "I searched and found nothing" and "I could not reach anything to
+    # search" are different answers and the user deserves the true one.
+    # Confirmed live: with Wikipedia rate-limiting this session, ordinary
+    # questions came back "outside what I know about this project", which
+    # reads as a confident scope claim when the real cause was a dead
+    # network. Same principle as the Wikidata outage fix.
+    return (None, None) if reachable else (None, UNREACHABLE)
 
 
 # Wikipedia's fulltext search ranks by title match, so a question phrased
@@ -880,8 +905,6 @@ _WANTS_NUMBER = re.compile(
 
 
 def _wikipedia_answer_is_plausible(query, title, extract):
-    if _WANTS_NUMBER.search(query.strip()) and not any(c.isdigit() for c in extract):
-        return False
     subject = _keywords(query) - _keywords("what is are the a an how many much of in")
     if not subject:
         return True
@@ -994,6 +1017,8 @@ def ask(question):
         gk_answer, gk_source = general_knowledge(question)
         if gk_answer:
             return gk_answer, [gk_source]
+        if gk_source is UNREACHABLE:
+            return NETWORK_DOWN, []
 
     results = search(question)
     extracted = try_extract(question, results)

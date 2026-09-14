@@ -251,6 +251,16 @@ Everything measured before tonight was about the project's own docs or FAQ phras
 
   **The more valuable find is one line of Nimble's, engine.js:206:** *"A model's number is an unsourced guess: for numeric answers prefer DDG when it has one."* It resolves the exact ceiling documented repeatedly above, where a search-summary answers "here is the topic" to a question asking "here is the value" (Everest's height, largest country, boiling point of water). Nimble's answer is not a smarter search, it's preferring whichever source actually contains a number when the question wants one. That is directly portable here and does not require the 8B decision.
 
+- **2026-09-14, a clean measurement run caught two regressions I had just shipped.** Ran `eval/basic_questions.py` properly after several fixes landed and got **9/20**, down from 16/19. Two were genuine, both mine from the previous hour.
+
+  **`clock()` answered 2026 to "what year did world war 2 end".** The year pattern was a bare `what year`, so it matched any question containing those words, present tense or not. Confidently wrong about history, from a feature added to *stop* confidently wrong answers. Now requires an explicit "is it"/"is this"/"are we in".
+
+  **The number guard rejected correct answers.** `_WANTS_NUMBER` declined any value-seeking question whose source text had no digit, which killed "how many sides does a triangle have" because the Triangle summary says "three sides" in words. Removed it entirely rather than patched: it was already recorded above as having been justified by a false premise (the Everest example that turned out to be answering correctly), and a guard with a wrong rationale that also breaks working answers has nothing left to stand on.
+
+  **The rest of the 9/20 was not code at all.** Wikipedia had started rate-limiting this session too, on top of Wikidata. That exposed a real honesty bug worth keeping: with the network unreachable, ordinary questions came back "it's outside what I know about this project", a confident scope claim when the true cause was a dead network. `general_knowledge()` now distinguishes "searched and found nothing" from "could not reach anything to search", and both entry points say so. Same principle as the earlier Wikidata outage fix, applied one layer out.
+
+  Verified after: with Wikipedia recovered, "how many sides does a triangle have" and "what is the chemical symbol for gold" both answer again, confirming those declines were throttling rather than the code. 18/18 + 29/29 + 18/18 + 13/16 + Nimble 6/6. **The 9/20 number itself should not be quoted**, it was measured through a throttled network; the next clean run needs a genuinely rested one.
+
 - **Open decision, deliberately not taken unilaterally: should general knowledge route to a local 8B?** `llama3.1:8b` and `qwen3:8b` are already on this machine and would answer all 19 correctly. It is architecturally consistent (the chain already delegates facts to non-Samantha sources, and it stays on-device, no frontier API), but it would make Samantha a thin router over a model 16x her size, which cuts against what this project is. Flagging it as Joshua's call rather than quietly changing what Samantha means.
 
 ### Phase 6: Distillation, not scale (month 4+, optional/ambitious)

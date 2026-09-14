@@ -25,10 +25,10 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from ask import ask
-from ask import OUT_OF_SCOPE, LOOKUP_FAILED, _CANT_PIN_DOWN
+from ask import OUT_OF_SCOPE, LOOKUP_FAILED, NETWORK_DOWN, _CANT_PIN_DOWN
 
 MODEL_NAME = "samantha"
-DECLINES = (OUT_OF_SCOPE, LOOKUP_FAILED, _CANT_PIN_DOWN)
+DECLINES = (OUT_OF_SCOPE, LOOKUP_FAILED, NETWORK_DOWN, _CANT_PIN_DOWN)
 
 
 def answer_for(question):
