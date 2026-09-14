@@ -128,6 +128,10 @@ Eventually: in-voice drafting, project Q&A from real data via retrieval, local a
 
 A multi-turn conversation loop on top of ask.py's retrieval. Same underlying model and same FAQ-matching/general-knowledge/retrieval/generation chain, but it carries the last few exchanges as short-term memory, so a follow-up question like "what's its first model called" correctly resolves "its" to whatever was discussed a turn earlier, instead of needing every question spelled out standalone. Until 2026-09-13 it only had FAQ-matching and retrieval, not general-knowledge, so it couldn't answer "who's the president" even though ask.py could, that gap is now closed.
 
+## What's the actual difference between ask.py and chat.py?
+
+ask.py is the one-shot core: a single question in, one grounded answer out, no memory of anything before it. chat.py wraps ask.py's exact same answer logic (FAQ-match, officeholder lookup, retrieval, generation) in a loop that also remembers recent turns, so it handles follow-ups and feels like a real conversation instead of restarting from zero every question. Neither is a separate model, both call the same Samantha.
+
 ## What is the FAQ-matcher?
 
 `faq_match()` in ask.py: parses this file's own `## Question` headers and answer paragraphs, fuzzy-matches an incoming question against them, and returns the real answer verbatim when confident, skipping retrieval and generation entirely. Added 2026-09-13 after hand-writing one-off fixes for failing eval questions turned into whack-a-mole. Jumped the eval score from about 10 out of 28 correct to about 24 out of 28 in one change, the single biggest win of that session. The lesson: a well-maintained FAQ beats fancier retrieval or training tricks for the questions people actually ask most.
