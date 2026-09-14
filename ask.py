@@ -158,6 +158,14 @@ _STOPWORDS = {
     "does", "do", "did", "this", "that", "it", "its", "to", "for", "of", "in",
     "on", "at", "be", "used", "let", "and", "or", "not", "with", "right", "now",
     "current",
+    # "about" is pure filler, but being 5 letters it survived the length
+    # filter and read as content. Confirmed live: right after an honest
+    # decline, the follow-up "what about that" returned "What About Bob?,
+    # a 1991 American comedy film", because every other word in it is
+    # already a stopword and "about" alone carried the search. A question
+    # made entirely of filler now has no content word left, so the
+    # contentless-query guard declines it instead.
+    "about",
 }
 
 

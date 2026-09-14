@@ -142,7 +142,7 @@ The model runs locally via MLX on this Mac Mini, it isn't servable from a static
 
 ## What's the current eval score?
 
-29 out of 29 on the hand-written eval set, 13 out of 13 on the held-out set, as of the second 2026-09-13 retrain, which added real instruction/response training examples (`TRAINING_EXAMPLES.md`, harvested from this repo's own git history) instead of only "tell me about X" facts. That fixed a real regression from the retrain just before it (a "write a commit message" prompt had started rambling in FAQ-doc voice). See `eval/` for every run's actual numbers and honest writeup, including the failed attempts that got there.
+As of 2026-09-14 there are four separate harnesses, because one number was hiding too much. `eval/score.py` scores 29 out of 29 on the hand-written set and 18 out of 18 on the held-out set. `test_chat.py` passes 18 out of 18 pure-function tests. `eval/faq_paraphrase.py` scores 13 out of 16 on natural rephrasings of questions the FAQ genuinely answers, a number that was 3 out of 16 before semantic matching landed. `eval/basic_questions.py` scores 16 out of 19 on general questions a child could answer, up from a 9 out of 19 baseline. The first two look perfect because their prompts are worded the way the FAQ words things; the last two exist precisely because that flattered the matcher. See `eval/` for every run's actual numbers and honest writeup, including the failed attempts that got there.
 
 ## How long does a question actually take to answer, and how much memory does it use?
 
