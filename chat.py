@@ -62,6 +62,16 @@ def clean(answer, question):
         # showing the scaffold as if it were Samantha's answer.
         if idx >= 0:
             answer = answer[:idx]
+    # Same leak, different scaffold: FAQ.md is training data, so its own
+    # "## Question" section-header voice sometimes bleeds into a real
+    # answer near the token cutoff, live-confirmed asking about the sticky
+    # topic flag: the model rambled into a spurious "## What is the honest
+    # win condition for the user?" heading and kept going into unrelated
+    # content. A real answer never legitimately contains a markdown header,
+    # so cut at the first one exactly like the User:/Samantha: markers.
+    idx = answer.find("\n##")
+    if idx >= 0:
+        answer = answer[:idx]
     return answer.strip()
 
 
