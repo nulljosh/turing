@@ -5,7 +5,7 @@ once when the indentation bug got fixed (see roadmap.md).
 
 Usage: ./.venv/bin/python test_chat.py
 """
-from chat import clean, build_prompt, HISTORY_TURNS, project_scope, answer_turn
+from chat import clean, build_prompt, HISTORY_TURNS, project_scope, answer_turn, resolve_followup, subject_of
 
 
 def test_clean_strips_echoed_user_turn():
@@ -87,7 +87,7 @@ def test_officeholder_outage_admits_it_instead_of_answering_from_faq():
     real = ask.http_json
     ask.http_json = lambda url, timeout=8, on_error=None: on_error
     try:
-        answer, _ = answer_turn("who is the current prime minister of canada", [], False)
+        answer, _, _ = answer_turn("who is the current prime minister of canada", [], False)
         assert answer == ask.LOOKUP_FAILED, answer
     finally:
         ask.http_json = real
@@ -104,6 +104,23 @@ def test_officeholder_empty_result_is_not_treated_as_an_outage():
         assert ask.current_officeholder("who is the wizard of oz") == (None, None)
     finally:
         ask.http_json = real
+
+
+def test_pronoun_followup_resolves_to_last_general_knowledge_subject():
+    # real bug: "who is steve jobs" answered correctly, then "what company
+    # did he found" returned the 1997 slasher film "I Know What You Did Last
+    # Summer", because nothing said who "he" was
+    assert subject_of("who is steve jobs") == "steve jobs"
+    resolved = resolve_followup("what company did he found", "steve jobs")
+    assert resolved == "what company did steve jobs found", resolved
+
+
+def test_pronoun_followup_without_a_subject_is_untouched():
+    assert resolve_followup("what company did he found", None) == "what company did he found"
+
+
+def test_followup_without_a_pronoun_is_untouched():
+    assert resolve_followup("what is the capital of france", "steve jobs") == "what is the capital of france"
 
 
 if __name__ == "__main__":

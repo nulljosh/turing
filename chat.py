@@ -6,10 +6,10 @@ Honest scope: this makes Samantha feel more like a real assistant to use.
 It does not and cannot make a 0.5B model "as good as Claude/GPT", see
 roadmap.md's "What we will never do on this budget."
 """
-import os, sys
+import os, re, sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from ask import search, try_extract, faq_match, general_knowledge, is_project_question, is_question, current_officeholder, _WHO_PREFIX, UNREACHABLE, LOOKUP_FAILED, MODEL, ADAPTER, SYSTEM
+from ask import search, try_extract, faq_match, general_knowledge, is_project_question, is_question, current_officeholder, _WHO_PREFIX, _QUESTION_PREFIX, UNREACHABLE, LOOKUP_FAILED, MODEL, ADAPTER, SYSTEM
 import subprocess
 
 HISTORY_TURNS = 3  # how many prior exchanges to keep as short-term memory
@@ -46,6 +46,40 @@ def project_scope(question, topic_active):
     active = topic_active or is_current
     who_query = bool(_WHO_PREFIX.match(question.strip()))
     return (is_current or (active and not who_query)), active
+
+
+_PRONOUN = re.compile(r"\b(?:he|him|his|she|hers|they|them|their|its|it)\b", re.I)
+
+
+def subject_of(question):
+    """The thing a question was about, for resolving the next question's
+    pronoun against. Reuses ask.py's own prefix regexes rather than a new
+    one: "who is steve jobs" gives "steve jobs".
+    """
+    stripped = _WHO_PREFIX.sub("", question.strip()).rstrip("?").strip()
+    if stripped == question.strip().rstrip("?").strip():
+        stripped = _QUESTION_PREFIX.sub("", stripped).strip()
+    return stripped or None
+
+
+def resolve_followup(question, last_subject):
+    """Substitute a bare pronoun with whatever the last general-knowledge
+    answer was about.
+
+    chat.py exists to carry conversation memory, but that memory only ever
+    covered *project* topics via the sticky topic flag. A general-knowledge
+    follow-up had no referent at all, so it went to the encyclopedia as
+    written. Confirmed live: "who is steve jobs" answered correctly, then
+    "what company did he found" returned the 1997 slasher film "I Know What
+    You Did Last Summer", because Wikipedia's title search matched the
+    sentence's own words with nothing to say who "he" was.
+
+    Only the first pronoun is replaced, which is enough to make the search
+    query name its subject, and leaves the rest of the sentence intact.
+    """
+    if not last_subject or not _PRONOUN.search(question):
+        return question
+    return _PRONOUN.sub(last_subject, question, count=1)
 
 
 def clean(answer, question):
@@ -101,11 +135,22 @@ def build_prompt(history, context, question):
     return "\n".join(parts)
 
 
-def answer_turn(question, history, topic_active):
+def answer_turn(question, history, topic_active, last_subject=None):
     """One turn of the conversation: (question, history, topic_active) in,
     (answer, updated topic_active) out. Shared by the plain CLI and the TUI
     so the two never drift into different answer logic.
+
+    `last_subject` carries what the previous general-knowledge answer was
+    about, so a pronoun follow-up can be resolved. Returns it updated as a
+    third element; it defaults to None so a caller that doesn't track
+    conversation state (the tests, one-shot use) behaves exactly as before.
     """
+    project_scoped, _ = project_scope(question, topic_active)
+    # resolve "he/she/it" against the last general-knowledge subject before
+    # anything else looks at the question, but never inside a project topic,
+    # where the sticky flag already handles continuity
+    if not project_scoped:
+        question = resolve_followup(question, last_subject)
     project_scoped, topic_active = project_scope(question, topic_active)
     holder_answer = None
     if not project_scoped and _WHO_PREFIX.match(question.strip()):
@@ -152,12 +197,19 @@ def answer_turn(question, history, topic_active):
     # on re-deriving scope from the current question's words.
     if faq_answer or (not holder_answer and not gk_answer and answer):
         topic_active = True
-    return answer, topic_active
+    # remember the subject only while the conversation is off-project, so a
+    # stale person never gets substituted into a later project question
+    if holder_answer or gk_answer:
+        last_subject = subject_of(question) or last_subject
+    elif topic_active:
+        last_subject = None
+    return answer, topic_active, last_subject
 
 
 def chat():
     history = []
     topic_active = False
+    last_subject = None
     print("Samantha (Turing project assistant). Ctrl+C or 'exit' to quit.\n")
     while True:
         try:
@@ -167,7 +219,7 @@ def chat():
             break
         if not question or question.lower() in EXIT_WORDS:
             break
-        answer, topic_active = answer_turn(question, history, topic_active)
+        answer, topic_active, last_subject = answer_turn(question, history, topic_active, last_subject)
         print(f"Samantha: {answer}\n")
         history.append((question, answer))
 
@@ -180,6 +232,7 @@ def tui():
         stdscr.scrollok(True)
         history = []
         topic_active = False
+        last_subject = None
         lines = ["Samantha (Turing project assistant). Ctrl+C or type 'exit' to quit.", ""]
 
         def redraw():
@@ -205,7 +258,7 @@ def tui():
             stdscr.erase()
             stdscr.addstr(0, 0, "thinking...")
             stdscr.refresh()
-            answer, topic_active = answer_turn(question, history, topic_active)
+            answer, topic_active, last_subject = answer_turn(question, history, topic_active, last_subject)
             history.append((question, answer))
             for l in (f"Samantha: {answer}", ""):
                 lines.extend(l.split("\n"))
