@@ -76,6 +76,8 @@ First automated run: **23/28 (82%)**. Caught a real bug the eyeball method misse
 
 Removed `eval/run_eval_rag.py`: predates `eval/score.py`, prints prompt/expect/got with no scoring, genuinely superseded by `eval/score.py --verbose` (same output plus real pass/fail). Confirmed zero references anywhere before deleting, dead code, not a stale-but-linked tool.
 
+Found a real latent bug auditing `FIXED_FACTS`: the who-maintains pattern (`who.*(maintain|own|wrote|author)`) matches any "who wrote X" question, not just ones about this project. `general_knowledge()` currently intercepts most of those first, masking it, but that's not guaranteed, simulated it failing and confirmed "who wrote Romeo and Juliet" confidently answered "Joshua Trommel". Fixed by requiring actual project context (project/repo/repository/turing/samantha) alongside the verb, not just the verb alone. Confirmed the real intended case ("Who maintains this project?") still works and the unrelated case now correctly falls through instead of confidently lying.
+
 ### Phase 6: Distillation, not scale (month 4+, optional/ambitious)
 Instead of chasing bigger bases, use a frontier model (Claude) to generate high-quality synthetic training examples in our exact style, then distill that into Samantha. This is literally how most useful small models are built today, nobody pretrains from raw internet text anymore if they can help it.
 

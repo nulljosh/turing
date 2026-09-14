@@ -75,7 +75,20 @@ EXTRACTORS = [
 # isolate, tried several query variants, the maintainer chunk never made the
 # top 15 results. This is invariant across every project, just answer it.
 FIXED_FACTS = [
-    (re.compile(r"\bwho\b.*\b(maintain|own|wrote|author)", re.I), "Joshua Trommel"),
+    (
+        # Broad "who...wrote/author" alone false-positives on any unrelated
+        # "who wrote X" question (e.g. "who wrote Romeo and Juliet"), which
+        # would confidently answer "Joshua Trommel" if it ever reached this
+        # fallback (general_knowledge() usually intercepts those first, but
+        # it can fail, and this shouldn't depend on that). Require project
+        # context explicitly instead of just the verb.
+        re.compile(
+            r"(?=.*\bwho\b)(?=.*\b(maintain|own|wrote|author)\b)"
+            r"(?=.*\b(project|repo|repository|turing|samantha)\b)",
+            re.I,
+        ),
+        "Joshua Trommel",
+    ),
     (
         re.compile(r"\bblocked\b.*\b(project|right now)", re.I),
         # NOTE: this one is a snapshot, not truly invariant, update it when
