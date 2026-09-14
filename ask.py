@@ -90,7 +90,16 @@ FIXED_FACTS = [
         "Joshua Trommel",
     ),
     (
-        re.compile(r"\bblocked\b.*\b(project|right now)", re.I),
+        # Same class of bug as the who-wrote fix above: "project" and "right
+        # now" alone aren't project-specific, so "Is the Conveyer project
+        # blocked right now?" or even "Why is my sink blocked right now?"
+        # both matched and confidently returned Turing's canned answer.
+        # Confirmed both false-positive before the fix. Also fixed an
+        # order bug: the old ".*"-based pattern required "project" to appear
+        # *after* "blocked", so "Is this project blocked?" never matched at
+        # all, lookaheads make word order irrelevant. Require an explicit
+        # reference to this project instead of the generic words alone.
+        re.compile(r"(?=.*\bblocked\b)(?=.*\b(?:this project|turing|samantha)\b)", re.I),
         # NOTE: this one is a snapshot, not truly invariant, update it when
         # the real blocker changes. Hardcoded because brain has no delete
         # endpoint (see roadmap.md), so a stale pre-fix roadmap.md chunk
