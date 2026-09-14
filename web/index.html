@@ -69,6 +69,18 @@
       #tooltip.show{opacity:1}
       #tooltip b{display:block;margin-bottom:2px}
       .chart-hint{font-size:12px;color:var(--muted);margin:6px 0 0;text-align:center}
+      .fix-card{border:1px solid var(--line);border-radius:10px;padding:16px 20px;margin-top:12px}
+      .fix-card summary{cursor:pointer;font-size:14px;font-weight:600;list-style:none}
+      .fix-card summary::-webkit-details-marker{display:none}
+      .fix-card summary::before{content:"▸ ";color:var(--muted)}
+      .fix-card[open] summary::before{content:"▾ "}
+      .turn{margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
+      .turn:first-of-type{border-top:none}
+      .turn-label{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin:0 0 4px}
+      .turn-q{font-size:14px;margin:0 0 6px}
+      .turn-a{font-size:14px;margin:0;padding-left:12px;border-left:2px solid var(--line)}
+      .turn-a.bad{border-left-color:#c0392b;color:var(--muted)}
+      .turn-a.good{border-left-color:#2e9e4a}
     </style>
   </head>
   <body>
@@ -135,23 +147,76 @@
       </section>
 
       <section>
-        <h2>Sample outputs</h2>
+        <h2>Real bugs, caught and fixed live</h2>
+        <p class="sub" style="margin:0 0 4px">Click one open. These are real captured transcripts from actually running the CLI, not simulated. No live inference on this page, the model runs locally via MLX, not servable from a static site without real hosting infra.</p>
+        <details class="fix-card">
+          <summary>Fixed: Wikipedia hijack on "Is this project blocked?"</summary>
+          <div class="turn">
+            <p class="turn-label">Before &middot; v0.6.6</p>
+            <p class="turn-q">Q: Is this project blocked?</p>
+            <p class="turn-a bad">"Many domain names are blocked in mainland China under the country's Internet censorship policy..." &mdash; wrong topic entirely, hijacked by a Wikipedia search.</p>
+          </div>
+          <div class="turn">
+            <p class="turn-label">After &middot; v0.7.0</p>
+            <p class="turn-q">Q: Is this project blocked?</p>
+            <p class="turn-a good">"The Qwen3.5-0.8B base comparison is blocked, it doesn't fit this machine's training memory budget even with the Metal cache-limit fix applied."</p>
+          </div>
+        </details>
+        <details class="fix-card">
+          <summary>Fixed: chat.py forgetting the conversation one turn later</summary>
+          <div class="turn">
+            <p class="turn-label">Turn 1</p>
+            <p class="turn-q">You: What is Turing?</p>
+            <p class="turn-a good">Samantha: "Turing is the project: the pipeline, the repo, this whole effort to build small language models on consumer hardware."</p>
+          </div>
+          <div class="turn">
+            <p class="turn-label">Turn 2, before &middot; v0.7.0</p>
+            <p class="turn-q">You: What is its first model called?</p>
+            <p class="turn-a bad">Samantha: "A large language model (LLM) is an AI model trained on a vast amount of text..." &mdash; no memory of turn 1 at all.</p>
+          </div>
+          <div class="turn">
+            <p class="turn-label">Turn 2, after &middot; v0.7.1</p>
+            <p class="turn-q">You: What is its first model called?</p>
+            <p class="turn-a good">Samantha: "Turing's first model is Samantha, fixed as a name."</p>
+          </div>
+        </details>
+        <details class="fix-card">
+          <summary>Fixed: hallucinated training method when retrieval came up empty</summary>
+          <div class="turn">
+            <p class="turn-label">Before &middot; v0.6.6</p>
+            <p class="turn-q">Q: What tool trains the adapter?</p>
+            <p class="turn-a bad">"...trained using a different method (Adversarial Training for Speech, ATR), not LoRA." &mdash; fabricated, ATR isn't a real thing here.</p>
+          </div>
+          <div class="turn">
+            <p class="turn-label">After &middot; v0.7.0</p>
+            <p class="turn-q">Q: What tool trains the adapter?</p>
+            <p class="turn-a good">"I don't have that pinned down confidently from what's currently indexed, not going to guess at the specifics." &mdash; honest, not a guess.</p>
+          </div>
+        </details>
+        <details class="fix-card">
+          <summary>Working: real generation, not a lookup</summary>
+          <div class="turn">
+            <p class="turn-label">Prompt</p>
+            <p class="turn-q">Write a one-line commit message for fixing an MLX memory leak during training.</p>
+            <p class="turn-a good">"Fix a real MLX memory leak during long unattended runs"</p>
+          </div>
+          <p class="sample-note" style="margin-top:8px">Trained on real instruction/response pairs harvested from this repo's own git history, so it learned actual task style, not just "tell me about X" facts.</p>
+        </details>
+        <p class="graph-explainer">29 of 29 on the hand-written eval set, 16 of 16 on a separate held-out set (automated scoring, not eyeballed). Still shaky on ambiguous general-knowledge questions, see <code>eval/</code> for the honest numbers.</p>
+      </section>
+
+      <section>
+        <h2>Run it yourself</h2>
         <div class="card">
-          <p class="sample-prompt">Prompt: "Who maintains this project?"</p>
-          <p class="sample-out">"Joshua Trommel, listed as the author in LICENSE and WHITEPAPER.md."</p>
-          <p class="sample-note">FAQ-matched: fuzzy-matches the question against FAQ.md's own Q&A pairs and answers verbatim, no generation, no chance to invent a fake name. Earlier this same session it confidently answered "Anthropic".</p>
+          <pre style="white-space:pre-wrap;font-size:13px;margin:0;font-family:ui-monospace,Menlo,monospace">git clone https://github.com/nulljosh/turing
+cd turing
+python3 -m venv .venv && ./.venv/bin/pip install mlx-lm
+./.venv/bin/python chat.py</pre>
+          <p class="meta" style="margin-top:14px">
+            <span>Latest: <b id="version">-</b></span>
+            <span><a id="release-link" href="https://github.com/nulljosh/turing/releases">Release notes</a></span>
+          </p>
         </div>
-        <div class="card" style="margin-top:12px">
-          <p class="sample-prompt">Prompt: "Write a one-line commit message for fixing an MLX memory leak during training."</p>
-          <p class="sample-out">"Fix a real MLX memory leak during long unattended runs"</p>
-          <p class="sample-note">Generated, not FAQ-matched, this is a genuine task, not a lookup. Trained on real instruction/response pairs harvested from this repo's own git history so it learned actual task style, not just "tell me about X" facts. An earlier retrain regressed here (rambled into fake documentation), this fixed it for real.</p>
-        </div>
-        <div class="card" style="margin-top:12px">
-          <p class="sample-prompt">Prompt: "Turing is"</p>
-          <p class="sample-out">"Turing is a state and a service the same and a state and a real the same a state as a service..."</p>
-          <p class="sample-note">From-scratch model (scratch/, zero borrowed weights). Real words, correct spelling, no coherence yet, stuck in a loop. This is what "from zero" actually looks like at this stage.</p>
-        </div>
-        <p class="graph-explainer">No live in-browser demo, the model runs locally via MLX, not servable from this static page without real hosting infra. Run it yourself: <code>./.venv/bin/python chat.py</code> after cloning the repo. 29 of 29 on the hand-written eval set, 13 of 13 on a separate held-out set (automated scoring, not eyeballed), after two real retrains this session, one on doubled training data, one adding real instruction examples harvested from this repo's own commit history. Still shaky on ambiguous general-knowledge questions, see <code>eval/</code> for the honest numbers.</p>
       </section>
 
       <section>
@@ -254,6 +319,12 @@
       }).catch(() => {
         document.getElementById('status-text').textContent = 'no data yet';
       });
+
+      fetch('https://api.github.com/repos/nulljosh/turing/releases/latest').then(r => r.json()).then(rel => {
+        if (!rel.tag_name) return;
+        document.getElementById('version').textContent = rel.tag_name;
+        document.getElementById('release-link').href = rel.html_url;
+      }).catch(() => {});
     </script>
   </body>
 </html>
