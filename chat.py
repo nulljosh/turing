@@ -9,7 +9,7 @@ roadmap.md's "What we will never do on this budget."
 import os, re, sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from ask import search, try_extract, faq_match, general_knowledge, is_project_question, is_question, current_officeholder, _WHO_PREFIX, _QUESTION_PREFIX, _keywords, project_vocabulary, clock, arithmetic, OUT_OF_SCOPE, UNREACHABLE, LOOKUP_FAILED, MODEL, ADAPTER, SYSTEM
+from ask import search, try_extract, faq_match, general_knowledge, is_project_question, is_question, current_officeholder, _WHO_PREFIX, _QUESTION_PREFIX, _keywords, project_vocabulary, clock, arithmetic, convert, local_answer, OUT_OF_SCOPE, UNREACHABLE, LOOKUP_FAILED, MODEL, ADAPTER, SYSTEM
 import subprocess
 
 HISTORY_TURNS = 3  # how many prior exchanges to keep as short-term memory
@@ -72,7 +72,7 @@ def self_contained(question):
     """True when the question answers itself locally (clock, arithmetic).
     Such a question never refers back to an earlier turn, and never supplies
     a subject a later turn could refer back to."""
-    return bool(clock(question) or arithmetic(question))
+    return bool(clock(question) or arithmetic(question) or convert(question))
 
 
 def subject_of(question):
@@ -177,6 +177,10 @@ def answer_turn(question, history, topic_active, last_subject=None):
     third element; it defaults to None so a caller that doesn't track
     conversation state (the tests, one-shot use) behaves exactly as before.
     """
+    exact, _exact_source = local_answer(question)
+    if exact:
+        return exact, topic_active, last_subject
+
     project_scoped, _ = project_scope(question, topic_active)
     # resolve "he/she/it" against the last general-knowledge subject before
     # anything else looks at the question, but never inside a project topic,

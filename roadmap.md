@@ -231,6 +231,14 @@ Everything measured before tonight was about the project's own docs or FAQ phras
 
   18/18 + 29/29 + 13/16 + Nimble 6/6. Holdout shows 17/18 on the Carney prompt, verified as Wikidata rate limiting again (a direct call returns UNREACHABLE), not a regression.
 
+- **2026-09-14, unit conversions, and a gating bug they exposed.** "how many kilometers is 5 miles" returned an article about **available seat miles**, an airline capacity metric. Conversions are the same category as arithmetic and clock: one exact answer this machine can compute, that a search engine can only get wrong. Added `convert()` with a deliberately small table of units people actually ask about rather than a units library, and it refuses cross-dimension nonsense ("how many kg is 5 miles" returns nothing rather than a confident number).
+
+  Then the fix didn't work in `chat.py` while working in isolation, which exposed the real bug. `convert()` lived inside `general_knowledge()`, which is gated behind `is_question()`, and "convert 100 fahrenheit to celsius" is not question-shaped, so it was declined as out of scope while the identical conversion answered fine when phrased as a question. That gate exists to stop a task instruction reaching Wikipedia and matching a loosely-related article, which is a real risk for a *search* and no risk at all for a calculator. Pulled all three exact paths into `local_answer()` and call it first in both `ask()` and `answer_turn()`, before any gate. Verified the gate still does its job: "write a commit message for adding dark mode" still declines.
+
+  Logged, not fixed: a follow-up conversion ("convert 100 fahrenheit to celsius" then "what about in kelvin") returns a Kenyan marathon runner named Kelvin. Carrying a value across turns is real conversational state that doesn't exist yet.
+
+  18/18 + 29/29 + 18/18 + 13/16 + Nimble 6/6.
+
 - **Open decision, deliberately not taken unilaterally: should general knowledge route to a local 8B?** `llama3.1:8b` and `qwen3:8b` are already on this machine and would answer all 19 correctly. It is architecturally consistent (the chain already delegates facts to non-Samantha sources, and it stays on-device, no frontier API), but it would make Samantha a thin router over a model 16x her size, which cuts against what this project is. Flagging it as Joshua's call rather than quietly changing what Samantha means.
 
 ### Phase 6: Distillation, not scale (month 4+, optional/ambitious)

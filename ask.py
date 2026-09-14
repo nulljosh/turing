@@ -631,6 +631,96 @@ _CLOCK_PATTERNS = (
 )
 
 
+# alias -> (dimension, factor to the dimension's base unit, display name)
+_UNITS = {}
+for _names, _dim, _factor, _label in [
+    (("mm", "millimeter", "millimeters", "millimetre", "millimetres"), "length", 0.001, "mm"),
+    (("cm", "centimeter", "centimeters", "centimetre", "centimetres"), "length", 0.01, "cm"),
+    (("m", "meter", "meters", "metre", "metres"), "length", 1.0, "m"),
+    (("km", "kilometer", "kilometers", "kilometre", "kilometres"), "length", 1000.0, "km"),
+    (("in", "inch", "inches"), "length", 0.0254, "in"),
+    (("ft", "foot", "feet"), "length", 0.3048, "ft"),
+    (("yd", "yard", "yards"), "length", 0.9144, "yd"),
+    (("mi", "mile", "miles"), "length", 1609.344, "mi"),
+    (("mg", "milligram", "milligrams"), "mass", 0.001, "mg"),
+    (("g", "gram", "grams"), "mass", 1.0, "g"),
+    (("kg", "kilogram", "kilograms"), "mass", 1000.0, "kg"),
+    (("oz", "ounce", "ounces"), "mass", 28.349523125, "oz"),
+    (("lb", "lbs", "pound", "pounds"), "mass", 453.59237, "lb"),
+    (("ml", "milliliter", "milliliters", "millilitre", "millilitres"), "volume", 0.001, "ml"),
+    (("l", "liter", "liters", "litre", "litres"), "volume", 1.0, "L"),
+    (("cup", "cups"), "volume", 0.2365882365, "cups"),
+    (("pint", "pints"), "volume", 0.473176473, "pints"),
+    (("gal", "gallon", "gallons"), "volume", 3.785411784, "gal"),
+]:
+    for _n in _names:
+        _UNITS[_n] = (_dim, _factor, _label)
+
+_TEMPS = {
+    "c": "c", "celsius": "c", "centigrade": "c",
+    "f": "f", "fahrenheit": "f",
+    "k": "k", "kelvin": "k",
+}
+
+_CONVERT_PATTERNS = (
+    # "convert 100 fahrenheit to celsius", "100 f in c", "what is 5 miles in km"
+    re.compile(r"(-?\d+(?:\.\d+)?)\s*([a-z°]+)\s*(?:to|in|into|as)\s+([a-z°]+)", re.I),
+    # "how many kilometers is 5 miles", "how many km in 5 miles"
+    re.compile(r"how\s+many\s+([a-z°]+)\s+(?:is|are|in)\s+(-?\d+(?:\.\d+)?)\s*([a-z°]+)", re.I),
+)
+
+
+def _to_celsius(value, unit):
+    return {"c": value, "f": (value - 32) * 5 / 9, "k": value - 273.15}[unit]
+
+
+def _from_celsius(value, unit):
+    return {"c": value, "f": value * 9 / 5 + 32, "k": value + 273.15}[unit]
+
+
+def _tidy(value):
+    rounded = round(value, 4)
+    return int(rounded) if rounded == int(rounded) else rounded
+
+
+def convert(query):
+    """Unit conversions, answered locally and exactly.
+
+    Same category as arithmetic and clock: one correct answer that a search
+    engine can only get wrong. Confirmed live, "how many kilometers is 5
+    miles" returned an article about **available seat miles**, an airline
+    capacity metric, and "convert 100 fahrenheit to celsius" was declined
+    outright. Deliberately a small table of units people actually ask
+    about rather than a units library, and it returns None on anything it
+    doesn't recognise so the normal lookup path still runs.
+    """
+    text = query.strip().rstrip("?").replace("°", " ")
+    for index, pattern in enumerate(_CONVERT_PATTERNS):
+        match = pattern.search(text)
+        if not match:
+            continue
+        if index == 0:
+            amount, src, dst = match.group(1), match.group(2), match.group(3)
+        else:
+            amount, src, dst = match.group(2), match.group(3), match.group(1)
+        amount = float(amount)
+        src, dst = src.lower(), dst.lower()
+
+        if src in _TEMPS and dst in _TEMPS:
+            result = _from_celsius(_to_celsius(amount, _TEMPS[src]), _TEMPS[dst])
+            return f"{_tidy(amount)} {src} = {_tidy(result)} {dst}"
+
+        if src in _UNITS and dst in _UNITS:
+            src_dim, src_factor, src_label = _UNITS[src]
+            dst_dim, dst_factor, dst_label = _UNITS[dst]
+            # refuse to convert across dimensions rather than printing a
+            # confident nonsense number for "how many kg is 5 miles"
+            if src_dim != dst_dim:
+                return None
+            return f"{_tidy(amount)} {src_label} = {_tidy(amount * src_factor / dst_factor)} {dst_label}"
+    return None
+
+
 def clock(query):
     """Answer date and time questions from the system clock.
 
@@ -648,6 +738,26 @@ def clock(query):
     return None
 
 
+def local_answer(query):
+    """Answers computable on this machine, exactly, with no network at all.
+
+    Deliberately NOT gated behind is_question(). That gate exists to stop a
+    task instruction ("write a commit message for X") reaching Wikipedia and
+    matching a loosely-related article, which is a real risk for a *search*.
+    It is no risk here: these only fire on a recognisable expression, a date
+    word, or a unit pair. Gating them anyway was a real bug, "convert 100
+    fahrenheit to celsius" was declined as out of scope while the exact same
+    conversion answered fine through a question-shaped phrasing.
+
+    Returns (answer, source) or (None, None).
+    """
+    for fn, source in ((arithmetic, "arithmetic"), (clock, "system clock"), (convert, "unit conversion")):
+        exact = fn(query)
+        if exact:
+            return exact, source
+    return None, None
+
+
 def general_knowledge(query, skip_officeholder=False):
     """Same pattern as nimble/docs/engine.js's ddg()/wiki(): DuckDuckGo's
     Instant Answer API first, Wikipedia's summary API as fallback. No API
@@ -661,13 +771,9 @@ def general_knowledge(query, skip_officeholder=False):
     # skip_officeholder avoids a second identical Wikidata round trip when
     # the caller has already tried it. That matters under rate limiting,
     # which is exactly when this path runs.
-    exact = arithmetic(query)
+    exact, exact_source = local_answer(query)
     if exact:
-        return exact, "arithmetic"
-
-    exact = clock(query)
-    if exact:
-        return exact, "system clock"
+        return exact, exact_source
 
     # A question with no content word left after stopwords has nothing to
     # look up, and both DDG and Wikipedia will happily title-match it to
@@ -807,6 +913,12 @@ def is_question(text):
 
 
 def ask(question):
+    # exact local answers first: no network, no ambiguity, and not subject
+    # to the is_question() gate further down (see local_answer's docstring)
+    exact, exact_source = local_answer(question)
+    if exact:
+        return exact, [exact_source]
+
     # "who is/who's the X" questions about a live office (president, prime
     # minister, etc.) can never have a correct static FAQ answer, the real
     # answer changes over time. Try this before faq_match, not after,
