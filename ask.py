@@ -613,6 +613,14 @@ def general_knowledge(query, skip_officeholder=False):
                 src = d.get(src_field) if src_field else "DuckDuckGo"
                 return text.strip(), src or "DuckDuckGo"
 
+    # Deliberately srlimit=1. Searching the top 3 and taking the first hit
+    # whose summary passes the plausibility guard looked like an obvious
+    # improvement (it would rescue a real article ranked behind a title
+    # coincidence), and measured worse: "what is the chemical symbol for
+    # gold" went from correct to answering "silver", because hit 2 and 3 are
+    # frequently *related but wrong* rather than better. It also tripled
+    # request volume, which made Wikipedia's rate limiting fire mid-eval and
+    # turned the score itself unreliable. Reverted, measured, documented.
     s = http_json(f"https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch={urllib.parse.quote(normalized)}&format=json&srlimit=1&origin=*")
     title = (s or {}).get("query", {}).get("search", [{}])
     title = title[0].get("title") if title else None

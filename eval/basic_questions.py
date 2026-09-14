@@ -16,7 +16,7 @@ report separates the two because they need opposite fixes.
 
 Run: ./.venv/bin/python eval/basic_questions.py [--verbose] [--min N]
 """
-import os, sys
+import os, sys, time
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from ask import ask
@@ -56,7 +56,15 @@ def main():
             minimum = int(sys.argv[i + 1])
 
     right = declined = wrong = 0
-    for question, accepted in CASES:
+    for i, (question, accepted) in enumerate(CASES):
+        # Wikidata and Wikipedia both rate-limit, and this harness fires
+        # several requests per question. Run flat out and the run throttles
+        # *itself* partway through: measured 16/19 and 11/19 on identical
+        # code, with all four "who is <person>" questions declining in the
+        # second run purely from 429s. A score that swings on request
+        # pacing is not a measurement, so pace it.
+        if i:
+            time.sleep(3.0)
         answer = (ask(question)[0] or "").strip()
         low = answer.lower()
         if any(a.lower() in low for a in accepted):
