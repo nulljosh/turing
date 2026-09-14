@@ -20,6 +20,14 @@ def test_clean_leaves_clean_answer_alone():
     assert clean("Just a plain answer.", "q") == "Just a plain answer."
 
 
+def test_clean_strips_echo_at_position_zero():
+    # real bug: "idx > 0" skipped a marker found at index 0, leaking the
+    # raw scaffold straight through as the "answer" when the model's
+    # output starts immediately with the echo, no leading newline
+    assert clean("User: what else?\nSamantha: x", "q") == ""
+    assert clean("Samantha: repeating my own tag", "q") == ""
+
+
 def test_build_prompt_includes_history():
     history = [("What is Turing?", "The project.")]
     prompt = build_prompt(history, "ctx", "What's its first model called?")

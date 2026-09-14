@@ -20,7 +20,14 @@ def clean(answer, question):
     # back into its own answer, especially near the max-token cutoff
     for marker in ("\nUser:", "\nSamantha:", "User:", "Samantha:"):
         idx = answer.find(marker)
-        if idx > 0:
+        # idx == 0 means the entire output IS the echoed scaffold with no
+        # leading newline. The old "idx > 0" guard skipped that case, so
+        # the raw "User: ...\nSamantha: ..." text leaked straight to the
+        # user as if it were the real answer. Confirmed: clean("User: what
+        # else?\nSamantha: x", "q") returned the untouched echo. An empty
+        # string here is a truthful "nothing usable," strictly better than
+        # showing the scaffold as if it were Samantha's answer.
+        if idx >= 0:
             answer = answer[:idx]
     return answer.strip()
 
