@@ -273,6 +273,20 @@ Everything measured before tonight was about the project's own docs or FAQ phras
 
 - **Open decision, deliberately not taken unilaterally: should general knowledge route to a local 8B?** `llama3.1:8b` and `qwen3:8b` are already on this machine and would answer all 19 correctly. It is architecturally consistent (the chain already delegates facts to non-Samantha sources, and it stays on-device, no frontier API), but it would make Samantha a thin router over a model 16x her size, which cuts against what this project is. Flagging it as Joshua's call rather than quietly changing what Samantha means.
 
+### Phase 8: Train the voice, not the facts (started 2026-09-14)
+
+Eight runs established what this project keeps relearning: a 0.5B LoRA absorbs style reliably and facts not at all. Run 6 tripled the document data and the score stayed flat at ~1/28. Run 8 added twelve hand-picked instruction/response pairs from this repo's git log and fixed a regression more document text could not. Every real gain tonight came from retrieval, matching and routing, never from weights. So the conclusion is not "train more", it is **train the only thing weights are good at**.
+
+- **`harvest_voice.py`, 183 real instruction/response pairs from 54 repos.** The task is learnable with no model in the loop: given the files a commit touched, write its subject line. Every response is a line Joshua actually wrote, so the voice is real by construction rather than synthesized. That is 15x the hand-picked set, and it regenerates as the fleet grows.
+
+  Deliberately excluded: merge commits, dependency bumps, version-only subjects, and **anything carrying an AI co-author trailer, including this session's own commits**. Training a model to imitate its own prior output is how a voice collapses into an average of itself.
+
+  One real bug while building it: the first run produced instructions naming things that were never files ("a change to session_01NzZB5DGtSRrhc2WYNQ3qAm"), because a commit body containing a URL or session id parsed as part of the `--name-only` file list. Fixed by closing the body with an explicit separator in the log format so the file list is unambiguously delimited.
+
+  Wired into `prep_data.py` as an optional source, so a fresh clone with no `data/` still trains.
+
+- Not yet done: the retrain itself, and a held-out check that the harvested pairs improve commit-message quality without regressing the FAQ/retrieval paths. More data has made things *worse* before (run 7), so this needs measuring, not assuming.
+
 ### Phase 6: Distillation, not scale (month 4+, optional/ambitious)
 Instead of chasing bigger bases, use a frontier model (Claude) to generate high-quality synthetic training examples in our exact style, then distill that into Samantha. This is literally how most useful small models are built today, nobody pretrains from raw internet text anymore if they can help it.
 

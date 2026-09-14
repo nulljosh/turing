@@ -85,6 +85,11 @@ def collect():
         topic = "Samantha" if "WHITEPAPER" in p or "README" in p else "Turing"
         own_examples += read_chunks(p, topic)
     own_examples += read_examples(EXAMPLES)
+    # Harvested commit-message pairs (harvest_voice.py). Same format as
+    # TRAINING_EXAMPLES.md, ~15x the volume, and every response is a real
+    # line Joshua wrote. Optional: a fresh clone has no data/ until the
+    # harvester runs, and training still works without it.
+    own_examples += read_examples(os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "voice.md"))
 
     fleet_paths = []
     fleet_paths += glob.glob(f"{VAULT}/**/*.md", recursive=True)
