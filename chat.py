@@ -6,13 +6,31 @@ Honest scope: this makes Samantha feel more like a real assistant to use.
 It does not and cannot make a 0.5B model "as good as Claude/GPT", see
 roadmap.md's "What we will never do on this budget."
 """
-import os, sys
+import os, re, sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from ask import search, try_extract, faq_match, general_knowledge, is_project_question, is_question, current_officeholder, _WHO_PREFIX, MODEL, ADAPTER, SYSTEM
 import subprocess
 
 HISTORY_TURNS = 3  # how many prior exchanges to keep as short-term memory
+
+_PRONOUN_FOLLOWUP = re.compile(r"\b(it|its|it's|this|that|these|those)\b", re.I)
+
+
+def _is_project_followup(question, history):
+    """is_project_question() only looks at the current question's own
+    words, so a natural pronoun follow-up in a live conversation ("What is
+    its first model called?" right after "What is Turing?") has no project
+    keyword of its own and gets misrouted to general_knowledge(). Confirmed
+    live: that exact follow-up got answered with a generic Wikipedia-style
+    "what is an LLM" definition, no memory of the prior turn at all, the
+    one thing this file exists to add over ask.py's single-shot ask().
+    If the previous turn was already about the project and this one refers
+    back to it, treat it as a continuation instead of a fresh topic.
+    """
+    if not history:
+        return False
+    return is_project_question(history[-1][0]) and bool(_PRONOUN_FOLLOWUP.search(question))
 
 
 def clean(answer, question):
@@ -69,13 +87,14 @@ def chat():
             break
         if not question or question.lower() in ("exit", "quit"):
             break
+        project_scoped = is_project_question(question) or _is_project_followup(question, history)
         holder_answer = None
-        if not is_project_question(question) and _WHO_PREFIX.match(question.strip()):
+        if not project_scoped and _WHO_PREFIX.match(question.strip()):
             holder_answer = current_officeholder(question)[0]
 
         faq_answer = None if holder_answer else faq_match(question)
         gk_answer = None
-        if not holder_answer and not faq_answer and not is_project_question(question) and is_question(question):
+        if not holder_answer and not faq_answer and not project_scoped and is_question(question):
             gk_answer = general_knowledge(question)[0]
 
         if holder_answer:

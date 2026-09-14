@@ -5,7 +5,7 @@ once when the indentation bug got fixed (see roadmap.md).
 
 Usage: ./.venv/bin/python test_chat.py
 """
-from chat import clean, build_prompt, HISTORY_TURNS
+from chat import clean, build_prompt, HISTORY_TURNS, _is_project_followup
 
 
 def test_clean_strips_echoed_user_turn():
@@ -46,6 +46,29 @@ def test_build_prompt_caps_to_history_turns():
 def test_build_prompt_no_history_omits_section():
     prompt = build_prompt([], "ctx", "first question")
     assert "Recent conversation:" not in prompt
+
+
+def test_project_followup_after_project_question():
+    # real bug: "What is its first model called?" right after "What is
+    # Turing?" had no project keyword of its own and got routed to
+    # general_knowledge(), which answered a generic "what is an LLM"
+    # question instead of remembering the conversation was about Turing
+    history = [("What is Turing?", "The project.")]
+    assert _is_project_followup("What is its first model called?", history)
+
+
+def test_project_followup_needs_prior_project_question():
+    history = [("What is the capital of France?", "Paris.")]
+    assert not _is_project_followup("What is its population?", history)
+
+
+def test_project_followup_needs_a_pronoun():
+    history = [("What is Turing?", "The project.")]
+    assert not _is_project_followup("What is the capital of France?", history)
+
+
+def test_project_followup_false_with_no_history():
+    assert not _is_project_followup("What is its first model called?", [])
 
 
 if __name__ == "__main__":

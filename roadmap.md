@@ -91,6 +91,8 @@ Found a real latent bug auditing `FIXED_FACTS`: the who-maintains pattern (`who.
 
   Added 3 new holdout prompts locking in all three fixes (16/16). 29/29 + 16/16 + 7/7 after the fix. Minor version bump, this changed actual answer behavior across several question shapes, not just regex robustness.
 
+- **2026-09-14, v0.7.1: ran actual multi-turn conversations, found the memory feature didn't work for the obvious case.** Asked "What is Turing?" then "What is its first model called?" in one `chat.py` session. The follow-up has no project keyword of its own ("its" refers back, nothing else), so `is_project_question()` returned False, it fell through to `general_knowledge()`, and got answered with a generic "what is an LLM" Wikipedia-style definition, no memory of the prior turn at all, the one thing `chat.py` exists to add over `ask.py`. Fixed with `_is_project_followup()`: if the previous turn was project-scoped and the current one has a back-reference pronoun (it/its/this/that/these/those), treat it as a continuation instead of routing it to the web. Retested the same conversation, "its first model" now correctly answers "Samantha". Added 4 tests for the new helper (11/11 in `test_chat.py`). 29/29 + 16/16 + 11/11 after the fix.
+
 ### Phase 6: Distillation, not scale (month 4+, optional/ambitious)
 Instead of chasing bigger bases, use a frontier model (Claude) to generate high-quality synthetic training examples in our exact style, then distill that into Samantha. This is literally how most useful small models are built today, nobody pretrains from raw internet text anymore if they can help it.
 
