@@ -10,12 +10,17 @@ another FAQ entry, which is whack-a-mole, not a fix.
 This measures the actual miss rate so the "is lexical matching good enough"
 question gets a number instead of a hunch. Each case is a paraphrase a
 person would plausibly type, paired with the FAQ header that genuinely
-answers it. Run: ./.venv/bin/python eval/faq_paraphrase.py [--verbose]
+answers it. Run: ./.venv/bin/python eval/faq_paraphrase.py [--verbose] [--min N]
+
+--min N exits nonzero if recall drops below N, which is how the pre-commit
+hook gates matcher changes. It skips itself when the local embedding daemon
+isn't reachable, since that is a degraded environment rather than a
+regression.
 """
 import os, sys
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from ask import faq_match, load_faq
+from ask import faq_match, load_faq, _embed
 
 # (what a person types, the FAQ header that actually answers it)
 CASES = [
@@ -40,6 +45,19 @@ CASES = [
 
 def main():
     verbose = "--verbose" in sys.argv
+    minimum = None
+    for i, arg in enumerate(sys.argv):
+        if arg == "--min" and i + 1 < len(sys.argv):
+            minimum = int(sys.argv[i + 1])
+
+    # Recall depends on the local embedding daemon. Without it the matcher
+    # correctly falls back to lexical and scores far lower, which is a
+    # degraded environment, not a regression, so a --min gate must not fire
+    # on it (that would block commits on any machine without Ollama).
+    if minimum is not None and _embed(["probe"]) is None:
+        print("embeddings unavailable (Ollama not running?), skipping the --min gate")
+        return 0
+
     by_question = dict(load_faq())
     missing = [h for _, h in CASES if h not in by_question]
     if missing:
@@ -74,6 +92,9 @@ def main():
     total = len(CASES)
     print(f"\n{hits}/{total} paraphrases matched the right entry "
           f"({wrong} matched the wrong entry, {nothing} matched nothing)")
+    if minimum is not None and hits < minimum:
+        print(f"REGRESSION: recall {hits} is below the required minimum {minimum}")
+        return 1
     return 0
 
 

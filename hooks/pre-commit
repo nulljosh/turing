@@ -15,6 +15,22 @@ if echo "$changed" | grep -qE '^(ask\.py|chat\.py|FAQ\.md|eval/prompts\.jsonl)$'
   fi
 fi
 
+if echo "$changed" | grep -qE '^(ask\.py|FAQ\.md)$'; then
+  echo "matcher-relevant file changed, running eval/faq_paraphrase.py..."
+  # Guards recall against natural rephrasings, which prompts.jsonl cannot
+  # see (its prompts are worded the way the FAQ words things). Recall was
+  # 3/16 before semantic matching landed and is 13/16 now; the floor stops
+  # a future matcher change from quietly walking it back. Skips itself when
+  # the embedding daemon isn't running, so a machine without Ollama is not
+  # blocked from committing.
+  if ! ./.venv/bin/python eval/faq_paraphrase.py --min 13; then
+    echo ""
+    echo "eval/faq_paraphrase.py regressed. Commit blocked."
+    echo "If this is expected, commit with --no-verify."
+    exit 1
+  fi
+fi
+
 if echo "$changed" | grep -qE '^chat\.py$'; then
   echo "chat.py changed, running test_chat.py..."
   if ! ./.venv/bin/python test_chat.py > /dev/null; then
