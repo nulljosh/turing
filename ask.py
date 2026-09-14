@@ -598,6 +598,15 @@ def general_knowledge(query, skip_officeholder=False):
     if exact:
         return exact, "arithmetic"
 
+    # A question with no content word left after stopwords has nothing to
+    # look up, and both DDG and Wikipedia will happily title-match it to
+    # something anyway. Confirmed live: a bare "why" returned "Why.., the
+    # first extended play by the South Korean boy band BoyNextDoor".
+    # Checked after arithmetic, since "2+2" has no word characters either
+    # and is genuinely answerable.
+    if not _keywords(query):
+        return None, None
+
     if not skip_officeholder:
         holder, src = current_officeholder(query)
         if holder:

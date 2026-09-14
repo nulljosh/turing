@@ -16,6 +16,11 @@ HISTORY_TURNS = 3  # how many prior exchanges to keep as short-term memory
 
 EXIT_WORDS = ("exit", "quit", "bye", "q")  # natural quit phrasings that should stop the loop, not get generated on
 
+OUT_OF_SCOPE = (
+    "I couldn't find anything on that, and it's outside what I know about "
+    "this project, so I'm not going to make something up."
+)
+
 
 def project_scope(question, topic_active):
     """is_project_question() only looks at the current question's own
@@ -152,6 +157,7 @@ def answer_turn(question, history, topic_active, last_subject=None):
     if not project_scoped:
         question = resolve_followup(question, last_subject)
     project_scoped, topic_active = project_scope(question, topic_active)
+    answered_from_project = False
     holder_answer = None
     if not project_scoped and _WHO_PREFIX.match(question.strip()):
         holder_answer, holder_source = current_officeholder(question)
@@ -172,11 +178,21 @@ def answer_turn(question, history, topic_active, last_subject=None):
         answer = faq_answer
     elif gk_answer:
         answer = gk_answer
+    elif not project_scoped:
+        # The question isn't about the project and the encyclopedia had
+        # nothing. Generating anyway means generating *from project
+        # retrieval context*, which can only produce a project-flavoured
+        # answer to an outside question. Confirmed live: "what is teh
+        # capitol of frnace" (typo'd, so no source could match it) came back
+        # "the Turing project", and a bare "why" produced invented detail
+        # about a nonexistent model. Saying so is the honest option.
+        answer = OUT_OF_SCOPE
     else:
         results = search(question)
         extracted = try_extract(question, results)
         if extracted:
             answer = extracted
+            answered_from_project = True
         else:
             context = "\n\n---\n\n".join(r["text"][:800] for r in results)
             prompt = build_prompt(history, context, question)
@@ -195,7 +211,19 @@ def answer_turn(question, history, topic_active, last_subject=None):
     # question that was actually about command-line flags. Latch
     # topic_active on however the answer actually got produced, not just
     # on re-deriving scope from the current question's words.
-    if faq_answer or (not holder_answer and not gk_answer and answer):
+    # Latch only on real evidence the question was about the project: an FAQ
+    # match, a project extraction, or a question that was already in scope.
+    #
+    # The previous rule also latched on the bare generation fallback, which
+    # is the catch-all every unanswered question lands in, *including* an
+    # outside question the encyclopedia simply couldn't answer. Confirmed
+    # live and it was severe: "who is taylor swift" answered fine, then "and
+    # her net worth?" found nothing, fell to generation, invented "Turing.
+    # Not a model." and latched the flag. Every later question in that
+    # session was then treated as project-scoped, so "what is teh capitol of
+    # frnace" answered "the Turing project". One failed outside question
+    # permanently converted the conversation.
+    if faq_answer or answered_from_project or project_scoped:
         topic_active = True
     # remember the subject only while the conversation is off-project, so a
     # stale person never gets substituted into a later project question
