@@ -119,6 +119,14 @@ Found a real latent bug auditing `FIXED_FACTS`: the who-maintains pattern (`who.
 
   Open, with evidence now attached: recall is still 3/16. That is the real headline and it is not fixable lexically. Next: semantic FAQ matching via embeddings.
 
+- **2026-09-14, recall 3/16 to 5/16 on stemming and a three-letter-acronym bug, and the semantic wall confirmed from a second direction.** Diagnosed all 12 paraphrase misses individually instead of assuming they needed embeddings. Most weren't semantic at all: four shared zero keywords purely from morphology (train/training, scoring/score, evals/eval, matching/matcher), the matcher simply couldn't see through an `-ing`. Added `_stem()`, a dozen lines of suffix stripping, deliberately not a real Porter stemmer, both sides stemmed identically so over-stripping stays symmetric. Separately, `_keywords()` filtered to `len(w) > 3`, which silently discarded this project's most distinctive words: `faq`, `tui`, `cli`, `api` are all three letters. Lowered to `> 2`. Together: recall 3/16 to 5/16, wrong-entry matches 1 to 0, out-of-scope false positives still 0/8, 29/29 + 18/18 + 11/11.
+
+  Then tried to fix the rest by weighting word rarity into the score (a question sharing "arthur", a word unique to exactly one FAQ entry, should match it). Swept eight weight combinations across seq_ratio/overlap/rarity: **every single one scored identically, 5/16.** The weights were irrelevant because the real blocker is the foreign-word veto added earlier the same session. "why did arthur fail" has keywords {arthur, fail}, "fail" appears nowhere in the FAQ, so one foreign word against one shared word trips the veto before scoring happens at all. The veto is costing recall on exactly the cases rarity would rescue.
+
+  Loosening it is not available either: the veto is what kills "is my sink blocked right now" (shares "blocked", df 1, unique to one entry) returning project status. Lexically, "arthur"+"fail" and "blocked"+"sink" are the same shape, one rare shared word and one unknown word. Nothing about word frequency, length, or sentence shape separates them, only meaning does. That is the semantic wall reached from a second, independent direction, precision and recall in direct tension with no lexical knob between them. Stopped tuning rather than trading one bug class for the other.
+
+  Standing conclusion: remaining recall needs real embeddings. Cheap lexical wins are now exhausted, 5/16 is the honest ceiling for this approach.
+
 ### Phase 6: Distillation, not scale (month 4+, optional/ambitious)
 Instead of chasing bigger bases, use a frontier model (Claude) to generate high-quality synthetic training examples in our exact style, then distill that into Samantha. This is literally how most useful small models are built today, nobody pretrains from raw internet text anymore if they can help it.
 

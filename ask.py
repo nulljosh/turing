@@ -161,8 +161,36 @@ _STOPWORDS = {
 }
 
 
+def _stem(w):
+    """Crude suffix stripping so a question and a FAQ header that use the
+    same word in different forms still count as sharing it.
+
+    Measured, not guessed: of 12 paraphrase misses, four shared no keyword
+    at all purely from morphology, "what do you use to train it" against
+    "What tool actually runs training?" (train/training), "how is it
+    scoring on evals right now" against "What's the current eval score?"
+    (scoring/score, evals/eval), "how does the faq matching work" against
+    "What is the FAQ-matcher?" (matching/matcher). Nothing semantic about
+    any of them, the matcher just couldn't see through an -ing.
+
+    Trailing "e" goes too, so score/scoring collapse to the same stem
+    rather than scor/score. Deliberately not a real Porter stemmer, this
+    is a dozen lines against a 41-entry FAQ, and both sides get stemmed
+    identically so an over-aggressive strip stays symmetric.
+    """
+    for suffix in ("ing", "ers", "er", "ed", "es", "s"):
+        if w.endswith(suffix) and len(w) - len(suffix) >= 3:
+            w = w[: -len(suffix)]
+            break
+    return w[:-1] if w.endswith("e") and len(w) > 3 else w
+
+
 def _keywords(s):
-    return {w for w in re.findall(r"[a-z0-9]+", s.lower()) if len(w) > 3 and w not in _STOPWORDS}
+    # len > 2, not > 3: this project's most distinctive words are three-letter
+    # acronyms (faq, tui, cli, api), and excluding them threw away the single
+    # strongest signal a question about them carries.
+    return {_stem(w) for w in re.findall(r"[a-z0-9]+", s.lower())
+            if len(w) > 2 and w not in _STOPWORDS}
 
 
 def faq_match(question):
