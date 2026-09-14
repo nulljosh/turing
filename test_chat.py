@@ -5,7 +5,7 @@ once when the indentation bug got fixed (see roadmap.md).
 
 Usage: ./.venv/bin/python test_chat.py
 """
-from chat import clean, build_prompt, HISTORY_TURNS, _is_project_followup
+from chat import clean, build_prompt, HISTORY_TURNS, project_scope
 
 
 def test_clean_strips_echoed_user_turn():
@@ -48,27 +48,34 @@ def test_build_prompt_no_history_omits_section():
     assert "Recent conversation:" not in prompt
 
 
-def test_project_followup_after_project_question():
-    # real bug: "What is its first model called?" right after "What is
-    # Turing?" had no project keyword of its own and got routed to
-    # general_knowledge(), which answered a generic "what is an LLM"
-    # question instead of remembering the conversation was about Turing
-    history = [("What is Turing?", "The project.")]
-    assert _is_project_followup("What is its first model called?", history)
+def test_scope_stays_active_across_keywordless_followup():
+    # real bug: "How confident does a match need to be?" right after "What
+    # is the FAQ matcher?" has no project keyword AND no pronoun, and got
+    # answered with a Wikipedia article about an unrelated comedian. A
+    # sticky topic flag catches this where pronoun-matching couldn't.
+    scoped, active = project_scope("What is the FAQ matcher?", False)
+    assert scoped and active
+    scoped, active = project_scope("How confident does a match need to be?", active)
+    assert scoped and active
 
 
-def test_project_followup_needs_prior_project_question():
-    history = [("What is the capital of France?", "Paris.")]
-    assert not _is_project_followup("What is its population?", history)
+def test_scope_not_active_before_any_project_question():
+    scoped, active = project_scope("What is the capital of France?", False)
+    assert not scoped and not active
 
 
-def test_project_followup_needs_a_pronoun():
-    history = [("What is Turing?", "The project.")]
-    assert not _is_project_followup("What is the capital of France?", history)
+def test_scope_officeholder_overrides_active_topic():
+    # a live "who's the current X" lookup is a real, tested escape hatch,
+    # a resumed project topic should never swallow it
+    scoped, active = project_scope("What is Turing?", False)
+    assert scoped and active
+    scoped, active = project_scope("who's the prime minister of canada", active)
+    assert not scoped and active
 
 
-def test_project_followup_false_with_no_history():
-    assert not _is_project_followup("What is its first model called?", [])
+def test_scope_direct_keyword_match_without_prior_history():
+    scoped, active = project_scope("What is its first model called?", False)
+    assert scoped and active
 
 
 if __name__ == "__main__":

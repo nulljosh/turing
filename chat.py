@@ -6,7 +6,7 @@ Honest scope: this makes Samantha feel more like a real assistant to use.
 It does not and cannot make a 0.5B model "as good as Claude/GPT", see
 roadmap.md's "What we will never do on this budget."
 """
-import os, re, sys
+import os, sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from ask import search, try_extract, faq_match, general_knowledge, is_project_question, is_question, current_officeholder, _WHO_PREFIX, MODEL, ADAPTER, SYSTEM
@@ -14,23 +14,36 @@ import subprocess
 
 HISTORY_TURNS = 3  # how many prior exchanges to keep as short-term memory
 
-_PRONOUN_FOLLOWUP = re.compile(r"\b(it|its|it's|this|that|these|those)\b", re.I)
 
-
-def _is_project_followup(question, history):
+def project_scope(question, topic_active):
     """is_project_question() only looks at the current question's own
-    words, so a natural pronoun follow-up in a live conversation ("What is
-    its first model called?" right after "What is Turing?") has no project
-    keyword of its own and gets misrouted to general_knowledge(). Confirmed
-    live: that exact follow-up got answered with a generic Wikipedia-style
-    "what is an LLM" definition, no memory of the prior turn at all, the
-    one thing this file exists to add over ask.py's single-shot ask().
-    If the previous turn was already about the project and this one refers
-    back to it, treat it as a continuation instead of a fresh topic.
+    words, so any natural follow-up that doesn't repeat a project keyword
+    gets misrouted to general_knowledge(). A pronoun-only fix ("what is
+    ITS first model called") caught the obvious case but missed the next
+    one found live: "How confident does a match need to be?" right after
+    "What is the FAQ matcher?" has no pronoun and no keyword either, and
+    got answered with a Wikipedia article about an unrelated Chinese
+    comedian (her "confident" catchphrase). No amount of pattern-matching
+    the current question's words alone can catch every phrasing of "still
+    talking about the same thing".
+
+    Once the conversation has genuinely turned to project (this session
+    is explicitly branded "Samantha, Turing project assistant" from its
+    first line), stay there for follow-ups instead of re-deriving scope
+    from each question in isolation, a plain sticky flag threaded through
+    the loop, simpler than a growing pile of reference-detection regexes
+    and more robust to phrasings none of them would catch. The one
+    carve-out: a "who is/who's the current X" question always overrides,
+    that's a real, tested, intentional live-lookup escape hatch, not
+    something a resumed project topic should swallow.
+
+    Returns (project_scoped, updated topic_active) for the caller to
+    thread through the next turn.
     """
-    if not history:
-        return False
-    return is_project_question(history[-1][0]) and bool(_PRONOUN_FOLLOWUP.search(question))
+    is_current = is_project_question(question)
+    active = topic_active or is_current
+    who_query = bool(_WHO_PREFIX.match(question.strip()))
+    return (is_current or (active and not who_query)), active
 
 
 def clean(answer, question):
@@ -78,6 +91,7 @@ def build_prompt(history, context, question):
 
 def chat():
     history = []
+    topic_active = False
     print("Samantha (Turing project assistant). Ctrl+C or 'exit' to quit.\n")
     while True:
         try:
@@ -87,7 +101,7 @@ def chat():
             break
         if not question or question.lower() in ("exit", "quit"):
             break
-        project_scoped = is_project_question(question) or _is_project_followup(question, history)
+        project_scoped, topic_active = project_scope(question, topic_active)
         holder_answer = None
         if not project_scoped and _WHO_PREFIX.match(question.strip()):
             holder_answer = current_officeholder(question)[0]
