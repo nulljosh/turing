@@ -478,6 +478,11 @@ def normalize_query(query):
 _WHO_PREFIX = re.compile(r"^who(?:'s|\s+(?:is|are|was|were))\s+", re.I)
 
 UNREACHABLE = "__lookup_unreachable__"  # source marker, not a real source
+OUT_OF_SCOPE = (
+    "I couldn't find anything on that, and it's outside what I know about "
+    "this project, so I'm not going to make something up."
+)
+
 LOOKUP_FAILED = (
     "I couldn't reach Wikidata to look that up just now, so I don't know "
     "who currently holds it. Not going to guess at a name."
@@ -793,6 +798,14 @@ def ask(question):
     extracted = try_extract(question, results)
     if extracted:
         return extracted, [r["source"] for r in results]
+    # Same rule chat.py already applies, and it belongs here too: generating
+    # for a question that isn't about the project means generating from
+    # *project* retrieval context, which can only invent. chat.py got this
+    # guard first and ask.py didn't, a divergence serve.py exposed
+    # immediately, "asdkjfhaskdjfh" came back as garbled half-Chinese text
+    # through the API while chat.py declined it cleanly.
+    if not is_project_question(question):
+        return OUT_OF_SCOPE, []
     context = "\n\n---\n\n".join(r["text"][:800] for r in results)
     prompt = f"{SYSTEM}\n\nContext:\n{context}\n\nQuestion: {question}"
     out = subprocess.run(

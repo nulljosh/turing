@@ -9,17 +9,13 @@ roadmap.md's "What we will never do on this budget."
 import os, re, sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from ask import search, try_extract, faq_match, general_knowledge, is_project_question, is_question, current_officeholder, _WHO_PREFIX, _QUESTION_PREFIX, _keywords, project_vocabulary, UNREACHABLE, LOOKUP_FAILED, MODEL, ADAPTER, SYSTEM
+from ask import search, try_extract, faq_match, general_knowledge, is_project_question, is_question, current_officeholder, _WHO_PREFIX, _QUESTION_PREFIX, _keywords, project_vocabulary, OUT_OF_SCOPE, UNREACHABLE, LOOKUP_FAILED, MODEL, ADAPTER, SYSTEM
 import subprocess
 
 HISTORY_TURNS = 3  # how many prior exchanges to keep as short-term memory
 
 EXIT_WORDS = ("exit", "quit", "bye", "q")  # natural quit phrasings that should stop the loop, not get generated on
 
-OUT_OF_SCOPE = (
-    "I couldn't find anything on that, and it's outside what I know about "
-    "this project, so I'm not going to make something up."
-)
 
 
 def project_scope(question, topic_active):
