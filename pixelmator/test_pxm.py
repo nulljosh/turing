@@ -24,6 +24,11 @@ APP_PATH = "/Applications/Pixelmator Pro.app"
 LIVE = os.environ.get("PXM_LIVE") == "1" and os.path.isdir(APP_PATH)
 
 
+def setUpModule():
+    # Tests must never queue behind, or block, a real build. They get a lock file of their own.
+    pxm.BUILD_LOCK_PATH = os.path.join(tempfile.mkdtemp(prefix="pxm-test-lock-"), "lock")
+
+
 def spec(**over):
     base = {"width": 100, "height": 100,
             "layers": [{"type": "ellipse", "width": 50, "height": 50, "fill": "#FF0000"}]}
@@ -620,26 +625,12 @@ class BuildLock(unittest.TestCase):
                 self.assertEqual(code, 0)
 
     def test_wait_flag_accepted_by_paint(self):
-        """--wait flag is accepted by paint command."""
-        with tempfile.TemporaryDirectory() as tmp:
-            # Create a small test image (1x1 red PNG).
-            img_path = os.path.join(tmp, "test.png")
-            png_data = (
-                b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x01'
-                b'\x00\x00\x00\x01\x08\x02\x00\x00\x00\x90wS\xde\x00\x00\x00\x0c'
-                b'IDATx\x9cc\xf8\xcf\xc0\x00\x00\x00\x03\x00\x01O\xf5`\xde'
-                b'\x00\x00\x00\x00IEND\xaeB`\x82'
-            )
-            with open(img_path, 'wb') as f:
-                f.write(png_data)
-            out_path = os.path.join(tmp, "out.png")
-            # --wait with --dry-run should parse without error.
-            with mock.patch.object(pxm, 'BUILD_LOCK_PATH', self.lock_path):
-                code, out, err = run_main(
-                    "paint", img_path, "--out", out_path,
-                    "--wait", "--dry-run", "--shapes", "5"
-                )
-                self.assertEqual(code, 0)
+        """--wait parses on paint. read_pixels is faked: sips only exists on macOS, CI runs on Linux."""
+        rows = [[(200, 10, 10)] * 4 for _ in range(4)]
+        with mock.patch.object(pxm, "read_pixels", return_value=(4, 4, rows)):
+            code, out, err = run_main("paint", "any.png", "--out", "/tmp/pxm-wait.png", "--wait", "--dry-run")
+        self.assertEqual(code, 0, err)
+        self.assertIn("make new document", out)
 
 
 @unittest.skipUnless(LIVE, "set PXM_LIVE=1 on a Mac with Pixelmator Pro")
