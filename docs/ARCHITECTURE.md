@@ -14,7 +14,9 @@ Local LLM training pipeline. Fine-tune small open models (LoRA on Qwen2.5-0.5B) 
 | `ask.py` + `chat.py` | Inference. Loads the trained adapter, retrieves facts from brain RAG, generates answers. `chat.py` wraps it in an interactive loop. |
 | `serve.py` | CLI server. Local REPL for chat sessions. |
 | `harvest_voice.py` | Voice data harvester. Collects training examples from git commits (183 pairs extracted from fleet repos), used for style transfer beyond documentation alone. |
-| `run_lora_capped.py` | Utility to run LoRA training with memory caps, protecting against OOM crashes. |
+| `run_lora_capped.py` | Utility to run LoRA training with memory caps, protecting against OOM crashes on the 16GB machine. |
+| `train_resilient.sh` | Wrapper script for resilient training runs (retries on crash, memory limits). |
+| `test_nimble.py` | Integration tests for Nimble service integration (via serve.py REPL). |
 | `eval/score.py` + `test_chat.py` | Automated QA over a held-out test set. No eyeballed results, CI validates every run. |
 | `scratch/` | Experimental from-scratch transformer (character-level, no pre-trained weights). Deliberately tiny, proves we can build one without repeating the Arthur gibberish failure. Not intended to be fluent. |
 | `tui/` | Terminal UI. SwiftPM + SwiftTUI wrapper around the Python CLI. |
