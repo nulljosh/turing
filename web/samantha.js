@@ -48,7 +48,7 @@
      function (m) { return ["new_note", m[1]]; }],
     [/^what(?:'s| is) on (?:my |the )?(?:calendar|schedule|agenda)\b|^(?:my )?(?:calendar|schedule|agenda)(?: for)?(?: today)?$|^what do i have (?:on )?today/i,
      function () { return ["calendar_today", ""]; }],
-    [/^(?:make|design|draw|create|build)(?: me)? (?:a |an )?(complex |intricate |detailed |elaborate |ornate |fancy |crazy |insane )?(?:logo|icon)(?: for| of)? (.+)$/i, function (m) { return ["make_logo", (m[1] || "") + m[2]]; }],
+    [/^(?:make|design|draw|create|build)(?: me)? (?:a |an )?((?:(?:complex|intricate|detailed|elaborate|ornate|fancy|crazy|insane|original|wordless|abstract|textless) )*)(?:logo|icon)(?: for| of)? (.+)$/i, function (m) { return ["make_logo", (m[1] || "") + m[2]]; }],
     [/^(?:(?:show me |tell me )?what(?:'s| is) (?:on|in) (?:my |the )?clipboard|(?:read|show)(?: me)? (?:my |the )?clipboard)\b/i, function () { return ["clipboard", ""]; }],
     [/^(?:set |turn |put )?(?:the |it |my )?(?:volume )?(?:up |down )?(?:to |at )(\d{1,3})\b/i, function (m) { return ["set_volume", m[1]]; }],
     [/^(?:set |turn )?(?:the )?volume (\d{1,3})\b/i, function (m) { return ["set_volume", m[1]]; }],

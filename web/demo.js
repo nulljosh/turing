@@ -112,7 +112,29 @@
     });
     return ((words[0] || 's')[0] + (words.length > 1 && words.length < 4 ? words[1][0] : '')).slice(0, 2);
   }
+  // Wordless: no letters. Cells on a golden-angle spiral, the same layout as tools._bloom_layers; cell 1 sits on the centre.
+  var WORDLESS = /\b(?:no (?:text|letters|words|lettering)|wordless|textless|without (?:text|letters|words)|original|abstract)\b/i;
+  function drawBloom(desc) {
+    var h = hash(desc.toLowerCase()), names = Object.keys(PALETTES), palette = names[h % names.length], p = PALETTES[palette];
+    var tile = p[0], ink = p[1], accent = p[2], cells = [55, 89, 144, 233][(h >>> 3) % 4], shape = (h >>> 5) % 2 ? 'square' : 'circle', lit = 1 + (h >>> 7) % 5;
+    var root = svg('svg', { viewBox: '0 0 1024 1024', role: 'img', 'aria-label': 'A wordless logo: a golden spiral of cells' });
+    root.appendChild(svg('rect', { x: 72, y: 72, width: 880, height: 880, rx: 200, fill: tile }));
+    var golden = 137.507764 * Math.PI / 180, fib = [1, 3, 8, 21, 55, 144, 233].filter(function (n) { return n <= cells; });
+    var bright = fib.slice(-lit).concat([1]);
+    for (var i = 1; i <= cells; i++) {
+      var f = Math.sqrt((i - 1) / (cells - 1)), r = 335 * f, th = i * golden, on = bright.indexOf(i) >= 0;
+      var size = Math.round(14 + 30 * f + (on ? (i === 1 ? 44 : 16) : 0)), x = 512 + r * Math.cos(th), y = 512 + r * Math.sin(th);
+      var op = on ? 1 : (52 + 40 * f) / 100, fill = on ? accent : ink;
+      root.appendChild(shape === 'square'
+        ? svg('rect', { x: x - size / 2, y: y - size / 2, width: size, height: size, rx: Math.max(2, Math.floor(size / 6)), fill: fill, opacity: op,
+                        transform: 'rotate(' + (th * 180 / Math.PI % 360).toFixed(2) + ' ' + x.toFixed(1) + ' ' + y.toFixed(1) + ')' })
+        : svg('circle', { cx: x, cy: y, r: size / 2, fill: fill, opacity: op }));
+    }
+    return { svg: root, text: 'I went with palette ' + palette + ', cells ' + cells + ', shape ' + shape + ', lit ' + lit + '. ' + (cells + 1) +
+             ' layers, no text. Here a hash of your words turns the dials. On the Mac her 1.7B picks them and Pixelmator builds it.' };
+  }
   function drawLogo(desc) {
+    if (WORDLESS.test(desc)) return drawBloom(desc);
     var h = hash(desc.toLowerCase()), fancy = /\b(?:complex|intricate|detailed|elaborate|ornate|fancy|crazy|insane)\b/i.test(desc);
     var names = Object.keys(PALETTES), palette = names[h % names.length], p = PALETTES[palette];
     var tile = p[0], ink = p[1], accent = p[2], letters = initials(desc).toUpperCase(), C = 512;
@@ -520,7 +542,7 @@
   // No theme commands in the reel: flipping a visitor's whole page unasked reads as a bug.
   // ---- idle reel: if nobody types, she shows what she does. Silent, and it stops the moment you touch anything ----
   var REEL = ['paint the mona lisa', 'change the title to Hello there', 'open chrome and go to github.com', 'set the volume to 40', 'paint the eniac', 'take a note the demo is live',
-              'what is 17*23', 'make me a complex logo for a surf school', "what's the weather in tokyo", 'play some music', 'skip this song', 'paint the last supper',
+              'what is 17*23', 'make me a complex logo for a surf school', 'make me an original wordless logo for turing', "what's the weather in tokyo", 'play some music', 'skip this song', 'paint the last supper',
               'who painted the mona lisa', 'set a timer for 1 minute', 'scroll to the results', 'take a screenshot', 'do a barrel roll', 'calculate 17*23', 'convert 72 f to c', 'time in tokyo', 'roll 2d6', 'is 91 prime', 'days until christmas', 'who invented the telephone', 'reset the page'];
   // more phrasings for the input's autocomplete only. The reel stays short.
   var MORE = ['tip on 45', 'roman numerals for 2026', 'sha256 of turing', 'base64 encode hello', 'morse sos', 'flip a coin', 'generate a strong password',

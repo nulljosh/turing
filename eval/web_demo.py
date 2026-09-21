@@ -38,6 +38,7 @@ STEPS = [
     # the page is hers too
     ("change the title to Hello Joshua", "Hello Joshua", lambda p: p.inner_text("h1") == "Hello Joshua"),
     ("make the title red", "red", lambda p: "rgb(192, 57, 43)" in p.evaluate("getComputedStyle(document.querySelector('h1')).color")),
+    ("make me an original wordless logo for turing", "no text", lambda p: p.locator("svg[aria-label^='A wordless logo']").count() >= 1),
     ("calculate 17*23", "391", None),
     ("convert 72 f to c", "22.22", None),
     ("sha256 of hello", "2cf24dba5fb0a30e", None),

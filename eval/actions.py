@@ -26,6 +26,8 @@ CASES = [
     ("start pixelmator", "open_app", "pixelmator"),
     ("make me a logo for turing", "make_logo", "turing"),
     ("make me a complex logo for a surf school", "make_logo", "complex a surf school"),
+    ("make me an original wordless logo for turing", "make_logo", "original wordless turing"),
+    ("design an abstract icon for a bakery", "make_logo", "abstract a bakery"),
 
     # opening sites
     ("go to hacker news", "open_url", "hacker news"),
