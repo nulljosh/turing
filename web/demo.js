@@ -112,16 +112,7 @@
     return svg('polygon', { points: pts.join(' '), fill: fill, opacity: opacity == null ? 1 : opacity });
   }
   function hash(s) { var h = 5381; for (var i = 0; i < s.length; i++) h = ((h * 33) ^ s.charCodeAt(i)) >>> 0; return h; }
-  function initials(desc) {
-    var called = /\b(?:called|named)\s+(\w)/i.exec(desc);
-    if (called) return called[1];
-    var words = (desc.toLowerCase().match(/[a-z0-9]+/g) || []).filter(function (w) {
-      return !/^(?:a|an|the|my|our|for|of|about|and|most|ever|logo|icon|complex|intricate|detailed|elaborate|ornate|fancy|crazy|insane)$/.test(w);
-    });
-    return ((words[0] || 's')[0] + (words.length > 1 && words.length < 4 ? words[1][0] : '')).slice(0, 2);
-  }
-  // Wordless: no letters. Cells on a golden-angle spiral, the same layout as tools._bloom_layers; cell 1 sits on the centre.
-  var WORDLESS = /\b(?:no (?:text|letters|words|lettering)|wordless|textless|without (?:text|letters|words)|original|abstract)\b/i;
+  // Default: no letters. Cells on a golden-angle spiral, the same layout as tools._bloom_layers; cell 1 sits on the centre.
   function drawBloom(desc) {
     var h = hash(desc.toLowerCase()), names = Object.keys(PALETTES), palette = names[h % names.length], p = PALETTES[palette];
     var tile = p[0], ink = p[1], accent = p[2], cells = [55, 89, 144, 233][(h >>> 3) % 4], shape = (h >>> 5) % 2 ? 'square' : 'circle', lit = 1 + (h >>> 7) % 5;
@@ -142,28 +133,32 @@
              ' layers, no text. Here a hash of your words turns the dials. On the Mac her 1.7B picks them.' };
   }
   function drawLogo(desc) {
-    if (WORDLESS.test(desc)) return drawBloom(desc);
-    var h = hash(desc.toLowerCase()), fancy = /\b(?:complex|intricate|detailed|elaborate|ornate|fancy|crazy|insane)\b/i.test(desc);
-    var names = Object.keys(PALETTES), palette = names[h % names.length], p = PALETTES[palette];
-    var tile = p[0], ink = p[1], accent = p[2], letters = initials(desc).toUpperCase(), C = 512;
-    var root = svg('svg', { viewBox: '0 0 1024 1024', role: 'img', 'aria-label': 'Logo: ' + letters });
+    var fancy = /\b(?:complex|intricate|detailed|elaborate|ornate|fancy|crazy|insane)\b/i.test(desc);
+    var simple = !fancy && /\b(?:simple|minimal|minimalist|clean|plain)\b/i.test(desc);
+    if (!fancy && !simple) return drawBloom(desc);
+    var h = hash(desc.toLowerCase()), names = Object.keys(PALETTES), palette = names[h % names.length], p = PALETTES[palette];
+    var tile = p[0], ink = p[1], accent = p[2], C = 512;
+    var root = svg('svg', { viewBox: '0 0 1024 1024', role: 'img', 'aria-label': 'An icon logo, no text' });
     root.appendChild(svg('rect', { x: 72, y: 72, width: 880, height: 880, rx: 200, fill: tile }));
-    function mark(size) {
-      var t = svg('text', { x: C, y: C, 'text-anchor': 'middle', 'dominant-baseline': 'central', fill: ink,
-                            'font-family': 'Helvetica Neue, Helvetica, Arial, sans-serif', 'font-weight': 700, 'font-size': size });
-      t.textContent = letters;
-      root.appendChild(t);
-    }
     var chose, layers;
     if (!fancy) {
-      var motif = ['ring', 'spark', 'underline', 'dot'][(h >>> 3) % 4];
-      if (motif === 'ring') root.appendChild(svg('circle', { cx: C, cy: C, r: 320, fill: 'none', stroke: accent, 'stroke-width': 28 }));
-      mark(letters.length === 1 ? 340 : 280);
-      if (motif === 'spark') root.appendChild(star(765, 265, 150, 4, 35, accent));
-      if (motif === 'underline') root.appendChild(svg('rect', { x: 362, y: 730, width: 300, height: 28, rx: 14, fill: accent }));
-      if (motif === 'dot') root.appendChild(svg('circle', { cx: 745, cy: 685, r: 45, fill: accent }));
-      chose = 'letters ' + letters + ', palette ' + palette + ', motif ' + motif;
-      layers = motif === 'ring' || motif === 'spark' || motif === 'underline' || motif === 'dot' ? 3 : 2;
+      var motif = ['ring', 'spark', 'bars', 'dot'][(h >>> 3) % 4];
+      if (motif === 'ring') {
+        root.appendChild(svg('circle', { cx: C, cy: C, r: 320, fill: 'none', stroke: accent, 'stroke-width': 28 }));
+        root.appendChild(svg('circle', { cx: C, cy: C, r: 150, fill: accent }));
+      } else if (motif === 'spark') {
+        root.appendChild(star(C, C, 520, 4, 72, accent));
+        root.appendChild(svg('circle', { cx: C, cy: C, r: 60, fill: ink }));
+      } else if (motif === 'bars') {
+        [[392, 240, accent], [512, 420, ink], [632, 320, accent]].forEach(function (b) {
+          root.appendChild(svg('rect', { x: b[0] - 45, y: C - b[1] / 2, width: 90, height: b[1], rx: 45, fill: b[2] }));
+        });
+      } else {
+        root.appendChild(svg('circle', { cx: C, cy: C, r: 180, fill: accent }));
+        root.appendChild(svg('circle', { cx: 690, cy: 340, r: 55, fill: ink }));
+      }
+      chose = 'palette ' + palette + ', motif ' + motif;
+      layers = motif === 'bars' ? 4 : 3;
     } else {
       var rings = 2 + (h >>> 3) % 4, rays = [12, 16, 20, 24, 30, 36][(h >>> 5) % 6], style = ['bars', 'dots', 'stars'][(h >>> 8) % 3];
       var orbit = [0, 6, 8, 12, 16][(h >>> 10) % 5], points = 4 + (h >>> 13) % 9, gap = Math.floor(300 / rings);
@@ -186,12 +181,12 @@
       }
       root.appendChild(svg('circle', { cx: C, cy: C, r: 150, fill: tile }));
       root.appendChild(star(C, C, 290, points, 72, accent, 0.28));
-      mark(letters.length === 1 ? 190 : 150);
-      chose = 'letters ' + letters + ', palette ' + palette + ', rings ' + rings + ', rays ' + rays + ', ray_style ' + style +
+      root.appendChild(svg('circle', { cx: C, cy: C, r: 48, fill: ink }));
+      chose = 'palette ' + palette + ', rings ' + rings + ', rays ' + rays + ', ray_style ' + style +
               ', orbit_dots ' + orbit + ', star_points ' + points;
       layers = 1 + rays + rings + orbit + 3;
     }
-    return { svg: root, text: 'I went with ' + chose + '. ' + layers + ' layers. Here a hash of your words turns the dials. On the Mac her 1.7B picks them.' };
+    return { svg: root, text: 'I went with ' + chose + '. ' + layers + ' layers, no text. Here a hash of your words turns the dials. On the Mac her 1.7B picks them.' };
   }
 
   // ---- a small home folder, with the same rules as tools._inside_home ----

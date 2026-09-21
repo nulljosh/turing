@@ -312,40 +312,42 @@ PXM = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pixelmator", "px
 PALETTES = {"ember": ("#15110D", "#F4C893", "#E8A96A"), "ink": ("#101418", "#FFFFFF", "#F2B33D"),
             "forest": ("#0F1A14", "#E9F2EA", "#6FBF73"), "signal": ("#16161A", "#FFFFFF", "#E5484D"),
             "paper": ("#F3EDE2", "#1A1410", "#C2562D")}
-_LOGO_SCHEMA = {"type": "object", "required": ["letters", "palette", "motif"], "properties": {
-    "letters": {"type": "string", "minLength": 1, "maxLength": 2},
-    "palette": {"enum": list(PALETTES)}, "motif": {"enum": ["ring", "spark", "underline", "dot"]}}}
+_LOGO_SCHEMA = {"type": "object", "required": ["palette", "motif"], "properties": {
+    "palette": {"enum": list(PALETTES)}, "motif": {"enum": ["ring", "spark", "bars", "dot"]}}}
+_WANTS_SIMPLE = re.compile(r"\b(?:simple|minimal|minimalist|clean|plain)\b", re.I)
 
 
-def _logo_layers(letters, palette, motif):
-    """Build layer list for a simple logo design."""
+def _logo_layers(palette, motif):
+    """Build layer list for a simple icon logo, no text."""
     tile, ink, accent = PALETTES[palette]
-    layers = [{"type": "rounded_rectangle", "name": "Tile", "width": 880, "height": 880, "corner_radius": 200, "fill": tile}]
+    L = [{"type": "rounded_rectangle", "name": "Tile", "width": 880, "height": 880, "corner_radius": 200, "fill": tile}]
     if motif == "ring":
-        layers.append({"type": "ellipse", "name": "Ring", "width": 640, "height": 640, "stroke": accent, "stroke_width": 28})
-    layers.append({"type": "text", "name": "Mark", "text": letters.upper(), "font": "HelveticaNeue-Bold",
-                   "size": 340 if len(letters) == 1 else 280, "color": ink})
-    if motif == "spark":
-        layers.append({"type": "star", "name": "Spark", "x": 690, "y": 190, "width": 150, "height": 150, "points": 4, "radius": 35, "fill": accent})
-    if motif == "underline":
-        layers.append({"type": "rounded_rectangle", "name": "Line", "x": 362, "y": 730, "width": 300, "height": 28, "corner_radius": 14, "fill": accent})
-    if motif == "dot":
-        layers.append({"type": "ellipse", "name": "Dot", "x": 700, "y": 640, "width": 90, "height": 90, "fill": accent})
-    return layers
+        L.append({"type": "ellipse", "name": "Ring", "cx": 512, "cy": 512, "width": 640, "height": 640, "stroke": accent, "stroke_width": 28})
+        L.append({"type": "ellipse", "name": "Dot", "cx": 512, "cy": 512, "width": 300, "height": 300, "fill": accent})
+    elif motif == "spark":
+        L.append({"type": "star", "name": "Spark", "cx": 512, "cy": 512, "width": 520, "height": 520, "points": 4, "radius": 72, "fill": accent})
+        L.append({"type": "ellipse", "name": "Dot", "cx": 512, "cy": 512, "width": 120, "height": 120, "fill": ink})
+    elif motif == "bars":
+        for i, (cx, h, fill) in enumerate(((392, 240, accent), (512, 420, ink), (632, 320, accent))):
+            L.append({"type": "rounded_rectangle", "name": f"Bar {i + 1}", "cx": cx, "cy": 512, "width": 90, "height": h, "corner_radius": 45, "fill": fill})
+    else:
+        L.append({"type": "ellipse", "name": "Disc", "cx": 512, "cy": 512, "width": 360, "height": 360, "fill": accent})
+        L.append({"type": "ellipse", "name": "Dot", "cx": 690, "cy": 340, "width": 110, "height": 110, "fill": ink})
+    return L
 
 
 # "Complex" mode: same rule, bigger control panel. She turns seven dials, the
 # harness does the trigonometry, so whatever she picks comes out symmetric.
-_COMPLEX_SCHEMA = {"type": "object", "required": ["letters", "palette", "rings", "rays", "ray_style", "orbit_dots", "star_points"],
+_COMPLEX_SCHEMA = {"type": "object", "required": ["palette", "rings", "rays", "ray_style", "orbit_dots", "star_points"],
                    "properties": {
-    "letters": {"type": "string", "minLength": 1, "maxLength": 2}, "palette": {"enum": list(PALETTES)},
+    "palette": {"enum": list(PALETTES)},
     "rings": {"type": "integer", "minimum": 2, "maximum": 5}, "rays": {"type": "integer", "minimum": 12, "maximum": 36},
     "ray_style": {"enum": ["bars", "dots", "stars"]}, "orbit_dots": {"type": "integer", "minimum": 0, "maximum": 16},
     "star_points": {"type": "integer", "minimum": 4, "maximum": 12}}}
 _WANTS_COMPLEX = re.compile(r"\b(?:complex|intricate|detailed|elaborate|ornate|fancy|crazy|insane)\b", re.I)
 
 
-def _complex_layers(letters, palette, rings, rays, ray_style, orbit_dots, star_points):
+def _complex_layers(palette, rings, rays, ray_style, orbit_dots, star_points):
     """Build layer list for an intricate logo design with concentric geometry."""
     tile, ink, accent = PALETTES[palette]
     C = 512
@@ -378,17 +380,15 @@ def _complex_layers(letters, palette, rings, rays, ray_style, orbit_dots, star_p
         L.append({"type": "ellipse", "name": f"Orbit {j + 1}", "cx": cx, "cy": cy, "width": 18, "height": 18, "fill": ink})
     L.append({"type": "ellipse", "name": "Core", "width": 300, "height": 300, "fill": tile})
     L.append({"type": "star", "name": "Burst", "width": 290, "height": 290, "points": star_points, "radius": 72, "fill": accent, "opacity": 28})
-    L.append({"type": "text", "name": "Mark", "text": letters.upper(), "font": "HelveticaNeue-Bold",
-              "size": 190 if len(letters) == 1 else 150, "color": ink})
+    L.append({"type": "ellipse", "name": "Center", "width": 96, "height": 96, "fill": ink})
     return L
 
 
-# Wordless mode: no letters at all. She turns four dials, the harness lays the cells on a golden-angle spiral (the way a
+# Default mode: no letters at all. She turns four dials, the harness lays the cells on a golden-angle spiral (the way a
 # sunflower packs its seeds), so it is never symmetric in the same way twice and never has text.
 _BLOOM_SCHEMA = {"type": "object", "required": ["palette", "cells", "shape", "lit"], "properties": {
     "palette": {"enum": list(PALETTES)}, "cells": {"type": "integer", "minimum": 55, "maximum": 233},
     "shape": {"enum": ["circle", "square"]}, "lit": {"type": "integer", "minimum": 1, "maximum": 5}}}
-_WANTS_WORDLESS = re.compile(r"\b(?:no (?:text|letters|words|lettering)|wordless|textless|without (?:text|letters|words)|original|abstract)\b", re.I)
 
 
 def _bloom_layers(palette, cells, shape, lit):
@@ -413,25 +413,26 @@ def _bloom_layers(palette, cells, shape, lit):
 
 
 def make_logo(description):
-    """Design a logo and build it live in Pixelmator Pro. Takes a short description of what the logo is for. Say 'complex' for an intricate one."""
+    """Design a logo icon and build it live in Pixelmator Pro. It always makes an icon with no text. Default is a golden spiral; say 'complex' for an intricate one or 'simple' for a plain shape."""
     fancy = bool(_WANTS_COMPLEX.search(description))
-    wordless = bool(_WANTS_WORDLESS.search(description))
-    prompt = ("Pick a logo for this. letters: its one or two initials. palette: ember (warm amber on dark), ink (white and gold on "
-              "near-black), forest (green on dark), signal (red on dark), paper (dark on cream). ")
-    if wordless:
-        prompt = ("Pick a wordless logo, no letters at all. palette: ember (warm amber on dark), ink (white and gold on near-black), forest "
-                  "(green on dark), signal (red on dark), paper (dark on cream). cells: how many cells spiral out from the centre, a Fibonacci "
-                  "number reads best. shape: circle or square. lit: how many cells glow in the accent color. Logo for: " + description)
+    simple = not fancy and bool(_WANTS_SIMPLE.search(description))
+    pal = ("palette: ember (warm amber on dark), ink (white and gold on near-black), forest (green on dark), signal (red on dark), "
+           "paper (dark on cream). ")
+    if fancy:
+        prompt = ("Pick an icon logo with no letters or text at all. " + pal + "This one should be intricate, so be bold with the numbers. "
+                  "rings: concentric rings. rays: marks around the rim. ray_style: bars, dots or stars. orbit_dots: dots circling inside. "
+                  "star_points: points on the centre burst. Logo for: " + description)
+    elif simple:
+        prompt = "Pick a simple icon logo with no letters or text at all. " + pal + "motif: ring, spark, bars or dot. Logo for: " + description
     else:
-        prompt += ("This one should be intricate, so be bold with the numbers. rings: concentric rings. rays: marks around the rim. "
-                   "ray_style: bars, dots or stars. orbit_dots: dots circling inside. star_points: points on the centre burst. "
-                   if fancy else "motif: ring, spark, underline or dot. ") + "Logo for: " + description
-    body = json.dumps({"model": AGENT_MODEL, "stream": False, "think": False, "format": _BLOOM_SCHEMA if wordless else _COMPLEX_SCHEMA if fancy else _LOGO_SCHEMA,
+        prompt = ("Pick an icon logo, no letters or text at all. " + pal + "cells: how many cells spiral out from the centre, a Fibonacci "
+                  "number reads best. shape: circle or square. lit: how many cells glow in the accent color. Logo for: " + description)
+    body = json.dumps({"model": AGENT_MODEL, "stream": False, "think": False, "format": _COMPLEX_SCHEMA if fancy else _LOGO_SCHEMA if simple else _BLOOM_SCHEMA,
                        "messages": [{"role": "user", "content": prompt}]}).encode()
     try:
         with urllib.request.urlopen(urllib.request.Request(OLLAMA_CHAT, body, {"Content-Type": "application/json"}), timeout=180) as r:
             pick = json.loads(json.load(r)["message"]["content"])
-        spec = {"layers": _bloom_layers(**pick) if wordless else _complex_layers(**pick) if fancy else _logo_layers(pick["letters"], pick["palette"], pick["motif"])}
+        spec = {"layers": _complex_layers(**pick) if fancy else _logo_layers(**pick) if simple else _bloom_layers(**pick)}
     except Exception as e:
         return f"I couldn't draft the design: {e}"
     out = os.path.expanduser("~/Desktop/samantha-logo.png")
@@ -803,12 +804,13 @@ def demo():
         assert act("what is turing") is None and not is_action("what is turing")
         assert is_action("poke around hacker news")
         for pal in PALETTES:
-            for motif in ("ring", "spark", "underline", "dot"):
-                assert _logo_layers("t", pal, motif)[0]["type"] == "rounded_rectangle"
-        big = _complex_layers("t", "ember", 5, 36, "bars", 16, 12)
+            for motif in ("ring", "spark", "bars", "dot"):
+                assert _logo_layers(pal, motif)[0]["type"] == "rounded_rectangle"
+                assert not any(l["type"] == "text" for l in _logo_layers(pal, motif))
+        big = _complex_layers("ember", 5, 36, "bars", 16, 12)
         assert len(big) == 1 + 36 + 5 + 16 + 3 and all(0 <= l.get("rotation", 0) < 360 for l in big)
         assert not any(l["type"] == "text" for l in _bloom_layers("ember", 89, "square", 3)) and len(_bloom_layers("paper", 144, "circle", 2)) == 145
-        assert _WANTS_WORDLESS.search("a wordless logo for turing") and not _WANTS_WORDLESS.search("a logo for a surf school")
+        assert not any(l["type"] == "text" for l in big)
         assert _named_page("poke around hacker news and tell me") == "https://news.ycombinator.com"
         assert _named_page("read github.com/nulljosh/turing.") == "https://github.com/nulljosh/turing"
         assert _named_page("open pixelmator then tell me my battery") is None
