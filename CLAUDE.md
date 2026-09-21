@@ -32,5 +32,9 @@ ever ships as its own real model, gets a name of its own too, not a
   matches weather/keyrate). `web/` is the asset root.
 - No daemon, no cron, training is invoked by hand every time.
 
+## Design system
+The landing page's tokens live at the top of `web/index.html`. True white in light mode, true black in dark. One accent, ember (`--ember` #E8A96A), lifted from her icon. Decor uses `--ember`, text uses `--ember-ink` so it stays readable in both themes. Ember goes on heading dots, link underlines, the slider, the Send button and the "now" bars. Nothing else gets color. No gradients, no second accent. Radius and spacing come from `--r-*` and `--s-*`.
+Page order is demo, hands, results, chart. Long text sits inside `details.more` so the page stays visual. Every section keeps its `<h2>`, because her page-control demo finds sections by heading. Results tiles read `stats.json`, never hardcode them.
+
 ## The loop
 `docs/LOOP-HANDOFF.md` holds the live `/loop`: what it is, where things stand, what is next, and the restart prompt. Checkpoint rewrites it. Read it before resuming.

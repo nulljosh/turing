@@ -12,12 +12,14 @@
     <meta property="og:title" content="Turing, Samantha">
     <meta property="og:description" content="A small language model, trained in the open, from scratch.">
     <style>
-      :root{--bg:#fafafa;--fg:#1a1a1a;--muted:#6b6b6b;--line:#dcdcdc;--accent:#1a1a1a}
+      /* Design system. One accent, ember, lifted from her icon. Decor uses --ember, text uses --ember-ink so it stays readable. */
+      :root{--bg:#ffffff;--fg:#1a1a1a;--muted:#6b6b6b;--line:#e4e4e4;--accent:#1a1a1a;--ember:#E8A96A;--ember-ink:#97581B;
+        --r-sm:6px;--r-md:10px;--r-pill:999px;--s-1:8px;--s-2:16px;--s-3:24px;--s-4:40px;--s-5:64px}
       @media (prefers-color-scheme: dark){
-        :root{--bg:#141414;--fg:#eaeaea;--muted:#9a9a9a;--line:#333;--accent:#eaeaea}
+        :root{--bg:#000000;--fg:#eaeaea;--muted:#9a9a9a;--line:#2a2a2a;--accent:#eaeaea;--ember-ink:#F4C893}
       }
-      :root[data-theme="dark"]{--bg:#141414;--fg:#eaeaea;--muted:#9a9a9a;--line:#333;--accent:#eaeaea}
-      :root[data-theme="light"]{--bg:#fafafa;--fg:#1a1a1a;--muted:#6b6b6b;--line:#dcdcdc;--accent:#1a1a1a}
+      :root[data-theme="dark"]{--bg:#000000;--fg:#eaeaea;--muted:#9a9a9a;--line:#2a2a2a;--accent:#eaeaea;--ember-ink:#F4C893}
+      :root[data-theme="light"]{--bg:#ffffff;--fg:#1a1a1a;--muted:#6b6b6b;--line:#e4e4e4;--accent:#1a1a1a;--ember-ink:#97581B}
       :root[data-theme="dark"] .desk{--desk:#1d1d1d}
       :root[data-theme="light"] .desk{--desk:#ecece8}
       .wrap.roll{animation:roll 1.1s ease-in-out}
@@ -50,7 +52,19 @@
       .meta b{color:var(--fg);font-weight:600}
       p{font-size:15px}
       footer{margin-top:56px;font-size:13px;color:var(--muted)}
-      a{color:inherit}
+      /* the sprinkle: a dot on each heading, links, sliders, the one primary button, the 'now' bars */
+      h2::before{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--ember);margin-right:10px;vertical-align:middle;position:relative;top:-3px}
+      a{color:inherit;text-decoration-color:var(--ember);text-decoration-thickness:2px;text-underline-offset:3px}
+      a:hover{color:var(--ember-ink)}
+      ::selection{background:var(--ember);color:#15110d}
+      input[type=range]{accent-color:var(--ember)}
+      #chat-send{background:var(--ember)!important;border-color:var(--ember)!important;color:#15110d!important}
+      #chat-input:focus{outline:2px solid var(--ember);outline-offset:1px}
+      #chat-chips button:hover,.paint-btn:hover{border-color:var(--ember)}
+      details.more>summary::marker{color:var(--ember)}
+      .bar-fill.now{background:var(--ember)}
+      .stat-value{color:var(--fg)}
+      .stat-tile:hover{border-color:var(--ember)}
       .bg-nodes{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
       .bg-nodes svg{position:absolute;opacity:.06;animation:drift 40s ease-in-out infinite;
         --px:0px;--py:0px;transform:translate(var(--px),var(--py));transition:transform .4s ease-out}
@@ -493,7 +507,7 @@ python3 -m venv .venv && ./.venv/bin/pip install mlx-lm
           if (b.after_label && typeof b.after !== 'string') {
             var afterMax = b.max || 0;
             var afterPct = (afterMax > 0) ? Math.min(100, (b.after/afterMax)*100) : 0;
-            tableHtml += '<div class="bar-container"><div class="bar"><div class="bar-fill" style="width:' + afterPct + '%"></div></div><div class="bar-label">' + b.after_label + '</div></div>';
+            tableHtml += '<div class="bar-container"><div class="bar"><div class="bar-fill now" style="width:' + afterPct + '%"></div></div><div class="bar-label">' + b.after_label + '</div></div>';
           } else {
             tableHtml += b.after;
           }
