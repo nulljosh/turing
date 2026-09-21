@@ -20,6 +20,36 @@ func outputPath(for image: URL) -> String {
     return NSHomeDirectory() + "/Desktop/" + name + "-painting.png"
 }
 
+/// Finished frames on disk, oldest first. The menu and --paint both read progress from here.
+func frameNames() -> [String] {
+    ((try? FileManager.default.contentsOfDirectory(atPath: framesDir)) ?? []).filter { $0.hasPrefix("frame-") }.sorted()
+}
+
+/// QA without a click: run exactly what the button runs, print what the menu would show. Exit 0 only if the painting exists.
+func paintFromCommandLine(image: String, layers: Int, background: Bool) -> Never {
+    let pxm = (Bundle.main.object(forInfoDictionaryKey: "PxmPath") as? String) ?? ""
+    let url = URL(fileURLWithPath: image)
+    let out = outputPath(for: url)
+    try? FileManager.default.removeItem(atPath: out)  // a stale file must not read as success
+    let job = Process()
+    job.executableURL = URL(fileURLWithPath: "/usr/bin/python3")
+    job.arguments = paintArguments(pxm: pxm, image: url.path, out: out, layers: layers, background: background, frames: framesDir)
+    do { try job.run() } catch { print("could not start python3"); exit(2) }
+    var seen = 0, previews = 0
+    while job.isRunning {
+        Thread.sleep(forTimeInterval: 1)
+        let names = frameNames()
+        if names.count != seen {
+            seen = names.count
+            if names.count >= 2, NSImage(contentsOfFile: framesDir + "/" + names[names.count - 2]) != nil { previews += 1 }
+            print("progress \(Int(min(1, Double(seen) / expectedFrames) * 100))%  frames \(seen)  previews loaded \(previews)")
+        }
+    }
+    let ok = job.terminationStatus == 0 && FileManager.default.fileExists(atPath: out)
+    print(ok ? "done: \(out)" : "FAILED with exit \(job.terminationStatus)")
+    exit(ok && previews > 0 ? 0 : 1)
+}
+
 @MainActor
 final class Painter: ObservableObject {
     @Published var status = "Ready"
@@ -31,8 +61,7 @@ final class Painter: ObservableObject {
 
     /// The newest frame on disk is the painting so far. Count them for the bar.
     private func poll() {
-        let names = ((try? FileManager.default.contentsOfDirectory(atPath: framesDir)) ?? [])
-            .filter { $0.hasPrefix("frame-") }.sorted()
+        let names = frameNames()
         progress = min(1, Double(names.count) / expectedFrames)
         // The newest file may still be half written. The one before it is complete.
         if names.count >= 2, let img = NSImage(contentsOfFile: framesDir + "/" + names[names.count - 2]) { preview = img }
@@ -121,7 +150,13 @@ struct PaintBarApp: App {
     @StateObject private var painter = Painter()
 
     init() {
-        guard CommandLine.arguments.contains("--check") else { return }
+        let argv = CommandLine.arguments
+        if let i = argv.firstIndex(of: "--paint"), i + 1 < argv.count {
+            let d = UserDefaults.standard  // the same saved settings the menu uses
+            paintFromCommandLine(image: argv[i + 1], layers: d.object(forKey: "layers") as? Int ?? 800,
+                                 background: d.object(forKey: "background") as? Bool ?? true)
+        }
+        guard argv.contains("--check") else { return }
         let a = paintArguments(pxm: "/p/pxm.py", image: "/i/a b.jpg", out: "/o.png", layers: 800, background: true, frames: "/f")
         precondition(a == ["/p/pxm.py", "paint", "/i/a b.jpg", "--out", "/o.png", "--shapes", "800", "--size", "1600", "--frames", "/f", "--headless"])
         precondition(!paintArguments(pxm: "p", image: "i", out: "o", layers: 2000, background: false, frames: "f").contains("--headless"))
