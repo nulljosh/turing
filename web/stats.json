@@ -51,6 +51,10 @@
         "total": 5,
         "documented": 5
       },
+      "test_screen.py": {
+        "total": 9,
+        "documented": 9
+      },
       "gen_hands_data.py": {
         "total": 5,
         "documented": 5
@@ -68,8 +72,8 @@
         "documented": 7
       },
       "tools_util.py": {
-        "total": 56,
-        "documented": 56
+        "total": 57,
+        "documented": 57
       },
       "test_memory.py": {
         "total": 11,
@@ -127,6 +131,10 @@
         "total": 2,
         "documented": 2
       },
+      "eval/a11y.py": {
+        "total": 1,
+        "documented": 1
+      },
       "eval/web_demo.py": {
         "total": 5,
         "documented": 5
@@ -152,7 +160,7 @@
   "measured": {
     "tools": {
       "before": 0,
-      "after": 72
+      "after": 73
     },
     "actions_eval": "77/77",
     "knowledge_sweep": {

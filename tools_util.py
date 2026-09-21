@@ -1,4 +1,4 @@
-"""Samantha's utility tools: forty-two small things that need no app and no network.
+"""Samantha's utility tools: forty-three small things that need no app and no network.
 
 Math and text (calculate, convert_units, dice, hashes, base64...) are pure Python.
 The system readers (disk_space, uptime, memory_usage...) run one fixed argv each and
@@ -487,6 +487,30 @@ def read_tab(query=""):
     return re.sub(r"\s+", " ", out).strip()[:3000]
 
 
+def read_screen(query=""):
+    """Read the text on the screen right now, with macOS Vision OCR. Private, so it asks first and is only used when named."""
+    if HEADLESS:
+        return "Would read the screen."
+    import tempfile
+    fd, shot = tempfile.mkstemp(suffix=".png")
+    os.close(fd)
+    try:
+        _sh(["screencapture", "-x", "-t", "png", shot], timeout=15)
+        script = os.path.join(os.path.dirname(os.path.abspath(__file__)), "ocr.swift")
+        text = _sh(["swift", script, shot], timeout=90)
+    finally:
+        os.unlink(shot)
+    if not text:
+        return "I could not read the screen. Screen Recording may need to be allowed for this app, or nothing on it is text."
+    lines = [ln.strip() for ln in text.splitlines() if ln.strip()]
+    want = _words(query)
+    if want:
+        lines = [ln for ln in lines if want & _words(ln)] or lines[:0]
+        if not lines:
+            return f"I do not see {query.strip()} on the screen."
+    return " | ".join(lines)[:1500]
+
+
 def _memory_path():
     """Where her memory lives: ~/.samantha/memory.json, or SAMANTHA_MEMORY (the tests use it)."""
     return os.path.expanduser(os.environ.get("SAMANTHA_MEMORY", "~/.samantha/memory.json"))
@@ -631,7 +655,7 @@ def call_mcp_tool(request):
 TOOLS = (calculate, convert_units, time_in, current_date, days_until, flip_coin, roll_dice, random_number, make_password,
          make_uuid, hash_text, base64_encode, base64_decode, word_count, reverse_text, shout, morse_code, json_pretty,
          is_prime, roman_numeral, tip, disk_space, uptime, memory_usage, cpu_load, ip_address, wifi_name, system_info,
-         copy_to_clipboard, sleep_display, reveal_in_finder, list_shortcuts, run_shortcut, list_mcp_tools, call_mcp_tool, list_tabs, switch_tab, close_tab, read_tab, remember, recall, forget)
+         copy_to_clipboard, sleep_display, reveal_in_finder, list_shortcuts, run_shortcut, list_mcp_tools, call_mcp_tool, list_tabs, switch_tab, close_tab, read_tab, remember, recall, forget, read_screen)
 
 _I = re.I
 # (pattern, tool name, what to hand it). Names, not functions: tools.py looks each one up at call time.
@@ -676,6 +700,8 @@ ROUTES = (
     (re.compile(r"^switch to tab (\d+(?:\.\d+)?)$|^switch to (?:the )?(.+?) tab$", _I), "switch_tab", lambda m: (m.group(1) or m.group(2))),
     (re.compile(r"^close tab (\d+(?:\.\d+)?)$|^close (?:the )?(.+?) tab$", _I), "close_tab", lambda m: (m.group(1) or m.group(2))),
     (re.compile(r"^read tab (\d+(?:\.\d+)?)$|^read (?!(?:this|the current) tab$)(?:the )?(.+?) tab$|^read (?:this|the current) tab$", _I), "read_tab", lambda m: (m.group(1) or m.group(2) or "")),
+    (re.compile(r"^(?:read|ocr) (?:my |the )?screen$|^what(?:'s| is) on my screen$|^what does my screen say$", _I), "read_screen", lambda m: ""),
+    (re.compile(r"^find (.+) on (?:my |the )?screen$|^is (.+) on (?:my |the )?screen$", _I), "read_screen", lambda m: (m.group(1) or m.group(2))),
     (re.compile(r"^remember that (.+)$", _I), "remember", lambda m: m.group(1)),
     (re.compile(r"^(?:recall|what do you remember about|what did i tell you about) (.+)$", _I), "recall", lambda m: m.group(1)),
     (re.compile(r"^forget (?:that |about )?(.+)$", _I), "forget", lambda m: m.group(1)),
@@ -712,7 +738,7 @@ def demo():
     assert copy_to_clipboard("x") == "Copied." and sleep_display() == "Screen off." and reveal_in_finder("~").startswith("Showing")
     assert reveal_in_finder("~/.ssh").startswith("No file") and reveal_in_finder("/etc/passwd").startswith("No file")
     assert run_shortcut("zzz-not-real").startswith("I do not see") and (list_shortcuts().startswith("No Shortcuts") or "Shortcuts:" in list_shortcuts())
-    assert len(TOOLS) == 42 and all(f.__doc__ for f in TOOLS)
+    assert len(TOOLS) == 43 and all(f.__doc__ for f in TOOLS)
     call = lambda name, a: globals()[name](a) if globals()[name].__code__.co_argcount else globals()[name]()
     hit = lambda q: next((call(name, arg(m)) for pat, name, arg in ROUTES if (m := pat.match(q))), None)
     assert hit("calculate 17 * 23") == "391" and hit("convert 5 km to miles") == "5 km is 3.1069 mi."

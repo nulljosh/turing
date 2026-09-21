@@ -1,0 +1,12 @@
+train rows 23330
+params 1826746 tools 42 argclasses 14
+step 200 ep 0.5 loss 4.9687 25s
+step 400 ep 1.1 loss 2.5336 49s
+step 600 ep 1.6 loss 1.3348 74s
+step 800 ep 2.2 loss 0.8417 99s
+step 1000 ep 2.7 loss 0.7101 124s
+step 1200 ep 3.3 loss 0.2956 150s
+step 1400 ep 3.8 loss 0.4024 175s
+step 1600 ep 4.4 loss 0.2952 200s
+step 1800 ep 4.9 loss 0.3652 225s
+step 2000 ep 5.5 loss 0.1995 250s

@@ -155,7 +155,7 @@ def main():
     print("params", nparams, "tools", len(tools), "argclasses", len(argclasses), flush=True)
     bs = 64
     steps_per_epoch = len(rows) // bs
-    opt = optim.AdamW(learning_rate=optim.cosine_decay(1e-3, 1), weight_decay=0.01)
+    opt = optim.AdamW(learning_rate=1e-3, weight_decay=0.01)
 
     def loss_fn(m, ids, y):
         pad = ids > 0

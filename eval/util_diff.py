@@ -43,7 +43,7 @@ SHAPES = {"flip a coin": r"(Heads|Tails)\.", "roll 2d6": r"\d+ \+ \d+ = \d+", "r
           "make a uuid": r"[0-9a-f-]{36}", "time in tokyo": r"It is \d+:\d\d [AP]M on \w+ in Tokyo\.", "what day is it": r"It is \w+, \w+ \d+, \d{4}\.",
           "days until christmas": r"\d+ days? until December 25, \d{4}\.|That is today\.", "roll 500d6": r"Up to 100 dice.*"}
 MAC_ONLY = ["disk space", "uptime", "how much memory do i have", "cpu load", "what is my ip", "what wifi am i on", "system info",
-            "copy hello to my clipboard", "lock the screen", "reveal ~/Documents in finder", "list my shortcuts", "run shortcut morning routine", "list my mcp tools", "call mcp samantha calculate {}", "list my tabs", "switch to the github tab", "close the github tab", "read tab 2", "read this tab"]
+            "copy hello to my clipboard", "lock the screen", "reveal ~/Documents in finder", "list my shortcuts", "run shortcut morning routine", "list my mcp tools", "call mcp samantha calculate {}", "read my screen", "find milk on my screen", "list my tabs", "switch to the github tab", "close the github tab", "read tab 2", "read this tab"]
 
 JS = """
 require(process.argv[1]);

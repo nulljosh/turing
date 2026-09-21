@@ -1,311 +1,11 @@
 [
 [
 "unseen",
-"alright i need a fresh password followed by: what does hunter2 hash to asap",
-"agent",
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"Alright what wifi is my mac using followed by: tell me my shortcuts asap",
-"agent",
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"Real quick can you logo for a hot sauce brand and once that's done how much juice is left if you can",
-"agent",
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"samantha could you please play that last one again followed by: say hi in morse code if you can",
-"agent",
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"alright show what i have copied followed by: stop the song when you get a sec",
-"agent",
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"samantha could you please pause it and once that's done what did i just copy when you get a sec",
-"agent",
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"samantha could you please how hot is it in cape town followed by: when was the last reboot when you get a sec",
-"agent",
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"Alright how cold is it out and once that's done what page is up right now when you get a sec",
-"agent",
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"alright sketch an icon for a flower shop called petal followed by: i need a random number between 3 and 30 asap",
-"agent",
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"Do me a favor and tip me out on 150 and once that's done drop the volume down to 42 if you can?",
-"agent",
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"samantha could you please let's roll 6d6 and once that's done time since the last restart when you get a sec",
-"agent",
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"alright what time is it right now in osaka and once that's done run a search on vintage ray bans when you get a sec",
-"agent",
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"alright jump over to arxiv.org followed by: give me a roll of 3d6 if you can",
-"agent",
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"alright what's my day look like and once that's done get me to arxiv.org if you can",
-"agent",
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"Alright read out my clipboard followed by: what did i just copy asap.",
-"agent",
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"Alright what's my day look like followed by: what percent is my battery if you can!",
-"agent",
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"alright show what i have copied and once that's done time since the last restart if you can",
-"agent",
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"Do me a favor and can 13 be divided evenly followed by: what page is up right now if you can",
-"agent",
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"Alright is the battery low followed by: call it, heads or tails when you get a sec?",
-"agent",
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"real quick can you bring the volume to 42 followed by: read out my clipboard when you get a sec",
-"agent",
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"Do me a favor and run good morning through sha256 and once that's done am i on home wifi, what's it called asap!",
-"agent",
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"alright let's use stocks followed by: cook up a 14 character password when you get a sec",
-"agent",
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"samantha could you please let's use stocks and once that's done crank the volume to 58 asap",
-"agent",
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"do me a favor and drop the volume down to 42 and once that's done should i bring an umbrella asap",
-"agent",
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"do me a favor and run good morning through sha256 followed by: make me a password that is 18 characters when you get a sec",
-"agent",
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"alright what's my memory looking like followed by: how much ram am i using if you can",
-"agent",
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"real quick can you break 8 into primes and once that's done pull up my shortcuts list asap",
-"agent",
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"samantha could you please what shortcuts are on this mac and once that's done what's my day look like when you get a sec",
-"agent",
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"alright change the volume to 42 followed by: get me to arxiv.org when you get a sec",
-"agent",
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"real quick can you play that last one again and once that's done am i on home wifi, what's it called if you can",
-"agent",
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
 "samantha could you please boot up podcasts asap",
 "open_app",
 "podcasts",
 {
-"tool": "make_password",
+"tool": "clipboard",
 "arg": ""
 }
 ],
@@ -315,8 +15,8 @@
 "open_app",
 "stocks",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "web_search",
+"arg": "boot up stocks whe"
 }
 ],
 [
@@ -325,7 +25,7 @@
 "open_app",
 "the weather app",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -335,8 +35,8 @@
 "open_app",
 "safari",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "music",
+"arg": "previous"
 }
 ],
 [
@@ -345,7 +45,7 @@
 "open_app",
 "safari",
 {
-"tool": "make_password",
+"tool": "flip_coin",
 "arg": ""
 }
 ],
@@ -355,7 +55,7 @@
 "open_app",
 "activity monitor",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -365,8 +65,8 @@
 "open_app",
 "notes",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "open_app",
+"arg": "please pop open notes"
 }
 ],
 [
@@ -375,7 +75,7 @@
 "open_app",
 "podcasts",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -385,7 +85,7 @@
 "open_app",
 "podcasts",
 {
-"tool": "make_password",
+"tool": "disk_space",
 "arg": ""
 }
 ],
@@ -395,7 +95,7 @@
 "open_app",
 "books",
 {
-"tool": "make_password",
+"tool": null,
 "arg": ""
 }
 ],
@@ -405,7 +105,7 @@
 "open_app",
 "the weather app",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -415,7 +115,7 @@
 "open_app",
 "activity monitor",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -425,8 +125,8 @@
 "open_app",
 "activity monitor",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "music",
+"arg": "playing"
 }
 ],
 [
@@ -435,7 +135,7 @@
 "open_app",
 "the weather app",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -445,8 +145,8 @@
 "open_app",
 "chrome",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "music",
+"arg": "pause"
 }
 ],
 [
@@ -455,8 +155,8 @@
 "open_app",
 "safari",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "music",
+"arg": "playing"
 }
 ],
 [
@@ -465,8 +165,8 @@
 "open_url",
 "youtube",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "music",
+"arg": "previous"
 }
 ],
 [
@@ -475,8 +175,8 @@
 "open_url",
 "bbc.com",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "open_url",
+"arg": "nd jump over to bbc.com"
 }
 ],
 [
@@ -485,8 +185,8 @@
 "open_url",
 "arxiv.org",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "make_logo",
+"arg": "arxiv"
 }
 ],
 [
@@ -495,7 +195,7 @@
 "open_url",
 "reddit",
 {
-"tool": "make_password",
+"tool": null,
 "arg": ""
 }
 ],
@@ -505,8 +205,8 @@
 "open_url",
 "reddit",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "weather",
+"arg": "get me to reddit if y"
 }
 ],
 [
@@ -515,8 +215,8 @@
 "open_url",
 "espn.com",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "web_search",
+"arg": "get me to espn.com as"
 }
 ],
 [
@@ -525,7 +225,7 @@
 "open_url",
 "letterboxd.com",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -535,7 +235,7 @@
 "open_url",
 "cloudflare.com",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -545,18 +245,8 @@
 "open_url",
 "cloudflare.com",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"alright hop on bbc.com when you get a sec",
-"open_url",
-"bbc.com",
-{
-"tool": "make_password",
-"arg": ""
+"tool": "make_logo",
+"arg": "ase hop on cloudflare.com"
 }
 ],
 [
@@ -565,8 +255,8 @@
 "open_url",
 "github.com",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "open_url",
+"arg": "and hop on g"
 }
 ],
 [
@@ -575,8 +265,8 @@
 "open_url",
 "letterboxd.com",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "open_url",
+"arg": "hop on letterboxd"
 }
 ],
 [
@@ -585,8 +275,8 @@
 "open_url",
 "youtube",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "web_search",
+"arg": "bring me"
 }
 ],
 [
@@ -595,8 +285,8 @@
 "open_url",
 "bbc.com",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "web_search",
+"arg": "bring me to bbc.com"
 }
 ],
 [
@@ -605,7 +295,7 @@
 "open_url",
 "cloudflare.com",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -615,7 +305,7 @@
 "open_url",
 "github.com",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -625,7 +315,7 @@
 "web_search",
 "sqlite full text search",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -635,7 +325,7 @@
 "web_search",
 "app store review times",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -645,8 +335,8 @@
 "web_search",
 "dog friendly hikes",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "make_logo",
+"arg": "arch on dog friendly"
 }
 ],
 [
@@ -655,8 +345,8 @@
 "web_search",
 "mlx lora",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "make_logo",
+"arg": "arch on ml"
 }
 ],
 [
@@ -665,7 +355,7 @@
 "web_search",
 "how to descale a kettle",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -675,7 +365,7 @@
 "web_search",
 "app store review times",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -685,7 +375,7 @@
 "web_search",
 "best pizza vancouver",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -695,7 +385,7 @@
 "web_search",
 "sqlite full text search",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -705,7 +395,7 @@
 "web_search",
 "ternary quantization",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -715,7 +405,7 @@
 "web_search",
 "qwen3 benchmarks",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -726,7 +416,7 @@
 "mlx lora",
 {
 "tool": "make_password",
-"arg": ""
+"arg": "an you web search mlx"
 }
 ],
 [
@@ -735,8 +425,8 @@
 "web_search",
 "vintage ray bans",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "make_logo",
+"arg": "ch vintage r"
 }
 ],
 [
@@ -745,7 +435,7 @@
 "current_tab",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -755,8 +445,8 @@
 "current_tab",
 "",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "music",
+"arg": "previous"
 }
 ],
 [
@@ -765,7 +455,7 @@
 "current_tab",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -775,7 +465,7 @@
 "current_tab",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -785,7 +475,7 @@
 "current_tab",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -795,7 +485,7 @@
 "current_tab",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -805,7 +495,7 @@
 "current_tab",
 "",
 {
-"tool": "make_password",
+"tool": null,
 "arg": ""
 }
 ],
@@ -815,7 +505,7 @@
 "current_tab",
 "",
 {
-"tool": "make_password",
+"tool": "disk_space",
 "arg": ""
 }
 ],
@@ -825,7 +515,7 @@
 "current_tab",
 "",
 {
-"tool": "make_password",
+"tool": "disk_space",
 "arg": ""
 }
 ],
@@ -835,17 +525,7 @@
 "current_tab",
 "",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"alright which tab is showing when you get a sec",
-"current_tab",
-"",
-{
-"tool": "make_password",
+"tool": "wifi_name",
 "arg": ""
 }
 ],
@@ -855,7 +535,7 @@
 "current_tab",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -865,7 +545,7 @@
 "current_tab",
 "",
 {
-"tool": "make_password",
+"tool": null,
 "arg": ""
 }
 ],
@@ -875,7 +555,7 @@
 "current_tab",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -885,7 +565,7 @@
 "current_tab",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -895,7 +575,7 @@
 "current_tab",
 "",
 {
-"tool": "make_password",
+"tool": "wifi_name",
 "arg": ""
 }
 ],
@@ -905,7 +585,7 @@
 "current_tab",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -915,7 +595,7 @@
 "current_tab",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -925,8 +605,8 @@
 "screenshot",
 "",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "web_search",
+"arg": "a picture"
 }
 ],
 [
@@ -935,8 +615,8 @@
 "screenshot",
 "",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "make_logo",
+"arg": "get a picture of my s"
 }
 ],
 [
@@ -945,8 +625,8 @@
 "screenshot",
 "",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "make_logo",
+"arg": "cture of my scr"
 }
 ],
 [
@@ -955,18 +635,8 @@
 "screenshot",
 "",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"alright get a picture of my screen asap",
-"screenshot",
-"",
-{
-"tool": "make_password",
-"arg": ""
+"tool": "web_search",
+"arg": "get a picture of my s"
 }
 ],
 [
@@ -985,7 +655,7 @@
 "screenshot",
 "",
 {
-"tool": "make_password",
+"tool": "disk_space",
 "arg": ""
 }
 ],
@@ -995,7 +665,7 @@
 "screenshot",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -1011,21 +681,11 @@
 ],
 [
 "unseen",
-"alright screencap this when you get a sec",
-"screenshot",
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
 "samantha could you please screencap this when you get a sec",
 "screenshot",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -1045,18 +705,8 @@
 "screenshot",
 "",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"alright take a screen shot when you get a sec",
-"screenshot",
-"",
-{
-"tool": "make_password",
-"arg": ""
+"tool": "make_logo",
+"arg": "screen shot if y"
 }
 ],
 [
@@ -1065,8 +715,8 @@
 "screenshot",
 "",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "web_search",
+"arg": "take a s"
 }
 ],
 [
@@ -1075,8 +725,8 @@
 "screenshot",
 "",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "make_logo",
+"arg": "screen shot if y"
 }
 ],
 [
@@ -1085,7 +735,7 @@
 "screenshot",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -1095,8 +745,8 @@
 "screenshot",
 "",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "web_search",
+"arg": "please take a scre"
 }
 ],
 [
@@ -1105,8 +755,8 @@
 "screenshot",
 "",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "open_app",
+"arg": "please take a scre"
 }
 ],
 [
@@ -1115,7 +765,7 @@
 "screenshot",
 "",
 {
-"tool": "make_password",
+"tool": null,
 "arg": ""
 }
 ],
@@ -1125,7 +775,7 @@
 "clipboard",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -1135,7 +785,7 @@
 "clipboard",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -1145,7 +795,7 @@
 "clipboard",
 "",
 {
-"tool": "make_password",
+"tool": null,
 "arg": ""
 }
 ],
@@ -1155,7 +805,7 @@
 "clipboard",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -1165,7 +815,7 @@
 "clipboard",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -1175,7 +825,7 @@
 "clipboard",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -1185,7 +835,7 @@
 "clipboard",
 "",
 {
-"tool": "make_password",
+"tool": "disk_space",
 "arg": ""
 }
 ],
@@ -1195,7 +845,7 @@
 "clipboard",
 "",
 {
-"tool": "make_password",
+"tool": "disk_space",
 "arg": ""
 }
 ],
@@ -1205,7 +855,7 @@
 "clipboard",
 "",
 {
-"tool": "make_password",
+"tool": null,
 "arg": ""
 }
 ],
@@ -1215,7 +865,7 @@
 "clipboard",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -1225,7 +875,7 @@
 "clipboard",
 "",
 {
-"tool": "make_password",
+"tool": "wifi_name",
 "arg": ""
 }
 ],
@@ -1235,17 +885,7 @@
 "clipboard",
 "",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"samantha could you please read out my clipboard asap",
-"clipboard",
-"",
-{
-"tool": "make_password",
+"tool": "disk_space",
 "arg": ""
 }
 ],
@@ -1256,7 +896,7 @@
 "",
 {
 "tool": "make_password",
-"arg": ""
+"arg": "ad out m"
 }
 ],
 [
@@ -1265,8 +905,8 @@
 "clipboard",
 "",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "make_logo",
+"arg": "ad out my clipboar"
 }
 ],
 [
@@ -1275,8 +915,8 @@
 "clipboard",
 "",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "make_logo",
+"arg": "ad out my clipboar"
 }
 ],
 [
@@ -1285,8 +925,8 @@
 "clipboard",
 "",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "open_url",
+"arg": "clipboard"
 }
 ],
 [
@@ -1295,8 +935,8 @@
 "clipboard",
 "",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "make_logo",
+"arg": "board when you get a s"
 }
 ],
 [
@@ -1305,8 +945,8 @@
 "clipboard",
 "",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "make_logo",
+"arg": "ad out my clipboar"
 }
 ],
 [
@@ -1315,8 +955,8 @@
 "set_volume",
 "58",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "set_volume",
+"arg": "nd crank the volume to 5"
 }
 ],
 [
@@ -1325,8 +965,8 @@
 "set_volume",
 "73",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "set_volume",
+"arg": "crank the volume to 7"
 }
 ],
 [
@@ -1335,8 +975,8 @@
 "set_volume",
 "5",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "open_app",
+"arg": "crank the volume to 5"
 }
 ],
 [
@@ -1345,8 +985,8 @@
 "set_volume",
 "0",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "set_volume",
+"arg": "volume to 0"
 }
 ],
 [
@@ -1355,8 +995,8 @@
 "set_volume",
 "58",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "random_number",
+"arg": "bring the volume to 5"
 }
 ],
 [
@@ -1365,8 +1005,8 @@
 "set_volume",
 "42",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "set_volume",
+"arg": "4"
 }
 ],
 [
@@ -1375,8 +1015,8 @@
 "set_volume",
 "73",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "set_volume",
+"arg": "ing the volume to 7"
 }
 ],
 [
@@ -1385,7 +1025,7 @@
 "set_volume",
 "0",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -1395,8 +1035,8 @@
 "set_volume",
 "10",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "random_number",
+"arg": "10"
 }
 ],
 [
@@ -1405,7 +1045,7 @@
 "set_volume",
 "73",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -1415,8 +1055,8 @@
 "set_volume",
 "42",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "set_volume",
+"arg": "4"
 }
 ],
 [
@@ -1425,7 +1065,7 @@
 "set_volume",
 "58",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -1435,7 +1075,7 @@
 "set_volume",
 "73",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -1445,7 +1085,7 @@
 "set_volume",
 "5",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -1455,8 +1095,8 @@
 "set_volume",
 "42",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "tip",
+"arg": "4"
 }
 ],
 [
@@ -1465,8 +1105,8 @@
 "set_volume",
 "10",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "tip",
+"arg": "10"
 }
 ],
 [
@@ -1475,8 +1115,8 @@
 "set_volume",
 "up",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "open_app",
+"arg": "crank it up as"
 }
 ],
 [
@@ -1485,8 +1125,8 @@
 "set_volume",
 "up",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "music",
+"arg": "play"
 }
 ],
 [
@@ -1495,8 +1135,8 @@
 "set_volume",
 "up",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "music",
+"arg": "next"
 }
 ],
 [
@@ -1505,8 +1145,8 @@
 "set_volume",
 "up",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "make_logo",
+"arg": "nd cr"
 }
 ],
 [
@@ -1515,8 +1155,8 @@
 "set_volume",
 "up",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "open_app",
+"arg": "s"
 }
 ],
 [
@@ -1525,8 +1165,8 @@
 "set_volume",
 "up",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "open_app",
+"arg": "crank it up when you get a s"
 }
 ],
 [
@@ -1535,7 +1175,7 @@
 "set_volume",
 "up",
 {
-"tool": "make_password",
+"tool": "clipboard",
 "arg": ""
 }
 ],
@@ -1545,7 +1185,7 @@
 "set_volume",
 "up",
 {
-"tool": "make_password",
+"tool": "flip_coin",
 "arg": ""
 }
 ],
@@ -1555,7 +1195,7 @@
 "set_volume",
 "up",
 {
-"tool": "make_password",
+"tool": "calendar_today",
 "arg": ""
 }
 ],
@@ -1565,8 +1205,8 @@
 "set_volume",
 "up",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "open_app",
+"arg": "a bit louder"
 }
 ],
 [
@@ -1575,7 +1215,7 @@
 "set_volume",
 "up",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -1585,8 +1225,8 @@
 "set_volume",
 "up",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "make_logo",
+"arg": "ise the v"
 }
 ],
 [
@@ -1595,7 +1235,7 @@
 "set_volume",
 "up",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -1605,8 +1245,8 @@
 "set_volume",
 "up",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "set_volume",
+"arg": "vol"
 }
 ],
 [
@@ -1615,8 +1255,8 @@
 "set_volume",
 "up",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "set_volume",
+"arg": "down"
 }
 ],
 [
@@ -1625,8 +1265,8 @@
 "set_volume",
 "up",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "open_app",
+"arg": "ise the v"
 }
 ],
 [
@@ -1635,7 +1275,7 @@
 "set_volume",
 "up",
 {
-"tool": "make_password",
+"tool": null,
 "arg": ""
 }
 ],
@@ -1645,8 +1285,8 @@
 "set_volume",
 "down",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "open_url",
+"arg": "could you please that's too loud asap"
 }
 ],
 [
@@ -1655,8 +1295,8 @@
 "set_volume",
 "down",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "music",
+"arg": "pause"
 }
 ],
 [
@@ -1665,8 +1305,8 @@
 "set_volume",
 "down",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "music",
+"arg": "pause"
 }
 ],
 [
@@ -1675,7 +1315,7 @@
 "set_volume",
 "down",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -1685,7 +1325,7 @@
 "set_volume",
 "down",
 {
-"tool": "make_password",
+"tool": "battery",
 "arg": ""
 }
 ],
@@ -1695,7 +1335,7 @@
 "set_volume",
 "down",
 {
-"tool": "make_password",
+"tool": "clipboard",
 "arg": ""
 }
 ],
@@ -1705,8 +1345,8 @@
 "set_volume",
 "down",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "new_reminder",
+"arg": "volume when you get a s"
 }
 ],
 [
@@ -1715,7 +1355,7 @@
 "set_volume",
 "down",
 {
-"tool": "make_password",
+"tool": "memory_usage",
 "arg": ""
 }
 ],
@@ -1725,7 +1365,7 @@
 "set_volume",
 "down",
 {
-"tool": "make_password",
+"tool": "memory_usage",
 "arg": ""
 }
 ],
@@ -1735,8 +1375,8 @@
 "set_volume",
 "down",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "set_volume",
+"arg": "and lower the v"
 }
 ],
 [
@@ -1745,8 +1385,8 @@
 "set_volume",
 "down",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "set_volume",
+"arg": "and lower the vol"
 }
 ],
 [
@@ -1755,17 +1395,7 @@
 "set_volume",
 "down",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"alright lower the volume when you get a sec",
-"set_volume",
-"down",
-{
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -1775,7 +1405,7 @@
 "set_volume",
 "down",
 {
-"tool": "make_password",
+"tool": null,
 "arg": ""
 }
 ],
@@ -1785,8 +1415,8 @@
 "set_volume",
 "down",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "weather",
+"arg": "bit quieter when you ge"
 }
 ],
 [
@@ -1795,7 +1425,7 @@
 "set_volume",
 "down",
 {
-"tool": "make_password",
+"tool": "weather",
 "arg": ""
 }
 ],
@@ -1805,7 +1435,7 @@
 "set_volume",
 "down",
 {
-"tool": "make_password",
+"tool": "flip_coin",
 "arg": ""
 }
 ],
@@ -1815,7 +1445,7 @@
 "set_volume",
 "0",
 {
-"tool": "make_password",
+"tool": "calendar_today",
 "arg": ""
 }
 ],
@@ -1825,8 +1455,8 @@
 "set_volume",
 "0",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "music",
+"arg": "pause"
 }
 ],
 [
@@ -1835,7 +1465,7 @@
 "set_volume",
 "0",
 {
-"tool": "make_password",
+"tool": "flip_coin",
 "arg": ""
 }
 ],
@@ -1845,7 +1475,7 @@
 "set_volume",
 "0",
 {
-"tool": "make_password",
+"tool": "flip_coin",
 "arg": ""
 }
 ],
@@ -1855,7 +1485,7 @@
 "set_volume",
 "0",
 {
-"tool": "make_password",
+"tool": "calendar_today",
 "arg": ""
 }
 ],
@@ -1865,7 +1495,7 @@
 "set_volume",
 "0",
 {
-"tool": "make_password",
+"tool": "flip_coin",
 "arg": ""
 }
 ],
@@ -1875,7 +1505,7 @@
 "set_volume",
 "0",
 {
-"tool": "make_password",
+"tool": "flip_coin",
 "arg": ""
 }
 ],
@@ -1885,8 +1515,8 @@
 "set_volume",
 "0",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "music",
+"arg": "pause"
 }
 ],
 [
@@ -1895,8 +1525,8 @@
 "set_volume",
 "0",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "music",
+"arg": "pause"
 }
 ],
 [
@@ -1905,7 +1535,7 @@
 "set_volume",
 "0",
 {
-"tool": "make_password",
+"tool": null,
 "arg": ""
 }
 ],
@@ -1915,7 +1545,7 @@
 "set_volume",
 "0",
 {
-"tool": "make_password",
+"tool": "uptime",
 "arg": ""
 }
 ],
@@ -1925,8 +1555,8 @@
 "set_volume",
 "0",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "music",
+"arg": "previous"
 }
 ],
 [
@@ -1935,8 +1565,8 @@
 "set_volume",
 "0",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "music",
+"arg": "pause"
 }
 ],
 [
@@ -1945,7 +1575,7 @@
 "battery",
 "",
 {
-"tool": "make_password",
+"tool": null,
 "arg": ""
 }
 ],
@@ -1955,7 +1585,7 @@
 "battery",
 "",
 {
-"tool": "make_password",
+"tool": null,
 "arg": ""
 }
 ],
@@ -1965,7 +1595,7 @@
 "battery",
 "",
 {
-"tool": "make_password",
+"tool": "disk_space",
 "arg": ""
 }
 ],
@@ -1975,7 +1605,7 @@
 "battery",
 "",
 {
-"tool": "make_password",
+"tool": "disk_space",
 "arg": ""
 }
 ],
@@ -1985,7 +1615,7 @@
 "battery",
 "",
 {
-"tool": "make_password",
+"tool": "weather",
 "arg": ""
 }
 ],
@@ -1995,7 +1625,7 @@
 "battery",
 "",
 {
-"tool": "make_password",
+"tool": "clipboard",
 "arg": ""
 }
 ],
@@ -2005,7 +1635,7 @@
 "battery",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -2015,7 +1645,7 @@
 "battery",
 "",
 {
-"tool": "make_password",
+"tool": null,
 "arg": ""
 }
 ],
@@ -2025,7 +1655,7 @@
 "battery",
 "",
 {
-"tool": "make_password",
+"tool": null,
 "arg": ""
 }
 ],
@@ -2035,7 +1665,7 @@
 "battery",
 "",
 {
-"tool": "make_password",
+"tool": "weather",
 "arg": ""
 }
 ],
@@ -2045,7 +1675,7 @@
 "battery",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -2055,7 +1685,7 @@
 "battery",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -2065,7 +1695,7 @@
 "battery",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -2075,7 +1705,7 @@
 "battery",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -2085,7 +1715,7 @@
 "battery",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -2095,7 +1725,7 @@
 "battery",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -2105,7 +1735,7 @@
 "battery",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -2115,8 +1745,8 @@
 "say",
 "the laundry is done",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "days_until",
+"arg": "laundry"
 }
 ],
 [
@@ -2125,7 +1755,7 @@
 "say",
 "welcome home",
 {
-"tool": "make_password",
+"tool": "memory_usage",
 "arg": ""
 }
 ],
@@ -2136,7 +1766,7 @@
 "dinner is ready",
 {
 "tool": "make_password",
-"arg": ""
+"arg": "say aloud dinner"
 }
 ],
 [
@@ -2145,7 +1775,7 @@
 "say",
 "hello there",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -2155,8 +1785,8 @@
 "say",
 "ship it",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "web_search",
+"arg": "voice to say s"
 }
 ],
 [
@@ -2165,8 +1795,8 @@
 "say",
 "the laundry is done",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "make_logo",
+"arg": "voice to say the laundry"
 }
 ],
 [
@@ -2185,8 +1815,8 @@
 "say",
 "good morning joshua",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "make_logo",
+"arg": "voice to say good morning jos"
 }
 ],
 [
@@ -2195,7 +1825,7 @@
 "list_dir",
 "~/Documents",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -2205,7 +1835,7 @@
 "list_dir",
 "~/Documents/Code/nimble",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -2215,8 +1845,8 @@
 "list_dir",
 "~/Documents",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "paint_image",
+"arg": "~/Doc"
 }
 ],
 [
@@ -2225,8 +1855,8 @@
 "list_dir",
 "~/Desktop",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "tip",
+"arg": "~/Des"
 }
 ],
 [
@@ -2235,7 +1865,7 @@
 "list_dir",
 "~/Desktop/old",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -2245,7 +1875,7 @@
 "list_dir",
 "~/Downloads",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -2255,7 +1885,7 @@
 "list_dir",
 "~/Documents",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -2265,7 +1895,7 @@
 "list_dir",
 "~/Documents/Code/nimble",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -2275,8 +1905,8 @@
 "list_dir",
 "~/Documents",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "time_in",
+"arg": "s in the documents folder"
 }
 ],
 [
@@ -2285,8 +1915,8 @@
 "list_dir",
 "~/Music",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "make_logo",
+"arg": "files in m"
 }
 ],
 [
@@ -2295,7 +1925,7 @@
 "list_dir",
 "~/Documents/Code/nimble",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -2305,8 +1935,8 @@
 "list_dir",
 "~/Desktop/old",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "days_until",
+"arg": "~/Desktop/ol"
 }
 ],
 [
@@ -2315,7 +1945,7 @@
 "read_file",
 "~/notes.txt",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -2325,7 +1955,7 @@
 "read_file",
 "~/Desktop/draft.md",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -2335,7 +1965,7 @@
 "read_file",
 "~/Documents/Code/nimble/README.md",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -2345,7 +1975,7 @@
 "read_file",
 "~/Documents/todo.md",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -2355,7 +1985,7 @@
 "read_file",
 "~/notes.txt",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -2365,7 +1995,7 @@
 "read_file",
 "~/Documents/Code/nimble/README.md",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -2375,7 +2005,7 @@
 "read_file",
 "~/Documents/todo.md",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -2385,8 +2015,8 @@
 "read_file",
 "~/Documents/letter.txt",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "read_file",
+"arg": "~/documents/let"
 }
 ],
 [
@@ -2395,8 +2025,8 @@
 "read_file",
 "~/Desktop/ideas.txt",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "paint_image",
+"arg": "~/Desktop/ideas.txt when you g"
 }
 ],
 [
@@ -2405,8 +2035,8 @@
 "read_file",
 "~/Documents/todo.md",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "paint_image",
+"arg": "~/documents/tod"
 }
 ],
 [
@@ -2415,8 +2045,8 @@
 "read_file",
 "~/Documents/letter.txt",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "paint_image",
+"arg": "~/Doc"
 }
 ],
 [
@@ -2425,8 +2055,8 @@
 "read_file",
 "~/Documents/Code/nimble/README.md",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "paint_image",
+"arg": "~/Documents/Cod"
 }
 ],
 [
@@ -2435,7 +2065,7 @@
 "make_logo",
 "my bike repair business",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -2445,8 +2075,8 @@
 "make_logo",
 "windgate",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "make_logo",
+"arg": "a log"
 }
 ],
 [
@@ -2455,7 +2085,7 @@
 "make_logo",
 "turing",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -2465,8 +2095,8 @@
 "make_logo",
 "a bookstore",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "make_logo",
+"arg": "a logo for"
 }
 ],
 [
@@ -2475,8 +2105,8 @@
 "make_logo",
 "turing",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "make_logo",
+"arg": "ase logo for turing when y"
 }
 ],
 [
@@ -2485,7 +2115,7 @@
 "make_logo",
 "a coffee shop called ember",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -2495,8 +2125,8 @@
 "make_logo",
 "a bookstore",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "make_logo",
+"arg": "and logo for a book"
 }
 ],
 [
@@ -2505,8 +2135,8 @@
 "make_logo",
 "a flower shop called petal",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "make_logo",
+"arg": "alled petal"
 }
 ],
 [
@@ -2515,8 +2145,8 @@
 "make_logo",
 "a bookstore",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "make_logo",
+"arg": "ch an icon for a books"
 }
 ],
 [
@@ -2525,7 +2155,7 @@
 "make_logo",
 "a coffee shop called ember",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -2535,7 +2165,7 @@
 "make_logo",
 "turing",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -2545,17 +2175,7 @@
 "make_logo",
 "a hot sauce brand",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"alright do a painting of ~/Downloads/last-supper.jpg when you get a sec",
-"paint_image",
-"~/Downloads/last-supper.jpg",
-{
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -2565,18 +2185,8 @@
 "paint_image",
 "~/Desktop/selfie.jpg",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"alright do a painting of ~/Downloads/mona.jpg asap",
-"paint_image",
-"~/Downloads/mona.jpg",
-{
-"tool": "make_password",
-"arg": ""
+"tool": "paint_image",
+"arg": "~/desktop/selfie.jpg when you g"
 }
 ],
 [
@@ -2585,7 +2195,7 @@
 "paint_image",
 "~/Pictures/garden.png",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -2595,17 +2205,7 @@
 "paint_image",
 "~/Desktop/dog.jpeg",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"real quick can you can you paint ~/Pictures/beach.png for me if you can",
-"paint_image",
-"~/Pictures/beach.png",
-{
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -2615,7 +2215,7 @@
 "paint_image",
 "~/Downloads/last-supper.jpg",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -2625,8 +2225,8 @@
 "paint_image",
 "~/Pictures/garden.png",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "paint_image",
+"arg": "~/Pictures/g"
 }
 ],
 [
@@ -2635,37 +2235,7 @@
 "paint_image",
 "~/Downloads/last-supper.jpg",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"do me a favor and make ~/Pictures/beach.png look painted if you can",
-"paint_image",
-"~/Pictures/beach.png",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"Real quick can you make ~/downloads/mona.jpg look painted asap",
-"paint_image",
-"~/Downloads/mona.jpg",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"do me a favor and make ~/Desktop/dog.jpeg look painted if you can",
-"paint_image",
-"~/Desktop/dog.jpeg",
-{
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -2675,17 +2245,7 @@
 "music",
 "play",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"Real quick can you put some music on if you can",
-"music",
-"play",
-{
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -2695,48 +2255,8 @@
 "music",
 "play",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"samantha could you please put some music on if you can",
-"music",
-"play",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"real quick can you put some music on asap",
-"music",
-"play",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"alright put some music on when you get a sec",
-"music",
-"play",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"alright put some music on asap",
-"music",
-"play",
-{
-"tool": "make_password",
-"arg": ""
+"tool": "open_app",
+"arg": "please put some mus"
 }
 ],
 [
@@ -2745,8 +2265,8 @@
 "music",
 "play",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "music",
+"arg": "next"
 }
 ],
 [
@@ -2755,8 +2275,8 @@
 "music",
 "play",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "music",
+"arg": "next"
 }
 ],
 [
@@ -2765,8 +2285,8 @@
 "music",
 "play",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "make_logo",
+"arg": "aying"
 }
 ],
 [
@@ -2775,8 +2295,8 @@
 "music",
 "play",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "music",
+"arg": "next"
 }
 ],
 [
@@ -2785,8 +2305,8 @@
 "music",
 "play",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "open_app",
+"arg": "ay"
 }
 ],
 [
@@ -2795,8 +2315,8 @@
 "music",
 "play",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "music",
+"arg": "next"
 }
 ],
 [
@@ -2805,8 +2325,8 @@
 "music",
 "play",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "music",
+"arg": "playing"
 }
 ],
 [
@@ -2815,7 +2335,7 @@
 "music",
 "play",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -2825,7 +2345,7 @@
 "music",
 "play",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -2835,7 +2355,7 @@
 "music",
 "play",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -2845,7 +2365,7 @@
 "music",
 "play",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -2855,28 +2375,8 @@
 "music",
 "pause",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"real quick can you pause it asap",
-"music",
-"pause",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"Alright pause it asap!",
-"music",
-"pause",
-{
-"tool": "make_password",
-"arg": ""
+"tool": "music",
+"arg": "play"
 }
 ],
 [
@@ -2885,7 +2385,7 @@
 "music",
 "pause",
 {
-"tool": "make_password",
+"tool": "make_uuid",
 "arg": ""
 }
 ],
@@ -2895,18 +2395,8 @@
 "music",
 "pause",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"Real quick can you pause it asap.",
-"music",
-"pause",
-{
-"tool": "make_password",
-"arg": ""
+"tool": "music",
+"arg": "play"
 }
 ],
 [
@@ -2915,8 +2405,8 @@
 "music",
 "pause",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "music",
+"arg": "play"
 }
 ],
 [
@@ -2925,8 +2415,8 @@
 "music",
 "pause",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "music",
+"arg": "play"
 }
 ],
 [
@@ -2935,7 +2425,7 @@
 "music",
 "pause",
 {
-"tool": "make_password",
+"tool": "memory_usage",
 "arg": ""
 }
 ],
@@ -2945,8 +2435,8 @@
 "music",
 "pause",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "music",
+"arg": "play"
 }
 ],
 [
@@ -2955,8 +2445,8 @@
 "music",
 "pause",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "music",
+"arg": "play"
 }
 ],
 [
@@ -2965,7 +2455,7 @@
 "music",
 "pause",
 {
-"tool": "make_password",
+"tool": "cpu_load",
 "arg": ""
 }
 ],
@@ -2975,8 +2465,8 @@
 "music",
 "pause",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "music",
+"arg": "play"
 }
 ],
 [
@@ -2985,8 +2475,8 @@
 "music",
 "pause",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "music",
+"arg": "play"
 }
 ],
 [
@@ -2995,8 +2485,8 @@
 "music",
 "pause",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "music",
+"arg": "play"
 }
 ],
 [
@@ -3005,8 +2495,8 @@
 "music",
 "pause",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "music",
+"arg": "previous"
 }
 ],
 [
@@ -3015,8 +2505,8 @@
 "music",
 "pause",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "music",
+"arg": "next"
 }
 ],
 [
@@ -3025,7 +2515,7 @@
 "music",
 "pause",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -3035,8 +2525,8 @@
 "music",
 "pause",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "open_app",
+"arg": "stop the song when y"
 }
 ],
 [
@@ -3045,18 +2535,8 @@
 "music",
 "pause",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"real quick can you skip it if you can",
-"music",
-"next",
-{
-"tool": "make_password",
-"arg": ""
+"tool": "music",
+"arg": "next"
 }
 ],
 [
@@ -3065,7 +2545,7 @@
 "music",
 "next",
 {
-"tool": "make_password",
+"tool": null,
 "arg": ""
 }
 ],
@@ -3075,7 +2555,7 @@
 "music",
 "next",
 {
-"tool": "make_password",
+"tool": "disk_space",
 "arg": ""
 }
 ],
@@ -3085,7 +2565,7 @@
 "music",
 "next",
 {
-"tool": "make_password",
+"tool": "ip_address",
 "arg": ""
 }
 ],
@@ -3095,28 +2575,8 @@
 "music",
 "next",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"real quick can you skip it when you get a sec",
-"music",
-"next",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"real quick can you skip it asap",
-"music",
-"next",
-{
-"tool": "make_password",
-"arg": ""
+"tool": "music",
+"arg": "play"
 }
 ],
 [
@@ -3125,7 +2585,7 @@
 "music",
 "next",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -3135,7 +2595,7 @@
 "music",
 "next",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -3145,8 +2605,8 @@
 "music",
 "next",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "time_in",
+"arg": "s one, next if yo"
 }
 ],
 [
@@ -3155,7 +2615,7 @@
 "music",
 "next",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -3165,8 +2625,8 @@
 "music",
 "next",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "time_in",
+"arg": "s one, next as"
 }
 ],
 [
@@ -3175,7 +2635,7 @@
 "music",
 "next",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -3185,7 +2645,7 @@
 "music",
 "next",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -3195,8 +2655,8 @@
 "music",
 "next",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "web_search",
+"arg": "go to the nex"
 }
 ],
 [
@@ -3205,7 +2665,7 @@
 "music",
 "next",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -3215,17 +2675,7 @@
 "music",
 "next",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"alright go to the next track if you can",
-"music",
-"next",
-{
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -3235,17 +2685,7 @@
 "music",
 "next",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"alright go to the next track asap",
-"music",
-"next",
-{
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -3255,8 +2695,8 @@
 "music",
 "previous",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "web_search",
+"arg": "st one ag"
 }
 ],
 [
@@ -3265,7 +2705,7 @@
 "music",
 "previous",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -3275,7 +2715,7 @@
 "music",
 "previous",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -3285,7 +2725,7 @@
 "music",
 "previous",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -3295,7 +2735,7 @@
 "music",
 "previous",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -3305,7 +2745,7 @@
 "music",
 "previous",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -3315,8 +2755,8 @@
 "music",
 "previous",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "days_until",
+"arg": "in if y"
 }
 ],
 [
@@ -3325,8 +2765,8 @@
 "music",
 "previous",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "make_logo",
+"arg": "at last one again if y"
 }
 ],
 [
@@ -3335,7 +2775,7 @@
 "music",
 "previous",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -3345,8 +2785,8 @@
 "music",
 "previous",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "music",
+"arg": "play"
 }
 ],
 [
@@ -3355,7 +2795,7 @@
 "music",
 "previous",
 {
-"tool": "make_password",
+"tool": "battery",
 "arg": ""
 }
 ],
@@ -3365,8 +2805,8 @@
 "music",
 "previous",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "web_search",
+"arg": "back a track when you ge"
 }
 ],
 [
@@ -3375,7 +2815,7 @@
 "music",
 "previous",
 {
-"tool": "make_password",
+"tool": "battery",
 "arg": ""
 }
 ],
@@ -3385,7 +2825,7 @@
 "music",
 "previous",
 {
-"tool": "make_password",
+"tool": "cpu_load",
 "arg": ""
 }
 ],
@@ -3395,7 +2835,7 @@
 "music",
 "previous",
 {
-"tool": "make_password",
+"tool": "battery",
 "arg": ""
 }
 ],
@@ -3405,8 +2845,8 @@
 "music",
 "previous",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "open_app",
+"arg": "back a tr"
 }
 ],
 [
@@ -3415,7 +2855,7 @@
 "music",
 "playing",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -3425,8 +2865,8 @@
 "music",
 "playing",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "time_in",
+"arg": "listening to when y"
 }
 ],
 [
@@ -3435,8 +2875,8 @@
 "music",
 "playing",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "time_in",
+"arg": "listening to when you ge"
 }
 ],
 [
@@ -3445,7 +2885,7 @@
 "music",
 "playing",
 {
-"tool": "make_password",
+"tool": null,
 "arg": ""
 }
 ],
@@ -3455,7 +2895,7 @@
 "music",
 "playing",
 {
-"tool": "make_password",
+"tool": "wifi_name",
 "arg": ""
 }
 ],
@@ -3465,7 +2905,7 @@
 "music",
 "playing",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -3475,7 +2915,7 @@
 "music",
 "playing",
 {
-"tool": "make_password",
+"tool": "wifi_name",
 "arg": ""
 }
 ],
@@ -3485,7 +2925,7 @@
 "music",
 "playing",
 {
-"tool": "make_password",
+"tool": "weather",
 "arg": ""
 }
 ],
@@ -3495,7 +2935,7 @@
 "music",
 "playing",
 {
-"tool": "make_password",
+"tool": "disk_space",
 "arg": ""
 }
 ],
@@ -3505,7 +2945,7 @@
 "music",
 "playing",
 {
-"tool": "make_password",
+"tool": null,
 "arg": ""
 }
 ],
@@ -3515,7 +2955,7 @@
 "music",
 "playing",
 {
-"tool": "make_password",
+"tool": null,
 "arg": ""
 }
 ],
@@ -3525,7 +2965,7 @@
 "music",
 "playing",
 {
-"tool": "make_password",
+"tool": "disk_space",
 "arg": ""
 }
 ],
@@ -3535,7 +2975,7 @@
 "music",
 "playing",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -3545,7 +2985,7 @@
 "music",
 "playing",
 {
-"tool": "make_password",
+"tool": "clipboard",
 "arg": ""
 }
 ],
@@ -3555,7 +2995,7 @@
 "music",
 "playing",
 {
-"tool": "make_password",
+"tool": "clipboard",
 "arg": ""
 }
 ],
@@ -3565,7 +3005,7 @@
 "music",
 "playing",
 {
-"tool": "make_password",
+"tool": "screenshot",
 "arg": ""
 }
 ],
@@ -3575,7 +3015,7 @@
 "music",
 "playing",
 {
-"tool": "make_password",
+"tool": "weather",
 "arg": ""
 }
 ],
@@ -3585,7 +3025,7 @@
 "weather",
 "",
 {
-"tool": "make_password",
+"tool": "disk_space",
 "arg": ""
 }
 ],
@@ -3595,7 +3035,7 @@
 "weather",
 "",
 {
-"tool": "make_password",
+"tool": null,
 "arg": ""
 }
 ],
@@ -3605,7 +3045,7 @@
 "weather",
 "",
 {
-"tool": "make_password",
+"tool": "flip_coin",
 "arg": ""
 }
 ],
@@ -3615,7 +3055,7 @@
 "weather",
 "",
 {
-"tool": "make_password",
+"tool": "wifi_name",
 "arg": ""
 }
 ],
@@ -3625,8 +3065,8 @@
 "weather",
 "",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "open_url",
+"arg": "s it out when you get a s"
 }
 ],
 [
@@ -3635,7 +3075,7 @@
 "weather",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -3645,8 +3085,8 @@
 "weather",
 "",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "music",
+"arg": "pause"
 }
 ],
 [
@@ -3655,7 +3095,7 @@
 "weather",
 "",
 {
-"tool": "make_password",
+"tool": null,
 "arg": ""
 }
 ],
@@ -3665,7 +3105,7 @@
 "weather",
 "",
 {
-"tool": "make_password",
+"tool": null,
 "arg": ""
 }
 ],
@@ -3675,7 +3115,7 @@
 "weather",
 "",
 {
-"tool": "make_password",
+"tool": null,
 "arg": ""
 }
 ],
@@ -3685,8 +3125,8 @@
 "weather",
 "",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "music",
+"arg": "next"
 }
 ],
 [
@@ -3695,7 +3135,7 @@
 "weather",
 "",
 {
-"tool": "make_password",
+"tool": null,
 "arg": ""
 }
 ],
@@ -3705,7 +3145,7 @@
 "weather",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -3715,8 +3155,8 @@
 "weather",
 "",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "make_logo",
+"arg": "please should i bring an umbr"
 }
 ],
 [
@@ -3725,8 +3165,8 @@
 "weather",
 "",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "make_logo",
+"arg": "mbrella when you get a s"
 }
 ],
 [
@@ -3735,7 +3175,7 @@
 "weather",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -3745,8 +3185,8 @@
 "weather",
 "",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "make_logo",
+"arg": "please should i bring an umbrella if y"
 }
 ],
 [
@@ -3755,8 +3195,8 @@
 "weather",
 "",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "make_logo",
+"arg": "mbrel"
 }
 ],
 [
@@ -3765,8 +3205,8 @@
 "weather",
 "",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "make_logo",
+"arg": "mbrella asa"
 }
 ],
 [
@@ -3775,7 +3215,7 @@
 "weather",
 "tokyo",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -3785,7 +3225,7 @@
 "weather",
 "calgary",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -3795,7 +3235,7 @@
 "weather",
 "vancouver",
 {
-"tool": "make_password",
+"tool": "uptime",
 "arg": ""
 }
 ],
@@ -3805,7 +3245,7 @@
 "weather",
 "reykjavik",
 {
-"tool": "make_password",
+"tool": null,
 "arg": ""
 }
 ],
@@ -3815,8 +3255,8 @@
 "weather",
 "vancouver",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "make_logo",
+"arg": "ast for vancouver"
 }
 ],
 [
@@ -3825,7 +3265,7 @@
 "weather",
 "cape town",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -3835,8 +3275,8 @@
 "weather",
 "tokyo",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "make_logo",
+"arg": "please forecast for"
 }
 ],
 [
@@ -3845,8 +3285,8 @@
 "weather",
 "calgary",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "make_logo",
+"arg": "cast for calgary"
 }
 ],
 [
@@ -3855,7 +3295,7 @@
 "weather",
 "cape town",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -3865,7 +3305,7 @@
 "weather",
 "langley",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -3875,7 +3315,7 @@
 "weather",
 "reykjavik",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -3885,7 +3325,7 @@
 "weather",
 "osaka",
 {
-"tool": "make_password",
+"tool": "wifi_name",
 "arg": ""
 }
 ],
@@ -3896,7 +3336,7 @@
 "40 seconds",
 {
 "tool": "make_password",
-"arg": ""
+"arg": "40"
 }
 ],
 [
@@ -3905,8 +3345,8 @@
 "timer",
 "8 minutes",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "is_prime",
+"arg": "8 minutes"
 }
 ],
 [
@@ -3915,7 +3355,7 @@
 "timer",
 "7 min",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -3925,7 +3365,7 @@
 "timer",
 "three minutes",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -3935,17 +3375,7 @@
 "timer",
 "10 minutes",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"alright let me know in 5 minutes if you can",
-"timer",
-"5 minutes",
-{
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -3955,7 +3385,7 @@
 "timer",
 "12 minutes",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -3963,20 +3393,10 @@
 "unseen",
 "alright let me know in 40 seconds asap",
 "timer",
-"40 seconds",
+"0.6667",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"real quick can you time me for 10 minutes asap",
-"timer",
-"10 minutes",
-{
-"tool": "make_password",
-"arg": ""
+"tool": "timer",
+"arg": "40"
 }
 ],
 [
@@ -3985,8 +3405,8 @@
 "timer",
 "30 seconds",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "roman_numeral",
+"arg": "30"
 }
 ],
 [
@@ -3995,17 +3415,7 @@
 "timer",
 "three minutes",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"Do me a favor and time me for 8 minutes if you can?",
-"timer",
-"8 minutes",
-{
-"tool": "make_password",
+"tool": null,
 "arg": ""
 }
 ],
@@ -4015,7 +3425,7 @@
 "timer",
 "45 second",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -4025,18 +3435,18 @@
 "timer",
 "10 minute",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "random_number",
+"arg": "10"
 }
 ],
 [
 "unseen",
 "alright give me a 5 minute timer when you get a sec",
 "timer",
-"5 minute",
+"5.0",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "timer",
+"arg": "5 minute timer when you get a s"
 }
 ],
 [
@@ -4045,8 +3455,8 @@
 "timer",
 "30 second",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "is_prime",
+"arg": "30"
 }
 ],
 [
@@ -4055,7 +3465,7 @@
 "new_note",
 "call the dentist monday",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -4065,7 +3475,7 @@
 "new_note",
 "the door code is 4417",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -4075,7 +3485,7 @@
 "new_note",
 "return the library books",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -4085,7 +3495,7 @@
 "new_note",
 "parking spot is level 3 row b",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -4095,7 +3505,7 @@
 "new_note",
 "parking spot is level 3 row b",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -4105,7 +3515,7 @@
 "new_note",
 "the plumber comes friday",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -4115,7 +3525,7 @@
 "new_note",
 "return the library books",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -4125,7 +3535,7 @@
 "new_note",
 "the door code is 4417",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -4135,7 +3545,7 @@
 "new_note",
 "parking spot is level 3 row b",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -4145,7 +3555,7 @@
 "new_note",
 "return the library books",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -4155,7 +3565,7 @@
 "new_note",
 "blog idea: ternary weights",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -4165,7 +3575,7 @@
 "new_note",
 "the door code is 4417",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -4175,7 +3585,7 @@
 "new_reminder",
 "feed the cat",
 {
-"tool": "make_password",
+"tool": null,
 "arg": ""
 }
 ],
@@ -4185,8 +3595,8 @@
 "new_reminder",
 "call mom",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "new_reminder",
+"arg": "call mom if you can"
 }
 ],
 [
@@ -4195,7 +3605,7 @@
 "new_reminder",
 "back up the mac",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -4205,7 +3615,7 @@
 "new_reminder",
 "take out the trash",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -4215,7 +3625,7 @@
 "new_reminder",
 "text dad back",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -4225,7 +3635,7 @@
 "new_reminder",
 "pick up dry cleaning",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -4235,7 +3645,7 @@
 "new_reminder",
 "feed the cat",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -4245,7 +3655,7 @@
 "new_reminder",
 "back up the mac",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -4255,7 +3665,7 @@
 "new_reminder",
 "feed the cat",
 {
-"tool": "make_password",
+"tool": null,
 "arg": ""
 }
 ],
@@ -4265,7 +3675,7 @@
 "new_reminder",
 "take out the trash",
 {
-"tool": "make_password",
+"tool": null,
 "arg": ""
 }
 ],
@@ -4275,7 +3685,7 @@
 "new_reminder",
 "pick up dry cleaning",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -4285,7 +3695,7 @@
 "new_reminder",
 "back up the mac",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -4295,7 +3705,7 @@
 "calendar_today",
 "",
 {
-"tool": "make_password",
+"tool": "disk_space",
 "arg": ""
 }
 ],
@@ -4305,17 +3715,7 @@
 "calendar_today",
 "",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"alright what's my day look like if you can",
-"calendar_today",
-"",
-{
-"tool": "make_password",
+"tool": "disk_space",
 "arg": ""
 }
 ],
@@ -4325,7 +3725,7 @@
 "calendar_today",
 "",
 {
-"tool": "make_password",
+"tool": "ip_address",
 "arg": ""
 }
 ],
@@ -4335,7 +3735,7 @@
 "calendar_today",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -4345,8 +3745,8 @@
 "calendar_today",
 "",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "web_search",
+"arg": "g on the books today"
 }
 ],
 [
@@ -4355,7 +3755,7 @@
 "calendar_today",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -4365,7 +3765,7 @@
 "calendar_today",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -4375,7 +3775,7 @@
 "calendar_today",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -4385,7 +3785,7 @@
 "calendar_today",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -4395,7 +3795,7 @@
 "calendar_today",
 "",
 {
-"tool": "make_password",
+"tool": "disk_space",
 "arg": ""
 }
 ],
@@ -4405,17 +3805,7 @@
 "calendar_today",
 "",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"alright show me today's events asap",
-"calendar_today",
-"",
-{
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -4425,7 +3815,7 @@
 "calendar_today",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -4435,7 +3825,7 @@
 "calendar_today",
 "",
 {
-"tool": "make_password",
+"tool": "disk_space",
 "arg": ""
 }
 ],
@@ -4445,7 +3835,7 @@
 "calendar_today",
 "",
 {
-"tool": "make_password",
+"tool": "disk_space",
 "arg": ""
 }
 ],
@@ -4455,7 +3845,7 @@
 "calendar_today",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -4465,8 +3855,8 @@
 "time_in",
 "vancouver",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "time_in",
+"arg": "vancouver when you get a s"
 }
 ],
 [
@@ -4475,7 +3865,7 @@
 "time_in",
 "langley",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -4485,8 +3875,8 @@
 "time_in",
 "tokyo",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "time_in",
+"arg": "t in tokyo when yo"
 }
 ],
 [
@@ -4495,7 +3885,7 @@
 "time_in",
 "cape town",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -4505,7 +3895,7 @@
 "time_in",
 "tokyo",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -4515,8 +3905,8 @@
 "time_in",
 "langley",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "days_until",
+"arg": "clock say"
 }
 ],
 [
@@ -4525,7 +3915,7 @@
 "time_in",
 "calgary",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -4535,7 +3925,7 @@
 "time_in",
 "vancouver",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -4545,7 +3935,7 @@
 "time_in",
 "tokyo",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -4555,7 +3945,7 @@
 "time_in",
 "osaka",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -4565,7 +3955,7 @@
 "time_in",
 "reykjavik",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -4575,7 +3965,7 @@
 "time_in",
 "calgary",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -4585,8 +3975,8 @@
 "days_until",
 "2026-11-11",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "days_until",
+"arg": "20"
 }
 ],
 [
@@ -4595,7 +3985,7 @@
 "days_until",
 "new year",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -4605,7 +3995,7 @@
 "days_until",
 "2027-03-14",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -4615,7 +4005,7 @@
 "days_until",
 "2027-07-04",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -4625,8 +4015,8 @@
 "days_until",
 "2027-03-14",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "is_prime",
+"arg": "3-14"
 }
 ],
 [
@@ -4635,7 +4025,7 @@
 "days_until",
 "christmas",
 {
-"tool": "make_password",
+"tool": "disk_space",
 "arg": ""
 }
 ],
@@ -4646,7 +4036,7 @@
 "2027-07-04",
 {
 "tool": "make_password",
-"arg": ""
+"arg": "far away is 2027-07-04"
 }
 ],
 [
@@ -4655,18 +4045,8 @@
 "days_until",
 "2026-11-11",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"alright count the days to 2026-11-11 asap",
-"days_until",
-"2026-11-11",
-{
-"tool": "make_password",
-"arg": ""
+"tool": "days_until",
+"arg": "2026-1"
 }
 ],
 [
@@ -4675,8 +4055,8 @@
 "days_until",
 "2027-07-04",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "days_until",
+"arg": "27-07-04"
 }
 ],
 [
@@ -4685,8 +4065,8 @@
 "days_until",
 "2027-03-14",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "is_prime",
+"arg": "s to 2027-03"
 }
 ],
 [
@@ -4695,37 +4075,7 @@
 "days_until",
 "new year",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"Samantha could you please let's flip a coin if you can?",
-"flip_coin",
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"samantha could you please let's flip a coin asap",
-"flip_coin",
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"samantha could you please let's flip a coin if you can",
-"flip_coin",
-"",
-{
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -4735,7 +4085,7 @@
 "flip_coin",
 "",
 {
-"tool": "make_password",
+"tool": "wifi_name",
 "arg": ""
 }
 ],
@@ -4745,7 +4095,7 @@
 "flip_coin",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -4755,27 +4105,7 @@
 "flip_coin",
 "",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"alright let's flip a coin asap",
-"flip_coin",
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"Samantha could you please let's flip a coin asap",
-"flip_coin",
-"",
-{
-"tool": "make_password",
+"tool": "disk_space",
 "arg": ""
 }
 ],
@@ -4785,7 +4115,7 @@
 "flip_coin",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -4795,7 +4125,7 @@
 "flip_coin",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -4805,7 +4135,7 @@
 "flip_coin",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -4815,7 +4145,7 @@
 "flip_coin",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -4825,7 +4155,7 @@
 "flip_coin",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -4835,7 +4165,7 @@
 "flip_coin",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -4845,7 +4175,7 @@
 "flip_coin",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -4855,8 +4185,8 @@
 "flip_coin",
 "",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "make_logo",
+"arg": "call it, heads or tails if y"
 }
 ],
 [
@@ -4865,8 +4195,8 @@
 "flip_coin",
 "",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "make_logo",
+"arg": "call it, head"
 }
 ],
 [
@@ -4875,7 +4205,7 @@
 "flip_coin",
 "",
 {
-"tool": "make_password",
+"tool": null,
 "arg": ""
 }
 ],
@@ -4885,18 +4215,8 @@
 "flip_coin",
 "",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"alright call it, heads or tails if you can",
-"flip_coin",
-"",
-{
-"tool": "make_password",
-"arg": ""
+"tool": "make_logo",
+"arg": "call it, heads or tails when y"
 }
 ],
 [
@@ -4905,8 +4225,8 @@
 "flip_coin",
 "",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "days_until",
+"arg": "it, heads or tail"
 }
 ],
 [
@@ -4915,8 +4235,8 @@
 "roll_dice",
 "2d20",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "make_logo",
+"arg": "me a roll of 2d20"
 }
 ],
 [
@@ -4925,8 +4245,8 @@
 "roll_dice",
 "d20",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "make_logo",
+"arg": "a roll of d20"
 }
 ],
 [
@@ -4935,8 +4255,8 @@
 "roll_dice",
 "2d6",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "make_logo",
+"arg": "a roll of 2d6"
 }
 ],
 [
@@ -4945,28 +4265,8 @@
 "roll_dice",
 "3d6",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"alright let's roll 6d6 asap",
-"roll_dice",
-"6d6",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"alright let's roll 3d8 if you can",
-"roll_dice",
-"3d8",
-{
-"tool": "make_password",
-"arg": ""
+"tool": "is_prime",
+"arg": "a roll of 3d6"
 }
 ],
 [
@@ -4975,8 +4275,8 @@
 "roll_dice",
 "d4",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "roll_dice",
+"arg": "4"
 }
 ],
 [
@@ -4985,18 +4285,8 @@
 "roll_dice",
 "d20",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"alright toss 3d6 if you can",
-"roll_dice",
-"3d6",
-{
-"tool": "make_password",
-"arg": ""
+"tool": "roll_dice",
+"arg": "please let's roll d20"
 }
 ],
 [
@@ -5006,7 +4296,7 @@
 "2d20",
 {
 "tool": "make_password",
-"arg": ""
+"arg": "2d20"
 }
 ],
 [
@@ -5025,8 +4315,8 @@
 "roll_dice",
 "d20",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "is_prime",
+"arg": "20"
 }
 ],
 [
@@ -5035,7 +4325,7 @@
 "random_number",
 "between 1 and 10",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -5045,8 +4335,8 @@
 "random_number",
 "between 1 and 2",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "random_number",
+"arg": "ber between 1 and 2"
 }
 ],
 [
@@ -5055,17 +4345,7 @@
 "random_number",
 "between 3 and 30",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"alright i need a random number from 1 to 100 asap",
-"random_number",
-"from 1 to 100",
-{
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -5075,8 +4355,8 @@
 "random_number",
 "from 50 to 60",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "random_number",
+"arg": "spit out a number from 50"
 }
 ],
 [
@@ -5085,7 +4365,7 @@
 "random_number",
 "between 1 and 10",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -5095,7 +4375,7 @@
 "random_number",
 "between 3 and 30",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -5105,8 +4385,8 @@
 "random_number",
 "between 1 and 2",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "random_number",
+"arg": "ber between 1 and 2"
 }
 ],
 [
@@ -5115,8 +4395,8 @@
 "random_number",
 "from 50 to 60",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "random_number",
+"arg": "surprise me with a number from 50 to 60"
 }
 ],
 [
@@ -5125,7 +4405,7 @@
 "random_number",
 "between 3 and 30",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -5135,7 +4415,7 @@
 "random_number",
 "between 1 and 2",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -5145,37 +4425,7 @@
 "random_number",
 "between 1 and 10",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"real quick can you cook up a 24 character password when you get a sec",
-"make_password",
-"24",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"samantha could you please cook up a 20 character password if you can",
-"make_password",
-"20",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"do me a favor and cook up a 14 character password if you can",
-"make_password",
-"14",
-{
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -5185,17 +4435,7 @@
 "make_password",
 "18",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"samantha could you please a secure password 18 characters long asap",
-"make_password",
-"18",
-{
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -5206,7 +4446,7 @@
 "28",
 {
 "tool": "make_password",
-"arg": ""
+"arg": "a secure password 2"
 }
 ],
 [
@@ -5215,7 +4455,7 @@
 "make_password",
 "14",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -5225,7 +4465,7 @@
 "make_password",
 "16",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -5235,7 +4475,7 @@
 "make_password",
 "16",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -5245,7 +4485,7 @@
 "make_password",
 "28",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -5255,17 +4495,107 @@
 "make_password",
 "20",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
 [
 "unseen",
-"real quick can you make me a password that is 14 characters asap",
+"samantha could you please i need a fresh password if you can",
 "make_password",
-"14",
+"",
+{
+"tool": "make_logo",
+"arg": "i need a fresh password if y"
+}
+],
+[
+"unseen",
+"Alright i need a fresh password when you get a sec!",
+"make_password",
+"",
+{
+"tool": "new_note",
+"arg": "sword when y"
+}
+],
+[
+"unseen",
+"samantha could you please i need a fresh password asap",
+"make_password",
+"",
 {
 "tool": "make_password",
+"arg": "i need a fresh password as"
+}
+],
+[
+"unseen",
+"samantha could you please i need a fresh password when you get a sec",
+"make_password",
+"",
+{
+"tool": "agent",
+"arg": ""
+}
+],
+[
+"unseen",
+"Samantha could you please i need a fresh password when you get a sec!",
+"make_password",
+"",
+{
+"tool": "agent",
+"arg": ""
+}
+],
+[
+"unseen",
+"alright come up with a password if you can",
+"make_password",
+"",
+{
+"tool": "disk_space",
+"arg": ""
+}
+],
+[
+"unseen",
+"do me a favor and come up with a password if you can",
+"make_password",
+"",
+{
+"tool": "make_logo",
+"arg": "me up with a passwor"
+}
+],
+[
+"unseen",
+"alright come up with a password when you get a sec",
+"make_password",
+"",
+{
+"tool": "disk_space",
+"arg": ""
+}
+],
+[
+"unseen",
+"real quick can you come up with a password when you get a sec",
+"make_password",
+"",
+{
+"tool": "disk_space",
+"arg": ""
+}
+],
+[
+"unseen",
+"do me a favor and come up with a password when you get a sec",
+"make_password",
+"",
+{
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -5275,18 +4605,8 @@
 "make_uuid",
 "",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"do me a favor and spit out a uuid if you can",
-"make_uuid",
-"",
-{
-"tool": "make_password",
-"arg": ""
+"tool": "music",
+"arg": "pause"
 }
 ],
 [
@@ -5295,7 +4615,7 @@
 "make_uuid",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -5305,8 +4625,8 @@
 "make_uuid",
 "",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "music",
+"arg": "pause"
 }
 ],
 [
@@ -5315,7 +4635,7 @@
 "make_uuid",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -5325,18 +4645,8 @@
 "make_uuid",
 "",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"do me a favor and spit out a uuid when you get a sec",
-"make_uuid",
-"",
-{
-"tool": "make_password",
-"arg": ""
+"tool": "music",
+"arg": "pause"
 }
 ],
 [
@@ -5345,27 +4655,7 @@
 "make_uuid",
 "",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"do me a favor and mint a new uuid when you get a sec",
-"make_uuid",
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"samantha could you please mint a new uuid if you can",
-"make_uuid",
-"",
-{
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -5375,38 +4665,8 @@
 "make_uuid",
 "",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"alright mint a new uuid when you get a sec",
-"make_uuid",
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"real quick can you mint a new uuid asap",
-"make_uuid",
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"Real quick can you mint a new uuid asap",
-"make_uuid",
-"",
-{
-"tool": "make_password",
-"arg": ""
+"tool": "music",
+"arg": "play"
 }
 ],
 [
@@ -5415,7 +4675,7 @@
 "make_uuid",
 "",
 {
-"tool": "make_password",
+"tool": "disk_space",
 "arg": ""
 }
 ],
@@ -5425,8 +4685,8 @@
 "make_uuid",
 "",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "make_logo",
+"arg": "a fresh guid pl"
 }
 ],
 [
@@ -5435,8 +4695,8 @@
 "make_uuid",
 "",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "web_search",
+"arg": "a fresh gui"
 }
 ],
 [
@@ -5445,8 +4705,8 @@
 "make_uuid",
 "",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "make_logo",
+"arg": "ase when y"
 }
 ],
 [
@@ -5455,8 +4715,8 @@
 "make_uuid",
 "",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "music",
+"arg": "previous"
 }
 ],
 [
@@ -5475,8 +4735,8 @@
 "hash_text",
 "hello world",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "web_search",
+"arg": "m for hello world"
 }
 ],
 [
@@ -5486,7 +4746,7 @@
 "hunter2",
 {
 "tool": "make_password",
-"arg": ""
+"arg": "2"
 }
 ],
 [
@@ -5495,8 +4755,8 @@
 "hash_text",
 "eniac",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "make_logo",
+"arg": "checksum for e"
 }
 ],
 [
@@ -5505,8 +4765,8 @@
 "hash_text",
 "good morning",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "web_search",
+"arg": "morning when you get a s"
 }
 ],
 [
@@ -5515,8 +4775,8 @@
 "hash_text",
 "hunter2",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "hash_text",
+"arg": "2 throug"
 }
 ],
 [
@@ -5525,7 +4785,7 @@
 "hash_text",
 "samantha",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -5535,8 +4795,8 @@
 "hash_text",
 "good morning",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "web_search",
+"arg": "25"
 }
 ],
 [
@@ -5545,7 +4805,7 @@
 "hash_text",
 "hello world",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -5555,8 +4815,8 @@
 "hash_text",
 "hunter2",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "hash_text",
+"arg": "2"
 }
 ],
 [
@@ -5565,7 +4825,7 @@
 "hash_text",
 "samantha",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -5575,7 +4835,7 @@
 "hash_text",
 "hello world",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -5585,7 +4845,7 @@
 "hash_text",
 "turing",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -5595,8 +4855,8 @@
 "word_count",
 "we hold these truths",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "new_note",
+"arg": "s in we hold these truths if y"
 }
 ],
 [
@@ -5605,8 +4865,8 @@
 "word_count",
 "hello world",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "new_note",
+"arg": "words in hello world when y"
 }
 ],
 [
@@ -5615,7 +4875,7 @@
 "word_count",
 "a b c d",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -5625,7 +4885,7 @@
 "word_count",
 "one two three four five",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -5635,7 +4895,7 @@
 "word_count",
 "one two three four five",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -5645,7 +4905,7 @@
 "word_count",
 "hello world",
 {
-"tool": "make_password",
+"tool": "clipboard",
 "arg": ""
 }
 ],
@@ -5655,7 +4915,7 @@
 "word_count",
 "a b c d",
 {
-"tool": "make_password",
+"tool": "disk_space",
 "arg": ""
 }
 ],
@@ -5665,7 +4925,7 @@
 "word_count",
 "we hold these truths",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -5675,8 +4935,8 @@
 "disk_space",
 "",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "make_logo",
+"arg": "age if y"
 }
 ],
 [
@@ -5685,7 +4945,7 @@
 "disk_space",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -5695,8 +4955,8 @@
 "disk_space",
 "",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "make_logo",
+"arg": "age when you get a s"
 }
 ],
 [
@@ -5705,8 +4965,8 @@
 "disk_space",
 "",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "make_logo",
+"arg": "am i running out of storage as"
 }
 ],
 [
@@ -5715,8 +4975,8 @@
 "disk_space",
 "",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "make_logo",
+"arg": "age when y"
 }
 ],
 [
@@ -5725,27 +4985,7 @@
 "disk_space",
 "",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"alright what's my free space when you get a sec",
-"disk_space",
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"samantha could you please what's my free space asap",
-"disk_space",
-"",
-{
-"tool": "make_password",
+"tool": "ip_address",
 "arg": ""
 }
 ],
@@ -5755,8 +4995,8 @@
 "disk_space",
 "",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "word_count",
+"arg": "s left on the dr"
 }
 ],
 [
@@ -5765,7 +5005,7 @@
 "disk_space",
 "",
 {
-"tool": "make_password",
+"tool": null,
 "arg": ""
 }
 ],
@@ -5775,7 +5015,7 @@
 "disk_space",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -5785,7 +5025,7 @@
 "disk_space",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -5795,7 +5035,7 @@
 "disk_space",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -5805,7 +5045,7 @@
 "disk_space",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -5815,7 +5055,7 @@
 "uptime",
 "",
 {
-"tool": "make_password",
+"tool": "flip_coin",
 "arg": ""
 }
 ],
@@ -5825,8 +5065,8 @@
 "uptime",
 "",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "music",
+"arg": "playing"
 }
 ],
 [
@@ -5835,7 +5075,7 @@
 "uptime",
 "",
 {
-"tool": "make_password",
+"tool": "flip_coin",
 "arg": ""
 }
 ],
@@ -5845,7 +5085,7 @@
 "uptime",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -5855,7 +5095,7 @@
 "uptime",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -5865,8 +5105,8 @@
 "uptime",
 "",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "make_logo",
+"arg": "ase how long has it been up if y"
 }
 ],
 [
@@ -5875,7 +5115,7 @@
 "uptime",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -5885,7 +5125,7 @@
 "uptime",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -5895,7 +5135,7 @@
 "uptime",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -5905,7 +5145,7 @@
 "uptime",
 "",
 {
-"tool": "make_password",
+"tool": "weather",
 "arg": ""
 }
 ],
@@ -5915,7 +5155,7 @@
 "uptime",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -5925,7 +5165,7 @@
 "uptime",
 "",
 {
-"tool": "make_password",
+"tool": "disk_space",
 "arg": ""
 }
 ],
@@ -5935,7 +5175,7 @@
 "uptime",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -5945,7 +5185,7 @@
 "uptime",
 "",
 {
-"tool": "make_password",
+"tool": null,
 "arg": ""
 }
 ],
@@ -5955,8 +5195,8 @@
 "uptime",
 "",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "new_note",
+"arg": "ce the last restart if yo"
 }
 ],
 [
@@ -5965,8 +5205,8 @@
 "uptime",
 "",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "time_in",
+"arg": "st restart if y"
 }
 ],
 [
@@ -5975,7 +5215,7 @@
 "uptime",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -5985,7 +5225,7 @@
 "uptime",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -5995,7 +5235,7 @@
 "uptime",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -6005,18 +5245,8 @@
 "uptime",
 "",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"alright is my ram full if you can",
-"memory_usage",
-"",
-{
-"tool": "make_password",
-"arg": ""
+"tool": "new_note",
+"arg": "ce the last restart if yo"
 }
 ],
 [
@@ -6025,7 +5255,7 @@
 "memory_usage",
 "",
 {
-"tool": "make_password",
+"tool": "disk_space",
 "arg": ""
 }
 ],
@@ -6035,7 +5265,7 @@
 "memory_usage",
 "",
 {
-"tool": "make_password",
+"tool": "disk_space",
 "arg": ""
 }
 ],
@@ -6045,27 +5275,7 @@
 "memory_usage",
 "",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"alright is my ram full when you get a sec",
-"memory_usage",
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"Alright is my ram full when you get a sec!",
-"memory_usage",
-"",
-{
-"tool": "make_password",
+"tool": "ip_address",
 "arg": ""
 }
 ],
@@ -6075,7 +5285,7 @@
 "memory_usage",
 "",
 {
-"tool": "make_password",
+"tool": "disk_space",
 "arg": ""
 }
 ],
@@ -6085,8 +5295,8 @@
 "memory_usage",
 "",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "days_until",
+"arg": "my memory looking"
 }
 ],
 [
@@ -6095,7 +5305,7 @@
 "memory_usage",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -6105,8 +5315,8 @@
 "memory_usage",
 "",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "days_until",
+"arg": "my memory looking"
 }
 ],
 [
@@ -6115,7 +5325,7 @@
 "memory_usage",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -6125,7 +5335,7 @@
 "memory_usage",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -6135,7 +5345,7 @@
 "memory_usage",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -6145,27 +5355,7 @@
 "memory_usage",
 "",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"alright how much ram am i using if you can",
-"memory_usage",
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"alright how much ram am i using asap",
-"memory_usage",
-"",
-{
-"tool": "make_password",
+"tool": "disk_space",
 "arg": ""
 }
 ],
@@ -6175,17 +5365,7 @@
 "memory_usage",
 "",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"alright how much ram am i using when you get a sec",
-"memory_usage",
-"",
-{
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -6195,7 +5375,7 @@
 "memory_usage",
 "",
 {
-"tool": "make_password",
+"tool": "disk_space",
 "arg": ""
 }
 ],
@@ -6205,7 +5385,7 @@
 "memory_usage",
 "",
 {
-"tool": "make_password",
+"tool": "disk_space",
 "arg": ""
 }
 ],
@@ -6216,7 +5396,7 @@
 "",
 {
 "tool": "make_password",
-"arg": ""
+"arg": "is the processor max"
 }
 ],
 [
@@ -6225,7 +5405,7 @@
 "cpu_load",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -6235,7 +5415,7 @@
 "cpu_load",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -6245,7 +5425,7 @@
 "cpu_load",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -6255,7 +5435,7 @@
 "cpu_load",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -6265,7 +5445,7 @@
 "cpu_load",
 "",
 {
-"tool": "make_password",
+"tool": null,
 "arg": ""
 }
 ],
@@ -6275,7 +5455,7 @@
 "cpu_load",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -6285,7 +5465,7 @@
 "cpu_load",
 "",
 {
-"tool": "make_password",
+"tool": "disk_space",
 "arg": ""
 }
 ],
@@ -6295,7 +5475,7 @@
 "cpu_load",
 "",
 {
-"tool": "make_password",
+"tool": "disk_space",
 "arg": ""
 }
 ],
@@ -6305,7 +5485,7 @@
 "cpu_load",
 "",
 {
-"tool": "make_password",
+"tool": "wifi_name",
 "arg": ""
 }
 ],
@@ -6315,7 +5495,7 @@
 "cpu_load",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -6325,7 +5505,7 @@
 "cpu_load",
 "",
 {
-"tool": "make_password",
+"tool": "ip_address",
 "arg": ""
 }
 ],
@@ -6335,7 +5515,7 @@
 "cpu_load",
 "",
 {
-"tool": "make_password",
+"tool": "system_info",
 "arg": ""
 }
 ],
@@ -6345,8 +5525,8 @@
 "cpu_load",
 "",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "music",
+"arg": "play"
 }
 ],
 [
@@ -6355,8 +5535,8 @@
 "cpu_load",
 "",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "music",
+"arg": "play"
 }
 ],
 [
@@ -6365,8 +5545,8 @@
 "cpu_load",
 "",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "music",
+"arg": "play"
 }
 ],
 [
@@ -6375,7 +5555,7 @@
 "cpu_load",
 "",
 {
-"tool": "make_password",
+"tool": "ip_address",
 "arg": ""
 }
 ],
@@ -6385,7 +5565,7 @@
 "cpu_load",
 "",
 {
-"tool": "make_password",
+"tool": "disk_space",
 "arg": ""
 }
 ],
@@ -6395,7 +5575,7 @@
 "ip_address",
 "",
 {
-"tool": "make_password",
+"tool": null,
 "arg": ""
 }
 ],
@@ -6405,7 +5585,7 @@
 "ip_address",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -6415,7 +5595,7 @@
 "ip_address",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -6425,7 +5605,7 @@
 "ip_address",
 "",
 {
-"tool": "make_password",
+"tool": null,
 "arg": ""
 }
 ],
@@ -6435,7 +5615,7 @@
 "ip_address",
 "",
 {
-"tool": "make_password",
+"tool": "memory_usage",
 "arg": ""
 }
 ],
@@ -6445,18 +5625,8 @@
 "ip_address",
 "",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"do me a favor and give me my ip asap",
-"ip_address",
-"",
-{
-"tool": "make_password",
-"arg": ""
+"tool": "music",
+"arg": "play"
 }
 ],
 [
@@ -6465,7 +5635,7 @@
 "ip_address",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -6475,8 +5645,8 @@
 "ip_address",
 "",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "music",
+"arg": "play"
 }
 ],
 [
@@ -6485,8 +5655,8 @@
 "ip_address",
 "",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "music",
+"arg": "play"
 }
 ],
 [
@@ -6505,7 +5675,7 @@
 "ip_address",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -6515,7 +5685,7 @@
 "ip_address",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -6535,7 +5705,7 @@
 "ip_address",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -6545,7 +5715,7 @@
 "ip_address",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -6555,7 +5725,7 @@
 "wifi_name",
 "",
 {
-"tool": "make_password",
+"tool": "disk_space",
 "arg": ""
 }
 ],
@@ -6565,7 +5735,7 @@
 "wifi_name",
 "",
 {
-"tool": "make_password",
+"tool": "disk_space",
 "arg": ""
 }
 ],
@@ -6575,27 +5745,7 @@
 "wifi_name",
 "",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"alright what wifi is my mac using when you get a sec",
-"wifi_name",
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"alright what wifi is my mac using if you can",
-"wifi_name",
-"",
-{
-"tool": "make_password",
+"tool": "disk_space",
 "arg": ""
 }
 ],
@@ -6605,17 +5755,7 @@
 "wifi_name",
 "",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"real quick can you name of the wifi i'm on if you can",
-"wifi_name",
-"",
-{
-"tool": "make_password",
+"tool": "disk_space",
 "arg": ""
 }
 ],
@@ -6625,7 +5765,7 @@
 "wifi_name",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -6635,17 +5775,7 @@
 "wifi_name",
 "",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"real quick can you name of the wifi i'm on asap",
-"wifi_name",
-"",
-{
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -6655,7 +5785,7 @@
 "wifi_name",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -6665,7 +5795,7 @@
 "wifi_name",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -6675,17 +5805,7 @@
 "wifi_name",
 "",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"alright am i on home wifi, what's it called asap",
-"wifi_name",
-"",
-{
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -6695,7 +5815,7 @@
 "wifi_name",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -6705,7 +5825,7 @@
 "wifi_name",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -6715,7 +5835,7 @@
 "wifi_name",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -6725,7 +5845,7 @@
 "wifi_name",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -6735,7 +5855,7 @@
 "system_info",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -6745,7 +5865,7 @@
 "system_info",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -6755,7 +5875,7 @@
 "system_info",
 "",
 {
-"tool": "make_password",
+"tool": "wifi_name",
 "arg": ""
 }
 ],
@@ -6765,7 +5885,7 @@
 "system_info",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -6775,7 +5895,7 @@
 "system_info",
 "",
 {
-"tool": "make_password",
+"tool": "wifi_name",
 "arg": ""
 }
 ],
@@ -6785,7 +5905,7 @@
 "system_info",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -6795,7 +5915,7 @@
 "system_info",
 "",
 {
-"tool": "make_password",
+"tool": "disk_space",
 "arg": ""
 }
 ],
@@ -6805,7 +5925,7 @@
 "system_info",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -6815,7 +5935,7 @@
 "system_info",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -6825,7 +5945,7 @@
 "system_info",
 "",
 {
-"tool": "make_password",
+"tool": "disk_space",
 "arg": ""
 }
 ],
@@ -6835,7 +5955,7 @@
 "system_info",
 "",
 {
-"tool": "make_password",
+"tool": "disk_space",
 "arg": ""
 }
 ],
@@ -6845,8 +5965,8 @@
 "system_info",
 "",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "web_search",
+"arg": "give me the specs"
 }
 ],
 [
@@ -6855,17 +5975,7 @@
 "system_info",
 "",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"alright which macos is this if you can",
-"system_info",
-"",
-{
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -6875,7 +5985,7 @@
 "system_info",
 "",
 {
-"tool": "make_password",
+"tool": "disk_space",
 "arg": ""
 }
 ],
@@ -6885,7 +5995,7 @@
 "system_info",
 "",
 {
-"tool": "make_password",
+"tool": "disk_space",
 "arg": ""
 }
 ],
@@ -6895,7 +6005,7 @@
 "list_shortcuts",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -6905,17 +6015,7 @@
 "list_shortcuts",
 "",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"alright what shortcuts are on this mac if you can",
-"list_shortcuts",
-"",
-{
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -6925,7 +6025,7 @@
 "list_shortcuts",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -6935,7 +6035,7 @@
 "list_shortcuts",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -6945,7 +6045,7 @@
 "list_shortcuts",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -6955,7 +6055,7 @@
 "list_shortcuts",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -6965,7 +6065,7 @@
 "list_shortcuts",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -6975,8 +6075,8 @@
 "list_shortcuts",
 "",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "music",
+"arg": "pause"
 }
 ],
 [
@@ -6985,7 +6085,7 @@
 "list_shortcuts",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -6995,18 +6095,8 @@
 "list_shortcuts",
 "",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"alright tell me my shortcuts if you can",
-"list_shortcuts",
-"",
-{
-"tool": "make_password",
-"arg": ""
+"tool": "web_search",
+"arg": "favor and pull up my shor"
 }
 ],
 [
@@ -7015,7 +6105,7 @@
 "list_shortcuts",
 "",
 {
-"tool": "make_password",
+"tool": "disk_space",
 "arg": ""
 }
 ],
@@ -7025,7 +6115,7 @@
 "list_shortcuts",
 "",
 {
-"tool": "make_password",
+"tool": "disk_space",
 "arg": ""
 }
 ],
@@ -7035,7 +6125,7 @@
 "list_shortcuts",
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -7045,17 +6135,7 @@
 "list_shortcuts",
 "",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"alright tell me my shortcuts when you get a sec",
-"list_shortcuts",
-"",
-{
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -7065,8 +6145,8 @@
 "tip",
 "33",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "tip",
+"arg": "please figure out the tip on 3"
 }
 ],
 [
@@ -7075,8 +6155,8 @@
 "tip",
 "62.50",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "tip",
+"arg": "figure out the tip on 62.50"
 }
 ],
 [
@@ -7085,7 +6165,7 @@
 "tip",
 "100",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -7095,8 +6175,8 @@
 "tip",
 "150",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "set_volume",
+"arg": "150"
 }
 ],
 [
@@ -7105,8 +6185,8 @@
 "tip",
 "100",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "tip",
+"arg": "10"
 }
 ],
 [
@@ -7115,8 +6195,8 @@
 "tip",
 "150",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "random_number",
+"arg": "150"
 }
 ],
 [
@@ -7125,8 +6205,8 @@
 "tip",
 "45",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "set_volume",
+"arg": "45"
 }
 ],
 [
@@ -7135,8 +6215,8 @@
 "tip",
 "33",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "set_volume",
+"arg": "33"
 }
 ],
 [
@@ -7145,7 +6225,7 @@
 "tip",
 "71.40",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -7155,7 +6235,7 @@
 "tip",
 "33",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -7165,7 +6245,7 @@
 "tip",
 "62.50",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -7175,7 +6255,7 @@
 "tip",
 "100",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -7185,8 +6265,8 @@
 "is_prime",
 "97",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "is_prime",
+"arg": "9"
 }
 ],
 [
@@ -7195,18 +6275,8 @@
 "is_prime",
 "13",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"do me a favor and check if 17 is prime if you can",
-"is_prime",
-"17",
-{
-"tool": "make_password",
-"arg": ""
+"tool": "web_search",
+"arg": "13"
 }
 ],
 [
@@ -7216,7 +6286,7 @@
 "91",
 {
 "tool": "make_password",
-"arg": ""
+"arg": "9"
 }
 ],
 [
@@ -7225,8 +6295,8 @@
 "is_prime",
 "97",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "roman_numeral",
+"arg": "97"
 }
 ],
 [
@@ -7236,7 +6306,7 @@
 "8",
 {
 "tool": "make_password",
-"arg": ""
+"arg": "8"
 }
 ],
 [
@@ -7245,28 +6315,8 @@
 "is_prime",
 "91",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"do me a favor and break 119 into primes asap",
-"is_prime",
-"119",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"real quick can you can 17 be divided evenly when you get a sec",
-"is_prime",
-"17",
-{
-"tool": "make_password",
-"arg": ""
+"tool": "is_prime",
+"arg": "1 into primes"
 }
 ],
 [
@@ -7275,8 +6325,8 @@
 "is_prime",
 "8",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "is_prime",
+"arg": "8 be divided evenly"
 }
 ],
 [
@@ -7285,8 +6335,8 @@
 "is_prime",
 "561",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "is_prime",
+"arg": "6"
 }
 ],
 [
@@ -7295,7 +6345,7 @@
 "is_prime",
 "97",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -7305,8 +6355,8 @@
 "roman_numeral",
 "2027",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "random_number",
+"arg": "20"
 }
 ],
 [
@@ -7315,7 +6365,7 @@
 "roman_numeral",
 "88",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -7325,8 +6375,8 @@
 "roman_numeral",
 "2026",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "roman_numeral",
+"arg": "20"
 }
 ],
 [
@@ -7335,8 +6385,8 @@
 "roman_numeral",
 "1999",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "random_number",
+"arg": "1999"
 }
 ],
 [
@@ -7346,7 +6396,7 @@
 "44",
 {
 "tool": "make_password",
-"arg": ""
+"arg": "44"
 }
 ],
 [
@@ -7356,7 +6406,7 @@
 "1066",
 {
 "tool": "make_password",
-"arg": ""
+"arg": "10"
 }
 ],
 [
@@ -7365,8 +6415,8 @@
 "roman_numeral",
 "88",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "roman_numeral",
+"arg": "88 as roman numerals"
 }
 ],
 [
@@ -7375,8 +6425,8 @@
 "roman_numeral",
 "2026",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "roman_numeral",
+"arg": "20"
 }
 ],
 [
@@ -7385,7 +6435,7 @@
 "roman_numeral",
 "44",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -7395,8 +6445,8 @@
 "roman_numeral",
 "2027",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "random_number",
+"arg": "give me the roman numeral for 2027"
 }
 ],
 [
@@ -7405,8 +6455,8 @@
 "roman_numeral",
 "1066",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "random_number",
+"arg": "give me the roman numeral for 1066"
 }
 ],
 [
@@ -7415,7 +6465,7 @@
 "roman_numeral",
 "1999",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -7426,7 +6476,7 @@
 "help",
 {
 "tool": "make_password",
-"arg": ""
+"arg": "please say help in mor"
 }
 ],
 [
@@ -7435,8 +6485,8 @@
 "morse_code",
 "ship",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "make_logo",
+"arg": "morse code when y"
 }
 ],
 [
@@ -7445,7 +6495,7 @@
 "morse_code",
 "hi",
 {
-"tool": "make_password",
+"tool": "disk_space",
 "arg": ""
 }
 ],
@@ -7465,7 +6515,7 @@
 "morse_code",
 "sos",
 {
-"tool": "make_password",
+"tool": "screenshot",
 "arg": ""
 }
 ],
@@ -7475,8 +6525,8 @@
 "morse_code",
 "hi",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "time_in",
+"arg": "morse"
 }
 ],
 [
@@ -7485,8 +6535,8 @@
 "morse_code",
 "hello",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "web_search",
+"arg": "turn hello into mors"
 }
 ],
 [
@@ -7495,7 +6545,7 @@
 "morse_code",
 "help",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -7505,7 +6555,7 @@
 "morse_code",
 "morse",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -7515,8 +6565,8 @@
 "morse_code",
 "ship",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "web_search",
+"arg": "send ship in mors"
 }
 ],
 [
@@ -7525,7 +6575,7 @@
 "morse_code",
 "sos",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -7535,87 +6585,7 @@
 "morse_code",
 "help",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"do me a favor and skim reddit for me and report back if you can",
-"agent",
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"Alright skim youtube for me and report back when you get a sec!",
-"agent",
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"Real quick can you skim letterboxd.com for me and report back when you get a sec",
-"agent",
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"Samantha could you please skim bbc.com for me and report back when you get a sec!",
-"agent",
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"alright dig through github.com and find something good if you can",
-"agent",
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"real quick can you dig through bbc.com and find something good when you get a sec",
-"agent",
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"samantha could you please dig through letterboxd.com and find something good asap",
-"agent",
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"samantha could you please dig through reddit and find something good if you can",
-"agent",
-"",
-{
-"tool": "make_password",
+"tool": "flip_coin",
 "arg": ""
 }
 ],
@@ -7625,7 +6595,7 @@
 "agent",
 "",
 {
-"tool": "make_password",
+"tool": "clipboard",
 "arg": ""
 }
 ],
@@ -7635,8 +6605,8 @@
 "agent",
 "",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "open_url",
+"arg": "an you tldr bbc.com"
 }
 ],
 [
@@ -7645,7 +6615,7 @@
 "agent",
 "",
 {
-"tool": "make_password",
+"tool": "clipboard",
 "arg": ""
 }
 ],
@@ -7655,8 +6625,8 @@
 "agent",
 "",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "open_url",
+"arg": "g"
 }
 ],
 [
@@ -7665,27 +6635,7 @@
 "agent",
 "",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"alright tldr this page asap",
-"agent",
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"samantha could you please tldr this page when you get a sec",
-"agent",
-"",
-{
-"tool": "make_password",
+"tool": "clipboard",
 "arg": ""
 }
 ],
@@ -7695,7 +6645,7 @@
 "agent",
 "",
 {
-"tool": "make_password",
+"tool": "calendar_today",
 "arg": ""
 }
 ],
@@ -7705,8 +6655,8 @@
 "agent",
 "",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "music",
+"arg": "next"
 }
 ],
 [
@@ -7715,118 +6665,8 @@
 "agent",
 "",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"alright open safari and then tell me what's playing when you get a sec",
-"agent",
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"do me a favor and open safari and then tell me what's playing when you get a sec",
-"agent",
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"Real quick can you open safari and then tell me what's playing when you get a sec",
-"agent",
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"do me a favor and open safari and then tell me what's playing if you can",
-"agent",
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"real quick can you open safari and then tell me what's playing asap",
-"agent",
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"do me a favor and open safari and then tell me what's playing asap",
-"agent",
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"Samantha could you please open safari and then tell me what's playing if you can",
-"agent",
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"alright give me the gist of this tab when you get a sec",
-"agent",
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"real quick can you give me the gist of this tab asap",
-"agent",
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"samantha could you please give me the gist of this tab asap",
-"agent",
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"do me a favor and give me the gist of this tab asap",
-"agent",
-"",
-{
-"tool": "make_password",
-"arg": ""
+"tool": "music",
+"arg": "play"
 }
 ],
 [
@@ -7835,48 +6675,8 @@
 "agent",
 "",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"do me a favor and give me the gist of this tab if you can",
-"agent",
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"Samantha could you please give me the gist of this tab when you get a sec",
-"agent",
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"who discovered penicillin",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"what is the capital of canada?",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
+"tool": "music",
+"arg": "playing"
 }
 ],
 [
@@ -7885,7 +6685,7 @@ null,
 null,
 "",
 {
-"tool": "make_password",
+"tool": "weather",
 "arg": ""
 }
 ],
@@ -7895,48 +6695,8 @@ null,
 null,
 "",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"what is 9 times 8?",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"cheers",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"what is the tallest building",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"when did the titanic sink",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
+"tool": "music",
+"arg": "next"
 }
 ],
 [
@@ -7945,77 +6705,7 @@ null,
 null,
 "",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"ok what is a neural network?",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"what model are you",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"quick question, is samantha open source",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"so what is the speed of sound",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"samantha who wrote the song yesterday",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"hey how do noise cancelling headphones work",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"what is a battery made of",
-null,
-"",
-{
-"tool": "make_password",
+"tool": "flip_coin",
 "arg": ""
 }
 ],
@@ -8025,47 +6715,7 @@ null,
 null,
 "",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"is it bad to skip breakfast",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"what is a volume in a book series",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"who opened the first mcdonalds",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"samantha what does google do with my data",
-null,
-"",
-{
-"tool": "make_password",
+"tool": "clipboard",
 "arg": ""
 }
 ],
@@ -8075,47 +6725,7 @@ null,
 null,
 "",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"what does remind mean",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"what is a timer in electronics",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"who plays batman?",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"what is the weather like on mars",
-null,
-"",
-{
-"tool": "make_password",
+"tool": "flip_coin",
 "arg": ""
 }
 ],
@@ -8125,18 +6735,8 @@ null,
 null,
 "",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"samantha what is a web browser",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
+"tool": "make_logo",
+"arg": "do you design a good l"
 }
 ],
 [
@@ -8145,27 +6745,7 @@ null,
 null,
 "",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"samantha write a sonnet about the sea",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"make a list of questions for a job interview",
-null,
-"",
-{
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -8175,18 +6755,8 @@ null,
 null,
 "",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"unseen",
-"start a poem about rain?",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
+"tool": "weather",
+"arg": "bike"
 }
 ],
 [
@@ -8195,8 +6765,8 @@ null,
 null,
 "",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "morse_code",
+"arg": "plan on frac"
 }
 ],
 [
@@ -8205,8 +6775,8 @@ null,
 null,
 "",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "open_url",
+"arg": "vil's advocate on remote wor"
 }
 ],
 [
@@ -8215,8 +6785,8 @@ null,
 null,
 "",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "new_reminder",
+"arg": "nd tell me what turing"
 }
 ],
 [
@@ -8225,8 +6795,8 @@ null,
 "open_app",
 "chrome",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "music",
+"arg": "pause"
 }
 ],
 [
@@ -8235,7 +6805,7 @@ null,
 "open_app",
 "safari",
 {
-"tool": "make_password",
+"tool": null,
 "arg": ""
 }
 ],
@@ -8245,8 +6815,8 @@ null,
 "open_app",
 "pixelmator",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "read_file",
+"arg": "xelmator"
 }
 ],
 [
@@ -8255,8 +6825,8 @@ null,
 "make_logo",
 "turing",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "make_logo",
+"arg": "for"
 }
 ],
 [
@@ -8265,8 +6835,8 @@ null,
 "make_logo",
 "complex a surf school",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "web_search",
+"arg": "a surf school"
 }
 ],
 [
@@ -8275,8 +6845,8 @@ null,
 "make_logo",
 "original wordless turing",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "make_logo",
+"arg": "inal wordless l"
 }
 ],
 [
@@ -8285,7 +6855,7 @@ null,
 "make_logo",
 "abstract a bakery",
 {
-"tool": "make_password",
+"tool": null,
 "arg": ""
 }
 ],
@@ -8295,17 +6865,7 @@ null,
 "open_url",
 "hacker news",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"actions",
-"visit github.com",
-"open_url",
-"github.com",
-{
-"tool": "make_password",
+"tool": "screenshot",
 "arg": ""
 }
 ],
@@ -8315,8 +6875,8 @@ null,
 "open_url",
 "reddit",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "set_volume",
+"arg": "redd"
 }
 ],
 [
@@ -8325,7 +6885,7 @@ null,
 "open_url",
 "youtube",
 {
-"tool": "make_password",
+"tool": null,
 "arg": ""
 }
 ],
@@ -8335,8 +6895,8 @@ null,
 "open_url",
 "x.com",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "open_url",
+"arg": "m"
 }
 ],
 [
@@ -8346,7 +6906,7 @@ null,
 "mlx",
 {
 "tool": "make_password",
-"arg": ""
+"arg": "h for mlx lora"
 }
 ],
 [
@@ -8355,8 +6915,8 @@ null,
 "web_search",
 "pizza",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "open_app",
+"arg": "vancouver"
 }
 ],
 [
@@ -8365,8 +6925,8 @@ null,
 "web_search",
 "qwen3",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "set_volume",
+"arg": "3"
 }
 ],
 [
@@ -8375,7 +6935,7 @@ null,
 "current_tab",
 null,
 {
-"tool": "make_password",
+"tool": "battery",
 "arg": ""
 }
 ],
@@ -8385,87 +6945,7 @@ null,
 "current_tab",
 null,
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"actions",
-"take a screenshot",
-"screenshot",
-null,
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"actions",
-"grab a screenshot",
-"screenshot",
-null,
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"actions",
-"what's on my clipboard",
-"clipboard",
-null,
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"actions",
-"read my clipboard",
-"clipboard",
-null,
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"actions",
-"volume 30",
-"set_volume",
-"30",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"actions",
-"set the volume to 50",
-"set_volume",
-"50",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"actions",
-"mute",
-"set_volume",
-"0",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"actions",
-"how's my battery",
-"battery",
-null,
-{
-"tool": "make_password",
+"tool": "battery",
 "arg": ""
 }
 ],
@@ -8475,18 +6955,8 @@ null,
 "battery",
 null,
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"actions",
-"what's my battery",
-"battery",
-null,
-{
-"tool": "make_password",
-"arg": ""
+"tool": "set_volume",
+"arg": "down"
 }
 ],
 [
@@ -8495,7 +6965,7 @@ null,
 "say",
 "hello",
 {
-"tool": "make_password",
+"tool": "weather",
 "arg": ""
 }
 ],
@@ -8505,8 +6975,8 @@ null,
 "say",
 "test",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "music",
+"arg": "play"
 }
 ],
 [
@@ -8515,8 +6985,8 @@ null,
 "list_dir",
 "Documents",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "list_dir",
+"arg": "~/Document"
 }
 ],
 [
@@ -8525,18 +6995,8 @@ null,
 "list_dir",
 "Desktop",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"actions",
-"read the file ~/notes.txt",
-"read_file",
-"notes.txt",
-{
-"tool": "make_password",
-"arg": ""
+"tool": "list_dir",
+"arg": "~/Des"
 }
 ],
 [
@@ -8545,8 +7005,8 @@ null,
 "read_file",
 "test.md",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "list_dir",
+"arg": "~/test.md"
 }
 ],
 [
@@ -8555,8 +7015,8 @@ null,
 "open_url",
 "youtube",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "set_volume",
+"arg": "up"
 }
 ],
 [
@@ -8565,8 +7025,8 @@ null,
 "agent",
 null,
 {
-"tool": "make_password",
-"arg": ""
+"tool": "open_url",
+"arg": "vis"
 }
 ],
 [
@@ -8575,38 +7035,8 @@ null,
 null,
 null,
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"actions",
-"who is steve jobs",
-null,
-null,
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"actions",
-"what is 17*23",
-null,
-null,
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"actions",
-"what is the capital of japan",
-null,
-null,
-{
-"tool": "make_password",
-"arg": ""
+"tool": "music",
+"arg": "playing"
 }
 ],
 [
@@ -8616,17 +7046,7 @@ null,
 null,
 {
 "tool": "make_password",
-"arg": ""
-}
-],
-[
-"actions",
-"go to github then tell me what tab is open",
-"agent",
-null,
-{
-"tool": "make_password",
-"arg": ""
+"arg": "d poke around hacker news"
 }
 ],
 [
@@ -8635,7 +7055,7 @@ null,
 "agent",
 null,
 {
-"tool": "make_password",
+"tool": "clipboard",
 "arg": ""
 }
 ],
@@ -8646,7 +7066,7 @@ null,
 null,
 {
 "tool": "make_password",
-"arg": ""
+"arg": "and summ"
 }
 ],
 [
@@ -8655,8 +7075,8 @@ null,
 null,
 null,
 {
-"tool": "make_password",
-"arg": ""
+"tool": "time_in",
+"arg": "Turing is"
 }
 ],
 [
@@ -8665,8 +7085,8 @@ null,
 "open_app",
 "chrome",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "open_app",
+"arg": "hr"
 }
 ],
 [
@@ -8675,7 +7095,7 @@ null,
 "open_app",
 "safari",
 {
-"tool": "make_password",
+"tool": null,
 "arg": ""
 }
 ],
@@ -8685,68 +7105,8 @@ null,
 "open_app",
 "spotify",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"actions",
-"turn the volume down to 20",
-"set_volume",
-"20",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"actions",
-"turn it up to 80",
-"set_volume",
-"80",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"actions",
-"what's my battery at",
-"battery",
-null,
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"actions",
-"how much battery do i have",
-"battery",
-null,
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"actions",
-"take a screenshot please",
-"screenshot",
-null,
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"actions",
-"show me what's on my clipboard",
-"clipboard",
-null,
-{
-"tool": "make_password",
-"arg": ""
+"tool": "open_app",
+"arg": "spot"
 }
 ],
 [
@@ -8755,8 +7115,8 @@ null,
 "open_url",
 "github",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "music",
+"arg": "pause"
 }
 ],
 [
@@ -8765,8 +7125,8 @@ null,
 "open_url",
 "youtube",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "set_volume",
+"arg": "up"
 }
 ],
 [
@@ -8775,8 +7135,8 @@ null,
 "web_search",
 "mlx lora",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "morse_code",
+"arg": "m"
 }
 ],
 [
@@ -8785,8 +7145,8 @@ null,
 "open_url",
 "turing repo",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "music",
+"arg": "next"
 }
 ],
 [
@@ -8795,18 +7155,8 @@ null,
 null,
 null,
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"actions",
-"play some music",
-"music",
-"play",
-{
-"tool": "make_password",
-"arg": ""
+"tool": "set_volume",
+"arg": "ll me who alan turing was"
 }
 ],
 [
@@ -8815,58 +7165,8 @@ null,
 "music",
 "pause",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"actions",
-"skip this song",
-"music",
-"next",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"actions",
-"can you skip",
-"music",
-"next",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"actions",
-"what's playing",
-"music",
-"playing",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"actions",
-"what song is this",
-"music",
-"playing",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"actions",
-"what's the weather",
-"weather",
-null,
-{
-"tool": "make_password",
-"arg": ""
+"tool": "music",
+"arg": "play"
 }
 ],
 [
@@ -8875,7 +7175,7 @@ null,
 "weather",
 "tokyo",
 {
-"tool": "make_password",
+"tool": "weather",
 "arg": ""
 }
 ],
@@ -8885,27 +7185,7 @@ null,
 "weather",
 null,
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"actions",
-"set a timer for 5 minutes",
-"timer",
-"5",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"actions",
-"set a 10 minute timer",
-"timer",
-"10",
-{
-"tool": "make_password",
+"tool": null,
 "arg": ""
 }
 ],
@@ -8915,7 +7195,7 @@ null,
 "timer",
 "0.5",
 {
-"tool": "make_password",
+"tool": null,
 "arg": ""
 }
 ],
@@ -8925,18 +7205,8 @@ null,
 "new_reminder",
 "call mom",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"actions",
-"add a reminder to buy milk",
-"new_reminder",
-"buy milk",
-{
-"tool": "make_password",
-"arg": ""
+"tool": "set_volume",
+"arg": "call mom"
 }
 ],
 [
@@ -8945,8 +7215,8 @@ null,
 "new_note",
 "buy milk",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "set_volume",
+"arg": "buy milk"
 }
 ],
 [
@@ -8955,18 +7225,8 @@ null,
 "new_note",
 "door code",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"actions",
-"what's on my calendar today",
-"calendar_today",
-null,
-{
-"tool": "make_password",
-"arg": ""
+"tool": "morse_code",
+"arg": "hat says the door code is 4417"
 }
 ],
 [
@@ -8975,117 +7235,7 @@ null,
 "calendar_today",
 null,
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"actions",
-"what is the weather system on jupiter",
-null,
-null,
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"actions",
-"what is music theory",
-null,
-null,
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"actions",
-"who plays the next james bond",
-null,
-null,
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"what is 2+2",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"what is 10 times 7",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"what is the capital of japan",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"what is the capital of france",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"how many days are in a week",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"how many continents are there",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"who wrote romeo and juliet",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"who painted the mona lisa",
-null,
-"",
-{
-"tool": "make_password",
+"tool": null,
 "arg": ""
 }
 ],
@@ -9095,37 +7245,7 @@ null,
 null,
 "",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"how many legs does a spider have",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"what is the largest planet in the solar system",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"what is the boiling point of water in celsius",
-null,
-"",
-{
-"tool": "make_password",
+"tool": "list_shortcuts",
 "arg": ""
 }
 ],
@@ -9135,8 +7255,8 @@ null,
 null,
 "",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "roll_dice",
+"arg": "2"
 }
 ],
 [
@@ -9145,157 +7265,7 @@ null,
 null,
 "",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"how many sides does a triangle have",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"what do bees make",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"who is steve jobs",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"who is albert einstein",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"who is taylor swift",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"who was abraham lincoln",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"who is marie curie",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"who was isaac newton",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"who is elon musk",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"who is barack obama",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"who was cleopatra",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"who is lebron james",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"who was alan turing",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"who is serena williams",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"who was nikola tesla",
-null,
-"",
-{
-"tool": "make_password",
+"tool": "clipboard",
 "arg": ""
 }
 ],
@@ -9305,7 +7275,7 @@ null,
 null,
 "",
 {
-"tool": "make_password",
+"tool": "wifi_name",
 "arg": ""
 }
 ],
@@ -9315,18 +7285,8 @@ null,
 null,
 "",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"who discovered penicillin",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
+"tool": "is_prime",
+"arg": "19"
 }
 ],
 [
@@ -9335,18 +7295,8 @@ null,
 null,
 "",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"who was the first person on the moon",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
+"tool": "set_volume",
+"arg": "phon"
 }
 ],
 [
@@ -9355,57 +7305,7 @@ null,
 null,
 "",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"what is the capital of canada",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"what is the capital of australia",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"what is the capital of brazil",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"what is the capital of british columbia",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"where is the eiffel tower",
-null,
-"",
-{
-"tool": "make_password",
+"tool": "calendar_today",
 "arg": ""
 }
 ],
@@ -9415,18 +7315,8 @@ null,
 null,
 "",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"what is the longest river in the world",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
+"tool": "set_volume",
+"arg": "s"
 }
 ],
 [
@@ -9435,17 +7325,7 @@ null,
 null,
 "",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"what is the largest ocean",
-null,
-"",
-{
-"tool": "make_password",
+"tool": "weather",
 "arg": ""
 }
 ],
@@ -9455,18 +7335,8 @@ null,
 null,
 "",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"where is the great barrier reef",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
+"tool": "set_volume",
+"arg": "vancouver"
 }
 ],
 [
@@ -9475,8 +7345,8 @@ null,
 null,
 "",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "time_in",
+"arg": "tain in the wo"
 }
 ],
 [
@@ -9485,18 +7355,8 @@ null,
 null,
 "",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"what is the sahara",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
+"tool": "open_url",
+"arg": "bout tok"
 }
 ],
 [
@@ -9505,107 +7365,7 @@ null,
 null,
 "",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"what is a black hole",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"what is photosynthesis",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"what is dna",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"what is the speed of light",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"what is bitcoin",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"what is a transformer in machine learning",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"what is the internet",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"what is a volcano",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"what is the pythagorean theorem",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"what is an electron",
-null,
-"",
-{
-"tool": "make_password",
+"tool": "cpu_load",
 "arg": ""
 }
 ],
@@ -9615,87 +7375,7 @@ null,
 null,
 "",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"what is jazz",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"what is a guitar",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"how many planets are in the solar system",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"what is the freezing point of water in fahrenheit",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"What is Turing?",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"What is Samantha?",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"What went wrong with the project called Arthur?",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"What base model does Samantha use?",
-null,
-"",
-{
-"tool": "make_password",
+"tool": "wifi_name",
 "arg": ""
 }
 ],
@@ -9705,17 +7385,7 @@ null,
 null,
 "",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"What's the difference between Turing and Samantha?",
-null,
-"",
-{
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -9725,7 +7395,7 @@ null,
 null,
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -9735,27 +7405,7 @@ null,
 null,
 "",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"What data was Samantha trained on?",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"Is Samantha fine-tuned or pretrained from scratch?",
-null,
-"",
-{
-"tool": "make_password",
+"tool": "battery",
 "arg": ""
 }
 ],
@@ -9765,17 +7415,7 @@ null,
 null,
 "",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"What does Phase 4 of the roadmap involve?",
-null,
-"",
-{
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -9785,8 +7425,8 @@ null,
 null,
 "",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "set_volume",
+"arg": "beat Claude or GPT"
 }
 ],
 [
@@ -9795,7 +7435,7 @@ null,
 null,
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -9805,7 +7445,7 @@ null,
 null,
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -9815,7 +7455,7 @@ null,
 null,
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -9825,18 +7465,8 @@ null,
 null,
 "",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"What is house voice?",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
+"tool": "time_in",
+"arg": "Turing is"
 }
 ],
 [
@@ -9845,17 +7475,7 @@ null,
 null,
 "",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"What's blocked or paused in this project right now?",
-null,
-"",
-{
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -9865,37 +7485,7 @@ null,
 null,
 "",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"What license is this project under?",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"Who maintains this project?",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"What's the honest win condition for Samantha?",
-null,
-"",
-{
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ],
@@ -9905,18 +7495,8 @@ null,
 null,
 "",
 {
-"tool": "make_password",
-"arg": ""
-}
-],
-[
-"questions",
-"What tool runs the training on this machine?",
-null,
-"",
-{
-"tool": "make_password",
-"arg": ""
+"tool": "list_dir",
+"arg": "A stands"
 }
 ],
 [
@@ -9925,7 +7505,7 @@ null,
 null,
 "",
 {
-"tool": "make_password",
+"tool": "clipboard",
 "arg": ""
 }
 ],
@@ -9935,8 +7515,8 @@ null,
 null,
 "",
 {
-"tool": "make_password",
-"arg": ""
+"tool": "new_note",
+"arg": "let Samantha actually"
 }
 ],
 [
@@ -9945,7 +7525,7 @@ null,
 null,
 "",
 {
-"tool": "make_password",
+"tool": "agent",
 "arg": ""
 }
 ]

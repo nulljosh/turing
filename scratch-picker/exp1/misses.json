@@ -1,0 +1,10002 @@
+[
+[
+"unseen",
+"alright i need a fresh password followed by: what does hunter2 hash to asap",
+"agent",
+"",
+{
+"tool": "paint_image",
+"arg": "h pas"
+}
+],
+[
+"unseen",
+"Alright what wifi is my mac using followed by: tell me my shortcuts asap",
+"agent",
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"Real quick can you logo for a hot sauce brand and once that's done how much juice is left if you can",
+"agent",
+"",
+{
+"tool": "paint_image",
+"arg": "how much juice is"
+}
+],
+[
+"unseen",
+"samantha could you please play that last one again followed by: say hi in morse code if you can",
+"agent",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright show what i have copied followed by: stop the song when you get a sec",
+"agent",
+"",
+{
+"tool": "paint_image",
+"arg": "how what i have copied followed by: stop the s"
+}
+],
+[
+"unseen",
+"samantha could you please pause it and once that's done what did i just copy when you get a sec",
+"agent",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"samantha could you please how hot is it in cape town followed by: when was the last reboot when you get a sec",
+"agent",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"Alright how cold is it out and once that's done what page is up right now when you get a sec",
+"agent",
+"",
+{
+"tool": "paint_image",
+"arg": "hat's"
+}
+],
+[
+"unseen",
+"alright sketch an icon for a flower shop called petal followed by: i need a random number between 3 and 30 asap",
+"agent",
+"",
+{
+"tool": "paint_image",
+"arg": "n for a flower s"
+}
+],
+[
+"unseen",
+"Do me a favor and tip me out on 150 and once that's done drop the volume down to 42 if you can?",
+"agent",
+"",
+{
+"tool": "paint_image",
+"arg": "hat's"
+}
+],
+[
+"unseen",
+"samantha could you please let's roll 6d6 and once that's done time since the last restart when you get a sec",
+"agent",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright what time is it right now in osaka and once that's done run a search on vintage ray bans when you get a sec",
+"agent",
+"",
+{
+"tool": "paint_image",
+"arg": "hat time is it right now in os"
+}
+],
+[
+"unseen",
+"alright jump over to arxiv.org followed by: give me a roll of 3d6 if you can",
+"agent",
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"alright what's my day look like and once that's done get me to arxiv.org if you can",
+"agent",
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"Alright read out my clipboard followed by: what did i just copy asap.",
+"agent",
+"",
+{
+"tool": "paint_image",
+"arg": "ht read out my clipboard followed by"
+}
+],
+[
+"unseen",
+"Alright what's my day look like followed by: what percent is my battery if you can!",
+"agent",
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"alright show what i have copied and once that's done time since the last restart if you can",
+"agent",
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"Do me a favor and can 13 be divided evenly followed by: what page is up right now if you can",
+"agent",
+"",
+{
+"tool": "paint_image",
+"arg": "nd can 13 be divided evenly"
+}
+],
+[
+"unseen",
+"Alright is the battery low followed by: call it, heads or tails when you get a sec?",
+"agent",
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"real quick can you bring the volume to 42 followed by: read out my clipboard when you get a sec",
+"agent",
+"",
+{
+"tool": "paint_image",
+"arg": "he volum"
+}
+],
+[
+"unseen",
+"Do me a favor and run good morning through sha256 and once that's done am i on home wifi, what's it called asap!",
+"agent",
+"",
+{
+"tool": "paint_image",
+"arg": "h s"
+}
+],
+[
+"unseen",
+"alright let's use stocks followed by: cook up a 14 character password when you get a sec",
+"agent",
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"samantha could you please let's use stocks and once that's done crank the volume to 58 asap",
+"agent",
+"",
+{
+"tool": "paint_image",
+"arg": "could you please let's use stocks"
+}
+],
+[
+"unseen",
+"do me a favor and drop the volume down to 42 and once that's done should i bring an umbrella asap",
+"agent",
+"",
+{
+"tool": "paint_image",
+"arg": "ce that's"
+}
+],
+[
+"unseen",
+"do me a favor and run good morning through sha256 followed by: make me a password that is 18 characters when you get a sec",
+"agent",
+"",
+{
+"tool": "paint_image",
+"arg": "hen y"
+}
+],
+[
+"unseen",
+"alright what's my memory looking like followed by: how much ram am i using if you can",
+"agent",
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"real quick can you break 8 into primes and once that's done pull up my shortcuts list asap",
+"agent",
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"samantha could you please what shortcuts are on this mac and once that's done what's my day look like when you get a sec",
+"agent",
+"",
+{
+"tool": "paint_image",
+"arg": "could you please what s"
+}
+],
+[
+"unseen",
+"alright change the volume to 42 followed by: get me to arxiv.org when you get a sec",
+"agent",
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"real quick can you play that last one again and once that's done am i on home wifi, what's it called if you can",
+"agent",
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"samantha could you please boot up podcasts asap",
+"open_app",
+"podcasts",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"real quick can you boot up stocks when you get a sec",
+"open_app",
+"stocks",
+{
+"tool": "paint_image",
+"arg": "can you boot up stocks"
+}
+],
+[
+"unseen",
+"do me a favor and boot up the weather app when you get a sec",
+"open_app",
+"the weather app",
+{
+"tool": "paint_image",
+"arg": "he weather app when you get a s"
+}
+],
+[
+"unseen",
+"alright boot up safari when you get a sec",
+"open_app",
+"safari",
+{
+"tool": "paint_image",
+"arg": "n you get a s"
+}
+],
+[
+"unseen",
+"Samantha could you please pop open safari if you can?",
+"open_app",
+"safari",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"samantha could you please pop open activity monitor if you can",
+"open_app",
+"activity monitor",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"samantha could you please pop open notes asap",
+"open_app",
+"notes",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"real quick can you pop open podcasts when you get a sec",
+"open_app",
+"podcasts",
+{
+"tool": "paint_image",
+"arg": "n podcas"
+}
+],
+[
+"unseen",
+"Real quick can you switch to podcasts asap",
+"open_app",
+"podcasts",
+{
+"tool": "paint_image",
+"arg": "h to podcasts"
+}
+],
+[
+"unseen",
+"alright switch to books asap",
+"open_app",
+"books",
+{
+"tool": "paint_image",
+"arg": "ht switch to books as"
+}
+],
+[
+"unseen",
+"do me a favor and switch to the weather app when you get a sec",
+"open_app",
+"the weather app",
+{
+"tool": "paint_image",
+"arg": "hen you get a s"
+}
+],
+[
+"unseen",
+"samantha could you please switch to activity monitor if you can",
+"open_app",
+"activity monitor",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"alright let's use activity monitor asap",
+"open_app",
+"activity monitor",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"samantha could you please let's use the weather app asap",
+"open_app",
+"the weather app",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright let's use chrome if you can",
+"open_app",
+"chrome",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"Alright let's use safari if you can.",
+"open_app",
+"safari",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"alright jump over to youtube if you can",
+"open_url",
+"youtube",
+{
+"tool": "paint_image",
+"arg": "ht jump over to youtube if y"
+}
+],
+[
+"unseen",
+"Do me a favor and jump over to bbc.com asap.",
+"open_url",
+"bbc.com",
+{
+"tool": "paint_image",
+"arg": "c.com as"
+}
+],
+[
+"unseen",
+"do me a favor and jump over to arxiv.org if you can",
+"open_url",
+"arxiv.org",
+{
+"tool": "paint_image",
+"arg": "nd jump over to arxiv.org if y"
+}
+],
+[
+"unseen",
+"alright jump over to reddit asap",
+"open_url",
+"reddit",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"alright get me to reddit if you can",
+"open_url",
+"reddit",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"real quick can you get me to espn.com asap",
+"open_url",
+"espn.com",
+{
+"tool": "paint_image",
+"arg": "can you get m"
+}
+],
+[
+"unseen",
+"samantha could you please get me to letterboxd.com when you get a sec",
+"open_url",
+"letterboxd.com",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"Do me a favor and get me to cloudflare.com when you get a sec",
+"open_url",
+"cloudflare.com",
+{
+"tool": "paint_image",
+"arg": "cloudflare.com when you get a s"
+}
+],
+[
+"unseen",
+"samantha could you please hop on cloudflare.com if you can",
+"open_url",
+"cloudflare.com",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright hop on bbc.com when you get a sec",
+"open_url",
+"bbc.com",
+{
+"tool": "paint_image",
+"arg": "n you get a s"
+}
+],
+[
+"unseen",
+"do me a favor and hop on github.com if you can",
+"open_url",
+"github.com",
+{
+"tool": "paint_image",
+"arg": "com if"
+}
+],
+[
+"unseen",
+"real quick can you hop on letterboxd.com if you can",
+"open_url",
+"letterboxd.com",
+{
+"tool": "paint_image",
+"arg": "hop on letterboxd.c"
+}
+],
+[
+"unseen",
+"real quick can you bring me to youtube if you can",
+"open_url",
+"youtube",
+{
+"tool": "paint_image",
+"arg": "can you bring me to y"
+}
+],
+[
+"unseen",
+"real quick can you bring me to bbc.com if you can",
+"open_url",
+"bbc.com",
+{
+"tool": "paint_image",
+"arg": "c.com"
+}
+],
+[
+"unseen",
+"real quick can you bring me to cloudflare.com when you get a sec",
+"open_url",
+"cloudflare.com",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"samantha could you please bring me to github.com when you get a sec",
+"open_url",
+"github.com",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"do me a favor and run a search on sqlite full text search when you get a sec",
+"web_search",
+"sqlite full text search",
+{
+"tool": "paint_image",
+"arg": "h on s"
+}
+],
+[
+"unseen",
+"Real quick can you run a search on app store review times if you can?",
+"web_search",
+"app store review times",
+{
+"tool": "paint_image",
+"arg": "n a s"
+}
+],
+[
+"unseen",
+"do me a favor and run a search on dog friendly hikes asap",
+"web_search",
+"dog friendly hikes",
+{
+"tool": "paint_image",
+"arg": "n dog friendly hikes as"
+}
+],
+[
+"unseen",
+"alright run a search on mlx lora if you can",
+"web_search",
+"mlx lora",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"do me a favor and see what the internet says about how to descale a kettle when you get a sec",
+"web_search",
+"how to descale a kettle",
+{
+"tool": "paint_image",
+"arg": "how to descale a kettle when you get a s"
+}
+],
+[
+"unseen",
+"Samantha could you please see what the internet says about app store review times asap!",
+"web_search",
+"app store review times",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"samantha could you please see what the internet says about best pizza vancouver if you can",
+"web_search",
+"best pizza vancouver",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"real quick can you see what the internet says about sqlite full text search when you get a sec",
+"web_search",
+"sqlite full text search",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"Alright web search ternary quantization when you get a sec",
+"web_search",
+"ternary quantization",
+{
+"tool": "paint_image",
+"arg": "hen you get a s"
+}
+],
+[
+"unseen",
+"Do me a favor and web search qwen3 benchmarks when you get a sec",
+"web_search",
+"qwen3 benchmarks",
+{
+"tool": "paint_image",
+"arg": "ch qwen3 benchmarks"
+}
+],
+[
+"unseen",
+"real quick can you web search mlx lora asap",
+"web_search",
+"mlx lora",
+{
+"tool": "paint_image",
+"arg": "can you web s"
+}
+],
+[
+"unseen",
+"Do me a favor and web search vintage ray bans if you can!",
+"web_search",
+"vintage ray bans",
+{
+"tool": "paint_image",
+"arg": "ch vintage ray bans"
+}
+],
+[
+"unseen",
+"samantha could you please what page is up right now asap",
+"current_tab",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright what page is up right now if you can",
+"current_tab",
+"",
+{
+"tool": "paint_image",
+"arg": "hat page is up right now if y"
+}
+],
+[
+"unseen",
+"samantha could you please what page is up right now if you can",
+"current_tab",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"Samantha could you please what page is up right now when you get a sec",
+"current_tab",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright what page is up right now asap",
+"current_tab",
+"",
+{
+"tool": "paint_image",
+"arg": "hat page is"
+}
+],
+[
+"unseen",
+"alright what page is up right now when you get a sec",
+"current_tab",
+"",
+{
+"tool": "paint_image",
+"arg": "hat page is"
+}
+],
+[
+"unseen",
+"alright which tab is showing asap",
+"current_tab",
+"",
+{
+"tool": "paint_image",
+"arg": "hich tab is"
+}
+],
+[
+"unseen",
+"samantha could you please which tab is showing if you can",
+"current_tab",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"Samantha could you please which tab is showing asap",
+"current_tab",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright which tab is showing if you can",
+"current_tab",
+"",
+{
+"tool": "paint_image",
+"arg": "hich tab is"
+}
+],
+[
+"unseen",
+"alright which tab is showing when you get a sec",
+"current_tab",
+"",
+{
+"tool": "paint_image",
+"arg": "hich tab is"
+}
+],
+[
+"unseen",
+"samantha could you please which tab is showing when you get a sec",
+"current_tab",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"Alright which tab is showing asap?",
+"current_tab",
+"",
+{
+"tool": "paint_image",
+"arg": "hich tab is"
+}
+],
+[
+"unseen",
+"samantha could you please what website am i on if you can",
+"current_tab",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"Samantha could you please what website am i on if you can!",
+"current_tab",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright what website am i on if you can",
+"current_tab",
+"",
+{
+"tool": "paint_image",
+"arg": "hat webs"
+}
+],
+[
+"unseen",
+"samantha could you please what website am i on asap",
+"current_tab",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"samantha could you please what website am i on when you get a sec",
+"current_tab",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright get a picture of my screen if you can",
+"screenshot",
+"",
+{
+"tool": "paint_image",
+"arg": "ht get a picture of my screen if y"
+}
+],
+[
+"unseen",
+"do me a favor and get a picture of my screen if you can",
+"screenshot",
+"",
+{
+"tool": "paint_image",
+"arg": "cture of my s"
+}
+],
+[
+"unseen",
+"do me a favor and get a picture of my screen asap",
+"screenshot",
+"",
+{
+"tool": "paint_image",
+"arg": "cture of my s"
+}
+],
+[
+"unseen",
+"real quick can you get a picture of my screen asap",
+"screenshot",
+"",
+{
+"tool": "paint_image",
+"arg": "cture of my"
+}
+],
+[
+"unseen",
+"alright get a picture of my screen asap",
+"screenshot",
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"samantha could you please screencap this asap",
+"screenshot",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"samantha could you please screencap this if you can",
+"screenshot",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"Samantha could you please screencap this when you get a sec.",
+"screenshot",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"Do me a favor and screencap this if you can",
+"screenshot",
+"",
+{
+"tool": "paint_image",
+"arg": "creencap this"
+}
+],
+[
+"unseen",
+"alright screencap this when you get a sec",
+"screenshot",
+"",
+{
+"tool": "paint_image",
+"arg": "n you get a s"
+}
+],
+[
+"unseen",
+"samantha could you please screencap this when you get a sec",
+"screenshot",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"real quick can you screencap this asap",
+"screenshot",
+"",
+{
+"tool": "paint_image",
+"arg": "can you s"
+}
+],
+[
+"unseen",
+"Do me a favor and take a screen shot if you can!",
+"screenshot",
+"",
+{
+"tool": "paint_image",
+"arg": "creen s"
+}
+],
+[
+"unseen",
+"alright take a screen shot when you get a sec",
+"screenshot",
+"",
+{
+"tool": "paint_image",
+"arg": "ht take a s"
+}
+],
+[
+"unseen",
+"real quick can you take a screen shot if you can",
+"screenshot",
+"",
+{
+"tool": "paint_image",
+"arg": "creen shot if y"
+}
+],
+[
+"unseen",
+"do me a favor and take a screen shot if you can",
+"screenshot",
+"",
+{
+"tool": "paint_image",
+"arg": "creen s"
+}
+],
+[
+"unseen",
+"do me a favor and take a screen shot when you get a sec",
+"screenshot",
+"",
+{
+"tool": "paint_image",
+"arg": "creen s"
+}
+],
+[
+"unseen",
+"Samantha could you please take a screen shot if you can",
+"screenshot",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"Samantha could you please take a screen shot asap",
+"screenshot",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright take a screen shot asap",
+"screenshot",
+"",
+{
+"tool": "paint_image",
+"arg": "ht take a s"
+}
+],
+[
+"unseen",
+"samantha could you please what did i just copy asap",
+"clipboard",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"Samantha could you please what did i just copy asap?",
+"clipboard",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright what did i just copy asap",
+"clipboard",
+"",
+{
+"tool": "paint_image",
+"arg": "hat did i just copy as"
+}
+],
+[
+"unseen",
+"samantha could you please what did i just copy if you can",
+"clipboard",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"samantha could you please what did i just copy when you get a sec",
+"clipboard",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"Samantha could you please what did i just copy if you can.",
+"clipboard",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"Samantha could you please show what i have copied if you can",
+"clipboard",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"samantha could you please show what i have copied if you can",
+"clipboard",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright show what i have copied asap",
+"clipboard",
+"",
+{
+"tool": "paint_image",
+"arg": "how what i have copied as"
+}
+],
+[
+"unseen",
+"samantha could you please show what i have copied when you get a sec",
+"clipboard",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright show what i have copied if you can",
+"clipboard",
+"",
+{
+"tool": "paint_image",
+"arg": "how what i have"
+}
+],
+[
+"unseen",
+"samantha could you please show what i have copied asap",
+"clipboard",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"samantha could you please read out my clipboard asap",
+"clipboard",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"real quick can you read out my clipboard asap",
+"clipboard",
+"",
+{
+"tool": "paint_image",
+"arg": "t my clipboard as"
+}
+],
+[
+"unseen",
+"do me a favor and read out my clipboard asap",
+"clipboard",
+"",
+{
+"tool": "paint_image",
+"arg": "nd read out my clipboard as"
+}
+],
+[
+"unseen",
+"Do me a favor and read out my clipboard if you can!",
+"clipboard",
+"",
+{
+"tool": "paint_image",
+"arg": "nd read out my clipboard if y"
+}
+],
+[
+"unseen",
+"alright read out my clipboard if you can",
+"clipboard",
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"do me a favor and read out my clipboard when you get a sec",
+"clipboard",
+"",
+{
+"tool": "paint_image",
+"arg": "hen you get a s"
+}
+],
+[
+"unseen",
+"do me a favor and read out my clipboard if you can",
+"clipboard",
+"",
+{
+"tool": "paint_image",
+"arg": "nd read out my clipboard if y"
+}
+],
+[
+"unseen",
+"do me a favor and crank the volume to 58 asap",
+"set_volume",
+"58",
+{
+"tool": "paint_image",
+"arg": "nk the volume to 58 as"
+}
+],
+[
+"unseen",
+"samantha could you please crank the volume to 73 asap",
+"set_volume",
+"73",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"samantha could you please crank the volume to 5 asap",
+"set_volume",
+"5",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright crank the volume to 0 if you can",
+"set_volume",
+"0",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"do me a favor and bring the volume to 58 asap",
+"set_volume",
+"58",
+{
+"tool": "paint_image",
+"arg": "ng the volume to 58 as"
+}
+],
+[
+"unseen",
+"alright bring the volume to 42 when you get a sec",
+"set_volume",
+"42",
+{
+"tool": "paint_image",
+"arg": "hen y"
+}
+],
+[
+"unseen",
+"samantha could you please bring the volume to 73 asap",
+"set_volume",
+"73",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"Real quick can you bring the volume to 0 when you get a sec?",
+"set_volume",
+"0",
+{
+"tool": "paint_image",
+"arg": "he volume to 0 when you get a s"
+}
+],
+[
+"unseen",
+"Do me a favor and change the volume to 10 if you can",
+"set_volume",
+"10",
+{
+"tool": "paint_image",
+"arg": "he volume to 10 if y"
+}
+],
+[
+"unseen",
+"samantha could you please change the volume to 73 when you get a sec",
+"set_volume",
+"73",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright change the volume to 42 when you get a sec",
+"set_volume",
+"42",
+{
+"tool": "paint_image",
+"arg": "hange the volume to 42 when y"
+}
+],
+[
+"unseen",
+"Samantha could you please change the volume to 58 if you can.",
+"set_volume",
+"58",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"do me a favor and drop the volume down to 73 when you get a sec",
+"set_volume",
+"73",
+{
+"tool": "paint_image",
+"arg": "hen y"
+}
+],
+[
+"unseen",
+"real quick can you drop the volume down to 5 when you get a sec",
+"set_volume",
+"5",
+{
+"tool": "paint_image",
+"arg": "hen y"
+}
+],
+[
+"unseen",
+"alright drop the volume down to 42 when you get a sec",
+"set_volume",
+"42",
+{
+"tool": "paint_image",
+"arg": "he volume down to 42 when you get a s"
+}
+],
+[
+"unseen",
+"alright drop the volume down to 10 if you can",
+"set_volume",
+"10",
+{
+"tool": "paint_image",
+"arg": "he volume down to 10 if y"
+}
+],
+[
+"unseen",
+"samantha could you please crank it up asap",
+"set_volume",
+"up",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"Samantha could you please crank it up if you can",
+"set_volume",
+"up",
+{
+"tool": "paint_image",
+"arg": "crank it up if y"
+}
+],
+[
+"unseen",
+"alright crank it up if you can",
+"set_volume",
+"up",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"do me a favor and crank it up if you can",
+"set_volume",
+"up",
+{
+"tool": "paint_image",
+"arg": "nk it up if y"
+}
+],
+[
+"unseen",
+"do me a favor and crank it up asap",
+"set_volume",
+"up",
+{
+"tool": "paint_image",
+"arg": "nk it up as"
+}
+],
+[
+"unseen",
+"samantha could you please crank it up when you get a sec",
+"set_volume",
+"up",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright a bit louder asap",
+"set_volume",
+"up",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"Samantha could you please a bit louder if you can",
+"set_volume",
+"up",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"Alright a bit louder if you can",
+"set_volume",
+"up",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"samantha could you please a bit louder asap",
+"set_volume",
+"up",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"samantha could you please a bit louder when you get a sec",
+"set_volume",
+"up",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"Do me a favor and raise the volume asap.",
+"set_volume",
+"up",
+{
+"tool": "paint_image",
+"arg": "se the volume as"
+}
+],
+[
+"unseen",
+"samantha could you please raise the volume when you get a sec",
+"set_volume",
+"up",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright raise the volume if you can",
+"set_volume",
+"up",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"alright raise the volume when you get a sec",
+"set_volume",
+"up",
+{
+"tool": "paint_image",
+"arg": "hen you get a s"
+}
+],
+[
+"unseen",
+"samantha could you please raise the volume if you can",
+"set_volume",
+"up",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright raise the volume asap",
+"set_volume",
+"up",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"Samantha could you please that's too loud asap.",
+"set_volume",
+"down",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright that's too loud if you can",
+"set_volume",
+"down",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"alright that's too loud when you get a sec",
+"set_volume",
+"down",
+{
+"tool": "paint_image",
+"arg": "hat's"
+}
+],
+[
+"unseen",
+"samantha could you please that's too loud when you get a sec",
+"set_volume",
+"down",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright that's too loud asap",
+"set_volume",
+"down",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"samantha could you please that's too loud asap",
+"set_volume",
+"down",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"do me a favor and lower the volume when you get a sec",
+"set_volume",
+"down",
+{
+"tool": "paint_image",
+"arg": "hen you get a s"
+}
+],
+[
+"unseen",
+"real quick can you lower the volume when you get a sec",
+"set_volume",
+"down",
+{
+"tool": "paint_image",
+"arg": "he volume when y"
+}
+],
+[
+"unseen",
+"Real quick can you lower the volume when you get a sec?",
+"set_volume",
+"down",
+{
+"tool": "paint_image",
+"arg": "he volume when y"
+}
+],
+[
+"unseen",
+"do me a favor and lower the volume asap",
+"set_volume",
+"down",
+{
+"tool": "paint_image",
+"arg": "nd lower the volume as"
+}
+],
+[
+"unseen",
+"do me a favor and lower the volume if you can",
+"set_volume",
+"down",
+{
+"tool": "paint_image",
+"arg": "nd lower the volume if y"
+}
+],
+[
+"unseen",
+"samantha could you please lower the volume when you get a sec",
+"set_volume",
+"down",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright lower the volume when you get a sec",
+"set_volume",
+"down",
+{
+"tool": "paint_image",
+"arg": "hen you get a s"
+}
+],
+[
+"unseen",
+"samantha could you please a bit quieter asap",
+"set_volume",
+"down",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright a bit quieter when you get a sec",
+"set_volume",
+"down",
+{
+"tool": "paint_image",
+"arg": "ht a bit quieter when you get a s"
+}
+],
+[
+"unseen",
+"alright a bit quieter if you can",
+"set_volume",
+"down",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"samantha could you please a bit quieter if you can",
+"set_volume",
+"down",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"do me a favor and kill the sound asap",
+"set_volume",
+"0",
+{
+"tool": "paint_image",
+"arg": "he sound"
+}
+],
+[
+"unseen",
+"Real quick can you kill the sound if you can",
+"set_volume",
+"0",
+{
+"tool": "paint_image",
+"arg": "can you kill the sound if y"
+}
+],
+[
+"unseen",
+"alright kill the sound if you can",
+"set_volume",
+"0",
+{
+"tool": "paint_image",
+"arg": "he s"
+}
+],
+[
+"unseen",
+"samantha could you please kill the sound asap",
+"set_volume",
+"0",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"Do me a favor and kill the sound asap",
+"set_volume",
+"0",
+{
+"tool": "paint_image",
+"arg": "he sound"
+}
+],
+[
+"unseen",
+"Alright kill the sound if you can?",
+"set_volume",
+"0",
+{
+"tool": "paint_image",
+"arg": "he s"
+}
+],
+[
+"unseen",
+"samantha could you please kill the sound if you can",
+"set_volume",
+"0",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"Real quick can you shut the sound off if you can!",
+"set_volume",
+"0",
+{
+"tool": "paint_image",
+"arg": "can you shut the sound off if y"
+}
+],
+[
+"unseen",
+"Real quick can you shut the sound off when you get a sec",
+"set_volume",
+"0",
+{
+"tool": "paint_image",
+"arg": "can you s"
+}
+],
+[
+"unseen",
+"do me a favor and shut the sound off asap",
+"set_volume",
+"0",
+{
+"tool": "paint_image",
+"arg": "hut the sound off as"
+}
+],
+[
+"unseen",
+"do me a favor and shut the sound off when you get a sec",
+"set_volume",
+"0",
+{
+"tool": "paint_image",
+"arg": "hut the sound off when you get a s"
+}
+],
+[
+"unseen",
+"real quick can you shut the sound off when you get a sec",
+"set_volume",
+"0",
+{
+"tool": "paint_image",
+"arg": "can you s"
+}
+],
+[
+"unseen",
+"Alright shut the sound off if you can",
+"set_volume",
+"0",
+{
+"tool": "paint_image",
+"arg": "hut the s"
+}
+],
+[
+"unseen",
+"alright how much juice is left asap",
+"battery",
+"",
+{
+"tool": "paint_image",
+"arg": "h juice is left as"
+}
+],
+[
+"unseen",
+"alright how much juice is left if you can",
+"battery",
+"",
+{
+"tool": "paint_image",
+"arg": "h juice is"
+}
+],
+[
+"unseen",
+"samantha could you please how much juice is left if you can",
+"battery",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"samantha could you please how much juice is left asap",
+"battery",
+"",
+{
+"tool": "paint_image",
+"arg": "how much juice is left as"
+}
+],
+[
+"unseen",
+"alright is the battery low if you can",
+"battery",
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"samantha could you please is the battery low if you can",
+"battery",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"Samantha could you please is the battery low when you get a sec",
+"battery",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"Alright is the battery low asap?",
+"battery",
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"alright is the battery low asap",
+"battery",
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"Alright is the battery low if you can",
+"battery",
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"samantha could you please what percent is my battery if you can",
+"battery",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"Alright what percent is my battery if you can",
+"battery",
+"",
+{
+"tool": "paint_image",
+"arg": "hat percent is my battery if y"
+}
+],
+[
+"unseen",
+"samantha could you please what percent is my battery asap",
+"battery",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright what percent is my battery when you get a sec",
+"battery",
+"",
+{
+"tool": "paint_image",
+"arg": "hat percent is my battery"
+}
+],
+[
+"unseen",
+"Alright what percent is my battery when you get a sec",
+"battery",
+"",
+{
+"tool": "paint_image",
+"arg": "hat percent is my battery when you get a s"
+}
+],
+[
+"unseen",
+"Samantha could you please what percent is my battery asap.",
+"battery",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright what percent is my battery if you can",
+"battery",
+"",
+{
+"tool": "paint_image",
+"arg": "hat percent is my battery if y"
+}
+],
+[
+"unseen",
+"Alright say aloud the laundry is done when you get a sec",
+"say",
+"the laundry is done",
+{
+"tool": "paint_image",
+"arg": "he laundry is"
+}
+],
+[
+"unseen",
+"alright say aloud welcome home when you get a sec",
+"say",
+"welcome home",
+{
+"tool": "paint_image",
+"arg": "home when y"
+}
+],
+[
+"unseen",
+"real quick can you say aloud dinner is ready asap",
+"say",
+"dinner is ready",
+{
+"tool": "paint_image",
+"arg": "ner is"
+}
+],
+[
+"unseen",
+"samantha could you please say aloud hello there when you get a sec",
+"say",
+"hello there",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"real quick can you use your voice to say ship it asap",
+"say",
+"ship it",
+{
+"tool": "paint_image",
+"arg": "r voice to say s"
+}
+],
+[
+"unseen",
+"do me a favor and use your voice to say the laundry is done asap",
+"say",
+"the laundry is done",
+{
+"tool": "paint_image",
+"arg": "he laundry is"
+}
+],
+[
+"unseen",
+"alright use your voice to say dinner is ready asap",
+"say",
+"dinner is ready",
+{
+"tool": "paint_image",
+"arg": "say dinner is"
+}
+],
+[
+"unseen",
+"alright use your voice to say good morning joshua if you can",
+"say",
+"good morning joshua",
+{
+"tool": "paint_image",
+"arg": "say good morning jos"
+}
+],
+[
+"unseen",
+"alright what do i have in the documents folder if you can",
+"list_dir",
+"~/Documents",
+{
+"tool": "paint_image",
+"arg": "hat do i have in the documents"
+}
+],
+[
+"unseen",
+"alright what do i have in ~/Documents/Code/nimble when you get a sec",
+"list_dir",
+"~/Documents/Code/nimble",
+{
+"tool": "paint_image",
+"arg": "hat do i have in ~/Documents"
+}
+],
+[
+"unseen",
+"samantha could you please what do i have in ~/Documents asap",
+"list_dir",
+"~/Documents",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright what do i have in ~/Desktop if you can",
+"list_dir",
+"~/Desktop",
+{
+"tool": "paint_image",
+"arg": "hat do i have in ~/Des"
+}
+],
+[
+"unseen",
+"samantha could you please show me what's inside ~/Desktop/old when you get a sec",
+"list_dir",
+"~/Desktop/old",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"samantha could you please show me what's inside ~/Downloads if you can",
+"list_dir",
+"~/Downloads",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"samantha could you please show me what's inside ~/Documents asap",
+"list_dir",
+"~/Documents",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"samantha could you please show me what's inside ~/Documents/Code/nimble if you can",
+"list_dir",
+"~/Documents/Code/nimble",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright files in the documents folder if you can",
+"list_dir",
+"~/Documents",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"real quick can you files in my music folder if you can",
+"list_dir",
+"~/Music",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"Do me a favor and files in ~/documents/code/nimble when you get a sec.",
+"list_dir",
+"~/Documents/Code/nimble",
+{
+"tool": "paint_image",
+"arg": "nd files in ~/documents"
+}
+],
+[
+"unseen",
+"do me a favor and files in ~/Desktop/old if you can",
+"list_dir",
+"~/Desktop/old",
+{
+"tool": "paint_image",
+"arg": "nd files in ~/Des"
+}
+],
+[
+"unseen",
+"alright show the contents of the file ~/notes.txt when you get a sec",
+"read_file",
+"~/notes.txt",
+{
+"tool": "paint_image",
+"arg": "how the contents"
+}
+],
+[
+"unseen",
+"samantha could you please show the contents of the file ~/Desktop/draft.md asap",
+"read_file",
+"~/Desktop/draft.md",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright show the contents of the file ~/Documents/Code/nimble/README.md when you get a sec",
+"read_file",
+"~/Documents/Code/nimble/README.md",
+{
+"tool": "paint_image",
+"arg": "how the contents"
+}
+],
+[
+"unseen",
+"samantha could you please show the contents of the file ~/Documents/todo.md when you get a sec",
+"read_file",
+"~/Documents/todo.md",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright what's written in ~/notes.txt when you get a sec",
+"read_file",
+"~/notes.txt",
+{
+"tool": "paint_image",
+"arg": "hat's written in ~/notes"
+}
+],
+[
+"unseen",
+"alright what's written in ~/Documents/Code/nimble/README.md when you get a sec",
+"read_file",
+"~/Documents/Code/nimble/README.md",
+{
+"tool": "paint_image",
+"arg": "hat's"
+}
+],
+[
+"unseen",
+"samantha could you please what's written in ~/Documents/todo.md when you get a sec",
+"read_file",
+"~/Documents/todo.md",
+{
+"tool": "paint_image",
+"arg": "could you please what's"
+}
+],
+[
+"unseen",
+"Alright what's written in ~/documents/letter.txt asap!",
+"read_file",
+"~/Documents/letter.txt",
+{
+"tool": "paint_image",
+"arg": "hat's written in ~/documents/letter.txt as"
+}
+],
+[
+"unseen",
+"real quick can you display ~/Desktop/ideas.txt when you get a sec",
+"read_file",
+"~/Desktop/ideas.txt",
+{
+"tool": "paint_image",
+"arg": "can you display ~/Des"
+}
+],
+[
+"unseen",
+"Do me a favor and display ~/documents/todo.md if you can!",
+"read_file",
+"~/Documents/todo.md",
+{
+"tool": "paint_image",
+"arg": "~/documents"
+}
+],
+[
+"unseen",
+"samantha could you please display ~/Documents/letter.txt asap",
+"read_file",
+"~/Documents/letter.txt",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"real quick can you display ~/Documents/Code/nimble/README.md asap",
+"read_file",
+"~/Documents/Code/nimble/README.md",
+{
+"tool": "paint_image",
+"arg": "can you display ~/Documents"
+}
+],
+[
+"unseen",
+"real quick can you whip up a logo for my bike repair business when you get a sec",
+"make_logo",
+"my bike repair business",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"do me a favor and whip up a logo for windgate if you can",
+"make_logo",
+"windgate",
+{
+"tool": "paint_image",
+"arg": "hip up a logo for windgate if y"
+}
+],
+[
+"unseen",
+"samantha could you please whip up a logo for turing when you get a sec",
+"make_logo",
+"turing",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"samantha could you please whip up a logo for a bookstore asap",
+"make_logo",
+"a bookstore",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"samantha could you please logo for turing when you get a sec",
+"make_logo",
+"turing",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"samantha could you please logo for a coffee shop called ember when you get a sec",
+"make_logo",
+"a coffee shop called ember",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"do me a favor and logo for a bookstore asap",
+"make_logo",
+"a bookstore",
+{
+"tool": "paint_image",
+"arg": "nd logo for a books"
+}
+],
+[
+"unseen",
+"Alright logo for a flower shop called petal if you can.",
+"make_logo",
+"a flower shop called petal",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"samantha could you please sketch an icon for a bookstore asap",
+"make_logo",
+"a bookstore",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"do me a favor and sketch an icon for a coffee shop called ember when you get a sec",
+"make_logo",
+"a coffee shop called ember",
+{
+"tool": "paint_image",
+"arg": "n icon for a coffee shop called ember when you get a s"
+}
+],
+[
+"unseen",
+"Real quick can you sketch an icon for turing when you get a sec",
+"make_logo",
+"turing",
+{
+"tool": "paint_image",
+"arg": "hen y"
+}
+],
+[
+"unseen",
+"do me a favor and sketch an icon for a hot sauce brand when you get a sec",
+"make_logo",
+"a hot sauce brand",
+{
+"tool": "paint_image",
+"arg": "n icon for a hot sauce brand when you get a s"
+}
+],
+[
+"unseen",
+"alright do a painting of ~/Downloads/last-supper.jpg when you get a sec",
+"paint_image",
+"~/Downloads/last-supper.jpg",
+{
+"tool": "paint_image",
+"arg": "hen y"
+}
+],
+[
+"unseen",
+"Alright do a painting of ~/desktop/selfie.jpg when you get a sec",
+"paint_image",
+"~/Desktop/selfie.jpg",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"alright do a painting of ~/Downloads/mona.jpg asap",
+"paint_image",
+"~/Downloads/mona.jpg",
+{
+"tool": "paint_image",
+"arg": "ng of ~/Downloads/mona.jpg as"
+}
+],
+[
+"unseen",
+"samantha could you please do a painting of ~/Pictures/garden.png if you can",
+"paint_image",
+"~/Pictures/garden.png",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"real quick can you can you paint ~/Desktop/dog.jpeg for me when you get a sec",
+"paint_image",
+"~/Desktop/dog.jpeg",
+{
+"tool": "paint_image",
+"arg": "n you paint ~/Des"
+}
+],
+[
+"unseen",
+"real quick can you can you paint ~/Pictures/beach.png for me if you can",
+"paint_image",
+"~/Pictures/beach.png",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"samantha could you please can you paint ~/Downloads/last-supper.jpg for me if you can",
+"paint_image",
+"~/Downloads/last-supper.jpg",
+{
+"tool": "paint_image",
+"arg": "can you paint ~/Downloads/las"
+}
+],
+[
+"unseen",
+"real quick can you can you paint ~/Pictures/garden.png for me asap",
+"paint_image",
+"~/Pictures/garden.png",
+{
+"tool": "paint_image",
+"arg": "n y"
+}
+],
+[
+"unseen",
+"do me a favor and make ~/Downloads/last-supper.jpg look painted when you get a sec",
+"paint_image",
+"~/Downloads/last-supper.jpg",
+{
+"tool": "paint_image",
+"arg": "hen you get a s"
+}
+],
+[
+"unseen",
+"do me a favor and make ~/Pictures/beach.png look painted if you can",
+"paint_image",
+"~/Pictures/beach.png",
+{
+"tool": "paint_image",
+"arg": "ctures"
+}
+],
+[
+"unseen",
+"Real quick can you make ~/downloads/mona.jpg look painted asap",
+"paint_image",
+"~/Downloads/mona.jpg",
+{
+"tool": "paint_image",
+"arg": "can you make ~/downloads/mona.jpg look painted as"
+}
+],
+[
+"unseen",
+"do me a favor and make ~/Desktop/dog.jpeg look painted if you can",
+"paint_image",
+"~/Desktop/dog.jpeg",
+{
+"tool": "paint_image",
+"arg": "nd make ~/Desktop/dog.jpeg look painted if y"
+}
+],
+[
+"unseen",
+"Samantha could you please put some music on when you get a sec.",
+"music",
+"play",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"Real quick can you put some music on if you can",
+"music",
+"play",
+{
+"tool": "paint_image",
+"arg": "can you put s"
+}
+],
+[
+"unseen",
+"Samantha could you please put some music on asap?",
+"music",
+"play",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"samantha could you please put some music on if you can",
+"music",
+"play",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"real quick can you put some music on asap",
+"music",
+"play",
+{
+"tool": "paint_image",
+"arg": "c on as"
+}
+],
+[
+"unseen",
+"alright put some music on when you get a sec",
+"music",
+"play",
+{
+"tool": "paint_image",
+"arg": "c on when you get a s"
+}
+],
+[
+"unseen",
+"alright put some music on asap",
+"music",
+"play",
+{
+"tool": "paint_image",
+"arg": "ht put some mus"
+}
+],
+[
+"unseen",
+"alright keep playing if you can",
+"music",
+"play",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"real quick can you keep playing if you can",
+"music",
+"play",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"do me a favor and keep playing when you get a sec",
+"music",
+"play",
+{
+"tool": "paint_image",
+"arg": "hen y"
+}
+],
+[
+"unseen",
+"real quick can you keep playing when you get a sec",
+"music",
+"play",
+{
+"tool": "paint_image",
+"arg": "hen y"
+}
+],
+[
+"unseen",
+"samantha could you please keep playing asap",
+"music",
+"play",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"real quick can you keep playing asap",
+"music",
+"play",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"alright let's hear some tunes asap",
+"music",
+"play",
+{
+"tool": "paint_image",
+"arg": "nes as"
+}
+],
+[
+"unseen",
+"Samantha could you please let's hear some tunes when you get a sec",
+"music",
+"play",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"samantha could you please let's hear some tunes if you can",
+"music",
+"play",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"samantha could you please let's hear some tunes asap",
+"music",
+"play",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"samantha could you please let's hear some tunes when you get a sec",
+"music",
+"play",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"samantha could you please pause it asap",
+"music",
+"pause",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"real quick can you pause it asap",
+"music",
+"pause",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"Alright pause it asap!",
+"music",
+"pause",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"Do me a favor and pause it if you can",
+"music",
+"pause",
+{
+"tool": "paint_image",
+"arg": "nd paus"
+}
+],
+[
+"unseen",
+"samantha could you please pause it if you can",
+"music",
+"pause",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"Real quick can you pause it asap.",
+"music",
+"pause",
+{
+"tool": "paint_image",
+"arg": "t as"
+}
+],
+[
+"unseen",
+"real quick can you pause it if you can",
+"music",
+"pause",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"real quick can you cut the music if you can",
+"music",
+"pause",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"do me a favor and cut the music when you get a sec",
+"music",
+"pause",
+{
+"tool": "paint_image",
+"arg": "hen y"
+}
+],
+[
+"unseen",
+"Alright cut the music asap?",
+"music",
+"pause",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"samantha could you please cut the music asap",
+"music",
+"pause",
+{
+"tool": "paint_image",
+"arg": "cut the music as"
+}
+],
+[
+"unseen",
+"do me a favor and cut the music asap",
+"music",
+"pause",
+{
+"tool": "paint_image",
+"arg": "music as"
+}
+],
+[
+"unseen",
+"Real quick can you cut the music asap.",
+"music",
+"pause",
+{
+"tool": "paint_image",
+"arg": "cut the mus"
+}
+],
+[
+"unseen",
+"real quick can you cut the music when you get a sec",
+"music",
+"pause",
+{
+"tool": "paint_image",
+"arg": "he music when y"
+}
+],
+[
+"unseen",
+"alright cut the music asap",
+"music",
+"pause",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"samantha could you please stop the song if you can",
+"music",
+"pause",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright stop the song when you get a sec",
+"music",
+"pause",
+{
+"tool": "paint_image",
+"arg": "he song when you get a s"
+}
+],
+[
+"unseen",
+"Samantha could you please stop the song when you get a sec?",
+"music",
+"pause",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"do me a favor and stop the song when you get a sec",
+"music",
+"pause",
+{
+"tool": "paint_image",
+"arg": "he song when y"
+}
+],
+[
+"unseen",
+"Alright stop the song if you can!",
+"music",
+"pause",
+{
+"tool": "paint_image",
+"arg": "he s"
+}
+],
+[
+"unseen",
+"real quick can you skip it if you can",
+"music",
+"next",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"do me a favor and skip it asap",
+"music",
+"next",
+{
+"tool": "paint_image",
+"arg": "nd s"
+}
+],
+[
+"unseen",
+"samantha could you please skip it when you get a sec",
+"music",
+"next",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright skip it asap",
+"music",
+"next",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"samantha could you please skip it asap",
+"music",
+"next",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"real quick can you skip it when you get a sec",
+"music",
+"next",
+{
+"tool": "paint_image",
+"arg": "can you s"
+}
+],
+[
+"unseen",
+"real quick can you skip it asap",
+"music",
+"next",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"samantha could you please i don't like this one, next if you can",
+"music",
+"next",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright i don't like this one, next when you get a sec",
+"music",
+"next",
+{
+"tool": "paint_image",
+"arg": "hen y"
+}
+],
+[
+"unseen",
+"alright i don't like this one, next if you can",
+"music",
+"next",
+{
+"tool": "paint_image",
+"arg": "ht i don't like this"
+}
+],
+[
+"unseen",
+"samantha could you please i don't like this one, next asap",
+"music",
+"next",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright i don't like this one, next asap",
+"music",
+"next",
+{
+"tool": "paint_image",
+"arg": "ht i don't like this one, next as"
+}
+],
+[
+"unseen",
+"do me a favor and go to the next track when you get a sec",
+"music",
+"next",
+{
+"tool": "paint_image",
+"arg": "hen you get a s"
+}
+],
+[
+"unseen",
+"samantha could you please go to the next track if you can",
+"music",
+"next",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"real quick can you go to the next track if you can",
+"music",
+"next",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"Samantha could you please go to the next track asap!",
+"music",
+"next",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"real quick can you go to the next track when you get a sec",
+"music",
+"next",
+{
+"tool": "paint_image",
+"arg": "he next track when you get a s"
+}
+],
+[
+"unseen",
+"alright go to the next track if you can",
+"music",
+"next",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"samantha could you please go to the next track when you get a sec",
+"music",
+"next",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright go to the next track asap",
+"music",
+"next",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"real quick can you play that last one again if you can",
+"music",
+"previous",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"samantha could you please play that last one again asap",
+"music",
+"previous",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"do me a favor and play that last one again when you get a sec",
+"music",
+"previous",
+{
+"tool": "paint_image",
+"arg": "hat last one again when you get a s"
+}
+],
+[
+"unseen",
+"samantha could you please play that last one again when you get a sec",
+"music",
+"previous",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"real quick can you play that last one again when you get a sec",
+"music",
+"previous",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"alright play that last one again when you get a sec",
+"music",
+"previous",
+{
+"tool": "paint_image",
+"arg": "hat last one again when y"
+}
+],
+[
+"unseen",
+"alright play that last one again if you can",
+"music",
+"previous",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"do me a favor and play that last one again if you can",
+"music",
+"previous",
+{
+"tool": "paint_image",
+"arg": "hat las"
+}
+],
+[
+"unseen",
+"samantha could you please back a track when you get a sec",
+"music",
+"previous",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"samantha could you please back a track if you can",
+"music",
+"previous",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"Alright back a track if you can",
+"music",
+"previous",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"Real quick can you back a track when you get a sec",
+"music",
+"previous",
+{
+"tool": "paint_image",
+"arg": "ck a track when y"
+}
+],
+[
+"unseen",
+"alright back a track if you can",
+"music",
+"previous",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"alright back a track asap",
+"music",
+"previous",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"alright back a track when you get a sec",
+"music",
+"previous",
+{
+"tool": "paint_image",
+"arg": "ht back a track when you get a s"
+}
+],
+[
+"unseen",
+"samantha could you please back a track asap",
+"music",
+"previous",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"samantha could you please what am i listening to when you get a sec",
+"music",
+"playing",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright what am i listening to when you get a sec",
+"music",
+"playing",
+{
+"tool": "paint_image",
+"arg": "hat am i listening to when y"
+}
+],
+[
+"unseen",
+"Alright what am i listening to when you get a sec",
+"music",
+"playing",
+{
+"tool": "paint_image",
+"arg": "hat am i listening to when y"
+}
+],
+[
+"unseen",
+"Alright what am i listening to asap?",
+"music",
+"playing",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"alright what am i listening to if you can",
+"music",
+"playing",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"alright what am i listening to asap",
+"music",
+"playing",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"alright who is this artist if you can",
+"music",
+"playing",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"Alright who is this artist when you get a sec",
+"music",
+"playing",
+{
+"tool": "paint_image",
+"arg": "ho is"
+}
+],
+[
+"unseen",
+"Samantha could you please who is this artist if you can",
+"music",
+"playing",
+{
+"tool": "paint_image",
+"arg": "could you please who is"
+}
+],
+[
+"unseen",
+"samantha could you please who is this artist asap",
+"music",
+"playing",
+{
+"tool": "paint_image",
+"arg": "could you please who is"
+}
+],
+[
+"unseen",
+"alright who is this artist asap",
+"music",
+"playing",
+{
+"tool": "paint_image",
+"arg": "ho is"
+}
+],
+[
+"unseen",
+"samantha could you please what track is on if you can",
+"music",
+"playing",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"samantha could you please what track is on when you get a sec",
+"music",
+"playing",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"samantha could you please what track is on asap",
+"music",
+"playing",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"Samantha could you please what track is on asap?",
+"music",
+"playing",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright what track is on when you get a sec",
+"music",
+"playing",
+{
+"tool": "paint_image",
+"arg": "hen you get a s"
+}
+],
+[
+"unseen",
+"alright what track is on if you can",
+"music",
+"playing",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"alright how cold is it out when you get a sec",
+"weather",
+"",
+{
+"tool": "paint_image",
+"arg": "hen you get a s"
+}
+],
+[
+"unseen",
+"alright how cold is it out asap",
+"weather",
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"samantha could you please how cold is it out asap",
+"weather",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright how cold is it out if you can",
+"weather",
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"Alright how cold is it out when you get a sec.",
+"weather",
+"",
+{
+"tool": "paint_image",
+"arg": "hen you get a s"
+}
+],
+[
+"unseen",
+"Samantha could you please how cold is it out when you get a sec?",
+"weather",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"samantha could you please is it nice out asap",
+"weather",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright is it nice out asap",
+"weather",
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"Alright is it nice out if you can!",
+"weather",
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"Alright is it nice out asap",
+"weather",
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"alright is it nice out when you get a sec",
+"weather",
+"",
+{
+"tool": "paint_image",
+"arg": "n you get a s"
+}
+],
+[
+"unseen",
+"alright is it nice out if you can",
+"weather",
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"samantha could you please is it nice out when you get a sec",
+"weather",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"samantha could you please should i bring an umbrella asap",
+"weather",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright should i bring an umbrella when you get a sec",
+"weather",
+"",
+{
+"tool": "paint_image",
+"arg": "hould i bring an umbrella when you get a s"
+}
+],
+[
+"unseen",
+"Samantha could you please should i bring an umbrella when you get a sec?",
+"weather",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"samantha could you please should i bring an umbrella if you can",
+"weather",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright should i bring an umbrella if you can",
+"weather",
+"",
+{
+"tool": "paint_image",
+"arg": "hould i bring an umbrella if y"
+}
+],
+[
+"unseen",
+"alright should i bring an umbrella asap",
+"weather",
+"",
+{
+"tool": "paint_image",
+"arg": "hould i bring an umbrella as"
+}
+],
+[
+"unseen",
+"samantha could you please what's it doing outside in tokyo asap",
+"weather",
+"tokyo",
+{
+"tool": "paint_image",
+"arg": "could you please what's"
+}
+],
+[
+"unseen",
+"alright what's it doing outside in calgary if you can",
+"weather",
+"calgary",
+{
+"tool": "paint_image",
+"arg": "hat's it doing outside in calgary"
+}
+],
+[
+"unseen",
+"alright what's it doing outside in vancouver if you can",
+"weather",
+"vancouver",
+{
+"tool": "paint_image",
+"arg": "hat's"
+}
+],
+[
+"unseen",
+"alright what's it doing outside in reykjavik asap",
+"weather",
+"reykjavik",
+{
+"tool": "paint_image",
+"arg": "hat's it doing outside in rey"
+}
+],
+[
+"unseen",
+"samantha could you please forecast for vancouver asap",
+"weather",
+"vancouver",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"Real quick can you forecast for cape town when you get a sec.",
+"weather",
+"cape town",
+{
+"tool": "paint_image",
+"arg": "cape town when you get a s"
+}
+],
+[
+"unseen",
+"samantha could you please forecast for tokyo if you can",
+"weather",
+"tokyo",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"Samantha could you please forecast for calgary when you get a sec",
+"weather",
+"calgary",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"samantha could you please how hot is it in cape town when you get a sec",
+"weather",
+"cape town",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"Samantha could you please how hot is it in langley asap!",
+"weather",
+"langley",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"samantha could you please how hot is it in reykjavik when you get a sec",
+"weather",
+"reykjavik",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright how hot is it in osaka when you get a sec",
+"weather",
+"osaka",
+{
+"tool": "paint_image",
+"arg": "hen y"
+}
+],
+[
+"unseen",
+"alright countdown for 40 seconds when you get a sec",
+"timer",
+"40 seconds",
+{
+"tool": "paint_image",
+"arg": "conds"
+}
+],
+[
+"unseen",
+"Real quick can you countdown for 8 minutes asap?",
+"timer",
+"8 minutes",
+{
+"tool": "paint_image",
+"arg": "countdown for 8 minutes"
+}
+],
+[
+"unseen",
+"samantha could you please countdown for 7 min when you get a sec",
+"timer",
+"7 min",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"do me a favor and countdown for three minutes when you get a sec",
+"timer",
+"three minutes",
+{
+"tool": "paint_image",
+"arg": "n for three minutes"
+}
+],
+[
+"unseen",
+"samantha could you please let me know in 10 minutes asap",
+"timer",
+"10 minutes",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright let me know in 5 minutes if you can",
+"timer",
+"5 minutes",
+{
+"tool": "paint_image",
+"arg": "n 5 minutes"
+}
+],
+[
+"unseen",
+"do me a favor and let me know in 12 minutes when you get a sec",
+"timer",
+"12 minutes",
+{
+"tool": "paint_image",
+"arg": "now in 12 minutes"
+}
+],
+[
+"unseen",
+"alright let me know in 40 seconds asap",
+"timer",
+"40 seconds",
+{
+"tool": "paint_image",
+"arg": "n 40 seconds"
+}
+],
+[
+"unseen",
+"real quick can you time me for 10 minutes asap",
+"timer",
+"10 minutes",
+{
+"tool": "paint_image",
+"arg": "can you time me for 10 minutes"
+}
+],
+[
+"unseen",
+"do me a favor and time me for 30 seconds if you can",
+"timer",
+"30 seconds",
+{
+"tool": "paint_image",
+"arg": "nd time me for 30 s"
+}
+],
+[
+"unseen",
+"alright time me for three minutes asap",
+"timer",
+"three minutes",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"Do me a favor and time me for 8 minutes if you can?",
+"timer",
+"8 minutes",
+{
+"tool": "paint_image",
+"arg": "for 8 minutes"
+}
+],
+[
+"unseen",
+"samantha could you please give me a 45 second timer if you can",
+"timer",
+"45 second",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"real quick can you give me a 10 minute timer if you can",
+"timer",
+"10 minute",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"alright give me a 5 minute timer when you get a sec",
+"timer",
+"5 minute",
+{
+"tool": "paint_image",
+"arg": "ht give me a 5 minute timer when y"
+}
+],
+[
+"unseen",
+"Real quick can you give me a 30 second timer asap.",
+"timer",
+"30 second",
+{
+"tool": "paint_image",
+"arg": "can you give me a 30 s"
+}
+],
+[
+"unseen",
+"do me a favor and save a note saying call the dentist monday if you can",
+"new_note",
+"call the dentist monday",
+{
+"tool": "paint_image",
+"arg": "nd save a note s"
+}
+],
+[
+"unseen",
+"Samantha could you please save a note saying the door code is 4417 when you get a sec",
+"new_note",
+"the door code is 4417",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"do me a favor and save a note saying return the library books if you can",
+"new_note",
+"return the library books",
+{
+"tool": "paint_image",
+"arg": "he library"
+}
+],
+[
+"unseen",
+"samantha could you please save a note saying parking spot is level 3 row b asap",
+"new_note",
+"parking spot is level 3 row b",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"samantha could you please put this in my notes: parking spot is level 3 row b if you can",
+"new_note",
+"parking spot is level 3 row b",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"do me a favor and put this in my notes: the plumber comes friday if you can",
+"new_note",
+"the plumber comes friday",
+{
+"tool": "paint_image",
+"arg": "nd put this in my"
+}
+],
+[
+"unseen",
+"Alright put this in my notes: return the library books when you get a sec?",
+"new_note",
+"return the library books",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"do me a favor and put this in my notes: the door code is 4417 if you can",
+"new_note",
+"the door code is 4417",
+{
+"tool": "paint_image",
+"arg": "nd put this in my"
+}
+],
+[
+"unseen",
+"Do me a favor and remember this in notes: parking spot is level 3 row b asap?",
+"new_note",
+"parking spot is level 3 row b",
+{
+"tool": "paint_image",
+"arg": "his in notes: parking s"
+}
+],
+[
+"unseen",
+"Real quick can you remember this in notes: return the library books asap.",
+"new_note",
+"return the library books",
+{
+"tool": "paint_image",
+"arg": "he library books as"
+}
+],
+[
+"unseen",
+"alright remember this in notes: blog idea: ternary weights when you get a sec",
+"new_note",
+"blog idea: ternary weights",
+{
+"tool": "paint_image",
+"arg": "hts when you get a s"
+}
+],
+[
+"unseen",
+"Alright remember this in notes: the door code is 4417 asap!",
+"new_note",
+"the door code is 4417",
+{
+"tool": "paint_image",
+"arg": "he door code is 4417 as"
+}
+],
+[
+"unseen",
+"Alright i need a reminder to feed the cat asap?",
+"new_reminder",
+"feed the cat",
+{
+"tool": "paint_image",
+"arg": "nder to fee"
+}
+],
+[
+"unseen",
+"alright i need a reminder to call mom if you can",
+"new_reminder",
+"call mom",
+{
+"tool": "paint_image",
+"arg": "nder to call mom if y"
+}
+],
+[
+"unseen",
+"samantha could you please i need a reminder to back up the mac if you can",
+"new_reminder",
+"back up the mac",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"samantha could you please i need a reminder to take out the trash when you get a sec",
+"new_reminder",
+"take out the trash",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"do me a favor and put text dad back on my reminders asap",
+"new_reminder",
+"text dad back",
+{
+"tool": "paint_image",
+"arg": "ck on my reminders"
+}
+],
+[
+"unseen",
+"Samantha could you please put pick up dry cleaning on my reminders asap",
+"new_reminder",
+"pick up dry cleaning",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"do me a favor and put feed the cat on my reminders if you can",
+"new_reminder",
+"feed the cat",
+{
+"tool": "paint_image",
+"arg": "he cat on my reminders if y"
+}
+],
+[
+"unseen",
+"samantha could you please put back up the mac on my reminders asap",
+"new_reminder",
+"back up the mac",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright make sure i remember to feed the cat asap",
+"new_reminder",
+"feed the cat",
+{
+"tool": "paint_image",
+"arg": "ht make s"
+}
+],
+[
+"unseen",
+"alright make sure i remember to take out the trash asap",
+"new_reminder",
+"take out the trash",
+{
+"tool": "paint_image",
+"arg": "ht make s"
+}
+],
+[
+"unseen",
+"do me a favor and make sure i remember to pick up dry cleaning when you get a sec",
+"new_reminder",
+"pick up dry cleaning",
+{
+"tool": "paint_image",
+"arg": "nd make s"
+}
+],
+[
+"unseen",
+"alright make sure i remember to back up the mac when you get a sec",
+"new_reminder",
+"back up the mac",
+{
+"tool": "paint_image",
+"arg": "ht make s"
+}
+],
+[
+"unseen",
+"samantha could you please what's my day look like asap",
+"calendar_today",
+"",
+{
+"tool": "paint_image",
+"arg": "could you please what's"
+}
+],
+[
+"unseen",
+"samantha could you please what's my day look like if you can",
+"calendar_today",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright what's my day look like if you can",
+"calendar_today",
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"alright what's my day look like asap",
+"calendar_today",
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"alright anything on the books today when you get a sec",
+"calendar_today",
+"",
+{
+"tool": "paint_image",
+"arg": "he books today when y"
+}
+],
+[
+"unseen",
+"alright anything on the books today asap",
+"calendar_today",
+"",
+{
+"tool": "paint_image",
+"arg": "he books today as"
+}
+],
+[
+"unseen",
+"samantha could you please anything on the books today if you can",
+"calendar_today",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"Alright anything on the books today when you get a sec?",
+"calendar_today",
+"",
+{
+"tool": "paint_image",
+"arg": "he books today when y"
+}
+],
+[
+"unseen",
+"Samantha could you please anything on the books today asap!",
+"calendar_today",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"Samantha could you please anything on the books today asap.",
+"calendar_today",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright show me today's events if you can",
+"calendar_today",
+"",
+{
+"tool": "paint_image",
+"arg": "how me today's events"
+}
+],
+[
+"unseen",
+"samantha could you please show me today's events when you get a sec",
+"calendar_today",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright show me today's events asap",
+"calendar_today",
+"",
+{
+"tool": "paint_image",
+"arg": "how me today's events as"
+}
+],
+[
+"unseen",
+"Samantha could you please show me today's events when you get a sec?",
+"calendar_today",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"samantha could you please show me today's events asap",
+"calendar_today",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"samantha could you please show me today's events if you can",
+"calendar_today",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"Samantha could you please show me today's events when you get a sec",
+"calendar_today",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright how late is it in vancouver when you get a sec",
+"time_in",
+"vancouver",
+{
+"tool": "paint_image",
+"arg": "hen y"
+}
+],
+[
+"unseen",
+"samantha could you please how late is it in langley when you get a sec",
+"time_in",
+"langley",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"Alright how late is it in tokyo when you get a sec?",
+"time_in",
+"tokyo",
+{
+"tool": "paint_image",
+"arg": "hen y"
+}
+],
+[
+"unseen",
+"samantha could you please how late is it in cape town when you get a sec",
+"time_in",
+"cape town",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"samantha could you please what's the clock say in tokyo when you get a sec",
+"time_in",
+"tokyo",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright what's the clock say in langley asap",
+"time_in",
+"langley",
+{
+"tool": "paint_image",
+"arg": "hat's the clock say in langley as"
+}
+],
+[
+"unseen",
+"samantha could you please what's the clock say in calgary when you get a sec",
+"time_in",
+"calgary",
+{
+"tool": "paint_image",
+"arg": "could you please what's"
+}
+],
+[
+"unseen",
+"alright what's the clock say in vancouver when you get a sec",
+"time_in",
+"vancouver",
+{
+"tool": "paint_image",
+"arg": "hat's"
+}
+],
+[
+"unseen",
+"alright what time is it right now in tokyo when you get a sec",
+"time_in",
+"tokyo",
+{
+"tool": "paint_image",
+"arg": "hat time is it right now in tokyo when you get a s"
+}
+],
+[
+"unseen",
+"Samantha could you please what time is it right now in osaka if you can",
+"time_in",
+"osaka",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"samantha could you please what time is it right now in reykjavik asap",
+"time_in",
+"reykjavik",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"samantha could you please what time is it right now in calgary asap",
+"time_in",
+"calgary",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"alright how many sleeps until 2026-11-11 when you get a sec",
+"days_until",
+"2026-11-11",
+{
+"tool": "paint_image",
+"arg": "til 2026-11-11 when you get a s"
+}
+],
+[
+"unseen",
+"Samantha could you please how many sleeps until new year asap?",
+"days_until",
+"new year",
+{
+"tool": "paint_image",
+"arg": "how many sleeps"
+}
+],
+[
+"unseen",
+"samantha could you please how many sleeps until 2027-03-14 asap",
+"days_until",
+"2027-03-14",
+{
+"tool": "paint_image",
+"arg": "how many sleeps"
+}
+],
+[
+"unseen",
+"samantha could you please how many sleeps until 2027-07-04 when you get a sec",
+"days_until",
+"2027-07-04",
+{
+"tool": "paint_image",
+"arg": "how many sleeps"
+}
+],
+[
+"unseen",
+"samantha could you please how far away is 2027-03-14 if you can",
+"days_until",
+"2027-03-14",
+{
+"tool": "paint_image",
+"arg": "how far away"
+}
+],
+[
+"unseen",
+"samantha could you please how far away is christmas if you can",
+"days_until",
+"christmas",
+{
+"tool": "paint_image",
+"arg": "how far away"
+}
+],
+[
+"unseen",
+"samantha could you please how far away is 2027-07-04 asap",
+"days_until",
+"2027-07-04",
+{
+"tool": "paint_image",
+"arg": "how far away"
+}
+],
+[
+"unseen",
+"alright how far away is 2026-11-11 if you can",
+"days_until",
+"2026-11-11",
+{
+"tool": "paint_image",
+"arg": "26-11-11 if y"
+}
+],
+[
+"unseen",
+"alright count the days to 2026-11-11 asap",
+"days_until",
+"2026-11-11",
+{
+"tool": "paint_image",
+"arg": "2026-11-11 as"
+}
+],
+[
+"unseen",
+"alright count the days to 2027-07-04 asap",
+"days_until",
+"2027-07-04",
+{
+"tool": "paint_image",
+"arg": "2027-07-04 as"
+}
+],
+[
+"unseen",
+"do me a favor and count the days to 2027-03-14 asap",
+"days_until",
+"2027-03-14",
+{
+"tool": "paint_image",
+"arg": "nt the days"
+}
+],
+[
+"unseen",
+"do me a favor and count the days to new year when you get a sec",
+"days_until",
+"new year",
+{
+"tool": "paint_image",
+"arg": "nt the days"
+}
+],
+[
+"unseen",
+"samantha could you please let's flip a coin asap",
+"flip_coin",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"samantha could you please let's flip a coin if you can",
+"flip_coin",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"samantha could you please let's flip a coin when you get a sec",
+"flip_coin",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"Samantha could you please let's flip a coin asap",
+"flip_coin",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"do me a favor and settle it with a coin toss when you get a sec",
+"flip_coin",
+"",
+{
+"tool": "paint_image",
+"arg": "hen y"
+}
+],
+[
+"unseen",
+"samantha could you please settle it with a coin toss asap",
+"flip_coin",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"Samantha could you please settle it with a coin toss asap!",
+"flip_coin",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"real quick can you settle it with a coin toss asap",
+"flip_coin",
+"",
+{
+"tool": "paint_image",
+"arg": "h a coin toss as"
+}
+],
+[
+"unseen",
+"samantha could you please settle it with a coin toss when you get a sec",
+"flip_coin",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"samantha could you please settle it with a coin toss if you can",
+"flip_coin",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright settle it with a coin toss when you get a sec",
+"flip_coin",
+"",
+{
+"tool": "paint_image",
+"arg": "h a coin toss"
+}
+],
+[
+"unseen",
+"samantha could you please call it, heads or tails if you can",
+"flip_coin",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"do me a favor and call it, heads or tails when you get a sec",
+"flip_coin",
+"",
+{
+"tool": "paint_image",
+"arg": "heads"
+}
+],
+[
+"unseen",
+"do me a favor and call it, heads or tails asap",
+"flip_coin",
+"",
+{
+"tool": "paint_image",
+"arg": "heads"
+}
+],
+[
+"unseen",
+"do me a favor and give me a roll of 2d20 asap",
+"roll_dice",
+"2d20",
+{
+"tool": "paint_image",
+"arg": "nd give m"
+}
+],
+[
+"unseen",
+"Do me a favor and give me a roll of d20 when you get a sec?",
+"roll_dice",
+"d20",
+{
+"tool": "paint_image",
+"arg": "hen you get a s"
+}
+],
+[
+"unseen",
+"Real quick can you give me a roll of 2d6 when you get a sec",
+"roll_dice",
+"2d6",
+{
+"tool": "paint_image",
+"arg": "can you give me a roll of 2d6 when you get a s"
+}
+],
+[
+"unseen",
+"samantha could you please give me a roll of 3d6 asap",
+"roll_dice",
+"3d6",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright let's roll 6d6 asap",
+"roll_dice",
+"6d6",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"alright let's roll 3d8 if you can",
+"roll_dice",
+"3d8",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"samantha could you please let's roll d4 if you can",
+"roll_dice",
+"d4",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"samantha could you please let's roll d20 if you can",
+"roll_dice",
+"d20",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright toss 3d6 if you can",
+"roll_dice",
+"3d6",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"alright toss 2d20 asap",
+"roll_dice",
+"2d20",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"alright toss d4 asap",
+"roll_dice",
+"d4",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"real quick can you toss d20 asap",
+"roll_dice",
+"d20",
+{
+"tool": "paint_image",
+"arg": "0 as"
+}
+],
+[
+"unseen",
+"alright i need a random number between 1 and 10 when you get a sec",
+"random_number",
+"between 1 and 10",
+{
+"tool": "paint_image",
+"arg": "ndom number b"
+}
+],
+[
+"unseen",
+"alright i need a random number between 1 and 2 if you can",
+"random_number",
+"between 1 and 2",
+{
+"tool": "paint_image",
+"arg": "mber b"
+}
+],
+[
+"unseen",
+"samantha could you please i need a random number between 3 and 30 asap",
+"random_number",
+"between 3 and 30",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright i need a random number from 1 to 100 asap",
+"random_number",
+"from 1 to 100",
+{
+"tool": "paint_image",
+"arg": "ht i need a random number from 1 to 100 as"
+}
+],
+[
+"unseen",
+"real quick can you spit out a number from 50 to 60 asap",
+"random_number",
+"from 50 to 60",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"alright spit out a number between 1 and 10 asap",
+"random_number",
+"between 1 and 10",
+{
+"tool": "paint_image",
+"arg": "ht spit out a numbe"
+}
+],
+[
+"unseen",
+"real quick can you spit out a number between 3 and 30 when you get a sec",
+"random_number",
+"between 3 and 30",
+{
+"tool": "paint_image",
+"arg": "hen you get a s"
+}
+],
+[
+"unseen",
+"do me a favor and spit out a number between 1 and 2 if you can",
+"random_number",
+"between 1 and 2",
+{
+"tool": "paint_image",
+"arg": "t out a num"
+}
+],
+[
+"unseen",
+"real quick can you surprise me with a number from 50 to 60 if you can",
+"random_number",
+"from 50 to 60",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"alright surprise me with a number between 3 and 30 when you get a sec",
+"random_number",
+"between 3 and 30",
+{
+"tool": "paint_image",
+"arg": "ht surprise me with a numbe"
+}
+],
+[
+"unseen",
+"Samantha could you please surprise me with a number between 1 and 2 asap.",
+"random_number",
+"between 1 and 2",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"real quick can you surprise me with a number between 1 and 10 when you get a sec",
+"random_number",
+"between 1 and 10",
+{
+"tool": "paint_image",
+"arg": "can you s"
+}
+],
+[
+"unseen",
+"real quick can you cook up a 24 character password when you get a sec",
+"make_password",
+"24",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"samantha could you please cook up a 20 character password if you can",
+"make_password",
+"20",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"do me a favor and cook up a 14 character password if you can",
+"make_password",
+"14",
+{
+"tool": "paint_image",
+"arg": "haracter pas"
+}
+],
+[
+"unseen",
+"samantha could you please cook up a 18 character password when you get a sec",
+"make_password",
+"18",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"samantha could you please a secure password 18 characters long asap",
+"make_password",
+"18",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"real quick can you a secure password 28 characters long asap",
+"make_password",
+"28",
+{
+"tool": "paint_image",
+"arg": "can you a secure pass"
+}
+],
+[
+"unseen",
+"samantha could you please a secure password 14 characters long when you get a sec",
+"make_password",
+"14",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"Samantha could you please a secure password 16 characters long if you can",
+"make_password",
+"16",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"do me a favor and make me a password that is 16 characters if you can",
+"make_password",
+"16",
+{
+"tool": "paint_image",
+"arg": "nd make me a pass"
+}
+],
+[
+"unseen",
+"real quick can you make me a password that is 28 characters if you can",
+"make_password",
+"28",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"Samantha could you please make me a password that is 20 characters asap?",
+"make_password",
+"20",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"real quick can you make me a password that is 14 characters asap",
+"make_password",
+"14",
+{
+"tool": "paint_image",
+"arg": "can you make me a pas"
+}
+],
+[
+"unseen",
+"samantha could you please i need a fresh password if you can",
+"make_password",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"Alright i need a fresh password when you get a sec!",
+"make_password",
+"",
+{
+"tool": "paint_image",
+"arg": "h password when y"
+}
+],
+[
+"unseen",
+"samantha could you please i need a fresh password asap",
+"make_password",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"samantha could you please i need a fresh password when you get a sec",
+"make_password",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"Samantha could you please i need a fresh password when you get a sec!",
+"make_password",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright come up with a password if you can",
+"make_password",
+"",
+{
+"tool": "paint_image",
+"arg": "h a pas"
+}
+],
+[
+"unseen",
+"do me a favor and come up with a password if you can",
+"make_password",
+"",
+{
+"tool": "paint_image",
+"arg": "h a pass"
+}
+],
+[
+"unseen",
+"alright come up with a password when you get a sec",
+"make_password",
+"",
+{
+"tool": "paint_image",
+"arg": "h a password when y"
+}
+],
+[
+"unseen",
+"Do me a favor and come up with a password asap",
+"make_password",
+"",
+{
+"tool": "paint_image",
+"arg": "h a pass"
+}
+],
+[
+"unseen",
+"real quick can you come up with a password when you get a sec",
+"make_password",
+"",
+{
+"tool": "paint_image",
+"arg": "come up with a pass"
+}
+],
+[
+"unseen",
+"do me a favor and come up with a password when you get a sec",
+"make_password",
+"",
+{
+"tool": "paint_image",
+"arg": "h a password when you get a s"
+}
+],
+[
+"unseen",
+"samantha could you please come up with a password asap",
+"make_password",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"real quick can you spit out a uuid asap",
+"make_uuid",
+"",
+{
+"tool": "paint_image",
+"arg": "can you s"
+}
+],
+[
+"unseen",
+"do me a favor and spit out a uuid if you can",
+"make_uuid",
+"",
+{
+"tool": "paint_image",
+"arg": "nd spit out a uuid if y"
+}
+],
+[
+"unseen",
+"Samantha could you please spit out a uuid when you get a sec!",
+"make_uuid",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"Real quick can you spit out a uuid when you get a sec?",
+"make_uuid",
+"",
+{
+"tool": "paint_image",
+"arg": "t a uuid when you get a s"
+}
+],
+[
+"unseen",
+"samantha could you please spit out a uuid when you get a sec",
+"make_uuid",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"real quick can you spit out a uuid when you get a sec",
+"make_uuid",
+"",
+{
+"tool": "paint_image",
+"arg": "t a uuid when you get a s"
+}
+],
+[
+"unseen",
+"do me a favor and spit out a uuid when you get a sec",
+"make_uuid",
+"",
+{
+"tool": "paint_image",
+"arg": "nd s"
+}
+],
+[
+"unseen",
+"samantha could you please mint a new uuid when you get a sec",
+"make_uuid",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"do me a favor and mint a new uuid when you get a sec",
+"make_uuid",
+"",
+{
+"tool": "paint_image",
+"arg": "nd mint a new uuid when you get a s"
+}
+],
+[
+"unseen",
+"samantha could you please mint a new uuid if you can",
+"make_uuid",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"samantha could you please mint a new uuid asap",
+"make_uuid",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright mint a new uuid when you get a sec",
+"make_uuid",
+"",
+{
+"tool": "paint_image",
+"arg": "ht mint a new uuid when you get a sec"
+}
+],
+[
+"unseen",
+"real quick can you mint a new uuid asap",
+"make_uuid",
+"",
+{
+"tool": "paint_image",
+"arg": "new uuid as"
+}
+],
+[
+"unseen",
+"Real quick can you mint a new uuid asap",
+"make_uuid",
+"",
+{
+"tool": "paint_image",
+"arg": "new uuid as"
+}
+],
+[
+"unseen",
+"real quick can you a fresh guid please asap",
+"make_uuid",
+"",
+{
+"tool": "paint_image",
+"arg": "can you a fresh guid please as"
+}
+],
+[
+"unseen",
+"samantha could you please a fresh guid please if you can",
+"make_uuid",
+"",
+{
+"tool": "paint_image",
+"arg": "could you please a fres"
+}
+],
+[
+"unseen",
+"Real quick can you a fresh guid please if you can.",
+"make_uuid",
+"",
+{
+"tool": "paint_image",
+"arg": "can you a fresh guid pleas"
+}
+],
+[
+"unseen",
+"do me a favor and a fresh guid please when you get a sec",
+"make_uuid",
+"",
+{
+"tool": "paint_image",
+"arg": "nd a fres"
+}
+],
+[
+"unseen",
+"alright a fresh guid please if you can",
+"make_uuid",
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"do me a favor and a fresh guid please asap",
+"make_uuid",
+"",
+{
+"tool": "paint_image",
+"arg": "nd a fres"
+}
+],
+[
+"unseen",
+"alright checksum for hello world asap",
+"hash_text",
+"hello world",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"do me a favor and checksum for hunter2 asap",
+"hash_text",
+"hunter2",
+{
+"tool": "paint_image",
+"arg": "cks"
+}
+],
+[
+"unseen",
+"do me a favor and checksum for eniac when you get a sec",
+"hash_text",
+"eniac",
+{
+"tool": "paint_image",
+"arg": "cks"
+}
+],
+[
+"unseen",
+"alright checksum for good morning when you get a sec",
+"hash_text",
+"good morning",
+{
+"tool": "paint_image",
+"arg": "hecks"
+}
+],
+[
+"unseen",
+"real quick can you run hunter2 through sha256 asap",
+"hash_text",
+"hunter2",
+{
+"tool": "paint_image",
+"arg": "hrough sha256 as"
+}
+],
+[
+"unseen",
+"Samantha could you please run samantha through sha256 asap",
+"hash_text",
+"samantha",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"real quick can you run good morning through sha256 when you get a sec",
+"hash_text",
+"good morning",
+{
+"tool": "paint_image",
+"arg": "n good morning through s"
+}
+],
+[
+"unseen",
+"Samantha could you please run hello world through sha256 when you get a sec",
+"hash_text",
+"hello world",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"Alright what does hunter2 hash to if you can",
+"hash_text",
+"hunter2",
+{
+"tool": "paint_image",
+"arg": "hash to if y"
+}
+],
+[
+"unseen",
+"alright what does samantha hash to when you get a sec",
+"hash_text",
+"samantha",
+{
+"tool": "paint_image",
+"arg": "hat does"
+}
+],
+[
+"unseen",
+"samantha could you please what does hello world hash to when you get a sec",
+"hash_text",
+"hello world",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"samantha could you please what does turing hash to when you get a sec",
+"hash_text",
+"turing",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright tally the words in we hold these truths if you can",
+"word_count",
+"we hold these truths",
+{
+"tool": "paint_image",
+"arg": "he words in we hold thes"
+}
+],
+[
+"unseen",
+"do me a favor and tally the words in hello world when you get a sec",
+"word_count",
+"hello world",
+{
+"tool": "paint_image",
+"arg": "hello world when y"
+}
+],
+[
+"unseen",
+"do me a favor and tally the words in a b c d when you get a sec",
+"word_count",
+"a b c d",
+{
+"tool": "paint_image",
+"arg": "hen y"
+}
+],
+[
+"unseen",
+"real quick can you tally the words in one two three four five when you get a sec",
+"word_count",
+"one two three four five",
+{
+"tool": "paint_image",
+"arg": "he words"
+}
+],
+[
+"unseen",
+"alright what's the word count for one two three four five if you can",
+"word_count",
+"one two three four five",
+{
+"tool": "paint_image",
+"arg": "hat's"
+}
+],
+[
+"unseen",
+"Alright what's the word count for hello world asap.",
+"word_count",
+"hello world",
+{
+"tool": "paint_image",
+"arg": "hat's"
+}
+],
+[
+"unseen",
+"Alright what's the word count for a b c d if you can!",
+"word_count",
+"a b c d",
+{
+"tool": "paint_image",
+"arg": "hat's"
+}
+],
+[
+"unseen",
+"Alright what's the word count for we hold these truths if you can.",
+"word_count",
+"we hold these truths",
+{
+"tool": "paint_image",
+"arg": "hat's"
+}
+],
+[
+"unseen",
+"alright am i running out of storage if you can",
+"disk_space",
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"samantha could you please am i running out of storage when you get a sec",
+"disk_space",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"Alright am i running out of storage when you get a sec",
+"disk_space",
+"",
+{
+"tool": "paint_image",
+"arg": "hen y"
+}
+],
+[
+"unseen",
+"samantha could you please am i running out of storage asap",
+"disk_space",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright am i running out of storage when you get a sec",
+"disk_space",
+"",
+{
+"tool": "paint_image",
+"arg": "hen y"
+}
+],
+[
+"unseen",
+"alright what's my free space asap",
+"disk_space",
+"",
+{
+"tool": "paint_image",
+"arg": "hat's my free s"
+}
+],
+[
+"unseen",
+"alright what's my free space when you get a sec",
+"disk_space",
+"",
+{
+"tool": "paint_image",
+"arg": "hat's my free s"
+}
+],
+[
+"unseen",
+"samantha could you please what's my free space asap",
+"disk_space",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"Alright how much room is left on the drive if you can?",
+"disk_space",
+"",
+{
+"tool": "paint_image",
+"arg": "h room is"
+}
+],
+[
+"unseen",
+"alright how much room is left on the drive asap",
+"disk_space",
+"",
+{
+"tool": "paint_image",
+"arg": "h room is"
+}
+],
+[
+"unseen",
+"Alright how much room is left on the drive when you get a sec?",
+"disk_space",
+"",
+{
+"tool": "paint_image",
+"arg": "h room is"
+}
+],
+[
+"unseen",
+"alright how much room is left on the drive when you get a sec",
+"disk_space",
+"",
+{
+"tool": "paint_image",
+"arg": "h room is"
+}
+],
+[
+"unseen",
+"samantha could you please how much room is left on the drive asap",
+"disk_space",
+"",
+{
+"tool": "paint_image",
+"arg": "how much room is"
+}
+],
+[
+"unseen",
+"samantha could you please how much room is left on the drive when you get a sec",
+"disk_space",
+"",
+{
+"tool": "paint_image",
+"arg": "how much room is"
+}
+],
+[
+"unseen",
+"Alright how long has it been up if you can.",
+"uptime",
+"",
+{
+"tool": "paint_image",
+"arg": "ht how long has"
+}
+],
+[
+"unseen",
+"Alright how long has it been up asap",
+"uptime",
+"",
+{
+"tool": "paint_image",
+"arg": "ht how long has it been up as"
+}
+],
+[
+"unseen",
+"alright how long has it been up if you can",
+"uptime",
+"",
+{
+"tool": "paint_image",
+"arg": "ht how long has"
+}
+],
+[
+"unseen",
+"alright how long has it been up when you get a sec",
+"uptime",
+"",
+{
+"tool": "paint_image",
+"arg": "hen y"
+}
+],
+[
+"unseen",
+"alright how long has it been up asap",
+"uptime",
+"",
+{
+"tool": "paint_image",
+"arg": "ht how long has it been up as"
+}
+],
+[
+"unseen",
+"samantha could you please how long has it been up if you can",
+"uptime",
+"",
+{
+"tool": "paint_image",
+"arg": "how long has"
+}
+],
+[
+"unseen",
+"samantha could you please how long has it been up when you get a sec",
+"uptime",
+"",
+{
+"tool": "paint_image",
+"arg": "how long has"
+}
+],
+[
+"unseen",
+"do me a favor and when was the last reboot when you get a sec",
+"uptime",
+"",
+{
+"tool": "paint_image",
+"arg": "hen was the las"
+}
+],
+[
+"unseen",
+"samantha could you please when was the last reboot asap",
+"uptime",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright when was the last reboot if you can",
+"uptime",
+"",
+{
+"tool": "paint_image",
+"arg": "hen was the las"
+}
+],
+[
+"unseen",
+"real quick can you when was the last reboot when you get a sec",
+"uptime",
+"",
+{
+"tool": "paint_image",
+"arg": "hen you get a s"
+}
+],
+[
+"unseen",
+"real quick can you when was the last reboot if you can",
+"uptime",
+"",
+{
+"tool": "paint_image",
+"arg": "s the las"
+}
+],
+[
+"unseen",
+"samantha could you please when was the last reboot if you can",
+"uptime",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright time since the last restart asap",
+"uptime",
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"do me a favor and time since the last restart if you can",
+"uptime",
+"",
+{
+"tool": "paint_image",
+"arg": "ce the last res"
+}
+],
+[
+"unseen",
+"alright time since the last restart if you can",
+"uptime",
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"real quick can you time since the last restart asap",
+"uptime",
+"",
+{
+"tool": "paint_image",
+"arg": "nce the last res"
+}
+],
+[
+"unseen",
+"do me a favor and time since the last restart when you get a sec",
+"uptime",
+"",
+{
+"tool": "paint_image",
+"arg": "ce the last res"
+}
+],
+[
+"unseen",
+"alright time since the last restart when you get a sec",
+"uptime",
+"",
+{
+"tool": "paint_image",
+"arg": "hen y"
+}
+],
+[
+"unseen",
+"Do me a favor and time since the last restart if you can",
+"uptime",
+"",
+{
+"tool": "paint_image",
+"arg": "ce the last res"
+}
+],
+[
+"unseen",
+"alright is my ram full if you can",
+"memory_usage",
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"samantha could you please is my ram full asap",
+"memory_usage",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"samantha could you please is my ram full when you get a sec",
+"memory_usage",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright is my ram full asap",
+"memory_usage",
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"alright is my ram full when you get a sec",
+"memory_usage",
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"Alright is my ram full when you get a sec!",
+"memory_usage",
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"Samantha could you please is my ram full asap",
+"memory_usage",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright what's my memory looking like asap",
+"memory_usage",
+"",
+{
+"tool": "paint_image",
+"arg": "hat's my memory"
+}
+],
+[
+"unseen",
+"alright what's my memory looking like when you get a sec",
+"memory_usage",
+"",
+{
+"tool": "paint_image",
+"arg": "hat's my memory"
+}
+],
+[
+"unseen",
+"alright what's my memory looking like if you can",
+"memory_usage",
+"",
+{
+"tool": "paint_image",
+"arg": "hat's my memory"
+}
+],
+[
+"unseen",
+"samantha could you please what's my memory looking like asap",
+"memory_usage",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"samantha could you please what's my memory looking like when you get a sec",
+"memory_usage",
+"",
+{
+"tool": "paint_image",
+"arg": "could you please what's"
+}
+],
+[
+"unseen",
+"samantha could you please how much ram am i using when you get a sec",
+"memory_usage",
+"",
+{
+"tool": "paint_image",
+"arg": "how much ram am i us"
+}
+],
+[
+"unseen",
+"Samantha could you please how much ram am i using if you can",
+"memory_usage",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright how much ram am i using if you can",
+"memory_usage",
+"",
+{
+"tool": "paint_image",
+"arg": "ch ram"
+}
+],
+[
+"unseen",
+"alright how much ram am i using asap",
+"memory_usage",
+"",
+{
+"tool": "paint_image",
+"arg": "h ram am i using as"
+}
+],
+[
+"unseen",
+"Samantha could you please how much ram am i using if you can.",
+"memory_usage",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright how much ram am i using when you get a sec",
+"memory_usage",
+"",
+{
+"tool": "paint_image",
+"arg": "h ram am i using when y"
+}
+],
+[
+"unseen",
+"samantha could you please how much ram am i using asap",
+"memory_usage",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"Samantha could you please how much ram am i using if you can?",
+"memory_usage",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"samantha could you please is the processor maxed out asap",
+"cpu_load",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"samantha could you please is the processor maxed out if you can",
+"cpu_load",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"Alright is the processor maxed out when you get a sec!",
+"cpu_load",
+"",
+{
+"tool": "paint_image",
+"arg": "hen you get a s"
+}
+],
+[
+"unseen",
+"Samantha could you please is the processor maxed out when you get a sec?",
+"cpu_load",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright is the processor maxed out when you get a sec",
+"cpu_load",
+"",
+{
+"tool": "paint_image",
+"arg": "ht is the processor maxed out when you get a s"
+}
+],
+[
+"unseen",
+"alright is the processor maxed out if you can",
+"cpu_load",
+"",
+{
+"tool": "paint_image",
+"arg": "ht is the processor maxed out if y"
+}
+],
+[
+"unseen",
+"samantha could you please is the processor maxed out when you get a sec",
+"cpu_load",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"samantha could you please how loaded is my mac asap",
+"cpu_load",
+"",
+{
+"tool": "paint_image",
+"arg": "how loaded is"
+}
+],
+[
+"unseen",
+"samantha could you please how loaded is my mac if you can",
+"cpu_load",
+"",
+{
+"tool": "paint_image",
+"arg": "how loaded is"
+}
+],
+[
+"unseen",
+"alright how loaded is my mac if you can",
+"cpu_load",
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"Samantha could you please how loaded is my mac asap.",
+"cpu_load",
+"",
+{
+"tool": "paint_image",
+"arg": "how loaded is"
+}
+],
+[
+"unseen",
+"alright how loaded is my mac asap",
+"cpu_load",
+"",
+{
+"tool": "paint_image",
+"arg": "ht how loaded is my"
+}
+],
+[
+"unseen",
+"alright how loaded is my mac when you get a sec",
+"cpu_load",
+"",
+{
+"tool": "paint_image",
+"arg": "ht how loaded is my"
+}
+],
+[
+"unseen",
+"alright what's my cpu doing if you can",
+"cpu_load",
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"Alright what's my cpu doing if you can.",
+"cpu_load",
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"alright what's my cpu doing when you get a sec",
+"cpu_load",
+"",
+{
+"tool": "paint_image",
+"arg": "hat's my cpu doing when y"
+}
+],
+[
+"unseen",
+"alright what's my cpu doing asap",
+"cpu_load",
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"samantha could you please what's my cpu doing if you can",
+"cpu_load",
+"",
+{
+"tool": "paint_image",
+"arg": "could you please what's"
+}
+],
+[
+"unseen",
+"alright what address is this mac on asap",
+"ip_address",
+"",
+{
+"tool": "paint_image",
+"arg": "hat address is this mac on as"
+}
+],
+[
+"unseen",
+"alright what address is this mac on when you get a sec",
+"ip_address",
+"",
+{
+"tool": "paint_image",
+"arg": "hat address is this mac on when y"
+}
+],
+[
+"unseen",
+"samantha could you please what address is this mac on when you get a sec",
+"ip_address",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright what address is this mac on if you can",
+"ip_address",
+"",
+{
+"tool": "paint_image",
+"arg": "hat address"
+}
+],
+[
+"unseen",
+"do me a favor and give me my ip when you get a sec",
+"ip_address",
+"",
+{
+"tool": "paint_image",
+"arg": "hen y"
+}
+],
+[
+"unseen",
+"samantha could you please give me my ip if you can",
+"ip_address",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"do me a favor and give me my ip asap",
+"ip_address",
+"",
+{
+"tool": "paint_image",
+"arg": "my ip as"
+}
+],
+[
+"unseen",
+"samantha could you please give me my ip when you get a sec",
+"ip_address",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright give me my ip if you can",
+"ip_address",
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"Alright give me my ip if you can",
+"ip_address",
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"alright what's my network address asap",
+"ip_address",
+"",
+{
+"tool": "paint_image",
+"arg": "hat's my network addres"
+}
+],
+[
+"unseen",
+"Samantha could you please what's my network address when you get a sec!",
+"ip_address",
+"",
+{
+"tool": "paint_image",
+"arg": "could you please what's"
+}
+],
+[
+"unseen",
+"samantha could you please what's my network address if you can",
+"ip_address",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"samantha could you please what's my network address asap",
+"ip_address",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright what's my network address when you get a sec",
+"ip_address",
+"",
+{
+"tool": "paint_image",
+"arg": "hat's my network addres"
+}
+],
+[
+"unseen",
+"Samantha could you please what's my network address when you get a sec",
+"ip_address",
+"",
+{
+"tool": "paint_image",
+"arg": "could you please what's"
+}
+],
+[
+"unseen",
+"Samantha could you please what wifi is my mac using if you can",
+"wifi_name",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"Samantha could you please what wifi is my mac using asap!",
+"wifi_name",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"samantha could you please what wifi is my mac using if you can",
+"wifi_name",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright what wifi is my mac using when you get a sec",
+"wifi_name",
+"",
+{
+"tool": "paint_image",
+"arg": "hat wifi is"
+}
+],
+[
+"unseen",
+"alright what wifi is my mac using if you can",
+"wifi_name",
+"",
+{
+"tool": "paint_image",
+"arg": "c using if y"
+}
+],
+[
+"unseen",
+"samantha could you please what wifi is my mac using asap",
+"wifi_name",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"real quick can you name of the wifi i'm on if you can",
+"wifi_name",
+"",
+{
+"tool": "paint_image",
+"arg": "he wifi i'm"
+}
+],
+[
+"unseen",
+"samantha could you please name of the wifi i'm on asap",
+"wifi_name",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"real quick can you name of the wifi i'm on when you get a sec",
+"wifi_name",
+"",
+{
+"tool": "paint_image",
+"arg": "he wifi i'm on when you get a s"
+}
+],
+[
+"unseen",
+"real quick can you name of the wifi i'm on asap",
+"wifi_name",
+"",
+{
+"tool": "paint_image",
+"arg": "he wifi i'm on as"
+}
+],
+[
+"unseen",
+"samantha could you please name of the wifi i'm on when you get a sec",
+"wifi_name",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"do me a favor and name of the wifi i'm on when you get a sec",
+"wifi_name",
+"",
+{
+"tool": "paint_image",
+"arg": "he wifi i'm on when you get a s"
+}
+],
+[
+"unseen",
+"samantha could you please am i on home wifi, what's it called when you get a sec",
+"wifi_name",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright am i on home wifi, what's it called asap",
+"wifi_name",
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"alright am i on home wifi, what's it called when you get a sec",
+"wifi_name",
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"samantha could you please am i on home wifi, what's it called if you can",
+"wifi_name",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"samantha could you please am i on home wifi, what's it called asap",
+"wifi_name",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"Samantha could you please am i on home wifi, what's it called if you can.",
+"wifi_name",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"samantha could you please what kind of mac am i on asap",
+"system_info",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"samantha could you please what kind of mac am i on when you get a sec",
+"system_info",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"Alright what kind of mac am i on if you can",
+"system_info",
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"Samantha could you please what kind of mac am i on when you get a sec",
+"system_info",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright what kind of mac am i on if you can",
+"system_info",
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"alright give me the specs of this mac asap",
+"system_info",
+"",
+{
+"tool": "paint_image",
+"arg": "ht give me the specs of this"
+}
+],
+[
+"unseen",
+"Real quick can you give me the specs of this mac asap?",
+"system_info",
+"",
+{
+"tool": "paint_image",
+"arg": "he s"
+}
+],
+[
+"unseen",
+"alright give me the specs of this mac when you get a sec",
+"system_info",
+"",
+{
+"tool": "paint_image",
+"arg": "ht give me the specs of this"
+}
+],
+[
+"unseen",
+"do me a favor and give me the specs of this mac if you can",
+"system_info",
+"",
+{
+"tool": "paint_image",
+"arg": "he specs of this"
+}
+],
+[
+"unseen",
+"real quick can you give me the specs of this mac asap",
+"system_info",
+"",
+{
+"tool": "paint_image",
+"arg": "he s"
+}
+],
+[
+"unseen",
+"alright give me the specs of this mac if you can",
+"system_info",
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"real quick can you give me the specs of this mac if you can",
+"system_info",
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"samantha could you please which macos is this when you get a sec",
+"system_info",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright which macos is this if you can",
+"system_info",
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"alright which macos is this when you get a sec",
+"system_info",
+"",
+{
+"tool": "paint_image",
+"arg": "hich macos is this when y"
+}
+],
+[
+"unseen",
+"samantha could you please which macos is this asap",
+"system_info",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"samantha could you please what shortcuts are on this mac asap",
+"list_shortcuts",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"samantha could you please what shortcuts are on this mac if you can",
+"list_shortcuts",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright what shortcuts are on this mac if you can",
+"list_shortcuts",
+"",
+{
+"tool": "paint_image",
+"arg": "hat shortcuts are on this"
+}
+],
+[
+"unseen",
+"samantha could you please what shortcuts are on this mac when you get a sec",
+"list_shortcuts",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"Samantha could you please what shortcuts are on this mac if you can?",
+"list_shortcuts",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright what shortcuts are on this mac when you get a sec",
+"list_shortcuts",
+"",
+{
+"tool": "paint_image",
+"arg": "hat shortcuts are on this"
+}
+],
+[
+"unseen",
+"Samantha could you please what shortcuts are on this mac if you can",
+"list_shortcuts",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"real quick can you pull up my shortcuts list when you get a sec",
+"list_shortcuts",
+"",
+{
+"tool": "paint_image",
+"arg": "can you pull up my shortcuts"
+}
+],
+[
+"unseen",
+"real quick can you pull up my shortcuts list asap",
+"list_shortcuts",
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"samantha could you please pull up my shortcuts list asap",
+"list_shortcuts",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"Do me a favor and pull up my shortcuts list if you can!",
+"list_shortcuts",
+"",
+{
+"tool": "paint_image",
+"arg": "hortcuts lis"
+}
+],
+[
+"unseen",
+"alright tell me my shortcuts if you can",
+"list_shortcuts",
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"real quick can you tell me my shortcuts if you can",
+"list_shortcuts",
+"",
+{
+"tool": "paint_image",
+"arg": "can you tell me my shortcuts"
+}
+],
+[
+"unseen",
+"Real quick can you tell me my shortcuts if you can?",
+"list_shortcuts",
+"",
+{
+"tool": "paint_image",
+"arg": "can you tell me my shortcuts"
+}
+],
+[
+"unseen",
+"samantha could you please tell me my shortcuts if you can",
+"list_shortcuts",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"do me a favor and tell me my shortcuts when you get a sec",
+"list_shortcuts",
+"",
+{
+"tool": "paint_image",
+"arg": "hortcuts"
+}
+],
+[
+"unseen",
+"alright tell me my shortcuts when you get a sec",
+"list_shortcuts",
+"",
+{
+"tool": "paint_image",
+"arg": "ht tell me my s"
+}
+],
+[
+"unseen",
+"samantha could you please figure out the tip on 33 if you can",
+"tip",
+"33",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"real quick can you figure out the tip on 62.50 if you can",
+"tip",
+"62.50",
+{
+"tool": "paint_image",
+"arg": "he tip on 62.50 if y"
+}
+],
+[
+"unseen",
+"real quick can you figure out the tip on 100 when you get a sec",
+"tip",
+"100",
+{
+"tool": "paint_image",
+"arg": "hen y"
+}
+],
+[
+"unseen",
+"alright figure out the tip on 150 if you can",
+"tip",
+"150",
+{
+"tool": "paint_image",
+"arg": "ht figure out the tip on 150 if y"
+}
+],
+[
+"unseen",
+"Alright tip me out on 100 if you can!",
+"tip",
+"100",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"Do me a favor and tip me out on 150 when you get a sec",
+"tip",
+"150",
+{
+"tool": "paint_image",
+"arg": "hen y"
+}
+],
+[
+"unseen",
+"alright tip me out on 45 when you get a sec",
+"tip",
+"45",
+{
+"tool": "paint_image",
+"arg": "hen you get a s"
+}
+],
+[
+"unseen",
+"Alright tip me out on 33 if you can",
+"tip",
+"33",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"Samantha could you please how much is the tip on a 71.40 bill asap",
+"tip",
+"71.40",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"samantha could you please how much is the tip on a 33 bill when you get a sec",
+"tip",
+"33",
+{
+"tool": "paint_image",
+"arg": "how much is the tip on a 33 bill when you get a s"
+}
+],
+[
+"unseen",
+"Alright how much is the tip on a 62.50 bill when you get a sec.",
+"tip",
+"62.50",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"samantha could you please how much is the tip on a 100 bill asap",
+"tip",
+"100",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"Real quick can you check if 97 is prime asap",
+"is_prime",
+"97",
+{
+"tool": "paint_image",
+"arg": "check if 97 is prime as"
+}
+],
+[
+"unseen",
+"alright check if 13 is prime when you get a sec",
+"is_prime",
+"13",
+{
+"tool": "paint_image",
+"arg": "heck if 13 is prime whe"
+}
+],
+[
+"unseen",
+"do me a favor and check if 17 is prime if you can",
+"is_prime",
+"17",
+{
+"tool": "paint_image",
+"arg": "ck if 17 is"
+}
+],
+[
+"unseen",
+"do me a favor and check if 91 is prime when you get a sec",
+"is_prime",
+"91",
+{
+"tool": "paint_image",
+"arg": "ck if 91 is"
+}
+],
+[
+"unseen",
+"alright break 97 into primes if you can",
+"is_prime",
+"97",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"Do me a favor and break 8 into primes asap?",
+"is_prime",
+"8",
+{
+"tool": "paint_image",
+"arg": "nd break 8 into primes"
+}
+],
+[
+"unseen",
+"Do me a favor and break 91 into primes if you can?",
+"is_prime",
+"91",
+{
+"tool": "paint_image",
+"arg": "nd break 91 into primes"
+}
+],
+[
+"unseen",
+"do me a favor and break 119 into primes asap",
+"is_prime",
+"119",
+{
+"tool": "paint_image",
+"arg": "9 into primes as"
+}
+],
+[
+"unseen",
+"real quick can you can 17 be divided evenly when you get a sec",
+"is_prime",
+"17",
+{
+"tool": "paint_image",
+"arg": "n 17 be divided evenly when you get a s"
+}
+],
+[
+"unseen",
+"Samantha could you please can 8 be divided evenly if you can!",
+"is_prime",
+"8",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"do me a favor and can 561 be divided evenly asap",
+"is_prime",
+"561",
+{
+"tool": "paint_image",
+"arg": "nd can 561 be divided evenly as"
+}
+],
+[
+"unseen",
+"samantha could you please can 97 be divided evenly when you get a sec",
+"is_prime",
+"97",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright how do you write 2027 in roman numerals when you get a sec",
+"roman_numeral",
+"2027",
+{
+"tool": "paint_image",
+"arg": "ht how do you write"
+}
+],
+[
+"unseen",
+"samantha could you please how do you write 88 in roman numerals if you can",
+"roman_numeral",
+"88",
+{
+"tool": "paint_image",
+"arg": "how do y"
+}
+],
+[
+"unseen",
+"alright how do you write 2026 in roman numerals if you can",
+"roman_numeral",
+"2026",
+{
+"tool": "paint_image",
+"arg": "ht how do you write"
+}
+],
+[
+"unseen",
+"alright how do you write 1999 in roman numerals when you get a sec",
+"roman_numeral",
+"1999",
+{
+"tool": "paint_image",
+"arg": "999 in roman num"
+}
+],
+[
+"unseen",
+"alright show 44 as roman numerals asap",
+"roman_numeral",
+"44",
+{
+"tool": "paint_image",
+"arg": "how 44 as roman numerals"
+}
+],
+[
+"unseen",
+"Samantha could you please show 1066 as roman numerals if you can!",
+"roman_numeral",
+"1066",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright show 88 as roman numerals when you get a sec",
+"roman_numeral",
+"88",
+{
+"tool": "paint_image",
+"arg": "how 88 as roman numerals"
+}
+],
+[
+"unseen",
+"alright show 2026 as roman numerals when you get a sec",
+"roman_numeral",
+"2026",
+{
+"tool": "paint_image",
+"arg": "how 2026 as roman numerals when y"
+}
+],
+[
+"unseen",
+"samantha could you please give me the roman numeral for 44 if you can",
+"roman_numeral",
+"44",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"real quick can you give me the roman numeral for 2027 if you can",
+"roman_numeral",
+"2027",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"real quick can you give me the roman numeral for 1066 asap",
+"roman_numeral",
+"1066",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"Samantha could you please give me the roman numeral for 1999 if you can.",
+"roman_numeral",
+"1999",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"samantha could you please say help in morse code asap",
+"morse_code",
+"help",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"do me a favor and say ship in morse code when you get a sec",
+"morse_code",
+"ship",
+{
+"tool": "paint_image",
+"arg": "nd say ship in mors"
+}
+],
+[
+"unseen",
+"Real quick can you say hi in morse code asap",
+"morse_code",
+"hi",
+{
+"tool": "paint_image",
+"arg": "can you say hi in morse code as"
+}
+],
+[
+"unseen",
+"alright say sos in morse code asap",
+"morse_code",
+"sos",
+{
+"tool": "paint_image",
+"arg": "ht say sos in morse code as"
+}
+],
+[
+"unseen",
+"alright turn sos into morse when you get a sec",
+"morse_code",
+"sos",
+{
+"tool": "paint_image",
+"arg": "ht turn sos"
+}
+],
+[
+"unseen",
+"alright turn hi into morse if you can",
+"morse_code",
+"hi",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"real quick can you turn hello into morse if you can",
+"morse_code",
+"hello",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"real quick can you turn help into morse when you get a sec",
+"morse_code",
+"help",
+{
+"tool": "paint_image",
+"arg": "help into mors"
+}
+],
+[
+"unseen",
+"samantha could you please how do you send morse in morse if you can",
+"morse_code",
+"morse",
+{
+"tool": "paint_image",
+"arg": "how do you s"
+}
+],
+[
+"unseen",
+"Alright how do you send ship in morse if you can.",
+"morse_code",
+"ship",
+{
+"tool": "paint_image",
+"arg": "nd ship in morse if y"
+}
+],
+[
+"unseen",
+"samantha could you please how do you send sos in morse when you get a sec",
+"morse_code",
+"sos",
+{
+"tool": "paint_image",
+"arg": "how do you s"
+}
+],
+[
+"unseen",
+"alright how do you send help in morse if you can",
+"morse_code",
+"help",
+{
+"tool": "paint_image",
+"arg": "help in morse if y"
+}
+],
+[
+"unseen",
+"do me a favor and skim reddit for me and report back if you can",
+"agent",
+"",
+{
+"tool": "paint_image",
+"arg": "nd s"
+}
+],
+[
+"unseen",
+"Alright skim youtube for me and report back when you get a sec!",
+"agent",
+"",
+{
+"tool": "paint_image",
+"arg": "hen you get a s"
+}
+],
+[
+"unseen",
+"Real quick can you skim letterboxd.com for me and report back when you get a sec",
+"agent",
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"Samantha could you please skim bbc.com for me and report back when you get a sec!",
+"agent",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright dig through github.com and find something good if you can",
+"agent",
+"",
+{
+"tool": "paint_image",
+"arg": "com and find s"
+}
+],
+[
+"unseen",
+"real quick can you dig through bbc.com and find something good when you get a sec",
+"agent",
+"",
+{
+"tool": "paint_image",
+"arg": "hrough bbc.com"
+}
+],
+[
+"unseen",
+"samantha could you please dig through letterboxd.com and find something good asap",
+"agent",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"samantha could you please dig through reddit and find something good if you can",
+"agent",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"samantha could you please tldr cloudflare.com asap",
+"agent",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"real quick can you tldr bbc.com if you can",
+"agent",
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"real quick can you tldr reddit asap",
+"agent",
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"do me a favor and tldr github.com if you can",
+"agent",
+"",
+{
+"tool": "paint_image",
+"arg": "hub.com if y"
+}
+],
+[
+"unseen",
+"samantha could you please tldr this page asap",
+"agent",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright tldr this page asap",
+"agent",
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"samantha could you please tldr this page when you get a sec",
+"agent",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"do me a favor and tldr this page if you can",
+"agent",
+"",
+{
+"tool": "paint_image",
+"arg": "his"
+}
+],
+[
+"unseen",
+"alright tldr this page when you get a sec",
+"agent",
+"",
+{
+"tool": "paint_image",
+"arg": "n you get a s"
+}
+],
+[
+"unseen",
+"real quick can you tldr this page asap",
+"agent",
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"alright open safari and then tell me what's playing when you get a sec",
+"agent",
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"do me a favor and open safari and then tell me what's playing when you get a sec",
+"agent",
+"",
+{
+"tool": "paint_image",
+"arg": "n s"
+}
+],
+[
+"unseen",
+"Real quick can you open safari and then tell me what's playing when you get a sec",
+"agent",
+"",
+{
+"tool": "paint_image",
+"arg": "hen tell me what's"
+}
+],
+[
+"unseen",
+"do me a favor and open safari and then tell me what's playing if you can",
+"agent",
+"",
+{
+"tool": "paint_image",
+"arg": "n s"
+}
+],
+[
+"unseen",
+"real quick can you open safari and then tell me what's playing asap",
+"agent",
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"do me a favor and open safari and then tell me what's playing asap",
+"agent",
+"",
+{
+"tool": "paint_image",
+"arg": "n s"
+}
+],
+[
+"unseen",
+"Samantha could you please open safari and then tell me what's playing if you can",
+"agent",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"alright give me the gist of this tab when you get a sec",
+"agent",
+"",
+{
+"tool": "paint_image",
+"arg": "he gist of this"
+}
+],
+[
+"unseen",
+"real quick can you give me the gist of this tab asap",
+"agent",
+"",
+{
+"tool": "paint_image",
+"arg": "he gis"
+}
+],
+[
+"unseen",
+"samantha could you please give me the gist of this tab asap",
+"agent",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"do me a favor and give me the gist of this tab asap",
+"agent",
+"",
+{
+"tool": "paint_image",
+"arg": "he gist of this"
+}
+],
+[
+"unseen",
+"Alright give me the gist of this tab if you can",
+"agent",
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"do me a favor and give me the gist of this tab if you can",
+"agent",
+"",
+{
+"tool": "paint_image",
+"arg": "he gist of this"
+}
+],
+[
+"unseen",
+"Samantha could you please give me the gist of this tab when you get a sec",
+"agent",
+"",
+{
+"tool": "paint_image",
+"arg": "could you pleas"
+}
+],
+[
+"unseen",
+"who discovered penicillin",
+null,
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"what is the capital of canada?",
+null,
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"how many bones are in the body",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "how many bones"
+}
+],
+[
+"unseen",
+"ok yo",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "k y"
+}
+],
+[
+"unseen",
+"what is 9 times 8?",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "hat is"
+}
+],
+[
+"unseen",
+"cheers",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "heers"
+}
+],
+[
+"unseen",
+"what is the tallest building",
+null,
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"when did the titanic sink",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "c"
+}
+],
+[
+"unseen",
+"how do planes fly",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "how do planes fly"
+}
+],
+[
+"unseen",
+"ok what is a neural network?",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "s"
+}
+],
+[
+"unseen",
+"what model are you",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "hat model are y"
+}
+],
+[
+"unseen",
+"quick question, is samantha open source",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "ck question, is samantha open s"
+}
+],
+[
+"unseen",
+"so what is the speed of sound",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "s the s"
+}
+],
+[
+"unseen",
+"samantha who wrote the song yesterday",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "ho wrote the s"
+}
+],
+[
+"unseen",
+"hey how do noise cancelling headphones work",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "hones"
+}
+],
+[
+"unseen",
+"what is a battery made of",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "hat is a battery"
+}
+],
+[
+"unseen",
+"ok why do we have leap years on the calendar",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "have leap y"
+}
+],
+[
+"unseen",
+"is it bad to skip breakfast",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "to s"
+}
+],
+[
+"unseen",
+"what is a volume in a book series",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "hat is a volume in a book series"
+}
+],
+[
+"unseen",
+"who opened the first mcdonalds",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "ho opened the first mcdonalds"
+}
+],
+[
+"unseen",
+"samantha what does google do with my data",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "h my d"
+}
+],
+[
+"unseen",
+"ok how long is a marathon",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "how long is"
+}
+],
+[
+"unseen",
+"what does remind mean",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "hat does"
+}
+],
+[
+"unseen",
+"what is a timer in electronics",
+null,
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"who plays batman?",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "ho plays"
+}
+],
+[
+"unseen",
+"what is the weather like on mars",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "he weather like on mars"
+}
+],
+[
+"unseen",
+"samantha how do you design a good logo",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "how do y"
+}
+],
+[
+"unseen",
+"samantha what is a web browser",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "hat is"
+}
+],
+[
+"unseen",
+"write a commit message for a change to roadmap.md in the turing project",
+null,
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"samantha write a sonnet about the sea",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "nnet about the s"
+}
+],
+[
+"unseen",
+"make a list of questions for a job interview",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "st of questions"
+}
+],
+[
+"unseen",
+"create a tagline for a bike shop",
+null,
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"start a poem about rain?",
+null,
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"unseen",
+"design a lesson plan on fractions",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "ctions"
+}
+],
+[
+"unseen",
+"play devil's advocate on remote work",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "s"
+}
+],
+[
+"unseen",
+"search your memory and tell me what turing is?",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "hat turing is"
+}
+],
+[
+"actions",
+"open chrome",
+"open_app",
+"chrome",
+{
+"tool": "paint_image",
+"arg": "chrome"
+}
+],
+[
+"actions",
+"launch safari",
+"open_app",
+"safari",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"actions",
+"start pixelmator",
+"open_app",
+"pixelmator",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"actions",
+"make me a logo for turing",
+"make_logo",
+"turing",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"actions",
+"make me a complex logo for a surf school",
+"make_logo",
+"complex a surf school",
+{
+"tool": "paint_image",
+"arg": "complex logo for a s"
+}
+],
+[
+"actions",
+"make me an original wordless logo for turing",
+"make_logo",
+"original wordless turing",
+{
+"tool": "paint_image",
+"arg": "s"
+}
+],
+[
+"actions",
+"design an abstract icon for a bakery",
+"make_logo",
+"abstract a bakery",
+{
+"tool": "paint_image",
+"arg": "c"
+}
+],
+[
+"actions",
+"go to hacker news",
+"open_url",
+"hacker news",
+{
+"tool": "paint_image",
+"arg": "cker news"
+}
+],
+[
+"actions",
+"visit github.com",
+"open_url",
+"github.com",
+{
+"tool": "paint_image",
+"arg": "hub.c"
+}
+],
+[
+"actions",
+"pull up reddit",
+"open_url",
+"reddit",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"actions",
+"browse to youtube",
+"open_url",
+"youtube",
+{
+"tool": "paint_image",
+"arg": "to y"
+}
+],
+[
+"actions",
+"open x.com",
+"open_url",
+"x.com",
+{
+"tool": "paint_image",
+"arg": "c"
+}
+],
+[
+"actions",
+"search for mlx lora",
+"web_search",
+"mlx",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"actions",
+"google best pizza vancouver",
+"web_search",
+"pizza",
+{
+"tool": "paint_image",
+"arg": "couve"
+}
+],
+[
+"actions",
+"look up qwen3",
+"web_search",
+"qwen3",
+{
+"tool": "paint_image",
+"arg": "k up qwe"
+}
+],
+[
+"actions",
+"what's in my current tab",
+"current_tab",
+null,
+{
+"tool": "paint_image",
+"arg": "tab"
+}
+],
+[
+"actions",
+"what's on my tab",
+"current_tab",
+null,
+{
+"tool": "paint_image",
+"arg": "hat's on my"
+}
+],
+[
+"actions",
+"take a screenshot",
+"screenshot",
+null,
+{
+"tool": "paint_image",
+"arg": "creens"
+}
+],
+[
+"actions",
+"grab a screenshot",
+"screenshot",
+null,
+{
+"tool": "paint_image",
+"arg": "creens"
+}
+],
+[
+"actions",
+"what's on my clipboard",
+"clipboard",
+null,
+{
+"tool": "paint_image",
+"arg": "hat's on my"
+}
+],
+[
+"actions",
+"read my clipboard",
+"clipboard",
+null,
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"actions",
+"volume 30",
+"set_volume",
+"30",
+{
+"tool": "paint_image",
+"arg": "um"
+}
+],
+[
+"actions",
+"set the volume to 50",
+"set_volume",
+"50",
+{
+"tool": "paint_image",
+"arg": "he"
+}
+],
+[
+"actions",
+"mute",
+"set_volume",
+"0",
+{
+"tool": "paint_image",
+"arg": "te"
+}
+],
+[
+"actions",
+"how's my battery",
+"battery",
+null,
+{
+"tool": "paint_image",
+"arg": "how's my battery"
+}
+],
+[
+"actions",
+"battery level",
+"battery",
+null,
+{
+"tool": "paint_image",
+"arg": "ttery"
+}
+],
+[
+"actions",
+"what's my battery",
+"battery",
+null,
+{
+"tool": "paint_image",
+"arg": "hat's my battery"
+}
+],
+[
+"actions",
+"say hello there",
+"say",
+"hello",
+{
+"tool": "paint_image",
+"arg": "her"
+}
+],
+[
+"actions",
+"say test",
+"say",
+"test",
+{
+"tool": "paint_image",
+"arg": "say tes"
+}
+],
+[
+"actions",
+"list the files in ~/Documents",
+"list_dir",
+"Documents",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"actions",
+"show me the folder in ~/Desktop",
+"list_dir",
+"Desktop",
+{
+"tool": "paint_image",
+"arg": "he folder in ~/Des"
+}
+],
+[
+"actions",
+"read the file ~/notes.txt",
+"read_file",
+"notes.txt",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"actions",
+"show me the file ~/test.md",
+"read_file",
+"test.md",
+{
+"tool": "paint_image",
+"arg": "he file ~/tes"
+}
+],
+[
+"actions",
+"open chrome and go to youtube",
+"open_url",
+"youtube",
+{
+"tool": "paint_image",
+"arg": "chrome"
+}
+],
+[
+"actions",
+"launch chrome then visit github.com",
+"agent",
+null,
+{
+"tool": "paint_image",
+"arg": "hen vis"
+}
+],
+[
+"actions",
+"what is turing",
+null,
+null,
+{
+"tool": "paint_image",
+"arg": "hat is"
+}
+],
+[
+"actions",
+"who is steve jobs",
+null,
+null,
+{
+"tool": "paint_image",
+"arg": "ho is steve jobs"
+}
+],
+[
+"actions",
+"what is 17*23",
+null,
+null,
+{
+"tool": "paint_image",
+"arg": "hat is"
+}
+],
+[
+"actions",
+"what is the capital of japan",
+null,
+null,
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"actions",
+"open chrome and poke around hacker news",
+"agent",
+null,
+{
+"tool": "paint_image",
+"arg": "hacker news"
+}
+],
+[
+"actions",
+"go to github then tell me what tab is open",
+"agent",
+null,
+{
+"tool": "paint_image",
+"arg": "hub then tell me what tab is"
+}
+],
+[
+"actions",
+"open pixelmator and read my clipboard",
+"agent",
+null,
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"actions",
+"search for mlx lora and summarize",
+"agent",
+null,
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"actions",
+"Summarize what Turing is in one sentence.",
+null,
+null,
+{
+"tool": "paint_image",
+"arg": "n one s"
+}
+],
+[
+"actions",
+"can you open chrome",
+"open_app",
+"chrome",
+{
+"tool": "paint_image",
+"arg": "hrom"
+}
+],
+[
+"actions",
+"please open safari",
+"open_app",
+"safari",
+{
+"tool": "paint_image",
+"arg": "n s"
+}
+],
+[
+"actions",
+"open up spotify for me",
+"open_app",
+"spotify",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"actions",
+"turn the volume down to 20",
+"set_volume",
+"20",
+{
+"tool": "paint_image",
+"arg": "n the volume d"
+}
+],
+[
+"actions",
+"turn it up to 80",
+"set_volume",
+"80",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"actions",
+"what's my battery at",
+"battery",
+null,
+{
+"tool": "paint_image",
+"arg": "hat's my battery"
+}
+],
+[
+"actions",
+"how much battery do i have",
+"battery",
+null,
+{
+"tool": "paint_image",
+"arg": "h battery"
+}
+],
+[
+"actions",
+"take a screenshot please",
+"screenshot",
+null,
+{
+"tool": "paint_image",
+"arg": "hot please"
+}
+],
+[
+"actions",
+"show me what's on my clipboard",
+"clipboard",
+null,
+{
+"tool": "paint_image",
+"arg": "hat's"
+}
+],
+[
+"actions",
+"hey open github",
+"open_url",
+"github",
+{
+"tool": "paint_image",
+"arg": "hey ope"
+}
+],
+[
+"actions",
+"i want to go to youtube",
+"open_url",
+"youtube",
+{
+"tool": "paint_image",
+"arg": "to y"
+}
+],
+[
+"actions",
+"could you search for mlx lora",
+"web_search",
+"mlx lora",
+{
+"tool": "paint_image",
+"arg": "h for mlx"
+}
+],
+[
+"actions",
+"open the turing repo on github",
+"open_url",
+"turing repo",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"actions",
+"can you tell me who alan turing was",
+null,
+null,
+{
+"tool": "paint_image",
+"arg": "ho alan turing was"
+}
+],
+[
+"actions",
+"play some music",
+"music",
+"play",
+{
+"tool": "paint_image",
+"arg": "some mus"
+}
+],
+[
+"actions",
+"pause the music",
+"music",
+"pause",
+{
+"tool": "paint_image",
+"arg": "he mus"
+}
+],
+[
+"actions",
+"skip this song",
+"music",
+"next",
+{
+"tool": "paint_image",
+"arg": "his s"
+}
+],
+[
+"actions",
+"can you skip",
+"music",
+"next",
+{
+"tool": "paint_image",
+"arg": "n you s"
+}
+],
+[
+"actions",
+"what's playing",
+"music",
+"playing",
+{
+"tool": "paint_image",
+"arg": "hat's play"
+}
+],
+[
+"actions",
+"what song is this",
+"music",
+"playing",
+{
+"tool": "paint_image",
+"arg": "his"
+}
+],
+[
+"actions",
+"what's the weather",
+"weather",
+null,
+{
+"tool": "paint_image",
+"arg": "he"
+}
+],
+[
+"actions",
+"how's the weather in tokyo",
+"weather",
+"tokyo",
+{
+"tool": "paint_image",
+"arg": "her in toky"
+}
+],
+[
+"actions",
+"weather",
+"weather",
+null,
+{
+"tool": "paint_image",
+"arg": "her"
+}
+],
+[
+"actions",
+"set a timer for 5 minutes",
+"timer",
+"5",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"actions",
+"set a 10 minute timer",
+"timer",
+"10",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"actions",
+"timer 30 seconds",
+"timer",
+"0.5",
+{
+"tool": "paint_image",
+"arg": "seconds"
+}
+],
+[
+"actions",
+"remind me to call mom",
+"new_reminder",
+"call mom",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"actions",
+"add a reminder to buy milk",
+"new_reminder",
+"buy milk",
+{
+"tool": "paint_image",
+"arg": "to buy"
+}
+],
+[
+"actions",
+"take a note buy milk",
+"new_note",
+"buy milk",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"actions",
+"make a note that says the door code is 4417",
+"new_note",
+"door code",
+{
+"tool": "paint_image",
+"arg": "hat says the door code is"
+}
+],
+[
+"actions",
+"what's on my calendar today",
+"calendar_today",
+null,
+{
+"tool": "paint_image",
+"arg": "hat's on m"
+}
+],
+[
+"actions",
+"what do i have today",
+"calendar_today",
+null,
+{
+"tool": "paint_image",
+"arg": "have today"
+}
+],
+[
+"actions",
+"what is the weather system on jupiter",
+null,
+null,
+{
+"tool": "paint_image",
+"arg": "he weather s"
+}
+],
+[
+"actions",
+"what is music theory",
+null,
+null,
+{
+"tool": "paint_image",
+"arg": "heory"
+}
+],
+[
+"actions",
+"who plays the next james bond",
+null,
+null,
+{
+"tool": "paint_image",
+"arg": "ho plays the next james"
+}
+],
+[
+"questions",
+"what is 2+2",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "hat is"
+}
+],
+[
+"questions",
+"what is 10 times 7",
+null,
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"questions",
+"what is the capital of japan",
+null,
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"questions",
+"what is the capital of france",
+null,
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"questions",
+"how many days are in a week",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "how many days"
+}
+],
+[
+"questions",
+"how many continents are there",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "continents"
+}
+],
+[
+"questions",
+"who wrote romeo and juliet",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "ho wrote rome"
+}
+],
+[
+"questions",
+"who painted the mona lisa",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "he mona lis"
+}
+],
+[
+"questions",
+"what color is the sky",
+null,
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"questions",
+"how many legs does a spider have",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "have"
+}
+],
+[
+"questions",
+"what is the largest planet in the solar system",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "he largest planet in the solar sy"
+}
+],
+[
+"questions",
+"what is the boiling point of water in celsius",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "he boiling point of water in cels"
+}
+],
+[
+"questions",
+"what year did world war 2 end",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "hat y"
+}
+],
+[
+"questions",
+"what is the chemical symbol for gold",
+null,
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"questions",
+"how many sides does a triangle have",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "ngle hav"
+}
+],
+[
+"questions",
+"what do bees make",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "hat do bees"
+}
+],
+[
+"questions",
+"who is steve jobs",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "ho is steve jobs"
+}
+],
+[
+"questions",
+"who is albert einstein",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "ho is albert eins"
+}
+],
+[
+"questions",
+"who is taylor swift",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "ho is"
+}
+],
+[
+"questions",
+"who was abraham lincoln",
+null,
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"questions",
+"who is marie curie",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "ho is"
+}
+],
+[
+"questions",
+"who was isaac newton",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "ho was"
+}
+],
+[
+"questions",
+"who is elon musk",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "ho is"
+}
+],
+[
+"questions",
+"who is barack obama",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "ho is"
+}
+],
+[
+"questions",
+"who was cleopatra",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "ho was"
+}
+],
+[
+"questions",
+"who is lebron james",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "ho is lebron james"
+}
+],
+[
+"questions",
+"who was alan turing",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "ho was"
+}
+],
+[
+"questions",
+"who is serena williams",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "ho is s"
+}
+],
+[
+"questions",
+"who was nikola tesla",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "ho was"
+}
+],
+[
+"questions",
+"who is oprah winfrey",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "h winfrey"
+}
+],
+[
+"questions",
+"who wrote 1984",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "ho wrote 1"
+}
+],
+[
+"questions",
+"who discovered penicillin",
+null,
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"questions",
+"who invented the telephone",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "he telepho"
+}
+],
+[
+"questions",
+"who was the first person on the moon",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "he firs"
+}
+],
+[
+"questions",
+"tell me about ada lovelace",
+null,
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"questions",
+"what is the capital of canada",
+null,
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"questions",
+"what is the capital of australia",
+null,
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"questions",
+"what is the capital of brazil",
+null,
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"questions",
+"what is the capital of british columbia",
+null,
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"questions",
+"where is the eiffel tower",
+null,
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"questions",
+"where is mount everest",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "here is"
+}
+],
+[
+"questions",
+"what is the longest river in the world",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "he longest river in the"
+}
+],
+[
+"questions",
+"what is the largest country in the world",
+null,
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"questions",
+"what is the largest ocean",
+null,
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"questions",
+"what country is vancouver in",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "couve"
+}
+],
+[
+"questions",
+"where is the great barrier reef",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "here is"
+}
+],
+[
+"questions",
+"what is the tallest mountain in the world",
+null,
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"questions",
+"tell me about tokyo",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "toky"
+}
+],
+[
+"questions",
+"what is the sahara",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "he s"
+}
+],
+[
+"questions",
+"where is machu picchu",
+null,
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"questions",
+"what is a black hole",
+null,
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"questions",
+"what is photosynthesis",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "hotosynthes"
+}
+],
+[
+"questions",
+"what is dna",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "hat is"
+}
+],
+[
+"questions",
+"what is the speed of light",
+null,
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"questions",
+"what is bitcoin",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "hat is"
+}
+],
+[
+"questions",
+"what is a transformer in machine learning",
+null,
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"questions",
+"what is the internet",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "he"
+}
+],
+[
+"questions",
+"what is a volcano",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "hat is"
+}
+],
+[
+"questions",
+"what is the pythagorean theorem",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "he py"
+}
+],
+[
+"questions",
+"what is an electron",
+null,
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"questions",
+"what is the great wall of china",
+null,
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"questions",
+"what is jazz",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "hat is"
+}
+],
+[
+"questions",
+"what is a guitar",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "hat is"
+}
+],
+[
+"questions",
+"how many planets are in the solar system",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "how many planets"
+}
+],
+[
+"questions",
+"what is the freezing point of water in fahrenheit",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "he"
+}
+],
+[
+"questions",
+"What is Turing?",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "hat is"
+}
+],
+[
+"questions",
+"What is Samantha?",
+null,
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"questions",
+"What went wrong with the project called Arthur?",
+null,
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"questions",
+"What base model does Samantha use?",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "ha us"
+}
+],
+[
+"questions",
+"Write a one-line commit message for fixing an MLX memory leak during training.",
+null,
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"questions",
+"What's the difference between Turing and Samantha?",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "ce be"
+}
+],
+[
+"questions",
+"Why doesn't Turing pretrain a model from scratch at full scale?",
+null,
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"questions",
+"What should Samantha be used for eventually?",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "ha be us"
+}
+],
+[
+"questions",
+"What data was Samantha trained on?",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "hat data was"
+}
+],
+[
+"questions",
+"Is Samantha fine-tuned or pretrained from scratch?",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "ha fine-tuned or pretrained from s"
+}
+],
+[
+"questions",
+"What happens in scratch/ in this repo?",
+null,
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"questions",
+"What does Phase 4 of the roadmap involve?",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "has"
+}
+],
+[
+"questions",
+"Should Samantha try to beat Claude or GPT?",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "ha try to b"
+}
+],
+[
+"questions",
+"What causes Samantha to hallucinate right now?",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "causes"
+}
+],
+[
+"questions",
+"Write a short journal entry about today's training run.",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "hort journal entry about today's"
+}
+],
+[
+"questions",
+"What's the difference between LoRA and full fine-tuning?",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "ce be"
+}
+],
+[
+"questions",
+"Summarize what Turing is in one sentence.",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "n one s"
+}
+],
+[
+"questions",
+"What is house voice?",
+null,
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"questions",
+"Name one thing Turing will never do on this hardware.",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "hing Turing will never do on this"
+}
+],
+[
+"questions",
+"What's blocked or paused in this project right now?",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "n this"
+}
+],
+[
+"questions",
+"How does the landing page get its loss chart data?",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "he landing page get its loss"
+}
+],
+[
+"questions",
+"What license is this project under?",
+null,
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"questions",
+"Who maintains this project?",
+null,
+"",
+{
+"tool": "flip_coin",
+"arg": ""
+}
+],
+[
+"questions",
+"What's the honest win condition for Samantha?",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "he hones"
+}
+],
+[
+"questions",
+"Explain what LoRA stands for.",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "hat LoRA stands"
+}
+],
+[
+"questions",
+"What tool runs the training on this machine?",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "his"
+}
+],
+[
+"questions",
+"Why was run_lora_capped.py written?",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "hy was"
+}
+],
+[
+"questions",
+"What would Phase 5 let Samantha actually do for someone?",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "c"
+}
+],
+[
+"questions",
+"How long does it take to get an answer, and how much memory does it use?",
+null,
+"",
+{
+"tool": "paint_image",
+"arg": "h memory does it us"
+}
+]
+]
