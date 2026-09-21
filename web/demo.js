@@ -355,6 +355,7 @@
     draw: function (what) {
       var subject = String(what).trim().slice(0, 120);
       if (!subject) return 'Draw what? Try "draw a lighthouse at dusk".';
+      narrate('draw', subject);
       var was = statusEl.textContent;
       statusEl.textContent = 'Imagining ' + subject + '...';
       return fetch('/api/draw', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ q: subject }) })
