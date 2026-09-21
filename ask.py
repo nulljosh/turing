@@ -755,14 +755,17 @@ _CONVERT_PATTERNS = (
 
 
 def _to_celsius(value, unit):
+    """Any of celsius, fahrenheit or kelvin to celsius."""
     return {"c": value, "f": (value - 32) * 5 / 9, "k": value - 273.15}[unit]
 
 
 def _from_celsius(value, unit):
+    """Celsius to celsius, fahrenheit or kelvin."""
     return {"c": value, "f": value * 9 / 5 + 32, "k": value + 273.15}[unit]
 
 
 def _tidy(value):
+    """Round to four places and drop a trailing .0."""
     rounded = round(value, 4)
     return int(rounded) if rounded == int(rounded) else rounded
 

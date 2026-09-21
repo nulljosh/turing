@@ -69,6 +69,7 @@ def sane(said):
 
 
 def post(path, body, ctype="application/json", origin=None):
+    """POST JSON to the live Worker and return (status, body)."""
     import json, urllib.request, urllib.error
     req = urllib.request.Request(URL + path, json.dumps(body).encode(), {"Content-Type": ctype, "User-Agent": "samantha-qa", **({"Origin": origin} if origin else {})})
     try:
@@ -103,6 +104,7 @@ def api_checks():
 
 
 def ask(page, text):
+    """Type a command into the demo's input and wait for her reply to land."""
     page.fill("#chat-input", text)
     page.press("#chat-input", "Enter")
     page.wait_for_function("() => { const m = document.querySelectorAll('.chat-message'); const last = m[m.length - 1]; return last && !last.classList.contains('chat-user') && last.innerText.trim().length > 0; }", timeout=30000)

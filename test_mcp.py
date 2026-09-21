@@ -19,6 +19,7 @@ class McpTests(unittest.TestCase):
     """initialize, list, call, and the ways a call can go wrong."""
 
     def test_conversation(self):
+        """Conversation."""
         r = talk({"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": {"protocolVersion": "2025-03-26"}},
                  {"jsonrpc": "2.0", "method": "notifications/initialized"},
                  {"jsonrpc": "2.0", "id": 2, "method": "tools/list"},
@@ -40,6 +41,7 @@ class McpTests(unittest.TestCase):
         self.assertEqual(r[5]["error"]["code"], -32601)
 
     def test_garbage_does_not_kill_the_server(self):
+        """Garbage does not kill the server."""
         p = subprocess.run([sys.executable, os.path.join(HERE, "mcp_server.py")], input='not json\n{"jsonrpc":"2.0","id":1,"method":"ping"}\n',
                            capture_output=True, text=True, timeout=60)
         replies = [json.loads(line) for line in p.stdout.splitlines()]

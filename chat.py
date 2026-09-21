@@ -303,6 +303,7 @@ def tui():
         lines = ["Samantha (Turing project assistant). Ctrl+C or type 'exit' to quit.", ""]
 
         def redraw():
+            """Repaint the transcript and the input line."""
             stdscr.erase()
             h, w = stdscr.getmaxyx()
             for i, line in enumerate(lines[-(h - 2):]):

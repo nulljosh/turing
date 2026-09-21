@@ -5,6 +5,7 @@ Run: python3 stats.py
 """
 import ast
 import json
+import sys
 import os
 from pathlib import Path
 
@@ -63,6 +64,13 @@ def collect_coverage():
             total_documented += documented
 
     # eval/*.py files
+    for py_file in repo_root.glob("pixelmator/*.py"):
+        total, documented = count_docstrings(py_file)
+        if total > 0:
+            files_coverage[f"pixelmator/{py_file.name}"] = {"total": total, "documented": documented}
+            total_items += total
+            total_documented += documented
+
     for py_file in repo_root.glob("eval/*.py"):
         total, documented = count_docstrings(py_file)
         if total > 0:
@@ -98,8 +106,20 @@ def read_version():
     except Exception:
         return "unknown"
 
+def check():
+    """The docs rule: every function and class has a docstring. Exit 1 and name the gaps when one does not."""
+    files, percent = collect_coverage()
+    gaps = {f: c["total"] - c["documented"] for f, c in files.items() if c["documented"] < c["total"]}
+    for f, n in sorted(gaps.items()):
+        print(f"undocumented in {f}: {n}")
+    print(f"docs coverage {percent}%")
+    sys.exit(1 if gaps else 0)
+
+
 def main():
     """Gather coverage data and write stats to web/stats.json."""
+    if "--check" in sys.argv:
+        check()
     files_coverage, coverage_percent = collect_coverage()
     house_docs = check_house_docs()
     version = read_version()

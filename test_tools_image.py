@@ -11,15 +11,20 @@ import tools_image
 
 
 class MockPxmError(Exception):
+    """Stand-in for pxm.PxmError so the tests need no Pixelmator."""
     def __init__(self, message):
+        """Keep the message and the exit code."""
         self.message = message
 
     def __str__(self):
+        """The message text."""
         return self.message
 
 
 class TestImageTools(unittest.TestCase):
+    """Unit tests for the image tools with Pixelmator mocked out."""
     def setUp(self):
+        """Point the tools at a temporary home with a sample image."""
         self.temp_dir = tempfile.mkdtemp()
         self.home = os.path.expanduser("~")
 
@@ -29,19 +34,23 @@ class TestImageTools(unittest.TestCase):
             f.write(b"fake jpg data")
 
     def tearDown(self):
+        """Remove the temporary home."""
         import shutil
         if os.path.exists(self.temp_dir):
             shutil.rmtree(self.temp_dir)
 
     def test_remove_background_path_outside_home(self):
+        """Remove background path outside home."""
         result = tools_image.remove_background("/etc/passwd")
         self.assertIn("No image at", result)
 
     def test_remove_background_missing_file(self):
+        """Remove background missing file."""
         result = tools_image.remove_background("~/nonexistent.jpg")
         self.assertIn("No image at", result)
 
     def test_remove_background_non_image(self):
+        """Remove background non image."""
         temp_txt = os.path.join(self.temp_dir, "test.txt")
         with open(temp_txt, "w") as f:
             f.write("not an image")
@@ -52,6 +61,7 @@ class TestImageTools(unittest.TestCase):
     @patch('tools_image.pxm.run_applescript')
     @patch('tools_image.pxm.hide_app')
     def test_remove_background_script_generation(self, mock_hide, mock_run, mock_lock):
+        """Remove background script generation."""
         mock_lock.return_value.__enter__ = MagicMock()
         mock_lock.return_value.__exit__ = MagicMock(return_value=False)
         mock_run.return_value = ""
@@ -85,6 +95,7 @@ class TestImageTools(unittest.TestCase):
     @patch('tools_image.pxm.run_applescript')
     @patch('tools_image.pxm.hide_app')
     def test_upscale_image_script(self, mock_hide, mock_run, mock_lock):
+        """Upscale image script."""
         mock_lock.return_value.__enter__ = MagicMock()
         mock_lock.return_value.__exit__ = MagicMock(return_value=False)
         mock_run.return_value = ""
@@ -109,6 +120,7 @@ class TestImageTools(unittest.TestCase):
                 os.remove(test_file)
 
     def test_rotate_image_parsing(self):
+        """Rotate image parsing."""
         home = os.path.expanduser("~")
         test_file = os.path.join(home, ".claude", "test-rotate.jpg")
         os.makedirs(os.path.dirname(test_file), exist_ok=True)
@@ -135,6 +147,7 @@ class TestImageTools(unittest.TestCase):
                 os.remove(test_file)
 
     def test_resize_image_parsing(self):
+        """Resize image parsing."""
         home = os.path.expanduser("~")
         test_file = os.path.join(home, ".claude", "test-resize.jpg")
         os.makedirs(os.path.dirname(test_file), exist_ok=True)
@@ -157,6 +170,7 @@ class TestImageTools(unittest.TestCase):
                 os.remove(test_file)
 
     def test_convert_image_parsing(self):
+        """Convert image parsing."""
         home = os.path.expanduser("~")
         test_file = os.path.join(home, ".claude", "test-convert.png")
         os.makedirs(os.path.dirname(test_file), exist_ok=True)
@@ -180,6 +194,7 @@ class TestImageTools(unittest.TestCase):
                 os.remove(test_file)
 
     def test_flip_image_parsing(self):
+        """Flip image parsing."""
         home = os.path.expanduser("~")
         test_file = os.path.join(home, ".claude", "test-flip.jpg")
         os.makedirs(os.path.dirname(test_file), exist_ok=True)
@@ -203,6 +218,7 @@ class TestImageTools(unittest.TestCase):
                 os.remove(test_file)
 
     def test_grayscale_image_script(self):
+        """Grayscale image script."""
         home = os.path.expanduser("~")
         test_file = os.path.join(home, ".claude", "test-gray.jpg")
         os.makedirs(os.path.dirname(test_file), exist_ok=True)
@@ -225,6 +241,7 @@ class TestImageTools(unittest.TestCase):
                 os.remove(test_file)
 
     def test_enhance_image_script(self):
+        """Enhance image script."""
         home = os.path.expanduser("~")
         test_file = os.path.join(home, ".claude", "test-enhance.jpg")
         os.makedirs(os.path.dirname(test_file), exist_ok=True)
@@ -248,6 +265,7 @@ class TestImageTools(unittest.TestCase):
 
     @patch('tools_image._get_image_dimensions')
     def test_crop_square_script(self, mock_dims):
+        """Crop square script."""
         mock_dims.return_value = (1000, 800)
 
         home = os.path.expanduser("~")
@@ -273,6 +291,7 @@ class TestImageTools(unittest.TestCase):
 
     @patch('tools_image._get_image_dimensions')
     def test_image_info(self, mock_dims):
+        """Image info."""
         mock_dims.return_value = (1920, 1080)
 
         home = os.path.expanduser("~")

@@ -82,7 +82,9 @@ TOP_KEYS = {"width", "height", "background", "layers", "export", "keep_open"}
 
 
 class PxmError(Exception):
+    """A failure with an exit code and a hint, so the CLI can say what went wrong and what to try."""
     def __init__(self, message, hint="", code=EXIT_SCRIPT, number=None):
+        """Keep the message, the hint, the exit code and the AppleScript error number."""
         super().__init__(message)
         self.message, self.hint, self.code, self.number = message, hint, code, number
 
@@ -122,6 +124,7 @@ def as_string(text):
 
 
 def _is_num(v):
+    """A real, finite number that is not a bool."""
     return isinstance(v, (int, float)) and not isinstance(v, bool) and math.isfinite(v)
 
 
@@ -130,6 +133,7 @@ def validate_spec(spec):
     errs = []
 
     def num(obj, key, where, lo, hi, default=None, required=False, integer=False):
+        """A validated number from a spec object, or an error saying what was expected."""
         v = obj.get(key, default)
         if v is None:
             if required:
@@ -142,6 +146,7 @@ def validate_spec(spec):
         return int(v) if integer else v
 
     def color(obj, key, where):
+        """A validated #RRGGBB color from a spec object, or an error."""
         if key not in obj:
             return None
         c = parse_color(obj[key])
@@ -150,6 +155,7 @@ def validate_spec(spec):
         return c
 
     def coord(obj, key, where, default):
+        """A validated coordinate: a number or the word center."""
         v = obj.get(key, default)
         if v is None and default is None:
             return None
@@ -294,10 +300,12 @@ def validate_spec(spec):
 # ---------- spec -> AppleScript (pure, testable anywhere) ----------
 
 def _rgb(c):
+    """An (r, g, b) tuple as an AppleScript color list."""
     return "{%d, %d, %d}" % c
 
 
 def _n(v):
+    """A number as AppleScript text: whole numbers plain, fractions to three places."""
     return repr(round(float(v), 3)) if not float(v).is_integer() else str(int(v))
 
 
@@ -437,6 +445,7 @@ def parse_osascript_error(stderr):
 
 
 def run_applescript(source, timeout=120, _retry=True):
+    """Run AppleScript through osascript and return its output, retrying once when the app was still starting."""
     try:
         p = subprocess.run(["osascript", "-"], input=source, text=True,
                            capture_output=True, timeout=timeout + 10)
@@ -458,6 +467,7 @@ def run_applescript(source, timeout=120, _retry=True):
 # ---------- after the run: trust nothing ----------
 
 def _squash(name):
+    """A font name reduced to lowercase letters and digits so two spellings compare equal."""
     return re.sub(r"[^a-z0-9]", "", name.lower())
 
 
@@ -484,6 +494,7 @@ def check_result(spec, output):
 
 
 def check_exports(spec):
+    """Fail unless every requested export exists on disk and is not empty."""
     for path in spec["export"]:
         if not os.path.isfile(path) or os.path.getsize(path) == 0:
             raise PxmError("export missing or empty: %s" % path, code=EXIT_VERIFY)
@@ -571,16 +582,19 @@ def paint_layers(w, h, rows, shapes, scale, shape="rectangle"):
         S.append(line)
 
     def cell(x0, y0, x1, y1):
+        """Error and mean color of one square, from the summed-area tables in constant time."""
         n = (x1 - x0) * (y1 - y0)
         r, g, b, sq = (S[y1][x1][k] - S[y0][x1][k] - S[y1][x0][k] + S[y0][x0][k] for k in range(4))
         err = sq - (r * r + g * g + b * b) / n  # sum of squared distance from the mean
         return err, "#%02X%02X%02X" % (round(r / n), round(g / n), round(b / n))
 
     def layer(x0, y0, x1, y1, fill):
+        """One square as a shape layer of the requested type."""
         return {"type": shape, "x": x0 * scale, "y": y0 * scale,
                 "width": (x1 - x0) * scale, "height": (y1 - y0) * scale, "fill": fill}
 
     def near(a, b):  # two fills the eye cannot tell apart
+        """True when two fills are too close for the eye to tell apart."""
         return all(abs(int(a[i:i + 2], 16) - int(b[i:i + 2], 16)) < 6 for i in (1, 3, 5))
 
     err, fill = cell(0, 0, w, h)
@@ -626,6 +640,7 @@ def hide_app():
 # ---------- commands ----------
 
 def cmd_check(_args):
+    """The check command: is this Mac ready to drive Pixelmator Pro."""
     if sys.platform != "darwin":
         raise PxmError("not macOS", hint="Pixelmator Pro only exists on the Mac.", code=EXIT_ENV)
     try:
@@ -640,11 +655,13 @@ def cmd_check(_args):
 
 
 def cmd_run(args):
+    """The run command: raw AppleScript from a file or stdin."""
     source = sys.stdin.read() if args.file == "-" else open(args.file).read()
     print(run_applescript(source, timeout=args.timeout))
 
 
 def cmd_logo(args):
+    """The logo command: build a logo from a JSON spec."""
     args._build_label = "logo %s" % os.path.basename(args.spec)
     with open(args.spec) as f:
         build(validate_spec(json.load(f)), args)
@@ -685,6 +702,7 @@ def paint_magick(w, h, layers, outs):
 
 
 def cmd_paint(args):
+    """The paint command: rebuild an image from squares, in Pixelmator or with ImageMagick."""
     magick = args.engine == "magick"
     if not 5 <= args.shapes <= (500000 if magick else 20000):
         raise PxmError("--shapes must be from 5 to %d" % (500000 if magick else 20000), code=EXIT_USAGE)
@@ -742,6 +760,7 @@ def build_lock(label, wait=False):
 
 
 def build(spec, args, frame_every=1, merge_every=0):
+    """Run a normalized spec through Pixelmator under the build lock, then verify the result and make any GIF."""
     if args.gif and not args.gif.lower().endswith(".gif"):
         raise PxmError("--gif path must end in .gif", code=EXIT_USAGE)
     keep_frames = getattr(args, "frames", None)
@@ -783,6 +802,7 @@ def build(spec, args, frame_every=1, merge_every=0):
 
 
 def main(argv=None):
+    """Parse the command line and run the chosen command, turning a PxmError into its exit code."""
     ap = argparse.ArgumentParser(prog="pxm.py", description=__doc__.split("\n")[0])
     sub = ap.add_subparsers(dest="cmd", required=True)
     sub.add_parser("check", help="is this Mac ready?").set_defaults(fn=cmd_check)

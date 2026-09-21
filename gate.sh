@@ -31,6 +31,9 @@ PXM_OK=$(echo "$OUT" | grep -c "OK" || true)
 OUT=$(SAMANTHA_HEADLESS=1 python3 tools.py 2>&1 | tail -1)
 TOOLS_OK=$([ "$OUT" = "tools ok" ] && echo "1" || echo "0")
 
+# The docs rule: 100 percent of functions and classes documented, or nothing ships.
+python3 stats.py --check || { echo "FAIL docs coverage below 100 percent"; exit 1; }
+
 HANDS_PASSED=""
 HANDS_PAST=""
 HANDS_REFUSED=""

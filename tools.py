@@ -153,6 +153,7 @@ def set_volume(level):
 
 
 def current_volume():
+    """The Mac's output volume, 50 if it cannot be read."""
     out = _run(["osascript", "-e", "output volume of (get volume settings)"])
     return int(out) if out.isdigit() else 50
 
@@ -350,6 +351,7 @@ def _complex_layers(letters, palette, rings, rays, ray_style, orbit_dots, star_p
     C = 512
 
     def polar(r, deg):  # clock angle, 0 at the top, screen y grows downward
+        """A point on a circle around the center, by radius and clock angle."""
         t = math.radians(deg)
         return round(C + r * math.sin(t)), round(C - r * math.cos(t))
 
@@ -548,7 +550,7 @@ def _named_page(task):
 NOT_FOR_MODELS = {"run_shortcut", "copy_to_clipboard", "sleep_display"}
 
 
-def agent(task, max_steps=6, log=None):
+def agent(task, max_steps=6, log=None, confirm=None):
     """Multi-step: let qwen3:8b drive TOOLS until it has an answer."""
     messages = [
         {"role": "system", "content": "You are Samantha, acting on Joshua's Mac through tools. Do what is asked in as few tool calls as possible, then answer in two or three plain sentences. Never invent page contents, read the page first."},
@@ -580,10 +582,14 @@ def agent(task, max_steps=6, log=None):
             name, args = c["function"]["name"], c["function"].get("arguments") or {}
             fn = TOOLS.get(name) if name not in NOT_FOR_MODELS else None
             try:
-                if fn:
+                if not fn:
+                    result = f"No tool named {name}."
+                elif confirm and name in WRITES and not confirm(name, tuple(map(str, args.values()))):
+                    result = "The user said no."
+                else:
                     takes = fn.__code__.co_varnames[:fn.__code__.co_argcount]
                     args = {k: v for k, v in args.items() if k in takes}
-                result = fn(**args) if fn else f"No tool named {name}."
+                    result = fn(**args)
             except Exception as e:
                 result = f"{name} failed: {e}"
             if log:
@@ -674,26 +680,55 @@ def pick(query):
     return (tool, arg) if tool and _sound(tool, arg, query) else None
 
 
-def do(query, log=None):
+# Tools that leave something behind or send something out: a note, a reminder, a file on the
+# Desktop, a Shortcut, the clipboard, a dark screen. The harness asks before any of these run.
+WRITES = {"new_note", "new_reminder", "make_logo", "paint_image", "run_shortcut", "copy_to_clipboard", "sleep_display",
+          "remove_background", "upscale_image", "enhance_image", "grayscale_image", "rotate_image", "flip_image",
+          "resize_image", "crop_square", "convert_image"}
+
+
+def plan(query):
+    """Which tools would act() fire for this command, and with what? Nothing runs: every tool is
+    swapped for a recorder while the router looks at the sentence, the way eval/actions.py does."""
+    calls, saved = [], {n: globals()[n] for n in TOOLS}
+    try:
+        for n in TOOLS:
+            globals()[n] = lambda *a, _n=n, **k: calls.append((_n, tuple(str(x) for x in a))) or "ok"
+        act(query)
+    finally:
+        globals().update(saved)
+    return calls
+
+
+def do(query, log=None, confirm=None):
     """The one entry point. The regex router first: instant, exact, and it has
     never fired the wrong tool. What it does not recognise goes to her own
     head, which understands phrasings nobody wrote a rule for. Multi-step work
     goes to agent(). Anything else is not a command: None."""
+    if confirm or log:
+        for name, args in plan(query):
+            if log:
+                log(f"  [{name}({', '.join(args)})]")
+            if confirm and name in WRITES and not confirm(name, args):
+                return "Okay, I will not."
     done = act(query)
     if done:
         return done
     if _MULTISTEP.search(_bare(query)):
-        return agent(query, log=log)
+        return agent(query, log=log, confirm=confirm)
     picked = pick(query)
     if picked and picked[0] != "agent":
         if log:
             log(f"  [{picked[0]}({picked[1]})]")
+        if confirm and picked[0] in WRITES and not confirm(picked[0], (picked[1],)):
+            return "Okay, I will not."
         fn = TOOLS[picked[0]]
         return fn(picked[1]) if fn.__code__.co_argcount else fn()
-    return agent(query, log=log) if picked or is_action(query) else None
+    return agent(query, log=log, confirm=confirm) if picked or is_action(query) else None
 
 
 def demo():
+    """Self-check for the router, the tools and the guard, with every subprocess mocked."""
     global _run
     calls, real = [], _run
     _run = lambda argv, timeout=10: calls.append(argv) or ""

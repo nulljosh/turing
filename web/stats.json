@@ -1,35 +1,43 @@
 {
   "version": "0.11.0",
   "docs_coverage": {
-    "percent": 86,
+    "percent": 100,
     "files": {
       "tools_image.py": {
         "total": 13,
         "documented": 13
       },
+      "harness.py": {
+        "total": 7,
+        "documented": 7
+      },
       "test_nimble.py": {
         "total": 4,
-        "documented": 2
+        "documented": 4
       },
       "parse_log.py": {
         "total": 1,
         "documented": 1
       },
+      "test_harness.py": {
+        "total": 8,
+        "documented": 8
+      },
       "ask.py": {
         "total": 33,
-        "documented": 30
+        "documented": 33
       },
       "test_tools_image.py": {
         "total": 19,
-        "documented": 0
+        "documented": 19
       },
       "harvest_voice.py": {
         "total": 3,
         "documented": 3
       },
       "tools.py": {
-        "total": 42,
-        "documented": 39
+        "total": 43,
+        "documented": 43
       },
       "serve.py": {
         "total": 8,
@@ -45,7 +53,7 @@
       },
       "chat.py": {
         "total": 12,
-        "documented": 11
+        "documented": 12
       },
       "test_chat.py": {
         "total": 18,
@@ -56,8 +64,16 @@
         "documented": 6
       },
       "tools_util.py": {
-        "total": 35,
-        "documented": 35
+        "total": 38,
+        "documented": 38
+      },
+      "test_mcp.py": {
+        "total": 4,
+        "documented": 4
+      },
+      "mcp_server.py": {
+        "total": 4,
+        "documented": 4
       },
       "eval/run_eval.py": {
         "total": 1,
@@ -85,11 +101,11 @@
       },
       "eval/util_diff.py": {
         "total": 2,
-        "documented": 1
+        "documented": 2
       },
       "eval/web_demo.py": {
         "total": 5,
-        "documented": 3
+        "documented": 5
       },
       "eval/score.py": {
         "total": 2,

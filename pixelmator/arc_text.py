@@ -44,6 +44,7 @@ def layout(text, adv, size, cx, cy, a, b, track=0.0, font=None, color="#FFFFFF",
         table.append((s, th))
 
     def theta(arc):
+        """The angle, found by bisection, at which the arc reaches the target length."""
         lo, hi = 0, steps
         while hi - lo > 1:
             mid = (lo + hi) // 2

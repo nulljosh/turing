@@ -67,6 +67,7 @@ def js(queries):
 
 
 def main():
+    """Diff every phrasing between Python and JavaScript and exit non-zero on any difference."""
     fails = 0
     queries = FIXED + NOT_COMMANDS + list(SHAPES) + MAC_ONLY
     theirs = dict(zip(queries, js(queries)))

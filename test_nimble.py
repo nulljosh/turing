@@ -53,6 +53,7 @@ def nimble_parse(payload):
 
 
 def wait_for_server(proc, timeout=30):
+    """Block until the server answers, or exit if it died."""
     deadline = time.time() + timeout
     while time.time() < deadline:
         if proc.poll() is not None:
@@ -67,6 +68,7 @@ def wait_for_server(proc, timeout=30):
 
 
 def main():
+    """Start the server, run the checks, stop the server."""
     proc = subprocess.Popen(
         [os.path.join(HERE, ".venv/bin/python"), os.path.join(HERE, "serve.py"), "--port", str(PORT)],
         stdout=subprocess.PIPE, stderr=subprocess.PIPE,
