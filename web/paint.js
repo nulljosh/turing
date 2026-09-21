@@ -2,6 +2,7 @@
 // The same quadtree as paint_layers in pxm.py: split the cell with the most color error.
 const c = document.getElementById('paint-c'), ctx = c.getContext('2d');
 const SCALE = 3, SIDE = 192;
+const BUDGET = 3000;
 let S, w, h, run = 0;
 const pics = [['mona.jpg', 'Mona Lisa'], ['supper.jpg', 'The Last Supper'], ['monet.jpg', 'Impression, Sunrise']];
 let pic = 0;
@@ -21,7 +22,10 @@ function load(src, name) {
       for (let j = 0; j < 4; j++) S[((y + 1) * (w + 1) + x + 1) * 4 + j] = a[j] + S[(y * (w + 1) + x + 1) * 4 + j];
     }
     c.width = w * SCALE; c.height = h * SCALE;
-    document.getElementById('paint-title').textContent = name;
+    const titleEl = document.getElementById('paint-title');
+    titleEl.textContent = name;
+    titleEl.style.display = 'inline';
+    document.getElementById('desk-space').classList.add('painting');
     paint();
   };
   img.src = src;
@@ -35,14 +39,14 @@ function cell(x0, y0, x1, y1) {
 }
 
 function paint() {
-  const me = ++run, budget = +document.getElementById('paint-budget').value;
+  const me = ++run;
   const still = matchMedia('(prefers-reduced-motion:reduce)').matches;
   let count = 0, heap = [];
   const draw = q => { ctx.fillStyle = q.fill; ctx.fillRect(q.x0 * SCALE, q.y0 * SCALE, (q.x1 - q.x0) * SCALE, (q.y1 - q.y0) * SCALE); count++; };
   const root = cell(0, 0, w, h); draw(root); heap.push(root);
   (function step() {
     if (me !== run) return;
-    for (let k = 0; k < (still ? 1e9 : Math.max(1, budget / 240)) && heap.length && count + 4 <= budget; k++) {
+    for (let k = 0; k < (still ? 1e9 : Math.max(1, BUDGET / 240)) && heap.length && count + 4 <= BUDGET; k++) {
       let bi = 0;  // linear scan for the worst cell: fine at a few thousand cells
       for (let i = 1; i < heap.length; i++) if (heap[i].err > heap[bi].err) bi = i;
       const q = heap.splice(bi, 1)[0], mx = (q.x0 + q.x1) >> 1, my = (q.y0 + q.y1) >> 1;
@@ -53,17 +57,16 @@ function paint() {
       }
     }
     document.getElementById('paint-n').textContent = count;
-    if (heap.length && count + 4 <= budget) requestAnimationFrame(step);
+    if (heap.length && count + 4 <= BUDGET) requestAnimationFrame(step);
   })();
 }
 
-document.getElementById('paint-again').onclick = paint;
-document.getElementById('paint-budget').onchange = paint;
 const picks = document.getElementById('paint-picks');
 pics.forEach(([src, name], i) => {
   const b = document.createElement('button');
   b.type = 'button'; b.className = 'paint-pick'; b.title = name; b.setAttribute('aria-label', 'Paint ' + name);
   b.setAttribute('aria-pressed', i === 0);
+  b.style.width = b.style.height = '32px';
   b.innerHTML = '<img src="' + src + '" alt="" loading="lazy">';
   b.onclick = () => {
     pic = i;
@@ -79,4 +82,10 @@ document.getElementById('paint-file').onchange = e => {
   r.onload = () => load(r.result, f.name.replace(/\.[^.]+$/, ''));
   r.readAsDataURL(f);
 };
-load(...pics[0]);
+window.samanthaPaint = function(index) {
+  if (index < 0 || index >= pics.length) index = pic;
+  pic = index;
+  picks.querySelectorAll('button').forEach((x, k) => x.setAttribute('aria-pressed', k === index));
+  load(...pics[index]);
+  return pics[index][1];
+};

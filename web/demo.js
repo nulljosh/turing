@@ -302,6 +302,7 @@
   // ---- the page is hers too. Every change is local to this visitor and undone by "reset the page". ----
   var wrap = document.querySelector('.wrap'), h1 = document.querySelector('h1'), tagline = document.querySelector('header .sub');
   var original = { h1: h1.textContent, tagline: tagline.textContent };
+  var paintNames = ['Mona Lisa', 'The Last Supper', 'Impression, Sunrise'];
   function sections() { return Array.prototype.slice.call(document.querySelectorAll('section')).filter(function (x) { return x.querySelector('h2'); }); }
   function names() { return sections().map(function (x) { return x.querySelector('h2').textContent; }); }
   function find(arg) {
@@ -313,7 +314,20 @@
   function label(node) { var h = node.querySelector('h2'); return h ? h.textContent : node.tagName === 'HEADER' ? 'the top' : 'the bottom'; }
   function go(node) { node.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' }); }
   var zoom = 1;
+  var lastPaintIndex = 0;
   var PAGE = {
+    paint: function (cmd) {
+      var text = (cmd || '').toLowerCase().trim();
+      var index = lastPaintIndex;
+      if (/mona|lisa/.test(text)) index = 0;
+      else if (/supper/.test(text)) index = 1;
+      else if (/monet|sunrise|impression/.test(text)) index = 2;
+      else index = (lastPaintIndex + 1) % paintNames.length;
+      lastPaintIndex = index;
+      if (typeof window.samanthaPaint === 'function') window.samanthaPaint(index);
+      var count = document.getElementById('paint-n').textContent;
+      return 'Painting the ' + paintNames[index] + ' from ' + count + ' squares. On my Mac this happens inside Pixelmator Pro.';
+    },
     set_heading: function (text) { h1.textContent = text.slice(0, 60); go(document.querySelector('header')); return 'The title now says "' + h1.textContent + '". Only on your screen.'; },
     set_tagline: function (text) { tagline.textContent = text.slice(0, 120); go(document.querySelector('header')); return 'Tagline changed.'; },
     scroll_to: function (where) {
@@ -451,6 +465,8 @@
   function answer(q) {
     var exact = S.exact(q);
     if (exact) return Promise.resolve({ text: exact });
+    var paintMatch = /^(?:paint|repaint|draw)\b/i.exec(q);
+    if (paintMatch) return runTool('paint', q.slice(paintMatch[0].length)).then(function (o) { return { calls: [o.call], text: o.text, node: o.node }; });
     var r = S.pageRoute(q, names()) || S.route(q);
     if (r && r.tool) return runTool(r.tool, r.arg).then(function (o) { return { calls: [o.call], text: o.text, node: o.node }; });
     if (r && r.agent) return agent(q);
@@ -523,7 +539,7 @@
     statusEl.textContent = 'Live demo. She controls the stand-in Mac and this page. A 3B on Cloudflare stands in for the models on her Mac.';
     say(null, [], "I'm Samantha. Tell me to do something, to the Mac up there or to this page, or ask me something. Type anything.");
     var chips = $('chat-chips');
-    ['change the title to Hello Joshua', 'dark mode', 'scroll to the results', 'do a barrel roll', 'play some music', 'set a timer for 1 minute',
+    ['paint the mona lisa', 'paint the last supper', 'paint a monet', 'change the title to Hello Joshua', 'dark mode', 'scroll to the results', 'do a barrel roll', 'play some music', 'set a timer for 1 minute',
      'make me a complex logo for a surf school', 'who invented the telephone', 'reset the page'].forEach(function (q) {
       var chip = el('button', 'chat-chip', q);
       chip.type = 'button';

@@ -146,7 +146,11 @@
       .desk-right{margin-left:auto;display:flex;gap:8px;align-items:center}
       .desk-vol-track{width:44px;height:4px;border-radius:2px;background:var(--line);overflow:hidden}
       #desk-vol-fill{display:block;height:100%;width:50%;background:var(--fg);transition:width .2s}
-      .desk-space{position:relative;height:200px;overflow:hidden;background:url(icon.svg) center/84px no-repeat}
+      .desk-space{position:relative;height:200px;overflow:hidden;background:url(icon.svg) center/84px no-repeat;display:flex;flex-direction:column}
+      .desk-space canvas{flex:1;width:100%;max-height:420px;object-fit:contain;display:none}
+      .desk-space.painting{background:none}
+      .desk-space.painting canvas{display:block}
+      .desk-paint-info{font-size:12px;color:var(--muted);text-align:center;padding:4px 0;order:-1}
       .desk-space.flash::after{content:"";position:absolute;inset:0;background:#fff;animation:flash .35s ease-out forwards;pointer-events:none}
       @keyframes flash{from{opacity:.85}to{opacity:0}}
       .desk-file{position:absolute;right:10px;bottom:8px;font-size:10px;color:var(--muted)}
@@ -229,9 +233,17 @@
               <span id="desk-timer"></span>
               <span class="desk-right"><span id="desk-vol">Vol 50</span><span class="desk-vol-track"><span id="desk-vol-fill"></span></span><span id="desk-clock"></span></span>
             </div>
-            <div id="desk-space" class="desk-space"><span id="desk-file" class="desk-file"></span></div>
+            <div id="desk-space" class="desk-space">
+              <div class="desk-paint-info"><b id="paint-n">0</b> layers, <span id="paint-title" style="display:none"></span></div>
+              <canvas id="paint-c" aria-label="A painting rebuilt from squares"></canvas>
+              <span id="desk-file" class="desk-file"></span>
+            </div>
           </div>
           <div id="chat-status" style="font-size:13px;color:var(--muted);margin-bottom:12px"></div>
+          <div id="paint-controls" style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;align-items:center">
+            <div id="paint-picks" role="group" aria-label="Pick a painting" style="display:flex;gap:6px;flex:1"></div>
+            <label class="paint-btn" style="flex:0 1 auto;margin:0;padding:6px 12px;font-size:12px">Your own<input id="paint-file" type="file" accept="image/*" style="display:none"></label>
+          </div>
           <div id="chat-transcript" aria-live="polite" aria-label="Conversation with Samantha" style="flex:1;overflow-y:auto;min-height:220px;max-height:340px;margin-bottom:12px;font-size:14px;line-height:1.5;padding-right:8px"></div>
           <div style="display:flex;gap:8px">
             <label for="chat-input" style="display:none">Ask Samantha</label>
@@ -244,17 +256,7 @@
 
       <section>
         <h2>Hands</h2>
-        <p>She works the Mac. She designs logos. She paints. Watch.</p>
-        <div class="card" style="margin-top:16px;display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start">
-          <canvas id="paint-c" aria-label="A painting rebuilt from squares" style="flex:1 1 240px;max-width:100%;min-width:0;height:auto;max-height:60vh;object-fit:contain;border-radius:6px"></canvas>
-          <div style="flex:1 1 180px;min-width:0;font-size:13px">
-            <div><b id="paint-n" style="font-size:22px">0</b> layers, <span id="paint-title">Mona Lisa</span></div>
-            <label style="display:block;margin:12px 0;color:var(--muted)">Layer budget<input id="paint-budget" type="range" min="50" max="6000" step="50" value="3000" style="width:100%"></label>
-            <button id="paint-again" type="button" class="paint-btn">Paint again</button>
-            <div id="paint-picks" role="group" aria-label="Pick a painting" style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:0 0 8px"></div>
-            <label class="paint-btn">Your own image<input id="paint-file" type="file" accept="image/*" style="display:none"></label>
-          </div>
-        </div>
+        <p>Built in Pixelmator Pro on the Mac.</p>
         <div style="margin-top:16px;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;align-items:end">
           <figure style="margin:0;text-align:center">
             <img src="mona-lisa.gif" loading="lazy" alt="The Mona Lisa assembling from 2997 squares inside Pixelmator Pro" style="max-width:100%;max-height:300px;border-radius:6px">
@@ -265,7 +267,6 @@
             <figcaption class="sub" style="margin-top:8px">The Last Supper. 3820 layers. The build was cut off at 95 percent, so one square is still blue.</figcaption>
           </figure>
         </div>
-        <p class="sub" style="margin-top:12px">Both built in the real app. Say "paint ~/Downloads/mona.jpg", or use the paintbrush in the menu bar and watch it build.</p>
       </section>
 
       <section id="results-section">
