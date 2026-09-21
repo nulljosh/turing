@@ -66,7 +66,9 @@
       a:hover{color:var(--ember-ink)}
       ::selection{background:var(--ember);color:#15110d}
       input[type=range]{accent-color:var(--ember)}
-      #chat-send{background:var(--ember)!important;border-color:var(--ember)!important;color:#15110d!important}
+      #chat-send{background:var(--fg)!important;border-color:var(--fg)!important;color:var(--bg)!important}
+      #chat-send:hover{opacity:.86}
+      #chat-send:focus-visible{outline:2px solid var(--fg);outline-offset:3px}
       #chat-input:focus{outline:2px solid var(--ember);outline-offset:1px}
       .paint-btn:hover{border-color:var(--ember)}
       details.more>summary::marker{color:var(--ember)}

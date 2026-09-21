@@ -52,7 +52,7 @@ Painting: `pixelmator/pxm.py paint --engine magick` draws the quadtree with Imag
 100 percent of functions and classes have a docstring, in the top folder, `eval/` and `pixelmator/`. `python3 stats.py --check` fails otherwise, `./gate.sh` runs it first and CI runs it. Nothing gets pushed under 100.
 
 ## Design system
-The landing page's tokens live at the top of `web/index.html`. True white in light mode, true black in dark. One accent, ember (`--ember` #E8A96A), lifted from her icon. Decor uses `--ember`, text uses `--ember-ink` so it stays readable in both themes. Ember goes on heading dots, link underlines, the slider, the Send button and the "now" bars. Nothing else gets color. No gradients, no second accent. Radius and spacing come from `--r-*` and `--s-*`.
+The landing page's tokens live at the top of `web/index.html`. True white in light mode, true black in dark. One accent, ember (`--ember` #E8A96A), lifted from her icon. Decor uses `--ember`, text uses `--ember-ink` so it stays readable in both themes. Ember goes on heading dots, link underlines, the slider and the "now" bars. The Send button is neutral, solid text color on the page color, so it is black in light mode and white in dark mode. Nothing else gets color. No gradients, no second accent. Radius and spacing come from `--r-*` and `--s-*`.
 Page order is demo, what she can do, results, chart. Long text sits inside `details.more` so the page stays visual. Every section keeps its `<h2>`, because her page-control demo finds sections by heading. Results tiles read `stats.json`, never hardcode them.
 
 ## The loop
