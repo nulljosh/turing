@@ -13,6 +13,7 @@ Build small language models on one Mac. Samantha is a 0.5B model fine-tuned on y
 ## Features
 
 - **63 tools.** Her Mac (open apps and sites, search, read a page, screenshot, clipboard, volume, battery, music, timers, notes, reminders, calendar, weather), pictures (paint any photo, make a logo, remove a background, upscale, enhance, rotate, crop, convert), and 33 small utilities that need no app: math, unit conversion, time in any city, dice, passwords, hashes, base64, morse, this Mac's disk, memory and Wi-Fi, and any Apple Shortcut you name
+- **Her own logo.** The icon above was designed by her. Her model steers four dials (palette, cell count, shape, how many cells glow), the harness lays the cells on a golden-angle spiral, and there is no text in it. Ask her for an original wordless logo and she makes a new one; the spec is in `pixelmator/examples/turing-bloom.json`
 - **A harness.** `harness.py` keeps the conversation, prints every tool call before it runs, and asks before anything that writes or sends (a note, a reminder, a file, a Shortcut, the clipboard)
 - **Her hands over MCP.** `mcp_server.py` lets Claude Code or any other assistant use her tools
 - **Small enough to train at home** (Qwen2.5-0.5B LoRA on Apple Silicon via MLX, ~3.5GB memory)

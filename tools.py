@@ -383,20 +383,55 @@ def _complex_layers(letters, palette, rings, rays, ray_style, orbit_dots, star_p
     return L
 
 
+# Wordless mode: no letters at all. She turns four dials, the harness lays the cells on a golden-angle spiral (the way a
+# sunflower packs its seeds), so it is never symmetric in the same way twice and never has text.
+_BLOOM_SCHEMA = {"type": "object", "required": ["palette", "cells", "shape", "lit"], "properties": {
+    "palette": {"enum": list(PALETTES)}, "cells": {"type": "integer", "minimum": 55, "maximum": 233},
+    "shape": {"enum": ["circle", "square"]}, "lit": {"type": "integer", "minimum": 1, "maximum": 5}}}
+_WANTS_WORDLESS = re.compile(r"\b(?:no (?:text|letters|words|lettering)|wordless|textless|without (?:text|letters|words)|original|abstract)\b", re.I)
+
+
+def _bloom_layers(palette, cells, shape, lit):
+    """A wordless logo: cells on a golden-angle spiral, growing outward, with a few lit in the accent color."""
+    tile, ink, accent = PALETTES[palette]
+    C, golden = 512, math.radians(137.507764)
+    fib = [n for n in (1, 3, 8, 21, 55, 144, 233) if n <= cells]
+    bright = set(fib[-lit:]) | {1}
+    L = [{"type": "rounded_rectangle", "name": "Tile", "width": 880, "height": 880, "corner_radius": 200, "fill": tile}]
+    for i in range(1, cells + 1):
+        f = math.sqrt((i - 1) / (cells - 1))  # cell 1 sits exactly on the centre: the one cell under the head
+        r, theta = 335 * f, i * golden
+        size = round(14 + 30 * f + ((44 if i == 1 else 16) if i in bright else 0))
+        cell = {"name": f"Cell {i}", "cx": round(C + r * math.cos(theta)), "cy": round(C + r * math.sin(theta)), "width": size, "height": size,
+                "fill": accent if i in bright else ink, "opacity": 100 if i in bright else round(52 + 40 * f)}
+        if shape == "square":
+            cell.update(type="rounded_rectangle", corner_radius=max(2, size // 6), rotation=round(math.degrees(theta) % 360, 2))
+        else:
+            cell["type"] = "ellipse"
+        L.append(cell)
+    return L
+
+
 def make_logo(description):
     """Design a logo and build it live in Pixelmator Pro. Takes a short description of what the logo is for. Say 'complex' for an intricate one."""
     fancy = bool(_WANTS_COMPLEX.search(description))
+    wordless = bool(_WANTS_WORDLESS.search(description))
     prompt = ("Pick a logo for this. letters: its one or two initials. palette: ember (warm amber on dark), ink (white and gold on "
               "near-black), forest (green on dark), signal (red on dark), paper (dark on cream). ")
-    prompt += ("This one should be intricate, so be bold with the numbers. rings: concentric rings. rays: marks around the rim. "
-               "ray_style: bars, dots or stars. orbit_dots: dots circling inside. star_points: points on the centre burst. "
-               if fancy else "motif: ring, spark, underline or dot. ") + "Logo for: " + description
-    body = json.dumps({"model": AGENT_MODEL, "stream": False, "think": False, "format": _COMPLEX_SCHEMA if fancy else _LOGO_SCHEMA,
+    if wordless:
+        prompt = ("Pick a wordless logo, no letters at all. palette: ember (warm amber on dark), ink (white and gold on near-black), forest "
+                  "(green on dark), signal (red on dark), paper (dark on cream). cells: how many cells spiral out from the centre, a Fibonacci "
+                  "number reads best. shape: circle or square. lit: how many cells glow in the accent color. Logo for: " + description)
+    else:
+        prompt += ("This one should be intricate, so be bold with the numbers. rings: concentric rings. rays: marks around the rim. "
+                   "ray_style: bars, dots or stars. orbit_dots: dots circling inside. star_points: points on the centre burst. "
+                   if fancy else "motif: ring, spark, underline or dot. ") + "Logo for: " + description
+    body = json.dumps({"model": AGENT_MODEL, "stream": False, "think": False, "format": _BLOOM_SCHEMA if wordless else _COMPLEX_SCHEMA if fancy else _LOGO_SCHEMA,
                        "messages": [{"role": "user", "content": prompt}]}).encode()
     try:
         with urllib.request.urlopen(urllib.request.Request(OLLAMA_CHAT, body, {"Content-Type": "application/json"}), timeout=180) as r:
             pick = json.loads(json.load(r)["message"]["content"])
-        spec = {"layers": _complex_layers(**pick) if fancy else _logo_layers(pick["letters"], pick["palette"], pick["motif"])}
+        spec = {"layers": _bloom_layers(**pick) if wordless else _complex_layers(**pick) if fancy else _logo_layers(pick["letters"], pick["palette"], pick["motif"])}
     except Exception as e:
         return f"I couldn't draft the design: {e}"
     out = os.path.expanduser("~/Desktop/samantha-logo.png")
@@ -772,6 +807,8 @@ def demo():
                 assert _logo_layers("t", pal, motif)[0]["type"] == "rounded_rectangle"
         big = _complex_layers("t", "ember", 5, 36, "bars", 16, 12)
         assert len(big) == 1 + 36 + 5 + 16 + 3 and all(0 <= l.get("rotation", 0) < 360 for l in big)
+        assert not any(l["type"] == "text" for l in _bloom_layers("ember", 89, "square", 3)) and len(_bloom_layers("paper", 144, "circle", 2)) == 145
+        assert _WANTS_WORDLESS.search("a wordless logo for turing") and not _WANTS_WORDLESS.search("a logo for a surf school")
         assert _named_page("poke around hacker news and tell me") == "https://news.ycombinator.com"
         assert _named_page("read github.com/nulljosh/turing.") == "https://github.com/nulljosh/turing"
         assert _named_page("open pixelmator then tell me my battery") is None
