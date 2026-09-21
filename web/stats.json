@@ -1,7 +1,7 @@
 {
-  "version": "0.10.0",
+  "version": "0.11.0",
   "docs_coverage": {
-    "percent": 83,
+    "percent": 86,
     "files": {
       "tools_image.py": {
         "total": 13,
@@ -28,8 +28,8 @@
         "documented": 3
       },
       "tools.py": {
-        "total": 41,
-        "documented": 38
+        "total": 42,
+        "documented": 39
       },
       "serve.py": {
         "total": 8,
@@ -55,6 +55,10 @@
         "total": 6,
         "documented": 6
       },
+      "tools_util.py": {
+        "total": 35,
+        "documented": 35
+      },
       "eval/run_eval.py": {
         "total": 1,
         "documented": 1
@@ -78,6 +82,10 @@
       "eval/actions.py": {
         "total": 3,
         "documented": 3
+      },
+      "eval/util_diff.py": {
+        "total": 2,
+        "documented": 1
       },
       "eval/web_demo.py": {
         "total": 5,
