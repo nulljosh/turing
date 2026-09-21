@@ -1,7 +1,7 @@
 {
   "version": "0.7.4",
   "docs_coverage": {
-    "percent": 36,
+    "percent": 40,
     "files": {
       "test_nimble.py": {
         "total": 4,
@@ -12,16 +12,16 @@
         "documented": 0
       },
       "ask.py": {
-        "total": 32,
-        "documented": 17
+        "total": 33,
+        "documented": 18
       },
       "harvest_voice.py": {
         "total": 3,
         "documented": 1
       },
       "tools.py": {
-        "total": 30,
-        "documented": 17
+        "total": 41,
+        "documented": 28
       },
       "serve.py": {
         "total": 8,
@@ -30,6 +30,10 @@
       "prep_data.py": {
         "total": 5,
         "documented": 0
+      },
+      "gen_hands_data.py": {
+        "total": 5,
+        "documented": 1
       },
       "chat.py": {
         "total": 12,
@@ -51,13 +55,25 @@
         "total": 1,
         "documented": 0
       },
+      "eval/hands.py": {
+        "total": 4,
+        "documented": 1
+      },
       "eval/faq_paraphrase.py": {
+        "total": 1,
+        "documented": 0
+      },
+      "eval/web_parity.py": {
         "total": 1,
         "documented": 0
       },
       "eval/actions.py": {
         "total": 3,
         "documented": 0
+      },
+      "eval/web_demo.py": {
+        "total": 5,
+        "documented": 2
       },
       "eval/score.py": {
         "total": 2,
@@ -72,7 +88,7 @@
       "CLAUDE.md": true,
       "roadmap.md": true,
       "LICENSE": true,
-      "SECURITY.md": false,
+      "SECURITY.md": true,
       "architecture.svg": true,
       "icon.svg": true
     }
@@ -80,9 +96,9 @@
   "measured": {
     "tools": {
       "before": 0,
-      "after": 13
+      "after": 20
     },
-    "actions_eval": "75/75",
+    "actions_eval": "77/77",
     "knowledge_sweep": {
       "before": "47/65",
       "after": "57/65"
