@@ -1,5 +1,22 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
-  <rect width="200" height="200" rx="36" fill="#1a1410"/>
-  <circle cx="100" cy="100" r="52" fill="none" stroke="#e8a96a" stroke-width="2" opacity="0.5"/>
-  <text x="100" y="128" font-family="-apple-system,Helvetica,Arial,sans-serif" font-size="80" font-weight="500" fill="#f4c893" text-anchor="middle">S</text>
+  <!-- A Turing machine: an endless tape, one cell under the head. -->
+  <defs><clipPath id="c"><rect width="200" height="200" rx="44"/></clipPath></defs>
+  <g clip-path="url(#c)">
+    <rect width="200" height="200" fill="#15110d"/>
+    <g transform="translate(0 13)">
+    <g fill="none" stroke="#e8a96a" stroke-width="3" opacity="0.45">
+      <rect x="-34" y="78" width="52" height="52" rx="8"/>
+      <rect x="20" y="78" width="52" height="52" rx="8"/>
+      <rect x="128" y="78" width="52" height="52" rx="8"/>
+      <rect x="182" y="78" width="52" height="52" rx="8"/>
+    </g>
+    <g fill="#e8a96a" opacity="0.45">
+      <circle cx="46" cy="104" r="7"/>
+      <circle cx="208" cy="104" r="7"/>
+    </g>
+    <rect x="74" y="78" width="52" height="52" rx="8" fill="#f4c893"/>
+    <circle cx="100" cy="104" r="8" fill="#15110d"/>
+    <path d="M100 66 L86 44 H114 Z" fill="#f4c893"/>
+    </g>
+  </g>
 </svg>
