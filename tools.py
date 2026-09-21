@@ -608,11 +608,31 @@ HANDS_SYSTEM = 'You are Samantha\'s hands. Reply with one JSON tool call. If thi
 _hands = None
 
 
+# A pick with no argument to check (disk_space, uptime...) or a loose one needs evidence in the sentence: some word that
+# is really about that tool. Round four confused ip_address with wifi_name and let "let me know in 10 minutes" write a note.
+_EVIDENCE = {
+    "disk_space": r"disk|storage|space|drive|room|full", "uptime": r"\bup\b|uptime|restart|reboot|been on|running|booted",
+    "memory_usage": r"memory|\bram\b", "cpu_load": r"cpu|processor|load|busy|maxed|working|doing", "ip_address": r"\bip\b|address",
+    "wifi_name": r"wi-?fi|network", "system_info": r"system|\bmac\b|macos|chip|computer|specs|about this", "list_shortcuts": r"shortcut",
+    "flip_coin": r"coin|heads|tails", "make_uuid": r"uuid|guid", "time_in": r"time|clock|late", "days_until": r"\bday|sleeps|until|till|far away|count",
+    "roll_dice": r"roll|dice|\bdie\b|\bd\d|throw|toss", "random_number": r"random|number", "make_password": r"password",
+    "hash_text": r"hash|sha|checksum", "word_count": r"word", "tip": r"\btip", "is_prime": r"prime|factor|divid", "roman_numeral": r"roman",
+    "morse_code": r"morse", "new_note": r"note|jot|write|remember|save|down", "say": r"\bsay|speak|announce|voice|aloud|out loud|words",
+}
+# ...and words that say the sentence is about a different tool. "say help in morse code" is morse_code, not say.
+_AGAINST = {"say": r"morse|clock say", "wifi_name": r"address|\bip\b", "open_app": r"shortcut", "weather": r"\bapp\b", "web_search": r"\.(?:com|org|net|io|ca)\b"}
+
+
 def _sound(tool, arg, query):
     """Is this pick safe to run? She was trained to copy her argument out of
     the sentence, never to compose one. So an argument that is not in the
     sentence is a guess, and a guess does not get to touch the Mac."""
     q_lower = query.lower()
+
+    if tool in _EVIDENCE and not re.search(_EVIDENCE[tool], q_lower):
+        return False
+    if tool in _AGAINST and re.search(_AGAINST[tool], q_lower):
+        return False
 
     if tool == "set_volume":
         # "mute" and "kill the sound" mean 0, and no digit appears in the sentence
