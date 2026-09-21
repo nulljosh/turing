@@ -43,6 +43,9 @@
       section{margin-top:40px}
       h2{font-size:28px;line-height:1.1;letter-spacing:-0.02em;font-weight:700;color:var(--fg);margin:0 0 12px}
       section{margin-top:64px}
+      .paint-pick{padding:0;border:2px solid var(--line);border-radius:var(--r-sm);background:none;cursor:pointer;overflow:hidden;aspect-ratio:1}
+      .paint-pick img{width:100%;height:100%;object-fit:cover;display:block}
+      .paint-pick[aria-pressed=true]{border-color:var(--ember)}
       .paint-btn{display:block;width:100%;margin:0 0 8px;padding:8px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--fg);font:inherit;font-size:13px;cursor:pointer;text-align:center;box-sizing:border-box}
       details.more>summary{cursor:pointer;font-size:15px;color:var(--muted);padding:6px 0}
       details.more[open]>summary{margin-bottom:8px}
@@ -248,7 +251,7 @@
             <div><b id="paint-n" style="font-size:22px">0</b> layers, <span id="paint-title">Mona Lisa</span></div>
             <label style="display:block;margin:12px 0;color:var(--muted)">Layer budget<input id="paint-budget" type="range" min="50" max="6000" step="50" value="3000" style="width:100%"></label>
             <button id="paint-again" type="button" class="paint-btn">Paint again</button>
-            <button id="paint-swap" type="button" class="paint-btn">The Last Supper</button>
+            <div id="paint-picks" role="group" aria-label="Pick a painting" style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:0 0 8px"></div>
             <label class="paint-btn">Your own image<input id="paint-file" type="file" accept="image/*" style="display:none"></label>
           </div>
         </div>

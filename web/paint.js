@@ -3,7 +3,7 @@
 const c = document.getElementById('paint-c'), ctx = c.getContext('2d');
 const SCALE = 3, SIDE = 192;
 let S, w, h, run = 0;
-const pics = [['mona.jpg', 'Mona Lisa'], ['supper.jpg', 'The Last Supper']];
+const pics = [['mona.jpg', 'Mona Lisa'], ['supper.jpg', 'The Last Supper'], ['monet.jpg', 'Impression, Sunrise']];
 let pic = 0;
 
 function load(src, name) {
@@ -59,9 +59,19 @@ function paint() {
 
 document.getElementById('paint-again').onclick = paint;
 document.getElementById('paint-budget').onchange = paint;
-document.getElementById('paint-swap').onclick = e => {
-  e.target.textContent = pics[pic][1]; pic = 1 - pic; load(...pics[pic]);
-};
+const picks = document.getElementById('paint-picks');
+pics.forEach(([src, name], i) => {
+  const b = document.createElement('button');
+  b.type = 'button'; b.className = 'paint-pick'; b.title = name; b.setAttribute('aria-label', 'Paint ' + name);
+  b.setAttribute('aria-pressed', i === 0);
+  b.innerHTML = '<img src="' + src + '" alt="" loading="lazy">';
+  b.onclick = () => {
+    pic = i;
+    picks.querySelectorAll('button').forEach((x, k) => x.setAttribute('aria-pressed', k === i));
+    load(src, name);
+  };
+  picks.appendChild(b);
+});
 document.getElementById('paint-file').onchange = e => {
   const f = e.target.files[0];
   if (!f) return;
