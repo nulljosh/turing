@@ -309,6 +309,15 @@ Gaps, in order:
 - [ ] **Her own head, started 2026-09-21.** `gen_hands_data.py` writes commands paired with tool calls, `eval/hands.py` scores a picker on phrasings it never saw. Round two on the 0.5B: **395 of 484 unseen, 74 of 75 hand-written. The regex router gets 30 of 463 on the same set.** 50 wrong-tool picks, mostly from polite wrappers it had not seen. Round three data (2,542 rows, 50 wrappers, writing tasks as not-a-command) is generated and **not trained**: the run was killed when usage ran out. `tools.do()` already calls `tools.pick()` behind `_sound()`, and with no `hands-adapter/` it falls through to the old path. Next: train round three alone, score it, check the "get past the guard" count, then decide if the 1.7B can go. Also untested: `prism-ml/Ternary-Bonsai-4B-mlx-2bit` is on the LaCie (1.1GB) as a smaller smarter borrowed head, score it with `eval/hands.py --model`.
 - [ ] **Her own head, the rest.** Distill the big model's tool calls into a small one we trained, so the borrowed head can go. Memory-gated, may slip past 1.0.0. If it does, say so in the release notes.
 
+### Gaps found by the loop
+The loop compares her with other assistants (Siri and Shortcuts, Apple Intelligence, Claude and ChatGPT desktop with MCP, Open Interpreter, Raycast AI, local Ollama agents), adds each real gap here with where it was seen, builds it, then deletes the line once it ships (history lives in git). Newest and biggest first.
+
+- [ ] MCP client: she calls other people's MCP servers, so any MCP tool becomes hers. Seen in Claude and ChatGPT desktop, Open Interpreter
+- [ ] Browser tabs: list, switch, close, and read a rendered page. Seen in Raycast, Claude in Chrome
+- [ ] Memory across sessions, not just inside one conversation
+- [ ] See the screen and answer about it (screenshot plus a small vision step). Seen in Apple Intelligence, ChatGPT desktop
+- [ ] Voice in as well as out: she can speak, she cannot listen
+
 ### Phase 6: Distillation, not scale (month 4+, optional/ambitious)
 Instead of chasing bigger bases, use a frontier model (Claude) to generate high-quality synthetic training examples in our exact style, then distill that into Samantha. This is literally how most useful small models are built today, nobody pretrains from raw internet text anymore if they can help it.
 
