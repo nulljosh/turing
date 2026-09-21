@@ -261,6 +261,7 @@
       <section id="abilities-section">
         <h2>What she can do</h2>
         <p class="sub">Type any of these in the demo above. Autocomplete suggests them.</p>
+        <p>Her own 0.5B model picks from 51 tools. She plugs into other assistants over MCP. She asks before anything that writes or sends. She draws a photo from 40,000 squares in about a second. Seven rules keep all of it honest.</p>
         <details class="more">
           <summary>Every tool, and how she plugs in</summary>
           <p><b>Her Mac.</b> Open apps and sites, search, read the current tab, screenshots, the clipboard, volume, battery, music, notes, reminders, the calendar, timers, the weather, files.</p>
@@ -522,7 +523,8 @@ python3 -m venv .venv && ./.venv/bin/pip install mlx-lm
 
         var benchmarks = [
           {label:'Confidently wrong answers (lower is better)', max:18, before:m.confidently_wrong.before, after:m.confidently_wrong.after, before_label:m.confidently_wrong.before, after_label:m.confidently_wrong.after},
-          {label:'Knowledge sweep, right out of 65', max:65, before:47, after:57, before_label:'47/65', after_label:'57/65'},
+          {label:'Knowledge sweep, right out of 65', max:65, before:47, after:parseInt(m.knowledge_sweep.after, 10), before_label:'47/65', after_label:m.knowledge_sweep.after},
+          {label:'Her own tool picker, right on phrasings it never saw (percent)', max:100, before:m.picker_unseen_percent.before, after:m.picker_unseen_percent.after, before_label:m.picker_unseen_percent.before+'%', after_label:m.picker_unseen_percent.after+'%'},
           {label:'Latency for multistep asks', before:'8B model minutes', after:m.multistep_latency_seconds.after+'s', before_label:'', after_label:m.multistep_latency_seconds.after+'s'},
           {label:'Hands model memory, GB (lower is better)', max:m.hands_model_memory_gb.before, before:m.hands_model_memory_gb.before, after:m.hands_model_memory_gb.after, before_label:m.hands_model_memory_gb.before+'GB', after_label:m.hands_model_memory_gb.after+'GB'}
         ];

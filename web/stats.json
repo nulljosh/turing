@@ -149,11 +149,15 @@
     "actions_eval": "77/77",
     "knowledge_sweep": {
       "before": "47/65",
-      "after": "57/65"
+      "after": "61/65"
     },
     "confidently_wrong": {
       "before": 18,
-      "after": 4
+      "after": 2
+    },
+    "picker_unseen_percent": {
+      "before": 6,
+      "after": 83
     },
     "project_eval": "29/29",
     "chat_tests": "18/18",
