@@ -1,5 +1,5 @@
 /*
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://cloudflareinsights.com https://wttr.in https://hacker-news.firebaseio.com https://api.github.com http://localhost:8127; frame-src https://news.ycombinator.com https://*.wikipedia.org https://heyitsmejosh.com https://example.com; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://cloudflareinsights.com https://wttr.in https://hacker-news.firebaseio.com https://api.github.com http://localhost:8127; frame-src https://*.wikipedia.org https://heyitsmejosh.com https://example.com https://lobste.rs https://text.npr.org https://info.cern.ch https://archive.org https://www.gutenberg.org https://gutenberg.org https://openlibrary.org https://xkcd.com https://wiby.me; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'
   X-Content-Type-Options: nosniff
   X-Frame-Options: DENY
   Referrer-Policy: strict-origin-when-cross-origin

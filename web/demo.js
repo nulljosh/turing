@@ -24,8 +24,8 @@
                clipboard: 'turing.heyitsmejosh.com', timerEnd: 0 };
 
   // ---- the stand-in Mac ----
-  // hosts that allow being framed (checked with curl -I: no X-Frame-Options, no frame-ancestors). GitHub, YouTube, Reddit and most others refuse.
-  var FRAMEABLE = /^(?:news\.ycombinator\.com|(?:[a-z-]+\.)?wikipedia\.org|heyitsmejosh\.com|example\.com)$/i;
+  // hosts that allow being framed, each tried in a real Chromium (curl headers missed Hacker News, which refuses). GitHub, YouTube, Reddit, HN and most others refuse.
+  var FRAMEABLE = /^(?:www\.)?(?:(?:[a-z-]+\.)?wikipedia\.org|heyitsmejosh\.com|example\.com|lobste\.rs|text\.npr\.org|info\.cern\.ch|archive\.org|gutenberg\.org|openlibrary\.org|xkcd\.com|wiby\.me)$/i;
   function closeWins() { var all = space.querySelectorAll('.win'); for (var k = 0; k < all.length; k++) all[k].remove(); }
   function win(id, title, build) {
     var w = $('win-' + id);
@@ -615,7 +615,7 @@
 
   // No theme commands and no barrel roll in the reel: moving a visitor's whole page unasked reads as a bug.
   // ---- idle reel: if nobody types, she shows what she does. Silent, and it stops the moment you touch anything ----
-  var REEL = ['paint the mona lisa', 'open chrome and go to news.ycombinator.com', 'set the volume to 40', 'paint the eniac',
+  var REEL = ['paint the mona lisa', 'open chrome and go to en.wikipedia.org/wiki/Alan_Turing', 'set the volume to 40', 'paint the eniac',
               'what is 17*23', 'make me a complex logo for a surf school', 'make me an original wordless logo for turing', "what's the weather in tokyo", 'play some music', 'skip this song', 'paint the last supper',
               'who painted the mona lisa', 'scroll to the results', 'take a screenshot', 'draw a lighthouse at dusk', 'draw a fox in the snow', 'calculate 17*23', 'convert 72 f to c', 'time in tokyo', 'roll 2d6', 'is 91 prime', 'days until christmas', 'who invented the telephone', 'reset the page'];
   // more phrasings for the input's autocomplete only. The reel stays short.
