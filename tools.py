@@ -4,7 +4,7 @@
 Two layers. act() is a regex router, instant and exact, same category as
 arithmetic/clock in ask.py: a recognisable command has one right action, so no
 model is involved. agent() is for anything multi-step ("poke around hacker news
-and tell me what's up"): qwen3:8b via Ollama's native tool calling drives the
+and tell me what's up"): qwen3:1.7b via Ollama's native tool calling drives the
 same TOOLS. The 0.5B cannot pick tools reliably, that is a hardware ceiling,
 not a tuning problem, so she borrows a bigger head for her hands.
 
@@ -20,7 +20,7 @@ import sys
 import urllib.parse
 import urllib.request
 
-AGENT_MODEL = "qwen3:8b"
+AGENT_MODEL = "qwen3:1.7b"  # 8B was right but 7.6GB and minutes per run; 1.7B is right in 5s once the harness prefetches
 OLLAMA_CHAT = "http://localhost:11434/api/chat"
 BROWSER = "Google Chrome"
 APP_DIRS = ("/Applications", "/System/Applications", "/System/Applications/Utilities",
@@ -33,7 +33,15 @@ SITES = {
 }
 
 
+# SAMANTHA_HEADLESS=1: nothing visible or audible happens. For evals and
+# development, so a test run never steals the screen from whoever is working.
+HEADLESS = os.environ.get("SAMANTHA_HEADLESS") == "1"
+_VISIBLE = ("open", "say", "screencapture")
+
+
 def _run(argv, timeout=10):
+    if HEADLESS and argv[0] in _VISIBLE:
+        return ""
     r = subprocess.run(argv, capture_output=True, text=True, timeout=timeout)
     return (r.stdout or r.stderr).strip()
 
@@ -74,7 +82,7 @@ def _url(target):
 
 
 def open_url(target):
-    """Open a website in Chrome. Takes a URL, a bare domain, or a known site name."""
+    """Open a website in Chrome for Joshua to see. Returns no page contents. Takes a URL, a bare domain, or a known site name."""
     url = _url(target)
     if not url:
         return web_search(target)
@@ -83,7 +91,7 @@ def open_url(target):
 
 
 def web_search(query):
-    """Search the web for a query, in Chrome."""
+    """Open a web search in Chrome for Joshua to look at. Returns NO results to you. To learn what a page says, use read_page."""
     _run(["open", "-a", BROWSER, "https://duckduckgo.com/?q=" + urllib.parse.quote_plus(query)])
     return f"Searching for {query!r} in Chrome."
 
@@ -96,7 +104,7 @@ def current_tab():
 
 
 def read_page(target=""):
-    """Fetch a web page and return its readable text. No argument reads Chrome's current tab."""
+    """Fetch a web page and return its text. The ONLY way to know what a page says. Takes a URL, bare domain, or site name like 'hacker news'. No argument reads Chrome's current tab."""
     url = _url(target) if target else (current_tab().splitlines() or [""])[-1]
     if not url or not url.startswith("http"):
         return "No page to read."
@@ -119,9 +127,71 @@ def screenshot():
     return f"Saved {path}."
 
 
-TOOLS = {f.__name__: f for f in (open_app, open_url, web_search, current_tab, read_page, screenshot)}
+def clipboard():
+    """Read what is on the clipboard."""
+    return _run(["pbpaste"])[:2000] or "The clipboard is empty."
+
+
+def set_volume(level):
+    """Set the Mac's output volume, 0 to 100."""
+    n = max(0, min(100, int(float(level))))
+    _run(["osascript", "-e", f"set volume output volume {n}"])
+    return f"Volume at {n}."
+
+
+def battery():
+    """Battery or power status of this Mac."""
+    return _run(["pmset", "-g", "batt"]).splitlines()[-1].strip()
+
+
+def say(text):
+    """Speak text out loud."""
+    if not HEADLESS:
+        subprocess.Popen(["say", text[:500]])
+    return f"Saying: {text[:80]}"
+
+
+HOME = os.path.realpath(os.path.expanduser("~"))
+
+
+def _inside_home(path):
+    # realpath first: a symlink or ../ must not walk a read out of the home folder
+    full = os.path.realpath(os.path.expanduser(path.strip() or "~"))
+    return full if full == HOME or full.startswith(HOME + os.sep) else None
+
+
+def list_dir(path="~"):
+    """List a folder inside the home folder."""
+    full = _inside_home(path)
+    if not full or not os.path.isdir(full):
+        return f"No folder at {path!r} inside your home folder."
+    names = sorted(n for n in os.listdir(full) if not n.startswith("."))
+    return ", ".join(names[:80]) or "Empty folder."
+
+
+def read_file(path):
+    """Read a text file inside the home folder."""
+    full = _inside_home(path)
+    if not full or not os.path.isfile(full):
+        return f"No file at {path!r} inside your home folder."
+    # ponytail: refuses dotfiles outright instead of a secrets allowlist; .env and .ssh stay unread
+    if any(part.startswith(".") for part in os.path.relpath(full, HOME).split(os.sep)):
+        return "I don't read hidden files."
+    with open(full, "rb") as f:
+        return f.read(3000).decode("utf-8", "ignore")
+
+
+TOOLS = {f.__name__: f for f in (open_app, open_url, web_search, current_tab, read_page, screenshot,
+                                     clipboard, set_volume, battery, say, list_dir, read_file)}
 
 _ROUTES = (
+    (re.compile(r"^(?:what(?:'s| is) (?:on|in) (?:my |the )?clipboard|read (?:my |the )?clipboard)\b", re.I), lambda m: clipboard()),
+    (re.compile(r"^(?:set |turn )?(?:the )?volume (?:to |at )?(\d{1,3})\b", re.I), lambda m: set_volume(m.group(1))),
+    (re.compile(r"^mute\b", re.I), lambda m: set_volume(0)),
+    (re.compile(r"^(?:how(?:'s| is) (?:my |the )?battery|battery(?: level| status)?$|what(?:'s| is) (?:my |the )?battery)", re.I), lambda m: battery()),
+    (re.compile(r"^say (.+)$", re.I), lambda m: say(m.group(1))),
+    (re.compile(r"^(?:list|show)(?: me)? (?:the )?(?:files|folder|contents) (?:in|of|at) (.+)$", re.I), lambda m: list_dir(m.group(1))),
+    (re.compile(r"^(?:read|show|cat)(?: me)? (?:the )?file (.+)$", re.I), lambda m: read_file(m.group(1))),
     (re.compile(r"^(?:take a |grab a )?screenshot\b", re.I), lambda m: screenshot()),
     (re.compile(r"^what(?:'s| is) (?:on |in )?(?:my |the )?(?:current |open )?(?:tab|chrome|browser)\b", re.I), lambda m: current_tab()),
     (re.compile(r"^(?:search|google|look up)(?: the web)?(?: for)? (.+)$", re.I), lambda m: web_search(m.group(1))),
@@ -159,12 +229,31 @@ def _schema(fn):
                        "required": [a for a in args if a != "target" or fn is open_url]}}}
 
 
+def _named_page(task):
+    """The URL or known site a task mentions, if any."""
+    m = re.search(r"https?://\S+|\b[\w-]+(?:\.[\w-]+)+(?:/\S*)?", task)
+    if m and _url(m.group(0).rstrip(".,")):
+        return _url(m.group(0).rstrip(".,"))
+    low = task.lower()
+    return next((url for name, url in sorted(SITES.items(), key=lambda kv: -len(kv[0]))
+                 if re.search(rf"\b{re.escape(name)}\b", low)), None)
+
+
 def agent(task, max_steps=6, log=None):
     """Multi-step: let qwen3:8b drive TOOLS until it has an answer."""
     messages = [
         {"role": "system", "content": "You are Samantha, acting on Joshua's Mac through tools. Do what is asked in as few tool calls as possible, then answer in two or three plain sentences. Never invent page contents, read the page first."},
         {"role": "user", "content": task},
     ]
+    # A small model asked to "poke around hacker news" opens a search and then
+    # invents three stories. Same lesson as the rest of this project: the
+    # harness retrieves, the model only reads. If the task names a page, it is
+    # already fetched before the model says a word.
+    named = _named_page(task)
+    if named:
+        if log:
+            log(f"  [read_page({named})]")
+        messages[1]["content"] += f"\n\nI already fetched {named} for you. Its text:\n{read_page(named)}"
     for _ in range(max_steps):
         body = json.dumps({"model": AGENT_MODEL, "messages": messages, "stream": False, "think": False,
                            "tools": [_schema(f) for f in TOOLS.values()]}).encode()
@@ -182,6 +271,9 @@ def agent(task, max_steps=6, log=None):
             name, args = c["function"]["name"], c["function"].get("arguments") or {}
             fn = TOOLS.get(name)
             try:
+                if fn:
+                    takes = fn.__code__.co_varnames[:fn.__code__.co_argcount]
+                    args = {k: v for k, v in args.items() if k in takes}
                 result = fn(**args) if fn else f"No tool named {name}."
             except Exception as e:
                 result = f"{name} failed: {e}"
@@ -209,8 +301,14 @@ def demo():
         assert act("open chrome and poke around hacker news") is None  # multi-step, agent's job
         assert act("what is turing") is None and not is_action("what is turing")
         assert is_action("poke around hacker news")
+        assert _named_page("poke around hacker news and tell me") == "https://news.ycombinator.com"
+        assert _named_page("read github.com/nulljosh/turing.") == "https://github.com/nulljosh/turing"
+        assert _named_page("open pixelmator then tell me my battery") is None
         assert not is_action("Summarize what Turing is in one sentence.")  # real eval prompt, was hijacked
-        assert all(a[0] in ("open", "osascript", "screencapture") for a in calls)
+        assert act("volume 30") == "Volume at 30." and act("set the volume to 250") == "Volume at 100."
+        assert "don't read hidden" in read_file("~/.ssh/id_rsa") or "No file" in read_file("~/.ssh/id_rsa")
+        assert "No file" in read_file("/etc/passwd") and "No folder" in list_dir("~/../..")
+        assert all(a[0] in ("open", "osascript", "screencapture", "pbpaste", "pmset") for a in calls)
     finally:
         _run = real
     print("tools ok")

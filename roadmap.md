@@ -307,6 +307,23 @@ Samantha could answer. She could not do anything. "Open chrome and go to hacker 
 - One real bug caught before commit: the action detector matched "summarize", which hijacked the eval prompt "Summarize what Turing is in one sentence" into the agent. Narrowed the verb list, added it to `tools.py`'s self-check.
 - Not yet done: `read_page` is a tag-strip over a plain fetch, so JS-rendered pages come back empty. Clicking and typing in Chrome needs a real bridge. And the goal that matters: a small model that calls these tools itself, so the borrowed 8B head can go.
 
+### Road to 1.0.0 (set 2026-09-20)
+
+1.0.0 means you can sit down, talk to her, and she answers and acts without a rewrite. Each box ships as its own tagged release. No box gets ticked without a check that fails when it breaks.
+
+Gaps, in order:
+
+- [ ] **Know things.** `eval/basic_questions.py` at 60/65 or better on people, places and things, zero confidently wrong.
+- [ ] **Faster hands.** Swap `qwen3:8b` for the smallest model that passes the same multi-step tasks. 7.6GB and minutes per run is not usable.
+- [ ] **Actions eval.** `eval/actions.py`: 30 commands, scored on which tool fired with which argument, tools mocked. Hands have a self-check today, not a measurement.
+- [ ] **File tools.** `read_file`, `list_dir`, `find_file`. Read-only, home folder only.
+- [ ] **Mac tools.** Clipboard read and write, volume, dark mode, battery, wifi, say it out loud, notify. All fixed argv.
+- [ ] **Personal tools.** Calendar today, new note, new reminder, weather, timer.
+- [ ] **Music.** Play, pause, skip, what's playing.
+- [ ] **Browser beyond opening.** List tabs, switch tab, close tab, read the rendered page through Chrome so JS sites stop coming back empty.
+- [ ] **A real harness.** One conversation that holds tool results across turns, shows a live tool log, and asks before anything that writes or deletes. The loop in `agent()` is the seed.
+- [ ] **Her own head.** Distill the big model's tool calls into a small one we trained, so the borrowed head can go. Memory-gated, may slip past 1.0.0. If it does, say so in the release notes.
+
 ### Phase 6: Distillation, not scale (month 4+, optional/ambitious)
 Instead of chasing bigger bases, use a frontier model (Claude) to generate high-quality synthetic training examples in our exact style, then distill that into Samantha. This is literally how most useful small models are built today, nobody pretrains from raw internet text anymore if they can help it.
 
