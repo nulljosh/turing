@@ -3,7 +3,7 @@
 The live `/loop` for this repo. Checkpoint rewrites this file every run. A new session reads it and picks up where the last one stopped.
 
 ## What the loop is
-Samantha to a 1.0.0 release, landing page to A+. `roadmap.md` "Road to 1.0.0" is the queue.
+Samantha to a 1.0.0 release, landing page to A+, and a standing gap hunt. Each iteration: look at what comparable assistants do that she cannot (Siri and Shortcuts, Apple Intelligence, Claude and ChatGPT desktop with MCP, Open Interpreter, Raycast AI, local Ollama agents), write the biggest real gap into `docs/GAPS.md` with where it was seen, then build the smallest honest fix. Every fix ships with its tests, `eval/laws.py` green, docs at 100 percent, the phone-size QA on the landing page, and CI green before the next iteration. `roadmap.md` "Road to 1.0.0" is the floor, the gap list is the ceiling.
 
 ## Rules
 Headless always: `SAMANTHA_HEADLESS=1`, never pop Chrome or any app. Fix at the root cause, never edit a test to pass. **Check free disk and free memory before any training or eval, 6GB disk minimum. One heavy job at a time, `ollama stop` first.** On 2026-09-21 training plus an eval filled swap, swap filled the disk, and the shell died. Never block in a foreground wait loop: start slow jobs in the background and end the turn. Haiku subagents, one at a time. Stop at 90% usage.
@@ -25,5 +25,5 @@ Lessons from 2026-09-21, keep them: helpers (Haiku agents) ship fast but need ch
 
 ## Restart prompt
 ```
-/loop Drive Samantha (~/Documents/Code/turing) to a 1.0.0 release and the landing page to A+. Read docs/LOOP-HANDOFF.md and roadmap.md "Road to 1.0.0" first. One item per iteration, in the order the handoff lists. SAMANTHA_HEADLESS=1 always. Check free disk (6GB) and memory before any heavy job, one at a time, never block in a foreground wait. Verify with tools.py, test_chat.py, eval/actions.py, eval/web_parity.py, eval/web_demo.py, eval/hands.py and eval/basic_questions.py. Fix at the root cause. Commit, push, npx wrangler deploy for site changes, self-grade honestly. Haiku subagents only, one at a time. Stop at 90% usage. One short ping per iteration.
+/loop Drive Samantha (~/Documents/Code/turing) to 1.0.0 and the landing page to A+. Read docs/LOOP-HANDOFF.md, roadmap.md "Road to 1.0.0" and docs/GAPS.md first. Each iteration: find the biggest real gap between her and comparable assistants (search the web, cite where seen), log it in docs/GAPS.md, build the smallest honest fix with tests, run ./gate.sh and eval/laws.py, QA the landing page on a phone size, push, wait for CI green, release as you go with ./release.sh, refresh the landing page, README and CLAUDE.md. SAMANTHA_HEADLESS=1 always, docs 100 percent, disk 6GB and memory checked before heavy jobs, one at a time, watch Claude usage. Stop at v1.0.0 and send a notification.
 ```
