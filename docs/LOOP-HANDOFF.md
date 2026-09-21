@@ -19,7 +19,7 @@ v0.10.0 is out, Apache 2.0. Samantha has 30 tools: the first 20 plus ten image t
 5. Finish docstrings: 11 left outside `pixelmator/`, 28 inside `pixelmator/pxm.py`.
 6. Painting is clear now: `pxm.py paint --engine magick` draws 40000 squares in about a second, and paint_image uses it (Pixelmator is the fallback and the watch-it-build showcase). Run the 5000 layer Pixelmator paint again only if the layered file is wanted.
 7. Run ./release.sh with a patch bump and the full gate once Pixelmator is free.
-9. Still open from before: re-run `eval/basic_questions.py`, score Ternary-Bonsai-4B as a borrowed head, score `voice-adapter`.
+8. Still open from before: re-run `eval/basic_questions.py`, score Ternary-Bonsai-4B as a borrowed head, score `voice-adapter`.
 
 Lessons from 2026-09-21, keep them: helpers (Haiku agents) ship fast but need checking. One made the guard refuse "mute", one claimed 100 percent at 77, one left orphan builds running in Pixelmator. Read the diff, rerun the numbers, and wait for the real CI result before calling anything done.
 
