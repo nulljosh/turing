@@ -1,32 +1,26 @@
-# Turing loop handoff (2026-09-20, late evening)
+# Turing loop handoff (2026-09-21, 2am)
 
 The live `/loop` for this repo. Checkpoint rewrites this file every run. A new session reads it and picks up where the last one stopped.
-
-*Updated 2026-09-20, Sunday night.*
 
 ## What the loop is
 Samantha to a 1.0.0 release, landing page to A+. `roadmap.md` "Road to 1.0.0" is the queue.
 
 ## Rules
-Headless always: `SAMANTHA_HEADLESS=1`, never pop Chrome or any app. Fix at the root cause, never edit a test to pass. Check free memory before any training. Haiku subagents, one at a time. Stop at 90% usage. One short ping per iteration.
+Headless always: `SAMANTHA_HEADLESS=1`, never pop Chrome or any app. Fix at the root cause, never edit a test to pass. **Check free disk and free memory before any training or eval, 6GB disk minimum. One heavy job at a time, `ollama stop` first.** On 2026-09-21 training plus an eval filled swap, swap filled the disk, and the shell died. Never block in a foreground wait loop: start slow jobs in the background and end the turn. Haiku subagents, one at a time. Stop at 90% usage.
 
 ## Where things stand
-Shipped tonight: 13 tools, actions eval 54 of 54, knowledge 47 to 57 of 65, confidently wrong 18 to 4, a 1.7B model for her hands at about 5 seconds, article reader with a grounding check, logos built live in Pixelmator, new icon, landing page rebuilt around the chat with idle autoplay and release-style results. Self-grade B+.
-
-The voice retrain finished cleanly at 20:50 into `voice-adapter/`, log in `voice-train.log`. Not scored yet, so live Samantha still runs on `ada-1-adapter`.
+Shipped tonight, all pushed and deployed: music and personal tools (19 tools, actions 75/75). Landing page is a working demo: her router runs in the browser, a stand-in Mac reacts, she can change the page itself, a model picks tools the rules miss behind a guard, lookups are live. Security pass: CSP, JSON-only same-origin API, no eval, injection tests in `eval/web_demo.py`. Live QA passed. Knowledge 62/65. Her own tool picker trained twice: 395/484 on unseen phrasings against 30/463 for the regex. Self-grade A- on the site, B on the picker.
 
 ## Next, in order
-1. Click through the landing chat in a real headless browser. Check phone width on the new layout.
-2. Replace the green left stripe on the older answer blocks.
-3. Score `voice-adapter` against `ada-1-adapter`. Delete `.http_cache.json` first. Swap only if it wins. Then refresh the loss chart with `parse_log.py`.
-4. Knowledge to 60 of 65 with zero confidently wrong. Eight misses left. Check for stale reader cache first: two of the wrong ones passed when asked directly.
-5. `SECURITY.md` is the one house doc missing. Docstring coverage is 36 percent.
-6. Global `core.hooksPath` overrides this repo's pre-commit hook, so the eval gate never runs on commit. Chain it.
-7. Roadmap boxes: personal tools, music, browser tabs, a real harness, her own tool-calling model.
+1. Train round three of the picker, alone: the command is in `gen_hands_data.py`'s docstring neighbourhood, data is in `hands-data/`. 600 iters, batch 8, lr 1e-4, `--mask-prompt`. Then `eval/hands.py --adapter hands-adapter --verbose`.
+2. Re-run `eval/basic_questions.py` to confirm the sky fix and zero confidently wrong.
+3. Score Ternary-Bonsai-4B as a borrowed head: `eval/hands.py --model prism-ml/Ternary-Bonsai-4B-mlx-2bit` with `HF_HOME=/Volumes/LaCie/llm/huggingface`.
+4. Update the landing page Limitations text and `web/stats.json` with the new knowledge and picker numbers. README too.
+5. Score `voice-adapter` against `ada-1-adapter`. Still unscored.
+6. Roadmap boxes left: browser tabs, a real harness that asks before writes, the rest of her own head.
+7. Idea parked: train the tiny from-scratch model in `scratch/` with three-value weights, the Bonsai trick at a size this Mac can do.
 
 ## Restart prompt
-Paste this to pick the loop back up:
-
 ```
-/loop Drive Samantha (~/Documents/Code/turing) to a 1.0.0 release and the landing page to A+. Read docs/LOOP-HANDOFF.md and roadmap.md "Road to 1.0.0" first. One item per iteration, in the order the handoff lists. SAMANTHA_HEADLESS=1 always, never pop Chrome or any visible app. Verify with tools.py self-check, test_chat.py, eval/score.py, eval/actions.py and eval/basic_questions.py. Fix at the root cause, never edit a test to pass. Check free memory before any training. Commit, push, npx wrangler deploy for site changes, self-grade honestly, clean finished items out of roadmap.md. Haiku subagents only, one at a time. Stop at 90% usage. One short ping per iteration.
+/loop Drive Samantha (~/Documents/Code/turing) to a 1.0.0 release and the landing page to A+. Read docs/LOOP-HANDOFF.md and roadmap.md "Road to 1.0.0" first. One item per iteration, in the order the handoff lists. SAMANTHA_HEADLESS=1 always. Check free disk (6GB) and memory before any heavy job, one at a time, never block in a foreground wait. Verify with tools.py, test_chat.py, eval/actions.py, eval/web_parity.py, eval/web_demo.py, eval/hands.py and eval/basic_questions.py. Fix at the root cause. Commit, push, npx wrangler deploy for site changes, self-grade honestly. Haiku subagents only, one at a time. Stop at 90% usage. One short ping per iteration.
 ```
