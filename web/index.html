@@ -56,6 +56,18 @@
       footer{margin-top:56px;font-size:13px;color:var(--muted)}
       p,li{max-width:66ch}
       b,strong{font-weight:650}
+      /* from Joshua Tree's page: a skip link, sections that ease in as they arrive, and a full screen demo */
+      .skip{position:absolute;left:-999px;top:8px;background:var(--fg);color:var(--bg);padding:10px 14px;border-radius:8px;z-index:100;font-weight:600;text-decoration:none}
+      .skip:focus{left:8px}
+      .js .reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
+      .js .reveal.in{opacity:1;transform:none}
+      @media (prefers-reduced-motion:reduce){.js .reveal{opacity:1;transform:none;transition:none}}
+      #demo-full{display:block;margin:0 0 8px auto;min-height:44px;padding:0 4px;background:none;border:0;color:var(--muted);font:inherit;font-size:13px;cursor:pointer;text-decoration:underline;text-decoration-color:var(--ember);text-underline-offset:3px}
+      #demo-full:hover{color:var(--fg)}
+      html.noscroll{overflow:hidden}
+      .card.full{position:fixed;inset:0;z-index:60;max-width:none;margin:0;border-radius:0;overflow:auto;background:var(--bg);padding:16px max(16px,calc((100vw - 760px)/2))}
+      .card.full .desk-space{height:min(56vh,600px)}
+      .card.full canvas{max-height:52vh}
       /* Mobile first: every tap target is at least 44px, the fingers on a phone are not a mouse. */
       #chat-input,#chat-send{min-height:44px;box-sizing:border-box}
       details>summary{min-height:44px;box-sizing:border-box;padding-top:10px;padding-bottom:10px}
@@ -171,6 +183,10 @@
       .win-dots i{width:7px;height:7px;border-radius:50%;background:var(--line)}
       .win-title{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
       .win-body{padding:8px 10px;min-height:52px;max-height:118px;overflow:auto}
+      .win.browser{width:min(440px,94%)}
+      .win.browser .win-body{max-height:none;padding:6px 8px}
+      .win-frame{display:block;width:100%;height:210px;border:0;border-radius:6px;background:#fff;margin-bottom:4px}
+      .win-note{color:var(--muted);margin:4px 0 6px}
       .win-body svg{display:block;width:72px;height:72px;margin:0 auto}
       .win-row{padding:2px 0;white-space:pre-line}
       .win-empty{color:var(--muted)}
@@ -187,6 +203,7 @@
     </style>
   </head>
   <body>
+    <a class="skip" href="#main">Skip to the demo</a>
     <div class="bg-nodes" aria-hidden="true">
       <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="20" cy="20" r="4"/><circle cx="70" cy="35" r="4"/><circle cx="45" cy="70" r="4"/><circle cx="80" cy="80" r="4"/><path d="M20 20L70 35M70 35L45 70M45 70L20 20M45 70L80 80"/></svg>
       <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="15" cy="50" r="4"/><circle cx="50" cy="15" r="4"/><circle cx="85" cy="50" r="4"/><circle cx="50" cy="85" r="4"/><path d="M15 50L50 15M50 15L85 50M85 50L50 85M50 85L15 50M15 50L85 50"/></svg>
@@ -230,7 +247,7 @@
         </div>
       </header>
 
-      <section>
+      <section id="main">
         <h2>Talk to Samantha</h2>
         <div class="card" style="display:flex;flex-direction:column">
           <div id="desk" class="desk" aria-label="A stand-in Mac that Samantha controls">
@@ -246,6 +263,7 @@
               <span id="desk-file" class="desk-file"></span>
             </div>
           </div>
+          <button type="button" id="demo-full" aria-pressed="false">Full screen</button>
           <div id="chat-status" style="font-size:13px;color:var(--muted);margin-bottom:12px"></div>
           <div id="chat-transcript" aria-live="polite" aria-label="Conversation with Samantha" style="flex:1;overflow-y:auto;min-height:96px;max-height:340px;margin-bottom:12px;font-size:14px;line-height:1.5;padding-right:8px"></div>
           <div style="display:flex;gap:8px">

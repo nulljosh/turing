@@ -24,6 +24,8 @@
                clipboard: 'turing.heyitsmejosh.com', timerEnd: 0 };
 
   // ---- the stand-in Mac ----
+  // hosts that allow being framed (checked with curl -I: no X-Frame-Options, no frame-ancestors). GitHub, YouTube, Reddit and most others refuse.
+  var FRAMEABLE = /^(?:news\.ycombinator\.com|(?:[a-z-]+\.)?wikipedia\.org|heyitsmejosh\.com|example\.com)$/i;
   function closeWins() { var all = space.querySelectorAll('.win'); for (var k = 0; k < all.length; k++) all[k].remove(); }
   function win(id, title, build) {
     var w = $('win-' + id);
@@ -49,6 +51,9 @@
     space.appendChild(w);  // last child sits on top
     var all = space.querySelectorAll('.win');
     if (all.length > 4) all[0].remove();
+    // a window is a glance, not furniture: it leaves after a few seconds so it never sits on the picture
+    clearTimeout(w._away);
+    w._away = setTimeout(function () { w.remove(); }, id === 'Google Chrome' ? 14000 : 6000);
   }
 
   function list(body, items, empty) {
@@ -218,14 +223,31 @@
     open_url: function (target) {
       var url = S.urlOf(target);
       if (!url) return TOOLS.web_search(target);
+      var host = '';
+      try { host = new URL(url).hostname; } catch (e) {}
+      var framed = FRAMEABLE.test(host);
       desk.tab = { title: url.replace(/^https?:\/\//, ''), url: url };
       win('Google Chrome', 'Google Chrome', function (b) {
         b.appendChild(el('div', 'win-url', url));
-        var a = el('a', 'win-link', 'Open it for real');
+        if (framed) {
+          // the real page, live, inside the stand-in Mac. Sandboxed with no same-origin, so it cannot reach this page.
+          var f = el('iframe', 'win-frame');
+          f.src = url; f.setAttribute('sandbox', 'allow-scripts allow-popups allow-forms'); f.setAttribute('referrerpolicy', 'no-referrer');
+          f.setAttribute('loading', 'lazy'); f.setAttribute('title', 'Live page: ' + host);
+          b.appendChild(f);
+        } else {
+          b.appendChild(el('div', 'win-note', host.replace(/^www\./, '') + ' does not allow itself to be shown inside another page.'));
+        }
+        var a = el('a', 'win-link', framed ? 'Open it in its own tab' : 'Open it for real');
         a.href = url; a.target = '_blank'; a.rel = 'noopener';
         b.appendChild(a);
       });
-      return 'Opened ' + url + ' in Chrome.';
+      var w = $('win-Google Chrome');
+      if (w) w.classList.toggle('browser', framed);
+      // a command you typed is a click, so the browser lets it open a real tab. The idle reel is not, and stays in the demo.
+      var mine = Date.now() - lastUser < 4000;
+      if (!framed && mine) { try { window.open(url, '_blank', 'noopener'); } catch (e) {} }
+      return framed ? 'Opened ' + url + ' in Chrome. That is the live page.' : mine ? 'Opened ' + url + ' in a new tab, because that site does not allow being shown here.' : 'Opened ' + url + ' in Chrome.';
     },
     web_search: function (q) {
       var url = 'https://duckduckgo.com/?q=' + encodeURIComponent(q).replace(/%20/g, '+');
@@ -598,11 +620,11 @@
 
   // No theme commands and no barrel roll in the reel: moving a visitor's whole page unasked reads as a bug.
   // ---- idle reel: if nobody types, she shows what she does. Silent, and it stops the moment you touch anything ----
-  var REEL = ['paint the mona lisa', 'open chrome and go to github.com', 'set the volume to 40', 'paint the eniac', 'take a note pick up milk',
+  var REEL = ['paint the mona lisa', 'open chrome and go to news.ycombinator.com', 'set the volume to 40', 'paint the eniac',
               'what is 17*23', 'make me a complex logo for a surf school', 'make me an original wordless logo for turing', "what's the weather in tokyo", 'play some music', 'skip this song', 'paint the last supper',
-              'who painted the mona lisa', 'set a timer for 1 minute', 'scroll to the results', 'take a screenshot', 'draw a lighthouse at dusk', 'draw a fox in the snow', 'calculate 17*23', 'convert 72 f to c', 'time in tokyo', 'roll 2d6', 'is 91 prime', 'days until christmas', 'who invented the telephone', 'reset the page'];
+              'who painted the mona lisa', 'scroll to the results', 'take a screenshot', 'draw a lighthouse at dusk', 'draw a fox in the snow', 'calculate 17*23', 'convert 72 f to c', 'time in tokyo', 'roll 2d6', 'is 91 prime', 'days until christmas', 'who invented the telephone', 'reset the page'];
   // more phrasings for the input's autocomplete only. The reel stays short.
-  var MORE = ['change the title to Hello there', 'draw a robot reading a book', 'draw a sailboat on a calm lake', 'imagine a city on the moon', 'do a barrel roll', 'tip on 45', 'roman numerals for 2026', 'sha256 of turing', 'base64 encode hello', 'morse sos', 'flip a coin', 'generate a strong password',
+  var MORE = ['take a note pick up milk', 'set a timer for 1 minute', 'open chrome and go to github.com', 'change the title to Hello there', 'draw a robot reading a book', 'draw a sailboat on a calm lake', 'imagine a city on the moon', 'do a barrel roll', 'tip on 45', 'roman numerals for 2026', 'sha256 of turing', 'base64 encode hello', 'morse sos', 'flip a coin', 'generate a strong password',
               'make a uuid', 'random number between 1 and 100', 'count words in the quick brown fox', 'reverse the text hello', 'what day is it',
               'convert 5 km to miles', 'calculate 15% of 80', 'factor 84', 'time in london', 'days until halloween', 'how much disk space do i have'];
   var reelAt = 0;
@@ -640,6 +662,28 @@
   });
   ['pointerdown', 'touchstart'].forEach(function (ev) { document.addEventListener(ev, function () { if (reel) { stopReel(); input.value = ''; } idle(); }, true); });
   document.addEventListener('visibilitychange', idle);
+
+  // ---- borrowed from Joshua Tree's landing: sections ease in on scroll, and the demo can fill the screen ----
+  (function () {
+    document.documentElement.classList.add('js');
+    var secs = Array.prototype.slice.call(document.querySelectorAll('section')).slice(1);
+    if ('IntersectionObserver' in window && !reduceMotion) {
+      var io = new IntersectionObserver(function (es) {
+        es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+      }, { threshold: 0.06, rootMargin: '0px 0px -6% 0px' });
+      secs.forEach(function (s) { s.classList.add('reveal'); io.observe(s); });
+    }
+    var btn = $('demo-full'), card = btn && btn.closest('.card');
+    function setFull(on) {
+      card.classList.toggle('full', on); document.documentElement.classList.toggle('noscroll', on);
+      btn.textContent = on ? 'Exit full screen' : 'Full screen'; btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+      if (on) input.focus();
+    }
+    if (btn && card) {
+      btn.addEventListener('click', function () { setFull(!card.classList.contains('full')); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && card.classList.contains('full')) setFull(false); });
+    }
+  })();
 
   paintBar();
   // Joshua's own Mac runs the real thing on a local port. Only look for it when asked (?local) or when the page itself is
