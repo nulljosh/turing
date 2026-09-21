@@ -135,6 +135,24 @@ async function ask(env, query) {
 
 const HOME = "https://turing.heyitsmejosh.com";
 
+// The image model behind "draw anything". Flux schnell makes a picture in four steps; the page rebuilds it from squares.
+const DRAWER = "@cf/black-forest-labs/flux-1-schnell";
+const NOT_DRAWN = /\b(?:nude|naked|nsfw|porn\w*|sex\w*|erotic|gore|gory|beheading|suicide|self.?harm|child abuse|loli\w*|rape|terroris\w*|bomb.?making|swastika)\b/i;
+
+async function draw(env, ctx, q) {
+  if (NOT_DRAWN.test(q)) return Response.json({ answer: "I won't draw that one. Try something else." }, { status: 400 });
+  const key = new Request(`${HOME}/__draw/${encodeURIComponent(q.toLowerCase())}`);
+  const hit = await caches.default.match(key);
+  if (hit) return hit;
+  let out;
+  try { out = await env.AI.run(DRAWER, { prompt: q, steps: 4 }); } catch { out = null; }
+  if (!out || !out.image) return Response.json({ answer: "My image model is busy. Try again in a moment." }, { status: 503 });
+  // only a real picture is cached: a failure must not be remembered for a day
+  const res = Response.json({ image: "data:image/jpeg;base64," + out.image }, { headers: { "Cache-Control": "public, max-age=86400", "X-Content-Type-Options": "nosniff" } });
+  ctx.waitUntil(caches.default.put(key, res.clone()));
+  return res;
+}
+
 async function cached(ctx, kind, q, make) {
   // the same question a day later is the same answer: no second trip to Wikipedia, no second model run
   const key = new Request(`${HOME}/__${kind}/${encodeURIComponent(q.toLowerCase())}`);
@@ -148,7 +166,7 @@ async function cached(ctx, kind, q, make) {
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
-    if (url.pathname !== "/api/ask" && url.pathname !== "/api/pick") return env.ASSETS.fetch(request);
+    if (!["/api/ask", "/api/pick", "/api/draw"].includes(url.pathname)) return env.ASSETS.fetch(request);
     if (request.method !== "POST") return new Response("POST only", { status: 405 });
     // JSON only, from this site only. A form on someone else's page cannot send application/json without a preflight, and there is no CORS here to pass one.
     if (!(request.headers.get("content-type") || "").startsWith("application/json")) return new Response("JSON only", { status: 415 });
@@ -159,10 +177,14 @@ export default {
     const ip = request.headers.get("cf-connecting-ip") || "anon";
     if (env.LIMIT && !(await env.LIMIT.limit({ key: ip })).success)
       return Response.json({ answer: "That's a lot of questions in one minute. Give me a moment." }, { status: 429 });
+    // pictures cost real compute, so they get a much smaller allowance than questions
+    if (url.pathname === "/api/draw" && env.DRAW_LIMIT && !(await env.DRAW_LIMIT.limit({ key: ip })).success)
+      return Response.json({ answer: "That's a lot of drawing for one minute. Give me a moment." }, { status: 429 });
     let body = {};
     try { body = await request.json(); } catch {}
     const q = String(body.q || "").replace(/[\u0000-\u001f]/g, " ").trim().slice(0, 200);
     if (!q) return Response.json({ answer: DECLINE }, { status: 400 });
+    if (url.pathname === "/api/draw") return draw(env, ctx, q.slice(0, 120));
     if (url.pathname === "/api/pick") {
       const sections = (Array.isArray(body.sections) ? body.sections : []).slice(0, 12).map(x => String(x).slice(0, 60));
       return cached(ctx, "pick", q, () => pick(env, q, sections));

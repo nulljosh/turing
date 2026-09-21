@@ -81,7 +81,7 @@ function paint() {
 }
 
 const picks = document.getElementById('paint-picks');
-pics.forEach(([src, name], i) => {
+(picks ? pics : []).forEach(([src, name], i) => {
   const b = document.createElement('button');
   b.type = 'button'; b.className = 'paint-pick'; b.title = name; b.setAttribute('aria-label', 'Paint ' + name);
   b.setAttribute('aria-pressed', i === 0);
@@ -93,7 +93,8 @@ pics.forEach(([src, name], i) => {
   };
   picks.appendChild(b);
 });
-document.getElementById('paint-file').onchange = e => {
+const fileInput = document.getElementById('paint-file');
+if (fileInput) fileInput.onchange = e => {
   const f = e.target.files[0];
   if (!f) return;
   const r = new FileReader();
@@ -103,7 +104,10 @@ document.getElementById('paint-file').onchange = e => {
 window.samanthaPaint = function(index) {
   if (index < 0 || index >= pics.length) index = pic;
   pic = index;
-  picks.querySelectorAll('button').forEach((x, k) => x.setAttribute('aria-pressed', k === index));
+  if (picks) picks.querySelectorAll('button').forEach((x, k) => x.setAttribute('aria-pressed', k === index));
   load(...pics[index]);
   return pics[index][1];
 };
+
+// A picture from anywhere (the image model's drawing arrives as a data URL): rebuild it from squares.
+window.samanthaPaintSrc = (src, name) => load(src, name);

@@ -131,7 +131,7 @@
         : svg('circle', { cx: x, cy: y, r: size / 2, fill: fill, opacity: op }));
     }
     return { svg: root, text: 'I went with palette ' + palette + ', cells ' + cells + ', shape ' + shape + ', lit ' + lit + '. ' + (cells + 1) +
-             ' layers, no text. Here a hash of your words turns the dials. On the Mac her 1.7B picks them and Pixelmator builds it.' };
+             ' layers, no text. Here a hash of your words turns the dials. On the Mac her 1.7B picks them.' };
   }
   function drawLogo(desc) {
     if (WORDLESS.test(desc)) return drawBloom(desc);
@@ -183,7 +183,7 @@
               ', orbit_dots ' + orbit + ', star_points ' + points;
       layers = 1 + rays + rings + orbit + 3;
     }
-    return { svg: root, text: 'I went with ' + chose + '. ' + layers + ' layers. Here a hash of your words turns the dials. On the Mac a 1.7B picks them and Pixelmator builds it.' };
+    return { svg: root, text: 'I went with ' + chose + '. ' + layers + ' layers. Here a hash of your words turns the dials. On the Mac her 1.7B picks them.' };
   }
 
   // ---- a small home folder, with the same rules as tools._inside_home ----
@@ -277,7 +277,7 @@
     },
     make_logo: function (desc) {
       var logo = drawLogo(desc);
-      win('Pixelmator Pro', 'Pixelmator Pro', function (b) { b.appendChild(logo.svg.cloneNode(true)); });
+      win('Logo', 'Logo', function (b) { b.appendChild(logo.svg.cloneNode(true)); });
       return { text: logo.text, node: logo.svg };
     },
     music: function (c) {
@@ -340,18 +340,35 @@
   var PAGE = {
     paint: function (cmd) {
       var text = (cmd || '').toLowerCase().trim();
-      var index = lastPaintIndex;
+      var subject = text.replace(/^(?:me |us )?(?:an? |the |some )?(?:picture|painting|drawing|image|photo|sketch|illustration) of /, '').replace(/^(?:me |an? |the |some )+/, '').replace(/[.!?]+$/, '').trim();
+      var index = -1;
       if (/mona|lisa/.test(text)) index = 0;
       else if (/supper/.test(text)) index = 1;
-      else if (/eniac|computer/.test(text)) index = 2;
-      else index = (lastPaintIndex + 1) % paintNames.length;
+      else if (/eniac/.test(text)) index = 2;
+      if (index < 0 && subject.length > 1 && !/^(?:it|that|this|again|another|something|anything)$/.test(subject)) return PAGE.draw(subject);
+      if (index < 0) index = (lastPaintIndex + 1) % paintNames.length;
       lastPaintIndex = index;
       if (typeof window.samanthaPaint === 'function') window.samanthaPaint(index);
-      // the counter still shows the last painting at this instant, so name the budget instead
-      return 'Painting ' + paintNames[index].replace(/^The /, 'the ').replace(/^Mona/, 'the Mona') + ' from 30,000 squares. On my Mac this happens inside Pixelmator Pro.';
+      return 'Painting ' + paintNames[index].replace(/^The /, 'the ').replace(/^Mona/, 'the Mona') + ' from 30,000 squares.';
+    },
+    // Anything at all. An image model on Cloudflare imagines it, then she rebuilds the picture from 30,000 squares in front of you.
+    draw: function (what) {
+      var subject = String(what).trim().slice(0, 120);
+      if (!subject) return 'Draw what? Try "draw a lighthouse at dusk".';
+      var was = statusEl.textContent;
+      statusEl.textContent = 'Imagining ' + subject + '...';
+      return fetch('/api/draw', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ q: subject }) })
+        .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+        .then(function (x) {
+          statusEl.textContent = was;
+          if (!x.ok || !x.d.image) return x.d.answer || 'I could not draw that one.';
+          window.samanthaPaintSrc(x.d.image, subject);
+          return 'Here is ' + subject + '. An image model on Cloudflare imagined it, and I am rebuilding it from 30,000 squares.';
+        })
+        .catch(function () { statusEl.textContent = was; return 'I could not reach my image model just now.'; });
     },
     set_heading: function (text) { h1.textContent = text.slice(0, 60); go(document.querySelector('header')); return 'The title now says "' + h1.textContent + '". Only on your screen.'; },
-    set_tagline: function (text) { tagline.textContent = text.slice(0, 120); go(document.querySelector('header')); return 'Tagline changed.'; },
+    set_tagline: function (text) { userTagline = true; clearTimeout(typing); clearTimeout(backTimer); tagline.textContent = text.slice(0, 120); go(document.querySelector('header')); return 'Tagline changed.'; },
     scroll_to: function (where) {
       var w = where.toLowerCase().trim();
       if (w === 'down' || w === 'up') { window.scrollBy({ top: (w === 'down' ? 1 : -1) * window.innerHeight * 0.8, behavior: reduceMotion ? 'auto' : 'smooth' }); return 'Scrolled ' + w + '.'; }
@@ -389,7 +406,7 @@
       return 'Wheee.';
     },
     reset_page: function () {
-      h1.textContent = original.h1; tagline.textContent = original.tagline; h1.style.color = ''; zoom = 1; wrap.style.zoom = '';
+      h1.textContent = original.h1; userTagline = false; clearTimeout(typing); clearTimeout(backTimer); tagline.textContent = original.tagline; h1.style.color = ''; zoom = 1; wrap.style.zoom = '';
       document.documentElement.removeAttribute('data-theme');
       sections().forEach(function (x) { x.style.display = ''; });
       if (window.speechSynthesis) speechSynthesis.cancel();
@@ -456,7 +473,42 @@
     return top >= 0.5 ? best.a : null;
   }
 
+  // ---- the hero line narrates the demo: what she is doing right now, typed out, then back to the tagline. Joshua Tree's eyebrow does the same. ----
+  var typing = 0, backTimer = 0, userTagline = false;
+  function say_hero(text) {
+    clearTimeout(typing); clearTimeout(backTimer);
+    if (reduceMotion) { tagline.textContent = text; return; }
+    var i = 0;
+    (function type() { tagline.textContent = text.slice(0, ++i); if (i < text.length) typing = setTimeout(type, 16); })();
+  }
+  var STORY = {
+    paint: function () { return 'Rebuilding a painting from 30,000 squares.'; },
+    draw: function (a) { return 'Imagining ' + a.slice(0, 50) + ', then rebuilding it square by square.'; },
+    make_logo: function () { return 'Designing a logo dial by dial. Her model picks, the code draws.'; },
+    set_volume: function () { return 'Turning the volume on a stand-in Mac.'; },
+    open_app: function () { return 'Opening an app on a stand-in Mac.'; },
+    open_url: function () { return 'Opening a site on a stand-in Mac.'; },
+    web_search: function () { return 'Searching the web for you.'; },
+    weather: function () { return 'Checking the weather live.'; },
+    timer: function () { return 'Starting a timer on the stand-in Mac.'; },
+    new_note: function () { return 'Writing a note. On a real Mac it asks first.'; },
+    new_reminder: function () { return 'Adding a reminder. On a real Mac it asks first.'; },
+    music: function () { return 'Driving the music player.'; },
+    screenshot: function () { return 'Taking a screenshot.'; },
+    set_heading: function () { return 'Rewriting this page. Only on your screen.'; },
+    scroll_to: function () { return 'Scrolling this page for you.'; },
+    theme: function () { return 'Switching this page between light and dark.'; },
+    reset_page: function () { return 'Putting the page back the way Joshua left it.'; }
+  };
+  function narrate(tool, arg) {
+    if (userTagline || tool === 'set_tagline') return;
+    var line = (STORY[tool] || function () { return 'Using her ' + tool.replace(/_/g, ' ') + ' tool. No model needed.'; })(String(arg || ''));
+    say_hero(line);
+    backTimer = setTimeout(function () { say_hero(original.tagline); }, 7000);
+  }
+
   function runTool(tool, arg) {
+    narrate(tool, arg);
     var call = '[' + tool + '(' + arg + ')]';
     return Promise.resolve(TOOLS[tool](arg)).then(function (out) {
       return typeof out === 'string' ? { call: call, text: out } : { call: call, text: out.text, node: out.node };
@@ -490,7 +542,7 @@
     var exact = S.exact(q);
     if (exact) return Promise.resolve({ text: exact });
     // bare() strips "can you", "please" and the rest, the same as every other command
-    var plain = S.bare(q), paintMatch = /^(?:paint|repaint|draw)\b/i.exec(plain);
+    var plain = S.bare(q), paintMatch = /^(?:paint|repaint|draw|imagine|sketch|illustrate|(?:generate|make|create)(?: me)?(?: an?)?(?: image| picture| painting| drawing| photo) of)\b/i.exec(plain);
     if (paintMatch) return runTool('paint', plain.slice(paintMatch[0].length)).then(function (o) { return { calls: [o.call], text: o.text, node: o.node }; });
     var r = S.pageRoute(q, names()) || S.route(q);
     if (r && r.tool) return runTool(r.tool, r.arg).then(function (o) { return { calls: [o.call], text: o.text, node: o.node }; });
@@ -541,11 +593,11 @@
 
   // No theme commands and no barrel roll in the reel: moving a visitor's whole page unasked reads as a bug.
   // ---- idle reel: if nobody types, she shows what she does. Silent, and it stops the moment you touch anything ----
-  var REEL = ['paint the mona lisa', 'change the title to Hello there', 'open chrome and go to github.com', 'set the volume to 40', 'paint the eniac', 'take a note the demo is live',
+  var REEL = ['paint the mona lisa', 'open chrome and go to github.com', 'set the volume to 40', 'paint the eniac', 'take a note the demo is live',
               'what is 17*23', 'make me a complex logo for a surf school', 'make me an original wordless logo for turing', "what's the weather in tokyo", 'play some music', 'skip this song', 'paint the last supper',
-              'who painted the mona lisa', 'set a timer for 1 minute', 'scroll to the results', 'take a screenshot', 'calculate 17*23', 'convert 72 f to c', 'time in tokyo', 'roll 2d6', 'is 91 prime', 'days until christmas', 'who invented the telephone', 'reset the page'];
+              'who painted the mona lisa', 'set a timer for 1 minute', 'scroll to the results', 'take a screenshot', 'draw a lighthouse at dusk', 'draw a fox in the snow', 'calculate 17*23', 'convert 72 f to c', 'time in tokyo', 'roll 2d6', 'is 91 prime', 'days until christmas', 'who invented the telephone', 'reset the page'];
   // more phrasings for the input's autocomplete only. The reel stays short.
-  var MORE = ['do a barrel roll', 'tip on 45', 'roman numerals for 2026', 'sha256 of turing', 'base64 encode hello', 'morse sos', 'flip a coin', 'generate a strong password',
+  var MORE = ['change the title to Hello there', 'draw a robot reading a book', 'draw a sailboat on a calm lake', 'imagine a city on the moon', 'do a barrel roll', 'tip on 45', 'roman numerals for 2026', 'sha256 of turing', 'base64 encode hello', 'morse sos', 'flip a coin', 'generate a strong password',
               'make a uuid', 'random number between 1 and 100', 'count words in the quick brown fox', 'reverse the text hello', 'what day is it',
               'convert 5 km to miles', 'calculate 15% of 80', 'factor 84', 'time in london', 'days until halloween', 'how much disk space do i have'];
   var reelAt = 0;
@@ -567,7 +619,7 @@
   }
 
   function startDemo() {
-    statusEl.textContent = 'Live demo. She controls the stand-in Mac and this page. A 3B on Cloudflare stands in for the models on her Mac.';
+    statusEl.textContent = 'Live demo. She controls the stand-in Mac and this page. Ask her to draw anything: an image model on Cloudflare imagines it and she rebuilds it from 30,000 squares. A 3B on Cloudflare stands in for the models on her Mac.';
     say(null, [], "I'm Samantha. Tell me to do something, to the Mac up there or to this page, or ask me something. Type anything.");
     // No buttons. The reel shows what she does, and the same lines feed the input's native autocomplete.
     var suggest = $('chat-suggest');

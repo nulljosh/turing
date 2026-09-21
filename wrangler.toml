@@ -22,5 +22,14 @@ namespace_id = "2109"
   limit = 20
   period = 60
 
+# a picture costs far more than an answer, so 5 a minute per visitor
+[[ratelimits]]
+name = "DRAW_LIMIT"
+namespace_id = "2110"
+
+  [ratelimits.simple]
+  limit = 5
+  period = 60
+
 [observability]
 enabled = true
