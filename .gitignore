@@ -14,3 +14,4 @@ voice-train.log
 hands-data/
 hands-train.log
 menubar/build/
+.claude/
