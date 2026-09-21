@@ -134,6 +134,8 @@ def main():
                 print(f"[{'PASS' if ok else 'FAIL'}] {name}: {text!r} -> {said[:90]!r}")
             if name == "desktop":
                 for text in dict.fromkeys(page.eval_on_selector_all("#chat-suggest option", "os => os.map(o => o.value)") + REEL):
+                    if text.lower().startswith(("draw", "imagine")):
+                        continue  # a picture costs real compute and drawing is limited to 5 a minute, so STEPS draws twice and the offered list does not
                     said = ask(page, text)
                     ok = sane(said) and not any(d in said.lower() for d in DUD)
                     failed += not ok
