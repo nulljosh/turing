@@ -550,6 +550,11 @@ def _named_page(task):
 NOT_FOR_MODELS = {"run_shortcut", "copy_to_clipboard", "sleep_display"}
 
 
+def model_tools():
+    """The tools a model may choose from: everything except NOT_FOR_MODELS."""
+    return {n: f for n, f in TOOLS.items() if n not in NOT_FOR_MODELS}
+
+
 def agent(task, max_steps=6, log=None, confirm=None):
     """Multi-step: let qwen3:8b drive TOOLS until it has an answer."""
     messages = [
@@ -567,7 +572,7 @@ def agent(task, max_steps=6, log=None, confirm=None):
         messages[1]["content"] += f"\n\nI already fetched {named} for you. Its text:\n{read_page(named)}"
     for _ in range(max_steps):
         body = json.dumps({"model": AGENT_MODEL, "messages": messages, "stream": False, "think": False,
-                           "tools": [_schema(f) for n, f in TOOLS.items() if n not in NOT_FOR_MODELS]}).encode()
+                           "tools": [_schema(f) for f in model_tools().values()]}).encode()
         req = urllib.request.Request(OLLAMA_CHAT, body, {"Content-Type": "application/json"})
         try:
             with urllib.request.urlopen(req, timeout=180) as r:
@@ -580,7 +585,7 @@ def agent(task, max_steps=6, log=None, confirm=None):
             return re.sub(r"(?s)<think>.*?</think>", "", msg.get("content", "")).strip()
         for c in calls:
             name, args = c["function"]["name"], c["function"].get("arguments") or {}
-            fn = TOOLS.get(name) if name not in NOT_FOR_MODELS else None
+            fn = model_tools().get(name)
             try:
                 if not fn:
                     result = f"No tool named {name}."
@@ -690,9 +695,10 @@ WRITES = {"new_note", "new_reminder", "make_logo", "paint_image", "run_shortcut"
 def plan(query):
     """Which tools would act() fire for this command, and with what? Nothing runs: every tool is
     swapped for a recorder while the router looks at the sentence, the way eval/actions.py does."""
-    calls, saved = [], {n: globals()[n] for n in TOOLS}
+    calls, names = [], [n for n in TOOLS if n in globals()]
+    saved = {n: globals()[n] for n in names}
     try:
-        for n in TOOLS:
+        for n in names:
             globals()[n] = lambda *a, _n=n, **k: calls.append((_n, tuple(str(x) for x in a))) or "ok"
         act(query)
     finally:

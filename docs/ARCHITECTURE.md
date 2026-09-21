@@ -41,6 +41,7 @@ Once she is trained, `ask.py` and `chat.py` handle questions. Before answering, 
 | `test_mcp.py` | A real client conversation against mcp_server.py: initialize, list, call, an unknown tool, an unknown method, and garbage input. |
 | `test_harness.py` | The harness keeps its promises: a no stops the write, a yes runs it once, reads never ask, the record is kept, and plan() runs nothing. |
 | `eval/util_diff.py` | Runs about a hundred phrasings through tools_util.py and through its JavaScript twin in web/samantha.js under node, and fails on any difference in the words that come back. Also checks that near-miss sentences ("hash browns are good") are not stolen. |
+| `eval/laws.py` | Checks the rules in LAWS.md against every tool, not a sample: side-effect tools are classified, hidden tools never reach a model or MCP, a no from the harness stops a write, her hands stay in the home folder, docs stay at 100 percent, Python and JavaScript agree, no em dashes. Borrowed from the idea of Bend's LAWS.bend. |
 | `web/paint.js` | Landing page painting demo. Shows live quadtree painting in the browser (three clickable paintings). |
 | `scratch/` | Experimental from-scratch transformer (character-level, no pre-trained weights). Deliberately tiny, proves we can build one without repeating the Arthur gibberish failure. Not intended to be fluent. |
 | `tui/` | Terminal UI. SwiftPM + SwiftTUI wrapper around the Python CLI. |

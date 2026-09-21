@@ -43,6 +43,9 @@ Every shipped ability or fix ends with `./release.sh X.Y.Z "what shipped"`. It r
 Anything that writes, sends or leaves a file goes in `tools.WRITES` and asks first through `harness.py`. Tools that fire a side effect nobody sees coming (`NOT_FOR_MODELS`) never reach a model's menu and are not served over MCP (`mcp_server.py`).
 Painting: `pixelmator/pxm.py paint --engine magick` draws the quadtree with ImageMagick in about a second for 40,000 squares; `paint_image` uses it and falls back to Pixelmator. Merging every 500 layers keeps the Pixelmator engine linear.
 
+## Laws
+`LAWS.md` lists the rules the repo never breaks and `eval/laws.py` checks them against every tool. The gate and CI run it first. A new tool that leaves a mark goes in `WRITES` or `NOT_FOR_MODELS`, and `eval/laws.py` fails until it is classified.
+
 ## Docs rule
 100 percent of functions and classes have a docstring, in the top folder, `eval/` and `pixelmator/`. `python3 stats.py --check` fails otherwise, `./gate.sh` runs it first and CI runs it. Nothing gets pushed under 100.
 
