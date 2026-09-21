@@ -4,9 +4,14 @@ on:
   push:
   pull_request:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test_chat:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -18,3 +23,18 @@ jobs:
   # model (MLX, Apple Silicon only) and a live brain API token, neither
   # of which a standard runner has. Run it locally, the pre-commit hook
   # already gates every ask.py/chat.py/FAQ.md/prompts.jsonl change.
+
+  docs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: README file references aren't stale
+        run: |
+          python3 - <<'PY'
+          import re, os, sys
+          refs = re.findall(r'(?:src="|\]\()([^")#?\s]+)', open("README.md").read())
+          bad = [r for r in refs if "://" not in r and not r.startswith(("mailto:", "/")) and not os.path.exists(r)]
+          print("stale README refs:", bad)
+          sys.exit(bool(bad))
+          PY
