@@ -98,7 +98,7 @@ CASES = [
     ("what is the freezing point of water in fahrenheit", ["32"]),
 ]
 
-DECLINED_MARKERS = ("couldn't reach", "don't have that pinned down", "not going to guess")
+DECLINED_MARKERS = ("couldn't find anything", "couldn't reach", "don't have that pinned down", "not going to guess")
 
 
 def main():

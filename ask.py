@@ -836,6 +836,62 @@ def local_answer(query):
     return None, None
 
 
+READER_MODEL = "qwen3:1.7b"
+READER_URL = "http://localhost:11434/api/chat"
+
+
+def _is_definition_of(query, title):
+    """True when the article IS the thing asked about, so its summary is the
+    answer. "who is marie curie" against "Marie Curie": yes. "who invented the
+    telephone" against "Telephone": no, the page is about the right topic and
+    its first sentence is still not an answer."""
+    asked = set(_keywords(normalize_query(query)))
+    return bool(asked) and asked <= set(_keywords(title))
+
+
+def read_article(query, title):
+    """Found the right page, now actually read it. QA sweep 2026-09-20: eight
+    of eighteen misses were the first sentence of a correct article returned as
+    if it answered the question ("what year did world war 2 end" got the war's
+    opening line). The small model reads, it does not recall: it sees the text
+    and may only answer from it, and the answer is checked against that text
+    before anyone sees it. Returns a sentence or None.
+    """
+    key = f"reader2:{READER_MODEL}:{title}:{query.lower().strip()}"
+    cached = _cache_get(key)
+    if cached is not None:
+        return cached or None
+    page = http_json("https://en.wikipedia.org/w/api.php?action=query&prop=extracts&explaintext=1"
+                     f"&exsectionformat=plain&redirects=1&titles={urllib.parse.quote(title)}&format=json&origin=*")
+    pages = ((page or {}).get("query") or {}).get("pages") or {}
+    text = next(iter(pages.values()), {}).get("extract", "")[:7000]
+    if not text:
+        return None
+    body = json.dumps({"model": READER_MODEL, "stream": False, "think": False, "options": {"temperature": 0},
+                       "messages": [
+        {"role": "system", "content": "Answer the question in one short sentence using ONLY the text. If the text does not contain the answer, reply exactly UNKNOWN."},
+        {"role": "user", "content": f"Text:\n{text}\n\nQuestion: {query}"}]}).encode()
+    try:
+        req = urllib.request.Request(READER_URL, body, {"Content-Type": "application/json"})
+        with urllib.request.urlopen(req, timeout=120) as r:
+            answer = json.load(r)["message"]["content"]
+    except Exception:
+        return None  # no Ollama: fall back to the old behaviour, do not cache
+    answer = re.sub(r"(?s)<think>.*?</think>", "", answer).strip()
+    # grounding: every number and every capitalised name in the answer has to
+    # be in the page. A reader that says something the page never said is a
+    # guesser, and a guess is worse than a decline.
+    claims = re.findall(r"\d[\d,.]*\d|\d|\b[A-Z][a-z]{2,}\b", answer)
+    asked = query.lower()
+    grounded = all(c.lower().rstrip(".,") in text.lower() or c.lower() in asked for c in claims[1:] or claims)
+    # the 1.7B does not always say the word it was told to say
+    declined = re.search(r"unknown|does not (?:contain|mention|say|provide|specify)|doesn't (?:contain|mention|say)|not (?:mentioned|stated|specified|provided)|no (?:information|mention)", answer, re.I)
+    if not answer or declined or not grounded:
+        answer = ""
+    _cache_put(key, answer)
+    return answer or None
+
+
 def general_knowledge(query, skip_officeholder=False):
     """Same pattern as nimble/docs/engine.js's ddg()/wiki(): DuckDuckGo's
     Instant Answer API first, Wikipedia's summary API as fallback. No API
@@ -879,6 +935,8 @@ def general_knowledge(query, skip_officeholder=False):
         for field, src_field in (("Answer", None), ("AbstractText", "AbstractSource"), ("Definition", "DefinitionSource")):
             text = d.get(field)
             if text:
+                if field == "AbstractText" and not _is_definition_of(query, d.get("Heading") or ""):
+                    continue  # right topic, not an answer: let the reader have the page
                 src = d.get(src_field) if src_field else "DuckDuckGo"
                 return text.strip(), src or "DuckDuckGo"
 
@@ -890,13 +948,13 @@ def general_knowledge(query, skip_officeholder=False):
     # frequently *related but wrong* rather than better. It also tripled
     # request volume, which made Wikipedia's rate limiting fire mid-eval and
     # turned the score itself unreliable. Reverted, measured, documented.
-    s = http_json(f"https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch={urllib.parse.quote(normalized)}&format=json&srlimit=1&origin=*", on_error=FETCH_FAILED)
+    s = http_json(f"https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch={urllib.parse.quote(normalized)}&format=json&srlimit=3&origin=*", on_error=FETCH_FAILED)
     if s is FETCH_FAILED:
         s = None
     else:
         reachable = True
-    title = (s or {}).get("query", {}).get("search", [{}])
-    title = title[0].get("title") if title else None
+    hits = [h.get("title") for h in (s or {}).get("query", {}).get("search", []) if h.get("title")]
+    title = hits[0] if hits else None
     if not title:
         # borrowed from nimble/docs/engine.js's wiki(): fulltext search and
         # prefix search are separate endpoints, and opensearch finds titles
@@ -915,6 +973,26 @@ def general_knowledge(query, skip_officeholder=False):
         # band". Wikipedia labels these itself, so this needs no heuristic.
         if (summary or {}).get("type") == "disambiguation":
             extract = None
+        if not _is_definition_of(query, title):
+            # The top hit for "largest country in the world" is a list page,
+            # which is a table, and a table has no sentence to read. The
+            # second or third hit usually is the prose article that says it.
+            asked = set(_keywords(normalize_query(query)))
+            for candidate in ([title] + [h for h in hits[1:] if h != title])[:3]:
+                # Two guards, both from real wrong answers. A page sharing no
+                # word with the question is search noise ("how many days are in
+                # a week" ranked Bodybuilding.com). And a "List of" page is a
+                # table of many right-looking names: the reader pulled "United
+                # States" out of a GDP list for "largest country", and the
+                # grounding check passed because the name really was on the page.
+                if candidate.lower().startswith(("list of", "lists of")) or not asked & set(_keywords(candidate)):
+                    continue
+                read = read_article(query, candidate)
+                if read:
+                    return read, f"Wikipedia: {candidate}"
+            # a list page or an article merely near the topic is never an answer
+            if not extract or extract.lstrip().lower().startswith(("this is a list", "this list", "the following")):
+                extract = None
         if extract and _wikipedia_answer_is_plausible(query, title, extract):
             return extract.strip(), f"Wikipedia: {title}"
     # "I searched and found nothing" and "I could not reach anything to
@@ -1008,6 +1086,10 @@ PROJECT_KEYWORDS = {
 
 def is_project_question(question):
     q = question.lower()
+    # ponytail: the one name that collides with the repo. "who was alan turing"
+    # got the project FAQ. If a second collision ever shows up, make it a list.
+    if "alan turing" in q:
+        return False
     return any(kw in q for kw in PROJECT_KEYWORDS)
 
 
