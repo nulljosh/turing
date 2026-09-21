@@ -398,8 +398,23 @@ def make_logo(description):
     return (f"I went with {chose}. {len(spec['layers'])} layers, built in Pixelmator, saved to {out}."
             if os.path.exists(out) else f"Pixelmator refused my design: {result[-300:]}")
 
+def paint_image(path):
+    """Repaint a photo inside Pixelmator Pro out of thousands of colored squares, each a real layer. Takes the path of an image file."""
+    full = _inside_home(path.strip().strip("'\""))
+    if not full or not os.path.isfile(full):
+        return f"I can't find an image at {path}."
+    out = os.path.expanduser("~/Desktop/samantha-painting.png")
+    if os.path.exists(out):
+        os.remove(out)  # a stale file must not read as a fresh success
+    # ponytail: 800 layers is about a minute. Raise it when paint gets faster.
+    result = _run([sys.executable, PXM, "paint", full, "--out", out, "--shapes", "800", "--size", "1024"]
+                  + (["--headless"] if HEADLESS else []), timeout=600)
+    return (f"Painted it from 800 layers in Pixelmator, saved to {out}." if os.path.exists(out)
+            else f"Pixelmator refused the painting: {result[-300:]}")
+
+
 TOOLS = {f.__name__: f for f in (open_app, open_url, web_search, current_tab, read_page, screenshot,
-                                     clipboard, set_volume, battery, say, list_dir, read_file, make_logo,
+                                     clipboard, set_volume, battery, say, list_dir, read_file, make_logo, paint_image,
                                      music, weather, timer, new_note, new_reminder, calendar_today)}
 
 _UNIT = {"s": 1 / 60, "m": 1, "h": 60}
@@ -420,6 +435,7 @@ _ROUTES = (
     (re.compile(r"^what(?:'s| is) on (?:my |the )?(?:calendar|schedule|agenda)\b|^(?:my )?(?:calendar|schedule|agenda)(?: for)?(?: today)?$|^what do i have (?:on )?today", re.I),
      lambda m: calendar_today()),
     (re.compile(r"^(?:make|design|draw|create|build)(?: me)? (?:a |an )?(complex |intricate |detailed |elaborate |ornate |fancy |crazy |insane )?(?:logo|icon)(?: for| of)? (.+)$", re.I), lambda m: make_logo((m.group(1) or "") + m.group(2))),
+    (re.compile(r"^(?:paint|repaint)(?: me)? (?:a picture of |a painting of |the (?:image|photo|picture) (?:at )?)?(\S+\.(?:jpe?g|png|heic|webp|tiff?))$", re.I), lambda m: paint_image(m.group(1))),
     (re.compile(r"^(?:(?:show me |tell me )?what(?:'s| is) (?:on|in) (?:my |the )?clipboard|(?:read|show)(?: me)? (?:my |the )?clipboard)\b", re.I), lambda m: clipboard()),
     (re.compile(r"^(?:set |turn |put )?(?:the |it |my )?(?:volume )?(?:up |down )?(?:to |at )(\d{1,3})\b", re.I), lambda m: set_volume(m.group(1))),
     (re.compile(r"^(?:set |turn )?(?:the )?volume (\d{1,3})\b", re.I), lambda m: set_volume(m.group(1))),
@@ -442,7 +458,7 @@ _ROUTES = (
 )
 # anything past the first verb phrase means more than one step: that is agent() work
 _MULTISTEP = re.compile(r"\b(?:and (?:then )?(?:tell|read|find|summar|poke|look|check|see|click)|poke around|then )", re.I)
-_ACTION = re.compile(r"^(?:open|launch|start|go to|visit|browse|pull up|search|google|look up|poke around|take a|grab a|screenshot|make|design|draw|play|pause|skip|remind me|set a)\b", re.I)
+_ACTION = re.compile(r"^(?:open|launch|start|go to|visit|browse|pull up|search|google|look up|poke around|take a|grab a|screenshot|make|design|draw|paint|repaint|play|pause|skip|remind me|set a)\b", re.I)
 
 
 # People do not type commands, they ask. "can you open chrome", "hey open
