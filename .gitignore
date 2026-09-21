@@ -9,3 +9,4 @@ __pycache__/
 .wrangler/
 .faq_embeddings.json
 .http_cache.json
+.samantha-logo.json

@@ -190,10 +190,61 @@ def read_file(path):
         return f.read(3000).decode("utf-8", "ignore")
 
 
+PXM = os.path.expanduser("~/Documents/Code/pixelmator-skill/pxm.py")
+# A 1.7B picks well and composes badly: left to write layers itself it put a
+# pink rectangle over everything and set "TURING" at 360pt, and pxm rejected
+# the spec. So she chooses, the harness lays out. Three choices, all enums.
+PALETTES = {"ember": ("#15110D", "#F4C893", "#E8A96A"), "ink": ("#101418", "#FFFFFF", "#F2B33D"),
+            "forest": ("#0F1A14", "#E9F2EA", "#6FBF73"), "signal": ("#16161A", "#FFFFFF", "#E5484D"),
+            "paper": ("#F3EDE2", "#1A1410", "#C2562D")}
+_LOGO_SCHEMA = {"type": "object", "required": ["letters", "palette", "motif"], "properties": {
+    "letters": {"type": "string", "minLength": 1, "maxLength": 2},
+    "palette": {"enum": list(PALETTES)}, "motif": {"enum": ["ring", "spark", "underline", "dot"]}}}
+
+
+def _logo_layers(letters, palette, motif):
+    tile, ink, accent = PALETTES[palette]
+    layers = [{"type": "rounded_rectangle", "name": "Tile", "width": 880, "height": 880, "corner_radius": 200, "fill": tile}]
+    if motif == "ring":
+        layers.append({"type": "ellipse", "name": "Ring", "width": 640, "height": 640, "stroke": accent, "stroke_width": 28})
+    layers.append({"type": "text", "name": "Mark", "text": letters.upper(), "font": "HelveticaNeue-Bold",
+                   "size": 340 if len(letters) == 1 else 280, "color": ink})
+    if motif == "spark":
+        layers.append({"type": "star", "name": "Spark", "x": 690, "y": 190, "width": 150, "height": 150, "points": 4, "radius": 35, "fill": accent})
+    if motif == "underline":
+        layers.append({"type": "rounded_rectangle", "name": "Line", "x": 362, "y": 730, "width": 300, "height": 28, "corner_radius": 14, "fill": accent})
+    if motif == "dot":
+        layers.append({"type": "ellipse", "name": "Dot", "x": 700, "y": 640, "width": 90, "height": 90, "fill": accent})
+    return layers
+
+
+def make_logo(description):
+    """Design a logo and build it live in Pixelmator Pro. Takes a short description of what the logo is for."""
+    prompt = ("Pick a logo for this. letters: its one or two initials. palette: ember (warm amber on dark), ink (white and gold on "
+              "near-black), forest (green on dark), signal (red on dark), paper (dark on cream). motif: ring, spark, underline or dot. "
+              "Logo for: " + description)
+    body = json.dumps({"model": AGENT_MODEL, "stream": False, "think": False, "format": _LOGO_SCHEMA,
+                       "messages": [{"role": "user", "content": prompt}]}).encode()
+    try:
+        with urllib.request.urlopen(urllib.request.Request(OLLAMA_CHAT, body, {"Content-Type": "application/json"}), timeout=180) as r:
+            pick = json.loads(json.load(r)["message"]["content"])
+        spec = {"layers": _logo_layers(pick["letters"], pick["palette"], pick["motif"])}
+    except Exception as e:
+        return f"I couldn't draft the design: {e}"
+    out = os.path.expanduser("~/Desktop/samantha-logo.png")
+    spec.update(width=1024, height=1024, export=[out], keep_open=not HEADLESS)
+    path = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".samantha-logo.json")
+    json.dump(spec, open(path, "w"), indent=1)
+    result = _run([sys.executable, PXM, "logo", path] + (["--headless"] if HEADLESS else []), timeout=180)
+    chose = f"{pick['letters'].upper()}, {pick['palette']}, {pick['motif']}"
+    return f"I went with {chose}. Built it in Pixelmator, saved to {out}." if os.path.exists(out) else f"Pixelmator refused my design: {result[-300:]}"
+
+
 TOOLS = {f.__name__: f for f in (open_app, open_url, web_search, current_tab, read_page, screenshot,
-                                     clipboard, set_volume, battery, say, list_dir, read_file)}
+                                     clipboard, set_volume, battery, say, list_dir, read_file, make_logo)}
 
 _ROUTES = (
+    (re.compile(r"^(?:make|design|draw|create|build)(?: me)? (?:a |an )?(?:logo|icon)(?: for| of)? (.+)$", re.I), lambda m: make_logo(m.group(1))),
     (re.compile(r"^(?:(?:show me |tell me )?what(?:'s| is) (?:on|in) (?:my |the )?clipboard|(?:read|show)(?: me)? (?:my |the )?clipboard)\b", re.I), lambda m: clipboard()),
     (re.compile(r"^(?:set |turn |put )?(?:the |it |my )?(?:volume )?(?:up |down )?(?:to |at )(\d{1,3})\b", re.I), lambda m: set_volume(m.group(1))),
     (re.compile(r"^(?:set |turn )?(?:the )?volume (\d{1,3})\b", re.I), lambda m: set_volume(m.group(1))),
@@ -216,7 +267,7 @@ _ROUTES = (
 )
 # anything past the first verb phrase means more than one step: that is agent() work
 _MULTISTEP = re.compile(r"\b(?:and (?:then )?(?:tell|read|find|summar|poke|look|check|see|click)|poke around|then )", re.I)
-_ACTION = re.compile(r"^(?:open|launch|start|go to|visit|browse|pull up|search|google|look up|poke around|take a|grab a|screenshot)\b", re.I)
+_ACTION = re.compile(r"^(?:open|launch|start|go to|visit|browse|pull up|search|google|look up|poke around|take a|grab a|screenshot|make|design|draw)\b", re.I)
 
 
 # People do not type commands, they ask. "can you open chrome", "hey open
@@ -329,6 +380,9 @@ def demo():
         assert act("open chrome and poke around hacker news") is None  # multi-step, agent's job
         assert act("what is turing") is None and not is_action("what is turing")
         assert is_action("poke around hacker news")
+        for pal in PALETTES:
+            for motif in ("ring", "spark", "underline", "dot"):
+                assert _logo_layers("t", pal, motif)[0]["type"] == "rounded_rectangle"
         assert _named_page("poke around hacker news and tell me") == "https://news.ycombinator.com"
         assert _named_page("read github.com/nulljosh/turing.") == "https://github.com/nulljosh/turing"
         assert _named_page("open pixelmator then tell me my battery") is None
