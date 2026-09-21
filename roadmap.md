@@ -311,13 +311,15 @@ Samantha could answer. She could not do anything. "Open chrome and go to hacker 
 
 1.0.0 means you can sit down, talk to her, and she answers and acts without a rewrite. Each box ships as its own tagged release. No box gets ticked without a check that fails when it breaks.
 
+Shipped 2026-09-20 and off the list: a 1.7B head that answers in 5 seconds, `eval/actions.py` at 54/54, read-only file tools, Mac tools (clipboard, volume, battery, say), headless mode.
+
 Gaps, in order:
 
-- [ ] **Know things.** `eval/basic_questions.py` at 60/65 or better on people, places and things, zero confidently wrong.
-- [ ] **Faster hands.** Swap `qwen3:8b` for the smallest model that passes the same multi-step tasks. 7.6GB and minutes per run is not usable.
-- [ ] **Actions eval.** `eval/actions.py`: 30 commands, scored on which tool fired with which argument, tools mocked. Hands have a self-check today, not a measurement.
-- [ ] **File tools.** `read_file`, `list_dir`, `find_file`. Read-only, home folder only.
-- [ ] **Mac tools.** Clipboard read and write, volume, dark mode, battery, wifi, say it out loud, notify. All fixed argv.
+- [ ] **Know things.** `eval/basic_questions.py` at 60/65 or better, zero confidently wrong. First full run 2026-09-20: **47/65, 18 wrong.** The misses are four bugs, not eighteen:
+  - **She finds the article and stops.** "Who invented the telephone" returns the telephone article's first sentence. "What year did world war 2 end" returns the war's opening line. The answer is in the page, nobody reads it. Fix: hand the article and the question to the 1.7B and ask for one sentence from that text only. Covers about eight misses.
+  - **Superlatives land on list pages.** "Largest country", "longest river", "tallest mountain" all return "This is a list of". Five misses. A list page is never an answer, same rule as the disambiguation fix.
+  - **"Who was alan turing" answers with the project FAQ.** The name collides with the repo. A "who was <person>" question is never about the project.
+  - **Four easy ones declined that used to pass** (days in a week, sky colour, spider legs, what bees make). The scorer also files that decline under wrong because its marker list misses the phrasing. Check for throttling first, then fix the markers.
 - [ ] **Personal tools.** Calendar today, new note, new reminder, weather, timer.
 - [ ] **Music.** Play, pause, skip, what's playing.
 - [ ] **Browser beyond opening.** List tabs, switch tab, close tab, read the rendered page through Chrome so JS sites stop coming back empty.
