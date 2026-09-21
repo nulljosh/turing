@@ -523,7 +523,8 @@ def read_pixels(path, side=256):
     try:
         p = subprocess.run(["sips", "-s", "format", "bmp", "-Z", str(side), path, "--out", bmp],
                            text=True, capture_output=True)
-        data = open(bmp, "rb").read()
+        with open(bmp, "rb") as f:
+            data = f.read()
     finally:
         os.unlink(bmp)
     if p.returncode != 0 or data[:2] != b"BM":

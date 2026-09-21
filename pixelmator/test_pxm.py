@@ -246,6 +246,48 @@ class Paint(unittest.TestCase):
         self.assertTrue(small and all(L["x"] >= 80 for L in small))
         pxm.validate_spec({"width": 160, "height": 160, "layers": layers})
 
+    def test_a_flat_image_is_one_layer_no_matter_the_budget(self):
+        rows = [[(10, 20, 30)] * 8 for _ in range(8)]
+        self.assertEqual(len(pxm.paint_layers(8, 8, rows, 500, 4)), 1)
+
+    def test_layers_tile_inside_the_canvas_with_whole_pixel_edges(self):
+        rows = [[((x * 37 + y * 11) % 256, (x * 5) % 256, (y * 9) % 256) for x in range(13)] for y in range(7)]
+        for L in pxm.paint_layers(13, 7, rows, 120, 3):
+            self.assertTrue(0 <= L["x"] and L["x"] + L["width"] <= 39 and 0 <= L["y"] and L["y"] + L["height"] <= 21)
+            self.assertTrue(L["width"] > 0 and L["height"] > 0 and L["width"] % 3 == 0 and L["height"] % 3 == 0)
+
+    @unittest.skipUnless(sys.platform == "darwin", "sips only exists on macOS")
+    def test_pixels_come_back_the_right_way_up_and_in_rgb_order(self):
+        # 2x2 bottom-up BMP: red top-left, green top-right, blue bottom-left, white bottom-right.
+        px = bytes([255, 0, 0, 255, 255, 255, 0, 0]) + bytes([0, 0, 255, 0, 255, 0, 0, 0])  # BGR, rows padded to 4
+        head = b"BM" + (54 + 16).to_bytes(4, "little") + bytes(4) + (54).to_bytes(4, "little")
+        info = (40).to_bytes(4, "little") + (2).to_bytes(4, "little") + (2).to_bytes(4, "little") + \
+            (1).to_bytes(2, "little") + (24).to_bytes(2, "little") + bytes(4) + (16).to_bytes(4, "little") + bytes(16)
+        with tempfile.NamedTemporaryFile(suffix=".bmp", delete=False) as f:
+            f.write(head + info + px)
+        try:
+            w, h, rows = pxm.read_pixels(f.name, side=2)
+        finally:
+            os.unlink(f.name)
+        self.assertEqual((w, h), (2, 2))
+        self.assertEqual(rows, [[(255, 0, 0), (0, 255, 0)], [(0, 0, 255), (255, 255, 255)]])
+
+    @unittest.skipUnless(sys.platform == "darwin", "sips only exists on macOS")
+    def test_a_file_that_is_not_an_image_is_a_usage_error(self):
+        with tempfile.NamedTemporaryFile(suffix=".jpg", delete=False) as f:
+            f.write(b"not an image")
+        try:
+            with self.assertRaises(pxm.PxmError) as cm:
+                pxm.read_pixels(f.name)
+        finally:
+            os.unlink(f.name)
+        self.assertEqual(cm.exception.code, pxm.EXIT_USAGE)
+
+    def test_paint_rejects_a_silly_layer_budget_before_touching_anything(self):
+        code, _, err = run_main("paint", "nope.jpg", "--out", "x.png", "--shapes", "2")
+        self.assertEqual(code, pxm.EXIT_USAGE)
+        self.assertIn("--shapes", err)
+
     def test_frames_are_thinned_but_the_last_layer_always_gets_one(self):
         layers = [{"type": "rectangle", "width": 5, "height": 5, "fill": "#000"}] * 7
         script = pxm.build_script(pxm.validate_spec({"width": 9, "height": 9, "layers": layers}),
