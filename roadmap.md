@@ -315,8 +315,10 @@ The loop compares her with other assistants (Siri and Shortcuts, Apple Intellige
 - [ ] MCP client: she calls other people's MCP servers, so any MCP tool becomes hers. Seen in Claude and ChatGPT desktop, Open Interpreter
 - [ ] Browser tabs: list, switch, close, and read a rendered page. Seen in Raycast, Claude in Chrome
 - [ ] Memory across sessions, not just inside one conversation
-- [ ] See the screen and answer about it (screenshot plus a small vision step). Seen in Apple Intelligence, ChatGPT desktop
-- [ ] Voice in as well as out: she can speak, she cannot listen
+- [ ] See the screen and answer about it: a screenshot, macOS Vision OCR for the text, then a question over it. Seen in Apple Intelligence (onscreen awareness), ChatGPT desktop
+- [ ] Read a PDF or document and answer questions about it (PDFKit text, then the same retrieve-then-read she uses for pages). Research pass 2026-09-21, source not re-verified
+- [ ] Control the GUI with approval: click and type in an app, every step confirmed by the harness first. Seen in Claude computer use, Open Interpreter
+- [ ] Voice in as well as out: she can speak, she cannot listen. A local Whisper on MLX would do it
 
 ### Phase 6: Distillation, not scale (month 4+, optional/ambitious)
 Instead of chasing bigger bases, use a frontier model (Claude) to generate high-quality synthetic training examples in our exact style, then distill that into Samantha. This is literally how most useful small models are built today, nobody pretrains from raw internet text anymore if they can help it.
