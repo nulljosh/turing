@@ -326,7 +326,7 @@
       lastPaintIndex = index;
       if (typeof window.samanthaPaint === 'function') window.samanthaPaint(index);
       // the counter still shows the last painting at this instant, so name the budget instead
-      return 'Painting ' + paintNames[index].replace(/^The /, 'the ').replace(/^Mona/, 'the Mona') + ' from 3000 squares. On my Mac this happens inside Pixelmator Pro.';
+      return 'Painting ' + paintNames[index].replace(/^The /, 'the ').replace(/^Mona/, 'the Mona') + ' from 30,000 squares. On my Mac this happens inside Pixelmator Pro.';
     },
     set_heading: function (text) { h1.textContent = text.slice(0, 60); go(document.querySelector('header')); return 'The title now says "' + h1.textContent + '". Only on your screen.'; },
     set_tagline: function (text) { tagline.textContent = text.slice(0, 120); go(document.querySelector('header')); return 'Tagline changed.'; },
