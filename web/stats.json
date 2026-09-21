@@ -1,5 +1,5 @@
 {
-  "version": "0.11.0",
+  "version": "0.12.0",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -36,8 +36,8 @@
         "documented": 3
       },
       "tools.py": {
-        "total": 43,
-        "documented": 43
+        "total": 44,
+        "documented": 44
       },
       "serve.py": {
         "total": 8,
@@ -108,6 +108,10 @@
         "documented": 1
       },
       "eval/actions.py": {
+        "total": 3,
+        "documented": 3
+      },
+      "eval/laws.py": {
         "total": 3,
         "documented": 3
       },
