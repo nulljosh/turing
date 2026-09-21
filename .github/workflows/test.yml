@@ -18,6 +18,8 @@ jobs:
         with:
           python-version: "3.12"
       - run: python3 test_chat.py
+      # her painting hands: the Pixelmator driver's own unit tests, no app needed
+      - run: cd pixelmator && python3 -m unittest
       # the regex router, and the landing page's JavaScript port of it, must agree on every case
       - run: python3 eval/actions.py
       - run: python3 eval/web_parity.py

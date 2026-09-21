@@ -45,6 +45,9 @@ DIRS = ([("~/Documents", "~/Documents"), ("~/Desktop", "~/Desktop"), ("~/Downloa
          ("~/Documents/Code/turing", "~/Documents/Code/turing"), ("the downloads folder", "~/Downloads"), ("my pictures", "~/Pictures")],
         [("~/Documents/Code/nimble", "~/Documents/Code/nimble"), ("my music folder", "~/Music"), ("~/Desktop/old", "~/Desktop/old"),
          ("the documents folder", "~/Documents")])
+IMAGES = (["~/Downloads/mona.jpg", "~/Pictures/beach.png", "~/Desktop/dog.jpeg", "~/Downloads/sunset.heic", "~/Pictures/family.jpg",
+           "~/Desktop/portrait.png", "~/Documents/cover.webp", "~/Downloads/cat.jpg", "~/Pictures/trip/lake.jpg"],
+          ["~/Desktop/selfie.jpg", "~/Downloads/last-supper.jpg", "~/Pictures/garden.png"])
 FILES = (["~/notes.txt", "~/Documents/todo.md", "~/Desktop/ideas.txt", "~/Documents/Code/turing/README.md", "~/Downloads/receipt.txt",
           "~/Documents/Code/turing/roadmap.md", "~/plan.md", "~/Documents/budget.csv", "~/Desktop/list.txt"],
          ["~/Desktop/draft.md", "~/Documents/letter.txt", "~/Documents/Code/nimble/README.md"])
@@ -113,6 +116,9 @@ SPEC = [
     ("make_logo", ["make a logo for {}", "design a logo for {}", "make me a logo for {}", "draw an icon for {}",
                    "create a logo for {}", "build a logo for {}", "design an icon for {}", "i need a logo for {}"],
      ["whip up a logo for {}", "logo for {}", "sketch an icon for {}"], BRANDS, None),
+    ("paint_image", ["paint {}", "repaint {}", "paint the photo {}", "turn {} into a painting", "make a painting of {}",
+                     "paint me {}", "paint the picture {}", "rebuild {} in pixelmator", "paint {} in pixelmator"],
+     ["do a painting of {}", "can you paint {} for me", "make {} look painted"], IMAGES, None),
     ("music", ["play", "play some music", "play music", "resume", "resume the music", "play my music", "hit play",
                "start the music", "unpause"], ["put some music on", "keep playing", "let's hear some tunes"], NONE, "play"),
     ("music", ["pause", "pause the music", "stop the music", "pause this song", "stop playing", "hold the music"],

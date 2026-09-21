@@ -296,7 +296,7 @@ def read_file(path):
         return f.read(3000).decode("utf-8", "ignore")
 
 
-PXM = os.path.expanduser("~/Documents/Code/pixelmator-skill/pxm.py")
+PXM = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pixelmator", "pxm.py")
 # A 1.7B picks well and composes badly: left to write layers itself it put a
 # pink rectangle over everything and set "TURING" at 360pt, and pxm rejected
 # the spec. So she chooses, the harness lays out. Three choices, all enums.
