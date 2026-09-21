@@ -1,8 +1,9 @@
 // Samantha's painting hands, in the browser. Same quadtree as pixelmator/pxm.py paint_layers.
 // The same quadtree as paint_layers in pxm.py: split the cell with the most color error.
 const c = document.getElementById('paint-c'), ctx = c.getContext('2d');
-const SCALE = 3, SIDE = 192;
-const BUDGET = 3000;
+// Paint at the screen's real pixels, one canvas pixel per image pixel, so nothing gets stretched.
+const SIDE = Math.round(420 * Math.min(2, window.devicePixelRatio || 1));
+const BUDGET = 30000;
 let S, w, h, run = 0;
 const pics = [['mona.jpg', 'Mona Lisa'], ['supper.jpg', 'The Last Supper'], ['monet.jpg', 'Impression, Sunrise']];
 let pic = 0;
@@ -21,7 +22,8 @@ function load(src, name) {
       a[0] += r; a[1] += g; a[2] += b; a[3] += r * r + g * g + b * b;
       for (let j = 0; j < 4; j++) S[((y + 1) * (w + 1) + x + 1) * 4 + j] = a[j] + S[(y * (w + 1) + x + 1) * 4 + j];
     }
-    c.width = w * SCALE; c.height = h * SCALE;
+    c.width = w; c.height = h;
+    c.style.aspectRatio = w + ' / ' + h;
     const titleEl = document.getElementById('paint-title');
     titleEl.textContent = name;
     titleEl.style.display = 'inline';
@@ -38,22 +40,39 @@ function cell(x0, y0, x1, y1) {
           fill: `rgb(${v[0] / n | 0},${v[1] / n | 0},${v[2] / n | 0})`};
 }
 
+// Max-heap on err: the worst cell is always at the top.
+function push(hp, q) {
+  let i = hp.push(q) - 1;
+  for (let p; i && hp[p = (i - 1) >> 1].err < q.err; i = p) hp[i] = hp[p];
+  hp[i] = q;
+}
+function pop(hp) {
+  const top = hp[0], q = hp.pop();
+  if (!hp.length) return top;
+  let i = 0;
+  for (let k; (k = 2 * i + 1) < hp.length; i = k) {
+    if (k + 1 < hp.length && hp[k + 1].err > hp[k].err) k++;
+    if (hp[k].err <= q.err) break;
+    hp[i] = hp[k];
+  }
+  hp[i] = q;
+  return top;
+}
+
 function paint() {
   const me = ++run;
   const still = matchMedia('(prefers-reduced-motion:reduce)').matches;
   let count = 0, heap = [];
-  const draw = q => { ctx.fillStyle = q.fill; ctx.fillRect(q.x0 * SCALE, q.y0 * SCALE, (q.x1 - q.x0) * SCALE, (q.y1 - q.y0) * SCALE); count++; };
+  const draw = q => { ctx.fillStyle = q.fill; ctx.fillRect(q.x0, q.y0, q.x1 - q.x0, q.y1 - q.y0); count++; };
   const root = cell(0, 0, w, h); draw(root); heap.push(root);
   (function step() {
     if (me !== run) return;
     for (let k = 0; k < (still ? 1e9 : Math.max(1, BUDGET / 240)) && heap.length && count + 4 <= BUDGET; k++) {
-      let bi = 0;  // linear scan for the worst cell: fine at a few thousand cells
-      for (let i = 1; i < heap.length; i++) if (heap[i].err > heap[bi].err) bi = i;
-      const q = heap.splice(bi, 1)[0], mx = (q.x0 + q.x1) >> 1, my = (q.y0 + q.y1) >> 1;
+      const q = pop(heap), mx = (q.x0 + q.x1) >> 1, my = (q.y0 + q.y1) >> 1;
       for (const [a, b, e, f] of [[q.x0, q.y0, mx, my], [mx, q.y0, q.x1, my], [q.x0, my, mx, q.y1], [mx, my, q.x1, q.y1]]) {
         if (e <= a || f <= b) continue;
         const kid = cell(a, b, e, f); draw(kid);
-        if (e - a > 1 && f - b > 1) heap.push(kid);
+        if (e - a > 1 && f - b > 1) push(heap, kid);
       }
     }
     document.getElementById('paint-n').textContent = count;

@@ -301,12 +301,14 @@ def _n(v):
     return repr(round(float(v), 3)) if not float(v).is_integer() else str(int(v))
 
 
-def build_script(spec, timeout=120, headless=False, frames_dir=None, frame_every=1):
+def build_script(spec, timeout=120, headless=False, frames_dir=None, frame_every=1, merge_every=0):
     """Normalized spec -> AppleScript. Layers are listed bottom to top.
 
     headless: never bring the app forward, always close the document after export.
     frames_dir: also export frame-000.png, frame-001.png... there, one after every
     `frame_every` layers, and always one after the last.
+    merge_every: flatten the document after every N layers. Pixelmator's cost per layer
+    grows with the layers already there, so merging keeps a 20000 layer painting linear.
     """
     W, H = spec["width"], spec["height"]
     layers = list(spec["layers"])
@@ -387,6 +389,8 @@ def build_script(spec, timeout=120, headless=False, frames_dir=None, frame_every
             b.append("export d to (POSIX file %s) as PNG"
                      % as_string(os.path.join(frames_dir, "frame-%03d.png" % (i // frame_every
                                  + (1 if i % frame_every else 0)))))
+        if merge_every and (i + 1) % merge_every == 0 and i < len(layers) - 1:
+            b += ["set carried to carried + (count of layers) - 1", "merge all d"]
         body += ["\t\t" + line for line in b]
 
     exports = ["\t\texport d to (POSIX file %s) as %s"
@@ -398,10 +402,11 @@ def build_script(spec, timeout=120, headless=False, frames_dir=None, frame_every
     ] + ([] if headless else ["\tactivate"]) + [
         "\tset d to make new document with properties {width:%d, height:%d}" % (W, H),
         '\tset out to ""',
+        "\tset carried to 0",
         "\ttry",
         "\t\ttell d",
     ] + ["\t" + line for line in body] + [
-        '\t\t\tset out to out & "layers" & tab & (count of layers) & linefeed',
+        '\t\t\tset out to out & "layers" & tab & (carried + (count of layers)) & linefeed',
         "\t\tend tell",
     ] + exports + [
         "\ton error m number n",
@@ -662,7 +667,7 @@ def cmd_paint(args):
     args.timeout = max(args.timeout, paint_timeout(len(layers)))
     build(validate_spec({"width": w * scale, "height": h * scale, "layers": layers,
                          "export": args.out, "keep_open": True}), args,
-          frame_every=max(1, len(layers) // 60))
+          frame_every=max(1, len(layers) // 60), merge_every=args.merge_every)
 
 
 @contextlib.contextmanager
@@ -701,7 +706,7 @@ def build_lock(label, wait=False):
         lock_file.close()
 
 
-def build(spec, args, frame_every=1):
+def build(spec, args, frame_every=1, merge_every=0):
     if args.gif and not args.gif.lower().endswith(".gif"):
         raise PxmError("--gif path must end in .gif", code=EXIT_USAGE)
     keep_frames = getattr(args, "frames", None)
@@ -716,7 +721,7 @@ def build(spec, args, frame_every=1):
     try:
         script = build_script(spec, timeout=args.timeout, headless=args.headless,
                               frames_dir=frames_dir or keep_frames or ("/tmp/frames" if args.gif else None),
-                              frame_every=frame_every)
+                              frame_every=frame_every, merge_every=merge_every)
         if args.dry_run:
             print(script, end="")
             return
@@ -769,6 +774,8 @@ def main(argv=None):
     p.add_argument("--shape", choices=("rectangle", "ellipse"), default="rectangle")
     p.add_argument("--detail", type=int, default=256,
                    help="longest side of the grid the image is sampled on (default 256)")
+    p.add_argument("--merge-every", type=int, default=500, metavar="N",
+                   help="flatten after every N layers so big paintings stay fast (0 keeps every layer)")
     p.add_argument("--size", type=int, default=2048, help="longest side of the canvas, roughly")
     p.add_argument("--dry-run", action="store_true")
     p.add_argument("--headless", action="store_true")

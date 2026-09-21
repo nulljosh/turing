@@ -515,9 +515,10 @@
     answer(q).then(function (a) { say(null, a.calls, a.text || '', { node: a.node, source: a.source }, finish); });
   }
 
+  // No theme commands in the reel: flipping a visitor's whole page unasked reads as a bug.
   // ---- idle reel: if nobody types, she shows what she does. Silent, and it stops the moment you touch anything ----
   var REEL = ['paint the mona lisa', 'change the title to Hello there', 'open chrome and go to github.com', 'set the volume to 40', 'paint a monet', 'take a note the demo is live',
-              'what is 17*23', 'dark mode', 'make me a complex logo for a surf school', "what's the weather in tokyo", 'play some music', 'skip this song', 'paint the last supper',
+              'what is 17*23', 'make me a complex logo for a surf school', "what's the weather in tokyo", 'play some music', 'skip this song', 'paint the last supper',
               'who painted the mona lisa', 'set a timer for 1 minute', 'scroll to the results', 'take a screenshot', 'do a barrel roll', 'who invented the telephone', 'reset the page'];
   var reelAt = 0;
   function stopReel() { reel = false; clearTimeout(reelTimer); clearTimeout(idleTimer); }
