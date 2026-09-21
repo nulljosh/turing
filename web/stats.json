@@ -1,0 +1,108 @@
+{
+  "version": "0.7.4",
+  "docs_coverage": {
+    "percent": 36,
+    "files": {
+      "test_nimble.py": {
+        "total": 4,
+        "documented": 2
+      },
+      "parse_log.py": {
+        "total": 1,
+        "documented": 0
+      },
+      "ask.py": {
+        "total": 32,
+        "documented": 17
+      },
+      "harvest_voice.py": {
+        "total": 3,
+        "documented": 1
+      },
+      "tools.py": {
+        "total": 30,
+        "documented": 17
+      },
+      "serve.py": {
+        "total": 8,
+        "documented": 0
+      },
+      "prep_data.py": {
+        "total": 5,
+        "documented": 0
+      },
+      "chat.py": {
+        "total": 12,
+        "documented": 5
+      },
+      "test_chat.py": {
+        "total": 18,
+        "documented": 0
+      },
+      "stats.py": {
+        "total": 6,
+        "documented": 4
+      },
+      "eval/run_eval.py": {
+        "total": 1,
+        "documented": 0
+      },
+      "eval/basic_questions.py": {
+        "total": 1,
+        "documented": 0
+      },
+      "eval/faq_paraphrase.py": {
+        "total": 1,
+        "documented": 0
+      },
+      "eval/actions.py": {
+        "total": 3,
+        "documented": 0
+      },
+      "eval/score.py": {
+        "total": 2,
+        "documented": 0
+      }
+    },
+    "house_docs": {
+      "README.md": true,
+      "WHITEPAPER.md": true,
+      "FAQ.md": true,
+      "TROUBLESHOOTING.md": true,
+      "CLAUDE.md": true,
+      "roadmap.md": true,
+      "LICENSE": true,
+      "SECURITY.md": false,
+      "architecture.svg": true,
+      "icon.svg": true
+    }
+  },
+  "measured": {
+    "tools": {
+      "before": 0,
+      "after": 13
+    },
+    "actions_eval": "54/54",
+    "knowledge_sweep": {
+      "before": "47/65",
+      "after": "57/65"
+    },
+    "confidently_wrong": {
+      "before": 18,
+      "after": 4
+    },
+    "project_eval": "29/29",
+    "chat_tests": "18/18",
+    "faq_paraphrase": "13/16",
+    "multistep_latency_seconds": {
+      "before": "minutes (8B)",
+      "after": 5.3
+    },
+    "hands_model_memory_gb": {
+      "before": 7.6,
+      "after": 3.5
+    },
+    "base_model": "Qwen2.5-0.5B-Instruct 4-bit, LoRA",
+    "hands_model": "qwen3:1.7b via Ollama"
+  }
+}

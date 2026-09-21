@@ -4,8 +4,8 @@
   text { font-family: -apple-system, Helvetica, Arial, sans-serif; fill: var(--ink); }
   line, polyline { stroke: var(--ink); fill: none; }
   .g { stroke-dasharray: 1 4; }
-</style><text x="44" y="11" font-size="10">Lines of real code</text><line x1="44" y1="26" x2="464" y2="26" class="g"/><text x="40" y="29" font-size="9" text-anchor="end">3627</text><line x1="44" y1="97" x2="464" y2="97" class="g"/><text x="40" y="100" font-size="9" text-anchor="end">1813</text>
+</style><text x="44" y="11" font-size="10">Lines of real code</text><line x1="44" y1="26" x2="464" y2="26" class="g"/><text x="40" y="29" font-size="9" text-anchor="end">3977</text><line x1="44" y1="97" x2="464" y2="97" class="g"/><text x="40" y="100" font-size="9" text-anchor="end">1988</text>
 <line x1="44" y1="26" x2="44" y2="166"/><line x1="44" y1="166" x2="464" y2="166"/>
-<polyline points="44,163 53,160 62,155 72,153 81,152 90,150 100,145 109,144 118,144 128,143 137,140 146,139 156,136 165,135 174,133 184,132 193,124 202,124 212,120 221,119 230,119 240,118 249,116 258,117 268,116 277,112 286,109 296,108 305,105 314,100 324,95 333,92 342,85 352,82 361,80 370,78 380,77 389,68 398,67 408,60 417,60 426,57 436,55 445,50 454,30 464,26" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="44,163 52,161 61,156 70,155 79,153 88,151 97,147 106,146 115,146 124,145 133,142 142,141 151,139 160,138 169,136 178,135 186,128 195,128 204,124 213,124 222,123 231,122 240,121 249,121 258,120 267,117 276,114 285,113 294,110 303,106 312,101 321,98 329,92 338,90 347,88 356,85 365,85 374,76 383,75 392,69 401,69 410,67 419,65 428,60 437,42 446,39 455,34 464,26" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
 <text x="44" y="182" font-size="10">Sep 13</text><text x="464" y="182" font-size="10" text-anchor="end">Sep 20</text>
-<text x="44" y="196" font-size="10" font-weight="600">3,627 lines &#183; 100% documented &#183; 122 commits since Sep 13 2026</text></svg>
+<text x="44" y="196" font-size="10" font-weight="600">3,977 lines &#183; 100% documented &#183; 130 commits since Sep 13 2026</text></svg>

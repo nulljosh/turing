@@ -81,6 +81,38 @@
       .turn-a{font-size:14px;margin:0;padding-left:12px;border-left:2px solid var(--line)}
       .turn-a.bad{border-left-color:#c0392b;color:var(--muted)}
       .turn-a.good{border-left-color:#2e9e4a}
+      .stat-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px;margin-top:16px}
+      .stat-tile{border:1px solid var(--line);border-radius:10px;padding:16px;text-align:center}
+      .stat-value{font-size:24px;font-weight:600;margin:0 0 4px;color:var(--fg);font-family:ui-monospace,Menlo,monospace}
+      .stat-label{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin:0}
+      .bench-table{width:100%;border-collapse:collapse;margin-top:16px;font-size:14px}
+      .bench-table caption{text-align:left;font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-bottom:12px;padding:0}
+      .bench-table th{text-align:left;font-weight:600;padding:8px 12px;border-bottom:1px solid var(--line);font-size:13px}
+      .bench-table td{padding:12px;border-bottom:1px solid var(--line)}
+      .bench-table th[scope="row"]{font-weight:600;color:var(--fg)}
+      .bar-container{display:flex;align-items:center;gap:8px;margin-top:4px}
+      .bar{flex:1;height:16px;background:var(--line);border-radius:3px;overflow:hidden}
+      .bar-fill{height:100%;background:var(--accent);transition:width 0.2s}
+      .bar-label{font-size:12px;font-family:ui-monospace,Menlo,monospace;color:var(--fg);min-width:40px;text-align:right}
+      .docs-block{margin-top:16px;padding:16px;border:1px solid var(--line);border-radius:10px}
+      .docs-title{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin:0 0 8px}
+      .docs-bar{margin-bottom:12px}
+      .docs-checklist{font-size:13px;line-height:1.6;color:var(--fg)}
+      .docs-item{margin:4px 0}
+      .docs-present::before{content:"✓ ";color:#2e9e4a}
+      .docs-missing::before{content:"○ ";color:var(--muted)}
+      .limitations{margin-top:16px;padding:16px;border:1px solid var(--line);border-radius:10px;font-size:13px;line-height:1.6;color:var(--fg)}
+      .limitations-title{font-weight:600;margin:0 0 8px}
+      .chat-tool-call{font-family:ui-monospace,Menlo,monospace;font-size:12px;color:var(--muted);margin:8px 0 4px}
+      .chat-message{margin:8px 0}
+      .chat-message-content{color:var(--fg)}
+      .chat-logo{margin:8px 0;text-align:center}
+      @media (max-width: 500px) {
+        .bench-table{font-size:13px}
+        .bench-table th{padding:6px 8px}
+        .bench-table td{padding:8px}
+        .stat-tiles{grid-template-columns:repeat(2,1fr)}
+      }
     </style>
   </head>
   <body>
@@ -125,46 +157,29 @@
       </header>
 
       <section>
-        <h2>Hands</h2>
-        <p>Samantha runs on this Mac only. Before 2026-09-20 she couldn't do anything on the system. Now she has hands.</p>
-        <div class="card">
-          <div class="turn">
-            <p class="turn-label">Q: open chrome and go to github.com</p>
-            <p class="turn-a good">Opened https://github.com in Chrome.</p>
-          </div>
-          <div class="turn">
-            <p class="turn-label">Q: poke around hacker news and tell me the top 3 stories</p>
-            <p class="turn-a good">[read_page(https://news.ycombinator.com)] (the three real front page stories with their points, in 5.3 seconds)</p>
-          </div>
-          <div class="turn">
-            <p class="turn-label">Q: open pixelmator then tell me my battery status</p>
-            <p class="turn-a good">[open_app(Pixelmator)] [battery()] The Mac is currently drawing power from the AC outlet.</p>
-          </div>
-          <div class="turn">
-            <p class="turn-label">Q: who invented the telephone</p>
-            <p class="turn-a good">The telephone was invented by Alexander Graham Bell.</p>
-          </div>
-          <div class="turn">
-            <p class="turn-label">Q: make me a logo for Turing, the most complex intricate logo ever</p>
-            <p class="turn-a good">I went with letters T, palette ember, rings 4, rays 12, ray_style dots, orbit_dots 8, star_points 4. 28 layers, built in Pixelmator.</p>
-          </div>
-          <div style="margin-top:16px;text-align:center">
-            <img src="samantha-logo.png" width="200" alt="Logo for Turing designed by Samantha">
-          </div>
-        </div>
-      </section>
-
-      <section>
-        <h2>Talk to her</h2>
-        <div class="card">
+        <h2>Talk to Samantha</h2>
+        <div class="card" style="display:flex;flex-direction:column">
           <div id="chat-status" style="font-size:13px;color:var(--muted);margin-bottom:12px"></div>
-          <div id="chat-transcript" aria-live="polite" aria-label="Conversation with Samantha" style="margin-bottom:12px;min-height:40px;font-size:14px;line-height:1.5"></div>
+          <div id="chat-transcript" aria-live="polite" aria-label="Conversation with Samantha" style="flex:1;overflow-y:auto;min-height:320px;max-height:400px;margin-bottom:12px;font-size:14px;line-height:1.5;padding-right:8px"></div>
           <div style="display:flex;gap:8px">
             <label for="chat-input" style="display:none">Ask Samantha</label>
-            <input type="text" id="chat-input" placeholder="Ask Samantha..." style="flex:1;padding:8px 12px;border:1px solid var(--line);border-radius:6px;font-size:14px;background:var(--bg);color:var(--fg);font-family:inherit" />
+            <input type="text" id="chat-input" placeholder="Ask Samantha..." style="flex:1;min-width:0;padding:8px 12px;border:1px solid var(--line);border-radius:6px;font-size:14px;background:var(--bg);color:var(--fg);font-family:inherit" />
             <button id="chat-send" style="padding:8px 16px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--fg);font-size:14px;cursor:pointer;font-weight:600" type="button">Send</button>
           </div>
           <div id="chat-chips" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:12px"></div>
+        </div>
+      </section>
+
+      <section id="results-section">
+        <h2>Results</h2>
+        <div id="results-placeholder" style="font-size:13px;color:var(--muted)">Loading results...</div>
+      </section>
+
+      <section>
+        <h2>Hands</h2>
+        <p>Samantha runs on this Mac only. Before 2026-09-20 she couldn't do anything on the system. Now she has hands.</p>
+        <div style="margin-top:16px;text-align:center">
+          <img src="samantha-logo.png" width="160" alt="Logo for Turing designed by Samantha">
         </div>
       </section>
 
@@ -370,6 +385,71 @@ python3 -m venv .venv && ./.venv/bin/pip install mlx-lm
         document.getElementById('release-link').href = rel.html_url;
       }).catch(() => {});
 
+      fetch('stats.json').then(r => r.json()).then(s => {
+        var results = document.getElementById('results-section');
+        var placeholder = document.getElementById('results-placeholder');
+        if (!s || !s.measured) { placeholder.textContent = 'stats unavailable'; return; }
+
+        var m = s.measured;
+        var docsCov = s.docs_coverage.percent;
+        var html = '<div class="stat-tiles">' +
+          '<div class="stat-tile"><div class="stat-value">13</div><div class="stat-label">Tools</div></div>' +
+          '<div class="stat-tile"><div class="stat-value">54/54</div><div class="stat-label">Actions eval</div></div>' +
+          '<div class="stat-tile"><div class="stat-value">57/65</div><div class="stat-label">Knowledge</div></div>' +
+          '<div class="stat-tile"><div class="stat-value">' + docsCov + '%</div><div class="stat-label">Docs coverage</div></div>' +
+          '</div>';
+
+        var benchmarks = [
+          {label:'Confidently wrong answers (lower is better)', max:18, before:m.confidently_wrong.before, after:m.confidently_wrong.after, before_label:m.confidently_wrong.before, after_label:m.confidently_wrong.after},
+          {label:'Knowledge sweep, right out of 65', max:65, before:47, after:57, before_label:'47/65', after_label:'57/65'},
+          {label:'Latency for multistep asks', before:'8B model minutes', after:m.multistep_latency_seconds.after+'s', before_label:'', after_label:m.multistep_latency_seconds.after+'s'},
+          {label:'Hands model memory, GB (lower is better)', max:m.hands_model_memory_gb.before, before:m.hands_model_memory_gb.before, after:m.hands_model_memory_gb.after, before_label:m.hands_model_memory_gb.before+'GB', after_label:m.hands_model_memory_gb.after+'GB'}
+        ];
+
+        var tableHtml = '<table class="bench-table"><caption>Before and After</caption><thead><tr><th scope="col">Metric</th><th scope="col">Before</th><th scope="col">Now</th></tr></thead><tbody>';
+        benchmarks.forEach(function(b) {
+          tableHtml += '<tr><th scope="row">' + b.label + '</th><td>';
+          if (b.before_label) {
+            var beforeMax = b.max || 0;
+            var beforeVal = (typeof b.before === 'string') ? 0 : b.before;
+            var beforePct = (beforeMax > 0) ? Math.min(100, (beforeVal/beforeMax)*100) : 0;
+            tableHtml += '<div class="bar-container"><div class="bar"><div class="bar-fill" style="width:' + beforePct + '%"></div></div><div class="bar-label">' + b.before_label + '</div></div>';
+          } else {
+            tableHtml += b.before;
+          }
+          tableHtml += '</td><td>';
+          if (b.after_label && typeof b.after !== 'string') {
+            var afterMax = b.max || 0;
+            var afterPct = (afterMax > 0) ? Math.min(100, (b.after/afterMax)*100) : 0;
+            tableHtml += '<div class="bar-container"><div class="bar"><div class="bar-fill" style="width:' + afterPct + '%"></div></div><div class="bar-label">' + b.after_label + '</div></div>';
+          } else {
+            tableHtml += b.after;
+          }
+          tableHtml += '</td></tr>';
+        });
+        tableHtml += '</tbody></table>';
+
+        var docsHtml = '<div class="docs-block"><p class="docs-title">House docs</p><div class="docs-bar"><div class="bar-container"><div class="bar"><div class="bar-fill" style="width:' + docsCov + '%"></div></div><div class="bar-label">' + docsCov + '%</div></div></div><div class="docs-checklist">';
+        if (s.docs_coverage.house_docs) {
+          Object.keys(s.docs_coverage.house_docs).forEach(function(doc) {
+            var exists = s.docs_coverage.house_docs[doc];
+            docsHtml += '<div class="docs-item ' + (exists ? 'docs-present' : 'docs-missing') + '">' + doc + '</div>';
+          });
+        }
+        docsHtml += '</div></div>';
+
+        var limitHtml = '<div class="limitations"><p class="limitations-title">Limitations</p>' +
+          '<p>The 0.5B model cannot pick tools herself and borrows a 1.7B head for that. ' +
+          'Knowledge bar is 60 of 65 with zero confidently wrong and she is at 57 with 4 wrong. ' +
+          'Logos are dial choices from a fixed set, not free-hand design. ' +
+          'She runs on one Mac only.</p></div>';
+
+        placeholder.parentNode.innerHTML = html + tableHtml + docsHtml + limitHtml;
+      }).catch(() => {
+        var placeholder = document.getElementById('results-placeholder');
+        placeholder.textContent = 'stats unavailable';
+      });
+
       // Chat functionality
       (function() {
         var isLive = false;
@@ -378,32 +458,156 @@ python3 -m venv .venv && ./.venv/bin/pip install mlx-lm
         if (reduceMotion) typingInterval = 0;
 
         var recordings = {
-          'open chrome and go to github.com': 'Opened https://github.com in Chrome.',
-          'poke around hacker news and tell me the top 3 stories': '[read_page(https://news.ycombinator.com)] (the three real front page stories with their points, in 5.3 seconds)',
-          'open pixelmator then tell me my battery status': '[open_app(Pixelmator)] [battery()] The Mac is currently drawing power from the AC outlet.',
-          'who invented the telephone': 'The telephone was invented by Alexander Graham Bell.',
-          'make me a logo for turing, the most complex intricate logo ever': 'I went with letters T, palette ember, rings 4, rays 12, ray_style dots, orbit_dots 8, star_points 4. 28 layers, built in Pixelmator.'
+          'open chrome and go to github.com': {toolcalls:['[open_url(github.com)]'], text:'Opened https://github.com in Chrome.'},
+          'poke around hacker news and tell me the top 3 stories': {toolcalls:['[read_page(https://news.ycombinator.com)]'], text:'(the three real front page stories with their points, in 5.3 seconds)'},
+          'open pixelmator then tell me my battery status': {toolcalls:['[open_app(Pixelmator)]','[battery()]'], text:'The Mac is currently drawing power from the AC outlet.'},
+          'who invented the telephone': {text:'The telephone was invented by Alexander Graham Bell.'},
+          'make me a logo for turing, the most complex intricate logo ever': {toolcalls:['[make_logo]'], text:'I went with letters T, palette ember, rings 4, rays 12, ray_style dots, orbit_dots 8, star_points 4. 28 layers, built in Pixelmator.', image:'samantha-logo.png'},
+          'who discovered penicillin': {text:'Penicillin was discovered in 1928 by the Scottish physician Alexander Fleming.'},
+          'how many days are in a week': {text:'A week consists of exactly seven days.'},
+          'what is 17*23': {text:'17*23 = 391'},
+          'what is turing': {text:'Turing is the project: the pipeline, the repo, this whole effort to build small language models on consumer hardware. It is not a model itself.'},
+          'what is the largest country in the world': {text:'I couldn\'t find anything on that, and it\'s outside what I know about this project, so I\'m not going to make something up.'}
         };
 
-        function typeOut(text, container) {
+        var transcript = document.getElementById('chat-transcript');
+        var input = document.getElementById('chat-input');
+        var autoplayActive = false;
+        var idleTimer = 0;
+        var typingInterval2 = typingInterval; // separate typing animation for input vs answer
+        var inAutoplay = false;
+
+        function typeOutInput(text, cb) {
+          if (typingInterval2 === 0) {
+            input.value = text;
+            if (cb) cb();
+            return;
+          }
+          input.value = '';
+          var idx = 0, chars = text.split('');
+          var timer = setInterval(function () {
+            if (idx < chars.length) {
+              input.value = input.value + chars[idx];
+              idx++;
+            } else {
+              clearInterval(timer);
+              if (cb) cb();
+            }
+          }, typingInterval2);
+        }
+
+        function typeOutAnswer(text, container, cb) {
+          if (typingInterval2 === 0) {
+            container.textContent = text;
+            if (cb) cb();
+            return;
+          }
           container.textContent = '';
-          var i = 0;
-          function type() {
-            if (i < text.length) {
-              container.textContent += text[i];
-              i++;
-              if (typingInterval > 0) {
-                setTimeout(type, typingInterval);
-              } else {
-                type();
-              }
+          var idx = 0, chars = text.split('');
+          var timer = setInterval(function () {
+            if (idx < chars.length) {
+              container.textContent += chars[idx];
+              idx++;
+            } else {
+              clearInterval(timer);
+              if (cb) cb();
+            }
+          }, typingInterval2);
+        }
+
+        function addToTranscript(isUser, content) {
+          var div = document.createElement('div');
+          div.className = 'chat-message';
+          if (isUser) {
+            div.style.cssText = 'margin:8px 0;padding:8px 12px;background:var(--line);border-radius:6px;color:var(--fg)';
+          } else {
+            div.style.cssText = 'margin:8px 0;color:var(--fg)';
+          }
+          div.innerHTML = content;
+          transcript.appendChild(div);
+          transcript.scrollTop = transcript.scrollHeight;
+        }
+
+        function capTranscript() {
+          var children = transcript.querySelectorAll('.chat-message');
+          if (children.length > 12) {
+            for (var i = 0; i < children.length - 12; i++) {
+              children[i].remove();
             }
           }
-          if (typingInterval > 0) {
-            type();
+        }
+
+        function showGreeting() {
+          if (isLive) {
+            addToTranscript(false, 'I\'m Samantha. Live on this Mac. Ask me anything.');
           } else {
-            container.textContent = text;
+            addToTranscript(false, 'I\'m Samantha. I run on one Mac, so what you see here is a recording of real answers unless you\'re Joshua. Pick a question.');
           }
+        }
+
+        function startAutoplay() {
+          if (autoplayActive || isLive || reduceMotion) return;
+          autoplayActive = true;
+          inAutoplay = true;
+          var questionList = Object.keys(recordings);
+          var qIdx = 0;
+
+          function playNext() {
+            if (!autoplayActive || !inAutoplay) return;
+            var q = questionList[qIdx];
+            var rec = recordings[q];
+            typeOutInput(q, function() {
+              setTimeout(function() {
+                if (!autoplayActive || !inAutoplay) return;
+                addToTranscript(true, q);
+                var toolLines = '';
+                if (rec.toolcalls && rec.toolcalls.length > 0) {
+                  rec.toolcalls.forEach(function(toolcall) {
+                    toolLines += '<div class="chat-tool-call">' + toolcall + '</div>';
+                  });
+                }
+                if (toolLines) {
+                  addToTranscript(false, toolLines);
+                }
+                typeOutAnswer(rec.text, (function() {
+                  var el = document.createElement('div');
+                  el.className = 'chat-message-content';
+                  addToTranscript(false, '');
+                  transcript.lastChild.appendChild(el);
+                  return el;
+                })(), function() {
+                  if (rec.image) {
+                    var img = document.createElement('img');
+                    img.src = rec.image;
+                    img.width = 160;
+                    img.alt = 'Samantha design';
+                    var imgDiv = document.createElement('div');
+                    imgDiv.className = 'chat-logo';
+                    imgDiv.appendChild(img);
+                    addToTranscript(false, '');
+                    transcript.lastChild.appendChild(imgDiv);
+                  }
+                  capTranscript();
+                  qIdx = (qIdx + 1) % questionList.length;
+                  setTimeout(playNext, 2600);
+                });
+              }, 800);
+            });
+          }
+          playNext();
+        }
+
+        function stopAutoplay() {
+          autoplayActive = false;
+          inAutoplay = false;
+          if (idleTimer) { clearTimeout(idleTimer); idleTimer = 0; }
+        }
+
+        function resetIdleTimer() {
+          stopAutoplay();
+          if (idleTimer) clearTimeout(idleTimer);
+          if (reduceMotion || isLive) return;
+          idleTimer = setTimeout(startAutoplay, 3000);
         }
 
         function checkLive() {
@@ -416,6 +620,7 @@ python3 -m venv .venv && ./.venv/bin/pip install mlx-lm
               isLive = true;
               document.getElementById('chat-status').textContent = 'Live, talking to Samantha on this Mac';
               document.getElementById('chat-chips').style.display = 'none';
+              showGreeting();
             } else {
               showRecordedMode();
             }
@@ -426,6 +631,7 @@ python3 -m venv .venv && ./.venv/bin/pip install mlx-lm
 
         function showRecordedMode() {
           document.getElementById('chat-status').innerHTML = '<em>Recorded transcript.</em> She runs on one Mac, not on a server.';
+          showGreeting();
           var chipsContainer = document.getElementById('chat-chips');
           chipsContainer.innerHTML = '';
           Object.keys(recordings).forEach(function(q) {
@@ -434,53 +640,120 @@ python3 -m venv .venv && ./.venv/bin/pip install mlx-lm
             chip.textContent = q;
             chip.style.cssText = 'padding:6px 12px;border:1px solid var(--line);border-radius:20px;background:var(--bg);color:var(--fg);font-size:12px;cursor:pointer;white-space:normal;text-align:left';
             chip.addEventListener('click', function() {
-              document.getElementById('chat-input').value = q;
+              stopAutoplay();
+              input.value = q;
               handleSend(q);
             });
             chipsContainer.appendChild(chip);
           });
+          if (!reduceMotion) {
+            resetIdleTimer();
+          }
         }
 
         function handleSend(question) {
-          var q = (question || document.getElementById('chat-input').value).trim();
+          stopAutoplay();
+          var q = (question || input.value).trim();
           if (!q) return;
-          document.getElementById('chat-input').value = '';
-          var transcript = document.getElementById('chat-transcript');
+          input.value = '';
 
           if (isLive) {
-            transcript.textContent = 'Asking...';
+            addToTranscript(true, q);
+            var ansEl = document.createElement('div');
+            ansEl.textContent = 'Asking...';
+            addToTranscript(false, '');
+            transcript.lastChild.appendChild(ansEl);
             fetch('http://localhost:8127/v1/chat/completions', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ model: 'samantha', messages: [{ role: 'user', content: q }] })
             }).then(function(r) { return r.json(); }).then(function(data) {
               if (data.choices && data.choices[0] && data.choices[0].message) {
-                typeOut(data.choices[0].message.content, transcript);
+                typeOutAnswer(data.choices[0].message.content, ansEl, function() {
+                  capTranscript();
+                  resetIdleTimer();
+                });
               } else {
-                transcript.textContent = 'No response.';
+                ansEl.textContent = 'No response.';
+                capTranscript();
+                resetIdleTimer();
               }
             }).catch(function(e) {
-              transcript.textContent = 'Error: ' + e;
+              ansEl.textContent = 'Error: ' + e;
+              capTranscript();
+              resetIdleTimer();
             });
           } else {
             var key = Object.keys(recordings).find(function(k) { return k.toLowerCase() === q.toLowerCase(); });
             if (key) {
-              typeOut(recordings[key], transcript);
+              addToTranscript(true, q);
+              var rec = recordings[key];
+              var toolLines = '';
+              if (rec.toolcalls && rec.toolcalls.length > 0) {
+                rec.toolcalls.forEach(function(toolcall) {
+                  toolLines += '<div class="chat-tool-call">' + toolcall + '</div>';
+                });
+              }
+              if (toolLines) {
+                addToTranscript(false, toolLines);
+              }
+              var el = document.createElement('div');
+              el.className = 'chat-message-content';
+              addToTranscript(false, '');
+              transcript.lastChild.appendChild(el);
+              typeOutAnswer(rec.text, el, function() {
+                if (rec.image) {
+                  var img = document.createElement('img');
+                  img.src = rec.image;
+                  img.width = 160;
+                  img.alt = 'Samantha design';
+                  var imgDiv = document.createElement('div');
+                  imgDiv.className = 'chat-logo';
+                  imgDiv.appendChild(img);
+                  addToTranscript(false, '');
+                  transcript.lastChild.appendChild(imgDiv);
+                }
+                capTranscript();
+                resetIdleTimer();
+              });
             } else {
-              transcript.textContent = 'I only run locally. Clone the repo and run ./samantha to talk to me.';
+              addToTranscript(true, q);
+              addToTranscript(false, 'I only run locally. Clone the repo and run ./samantha to talk to me.');
+              capTranscript();
+              resetIdleTimer();
             }
           }
         }
 
-        document.getElementById('chat-send').addEventListener('click', function() {
+        var sendBtn = document.getElementById('chat-send');
+        sendBtn.addEventListener('click', function() {
           handleSend();
         });
-        document.getElementById('chat-input').addEventListener('keypress', function(e) {
+        input.addEventListener('keypress', function(e) {
           if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
             handleSend();
           }
         });
+        input.addEventListener('focus', resetIdleTimer);
+        input.addEventListener('keydown', resetIdleTimer);
+        sendBtn.addEventListener('click', function() { stopAutoplay(); });
+        document.addEventListener('pointerdown', resetIdleTimer, true);
+        document.addEventListener('touchstart', resetIdleTimer, true);
+        document.addEventListener('visibilitychange', function() {
+          if (document.hidden) stopAutoplay();
+          else if (!isLive && !reduceMotion) resetIdleTimer();
+        });
+
+        if ('IntersectionObserver' in window) {
+          var io = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+              if (!entry.isIntersecting) stopAutoplay();
+              else if (!isLive && !reduceMotion) resetIdleTimer();
+            });
+          }, { threshold: 0.1 });
+          io.observe(transcript);
+        }
 
         checkLive();
       })();

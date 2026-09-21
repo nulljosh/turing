@@ -28,6 +28,18 @@ A LoRA fine-tune of `Qwen2.5-0.5B-Instruct-4bit` (small enough to train on-devic
 
 Samantha's base model *is* Qwen2.5-0.5B, LoRA only adds a small trained delta on top of it. So "beat Qwen" isn't a fair or coherent bar, a LoRA fine-tune of Qwen can't outperform Qwen in general, only on the narrow thing it was fine-tuned for. The real benchmark is whether the fine-tuned version answers our own questions better than stock Qwen does. See `eval/` for that.
 
+## Results
+
+| Metric | Before | Now |
+|--------|--------|-----|
+| Tools | 0 | 13 |
+| Actions eval | - | 54/54 |
+| Knowledge sweep | 47/65 | 57/65 |
+| Confidently wrong | 18 | 4 |
+| Multistep latency | minutes (8B) | 5.3s |
+| Model memory | 7.6GB | 3.5GB |
+| Docs coverage | - | 36% |
+
 ## What she can do
 
 She could answer. She could not do anything. Before 2026-09-20, "open chrome and go to hacker news" got an honest refusal:
