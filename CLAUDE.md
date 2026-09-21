@@ -48,6 +48,9 @@ Painting: `pixelmator/pxm.py paint --engine magick` draws the quadtree with Imag
 ## Laws
 `LAWS.md` lists the rules the repo never breaks and `eval/laws.py` checks them against every tool. The gate and CI run it first. A new tool that leaves a mark goes in `WRITES` or `NOT_FOR_MODELS`, and `eval/laws.py` fails until it is classified.
 
+## Accessibility
+`eval/a11y.py` runs axe-core against the live page in desktop, phone, light and dark, and `./gate.sh --full` fails on any violation. Keep a `<main>`, a skip link, text at 4.5:1 contrast, 44px tap targets and visible focus. Dog food it after any landing change.
+
 ## Docs rule
 100 percent of functions and classes have a docstring, in the top folder, `eval/` and `pixelmator/`. `python3 stats.py --check` fails otherwise, `./gate.sh` runs it first and CI runs it. Nothing gets pushed under 100.
 
