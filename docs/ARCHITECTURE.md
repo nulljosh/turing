@@ -1,10 +1,14 @@
 # Architecture
 
-Local LLM training pipeline. Fine-tune small open models (LoRA on Qwen2.5-0.5B) with house voice from personal documentation. Samantha is the first model. Everything runs on-device via Apple's MLX framework, no cloud GPU, no cost. CLI/TUI interface; RAG back-end via brain project.
+Turing teaches a small AI model to write and answer the way you do. It reads everything you have written, your notes and your project docs, and trains the model on that until it picks up your voice and knows your work. The result is called Samantha, and you talk to her from the terminal.
+
+The whole thing runs on this Mac. Nothing is uploaded, no rented graphics cards, no bill. It is a small enough model to train at home, nudged toward your writing rather than rebuilt from scratch, which is why it fits.
 
 ## How it runs
 
-`prep_data.py` chunks the Obsidian wiki and project docs (READMEs, roadmaps, CLAUDEs) into train/valid JSONL. `mlx_lm lora` runs LoRA training on Apple Silicon, storing weight deltas (a few MB, not a full model copy). `parse_log.py` regenerates `web/status.json` (loss history). `ask.py`/`chat.py` retrieve facts from brain RAG, answer from passages, with a fuzzy FAQ matcher for common questions and Wikidata lookups for current facts (president/prime minister). CLI interface (`serve.py` runs the REPL). TUI wrapped in SwiftPM.
+First `prep_data.py` gathers your wiki and project documentation and cuts it into training examples, holding some back to check the results against. Then the training step runs on the Mac's own chip. It does not make a new copy of the model; it saves only the adjustments, a few megabytes rather than gigabytes. `parse_log.py` turns the training log into `web/status.json` so you can watch it improve.
+
+Once she is trained, `ask.py` and `chat.py` handle questions. Before answering, they look up the relevant passages from your notes through the brain project, so answers come from what you actually wrote instead of being made up. Common questions are matched even when worded differently, and anything that changes with time, like who currently holds an office, is looked up live rather than remembered. `serve.py` runs the prompt you type into.
 
 | File | What it owns |
 |---|---|
@@ -13,6 +17,7 @@ Local LLM training pipeline. Fine-tune small open models (LoRA on Qwen2.5-0.5B) 
 | `parse_log.py` | Post-training: parses loss history from `train.log`, writes `web/status.json` for the landing page. |
 | `ask.py` + `chat.py` | Inference. Loads the trained adapter, retrieves facts from brain RAG, generates answers. `chat.py` wraps it in an interactive loop. |
 | `serve.py` | CLI server. Local REPL for chat sessions. |
+| `tools.py` | The small fixed set of things Samantha can actually do on this Mac. Simple commands are matched by pattern and run straight away, with no model involved, because there is only one right answer. Anything that takes several steps is handed to a larger model that picks the tools itself. There is deliberately no command-line tool: every action is a fixed command, never a line of text a model wrote. |
 | `harvest_voice.py` | Voice data harvester. Collects training examples from git commits (183 pairs extracted from fleet repos), used for style transfer beyond documentation alone. |
 | `run_lora_capped.py` | Utility to run LoRA training with memory caps, protecting against OOM crashes on the 16GB machine. |
 | `train_resilient.sh` | Wrapper script for resilient training runs (retries on crash, memory limits). |
