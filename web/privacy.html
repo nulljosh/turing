@@ -17,6 +17,7 @@ p{margin:0 0 12px}.sub{color:var(--muted);font-size:14px}
 <h2>The demo on this site</h2>
 <p>Most commands run in your browser and go nowhere. When you ask a question the rules cannot answer, the text you typed is sent to a small Cloudflare Worker, which passes it to a Cloudflare Workers AI model to pick a tool or read a Wikipedia article. The Worker does not store what you type. Answers to common questions may be cached at Cloudflare's edge so the next person gets them faster.</p>
 <h2>What stays in your browser</h2>
+<p>When you ask her to draw something, the words you typed go to the same Worker, which passes them to an image model on Cloudflare. The picture comes back to your browser, and she rebuilds it from squares there. Prompts are not stored by this site, and a repeated prompt is answered from a one-day cache.</p>
 <p>Notes and reminders you make in the demo are kept in your own browser's local storage, the last twenty of each, so they survive a reload. Clear your site data and they are gone. They are never sent anywhere.</p>
 <h2>Other services the demo calls</h2>
 <p>Weather comes from wttr.in. Headlines come from the Hacker News API. Version info comes from the GitHub API. Each of those sees your IP address the way any website does.</p>

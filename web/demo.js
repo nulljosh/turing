@@ -364,7 +364,7 @@
           statusEl.textContent = was;
           if (!x.ok || !x.d.image) return x.d.answer || 'I could not draw that one.';
           window.samanthaPaintSrc(x.d.image, subject);
-          return 'Here is ' + subject + '. An image model on Cloudflare imagined it, and I am rebuilding it from 30,000 squares.';
+          return 'Here it is: ' + subject + '. An image model on Cloudflare imagined it, and I am rebuilding it from 30,000 squares.';
         })
         .catch(function () { statusEl.textContent = was; return 'I could not reach my image model just now.'; });
     },
