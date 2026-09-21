@@ -125,6 +125,50 @@
       </header>
 
       <section>
+        <h2>Hands</h2>
+        <p>Samantha runs on this Mac only. Before 2026-09-20 she couldn't do anything on the system. Now she has hands.</p>
+        <div class="card">
+          <div class="turn">
+            <p class="turn-label">Q: open chrome and go to github.com</p>
+            <p class="turn-a good">Opened https://github.com in Chrome.</p>
+          </div>
+          <div class="turn">
+            <p class="turn-label">Q: poke around hacker news and tell me the top 3 stories</p>
+            <p class="turn-a good">[read_page(https://news.ycombinator.com)] (the three real front page stories with their points, in 5.3 seconds)</p>
+          </div>
+          <div class="turn">
+            <p class="turn-label">Q: open pixelmator then tell me my battery status</p>
+            <p class="turn-a good">[open_app(Pixelmator)] [battery()] The Mac is currently drawing power from the AC outlet.</p>
+          </div>
+          <div class="turn">
+            <p class="turn-label">Q: who invented the telephone</p>
+            <p class="turn-a good">The telephone was invented by Alexander Graham Bell.</p>
+          </div>
+          <div class="turn">
+            <p class="turn-label">Q: make me a logo for Turing, the most complex intricate logo ever</p>
+            <p class="turn-a good">I went with letters T, palette ember, rings 4, rays 12, ray_style dots, orbit_dots 8, star_points 4. 28 layers, built in Pixelmator.</p>
+          </div>
+          <div style="margin-top:16px;text-align:center">
+            <img src="samantha-logo.png" width="200" alt="Logo for Turing designed by Samantha">
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Talk to her</h2>
+        <div class="card">
+          <div id="chat-status" style="font-size:13px;color:var(--muted);margin-bottom:12px"></div>
+          <div id="chat-transcript" aria-live="polite" aria-label="Conversation with Samantha" style="margin-bottom:12px;min-height:40px;font-size:14px;line-height:1.5"></div>
+          <div style="display:flex;gap:8px">
+            <label for="chat-input" style="display:none">Ask Samantha</label>
+            <input type="text" id="chat-input" placeholder="Ask Samantha..." style="flex:1;padding:8px 12px;border:1px solid var(--line);border-radius:6px;font-size:14px;background:var(--bg);color:var(--fg);font-family:inherit" />
+            <button id="chat-send" style="padding:8px 16px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--fg);font-size:14px;cursor:pointer;font-weight:600" type="button">Send</button>
+          </div>
+          <div id="chat-chips" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:12px"></div>
+        </div>
+      </section>
+
+      <section>
         <h2>Training loss</h2>
         <div class="card">
           <div id="chart-wrap">
@@ -325,6 +369,121 @@ python3 -m venv .venv && ./.venv/bin/pip install mlx-lm
         document.getElementById('version').textContent = rel.tag_name;
         document.getElementById('release-link').href = rel.html_url;
       }).catch(() => {});
+
+      // Chat functionality
+      (function() {
+        var isLive = false;
+        var typingInterval = 40;
+        var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (reduceMotion) typingInterval = 0;
+
+        var recordings = {
+          'open chrome and go to github.com': 'Opened https://github.com in Chrome.',
+          'poke around hacker news and tell me the top 3 stories': '[read_page(https://news.ycombinator.com)] (the three real front page stories with their points, in 5.3 seconds)',
+          'open pixelmator then tell me my battery status': '[open_app(Pixelmator)] [battery()] The Mac is currently drawing power from the AC outlet.',
+          'who invented the telephone': 'The telephone was invented by Alexander Graham Bell.',
+          'make me a logo for turing, the most complex intricate logo ever': 'I went with letters T, palette ember, rings 4, rays 12, ray_style dots, orbit_dots 8, star_points 4. 28 layers, built in Pixelmator.'
+        };
+
+        function typeOut(text, container) {
+          container.textContent = '';
+          var i = 0;
+          function type() {
+            if (i < text.length) {
+              container.textContent += text[i];
+              i++;
+              if (typingInterval > 0) {
+                setTimeout(type, typingInterval);
+              } else {
+                type();
+              }
+            }
+          }
+          if (typingInterval > 0) {
+            type();
+          } else {
+            container.textContent = text;
+          }
+        }
+
+        function checkLive() {
+          fetch('http://localhost:8127/v1/chat/completions', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ model: 'samantha', messages: [{ role: 'user', content: 'hi' }] })
+          }).then(function(r) {
+            if (r.ok) {
+              isLive = true;
+              document.getElementById('chat-status').textContent = 'Live, talking to Samantha on this Mac';
+              document.getElementById('chat-chips').style.display = 'none';
+            } else {
+              showRecordedMode();
+            }
+          }).catch(function() {
+            showRecordedMode();
+          });
+        }
+
+        function showRecordedMode() {
+          document.getElementById('chat-status').innerHTML = '<em>Recorded transcript.</em> She runs on one Mac, not on a server.';
+          var chipsContainer = document.getElementById('chat-chips');
+          chipsContainer.innerHTML = '';
+          Object.keys(recordings).forEach(function(q) {
+            var chip = document.createElement('button');
+            chip.type = 'button';
+            chip.textContent = q;
+            chip.style.cssText = 'padding:6px 12px;border:1px solid var(--line);border-radius:20px;background:var(--bg);color:var(--fg);font-size:12px;cursor:pointer;white-space:normal;text-align:left';
+            chip.addEventListener('click', function() {
+              document.getElementById('chat-input').value = q;
+              handleSend(q);
+            });
+            chipsContainer.appendChild(chip);
+          });
+        }
+
+        function handleSend(question) {
+          var q = (question || document.getElementById('chat-input').value).trim();
+          if (!q) return;
+          document.getElementById('chat-input').value = '';
+          var transcript = document.getElementById('chat-transcript');
+
+          if (isLive) {
+            transcript.textContent = 'Asking...';
+            fetch('http://localhost:8127/v1/chat/completions', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ model: 'samantha', messages: [{ role: 'user', content: q }] })
+            }).then(function(r) { return r.json(); }).then(function(data) {
+              if (data.choices && data.choices[0] && data.choices[0].message) {
+                typeOut(data.choices[0].message.content, transcript);
+              } else {
+                transcript.textContent = 'No response.';
+              }
+            }).catch(function(e) {
+              transcript.textContent = 'Error: ' + e;
+            });
+          } else {
+            var key = Object.keys(recordings).find(function(k) { return k.toLowerCase() === q.toLowerCase(); });
+            if (key) {
+              typeOut(recordings[key], transcript);
+            } else {
+              transcript.textContent = 'I only run locally. Clone the repo and run ./samantha to talk to me.';
+            }
+          }
+        }
+
+        document.getElementById('chat-send').addEventListener('click', function() {
+          handleSend();
+        });
+        document.getElementById('chat-input').addEventListener('keypress', function(e) {
+          if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            handleSend();
+          }
+        });
+
+        checkLive();
+      })();
     </script>
   </body>
 </html>

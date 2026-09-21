@@ -28,6 +28,44 @@ A LoRA fine-tune of `Qwen2.5-0.5B-Instruct-4bit` (small enough to train on-devic
 
 Samantha's base model *is* Qwen2.5-0.5B, LoRA only adds a small trained delta on top of it. So "beat Qwen" isn't a fair or coherent bar, a LoRA fine-tune of Qwen can't outperform Qwen in general, only on the narrow thing it was fine-tuned for. The real benchmark is whether the fine-tuned version answers our own questions better than stock Qwen does. See `eval/` for that.
 
+## What she can do
+
+She could answer. She could not do anything. Before 2026-09-20, "open chrome and go to hacker news" got an honest refusal:
+
+```
+You: open chrome and go to hacker news
+Samantha: I couldn't find anything on that, and it's outside what I know about this project, so I'm not going to make something up.
+```
+
+Now she has hands.
+
+```
+You: open chrome and go to github.com
+Samantha: Opened https://github.com in Chrome.
+
+You: poke around hacker news and tell me the top 3 stories
+Samantha: [read_page(https://news.ycombinator.com)] (the three real front page stories with their points, in 5.3 seconds)
+
+You: open pixelmator then tell me my battery status
+Samantha: [open_app(Pixelmator)] [battery()] The Mac is currently drawing power from the AC outlet.
+
+You: who invented the telephone
+Samantha: The telephone was invented by Alexander Graham Bell.
+
+You: make me a logo for Turing, the most complex intricate logo ever
+Samantha: I went with letters T, palette ember, rings 4, rays 12, ray_style dots, orbit_dots 8, star_points 4. 28 layers, built in Pixelmator.
+```
+
+<img src="web/samantha-logo.png" width="160" alt="Logo for Turing designed by Samantha">
+
+How it works: a regex router handles plain commands with no model at all. Multi-step asks go to qwen3:1.7b through Ollama tool calling. The harness fetches pages before the model speaks so it cannot invent them. For logos she picks the dials and the harness does the layout. No shell tool, every tool is fixed argv.
+
+Samantha is 0.5B and cannot pick tools herself yet. She borrows a 1.7B head for her hands. Training her own is the open roadmap item.
+
+13 tools: open_app, open_url, web_search, current_tab, read_page, screenshot, clipboard, set_volume, battery, say, list_dir, read_file, make_logo.
+
+Scores: actions eval 54/54, knowledge sweep 47/65 before the article reader.
+
 ## Pipeline
 
 ```
