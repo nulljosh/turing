@@ -325,8 +325,8 @@
       else index = (lastPaintIndex + 1) % paintNames.length;
       lastPaintIndex = index;
       if (typeof window.samanthaPaint === 'function') window.samanthaPaint(index);
-      var count = document.getElementById('paint-n').textContent;
-      return 'Painting the ' + paintNames[index] + ' from ' + count + ' squares. On my Mac this happens inside Pixelmator Pro.';
+      // the counter still shows the last painting at this instant, so name the budget instead
+      return 'Painting ' + paintNames[index].replace(/^The /, 'the ').replace(/^Mona/, 'the Mona') + ' from 3000 squares. On my Mac this happens inside Pixelmator Pro.';
     },
     set_heading: function (text) { h1.textContent = text.slice(0, 60); go(document.querySelector('header')); return 'The title now says "' + h1.textContent + '". Only on your screen.'; },
     set_tagline: function (text) { tagline.textContent = text.slice(0, 120); go(document.querySelector('header')); return 'Tagline changed.'; },
@@ -465,8 +465,9 @@
   function answer(q) {
     var exact = S.exact(q);
     if (exact) return Promise.resolve({ text: exact });
-    var paintMatch = /^(?:paint|repaint|draw)\b/i.exec(q);
-    if (paintMatch) return runTool('paint', q.slice(paintMatch[0].length)).then(function (o) { return { calls: [o.call], text: o.text, node: o.node }; });
+    // bare() strips "can you", "please" and the rest, the same as every other command
+    var plain = S.bare(q), paintMatch = /^(?:paint|repaint|draw)\b/i.exec(plain);
+    if (paintMatch) return runTool('paint', plain.slice(paintMatch[0].length)).then(function (o) { return { calls: [o.call], text: o.text, node: o.node }; });
     var r = S.pageRoute(q, names()) || S.route(q);
     if (r && r.tool) return runTool(r.tool, r.arg).then(function (o) { return { calls: [o.call], text: o.text, node: o.node }; });
     if (r && r.agent) return agent(q);
