@@ -1,37 +1,26 @@
 # Turing Technical Whitepaper
 
-**v0.5** | September 2026
+**v0.8.0** | September 2026
 
-Turing is a pipeline for building small language models on consumer hardware. Its first model, Samantha, is a LoRA fine-tune of a small open base, trained on this project's own notes and documentation instead of the open internet, so it inherits house voice instead of generic web text.
+Turing is a pipeline for building small language models on consumer hardware. Its first model, Samantha, is a LoRA fine-tune of a small open base, trained on this project's own notes and documentation, and now equipped with 20 hands (tools) to take real actions on the Mac: open apps, read web pages, paint images, make notes, and more.
 
 ## The core mechanic
 
-Pretraining a language model from raw text needs gigabytes of clean data and enough compute to make noise start looking like language, a prior attempt (project code name Arthur) tried exactly that on a single Mac and produced gibberish after days of training. Turing skips that step entirely.
+Start from an already-trained small open model (Qwen2.5-0.5B-Instruct), which already knows grammar and reasoning. Apply LoRA (Low-Rank Adaptation), a small set of trainable weight deltas layered on top, trained on your own voice and knowledge. No relearning language, just adjusting it.
 
-Instead: start from an already-trained small open model (`Qwen2.5-0.5B-Instruct`), which already knows grammar, facts, and reasoning at a basic level. Apply LoRA (Low-Rank Adaptation), a small set of trainable weight deltas layered on top of the frozen base, trained only on the target voice and knowledge. This is the same idea behind most consumer-facing fine-tunes: don't relearn language, adjust it.
+All training runs on-device via Apple's MLX framework, no cloud GPU, no API cost. A run is invoked by hand, not scheduled.
 
-```
-raw text (wiki, READMEs, notes)
-        │  prep_data.py: chunk + JSONL
-        ▼
-   train.jsonl / valid.jsonl
-        │  mlx_lm.lora: LoRA fine-tune on Apple Silicon (MLX)
-        ▼
-   ada-1-adapter/  (a few MB of weight deltas, not a full model copy)
-        │  parse_log.py: loss history
-        ▼
-   status.json → landing page chart
-```
+## What's working now
 
-Training runs entirely on-device via Apple's MLX framework, no cloud GPU, no API cost, no daemon. A run is invoked, not scheduled; more data beats more iterations for a corpus this size.
+Samantha answers questions by retrieving real facts from `brain` RAG and generating answers from them, not from memorized weights. A regex router handles simple commands (open chrome, set volume, take screenshot) with zero model inference. Multi-step asks (poke around a website, tell me the top 3 stories) go to a 1.7B model via Ollama for tool picking.
 
-## What's actually working now
+**Painting hands:** `paint_image` repaints photos as colored squares using a quadtree algorithm (split the most-wrong region into four, repeat). No model draws the picture. The harness does the layout in Pixelmator Pro via `pxm.py`. PaintBar, a one-file SwiftUI menu bar app, picks a photo and shows live progress without opening Pixelmator.
 
-Six training runs proved the fine-tune alone learns style but not facts (see roadmap.md), so retrieval carries the facts instead: `ask.py`/`chat.py` pull real passages from `brain`, Turing's own RAG system, and answer from those instead of memorized weights. A fuzzy FAQ-matcher answers common questions straight from `FAQ.md`, no generation needed. A Wikidata lookup answers "who's the president/prime minister of X" with today's actual holder, not a description of the office. Every one of these is checked by real automated QA (`eval/score.py`, a held-out set, `test_chat.py`, CI), not eyeballed.
+**Picker guard:** Her own 0.5B tool picker (round three, trained on 501 examples with painting) picks the right tool 394/501 times on unseen wording. The guard `_sound()` lets 9 wrong picks past (down from 21) and refuses zero right ones.
 
-## Where this goes
+## Limits, stated plainly
 
-Samantha alone won't out-argue a frontier model, and that was never the goal. Small trained model + good retrieval is closer to how production small-model systems actually work than a bigger model with neither, that combination is already running, not just planned.
+The Mona Lisa at 3000 layers still looks blocky. Paintings above 4000 layers get cut off. 62 of 672 picks are still wrong; multi-step asks borrow a 1.7B model because training her own is the next roadmap item.
 
 ---
 MIT License, 2026 Joshua Trommel.
