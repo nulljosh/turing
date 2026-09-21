@@ -594,6 +594,27 @@ def paint_layers(w, h, rows, shapes, scale, shape="rectangle"):
     return out
 
 
+# ---------- truly headless ----------
+
+_HIDE_JS = ("ObjC.import('AppKit'); var a = $.NSRunningApplication."
+            "runningApplicationsWithBundleIdentifier('%s').js; a.length ? (a[0].hide, 1) : 0")
+
+
+def hide_app():
+    """Headless means no window on screen. The dictionary has no window class, so ask
+    macOS to hide the app: NSRunningApplication.hide, no System Events, no permission prompt.
+    Launch it hidden first if it is not running, then hide again once the new document
+    exists, since a fresh document can bring the window back."""
+    try:
+        bundle = run_applescript('id of application "%s"' % APP, timeout=20)
+    except PxmError:
+        return  # check and the build itself report a missing app properly
+    subprocess.run(["open", "-g", "-j", "-b", bundle], capture_output=True)
+    js = _HIDE_JS % bundle
+    subprocess.run(["osascript", "-l", "JavaScript", "-e", js], capture_output=True)
+    subprocess.Popen(["/bin/sh", "-c", "sleep 3; osascript -l JavaScript -e \"$0\" >/dev/null 2>&1", js])
+
+
 # ---------- commands ----------
 
 def cmd_check(_args):
@@ -636,10 +657,18 @@ def cmd_paint(args):
 def build(spec, args, frame_every=1):
     if args.gif and not args.gif.lower().endswith(".gif"):
         raise PxmError("--gif path must end in .gif", code=EXIT_USAGE)
-    frames_dir = tempfile.mkdtemp(prefix="pxm-frames-") if args.gif and not args.dry_run else None
+    keep_frames = getattr(args, "frames", None)
+    if keep_frames and not args.dry_run:
+        frames_dir = os.path.abspath(os.path.expanduser(keep_frames))
+        os.makedirs(frames_dir, exist_ok=True)
+        for name in os.listdir(frames_dir):  # old frames would read as progress
+            if name.startswith("frame-"):
+                os.unlink(os.path.join(frames_dir, name))
+    else:
+        frames_dir = tempfile.mkdtemp(prefix="pxm-frames-") if args.gif and not args.dry_run else None
     try:
         script = build_script(spec, timeout=args.timeout, headless=args.headless,
-                              frames_dir=frames_dir or ("/tmp/frames" if args.gif else None),
+                              frames_dir=frames_dir or keep_frames or ("/tmp/frames" if args.gif else None),
                               frame_every=frame_every)
         if args.dry_run:
             print(script, end="")
@@ -647,12 +676,14 @@ def build(spec, args, frame_every=1):
         gif = os.path.abspath(os.path.expanduser(args.gif)) if args.gif else None
         for path in spec["export"] + ([gif] if gif else []):
             os.makedirs(os.path.dirname(path), exist_ok=True)
+        if args.headless:
+            hide_app()
         check_result(spec, run_applescript(script, timeout=args.timeout))
         check_exports(spec)
         if gif:
             make_gif(frames_dir, gif, spec["width"], spec["height"])
     finally:
-        if frames_dir:
+        if frames_dir and not keep_frames:
             shutil.rmtree(frames_dir, ignore_errors=True)
     for path in spec["export"] + ([gif] if gif else []):
         print("exported: %s" % path)
@@ -674,6 +705,7 @@ def main(argv=None):
     g.add_argument("--dry-run", action="store_true", help="print the AppleScript and stop")
     g.add_argument("--headless", action="store_true",
                    help="stay in the background: no focus steal, close the document after export")
+    g.add_argument("--frames", metavar="DIR", help="keep progress frames here as the build runs")
     g.add_argument("--gif", metavar="PATH", help="also write a short GIF of the build (needs ffmpeg)")
     g.add_argument("--timeout", type=int, default=120)
     g.set_defaults(fn=cmd_logo)
@@ -688,6 +720,7 @@ def main(argv=None):
     p.add_argument("--size", type=int, default=2048, help="longest side of the canvas, roughly")
     p.add_argument("--dry-run", action="store_true")
     p.add_argument("--headless", action="store_true")
+    p.add_argument("--frames", metavar="DIR", help="keep progress frames here as the build runs")
     p.add_argument("--gif", metavar="PATH")
     p.add_argument("--timeout", type=int, default=120)
     p.set_defaults(fn=cmd_paint)

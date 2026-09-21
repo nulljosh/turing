@@ -283,6 +283,17 @@ class Paint(unittest.TestCase):
             os.unlink(f.name)
         self.assertEqual(cm.exception.code, pxm.EXIT_USAGE)
 
+    def test_headless_hides_the_app_without_system_events(self):
+        calls = []
+        with mock.patch.object(pxm, "run_applescript", return_value="com.example.app"), \
+                mock.patch.object(pxm.subprocess, "run", side_effect=lambda a, **k: calls.append(a) or fake_proc()), \
+                mock.patch.object(pxm.subprocess, "Popen", side_effect=lambda a, **k: calls.append(a)):
+            pxm.hide_app()
+        flat = " ".join(" ".join(c) for c in calls)
+        self.assertIn("-j", calls[0])  # launched hidden
+        self.assertIn("NSRunningApplication", flat)
+        self.assertNotIn("System Events", flat)
+
     def test_paint_rejects_a_silly_layer_budget_before_touching_anything(self):
         code, _, err = run_main("paint", "nope.jpg", "--out", "x.png", "--shapes", "2")
         self.assertEqual(code, pxm.EXIT_USAGE)
