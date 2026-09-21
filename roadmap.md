@@ -340,3 +340,18 @@ Not "beat GPT." Win condition is: ask it to draft something in our voice, or ans
 - [ ] Picker trick: more "not a command" and "not sure" examples so she abstains instead of guessing
 - [ ] PaintBar: share its background setting with Samantha's own paint tool, add launch at login
 
+### 100 tools (set 2026-09-21)
+
+The model picks, the code does. More menu is more power. Rules: every tool ships with cases in `eval/actions.py` and phrasings in `gen_hands_data.py`, the gate baseline only moves up, anything that writes, sends or deletes asks first through the harness, stdlib and built-in macOS commands only.
+
+- [ ] Two-step picking: she picks a family first, then a tool inside it, so no single choice is bigger than about twelve. Retrain the picker for it and score it before adding tools in bulk
+- [ ] Image family through Pixelmator (`edit_image` with a fixed menu): remove background, upscale, auto enhance, crop, resize, rotate, flip, grayscale, convert format, export
+- [ ] Files family: find a file, move, copy, rename, zip, unzip, folder size, disk space, recent downloads, move to Trash (asks first)
+- [ ] System family: dark mode, wifi, bluetooth, do not disturb, lock, sleep, brightness, uptime, ip address, running apps, quit an app
+- [ ] Organizer family: list reminders, complete a reminder, add a calendar event, tomorrow's calendar, search notes, append to a note
+- [ ] Browser family: list tabs, switch tab, close tab, read the rendered page, download a file
+- [ ] Dev family: git status, recent commits, run a repo's tests, open PRs, open a repo in the editor
+- [ ] Knowledge family: define a word, translate, convert units, time in a city, calculate
+- [ ] Shortcuts bridge: `run_shortcut(name)` runs any Apple Shortcut, so one tool opens hundreds of actions the user already owns
+- [ ] MCP both ways: serve her tools over MCP so other assistants can use her hands, and let her call MCP servers so any MCP tool becomes hers
+
