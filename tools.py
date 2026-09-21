@@ -41,6 +41,7 @@ _VISIBLE = ("open", "say", "screencapture")
 
 
 def _run(argv, timeout=10):
+    """Run a subprocess and return its output, or empty string in headless mode for visible apps."""
     if HEADLESS and argv[0] in _VISIBLE:
         return ""
     r = subprocess.run(argv, capture_output=True, text=True, timeout=timeout)
@@ -48,6 +49,7 @@ def _run(argv, timeout=10):
 
 
 def installed_apps():
+    """Scan Applications folders and return dict of app names to display names."""
     apps = {}
     for d in APP_DIRS:
         if os.path.isdir(d):
@@ -58,6 +60,7 @@ def installed_apps():
 
 
 def _app_match(name):
+    """Find an installed app by name, allowing partial matches and normalizing common names."""
     apps = installed_apps()
     key = re.sub(r"^(?:the |my )|(?: app)$", "", name.strip().lower())
     if key == "chrome":
@@ -76,6 +79,7 @@ def open_app(name):
 
 
 def _url(target):
+    """Convert a target (URL, domain, or site name) to a full HTTPS URL."""
     t = target.strip().strip("\"'")
     if t.lower() in SITES:
         return SITES[t.lower()]
@@ -270,6 +274,7 @@ HOME = os.path.realpath(os.path.expanduser("~"))
 
 
 def _inside_home(path):
+    """Resolve a path and verify it stays inside the home folder, return None if outside."""
     # realpath first: a symlink or ../ must not walk a read out of the home folder
     full = os.path.realpath(os.path.expanduser(path.strip() or "~"))
     return full if full == HOME or full.startswith(HOME + os.sep) else None
@@ -309,6 +314,7 @@ _LOGO_SCHEMA = {"type": "object", "required": ["letters", "palette", "motif"], "
 
 
 def _logo_layers(letters, palette, motif):
+    """Build layer list for a simple logo design."""
     tile, ink, accent = PALETTES[palette]
     layers = [{"type": "rounded_rectangle", "name": "Tile", "width": 880, "height": 880, "corner_radius": 200, "fill": tile}]
     if motif == "ring":
@@ -336,6 +342,7 @@ _WANTS_COMPLEX = re.compile(r"\b(?:complex|intricate|detailed|elaborate|ornate|f
 
 
 def _complex_layers(letters, palette, rings, rays, ray_style, orbit_dots, star_points):
+    """Build layer list for an intricate logo design with concentric geometry."""
     tile, ink, accent = PALETTES[palette]
     C = 512
 
@@ -471,6 +478,7 @@ _TAIL = re.compile(r"(?:[, ]+(?:please|for me|real quick|now|thanks|thank you))+
 
 
 def _bare(query):
+    """Strip politeness markers (please, can you, etc.) from a command."""
     q = query.strip().rstrip(".!?")
     return _TAIL.sub("", _LEAD.sub("", q, count=1)).strip()
 
@@ -488,10 +496,12 @@ def act(query):
 
 
 def is_action(query):
+    """Check if query starts with an action verb, after stripping politeness markers."""
     return bool(_ACTION.match(_bare(query)))
 
 
 def _schema(fn):
+    """Build OpenAI tool schema from function signature and docstring."""
     args = fn.__code__.co_varnames[:fn.__code__.co_argcount]
     return {"type": "function", "function": {
         "name": fn.__name__, "description": fn.__doc__,

@@ -4,8 +4,8 @@
   text { font-family: -apple-system, Helvetica, Arial, sans-serif; fill: var(--ink); }
   line, polyline { stroke: var(--ink); fill: none; }
   .g { stroke-dasharray: 1 4; }
-</style><text x="44" y="11" font-size="10">Lines of real code</text><line x1="44" y1="26" x2="464" y2="26" class="g"/><text x="40" y="29" font-size="9" text-anchor="end">8108</text><line x1="44" y1="96" x2="464" y2="96" class="g"/><text x="40" y="99" font-size="9" text-anchor="end">4054</text>
+</style><text x="44" y="11" font-size="10">Lines of real code</text><line x1="44" y1="26" x2="464" y2="26" class="g"/><text x="40" y="29" font-size="9" text-anchor="end">8165</text><line x1="44" y1="97" x2="464" y2="97" class="g"/><text x="40" y="100" font-size="9" text-anchor="end">4082</text>
 <line x1="44" y1="26" x2="44" y2="166"/><line x1="44" y1="166" x2="464" y2="166"/>
-<polyline points="44,165 53,162 63,160 72,159 82,156 91,156 101,155 110,153 120,152 129,151 139,148 149,146 158,145 168,145 177,144 187,142 196,140 206,139 215,134 225,131 234,128 244,127 254,122 263,121 273,119 282,117 292,110 301,104 311,98 320,89 330,80 339,72 349,70 359,65 368,64 378,50 387,38 397,40 406,37 416,34 425,34 435,33 444,32 454,26 464,27" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="44,165 53,162 62,161 72,159 81,157 90,156 100,155 109,153 118,152 128,151 137,148 146,146 156,145 165,145 174,144 184,143 193,140 202,139 212,135 221,132 230,129 240,127 249,123 258,121 268,119 277,117 286,111 296,104 305,98 314,89 324,81 333,72 342,71 352,66 361,65 370,51 380,39 389,40 398,37 408,35 417,35 426,34 436,33 445,27 454,27 464,26" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
 <text x="44" y="182" font-size="10">Sep 13</text><text x="464" y="182" font-size="10" text-anchor="end">Sep 21</text>
-<text x="44" y="196" font-size="10" font-weight="600">8,106 lines &#183; 100% documented &#183; 172 commits since Sep 13 2026</text></svg>
+<text x="44" y="196" font-size="10" font-weight="600">8,165 lines &#183; 100% documented &#183; 173 commits since Sep 13 2026</text></svg>

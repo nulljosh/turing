@@ -9,6 +9,7 @@ PROMPTS = f"{D}/prompts.jsonl"
 
 
 def main(model, adapter_path):
+    """Run eval prompts through the model and print results for manual review."""
     prompts = [json.loads(l) for l in open(PROMPTS)]
     for p in prompts:
         out = subprocess.run(

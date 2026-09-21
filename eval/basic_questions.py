@@ -102,6 +102,7 @@ DECLINED_MARKERS = ("couldn't find anything", "couldn't reach", "don't have that
 
 
 def main():
+    """Test general knowledge questions and track correct, confidently wrong, and declined answers."""
     verbose = "--verbose" in sys.argv
     minimum = None
     for i, arg in enumerate(sys.argv):

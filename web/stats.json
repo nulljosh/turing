@@ -1,7 +1,7 @@
 {
   "version": "0.9.0",
   "docs_coverage": {
-    "percent": 77,
+    "percent": 92,
     "files": {
       "test_nimble.py": {
         "total": 4,
@@ -17,11 +17,11 @@
       },
       "harvest_voice.py": {
         "total": 3,
-        "documented": 1
+        "documented": 3
       },
       "tools.py": {
         "total": 41,
-        "documented": 28
+        "documented": 38
       },
       "serve.py": {
         "total": 8,
@@ -45,27 +45,27 @@
       },
       "stats.py": {
         "total": 6,
-        "documented": 4
+        "documented": 6
       },
       "eval/run_eval.py": {
         "total": 1,
-        "documented": 0
+        "documented": 1
       },
       "eval/basic_questions.py": {
         "total": 1,
-        "documented": 0
+        "documented": 1
       },
       "eval/hands.py": {
         "total": 4,
-        "documented": 1
+        "documented": 4
       },
       "eval/faq_paraphrase.py": {
         "total": 1,
-        "documented": 0
+        "documented": 1
       },
       "eval/web_parity.py": {
         "total": 1,
-        "documented": 0
+        "documented": 1
       },
       "eval/actions.py": {
         "total": 3,
@@ -73,11 +73,11 @@
       },
       "eval/web_demo.py": {
         "total": 5,
-        "documented": 2
+        "documented": 3
       },
       "eval/score.py": {
         "total": 2,
-        "documented": 0
+        "documented": 2
       }
     },
     "house_docs": {

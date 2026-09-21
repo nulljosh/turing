@@ -44,6 +44,7 @@ CASES = [
 
 
 def main():
+    """Test FAQ matcher against natural rephrasings of questions it answers."""
     verbose = "--verbose" in sys.argv
     minimum = None
     for i, arg in enumerate(sys.argv):

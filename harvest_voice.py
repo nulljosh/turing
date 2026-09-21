@@ -35,6 +35,7 @@ SKIP = re.compile(
 
 
 def repos():
+    """Yield (name, path) for each git repo in the Code directory."""
     for name in sorted(os.listdir(CODE)):
         path = os.path.join(CODE, name)
         if os.path.isdir(os.path.join(path, ".git")):
@@ -78,6 +79,7 @@ def commits(path, per_repo):
 
 
 def main():
+    """Harvest commit messages from git history across the fleet, write to markdown."""
     limit = 400
     out_path = os.path.join(REPO, "data", "voice.md")
     if "--limit" in sys.argv:

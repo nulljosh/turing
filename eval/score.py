@@ -16,6 +16,7 @@ PROMPTS = f"{D}/prompts.jsonl"
 
 
 def check(answer, spec):
+    """Verify answer against scoring spec, return list of reasons if it fails."""
     lower = answer.lower()
     reasons = []
 
@@ -45,6 +46,7 @@ def check(answer, spec):
 
 
 def main():
+    """Run eval prompts, check answers against specs, report pass/fail."""
     verbose = "--verbose" in sys.argv
     path_args = [a for a in sys.argv[1:] if not a.startswith("--")]
     path = path_args[0] if path_args else PROMPTS

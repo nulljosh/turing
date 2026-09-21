@@ -105,6 +105,7 @@ def ask(page, text):
 
 
 def main():
+    """Test the landing page demo with Chromium, checking commands and security."""
     errors, failed = [], 0
     with sync_playwright() as pw:
         browser = pw.chromium.launch()

@@ -23,6 +23,7 @@ console.log(JSON.stringify(cases.map(c => globalThis.Samantha.route(c))));
 
 
 def main():
+    """Verify JavaScript and Python tool routers pick the same tool for each command."""
     out = subprocess.run(["node", "-e", JS, os.path.join(REPO, "web", "samantha.js"), json.dumps([c[0] for c in CASES])],
                          capture_output=True, text=True, timeout=30)
     if out.returncode:

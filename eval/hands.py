@@ -26,6 +26,7 @@ BASE = "mlx-community/Qwen2.5-0.5B-Instruct-4bit"
 
 
 def _flag(name, default=None):
+    """Extract a command-line flag value from sys.argv."""
     return sys.argv[sys.argv.index(name) + 1] if name in sys.argv else default
 
 
@@ -40,6 +41,7 @@ def untrained_system():
 
 
 def cases():
+    """Gather test cases from hands-data, actions, and questions."""
     out = []
     for line in open(os.path.join(REPO, "hands-data", "test.jsonl")):
         m = json.loads(line)["messages"]
@@ -63,6 +65,7 @@ def cases():
 
 
 def main():
+    """Evaluate the model's tool-picking accuracy against test cases."""
     from mlx_lm import load, generate
     adapter, model_id = _flag("--adapter"), _flag("--model", BASE)
     model, tok = load(model_id, adapter_path=os.path.join(REPO, adapter) if adapter else None)

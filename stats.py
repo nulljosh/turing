@@ -35,6 +35,7 @@ def count_docstrings(file_path):
     documented = 0
 
     def visit(node):
+        """Recursively count and check docstrings in AST nodes."""
         nonlocal total, documented
         if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
             total += 1
@@ -98,6 +99,7 @@ def read_version():
         return "unknown"
 
 def main():
+    """Gather coverage data and write stats to web/stats.json."""
     files_coverage, coverage_percent = collect_coverage()
     house_docs = check_house_docs()
     version = read_version()
