@@ -31,6 +31,7 @@ jobs:
       # her hands over MCP: a real client conversation against the stdio server
       - run: python3 test_mcp.py
       - run: python3 test_harness.py
+      - run: python3 test_tabs.py
       # the laws in LAWS.md, checked against every tool
       - run: python3 eval/laws.py
 

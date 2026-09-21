@@ -7,6 +7,10 @@
         "total": 13,
         "documented": 13
       },
+      "test_tabs.py": {
+        "total": 10,
+        "documented": 10
+      },
       "harness.py": {
         "total": 7,
         "documented": 7
@@ -64,8 +68,8 @@
         "documented": 7
       },
       "tools_util.py": {
-        "total": 42,
-        "documented": 42
+        "total": 48,
+        "documented": 48
       },
       "test_mcp.py": {
         "total": 12,
@@ -144,7 +148,7 @@
   "measured": {
     "tools": {
       "before": 0,
-      "after": 65
+      "after": 69
     },
     "actions_eval": "77/77",
     "knowledge_sweep": {

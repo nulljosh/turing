@@ -312,7 +312,6 @@ Gaps, in order:
 ### Gaps found by the loop
 The loop compares her with other assistants (Siri and Shortcuts, Apple Intelligence, Claude and ChatGPT desktop with MCP, Open Interpreter, Raycast AI, local Ollama agents), adds each real gap here with where it was seen, builds it, then deletes the line once it ships (history lives in git). Newest and biggest first.
 
-- [ ] Browser tabs: list, switch, close, and read a rendered page. Seen in Raycast, Claude in Chrome
 - [ ] Memory across sessions, not just inside one conversation
 - [ ] See the screen and answer about it: a screenshot, macOS Vision OCR for the text, then a question over it. Seen in Apple Intelligence (onscreen awareness), ChatGPT desktop
 - [ ] Read a PDF or document and answer questions about it (PDFKit text, then the same retrieve-then-read she uses for pages). Research pass 2026-09-21, source not re-verified

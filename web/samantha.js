@@ -232,7 +232,7 @@
   function isProject(q) { return PROJECT.test(q); }
 
 
-  // ---- the thirty-five utility tools, ported from tools_util.py. Same words back, so the two sides can be diffed. ----
+  // ---- the thirty-nine utility tools, ported from tools_util.py. Same words back, so the two sides can be diffed. ----
   var U = {};
   function num(x) { x = Math.round(x * 1e10) / 1e10; return String(x); }
 
@@ -444,9 +444,9 @@
   };
   // the ten that read or touch a real Mac. The stand-in Mac on this page has no disk, network or clipboard to show.
   var REAL_MAC = "That one reads your real Mac, and this stand-in has no disk, memory or network. Run her on a Mac and it answers.";
-  ["disk_space", "uptime", "memory_usage", "cpu_load", "ip_address", "wifi_name", "system_info", "copy_to_clipboard", "sleep_display", "reveal_in_finder", "list_shortcuts", "run_shortcut", "list_mcp_tools", "call_mcp_tool"]
+  ["disk_space", "uptime", "memory_usage", "cpu_load", "ip_address", "wifi_name", "system_info", "copy_to_clipboard", "sleep_display", "reveal_in_finder", "list_shortcuts", "run_shortcut", "list_mcp_tools", "call_mcp_tool", "list_tabs", "switch_tab", "close_tab", "read_tab"]
     .forEach(function (name) { U[name] = function () { return REAL_MAC; }; });
-  U.NEEDS_MAC = ["disk_space", "uptime", "memory_usage", "cpu_load", "ip_address", "wifi_name", "system_info", "copy_to_clipboard", "sleep_display", "reveal_in_finder", "list_shortcuts", "run_shortcut", "list_mcp_tools", "call_mcp_tool"];
+  U.NEEDS_MAC = ["disk_space", "uptime", "memory_usage", "cpu_load", "ip_address", "wifi_name", "system_info", "copy_to_clipboard", "sleep_display", "reveal_in_finder", "list_shortcuts", "run_shortcut", "list_mcp_tools", "call_mcp_tool", "list_tabs", "switch_tab", "close_tab", "read_tab"];
 
   ROUTES.push.apply(ROUTES, [
     [/^(?:calc(?:ulate)?|compute|work out|math)[: ]+(.+)$/i, function (m) { return ["calculate", m[1]]; }],
@@ -485,6 +485,10 @@
     [/^(?:list|show)(?: me)?(?: all)?(?: my)? shortcuts$|^what shortcuts do i have$/i, function (m) { return ["list_shortcuts", ""]; }],
     [/^(?:list|show)(?: me)?(?: all)?(?: my)? mcp tools$|^what mcp tools do i have$/i, function (m) { return ["list_mcp_tools", ""]; }],
     [/^call mcp (\S+ \S+(?: .+)?)$/i, function (m) { return ["call_mcp_tool", m[1]]; }],
+    [/^(?:list|show)(?: me)?(?: all)?(?: my| the)?(?: open)? (?:chrome )?tabs$|^what tabs (?:do i have|are open)(?: in chrome)?$/i, function (m) { return ["list_tabs", ""]; }],
+    [/^switch to tab (\d+(?:\.\d+)?)$|^switch to (?:the )?(.+?) tab$/i, function (m) { return ["switch_tab", ((m[1] || m[2]))]; }],
+    [/^close tab (\d+(?:\.\d+)?)$|^close (?:the )?(.+?) tab$/i, function (m) { return ["close_tab", ((m[1] || m[2]))]; }],
+    [/^read tab (\d+(?:\.\d+)?)$|^read (?!(?:this|the current) tab$)(?:the )?(.+?) tab$|^read (?:this|the current) tab$/i, function (m) { return ["read_tab", ((m[1] || m[2] || ""))]; }],
     [/^run (?:the |my )?shortcut (.+)$|^run (.+) shortcut$/i, function (m) { return ["run_shortcut", ((m[1] || m[2]))]; }]
   ]);
 

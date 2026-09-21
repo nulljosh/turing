@@ -1,9 +1,9 @@
-"""Samantha's utility tools: thirty-five small things that need no app and no network.
+"""Samantha's utility tools: thirty-nine small things that need no app and no network.
 
 Math and text (calculate, convert_units, dice, hashes, base64...) are pure Python.
 The system readers (disk_space, uptime, memory_usage...) run one fixed argv each and
-only read. Five tools touch the Mac or another program (copy_to_clipboard, sleep_display,
-reveal_in_finder, run_shortcut, call_mcp_tool) and stay silent under SAMANTHA_HEADLESS=1, so a test run
+only read. Six tools touch the Mac or another program (copy_to_clipboard, sleep_display,
+reveal_in_finder, run_shortcut, call_mcp_tool, close_tab) and stay silent under SAMANTHA_HEADLESS=1, so a test run
 never clobbers a clipboard, blanks a screen or fires someone's Shortcut. Like the rest of her hands there is no
 shell: every command is a fixed list, never a string someone wrote.
 
@@ -408,6 +408,85 @@ def run_shortcut(name):
     return f"Ran {match}." + (f" It said: {out[:500]}" if out else "")
 
 
+_CHROME = "Google Chrome"
+_TABS = (f'tell application "{_CHROME}"\nset out to ""\nset wi to 0\nrepeat with w in windows\nset wi to wi + 1\nset ti to 0\n'
+         'repeat with t in tabs of w\nset ti to ti + 1\nset out to out & wi & "." & ti & (ASCII character 9) & (title of t) & (ASCII character 9) & (URL of t) & linefeed\n'
+         'end repeat\nend repeat\nreturn out\nend tell')
+
+
+def _tabs():
+    """Chrome's open tabs as (window, tab, title, url), or [] when Chrome has none."""
+    rows = []
+    if not _sh(["pgrep", "-x", _CHROME]):  # asking a closed Chrome about its tabs would launch it
+        return rows
+    for line in _sh(["osascript", "-e", _TABS], timeout=15).splitlines():
+        pos, _, rest = line.partition("\t")
+        title, _, url = rest.partition("\t")
+        w, _, t = pos.partition(".")
+        if w.isdigit() and t.isdigit():
+            rows.append((int(w), int(t), title, url))
+    return rows
+
+
+def _find_tab(query):
+    """The tab a phrase means: a number like 2 or 1.3, or a word from its title or address. Returns (tab, None) or (None, why)."""
+    tabs, q = _tabs(), query.strip().lower().strip("'\"")
+    if not tabs:
+        return None, "Chrome has no tabs open."
+    if not q:
+        return tabs[0], None
+    m = re.fullmatch(r"(?:(\d+)\.)?(\d+)", q)
+    if m:
+        want = (int(m.group(1) or 1), int(m.group(2)))
+        hit = next((t for t in tabs if (t[0], t[1]) == want), None)
+        return (hit, None) if hit else (None, f"No tab {q}.")
+    hit = next((t for t in tabs if q in t[2].lower() or q in t[3].lower()), None)
+    return (hit, None) if hit else (None, f"No tab matches {q}.")
+
+
+def list_tabs():
+    """List the tabs open in Chrome, numbered, with their titles and sites."""
+    tabs = _tabs()
+    if not tabs:
+        return "Chrome has no tabs open."
+    site = lambda url: re.sub(r"^https?://(?:www\.)?", "", url).split("/")[0]
+    lines = [f"{w}.{t} {title[:60]} ({site(url)})" for w, t, title, url in tabs[:25]]
+    return "\n".join(lines) + (f"\nand {len(tabs) - 25} more" if len(tabs) > 25 else "")
+
+
+def switch_tab(query):
+    """Bring a Chrome tab to the front. Takes a number like 2 or 1.3, or a word from its title or address."""
+    tab, why = _find_tab(query)
+    if not tab:
+        return why
+    if not HEADLESS:
+        _sh(["osascript", "-e", f'tell application "{_CHROME}"\nset active tab index of window {tab[0]} to {tab[1]}\nset index of window {tab[0]} to 1\nactivate\nend tell'])
+    return f"Switched to {tab[2][:60]}."
+
+
+def close_tab(query):
+    """Close one Chrome tab. Takes a number like 2 or 1.3, or a word from its title or address. Asks first, never chosen by a model."""
+    tab, why = _find_tab(query)
+    if not tab or not query.strip():
+        return why or "Say which tab: a number, or a word from its title."
+    if not HEADLESS:
+        _sh(["osascript", "-e", f'tell application "{_CHROME}" to close tab {tab[1]} of window {tab[0]}'])
+    return f"Closed {tab[2][:60]}."
+
+
+def read_tab(query=""):
+    """Read the text of a Chrome tab as it is rendered, so pages built by JavaScript work too. No argument reads the front tab."""
+    tab, why = _find_tab(query) if query.strip() else (next(iter(_tabs()), None), None)
+    if not tab:
+        return why or "Chrome has no tabs open."
+    if HEADLESS:
+        return f"Would read {tab[2][:60]}."
+    out = _sh(["osascript", "-e", f'tell application "{_CHROME}" to execute (tab {tab[1]} of window {tab[0]}) javascript "document.body.innerText"'], timeout=20)
+    if not out:
+        return "Chrome would not hand over the page. Turn on View, Developer, Allow JavaScript from Apple Events, then ask again."
+    return re.sub(r"\s+", " ", out).strip()[:3000]
+
+
 def _mcp_config():
     """The MCP servers she may call: name to argv, from ~/.samantha/mcp.json (or SAMANTHA_MCP_CONFIG). Argv only, never a shell string."""
     path = os.path.expanduser(os.environ.get("SAMANTHA_MCP_CONFIG", "~/.samantha/mcp.json"))
@@ -486,7 +565,7 @@ def call_mcp_tool(request):
 TOOLS = (calculate, convert_units, time_in, current_date, days_until, flip_coin, roll_dice, random_number, make_password,
          make_uuid, hash_text, base64_encode, base64_decode, word_count, reverse_text, shout, morse_code, json_pretty,
          is_prime, roman_numeral, tip, disk_space, uptime, memory_usage, cpu_load, ip_address, wifi_name, system_info,
-         copy_to_clipboard, sleep_display, reveal_in_finder, list_shortcuts, run_shortcut, list_mcp_tools, call_mcp_tool)
+         copy_to_clipboard, sleep_display, reveal_in_finder, list_shortcuts, run_shortcut, list_mcp_tools, call_mcp_tool, list_tabs, switch_tab, close_tab, read_tab)
 
 _I = re.I
 # (pattern, tool name, what to hand it). Names, not functions: tools.py looks each one up at call time.
@@ -527,6 +606,10 @@ ROUTES = (
     (re.compile(r"^(?:list|show)(?: me)?(?: all)?(?: my)? shortcuts$|^what shortcuts do i have$", _I), "list_shortcuts", lambda m: ""),
     (re.compile(r"^(?:list|show)(?: me)?(?: all)?(?: my)? mcp tools$|^what mcp tools do i have$", _I), "list_mcp_tools", lambda m: ""),
     (re.compile(r"^call mcp (\S+ \S+(?: .+)?)$", _I), "call_mcp_tool", lambda m: m.group(1)),
+    (re.compile(r"^(?:list|show)(?: me)?(?: all)?(?: my| the)?(?: open)? (?:chrome )?tabs$|^what tabs (?:do i have|are open)(?: in chrome)?$", _I), "list_tabs", lambda m: ""),
+    (re.compile(r"^switch to tab (\d+(?:\.\d+)?)$|^switch to (?:the )?(.+?) tab$", _I), "switch_tab", lambda m: (m.group(1) or m.group(2))),
+    (re.compile(r"^close tab (\d+(?:\.\d+)?)$|^close (?:the )?(.+?) tab$", _I), "close_tab", lambda m: (m.group(1) or m.group(2))),
+    (re.compile(r"^read tab (\d+(?:\.\d+)?)$|^read (?!(?:this|the current) tab$)(?:the )?(.+?) tab$|^read (?:this|the current) tab$", _I), "read_tab", lambda m: (m.group(1) or m.group(2) or "")),
     (re.compile(r"^run (?:the |my )?shortcut (.+)$|^run (.+) shortcut$", _I), "run_shortcut", lambda m: (m.group(1) or m.group(2))),
 )
 
@@ -560,7 +643,7 @@ def demo():
     assert copy_to_clipboard("x") == "Copied." and sleep_display() == "Screen off." and reveal_in_finder("~").startswith("Showing")
     assert reveal_in_finder("~/.ssh").startswith("No file") and reveal_in_finder("/etc/passwd").startswith("No file")
     assert run_shortcut("zzz-not-real").startswith("I do not see") and (list_shortcuts().startswith("No Shortcuts") or "Shortcuts:" in list_shortcuts())
-    assert len(TOOLS) == 35 and all(f.__doc__ for f in TOOLS)
+    assert len(TOOLS) == 39 and all(f.__doc__ for f in TOOLS)
     call = lambda name, a: globals()[name](a) if globals()[name].__code__.co_argcount else globals()[name]()
     hit = lambda q: next((call(name, arg(m)) for pat, name, arg in ROUTES if (m := pat.match(q))), None)
     assert hit("calculate 17 * 23") == "391" and hit("convert 5 km to miles") == "5 km is 3.1069 mi."
@@ -573,6 +656,7 @@ def demo():
     assert hit("copy hello world to my clipboard") == "Copied." and hit("what is turing") is None and hit("open chrome") is None
     assert hit("run shortcut zzz-not-real").startswith("I do not see") and hit("run tests") is None and hit("run the build") is None
     assert hit("convert 2026 to roman numerals") == "MMXXVI" and hit("1999 in roman numerals") == "MCMXCIX"
+    assert hit("read this tab") is not None and hit("read the github tab") is not None
     assert hit("hash browns are good") is None and hit("reverse psychology") is None and hit("reverse the text abc") == "cba" and hit("hash: hello").startswith("2cf2")
     print("tools_util ok")
 
