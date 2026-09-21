@@ -1,4 +1,4 @@
-# Turing loop handoff (2026-09-20, evening)
+# Turing loop handoff (2026-09-20, late evening)
 
 The live `/loop` for this repo. Checkpoint rewrites this file every run. A new session reads it and picks up where the last one stopped.
 
@@ -13,7 +13,7 @@ Headless always: `SAMANTHA_HEADLESS=1`, never pop Chrome or any app. Fix at the 
 ## Where things stand
 Shipped tonight: 13 tools, actions eval 54 of 54, knowledge 47 to 57 of 65, confidently wrong 18 to 4, a 1.7B model for her hands at about 5 seconds, article reader with a grounding check, logos built live in Pixelmator, new icon, landing page rebuilt around the chat with idle autoplay and release-style results. Self-grade B+.
 
-Running: the voice retrain into `voice-adapter/`, log in `voice-train.log`. Not scored yet.
+The voice retrain finished cleanly at 20:50 into `voice-adapter/`, log in `voice-train.log`. Not scored yet, so live Samantha still runs on `ada-1-adapter`.
 
 ## Next, in order
 1. Click through the landing chat in a real headless browser. Check phone width on the new layout.

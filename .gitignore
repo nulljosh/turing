@@ -10,3 +10,4 @@ __pycache__/
 .faq_embeddings.json
 .http_cache.json
 .samantha-logo.json
+voice-train.log
