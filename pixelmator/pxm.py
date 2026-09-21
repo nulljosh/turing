@@ -301,12 +301,13 @@ def _n(v):
     return repr(round(float(v), 3)) if not float(v).is_integer() else str(int(v))
 
 
-def build_script(spec, timeout=120, headless=False, frames_dir=None, frame_every=1):
+def build_script(spec, timeout=120, headless=False, frames_dir=None, frame_every=1, group_size=None):
     """Normalized spec -> AppleScript. Layers are listed bottom to top.
 
     headless: never bring the app forward, always close the document after export.
     frames_dir: also export frame-000.png, frame-001.png... there, one after every
     `frame_every` layers, and always one after the last.
+    group_size: if set, group layers into groups of this size. Reduces quadratic slowdown.
     """
     W, H = spec["width"], spec["height"]
     layers = list(spec["layers"])
@@ -316,12 +317,28 @@ def build_script(spec, timeout=120, headless=False, frames_dir=None, frame_every
                           "stroke": None, "stroke_width": None, "opacity": None,
                           "rotation": None, "cx": None, "cy": None})
     body = []
+
+    # Create groups first if grouping is enabled. Then add layers to groups or top level.
+    if group_size and len(layers) >= group_size:
+        num_groups = (len(layers) + group_size - 1) // group_size
+        for g_idx in range(num_groups):
+            body.append("set G%d to make new group layer at the beginning of layers" % g_idx)
+            body.append("set name of G%d to %s" % (g_idx, as_string("Group %d" % g_idx)))
+
     for i, L in enumerate(layers):
         label = "layer %d (%s)" % (i, L["type"])
         b = ["try"]
+
+        # Determine which group this layer belongs to
+        group_idx = None
+        layer_target = "layers"
+        if group_size and len(layers) >= group_size:
+            group_idx = i // group_size
+            layer_target = "layers of G%d" % group_idx
+
         if L["type"] == "text":
-            b.append("set L to make new text layer at the beginning of layers "
-                     "with properties {text content:%s}" % as_string(L["text"]))
+            b.append("set L to make new text layer at the beginning of %s "
+                     "with properties {text content:%s}" % (layer_target, as_string(L["text"])))
             b.append("tell text content of L")
             b.append("\tset fontBefore to its font")
             if L["color"]:
@@ -350,8 +367,8 @@ def build_script(spec, timeout=120, headless=False, frames_dir=None, frame_every
                               ("points", "star points"), ("radius", "star radius")):
                 if L.get(key) is not None:
                     props.append("%s:%s" % (term, _n(L[key])))
-            b.append("set L to make new %s at the beginning of layers with properties {%s}"
-                     % (SHAPES[L["type"]], ", ".join(props)))
+            b.append("set L to make new %s at the beginning of %s with properties {%s}"
+                     % (SHAPES[L["type"]], layer_target, ", ".join(props)))
         if L["type"] != "text":
             if L["fill"]:
                 b.append("set fill color of styles of L to %s" % _rgb(L["fill"]))
@@ -456,9 +473,16 @@ def _squash(name):
     return re.sub(r"[^a-z0-9]", "", name.lower())
 
 
-def check_result(spec, output):
-    """Compare what Pixelmator says it built with what the spec asked for."""
-    expected = len(spec["layers"]) + (1 if spec["background"] else 0)
+def check_result(spec, output, group_size=None):
+    """Compare what Pixelmator says it built with what the spec asked for.
+
+    group_size: if set, layers are grouped, so expected count includes groups.
+    """
+    num_layers = len(spec["layers"]) + (1 if spec["background"] else 0)
+    num_groups = 0
+    if group_size and num_layers >= group_size:
+        num_groups = (num_layers + group_size - 1) // group_size
+    expected = num_layers + num_groups
     count = None
     for line in output.splitlines():
         parts = line.split("\t")
@@ -714,9 +738,10 @@ def build(spec, args, frame_every=1):
     else:
         frames_dir = tempfile.mkdtemp(prefix="pxm-frames-") if args.gif and not args.dry_run else None
     try:
+        group_size = getattr(args, "group_size", None)
         script = build_script(spec, timeout=args.timeout, headless=args.headless,
                               frames_dir=frames_dir or keep_frames or ("/tmp/frames" if args.gif else None),
-                              frame_every=frame_every)
+                              frame_every=frame_every, group_size=group_size)
         if args.dry_run:
             print(script, end="")
             return
@@ -728,7 +753,7 @@ def build(spec, args, frame_every=1):
                 os.makedirs(os.path.dirname(path), exist_ok=True)
             if args.headless:
                 hide_app()
-            check_result(spec, run_applescript(script, timeout=args.timeout))
+            check_result(spec, run_applescript(script, timeout=args.timeout), group_size=group_size)
             check_exports(spec)
             if gif:
                 make_gif(frames_dir, gif, spec["width"], spec["height"])
@@ -766,6 +791,8 @@ def main(argv=None):
     p.add_argument("--out", action="append", required=True, metavar="PATH",
                    help="export path, repeatable (png, svg, pxd...)")
     p.add_argument("--shapes", type=int, default=2000, help="layer budget (default 2000)")
+    p.add_argument("--group-size", type=int, default=None, metavar="N",
+                   help="group layers into groups of N to reduce slowdown (default: no grouping)")
     p.add_argument("--shape", choices=("rectangle", "ellipse"), default="rectangle")
     p.add_argument("--detail", type=int, default=256,
                    help="longest side of the grid the image is sampled on (default 256)")
