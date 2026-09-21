@@ -232,7 +232,7 @@
   function isProject(q) { return PROJECT.test(q); }
 
 
-  // ---- the thirty-one utility tools, ported from tools_util.py. Same words back, so the two sides can be diffed. ----
+  // ---- the thirty-three utility tools, ported from tools_util.py. Same words back, so the two sides can be diffed. ----
   var U = {};
   function num(x) { x = Math.round(x * 1e10) / 1e10; return String(x); }
 
@@ -444,9 +444,9 @@
   };
   // the ten that read or touch a real Mac. The stand-in Mac on this page has no disk, network or clipboard to show.
   var REAL_MAC = "That one reads your real Mac, and this stand-in has no disk, memory or network. Run her on a Mac and it answers.";
-  ["disk_space", "uptime", "memory_usage", "cpu_load", "ip_address", "wifi_name", "system_info", "copy_to_clipboard", "sleep_display", "reveal_in_finder"]
+  ["disk_space", "uptime", "memory_usage", "cpu_load", "ip_address", "wifi_name", "system_info", "copy_to_clipboard", "sleep_display", "reveal_in_finder", "list_shortcuts", "run_shortcut"]
     .forEach(function (name) { U[name] = function () { return REAL_MAC; }; });
-  U.NEEDS_MAC = ["disk_space", "uptime", "memory_usage", "cpu_load", "ip_address", "wifi_name", "system_info", "copy_to_clipboard", "sleep_display", "reveal_in_finder"];
+  U.NEEDS_MAC = ["disk_space", "uptime", "memory_usage", "cpu_load", "ip_address", "wifi_name", "system_info", "copy_to_clipboard", "sleep_display", "reveal_in_finder", "list_shortcuts", "run_shortcut"];
 
   ROUTES.push.apply(ROUTES, [
     [/^(?:calc(?:ulate)?|compute|work out|math)[: ]+(.+)$/i, function (m) { return ["calculate", m[1]]; }],
@@ -480,7 +480,9 @@
     [/^(?:system|mac) info$|^what mac (?:is this|am i on)$|^about this mac$/i, function (m) { return ["system_info", ""]; }],
     [/^copy (.+) to (?:the |my )?clipboard$/i, function (m) { return ["copy_to_clipboard", m[1]]; }],
     [/^(?:lock|sleep)(?: the| my)? (?:screen|display)$/i, function (m) { return ["sleep_display", ""]; }],
-    [/^(?:reveal|show)(?: me)? (.+?) in finder$/i, function (m) { return ["reveal_in_finder", m[1]]; }]
+    [/^(?:reveal|show)(?: me)? (.+?) in finder$/i, function (m) { return ["reveal_in_finder", m[1]]; }],
+    [/^(?:list|show)(?: me)?(?: all)?(?: my)? shortcuts$|^what shortcuts do i have$/i, function (m) { return ["list_shortcuts", ""]; }],
+    [/^run (?:the |my )?shortcut (.+)$|^run (.+) shortcut$/i, function (m) { return ["run_shortcut", ((m[1] || m[2]))]; }]
   ]);
 
   root.Samantha = { route: route, exact: exact, bare: bare, urlOf: urlOf, appMatch: appMatch, APPS: APPS, SITES: SITES,

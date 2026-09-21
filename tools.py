@@ -542,6 +542,12 @@ def _named_page(task):
                  if re.search(rf"\b{re.escape(name)}\b", low)), None)
 
 
+# These fire something with a side effect the user did not see coming (a Shortcut can send a
+# message, a clipboard write loses what was there, the screen goes dark). Only a command that
+# names them runs them, never a model's own choice. The real fix is the harness asking first.
+NOT_FOR_MODELS = {"run_shortcut", "copy_to_clipboard", "sleep_display"}
+
+
 def agent(task, max_steps=6, log=None):
     """Multi-step: let qwen3:8b drive TOOLS until it has an answer."""
     messages = [
@@ -559,7 +565,7 @@ def agent(task, max_steps=6, log=None):
         messages[1]["content"] += f"\n\nI already fetched {named} for you. Its text:\n{read_page(named)}"
     for _ in range(max_steps):
         body = json.dumps({"model": AGENT_MODEL, "messages": messages, "stream": False, "think": False,
-                           "tools": [_schema(f) for f in TOOLS.values()]}).encode()
+                           "tools": [_schema(f) for n, f in TOOLS.items() if n not in NOT_FOR_MODELS]}).encode()
         req = urllib.request.Request(OLLAMA_CHAT, body, {"Content-Type": "application/json"})
         try:
             with urllib.request.urlopen(req, timeout=180) as r:
@@ -572,7 +578,7 @@ def agent(task, max_steps=6, log=None):
             return re.sub(r"(?s)<think>.*?</think>", "", msg.get("content", "")).strip()
         for c in calls:
             name, args = c["function"]["name"], c["function"].get("arguments") or {}
-            fn = TOOLS.get(name)
+            fn = TOOLS.get(name) if name not in NOT_FOR_MODELS else None
             try:
                 if fn:
                     takes = fn.__code__.co_varnames[:fn.__code__.co_argcount]
@@ -728,6 +734,7 @@ def demo():
     finally:
         _run = real
     tools_util.demo()
+    assert NOT_FOR_MODELS <= set(TOOLS) and "run_shortcut" in NOT_FOR_MODELS  # side-effect tools never reach the model's menu
     print("tools ok")
 
 

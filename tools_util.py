@@ -1,10 +1,10 @@
-"""Samantha's utility tools: thirty-one small things that need no app and no network.
+"""Samantha's utility tools: thirty-three small things that need no app and no network.
 
 Math and text (calculate, convert_units, dice, hashes, base64...) are pure Python.
 The system readers (disk_space, uptime, memory_usage...) run one fixed argv each and
-only read. Three tools touch the Mac (copy_to_clipboard, sleep_display,
-reveal_in_finder) and stay silent under SAMANTHA_HEADLESS=1, so a test run never
-clobbers a clipboard or blanks a screen. Like the rest of her hands there is no
+only read. Four tools touch the Mac (copy_to_clipboard, sleep_display,
+reveal_in_finder, run_shortcut) and stay silent under SAMANTHA_HEADLESS=1, so a test run
+never clobbers a clipboard, blanks a screen or fires someone's Shortcut. Like the rest of her hands there is no
 shell: every command is a fixed list, never a string someone wrote.
 
 ROUTES is the regex table tools.py appends to its own, so each of these also works
@@ -383,10 +383,35 @@ def reveal_in_finder(path):
     return f"Showing {os.path.basename(full)} in Finder."
 
 
+def _shortcuts():
+    """The names of the Shortcuts on this Mac, from the shortcuts command."""
+    return [n.strip() for n in _sh(["shortcuts", "list"], timeout=15).splitlines() if n.strip()]
+
+
+def list_shortcuts():
+    """List the Apple Shortcuts on this Mac by name."""
+    names = _shortcuts()
+    if not names:
+        return "No Shortcuts found on this Mac."
+    return f"{len(names)} Shortcuts: " + ", ".join(names[:40]) + (f", and {len(names) - 40} more." if len(names) > 40 else ".")
+
+
+def run_shortcut(name):
+    """Run one of the user's Apple Shortcuts by its exact name. Only when asked by name, never chosen by a model."""
+    want = name.strip().strip("'\"")
+    match = next((n for n in _shortcuts() if n.lower() == want.lower()), None)
+    if not match:
+        return f"I do not see a Shortcut called {want}. Say \"list my shortcuts\" to see them."
+    if HEADLESS:
+        return f"Would run {match}."
+    out = _sh(["shortcuts", "run", match], timeout=60)
+    return f"Ran {match}." + (f" It said: {out[:500]}" if out else "")
+
+
 TOOLS = (calculate, convert_units, time_in, current_date, days_until, flip_coin, roll_dice, random_number, make_password,
          make_uuid, hash_text, base64_encode, base64_decode, word_count, reverse_text, shout, morse_code, json_pretty,
          is_prime, roman_numeral, tip, disk_space, uptime, memory_usage, cpu_load, ip_address, wifi_name, system_info,
-         copy_to_clipboard, sleep_display, reveal_in_finder)
+         copy_to_clipboard, sleep_display, reveal_in_finder, list_shortcuts, run_shortcut)
 
 _I = re.I
 # (pattern, tool name, what to hand it). Names, not functions: tools.py looks each one up at call time.
@@ -423,6 +448,8 @@ ROUTES = (
     (re.compile(r"^copy (.+) to (?:the |my )?clipboard$", _I), "copy_to_clipboard", lambda m: m.group(1)),
     (re.compile(r"^(?:lock|sleep)(?: the| my)? (?:screen|display)$", _I), "sleep_display", lambda m: ""),
     (re.compile(r"^(?:reveal|show)(?: me)? (.+?) in finder$", _I), "reveal_in_finder", lambda m: m.group(1)),
+    (re.compile(r"^(?:list|show)(?: me)?(?: all)?(?: my)? shortcuts$|^what shortcuts do i have$", _I), "list_shortcuts", lambda m: ""),
+    (re.compile(r"^run (?:the |my )?shortcut (.+)$|^run (.+) shortcut$", _I), "run_shortcut", lambda m: (m.group(1) or m.group(2))),
 )
 
 
@@ -454,7 +481,8 @@ def demo():
     assert disk_space().endswith("GB.") and "cores" in cpu_load()
     assert copy_to_clipboard("x") == "Copied." and sleep_display() == "Screen off." and reveal_in_finder("~").startswith("Showing")
     assert reveal_in_finder("~/.ssh").startswith("No file") and reveal_in_finder("/etc/passwd").startswith("No file")
-    assert len(TOOLS) == 31 and all(f.__doc__ for f in TOOLS)
+    assert run_shortcut("zzz-not-real").startswith("I do not see") and (list_shortcuts().startswith("No Shortcuts") or "Shortcuts:" in list_shortcuts())
+    assert len(TOOLS) == 33 and all(f.__doc__ for f in TOOLS)
     call = lambda name, a: globals()[name](a) if globals()[name].__code__.co_argcount else globals()[name]()
     hit = lambda q: next((call(name, arg(m)) for pat, name, arg in ROUTES if (m := pat.match(q))), None)
     assert hit("calculate 17 * 23") == "391" and hit("convert 5 km to miles") == "5 km is 3.1069 mi."
@@ -465,6 +493,7 @@ def demo():
     assert hit("roman numerals for 1999") == "MCMXCIX" and hit("tip on 45").startswith("Tip on 45.00") and hit("morse sos") == "... --- ..."
     assert hit("what is my ip") is not None and hit("how much disk space do i have").endswith("GB.")
     assert hit("copy hello world to my clipboard") == "Copied." and hit("what is turing") is None and hit("open chrome") is None
+    assert hit("run shortcut zzz-not-real").startswith("I do not see") and hit("run tests") is None and hit("run the build") is None
     assert hit("hash browns are good") is None and hit("reverse psychology") is None and hit("reverse the text abc") == "cba" and hit("hash: hello").startswith("2cf2")
     print("tools_util ok")
 
