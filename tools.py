@@ -20,6 +20,7 @@ import subprocess
 import sys
 import urllib.parse
 import urllib.request
+from tools_image import remove_background, upscale_image, enhance_image, grayscale_image, rotate_image, flip_image, resize_image, crop_square, convert_image, image_info
 
 AGENT_MODEL = "qwen3:1.7b"  # 8B was right but 7.6GB and minutes per run; 1.7B is right in 5s once the harness prefetches
 OLLAMA_CHAT = "http://localhost:11434/api/chat"
@@ -422,7 +423,8 @@ def paint_image(path):
 
 TOOLS = {f.__name__: f for f in (open_app, open_url, web_search, current_tab, read_page, screenshot,
                                      clipboard, set_volume, battery, say, list_dir, read_file, make_logo, paint_image,
-                                     music, weather, timer, new_note, new_reminder, calendar_today)}
+                                     music, weather, timer, new_note, new_reminder, calendar_today,
+                                     remove_background, upscale_image, enhance_image, grayscale_image, rotate_image, flip_image, resize_image, crop_square, convert_image, image_info)}
 
 _UNIT = {"s": 1 / 60, "m": 1, "h": 60}
 

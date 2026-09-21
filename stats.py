@@ -10,7 +10,7 @@ from pathlib import Path
 
 # Fixed measured results from eval runs (tools and actions re-measured 2026-09-21, the rest 2026-09-20). Update these when re-running evals.
 MEASURED = {
-    "tools": {"before": 0, "after": 20},
+    "tools": {"before": 0, "after": 30},
     "actions_eval": "77/77",
     "knowledge_sweep": {"before": "47/65", "after": "57/65"},
     "confidently_wrong": {"before": 18, "after": 4},

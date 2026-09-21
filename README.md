@@ -6,13 +6,13 @@
 [![test](https://github.com/nulljosh/turing/actions/workflows/test.yml/badge.svg)](https://github.com/nulljosh/turing/actions/workflows/test.yml)
 ![license](https://img.shields.io/badge/license-MIT-green) [![GitHub](https://img.shields.io/badge/GitHub-nulljosh%2Fturing-black?logo=github)](https://github.com/nulljosh/turing)
 
-Build small language models on one Mac. Samantha is a 0.5B model fine-tuned on your own writing, runs entirely on-device via MLX, and now has 20 hands to act on the world.
+Build small language models on one Mac. Samantha is a 0.5B model fine-tuned on your own writing, runs entirely on-device via MLX, and now has 30 hands to act on the world.
 
 [turing.heyitsmejosh.com](https://turing.heyitsmejosh.com)
 
 ## Features
 
-- **20 tools** (open_app, web_search, read_page, screenshot, make_logo, **paint_image**, music, timer, new_note, calendar_today, battery, clipboard, and more)
+- **30 tools** (open_app, web_search, read_page, screenshot, make_logo, **paint_image**, music, timer, new_note, calendar_today, battery, clipboard, **image tools** (remove_background, upscale, enhance, grayscale, rotate, flip, resize, crop, convert, image_info), and more)
 - **Small enough to train at home** (Qwen2.5-0.5B LoRA on Apple Silicon via MLX, ~3.5GB memory)
 - **No hallucination** (retrieves real facts from brain RAG, FAQ matching, live officeholder lookup)
 - **Voices like you** (trained on your own docs and commit history, not generic web text)
