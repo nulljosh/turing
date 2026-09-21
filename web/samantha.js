@@ -232,7 +232,7 @@
   function isProject(q) { return PROJECT.test(q); }
 
 
-  // ---- the thirty-nine utility tools, ported from tools_util.py. Same words back, so the two sides can be diffed. ----
+  // ---- the forty-two utility tools, ported from tools_util.py. Same words back, so the two sides can be diffed. ----
   var U = {};
   function num(x) { x = Math.round(x * 1e10) / 1e10; return String(x); }
 
@@ -442,6 +442,33 @@
     if (isNaN(bill)) return "Give me the bill amount.";
     return "Tip on " + bill.toFixed(2) + ": " + [15, 18, 20].map(function (p) { return p + "% is " + (bill * p / 100).toFixed(2); }).join(", ") + ".";
   };
+  // memory across visits: the same three tools as tools_util.py, kept in this browser's localStorage instead of a file
+  function facts() { try { var g = JSON.parse(localStorage.getItem("samantha.memory") || "[]"); return Array.isArray(g) ? g.filter(function (f) { return typeof f === "string"; }) : []; } catch (e) { return []; } }
+  function saveFacts(f) { try { localStorage.setItem("samantha.memory", JSON.stringify(f.slice(-500))); } catch (e) {} }
+  function words(t) { var out = {}; (t.toLowerCase().match(/[a-z0-9']+/g) || []).forEach(function (w) { if (w.length > 2) out[w] = 1; }); return out; }
+  function overlap(a, b) { return Object.keys(a).filter(function (w) { return b[w]; }).length; }
+  U.remember = function (text) {
+    var fact = text.split(/\s+/).filter(Boolean).join(" ").slice(0, 300);
+    if (!fact) return "Tell me what to remember.";
+    var all = facts();
+    if (all.some(function (f) { return f.toLowerCase() === fact.toLowerCase(); })) return "I already know that.";
+    saveFacts(all.concat([fact]));
+    return "Remembered: " + fact;
+  };
+  U.recall = function (query) {
+    var want = words(query), found = facts().map(function (f, i) { return [overlap(want, words(f)), i, f]; })
+      .filter(function (t) { return t[0]; }).sort(function (a, b) { return b[0] - a[0] || b[1] - a[1]; }).slice(0, 3).map(function (t) { return t[2]; });
+    return found.length ? found.join("\n") : "I do not remember anything about " + (query.trim() || "that") + ".";
+  };
+  U.forget = function (query) {
+    var want = words(query);
+    if (!Object.keys(want).length) return "Say what to forget.";
+    var all = facts(), hit = all.filter(function (f) { return overlap(want, words(f)) === Object.keys(want).length; });
+    if (!hit.length) return "I do not remember anything about " + query.trim() + ".";
+    if (hit.length > 5) return "That matches " + hit.length + " things. Be more specific.";
+    saveFacts(all.filter(function (f) { return hit.indexOf(f) < 0; }));
+    return "Forgot " + hit.length + " thing" + (hit.length === 1 ? "" : "s") + ".";
+  };
   // the ten that read or touch a real Mac. The stand-in Mac on this page has no disk, network or clipboard to show.
   var REAL_MAC = "That one reads your real Mac, and this stand-in has no disk, memory or network. Run her on a Mac and it answers.";
   ["disk_space", "uptime", "memory_usage", "cpu_load", "ip_address", "wifi_name", "system_info", "copy_to_clipboard", "sleep_display", "reveal_in_finder", "list_shortcuts", "run_shortcut", "list_mcp_tools", "call_mcp_tool", "list_tabs", "switch_tab", "close_tab", "read_tab"]
@@ -489,6 +516,9 @@
     [/^switch to tab (\d+(?:\.\d+)?)$|^switch to (?:the )?(.+?) tab$/i, function (m) { return ["switch_tab", ((m[1] || m[2]))]; }],
     [/^close tab (\d+(?:\.\d+)?)$|^close (?:the )?(.+?) tab$/i, function (m) { return ["close_tab", ((m[1] || m[2]))]; }],
     [/^read tab (\d+(?:\.\d+)?)$|^read (?!(?:this|the current) tab$)(?:the )?(.+?) tab$|^read (?:this|the current) tab$/i, function (m) { return ["read_tab", ((m[1] || m[2] || ""))]; }],
+    [/^remember that (.+)$/i, function (m) { return ["remember", m[1]]; }],
+    [/^(?:recall|what do you remember about|what did i tell you about) (.+)$/i, function (m) { return ["recall", m[1]]; }],
+    [/^forget (?:that |about )?(.+)$/i, function (m) { return ["forget", m[1]]; }],
     [/^run (?:the |my )?shortcut (.+)$|^run (.+) shortcut$/i, function (m) { return ["run_shortcut", ((m[1] || m[2]))]; }]
   ]);
 

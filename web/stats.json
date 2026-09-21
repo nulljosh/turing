@@ -68,8 +68,12 @@
         "documented": 7
       },
       "tools_util.py": {
-        "total": 48,
-        "documented": 48
+        "total": 56,
+        "documented": 56
+      },
+      "test_memory.py": {
+        "total": 11,
+        "documented": 11
       },
       "test_mcp.py": {
         "total": 12,
@@ -148,7 +152,7 @@
   "measured": {
     "tools": {
       "before": 0,
-      "after": 69
+      "after": 72
     },
     "actions_eval": "77/77",
     "knowledge_sweep": {

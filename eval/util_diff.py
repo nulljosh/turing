@@ -15,6 +15,7 @@ import subprocess
 import sys
 
 os.environ["SAMANTHA_HEADLESS"] = "1"
+os.environ["SAMANTHA_MEMORY"] = "/nonexistent/samantha-memory.json"  # the diff must not read anyone's real memory
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, REPO)
 import tools
@@ -34,7 +35,7 @@ FIXED = [
     "roman numerals for 2026", "roman numeral 4", "1999 in roman numerals", "roman numerals for 4000",
     "tip on 45", "what's the tip on 100", "tip for 12.5", "tip on 0",
     "days until 2000-01-01", "days until 2999-12-31", "days until soon", "days until 2026-02-31",
-    "can you please calculate 6*7 for me", "hey calculate 8 + 8", "please convert 10 km to miles",
+    "recall my dog", "forget zebra", "can you please calculate 6*7 for me", "hey calculate 8 + 8", "please convert 10 km to miles",
 ]
 NOT_COMMANDS = ["what is turing", "calculating machines are cool", "roll call", "hash browns are good", "reverse psychology"]
 SHAPES = {"flip a coin": r"(Heads|Tails)\.", "roll 2d6": r"\d+ \+ \d+ = \d+", "roll a die": r"[1-6]", "roll d20": r"\d+",

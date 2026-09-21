@@ -25,11 +25,11 @@ READ_ONLY = {"open_app", "open_url", "web_search", "current_tab", "read_page", "
              "tip", "list_mcp_tools", "list_tabs", "switch_tab", "read_tab", "disk_space", "uptime", "memory_usage", "cpu_load", "ip_address", "wifi_name", "system_info", "list_shortcuts",
              "reveal_in_finder"}
 # Tools whose side effect nobody sees coming. They never reach a model or MCP, whatever tools.NOT_FOR_MODELS says today.
-MUST_HIDE = {"run_shortcut", "copy_to_clipboard", "sleep_display", "call_mcp_tool", "close_tab"}
+MUST_HIDE = {"run_shortcut", "copy_to_clipboard", "sleep_display", "call_mcp_tool", "close_tab", "remember", "recall", "forget"}
 # A spoken command for each write tool that has a route. The image tools are picked by her model or the agent, never by a route.
 SPOKEN = {"new_note": "take a note buy milk", "new_reminder": "remind me to call mom", "make_logo": "make me a logo for turing",
           "copy_to_clipboard": "copy hello to my clipboard", "sleep_display": "sleep the screen", "run_shortcut": "run shortcut morning",
-          "paint_image": "paint ~/Desktop/mona.jpg", "call_mcp_tool": "call mcp samantha calculate {}", "close_tab": "close the github tab"}
+          "paint_image": "paint ~/Desktop/mona.jpg", "call_mcp_tool": "call mcp samantha calculate {}", "close_tab": "close the github tab", "remember": "remember that my dog is called biscuit", "forget": "forget biscuit"}
 PEOPLE_READ = ["README.md", "CLAUDE.md", "WHITEPAPER.md", "FAQ.md", "roadmap.md", "LAWS.md", "docs/ARCHITECTURE.md", "web/index.html",
                "web/demo.js", "web/samantha.js", "web/faq.json"]
 
@@ -48,6 +48,9 @@ def broken():
     out += [f"law 2: {n} is served over MCP" for n in sorted(served & MUST_HIDE)]
     out += [f"law 2: {n} is on a model's menu" for n in sorted(set(tools.model_tools()) & MUST_HIDE)]
 
+    import tempfile
+    mem = os.path.join(tempfile.mkdtemp(), "memory.json")
+    os.environ["SAMANTHA_MEMORY"] = mem  # a denied remember must leave no file behind, and must never touch the real one
     for name, spoken in SPOKEN.items():
         with mock.patch.object(tools, "_run") as run, mock.patch.object(tools, "_app") as app, mock.patch("subprocess.run") as sp, \
                 mock.patch("subprocess.Popen") as po, mock.patch("tools_util.subprocess.run") as usp:
@@ -55,6 +58,9 @@ def broken():
             ran = run.call_count + app.call_count + sp.call_count + po.call_count + usp.call_count
         if name in tools.WRITES and (ran or reply != "Okay, I will not."):
             out.append(f"law 3: saying no to {name!r} ({spoken!r}) still ran {ran} command(s), reply {reply!r}")
+    if os.path.exists(mem):
+        out.append("law 3: saying no to remember or forget still wrote the memory file")
+    os.environ.pop("SAMANTHA_MEMORY", None)
     out += [f"law 3: {n} has no spoken command in eval/laws.py and is not an image tool" for n in tools.WRITES - set(SPOKEN)
             if not n.endswith("_image") and n not in ("crop_square", "remove_background")]
 

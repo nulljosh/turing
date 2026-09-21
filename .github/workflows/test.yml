@@ -32,6 +32,7 @@ jobs:
       - run: python3 test_mcp.py
       - run: python3 test_harness.py
       - run: python3 test_tabs.py
+      - run: python3 test_memory.py
       # the laws in LAWS.md, checked against every tool
       - run: python3 eval/laws.py
 

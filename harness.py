@@ -13,6 +13,7 @@ import re
 import sys
 
 import tools
+import tools_util
 
 _RECALL = re.compile(r"^(?:what did you (?:just )?do|what have you done|show (?:me )?(?:the )?(?:tool )?(?:log|history)|history)$", re.I)
 
@@ -38,6 +39,8 @@ class Session:
 
         # a multi-step ask starts knowing what was just done
         context = "".join(f"Earlier: {h['q']} -> {h['result'][:120]}\n" for h in self.history[-3:])
+        # what she was told to remember about this ask rides along with a multi-step task, never over MCP
+        context += "".join(f"Remembered: {f}\n" for f in tools_util.recall_lines(q))
         result = tools.do((context + q) if context and tools._MULTISTEP.search(tools._bare(q)) else q, log=log, confirm=self.confirm)
         result = result or "That is not a command I know. Ask me a question, or tell me to do something."
         self.history.append({"q": q, "calls": calls, "result": result})

@@ -583,7 +583,7 @@ def _named_page(task):
 # These fire something with a side effect the user did not see coming (a Shortcut can send a
 # message, a clipboard write loses what was there, the screen goes dark). Only a command that
 # names them runs them, never a model's own choice. The real fix is the harness asking first.
-NOT_FOR_MODELS = {"run_shortcut", "copy_to_clipboard", "sleep_display", "call_mcp_tool", "close_tab"}
+NOT_FOR_MODELS = {"run_shortcut", "copy_to_clipboard", "sleep_display", "call_mcp_tool", "close_tab", "remember", "recall", "forget"}  # her memory is private: only her own commands and the harness touch it
 
 
 def model_tools():
@@ -743,7 +743,7 @@ def pick(query):
 
 # Tools that leave something behind or send something out: a note, a reminder, a file on the
 # Desktop, a Shortcut, the clipboard, a dark screen. The harness asks before any of these run.
-WRITES = {"close_tab", "call_mcp_tool", "new_note", "new_reminder", "make_logo", "paint_image", "run_shortcut", "copy_to_clipboard", "sleep_display",
+WRITES = {"remember", "forget", "close_tab", "call_mcp_tool", "new_note", "new_reminder", "make_logo", "paint_image", "run_shortcut", "copy_to_clipboard", "sleep_display",
           "remove_background", "upscale_image", "enhance_image", "grayscale_image", "rotate_image", "flip_image",
           "resize_image", "crop_square", "convert_image"}
 
