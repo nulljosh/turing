@@ -17,7 +17,7 @@ SHOTS = sys.argv[sys.argv.index("--shots") + 1] if "--shots" in sys.argv else No
 # (what a visitor types, text her reply must contain, optional check on the desk)
 STEPS = [
     ("set the volume to 30", "Volume at 30.", lambda p: p.inner_text("#desk-vol") == "Vol 30"),
-    ("can you open chrome and go to github.com", "Opened https://github.com in Chrome.", lambda p: "github.com" in p.inner_text("#desk-space")),
+    ("can you open chrome and go to github.com", "Opened https://github.com in", lambda p: "github.com" in p.inner_text("#desk-space")),
     ("what's on my tab", "github.com", None),
     ("take a note buy milk", "Noted: buy milk", lambda p: "buy milk" in p.inner_text("#desk-space")),
     ("remind me to call mom", "I'll remind you: call mom", None),

@@ -225,9 +225,9 @@
       win('Google Chrome', 'Google Chrome', function (b) {
         b.appendChild(el('div', 'win-url', url));
         if (framed) {
-          // the real page, live, inside the stand-in Mac. Sandboxed with no same-origin, so it cannot reach this page.
+          // the real page, live, inside the stand-in Mac. Sandboxed, and a different origin from this page, so it cannot reach it.
           var f = el('iframe', 'win-frame');
-          f.src = url; f.setAttribute('sandbox', 'allow-scripts allow-popups allow-forms'); f.setAttribute('referrerpolicy', 'no-referrer');
+          f.src = url; f.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-popups allow-forms');  // same-origin here means the framed site's OWN origin, never ours f.setAttribute('referrerpolicy', 'no-referrer');
           f.setAttribute('loading', 'lazy'); f.setAttribute('title', 'Live page: ' + host);
           b.appendChild(f);
         } else {
