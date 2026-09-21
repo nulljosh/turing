@@ -67,7 +67,7 @@ def main():
     adapter, model_id = _flag("--adapter"), _flag("--model", BASE)
     model, tok = load(model_id, adapter_path=os.path.join(REPO, adapter) if adapter else None)
     system = SYSTEM if adapter else untrained_system()
-    verbose, score, wrong_tool, fired, t0 = "--verbose" in sys.argv, {}, 0, 0, time.time()
+    verbose, score, wrong_tool, fired, blocked, t0 = "--verbose" in sys.argv, {}, 0, 0, 0, time.time()
     for group, text, tool, arg, exact in cases():
         prompt = tok.apply_chat_template([{"role": "system", "content": system}, {"role": "user", "content": text}],
                                          add_generation_prompt=True, tokenize=False, enable_thinking=False)
@@ -84,6 +84,11 @@ def main():
         n = score.setdefault(group, [0, 0])
         n[0] += ok
         n[1] += 1
+        # The other half of the guard's job: a RIGHT pick it refuses is a command she cannot do.
+        if ok and tool and tool != "agent" and not tools._sound(tool, str(got.get("arg") or "").strip(), text):
+            blocked += 1
+            if verbose:
+                print(f"  BLOCKED [{group}] {text!r}: right pick {tool}({got.get('arg')!r}) refused by the guard")
         if not ok:
             wrong_tool += bool(got.get("tool")) and got.get("tool") != tool
             # what tools.do() would really run: a wrong pick that is also unsound never fires
@@ -93,7 +98,7 @@ def main():
     total = sum(n[0] for n in score.values())
     for group, (p, n) in score.items():
         print(f"{group}: {p}/{n}")
-    print(f"{total}/{sum(n[1] for n in score.values())} passed, {wrong_tool} picked the wrong tool, {fired} of those get past the guard in tools.do(), {time.time() - t0:.0f}s, {adapter or model_id}")
+    print(f"{total}/{sum(n[1] for n in score.values())} passed, {wrong_tool} picked the wrong tool, {fired} of those get past the guard in tools.do(), {blocked} right picks refused by the guard, {time.time() - t0:.0f}s, {adapter or model_id}")
     minimum = _flag("--min")
     if minimum and total < int(minimum):
         sys.exit(1)
