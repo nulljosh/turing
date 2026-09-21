@@ -6,16 +6,16 @@
 [![test](https://github.com/nulljosh/turing/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/nulljosh/turing/actions/workflows/test.yml)
 ![license](https://img.shields.io/badge/license-Apache--2.0-green) [![GitHub](https://img.shields.io/badge/GitHub-nulljosh%2Fturing-black?logo=github)](https://github.com/nulljosh/turing)
 
-Build small language models on one Mac. Samantha is a 0.5B model fine-tuned on your own writing, runs entirely on-device via MLX, and has 63 tools to act on the world.
+Build small language models on one Mac. Samantha is a 0.5B model fine-tuned on your own writing, runs entirely on-device via MLX, and has 65 tools to act on the world.
 
 [turing.heyitsmejosh.com](https://turing.heyitsmejosh.com)
 
 ## Features
 
-- **63 tools.** Her Mac (open apps and sites, search, read a page, screenshot, clipboard, volume, battery, music, timers, notes, reminders, calendar, weather), pictures (paint any photo, make a logo, remove a background, upscale, enhance, rotate, crop, convert), and 33 small utilities that need no app: math, unit conversion, time in any city, dice, passwords, hashes, base64, morse, this Mac's disk, memory and Wi-Fi, and any Apple Shortcut you name
+- **65 tools.** Her Mac (open apps and sites, search, read a page, screenshot, clipboard, volume, battery, music, timers, notes, reminders, calendar, weather), pictures (paint any photo, make a logo, remove a background, upscale, enhance, rotate, crop, convert), and 35 small utilities that need no app: math, unit conversion, time in any city, dice, passwords, hashes, base64, morse, this Mac's disk, memory and Wi-Fi, and any Apple Shortcut you name
 - **Her own logo.** The icon above was designed by her. Her model steers four dials (palette, cell count, shape, how many cells glow), the harness lays the cells on a golden-angle spiral, and there is no text in it. Ask her for an original wordless logo and she makes a new one; the spec is in `pixelmator/examples/turing-bloom.json`
 - **A harness.** `harness.py` keeps the conversation, prints every tool call before it runs, and asks before anything that writes or sends (a note, a reminder, a file, a Shortcut, the clipboard)
-- **Her hands over MCP.** `mcp_server.py` lets Claude Code or any other assistant use her tools
+- **MCP both ways.** `mcp_server.py` lets Claude Code or any other assistant use her tools, and she can call other MCP servers from `~/.samantha/mcp.json` (she asks first)
 - **Small enough to train at home** (Qwen2.5-0.5B LoRA on Apple Silicon via MLX, ~3.5GB memory)
 - **No hallucination** (retrieves real facts from brain RAG, FAQ matching, live officeholder lookup)
 - **Voices like you** (trained on your own docs and commit history, not generic web text)
@@ -51,7 +51,7 @@ python3 mcp_server.py                  # her tools over MCP (claude mcp add sama
 - Her own picker knows the first 30 tools. The other 33 work through the exact router, not a model. Retraining it on all 63 is next
 - On unseen phrasings the picker got 394 of 501, and the guard `_sound()` lets 9 wrong picks past and refuses no right ones
 - The 10 tools that read this Mac (disk, memory, Wi-Fi, Shortcuts...) answer on a Mac only; the landing page's stand-in says so
-- MCP goes one way: others can use her tools, she cannot yet call theirs
+- Calling another MCP server is explicit (`call mcp <server> <tool> {json}`) and asks first; her model never chooses it
 - Multi-step asks borrow a 1.7B model via Ollama (training her own picker is the open roadmap)
 - `eval/web_demo.py` needs the live site's /api, so it only fully passes against production
 

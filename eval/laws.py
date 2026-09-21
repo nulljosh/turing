@@ -22,14 +22,14 @@ READ_ONLY = {"open_app", "open_url", "web_search", "current_tab", "read_page", "
              "list_dir", "read_file", "music", "weather", "timer", "calendar_today", "image_info", "calculate", "convert_units", "time_in",
              "current_date", "days_until", "flip_coin", "roll_dice", "random_number", "make_password", "make_uuid", "hash_text",
              "base64_encode", "base64_decode", "word_count", "reverse_text", "shout", "morse_code", "json_pretty", "is_prime", "roman_numeral",
-             "tip", "disk_space", "uptime", "memory_usage", "cpu_load", "ip_address", "wifi_name", "system_info", "list_shortcuts",
+             "tip", "list_mcp_tools", "disk_space", "uptime", "memory_usage", "cpu_load", "ip_address", "wifi_name", "system_info", "list_shortcuts",
              "reveal_in_finder"}
 # Tools whose side effect nobody sees coming. They never reach a model or MCP, whatever tools.NOT_FOR_MODELS says today.
-MUST_HIDE = {"run_shortcut", "copy_to_clipboard", "sleep_display"}
+MUST_HIDE = {"run_shortcut", "copy_to_clipboard", "sleep_display", "call_mcp_tool"}
 # A spoken command for each write tool that has a route. The image tools are picked by her model or the agent, never by a route.
 SPOKEN = {"new_note": "take a note buy milk", "new_reminder": "remind me to call mom", "make_logo": "make me a logo for turing",
           "copy_to_clipboard": "copy hello to my clipboard", "sleep_display": "sleep the screen", "run_shortcut": "run shortcut morning",
-          "paint_image": "paint ~/Desktop/mona.jpg"}
+          "paint_image": "paint ~/Desktop/mona.jpg", "call_mcp_tool": "call mcp samantha calculate {}"}
 PEOPLE_READ = ["README.md", "CLAUDE.md", "WHITEPAPER.md", "FAQ.md", "roadmap.md", "LAWS.md", "docs/ARCHITECTURE.md", "web/index.html",
                "web/demo.js", "web/samantha.js", "web/faq.json"]
 

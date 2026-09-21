@@ -36,8 +36,8 @@
         "documented": 3
       },
       "tools.py": {
-        "total": 44,
-        "documented": 44
+        "total": 45,
+        "documented": 45
       },
       "serve.py": {
         "total": 8,
@@ -64,12 +64,12 @@
         "documented": 7
       },
       "tools_util.py": {
-        "total": 38,
-        "documented": 38
+        "total": 42,
+        "documented": 42
       },
       "test_mcp.py": {
-        "total": 4,
-        "documented": 4
+        "total": 12,
+        "documented": 12
       },
       "mcp_server.py": {
         "total": 4,
@@ -144,7 +144,7 @@
   "measured": {
     "tools": {
       "before": 0,
-      "after": 63
+      "after": 65
     },
     "actions_eval": "77/77",
     "knowledge_sweep": {

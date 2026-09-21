@@ -1,9 +1,9 @@
-"""Samantha's utility tools: thirty-three small things that need no app and no network.
+"""Samantha's utility tools: thirty-five small things that need no app and no network.
 
 Math and text (calculate, convert_units, dice, hashes, base64...) are pure Python.
 The system readers (disk_space, uptime, memory_usage...) run one fixed argv each and
-only read. Four tools touch the Mac (copy_to_clipboard, sleep_display,
-reveal_in_finder, run_shortcut) and stay silent under SAMANTHA_HEADLESS=1, so a test run
+only read. Five tools touch the Mac or another program (copy_to_clipboard, sleep_display,
+reveal_in_finder, run_shortcut, call_mcp_tool) and stay silent under SAMANTHA_HEADLESS=1, so a test run
 never clobbers a clipboard, blanks a screen or fires someone's Shortcut. Like the rest of her hands there is no
 shell: every command is a fixed list, never a string someone wrote.
 
@@ -408,10 +408,85 @@ def run_shortcut(name):
     return f"Ran {match}." + (f" It said: {out[:500]}" if out else "")
 
 
+def _mcp_config():
+    """The MCP servers she may call: name to argv, from ~/.samantha/mcp.json (or SAMANTHA_MCP_CONFIG). Argv only, never a shell string."""
+    path = os.path.expanduser(os.environ.get("SAMANTHA_MCP_CONFIG", "~/.samantha/mcp.json"))
+    try:
+        servers = json.load(open(path)).get("servers", {})
+    except (OSError, ValueError):
+        return {}
+    return {n: a for n, a in servers.items() if isinstance(a, list) and a and all(isinstance(x, str) for x in a)}
+
+
+def _mcp_talk(argv, calls, timeout=30):
+    """Run one MCP server for a short conversation: initialize, then each (method, params) in calls. Returns the results in order."""
+    msgs = [{"jsonrpc": "2.0", "id": 0, "method": "initialize", "params": {"protocolVersion": "2024-11-05", "capabilities": {},
+                                                                              "clientInfo": {"name": "samantha", "version": "1"}}},
+            {"jsonrpc": "2.0", "method": "notifications/initialized"}]
+    msgs += [{"jsonrpc": "2.0", "id": i + 1, "method": m, "params": p} for i, (m, p) in enumerate(calls)]
+    try:
+        r = subprocess.run(argv, input="\n".join(json.dumps(m) for m in msgs) + "\n", capture_output=True, text=True, timeout=timeout)
+    except (OSError, subprocess.SubprocessError) as e:
+        raise RuntimeError(f"could not run it: {e}")
+    replies = {}
+    for line in r.stdout.splitlines():
+        try:
+            m = json.loads(line)
+        except ValueError:
+            continue
+        if isinstance(m, dict) and "id" in m:
+            replies[m["id"]] = m
+    out = []
+    for i in range(len(calls)):
+        m = replies.get(i + 1)
+        if not m or "error" in m:
+            raise RuntimeError((m or {}).get("error", {}).get("message", "no answer"))
+        out.append(m["result"])
+    return out
+
+
+def list_mcp_tools():
+    """List the tools of the MCP servers in her config, so she knows what else she can call."""
+    servers = _mcp_config()
+    if not servers:
+        return "No MCP servers configured. Add some to ~/.samantha/mcp.json."
+    lines = []
+    for name, argv in servers.items():
+        try:
+            tools_ = _mcp_talk(argv, [("tools/list", {})])[0]["tools"]
+            lines.append(f"{name}: " + ", ".join(t["name"] for t in tools_[:30]) + (f", and {len(tools_) - 30} more" if len(tools_) > 30 else ""))
+        except (RuntimeError, KeyError, TypeError) as e:
+            lines.append(f"{name}: unavailable ({e})")
+    return "\n".join(lines)
+
+
+def call_mcp_tool(request):
+    """Call one tool on one of her MCP servers. Takes 'server tool {json arguments}'. Asks first, and only when named, never chosen by a model."""
+    parts = request.strip().split(None, 2)
+    if len(parts) < 2:
+        return 'Say it like: call mcp samantha calculate {"expression": "2+2"}'
+    server, tool, raw = parts[0], parts[1], (parts[2] if len(parts) > 2 else "{}")
+    servers = _mcp_config()
+    if server not in servers:
+        return f"I do not have an MCP server called {server}." + (f" I have: {', '.join(servers)}." if servers else " None are configured.")
+    try:
+        args = json.loads(raw)
+        if not isinstance(args, dict):
+            raise ValueError("arguments must be an object")
+    except ValueError as e:
+        return f"Those arguments are not a JSON object: {e}."
+    try:
+        res = _mcp_talk(servers[server], [("tools/call", {"name": tool, "arguments": args})])[0]
+    except RuntimeError as e:
+        return f"{server} said no: {e}."
+    text = " ".join(c.get("text", "") for c in res.get("content", []) if isinstance(c, dict) and c.get("type") == "text").strip()
+    return ("Error from " + server + ": " if res.get("isError") else "") + (text[:2000] or "Done, with no text back.")
+
+
 TOOLS = (calculate, convert_units, time_in, current_date, days_until, flip_coin, roll_dice, random_number, make_password,
          make_uuid, hash_text, base64_encode, base64_decode, word_count, reverse_text, shout, morse_code, json_pretty,
          is_prime, roman_numeral, tip, disk_space, uptime, memory_usage, cpu_load, ip_address, wifi_name, system_info,
-         copy_to_clipboard, sleep_display, reveal_in_finder, list_shortcuts, run_shortcut)
+         copy_to_clipboard, sleep_display, reveal_in_finder, list_shortcuts, run_shortcut, list_mcp_tools, call_mcp_tool)
 
 _I = re.I
 # (pattern, tool name, what to hand it). Names, not functions: tools.py looks each one up at call time.
@@ -450,6 +525,8 @@ ROUTES = (
     (re.compile(r"^(?:lock|sleep)(?: the| my)? (?:screen|display)$", _I), "sleep_display", lambda m: ""),
     (re.compile(r"^(?:reveal|show)(?: me)? (.+?) in finder$", _I), "reveal_in_finder", lambda m: m.group(1)),
     (re.compile(r"^(?:list|show)(?: me)?(?: all)?(?: my)? shortcuts$|^what shortcuts do i have$", _I), "list_shortcuts", lambda m: ""),
+    (re.compile(r"^(?:list|show)(?: me)?(?: all)?(?: my)? mcp tools$|^what mcp tools do i have$", _I), "list_mcp_tools", lambda m: ""),
+    (re.compile(r"^call mcp (\S+ \S+(?: .+)?)$", _I), "call_mcp_tool", lambda m: m.group(1)),
     (re.compile(r"^run (?:the |my )?shortcut (.+)$|^run (.+) shortcut$", _I), "run_shortcut", lambda m: (m.group(1) or m.group(2))),
 )
 
@@ -483,7 +560,7 @@ def demo():
     assert copy_to_clipboard("x") == "Copied." and sleep_display() == "Screen off." and reveal_in_finder("~").startswith("Showing")
     assert reveal_in_finder("~/.ssh").startswith("No file") and reveal_in_finder("/etc/passwd").startswith("No file")
     assert run_shortcut("zzz-not-real").startswith("I do not see") and (list_shortcuts().startswith("No Shortcuts") or "Shortcuts:" in list_shortcuts())
-    assert len(TOOLS) == 33 and all(f.__doc__ for f in TOOLS)
+    assert len(TOOLS) == 35 and all(f.__doc__ for f in TOOLS)
     call = lambda name, a: globals()[name](a) if globals()[name].__code__.co_argcount else globals()[name]()
     hit = lambda q: next((call(name, arg(m)) for pat, name, arg in ROUTES if (m := pat.match(q))), None)
     assert hit("calculate 17 * 23") == "391" and hit("convert 5 km to miles") == "5 km is 3.1069 mi."
