@@ -42,6 +42,7 @@ STEPS = [
     ("make me an original wordless logo for turing", "no text", lambda p: p.locator("svg[aria-label^='A wordless logo']").count() >= 1),
     ("draw a lighthouse at dusk", "Here it is", lambda p: p.wait_for_function("() => document.getElementById('paint-title').textContent.includes('lighthouse')", timeout=60000) is not None),
     ("draw a fox in the snow", "Here it is", lambda p: p.evaluate("document.querySelector('header .sub').textContent").startswith(("Imagining", "Building"))),
+    ("open chrome and go to en.wikipedia.org/wiki/Alan_Turing", "live page", lambda p: p.locator(".win-frame").count() >= 1),
     ("calculate 17*23", "391", None),
     ("convert 72 f to c", "22.22", None),
     ("sha256 of hello", "2cf24dba5fb0a30e", None),
