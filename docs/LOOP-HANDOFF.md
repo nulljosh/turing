@@ -1,4 +1,4 @@
-# Turing loop handoff (2026-09-21, evening)
+# Turing loop handoff (2026-09-21, late night)
 
 The live `/loop` for this repo. Checkpoint rewrites this file every run. A new session reads it and picks up where the last one stopped.
 
@@ -17,8 +17,10 @@ v0.10.0 is out, Apache 2.0. Samantha has 30 tools: the first 20 plus ten image t
 3. Blender family, then the Shortcuts bridge, then MCP both ways.
 4. The harness for 1.0: one conversation that holds tool results, shows a live tool log and asks before anything that writes, sends or deletes.
 5. Finish docstrings: 11 left outside `pixelmator/`, 28 inside `pixelmator/pxm.py`.
-6. Sharp paintings: measure merging same-color neighbor cells. Layer grouping was measured slower and reverted, do not retry it.
-7. Still open from before: re-run `eval/basic_questions.py`, score Ternary-Bonsai-4B as a borrowed head, score `voice-adapter`.
+6. A 20000 layer, --detail 512 Mona Lisa was building headless in Pixelmator to /tmp/pxmtest/m20k.png. Look at it. If crystal clear, raise paint defaults (--shapes, --detail) to match. If not, iterate.
+7. Run ./release.sh with a patch bump and the full gate once Pixelmator is free.
+8. Rebuild web/mona-lisa.gif and web/last-supper.gif at the new quality.
+9. Still open from before: re-run `eval/basic_questions.py`, score Ternary-Bonsai-4B as a borrowed head, score `voice-adapter`.
 
 Lessons from 2026-09-21, keep them: helpers (Haiku agents) ship fast but need checking. One made the guard refuse "mute", one claimed 100 percent at 77, one left orphan builds running in Pixelmator. Read the diff, rerun the numbers, and wait for the real CI result before calling anything done.
 
