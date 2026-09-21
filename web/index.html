@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Turing</title>
     <meta name="theme-color" content="#1a1a1a">
+    <link rel="icon" type="image/svg+xml" href="icon.svg">
+    <meta property="og:image" content="https://turing.heyitsmejosh.com/samantha-logo.png">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Turing">
     <meta property="og:title" content="Turing, Samantha">
@@ -14,11 +16,21 @@
       @media (prefers-color-scheme: dark){
         :root{--bg:#141414;--fg:#eaeaea;--muted:#9a9a9a;--line:#333;--accent:#eaeaea}
       }
+      :root[data-theme="dark"]{--bg:#141414;--fg:#eaeaea;--muted:#9a9a9a;--line:#333;--accent:#eaeaea}
+      :root[data-theme="light"]{--bg:#fafafa;--fg:#1a1a1a;--muted:#6b6b6b;--line:#dcdcdc;--accent:#1a1a1a}
+      :root[data-theme="dark"] .desk{--desk:#1d1d1d}
+      :root[data-theme="light"] .desk{--desk:#ecece8}
+      .wrap.roll{animation:roll 1.1s ease-in-out}
+      @keyframes roll{to{transform:rotate(360deg)}}
+      section.lit{animation:lit 1.6s ease-out}
+      @keyframes lit{0%,60%{outline:3px solid #f2b33d;outline-offset:8px}100%{outline:3px solid transparent;outline-offset:8px}}
       *{box-sizing:border-box}
       body{margin:0;background:var(--bg);color:var(--fg);font-family:-apple-system,Helvetica,Arial,sans-serif;
         padding:0 20px 64px;line-height:1.5}
       .wrap{max-width:640px;margin:0 auto}
       header{padding:64px 0 24px}
+      .brand{display:flex;align-items:center;gap:16px}
+      .brand img{border-radius:14px;flex:0 0 auto}
       h1{font-size:28px;margin:0 0 4px;letter-spacing:-0.02em}
       .sub{color:var(--muted);font-size:15px;margin:0}
       .status{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);
@@ -113,7 +125,7 @@
       .desk-right{margin-left:auto;display:flex;gap:8px;align-items:center}
       .desk-vol-track{width:44px;height:4px;border-radius:2px;background:var(--line);overflow:hidden}
       #desk-vol-fill{display:block;height:100%;width:50%;background:var(--fg);transition:width .2s}
-      .desk-space{position:relative;height:200px;overflow:hidden}
+      .desk-space{position:relative;height:200px;overflow:hidden;background:url(icon.svg) center/84px no-repeat}
       .desk-space.flash::after{content:"";position:absolute;inset:0;background:#fff;animation:flash .35s ease-out forwards;pointer-events:none}
       @keyframes flash{from{opacity:.85}to{opacity:0}}
       .desk-file{position:absolute;right:10px;bottom:8px;font-size:10px;color:var(--muted)}
@@ -125,7 +137,7 @@
       .win-dots i{width:7px;height:7px;border-radius:50%;background:var(--line)}
       .win-title{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
       .win-body{padding:8px 10px;min-height:52px;max-height:118px;overflow:auto}
-      .win-body svg{display:block;width:96px;height:96px;margin:0 auto}
+      .win-body svg{display:block;width:72px;height:72px;margin:0 auto}
       .win-row{padding:2px 0;white-space:pre-line}
       .win-empty{color:var(--muted)}
       .win-url{border:1px solid var(--line);border-radius:10px;padding:2px 8px;margin-bottom:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--muted)}
@@ -173,8 +185,13 @@
     </script>
     <div class="wrap">
       <header>
-        <h1>Turing</h1>
-        <p class="sub">Building small language models in the open.</p>
+        <div class="brand">
+          <img src="icon.svg" width="64" height="64" alt="Turing icon: a tape with one lit cell under the head">
+          <div>
+            <h1>Turing</h1>
+            <p class="sub">Building small language models in the open.</p>
+          </div>
+        </div>
         <div class="name-split">
           <div><span class="name-label">Project</span><b>Turing</b></div>
           <div><span class="name-label">Model</span><b>Samantha</b></div>
@@ -479,7 +496,7 @@ python3 -m venv .venv && ./.venv/bin/pip install mlx-lm
           'Logos are dial choices from a fixed set, not free-hand design. ' +
           'She runs on one Mac only.</p></div>';
 
-        placeholder.parentNode.innerHTML = html + tableHtml + docsHtml + limitHtml;
+        placeholder.parentNode.innerHTML = '<h2>Results</h2>' + html + tableHtml + docsHtml + limitHtml;
       }).catch(() => {
         var placeholder = document.getElementById('results-placeholder');
         placeholder.textContent = 'stats unavailable';

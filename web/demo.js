@@ -273,7 +273,7 @@
         .catch(function () { return "Couldn't get the weather."; });
     },
     timer: function (minutes) {
-      var secs = parseFloat(minutes) * 60;
+      var secs = (/^[\d.]+$/.test(String(minutes).trim()) ? parseFloat(minutes) : S.duration(minutes)) * 60;
       if (!(secs > 0 && secs <= 86400)) return 'A timer runs from a second to a day.';
       desk.timerEnd = Date.now() + secs * 1000;
       return secs >= 60 ? 'Timer set for ' + (secs / 60) + ' minutes.' : 'Timer set for ' + secs + ' seconds.';
@@ -292,6 +292,69 @@
     },
     calendar_today: function () { TOOLS.open_app('Calendar'); return 'Nothing on the calendar today.'; }
   };
+
+  // ---- the page is hers too. Every change is local to this visitor and undone by "reset the page". ----
+  var wrap = document.querySelector('.wrap'), h1 = document.querySelector('h1'), tagline = document.querySelector('header .sub');
+  var original = { h1: h1.textContent, tagline: tagline.textContent };
+  function sections() { return Array.prototype.slice.call(document.querySelectorAll('section')).filter(function (x) { return x.querySelector('h2'); }); }
+  function names() { return sections().map(function (x) { return x.querySelector('h2').textContent; }); }
+  function find(arg) {
+    var name = S.section(arg, names());
+    if (name === 'top') return document.querySelector('header');
+    if (name === 'bottom') return document.querySelector('footer') || sections().pop();
+    return sections().filter(function (x) { return x.querySelector('h2').textContent === name; })[0] || null;
+  }
+  function label(node) { var h = node.querySelector('h2'); return h ? h.textContent : node.tagName === 'HEADER' ? 'the top' : 'the bottom'; }
+  function go(node) { node.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' }); }
+  var zoom = 1;
+  var PAGE = {
+    set_heading: function (text) { h1.textContent = text.slice(0, 60); go(document.querySelector('header')); return 'The title now says "' + h1.textContent + '". Only on your screen.'; },
+    set_tagline: function (text) { tagline.textContent = text.slice(0, 120); go(document.querySelector('header')); return 'Tagline changed.'; },
+    scroll_to: function (where) {
+      var w = where.toLowerCase().trim();
+      if (w === 'down' || w === 'up') { window.scrollBy({ top: (w === 'down' ? 1 : -1) * window.innerHeight * 0.8, behavior: reduceMotion ? 'auto' : 'smooth' }); return 'Scrolled ' + w + '.'; }
+      var node = find(where);
+      if (!node) return "I don't see a part of this page called \"" + where + '".';
+      go(node);
+      return 'Scrolled to ' + label(node) + '.';
+    },
+    theme: function (mode) { document.documentElement.setAttribute('data-theme', mode); return mode === 'dark' ? 'Lights off.' : 'Lights on.'; },
+    text_size: function (dir) {
+      zoom = Math.max(0.8, Math.min(1.5, zoom + (dir === 'bigger' ? 0.15 : -0.15)));
+      wrap.style.zoom = zoom;
+      return 'Text is ' + (dir === 'bigger' ? 'bigger.' : 'smaller.');
+    },
+    set_color: function (name) { h1.style.color = S.COLORS[name.toLowerCase()]; go(document.querySelector('header')); return 'The title is ' + name.toLowerCase() + ' now.'; },
+    hide: function (what) { var n = find(what); if (!n || n === sections()[0]) return "I'll keep that one where it is."; n.style.display = 'none'; return 'Hid ' + label(n) + '. Say "show ' + label(n).toLowerCase() + '" to bring it back.'; },
+    show: function (what) { var n = find(what); if (!n) return "I don't see that part."; n.style.display = ''; go(n); return label(n) + ' is back.'; },
+    highlight: function (what) {
+      var n = find(what);
+      if (!n) return "I don't see that part.";
+      go(n); n.classList.remove('lit'); void n.offsetWidth; n.classList.add('lit');
+      return 'Highlighted ' + label(n) + '.';
+    },
+    read_aloud: function (what) {
+      var n = find(what);
+      if (!n) return "I don't see that part.";
+      go(n);
+      var text = n.innerText.replace(/\s+/g, ' ').slice(0, 600);
+      if (!reel && window.speechSynthesis) { speechSynthesis.cancel(); var u = new SpeechSynthesisUtterance(text); u.volume = desk.volume / 100; speechSynthesis.speak(u); }
+      return 'Reading ' + label(n) + ' out loud. Say "pause" style commands won\'t stop me, "reset the page" will.';
+    },
+    barrel_roll: function () {
+      if (reduceMotion) return "Your system asked for less motion, so I'll sit this one out.";
+      wrap.classList.remove('roll'); void wrap.offsetWidth; wrap.classList.add('roll');
+      return 'Wheee.';
+    },
+    reset_page: function () {
+      h1.textContent = original.h1; tagline.textContent = original.tagline; h1.style.color = ''; zoom = 1; wrap.style.zoom = '';
+      document.documentElement.removeAttribute('data-theme');
+      sections().forEach(function (x) { x.style.display = ''; });
+      if (window.speechSynthesis) speechSynthesis.cancel();
+      return 'Page is back to how Joshua left it.';
+    }
+  };
+  Object.keys(PAGE).forEach(function (k) { TOOLS[k] = PAGE[k]; });
 
   setInterval(function () {
     if (desk.timerEnd && Date.now() >= desk.timerEnd) {
@@ -381,7 +444,7 @@
   function answer(q) {
     var exact = S.exact(q);
     if (exact) return Promise.resolve({ text: exact });
-    var r = S.route(q);
+    var r = S.pageRoute(q, names()) || S.route(q);
     if (r && r.tool) return runTool(r.tool, r.arg).then(function (o) { return { calls: [o.call], text: o.text, node: o.node }; });
     if (r && r.agent) return agent(q);
     for (var i = 0; i < SMALLTALK.length; i++) if (SMALLTALK[i][0].test(q.trim())) return Promise.resolve({ text: SMALLTALK[i][1] });
@@ -389,6 +452,22 @@
       var known = fromFaq(q);
       if (known) return Promise.resolve({ text: known, source: 'From the project FAQ' });
     }
+    // No rule matched. If it does not read like a question, a model gets to pick a tool, and the pick has to pass the guard.
+    var plain = S.bare(q);
+    var asking = /\?$/.test(q.trim()) || /^(?:who|what|why|when|where|which|how|is|are|was|were|does|do|did|tell me about|explain|describe|define)\b/i.test(plain);
+    if (!asking) {
+      return fetch('/api/pick', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ q: q, sections: names() }) })
+        .then(function (res) { return res.json(); })
+        .then(function (p) {
+          if (p && p.tool && TOOLS[p.tool] && S.sound(p.tool, p.arg, q, names()))
+            return runTool(p.tool, String(p.arg || '')).then(function (o) { return { calls: ['no rule for that, so a model picked:', o.call], text: o.text, node: o.node }; });
+          return lookup(q);
+        }).catch(function () { return lookup(q); });
+    }
+    return lookup(q);
+  }
+
+  function lookup(q) {
     return fetch('/api/ask', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ q: q }) })
       .then(function (res) { return res.json(); })
       .then(function (d) { return { text: d.answer, source: d.source ? d.source + (d.read ? ', read by the 3B stand-in' : '') : '' }; })
@@ -413,8 +492,8 @@
   }
 
   // ---- idle reel: if nobody types, she shows what she does. Silent, and it stops the moment you touch anything ----
-  var REEL = ['open chrome and go to github.com', 'set the volume to 40', 'take a note the demo is live', 'what is 17*23', 'make me a logo for turing',
-              "what's the weather in tokyo", 'play some music', 'skip this song', 'who painted the mona lisa', 'take a screenshot'];
+  var REEL = ['change the title to Hello there', 'open chrome and go to github.com', 'set the volume to 40', 'take a note the demo is live', 'what is 17*23', 'make me a logo for turing',
+              "what's the weather in tokyo", 'play some music', 'skip this song', 'who painted the mona lisa', 'take a screenshot', 'reset the page'];
   var reelAt = 0;
   function stopReel() { reel = false; clearTimeout(reelTimer); clearTimeout(idleTimer); }
   function nextReel() {
@@ -434,12 +513,12 @@
   }
 
   function startDemo() {
-    statusEl.textContent = 'Live demo. Her real command router runs in your browser. The Mac is a stand-in, since a web page cannot touch yours. ' +
-      'Lookups go to Wikipedia, read by a 3B model on Cloudflare in place of the 1.7B on her Mac.';
-    say(null, [], "I'm Samantha. Tell me to do something, or ask me something. Type anything.");
+    statusEl.textContent = 'Live demo. Her real command rules run in your browser. What the rules miss, a small model picks a tool for, and a guard checks the pick. ' +
+      'She can act on the stand-in Mac and on this page itself. A 3B on Cloudflare stands in for the models on her Mac.';
+    say(null, [], "I'm Samantha. Tell me to do something, to the Mac up there or to this page, or ask me something. Type anything.");
     var chips = $('chat-chips');
-    ['set a timer for 1 minute', 'play some music', 'say hello there', 'make me a complex logo for a surf school', "what's the weather",
-     'remind me to call mom', 'who invented the telephone', 'poke around hacker news and tell me the top stories'].forEach(function (q) {
+    ['change the title to Hello Joshua', 'dark mode', 'scroll to the results', 'do a barrel roll', 'play some music', 'set a timer for 1 minute',
+     'make me a complex logo for a surf school', 'who invented the telephone', 'reset the page'].forEach(function (q) {
       var chip = el('button', 'chat-chip', q);
       chip.type = 'button';
       chip.addEventListener('click', function () { stopReel(); send(q, idle); });

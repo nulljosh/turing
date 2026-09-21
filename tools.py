@@ -138,8 +138,9 @@ def clipboard():
 
 
 def set_volume(level):
-    """Set the Mac's output volume, 0 to 100."""
-    n = max(0, min(100, int(float(level))))
+    """Set the Mac's output volume. Takes 0 to 100, or "up" or "down"."""
+    step = {"up": 15, "down": -15}.get(str(level).strip().lower())
+    n = max(0, min(100, current_volume() + step if step else int(float(level))))
     _run(["osascript", "-e", f"set volume output volume {n}"])
     return f"Volume at {n}."
 
@@ -423,7 +424,7 @@ _ROUTES = (
     (re.compile(r"^(?:set |turn |put )?(?:the |it |my )?(?:volume )?(?:up |down )?(?:to |at )(\d{1,3})\b", re.I), lambda m: set_volume(m.group(1))),
     (re.compile(r"^(?:set |turn )?(?:the )?volume (\d{1,3})\b", re.I), lambda m: set_volume(m.group(1))),
     (re.compile(r"^(?:turn )?(?:the |it )?(?:volume )?(up|down)$|^(?:turn )?(?:the )?volume (up|down)$|^(louder|quieter)$", re.I),
-     lambda m: set_volume(current_volume() + (15 if (m.group(1) or m.group(2) or m.group(3)).lower() in ("up", "louder") else -15))),
+     lambda m: set_volume("up" if (m.group(1) or m.group(2) or m.group(3)).lower() in ("up", "louder") else "down")),
     (re.compile(r"^mute\b", re.I), lambda m: set_volume(0)),
     (re.compile(r"^(?:how(?:'s| is) (?:my |the )?battery|battery(?: level| status)?$|what(?:'s| is) (?:my |the )?battery|how much battery)", re.I), lambda m: battery()),
     (re.compile(r"^say (.+)$", re.I), lambda m: say(m.group(1))),
@@ -536,9 +537,71 @@ def agent(task, max_steps=6, log=None):
     return "I ran out of steps before finishing that."
 
 
+HANDS_ADAPTER = os.path.join(os.path.dirname(os.path.abspath(__file__)), "hands-adapter")
+HANDS_SYSTEM = 'You are Samantha\'s hands. Reply with one JSON tool call. If this is not a command, reply {"tool": null, "arg": ""}.'
+_hands = None
+
+
+def _sound(tool, arg, query):
+    """Is this pick safe to run? She was trained to copy her argument out of
+    the sentence, never to compose one. So an argument that is not in the
+    sentence is a guess, and a guess does not get to touch the Mac."""
+    if tool == "set_volume":
+        return arg in ("up", "down") or (arg.isdigit() and arg in query)
+    if tool == "music":
+        return arg in _MUSIC or arg == "playing"
+    if tool == "timer":
+        return duration(arg) is not None and arg.lower() in query.lower()
+    if tool in ("list_dir", "read_file"):
+        return bool(arg)
+    return tool in TOOLS and arg.lower() in query.lower()
+
+
+def pick(query):
+    """Her own head for tool picking: the 0.5B with hands-adapter, trained by
+    gen_hands_data.py, scored by eval/hands.py. Returns (tool, arg), ("agent",
+    ""), or None when it is not a command, the pick is unsound, or the adapter
+    or MLX is not here. None always means: carry on as if she had not looked."""
+    global _hands
+    if _hands is None:
+        try:
+            from mlx_lm import load
+            _hands = load("mlx-community/Qwen2.5-0.5B-Instruct-4bit", adapter_path=HANDS_ADAPTER) if os.path.isdir(HANDS_ADAPTER) else False
+        except Exception:
+            _hands = False
+    if not _hands:
+        return None
+    from mlx_lm import generate
+    model, tok = _hands
+    prompt = tok.apply_chat_template([{"role": "system", "content": HANDS_SYSTEM}, {"role": "user", "content": query}],
+                                     add_generation_prompt=True, tokenize=False)
+    try:
+        got = json.loads(re.search(r"\{.*?\}", generate(model, tok, prompt=prompt, max_tokens=48, verbose=False), re.S).group(0))
+        tool, arg = got.get("tool"), str(got.get("arg") or "").strip()
+    except Exception:
+        return None
+    if tool == "agent":
+        return "agent", ""
+    return (tool, arg) if tool and _sound(tool, arg, query) else None
+
+
 def do(query, log=None):
-    """The one entry point: exact route first, agent if it's action-shaped, else None."""
-    return act(query) or (agent(query, log=log) if is_action(query) else None)
+    """The one entry point. The regex router first: instant, exact, and it has
+    never fired the wrong tool. What it does not recognise goes to her own
+    head, which understands phrasings nobody wrote a rule for. Multi-step work
+    goes to agent(). Anything else is not a command: None."""
+    done = act(query)
+    if done:
+        return done
+    if _MULTISTEP.search(_bare(query)):
+        return agent(query, log=log)
+    picked = pick(query)
+    if picked and picked[0] != "agent":
+        if log:
+            log(f"  [{picked[0]}({picked[1]})]")
+        fn = TOOLS[picked[0]]
+        return fn(picked[1]) if fn.__code__.co_argcount else fn()
+    return agent(query, log=log) if picked or is_action(query) else None
 
 
 def demo():
@@ -575,6 +638,9 @@ def demo():
         if not HEADLESS:  # headless never reaches osascript at all
             note = [a for a in calls if a[-1] == "buy milk"][0]
             assert "buy milk" not in note[2]  # her words ride in argv, never inside the script
+        assert _sound("set_volume", "40", "crank it to 40") and not _sound("set_volume", "90", "crank it to 40")
+        assert _sound("new_note", "buy milk", "jot down buy milk") and not _sound("new_note", "sell the car", "jot down buy milk")
+        assert not _sound("timer", "soon", "time me soon") and not _sound("rm_rf", "", "anything")
         assert all(a[0] in ("open", "osascript", "screencapture", "pbpaste", "pmset") for a in calls)
     finally:
         _run = real

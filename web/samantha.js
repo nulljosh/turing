@@ -89,6 +89,78 @@
     return ACTION.test(q) ? { agent: true } : null;
   }
 
+  // ---- the page itself is a thing she can act on. Landing page only: tools.py has no page. ----
+  var COLORS = { red: "#c0392b", orange: "#d9701a", amber: "#c98a14", gold: "#b8901f", green: "#2e9e4a", blue: "#2b6cb0", pink: "#d6457f",
+                 black: "#111111", white: "#ffffff", grey: "#777777", gray: "#777777" };
+
+  // which part of the page a phrase means, or null. names are the page's own section headings.
+  function section(arg, names) {
+    var a = arg.trim().toLowerCase().replace(/^(?:the |that |this )/, "").replace(/ (?:section|part|bit|area)$/, "");
+    if (/^(?:top|start|beginning|header|up)$/.test(a)) return "top";
+    if (/^(?:bottom|end|footer|down)$/.test(a)) return "bottom";
+    if (/^(?:chat|demo|mac|desk)$/.test(a)) return names[0] || null;
+    var want = keywords(a), best = null, top = 0;
+    names.forEach(function (n) {
+      var have = keywords(n), hit = want.filter(function (k) { return have.indexOf(k) >= 0; }).length;
+      if (hit > top) { top = hit; best = n; }
+    });
+    return best;
+  }
+
+  var PAGE_ROUTES = [
+    [/^(?:make|turn|paint|color|colour) (?:the |this )?(?:page|site|title|heading|h1|accent|everything) (red|orange|amber|gold|green|blue|pink|black|white|grey|gray)$/i, "set_color"],
+    [/^(?:change|set|make|rename|update|edit) (?:the |this |your )?(?:h1|title|heading|headline|header|page title)(?: text)?(?: to(?: say)?| say| read| into)? (.+)$/i, "set_heading"],
+    [/^(?:change|set|make|update) (?:the |your )?(?:tagline|subtitle|subheading)(?: to(?: say)?| say| read)? (.+)$/i, "set_tagline"],
+    [/^scroll (?:all the way )?(?:back )?(?:to the )?(up|down|top|bottom)(?: of the page)?$/i, "scroll_to"],
+    [/^(?:scroll|go|jump|take me|skip|head)(?: down| up| back)? to (.+)$/i, "scroll_to", true],
+    [/^(?:switch to |turn on |go |enable |use )?(dark|light)(?: mode| theme)?$/i, "theme"],
+    [/^(?:make|turn) (?:the |this )?(?:page|site|text|font|everything) (bigger|smaller)$|^(bigger|smaller) (?:text|font)$/i, "text_size"],
+    [/^(?:hide|remove|get rid of|collapse) (.+)$/i, "hide", true],
+    [/^(?:show|unhide|bring back|restore) (.+)$/i, "show", true],
+    [/^(?:read|say|speak)(?: me| out)? (.+?)(?: out loud| aloud| to me)*$/i, "read_aloud", true],
+    [/^highlight (.+)$/i, "highlight", true],
+    [/^(?:reset|restore|undo)(?: the| this)? (?:page|site|everything)$|^reset$|^undo (?:that|all|it)$/i, "reset_page"],
+    [/^(?:do a )?barrel roll$|^spin(?: the page| around)?$|^flip(?: the page)?$/i, "barrel_roll"]
+  ];
+
+  // a rule marked true only fires when its words name a real part of this page: "go to the results" scrolls, "go to github" still opens github
+  function pageRoute(query, names) {
+    var q = bare(query);
+    for (var i = 0; i < PAGE_ROUTES.length; i++) {
+      var m = PAGE_ROUTES[i][0].exec(q);
+      if (!m) continue;
+      var arg = m[1] || m[2] || "";
+      if (PAGE_ROUTES[i][2] && !section(arg, names)) continue;
+      return { tool: PAGE_ROUTES[i][1], arg: arg };
+    }
+    return null;
+  }
+
+  // minutes in a spoken length of time, same as tools.duration()
+  var NUMBER_WORDS = { zero: 0, one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10, a: 1, an: 1, half: 0.5 };
+  function duration(text) {
+    var m = /^(\d+(?:\.\d+)?|[a-z]+)(?: an| a)?[ -]?(s|m|h)?[a-z]*$/.exec(String(text).toLowerCase().trim());
+    if (!m) return null;
+    var n = /^\d/.test(m[1]) ? parseFloat(m[1]) : NUMBER_WORDS[m[1]];
+    return n == null ? null : Math.round(n * { s: 1 / 60, m: 1, h: 60 }[m[2] || "m"] * 10000) / 10000;
+  }
+
+  // Is a model's pick safe to run? Same rule as tools._sound(): she copies her argument out of the sentence,
+  // so an argument that is not in the sentence is a guess, and a guess does not get to touch anything.
+  var FIXED = { music: ["play", "pause", "next", "previous", "playing"], theme: ["dark", "light"], text_size: ["bigger", "smaller"] };
+  var NO_ARG = ["current_tab", "screenshot", "clipboard", "battery", "calendar_today", "reset_page", "barrel_roll"];
+  var SPAN = ["open_app", "open_url", "web_search", "say", "make_logo", "new_note", "new_reminder", "set_heading", "set_tagline", "weather", "list_dir", "read_file"];
+  function sound(tool, arg, query, names) {
+    var q = query.toLowerCase(), a = String(arg || "").toLowerCase().trim();
+    if (FIXED[tool]) return FIXED[tool].indexOf(a) >= 0;
+    if (NO_ARG.indexOf(tool) >= 0) return true;
+    if (tool === "set_volume") return a === "up" || a === "down" || (/^\d{1,3}$/.test(a) && q.indexOf(a) >= 0);
+    if (tool === "timer") return duration(a) !== null && q.indexOf(a) >= 0;
+    if (tool === "set_color") return !!COLORS[a] && q.indexOf(a) >= 0;
+    if (["scroll_to", "hide", "show", "read_aloud", "highlight"].indexOf(tool) >= 0) return !!section(a, names || []);
+    return SPAN.indexOf(tool) >= 0 && (tool === "weather" || a.length > 0) && q.indexOf(a) >= 0;
+  }
+
   // ---- exact answers: one right answer, so no model and no lookup ----
   var ARITH_WORDS = [[/\b(?:multiplied by|times)\b/g, "*"], [/\bplus\b/g, "+"], [/\bminus\b/g, "-"], [/\b(?:divided by|over)\b/g, "/"], [/(\d)\s*x\s*(\d)/g, "$1*$2"]];
   var CONVERT = { mile: ["km", 1.609344], km: ["miles", 0.621371], kg: ["lb", 2.204623], lb: ["kg", 0.453592], foot: ["m", 0.3048],
@@ -98,15 +170,29 @@
 
   function tidy(n) { return String(Math.round(n * 10000) / 10000); }
 
+  // + - * / and brackets, by hand. No eval, no Function: the page's security policy forbids both, as it should.
+  function calc(src) {
+    var t = src.replace(/\s+/g, ""), i = 0;
+    function num() {
+      if (t[i] === "-") { i++; return -num(); }
+      if (t[i] === "(") { i++; var v = sum(); if (t[i++] !== ")") throw 0; return v; }
+      var m = /^\d+(?:\.\d+)?/.exec(t.slice(i));
+      if (!m) throw 0;
+      i += m[0].length;
+      return parseFloat(m[0]);
+    }
+    function product() { var v = num(); while (t[i] === "*" || t[i] === "/") { var op = t[i++], r = num(); v = op === "*" ? v * r : v / r; } return v; }
+    function sum() { var v = product(); while (t[i] === "+" || t[i] === "-") { var op = t[i++], r = product(); v = op === "+" ? v + r : v - r; } return v; }
+    try { var out = sum(); return i === t.length ? out : null; } catch (e) { return null; }
+  }
+
   function exact(query) {
     var q = query.trim().toLowerCase().replace(/[?!.]+$/, "");
     var expr = q.replace(/^(?:what(?:'s| is)|calculate|compute|how much is)\s+/, "");
     ARITH_WORDS.forEach(function (p) { expr = expr.replace(p[0], p[1]); });
     if (/^[\d\s+\-*\/().]+$/.test(expr) && /\d/.test(expr) && /[+\-*\/]/.test(expr)) {
-      try {
-        var v = Function('"use strict";return (' + expr + ")")();  // digits and operators only, checked on the line above
-        if (isFinite(v)) return expr.replace(/\s+/g, "") + " = " + tidy(v);
-      } catch (e) {}
+      var v = calc(expr);
+      if (v !== null && isFinite(v)) return expr.replace(/\s+/g, "") + " = " + tidy(v);
     }
     var c = /^(?:convert |what(?:'s| is) )?(-?\d+(?:\.\d+)?)\s*(?:degrees? )?([a-z]+)\s+(?:to|in|into)\s+([a-z]+)$/.exec(q);
     if (c) {
@@ -146,5 +232,6 @@
   function isProject(q) { return PROJECT.test(q); }
 
   root.Samantha = { route: route, exact: exact, bare: bare, urlOf: urlOf, appMatch: appMatch, APPS: APPS, SITES: SITES,
-                    stem: stem, keywords: keywords, isProject: isProject };
+                    stem: stem, keywords: keywords, isProject: isProject,
+                    pageRoute: pageRoute, section: section, sound: sound, duration: duration, COLORS: COLORS };
 })(typeof globalThis !== "undefined" ? globalThis : this);

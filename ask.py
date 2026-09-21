@@ -914,6 +914,8 @@ def _reading_order(asked, found):
         named = set(_keywords(re.sub(r"\s*\([^)]*\)", "", title)))
         if title.lower().startswith(("list of", "lists of")):
             continue  # a table of many right-looking names, the reader pulled "United States" out of a GDP list
+        if re.match(r"(?:what|who|how|why|where|when)\b", title, re.I):
+            continue  # a page titled like a question is a song or a book: "what color is the sky" found the album What Color Is Your Sky
         snippet = html.unescape(re.sub(r"<[^>]+>", "", h.get("snippet") or "")).lower()
         # "sixth-largest" and "one of the largest" are not "largest"
         hedged = re.search(r"\b(?:one of the|among the)\b|\w+-(?:large|long|tall|big|small|high|deep|fast|old)", snippet)

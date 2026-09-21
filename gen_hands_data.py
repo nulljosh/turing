@@ -21,7 +21,8 @@ import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "eval"))
 
-SYSTEM = 'You are Samantha\'s hands. Reply with one JSON tool call. If this is not a command, reply {"tool": null, "arg": ""}.'
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from tools import HANDS_SYSTEM as SYSTEM  # the exact prompt tools.pick() sends
 
 APPS = (["safari", "chrome", "notes", "mail", "calendar", "music", "spotify", "pixelmator", "xcode", "terminal", "finder",
          "messages", "photos", "preview", "maps", "facetime", "reminders", "system settings", "calculator", "textedit",
@@ -185,9 +186,24 @@ TRICKY = (["what is music theory", "who plays the next james bond", "what is the
            "how long is a marathon", "what does remind mean", "what is a timer in electronics", "who plays batman",
            "what is the weather like on mars", "how do you design a good logo", "what is a web browser"])
 
-LEADS = (["", "", "", "", "hey ", "please ", "can you ", "could you ", "yo ", "ok ", "samantha ", "hey samantha, ", "i need you to ",
-          "would you ", "go ahead and ", "quick, "], ["do me a favor and ", "real quick can you ", "samantha could you please ", "alright "])
-TAILS = (["", "", "", "", " please", " for me", " thanks", " real quick", " now"], [" when you get a sec", " asap", " if you can"])
+# Round two scored 82% on unseen phrasings and most misses were the wrapper, not the command: eight tails in training
+# taught her that anything after the command is content. Many wrappers teach that a wrapper is a wrapper.
+# Work for the language model, not for the hands. do() sees every message, so she has to let these through.
+TASKS = (["write a commit message for a change to index.html in the sparkjar project", "write a haiku about autumn", "rewrite this sentence to be shorter: the cat sat on the mat",
+          "translate good morning to french", "give me three names for a coffee shop", "write a tweet about shipping a landing page", "fix the grammar: me and him goes to school",
+          "draft an email to my landlord about the broken heater", "make this sound friendlier: send me the report", "write a product description for a breathing app",
+          "summarize the plot of hamlet in two sentences", "list five uses for a paperclip", "write a limerick about a mac mini", "explain recursion to a child",
+          "write a readme intro for a typing test", "brainstorm features for a weather app", "write a toast for my sister's wedding", "start a story about a lighthouse",
+          "create a workout plan for three days a week", "make a packing list for a weekend trip", "design a database schema for a blog", "build a study schedule for finals",
+          "draw a comparison between rust and go", "open with a joke and then introduce yourself"],
+         ["write a commit message for a change to roadmap.md in the turing project", "write a sonnet about the sea", "make a list of questions for a job interview",
+          "create a tagline for a bike shop", "start a poem about rain", "design a lesson plan on fractions", "play devil's advocate on remote work", "search your memory and tell me what turing is"])
+
+LEADS = (["", "", "", "", "", "", "hey ", "please ", "can you ", "could you ", "yo ", "ok ", "samantha ", "hey samantha, ", "i need you to ",
+          "would you ", "go ahead and ", "quick, ", "hey can you ", "could you please ", "can you please ", "pls ", "would you mind: ",
+          "i'd like you to ", "okay so ", "um ", "so ", "right, ", "kindly ", "hi, ", "samantha, ", "ok now "], ["do me a favor and ", "real quick can you ", "samantha could you please ", "alright "])
+TAILS = (["", "", "", "", "", "", " please", " for me", " thanks", " real quick", " now", " when you can", " if you don't mind", " right now",
+          " pls", " thank you", " ok", " quickly", " for a sec", " when you have a moment", " whenever", " would be great", " ty"], [" when you get a sec", " asap", " if you can"])
 _QFORM = ("what", "how", "which", "who", "is ", "am ", "do ", "any", "should ", "my ", "show ", "that's", "i ", "let's", "a bit")  # "can you what's playing" is not a sentence
 
 
@@ -230,7 +246,7 @@ def build(held, per_template, seed):
             for f in rng.sample(pool, min(len(pool), per_template)) * (1 if "{}" in t else per_template):
                 spoken, carried = f if isinstance(f, tuple) else (f, f)
                 rows.setdefault(_dress(rng, t.format(spoken), held), _call(tool, carried if arg is None else arg))
-    for q in PLAIN[held] + TRICKY[held] * (1 if held else 3):
+    for q in PLAIN[held] + (TRICKY[held] + TASKS[held]) * (1 if held else 3):
         for _ in range(1 if held else 3):
             text = q if rng.random() < 0.6 else rng.choice(["hey ", "ok ", "samantha ", "so ", "quick question, "]) + q
             rows.setdefault(text + ("?" if rng.random() < 0.3 else ""), _call(None, ""))
@@ -241,7 +257,7 @@ def main():
     from actions import CASES
     from basic_questions import CASES as QUESTIONS
     reserved = {c[0].lower() for c in CASES} | {q[0].lower() for q in QUESTIONS}  # other evals stay unseen
-    train = {k: v for k, v in build(0, 7, seed=7).items() if k.lower().rstrip(".?!") not in reserved}
+    train = {k: v for k, v in build(0, 9, seed=7).items() if k.lower().rstrip(".?!") not in reserved}
     test = {k: v for k, v in build(1, 4, seed=11).items() if k not in train}
     items = list(train.items())
     random.Random(3).shuffle(items)
