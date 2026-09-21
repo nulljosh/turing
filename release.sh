@@ -18,6 +18,11 @@ case "$CI" in
   completed*) echo "CI is red on main ($CI). Fix it first."; exit 1 ;;
   *) echo "CI is still running on main. Wait for it, then release."; exit 1 ;;
 esac
+# The live site check tests what is deployed, so the site has to go out before it runs:
+# quick checks, deploy, give the edge cache half a minute, then the full gate against the live page.
+./gate.sh
+npx wrangler deploy 2>&1 | tail -1
+sleep 35
 ./gate.sh --full
 
 echo "$V" > VERSION
