@@ -516,8 +516,9 @@
   }
 
   // ---- idle reel: if nobody types, she shows what she does. Silent, and it stops the moment you touch anything ----
-  var REEL = ['change the title to Hello there', 'open chrome and go to github.com', 'set the volume to 40', 'take a note the demo is live', 'what is 17*23', 'make me a logo for turing',
-              "what's the weather in tokyo", 'play some music', 'skip this song', 'who painted the mona lisa', 'take a screenshot', 'reset the page'];
+  var REEL = ['paint the mona lisa', 'change the title to Hello there', 'open chrome and go to github.com', 'set the volume to 40', 'paint a monet', 'take a note the demo is live',
+              'what is 17*23', 'dark mode', 'make me a complex logo for a surf school', "what's the weather in tokyo", 'play some music', 'skip this song', 'paint the last supper',
+              'who painted the mona lisa', 'set a timer for 1 minute', 'scroll to the results', 'take a screenshot', 'do a barrel roll', 'who invented the telephone', 'reset the page'];
   var reelAt = 0;
   function stopReel() { reel = false; clearTimeout(reelTimer); clearTimeout(idleTimer); }
   function nextReel() {
@@ -533,20 +534,15 @@
   function idle() {
     stopReel();
     if (reduceMotion || isLive || document.hidden) return;
-    idleTimer = setTimeout(function () { if (!busy) { reel = true; desk.playing = false; nextReel(); } }, 6000);
+    idleTimer = setTimeout(function () { if (!busy) { reel = true; desk.playing = false; nextReel(); } }, reelAt ? 6000 : 2200);
   }
 
   function startDemo() {
     statusEl.textContent = 'Live demo. She controls the stand-in Mac and this page. A 3B on Cloudflare stands in for the models on her Mac.';
     say(null, [], "I'm Samantha. Tell me to do something, to the Mac up there or to this page, or ask me something. Type anything.");
-    var chips = $('chat-chips');
-    ['paint the mona lisa', 'paint the last supper', 'paint a monet', 'change the title to Hello Joshua', 'dark mode', 'scroll to the results', 'do a barrel roll', 'play some music', 'set a timer for 1 minute',
-     'make me a complex logo for a surf school', 'who invented the telephone', 'reset the page'].forEach(function (q) {
-      var chip = el('button', 'chat-chip', q);
-      chip.type = 'button';
-      chip.addEventListener('click', function () { stopReel(); send(q, idle); });
-      chips.appendChild(chip);
-    });
+    // No buttons. The reel shows what she does, and the same lines feed the input's native autocomplete.
+    var suggest = $('chat-suggest');
+    REEL.forEach(function (q) { var o = document.createElement('option'); o.value = q; suggest.appendChild(o); });
     fetch('faq.json').then(function (r) { return r.json(); }).then(function (f) { faq = f; }).catch(function () {});
     idle();
   }

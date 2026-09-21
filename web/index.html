@@ -63,7 +63,7 @@
       input[type=range]{accent-color:var(--ember)}
       #chat-send{background:var(--ember)!important;border-color:var(--ember)!important;color:#15110d!important}
       #chat-input:focus{outline:2px solid var(--ember);outline-offset:1px}
-      #chat-chips button:hover,.paint-btn:hover{border-color:var(--ember)}
+      .paint-btn:hover{border-color:var(--ember)}
       details.more>summary::marker{color:var(--ember)}
       .bar-fill.now{background:var(--ember)}
       .stat-value{color:var(--fg)}
@@ -169,7 +169,6 @@
       .chat-user{padding:8px 12px;background:var(--line);border-radius:6px}
       .chat-source{font-size:12px;color:var(--muted);margin-top:4px}
       .chat-logo svg{width:160px;height:160px}
-      .chat-chip{padding:6px 12px;border:1px solid var(--line);border-radius:20px;background:var(--bg);color:var(--fg);font-size:12px;cursor:pointer;text-align:left;font-family:inherit}
       @media (max-width: 500px) {
         .bench-table{font-size:13px}
         .bench-table th{padding:6px 8px}
@@ -247,10 +246,10 @@
           <div id="chat-transcript" aria-live="polite" aria-label="Conversation with Samantha" style="flex:1;overflow-y:auto;min-height:220px;max-height:340px;margin-bottom:12px;font-size:14px;line-height:1.5;padding-right:8px"></div>
           <div style="display:flex;gap:8px">
             <label for="chat-input" style="display:none">Ask Samantha</label>
-            <input type="text" id="chat-input" maxlength="200" autocomplete="off" placeholder="Try: set the volume to 30" style="flex:1;min-width:0;padding:8px 12px;border:1px solid var(--line);border-radius:6px;font-size:16px;background:var(--bg);color:var(--fg);font-family:inherit" />
+            <input type="text" id="chat-input" list="chat-suggest" maxlength="200" autocomplete="off" placeholder="Try: set the volume to 30" style="flex:1;min-width:0;padding:8px 12px;border:1px solid var(--line);border-radius:6px;font-size:16px;background:var(--bg);color:var(--fg);font-family:inherit" />
             <button id="chat-send" style="padding:8px 16px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--fg);font-size:14px;cursor:pointer;font-weight:600" type="button">Send</button>
           </div>
-          <div id="chat-chips" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:12px"></div>
+          <datalist id="chat-suggest"></datalist>
         </div>
       </section>
 

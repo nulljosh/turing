@@ -51,7 +51,7 @@ STEPS = [
 ]
 
 
-# Everything the page itself offers a visitor has to work: the chips and the idle reel.
+# Everything the page itself offers a visitor has to work: the autocomplete lines and the idle reel.
 import os, re
 REEL = re.findall(r"""['"]([^'"]+)['"]""", re.search(r"var REEL = \[(.*?)\];", open(os.path.join(os.path.dirname(__file__), "..", "web", "demo.js")).read().replace("what's", "what is"), re.S).group(1))
 DUD = ("couldn't", "no weather", "i don't see", "multi-step head", "make something up", "no app called", "error")
@@ -115,14 +115,14 @@ def main():
             page.on("pageerror", lambda e: errors.append(str(e)))
             page.on("dialog", lambda d: (errors.append("a dialog opened, script ran: " + d.message), d.dismiss()))
             page.goto(URL)
-            page.wait_for_selector(".chat-chip")
+            page.wait_for_selector("#chat-suggest option", state="attached")
             for text, want, check in STEPS if name == "desktop" else STEPS[:4]:
                 said = ask(page, text)
                 ok = want.lower() in said.lower() and (check is None or check(page)) and sane(said)
                 failed += not ok
                 print(f"[{'PASS' if ok else 'FAIL'}] {name}: {text!r} -> {said[:90]!r}")
             if name == "desktop":
-                for text in dict.fromkeys(page.locator(".chat-chip").all_inner_texts() + REEL):
+                for text in dict.fromkeys(page.eval_on_selector_all("#chat-suggest option", "os => os.map(o => o.value)") + REEL):
                     said = ask(page, text)
                     ok = sane(said) and not any(d in said.lower() for d in DUD)
                     failed += not ok
