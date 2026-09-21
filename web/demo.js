@@ -302,7 +302,7 @@
   // ---- the page is hers too. Every change is local to this visitor and undone by "reset the page". ----
   var wrap = document.querySelector('.wrap'), h1 = document.querySelector('h1'), tagline = document.querySelector('header .sub');
   var original = { h1: h1.textContent, tagline: tagline.textContent };
-  var paintNames = ['Mona Lisa', 'The Last Supper', 'Impression, Sunrise'];
+  var paintNames = ['Mona Lisa', 'The Last Supper', 'The ENIAC'];
   function sections() { return Array.prototype.slice.call(document.querySelectorAll('section')).filter(function (x) { return x.querySelector('h2'); }); }
   function names() { return sections().map(function (x) { return x.querySelector('h2').textContent; }); }
   function find(arg) {
@@ -321,7 +321,7 @@
       var index = lastPaintIndex;
       if (/mona|lisa/.test(text)) index = 0;
       else if (/supper/.test(text)) index = 1;
-      else if (/monet|sunrise|impression/.test(text)) index = 2;
+      else if (/eniac|computer/.test(text)) index = 2;
       else index = (lastPaintIndex + 1) % paintNames.length;
       lastPaintIndex = index;
       if (typeof window.samanthaPaint === 'function') window.samanthaPaint(index);
@@ -517,7 +517,7 @@
 
   // No theme commands in the reel: flipping a visitor's whole page unasked reads as a bug.
   // ---- idle reel: if nobody types, she shows what she does. Silent, and it stops the moment you touch anything ----
-  var REEL = ['paint the mona lisa', 'change the title to Hello there', 'open chrome and go to github.com', 'set the volume to 40', 'paint a monet', 'take a note the demo is live',
+  var REEL = ['paint the mona lisa', 'change the title to Hello there', 'open chrome and go to github.com', 'set the volume to 40', 'paint the eniac', 'take a note the demo is live',
               'what is 17*23', 'make me a complex logo for a surf school', "what's the weather in tokyo", 'play some music', 'skip this song', 'paint the last supper',
               'who painted the mona lisa', 'set a timer for 1 minute', 'scroll to the results', 'take a screenshot', 'do a barrel roll', 'who invented the telephone', 'reset the page'];
   var reelAt = 0;

@@ -5,7 +5,7 @@ const c = document.getElementById('paint-c'), ctx = c.getContext('2d');
 const SIDE = Math.round(420 * Math.min(2, window.devicePixelRatio || 1));
 const BUDGET = 30000;
 let S, w, h, run = 0;
-const pics = [['mona.jpg', 'Mona Lisa'], ['supper.jpg', 'The Last Supper'], ['monet.jpg', 'Impression, Sunrise']];
+const pics = [['mona.jpg', 'Mona Lisa'], ['supper.jpg', 'The Last Supper'], ['eniac.jpg', 'The ENIAC']];
 let pic = 0;
 
 function load(src, name) {
