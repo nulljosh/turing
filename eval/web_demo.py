@@ -38,6 +38,11 @@ STEPS = [
     # the page is hers too
     ("change the title to Hello Joshua", "Hello Joshua", lambda p: p.inner_text("h1") == "Hello Joshua"),
     ("make the title red", "red", lambda p: "rgb(192, 57, 43)" in p.evaluate("getComputedStyle(document.querySelector('h1')).color")),
+    ("calculate 17*23", "391", None),
+    ("convert 72 f to c", "22.22 C", None),
+    ("sha256 of hello", "2cf24dba5fb0a30e", None),
+    ("is 91 prime", "7 x 13", None),
+    ("how much disk space do i have", "real Mac", None),
     ("paint the eniac", "ENIAC", lambda p: p.wait_for_function("document.getElementById('paint-title').textContent === 'The ENIAC'", timeout=8000) is not None),
     ("dark mode", "Lights off.", lambda p: p.evaluate("document.documentElement.dataset.theme") == "dark"),
     ("scroll to the results", "Scrolled to Results.", lambda p: p.evaluate("window.scrollY") > 200),
