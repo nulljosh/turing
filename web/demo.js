@@ -24,6 +24,7 @@
                clipboard: 'turing.heyitsmejosh.com', timerEnd: 0 };
 
   // ---- the stand-in Mac ----
+  function closeWins() { var all = space.querySelectorAll('.win'); for (var k = 0; k < all.length; k++) all[k].remove(); }
   function win(id, title, build) {
     var w = $('win-' + id);
     if (!w) {
@@ -35,6 +36,8 @@
       bar.appendChild(el('span', 'win-title'));
       w.appendChild(bar);
       w.appendChild(el('div', 'win-body'));
+      var open = space.querySelectorAll('.win');
+      for (var k = 0; k <= open.length - 2; k++) open[k].remove();  // at most two windows on the stand-in Mac, the oldest goes
       var n = space.querySelectorAll('.win').length;
       w.style.left = (2 + (n % 4) * 7) + '%';
       w.style.top = (8 + (n % 4) * 18) + 'px';
@@ -339,6 +342,7 @@
   var lastPaintIndex = 0;
   var PAGE = {
     paint: function (cmd) {
+      closeWins();  // the picture is the show: nothing sits on top of it
       var text = (cmd || '').toLowerCase().trim();
       var subject = text.replace(/^(?:me |us )?(?:an? |the |some )?(?:picture|painting|drawing|image|photo|sketch|illustration) of /, '').replace(/^(?:me |an? |the |some )+/, '').replace(/[.!?]+$/, '').trim();
       var index = -1;
@@ -594,7 +598,7 @@
 
   // No theme commands and no barrel roll in the reel: moving a visitor's whole page unasked reads as a bug.
   // ---- idle reel: if nobody types, she shows what she does. Silent, and it stops the moment you touch anything ----
-  var REEL = ['paint the mona lisa', 'open chrome and go to github.com', 'set the volume to 40', 'paint the eniac', 'take a note the demo is live',
+  var REEL = ['paint the mona lisa', 'open chrome and go to github.com', 'set the volume to 40', 'paint the eniac', 'take a note pick up milk',
               'what is 17*23', 'make me a complex logo for a surf school', 'make me an original wordless logo for turing', "what's the weather in tokyo", 'play some music', 'skip this song', 'paint the last supper',
               'who painted the mona lisa', 'set a timer for 1 minute', 'scroll to the results', 'take a screenshot', 'draw a lighthouse at dusk', 'draw a fox in the snow', 'calculate 17*23', 'convert 72 f to c', 'time in tokyo', 'roll 2d6', 'is 91 prime', 'days until christmas', 'who invented the telephone', 'reset the page'];
   // more phrasings for the input's autocomplete only. The reel stays short.
