@@ -562,15 +562,55 @@ def _sound(tool, arg, query):
     """Is this pick safe to run? She was trained to copy her argument out of
     the sentence, never to compose one. So an argument that is not in the
     sentence is a guess, and a guess does not get to touch the Mac."""
+    q_lower = query.lower()
+
     if tool == "set_volume":
         return arg in ("up", "down") or (arg.isdigit() and arg in query)
     if tool == "music":
+        # arg must be an exact command, not a loose phrase
         return arg in _MUSIC or arg == "playing"
     if tool == "timer":
-        return duration(arg) is not None and arg.lower() in query.lower()
+        return duration(arg) is not None and arg.lower() in q_lower
     if tool in ("list_dir", "read_file"):
         return bool(arg)
-    return tool in TOOLS and arg.lower() in query.lower()
+
+    # Empty arg guard: most tools need a real argument
+    if not arg:
+        if tool == "current_tab":
+            return False  # current_tab() takes no arg; empty is OK only if really called
+        if tool in ("open_app", "open_url"):
+            return False  # empty URL or app name is never safe
+        if tool in ("weather", "calendar_today"):
+            return not re.search(r"^\s*(?:what|how|should|can|will)", q_lower)  # question means not a direct command
+
+    # Reject single words that are too generic or look like tool names
+    if len(arg.split()) == 1:
+        if tool == "web_search":
+            return False  # single-word "searches" are usually mispicks
+        if tool == "new_note" and arg.lower() in TOOLS:
+            return False  # "notes" is a tool name, not note content
+
+    # Reject say() if arg looks like a timer duration
+    if tool == "say" and duration(arg) is not None:
+        return False  # "say 8 minutes" is likely a mispicked timer
+
+    # Reject new_reminder() if query says "notes" not "remind"
+    if tool == "new_reminder" and re.search(r"\bnotes?\b", q_lower) and not re.search(r"\b(?:remind|reminder)\b", q_lower):
+        return False  # picked reminder when user said "notes"
+
+    # Reject web_search for multi-step queries (dig through, poke around)
+    if tool == "web_search" and re.search(r"\b(?:dig through|poke around|find something)\b", q_lower):
+        return False  # this is agent work, not a simple search
+
+    # Reject open_url() if arg looks like an app name
+    if tool == "open_url":
+        if arg.lower() in ("chrome", "safari", "firefox"):
+            return False  # these are apps, not URLs
+        if _url(arg) is None:
+            return False  # arg doesn't look like a URL
+
+    # Default: arg must appear in the query (lowercased)
+    return tool in TOOLS and arg.lower() in q_lower
 
 
 def pick(query):
