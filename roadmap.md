@@ -297,6 +297,16 @@ Eight runs established what this project keeps relearning: a 0.5B LoRA absorbs s
 
 - Not yet done: the retrain itself, and a held-out check that the harvested pairs improve commit-message quality without regressing the FAQ/retrieval paths. More data has made things *worse* before (run 7), so this needs measuring, not assuming.
 
+### Phase 9: Hands (started 2026-09-20)
+
+Samantha could answer. She could not do anything. "Open chrome and go to hacker news" got "that's outside what I know about this project." Now it opens Hacker News.
+
+- **`tools.py`, six tools: `open_app`, `open_url`, `web_search`, `current_tab`, `read_page`, `screenshot`.** No shell tool, on purpose. Every tool is a fixed argv. A string a model wrote never reaches `sh`.
+- **Two layers.** `act()` is a regex router, instant and exact, same category as arithmetic and the clock: a recognisable command has one right action, so no model is involved. `agent()` handles multi-step asks ("poke around hacker news and tell me the top stories") by letting `qwen3:8b` drive the same tools through Ollama's native tool calling. The 0.5B cannot pick tools reliably. She borrows a bigger head for her hands.
+- **Wired in at `local_answer()`**, the one place `ask.py`, `chat.py`, the TUI and `serve.py` all route through.
+- One real bug caught before commit: the action detector matched "summarize", which hijacked the eval prompt "Summarize what Turing is in one sentence" into the agent. Narrowed the verb list, added it to `tools.py`'s self-check.
+- Not yet done: `read_page` is a tag-strip over a plain fetch, so JS-rendered pages come back empty. Clicking and typing in Chrome needs a real bridge. And the goal that matters: a small model that calls these tools itself, so the borrowed 8B head can go.
+
 ### Phase 6: Distillation, not scale (month 4+, optional/ambitious)
 Instead of chasing bigger bases, use a frontier model (Claude) to generate high-quality synthetic training examples in our exact style, then distill that into Samantha. This is literally how most useful small models are built today, nobody pretrains from raw internet text anymore if they can help it.
 

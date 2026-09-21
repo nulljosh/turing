@@ -826,6 +826,13 @@ def local_answer(query):
         exact = fn(query)
         if exact:
             return exact, source
+    # actions ("open chrome", "go to hacker news"): same shape, a recognisable
+    # command with one right outcome. Here so ask.py, chat.py, the TUI and
+    # serve.py all get hands from one place.
+    from tools import do
+    done = do(query)
+    if done:
+        return done, "tools"
     return None, None
 
 
