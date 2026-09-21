@@ -33,7 +33,7 @@ Samantha's base model *is* Qwen2.5-0.5B, LoRA only adds a small trained delta on
 | Metric | Before | Now |
 |--------|--------|-----|
 | Tools | 0 | 13 |
-| Actions eval | - | 54/54 |
+| Actions eval | - | 75/75 |
 | Knowledge sweep | 47/65 | 57/65 |
 | Confidently wrong | 18 | 4 |
 | Multistep latency | minutes (8B) | 5.3s |
@@ -74,9 +74,9 @@ How it works: a regex router handles plain commands with no model at all. Multi-
 
 Samantha is 0.5B and cannot pick tools herself yet. She borrows a 1.7B head for her hands. Training her own is the open roadmap item.
 
-13 tools: open_app, open_url, web_search, current_tab, read_page, screenshot, clipboard, set_volume, battery, say, list_dir, read_file, make_logo.
+19 tools: open_app, open_url, web_search, current_tab, read_page, screenshot, clipboard, set_volume, battery, say, list_dir, read_file, make_logo, music, weather, timer, new_note, new_reminder, calendar_today.
 
-Scores: actions eval 54/54, knowledge sweep 47/65 before the article reader.
+Scores: actions eval 75/75, knowledge sweep 47/65 before the article reader.
 
 ## Pipeline
 

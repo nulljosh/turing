@@ -102,6 +102,29 @@ CASES = [
     # a phrase that is no app is something to look for, never a fake app name
     ("open the turing repo on github", "open_url", "turing repo"),
     ("can you tell me who alan turing was", None, None),
+    # 2026-09-21: music and personal tools
+    ("play some music", "music", "play"),
+    ("pause the music", "music", "pause"),
+    ("skip this song", "music", "next"),
+    ("can you skip", "music", "next"),
+    ("what's playing", "music", "playing"),
+    ("what song is this", "music", "playing"),
+    ("what's the weather", "weather", None),
+    ("how's the weather in tokyo", "weather", "tokyo"),
+    ("weather", "weather", None),
+    ("set a timer for 5 minutes", "timer", "5"),
+    ("set a 10 minute timer", "timer", "10"),
+    ("timer 30 seconds", "timer", "0.5"),
+    ("remind me to call mom", "new_reminder", "call mom"),
+    ("add a reminder to buy milk", "new_reminder", "buy milk"),
+    ("take a note buy milk", "new_note", "buy milk"),
+    ("make a note that says the door code is 4417", "new_note", "door code"),
+    ("what's on my calendar today", "calendar_today", None),
+    ("what do i have today", "calendar_today", None),
+    # these look like the new commands and are not
+    ("what is the weather system on jupiter", None, None),
+    ("what is music theory", None, None),
+    ("who plays the next james bond", None, None),
 ]
 
 
@@ -122,9 +145,7 @@ def main():
         return recorder
 
     original_tools = {}
-    for tool_name in ("open_app", "open_url", "web_search", "current_tab",
-                      "read_page", "screenshot", "clipboard", "set_volume",
-                      "battery", "say", "list_dir", "read_file"):
+    for tool_name in tools.TOOLS:
         original_tools[tool_name] = getattr(tools, tool_name)
         setattr(tools, tool_name, make_recorder(tool_name))
 

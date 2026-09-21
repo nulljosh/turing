@@ -161,6 +161,97 @@ def say(text):
     return f"Saying: {text[:80]}"
 
 
+def _app(script, *args):
+    """AppleScript that drives another app. Text rides in argv, never spliced into the script. Headless does nothing: no app launches, no note gets written."""
+    return "" if HEADLESS else _run(["osascript", "-e", script, *args], timeout=30)
+
+
+_MUSIC = {"play": ("play", "Playing."), "pause": ("pause", "Paused."),
+          "next": ("next track", "Skipped."), "previous": ("previous track", "Went back one.")}
+_NOW_PLAYING = '''if application "Music" is running then
+tell application "Music"
+if player state is playing then return (name of current track) & " by " & (artist of current track)
+end tell
+end if
+return ""'''
+
+
+def music(command):
+    """Control the Music app. command is one of: play, pause, next, previous, playing."""
+    c = command.strip().lower()
+    if c == "playing":
+        return _app(_NOW_PLAYING) or "Nothing is playing."
+    if c not in _MUSIC:
+        return f"I can play, pause, skip, go back, or tell you what's playing. Not {command!r}."
+    # ponytail: Music.app only, no "play <song>". Add a library search when she gets asked for one.
+    _app(f'tell application "Music" to {_MUSIC[c][0]}')
+    return _MUSIC[c][1]
+
+
+def weather(place=""):
+    """Current weather. Takes a city, or nothing for here."""
+    # ponytail: wttr.in one-liner, located by IP. Swap for Open-Meteo if it gets flaky.
+    url = "https://wttr.in/" + urllib.parse.quote(place.strip()) + "?format=%l:+%C,+%t,+feels+%f"
+    try:
+        with urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": "curl/8"}), timeout=10) as r:
+            out = r.read(300).decode("utf-8", "ignore").strip()
+    except Exception as e:
+        return f"Couldn't get the weather: {e}"
+    return out if "°" in out else f"No weather for {place!r}."
+
+
+_TIMER = ("import sys,time,subprocess;time.sleep(float(sys.argv[1]));"
+          "subprocess.run(['osascript','-e','display notification \"Time is up.\" with title \"Samantha\" sound name \"Glass\"']);"
+          "subprocess.run(['say','Time is up'])")
+
+
+def timer(minutes):
+    """Start a timer. Takes minutes, fractions allowed. Notifies and speaks when it is done."""
+    try:
+        secs = float(minutes) * 60
+    except ValueError:
+        return f"{minutes!r} is not a number of minutes."
+    if not 0 < secs <= 86400:
+        return "A timer runs from a second to a day."
+    # ponytail: a sleeping child process. No cancel, gone on reboot. Fine for tea.
+    if not HEADLESS:
+        subprocess.Popen([sys.executable, "-c", _TIMER, str(secs)], start_new_session=True)
+    return f"Timer set for {secs / 60:g} minutes." if secs >= 60 else f"Timer set for {secs:g} seconds."
+
+
+def new_note(text):
+    """Create a note in the Notes app."""
+    _app('on run argv\ntell application "Notes" to make new note with properties {body:item 1 of argv}\nend run', text)
+    return f"Noted: {text[:80]}"
+
+
+def new_reminder(text):
+    """Add a reminder to the Reminders app."""
+    # ponytail: no due date, "at 5" stays in the title. Parse times when that gets annoying.
+    _app('on run argv\ntell application "Reminders" to make new reminder with properties {name:item 1 of argv}\nend run', text)
+    return f"I'll remind you: {text[:80]}"
+
+
+# ponytail: a repeating event only shows on the day it was first made, Calendar's scripting does not expand them. EventKit if that bites.
+_TODAY = '''set d0 to current date
+set time of d0 to 0
+set d1 to d0 + 1 * days
+set out to ""
+tell application "Calendar"
+repeat with c in calendars
+repeat with e in (every event of c whose start date is greater than or equal to d0 and start date is less than d1)
+set out to out & (time string of (get start date of e)) & " " & (summary of e) & linefeed
+end repeat
+end repeat
+end tell
+return out'''
+
+
+def calendar_today():
+    """What is on the calendar today."""
+    return _app(_TODAY) or "Nothing on the calendar today."
+
+
 HOME = os.path.realpath(os.path.expanduser("~"))
 
 
@@ -294,9 +385,26 @@ def make_logo(description):
             if os.path.exists(out) else f"Pixelmator refused my design: {result[-300:]}")
 
 TOOLS = {f.__name__: f for f in (open_app, open_url, web_search, current_tab, read_page, screenshot,
-                                     clipboard, set_volume, battery, say, list_dir, read_file, make_logo)}
+                                     clipboard, set_volume, battery, say, list_dir, read_file, make_logo,
+                                     music, weather, timer, new_note, new_reminder, calendar_today)}
+
+_UNIT = {"s": 1 / 60, "m": 1, "h": 60}
 
 _ROUTES = (
+    (re.compile(r"^(?:play|resume)(?: (?:the |some |my )?(?:music|song|tunes))?$", re.I), lambda m: music("play")),
+    (re.compile(r"^pause$|^(?:pause|stop) (?:the |my |this )?(?:music|song|track)$", re.I), lambda m: music("pause")),
+    (re.compile(r"^(?:skip|next)(?: (?:this |the )?(?:song|track|one))?$", re.I), lambda m: music("next")),
+    (re.compile(r"^(?:previous|last|go back a|go back one)(?: (?:song|track))?$", re.I), lambda m: music("previous")),
+    (re.compile(r"^what(?:'s| is) (?:this song|playing)\b|^what song is (?:this|playing)", re.I), lambda m: music("playing")),
+    (re.compile(r"^(?:what(?:'s| is) the |how(?:'s| is) the )?weather\b(?: like)?(?: today| outside| right now| now)*(?: (?:in|for) (.+))?$", re.I),
+     lambda m: weather(m.group(1) or "")),
+    (re.compile(r"^(?:set |start )?(?:a |an )?(?:timer (?:for )?(\d+(?:\.\d+)?) ?(s|m|h)\w*|(\d+(?:\.\d+)?)[ -]?(s|m|h)\w* timer)$", re.I),
+     lambda m: timer(float(m.group(1) or m.group(3)) * _UNIT[(m.group(2) or m.group(4)).lower()])),
+    (re.compile(r"^remind me (?:to |that |about )?(.+)$|^(?:add|create|make|set|new) (?:a |me a )?(?:new )?reminder(?: to| that says| saying|:)? (.+)$", re.I),
+     lambda m: new_reminder(m.group(1) or m.group(2))),
+    (re.compile(r"^(?:(?:make|create|take|write|add|new) (?:a |me a )?(?:new )?note|note)(?: that says| saying| that|:)? (.+)$", re.I), lambda m: new_note(m.group(1))),
+    (re.compile(r"^what(?:'s| is) on (?:my |the )?(?:calendar|schedule|agenda)\b|^(?:my )?(?:calendar|schedule|agenda)(?: for)?(?: today)?$|^what do i have (?:on )?today", re.I),
+     lambda m: calendar_today()),
     (re.compile(r"^(?:make|design|draw|create|build)(?: me)? (?:a |an )?(?:logo|icon)(?: for| of)? (.+)$", re.I), lambda m: make_logo(m.group(1))),
     (re.compile(r"^(?:(?:show me |tell me )?what(?:'s| is) (?:on|in) (?:my |the )?clipboard|(?:read|show)(?: me)? (?:my |the )?clipboard)\b", re.I), lambda m: clipboard()),
     (re.compile(r"^(?:set |turn |put )?(?:the |it |my )?(?:volume )?(?:up |down )?(?:to |at )(\d{1,3})\b", re.I), lambda m: set_volume(m.group(1))),
@@ -320,7 +428,7 @@ _ROUTES = (
 )
 # anything past the first verb phrase means more than one step: that is agent() work
 _MULTISTEP = re.compile(r"\b(?:and (?:then )?(?:tell|read|find|summar|poke|look|check|see|click)|poke around|then )", re.I)
-_ACTION = re.compile(r"^(?:open|launch|start|go to|visit|browse|pull up|search|google|look up|poke around|take a|grab a|screenshot|make|design|draw)\b", re.I)
+_ACTION = re.compile(r"^(?:open|launch|start|go to|visit|browse|pull up|search|google|look up|poke around|take a|grab a|screenshot|make|design|draw|play|pause|skip|remind me|set a)\b", re.I)
 
 
 # People do not type commands, they ask. "can you open chrome", "hey open
@@ -445,6 +553,14 @@ def demo():
         assert act("volume 30") == "Volume at 30." and act("set the volume to 250") == "Volume at 100."
         assert "don't read hidden" in read_file("~/.ssh/id_rsa") or "No file" in read_file("~/.ssh/id_rsa")
         assert "No file" in read_file("/etc/passwd") and "No folder" in list_dir("~/../..")
+        assert act("play some music") == "Playing." and act("skip this song") == "Skipped." and act("pause") == "Paused."
+        assert act("set a timer for 0 minutes").startswith("A timer runs") and act("what's playing") == "Nothing is playing."
+        assert act("remind me to call mom") == "I'll remind you: call mom" and act("take a note buy milk") == "Noted: buy milk"
+        assert act("what's on my calendar today") == "Nothing on the calendar today."
+        assert act("what is the weather system") is None and act("play chess with me") is None  # questions, not commands
+        if not HEADLESS:  # headless never reaches osascript at all
+            note = [a for a in calls if a[-1] == "buy milk"][0]
+            assert "buy milk" not in note[2]  # her words ride in argv, never inside the script
         assert all(a[0] in ("open", "osascript", "screencapture", "pbpaste", "pmset") for a in calls)
     finally:
         _run = real

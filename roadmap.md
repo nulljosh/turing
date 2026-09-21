@@ -299,6 +299,8 @@ Samantha could answer. She could not do anything. "Open chrome and go to hacker 
 
 Shipped 2026-09-20 and off the list: a 1.7B head that answers in 5 seconds, `eval/actions.py` at 54/54, read-only file tools, Mac tools (clipboard, volume, battery, say), headless mode.
 
+Shipped 2026-09-21: music (play, pause, skip, back, what's playing) and personal tools (weather, timer, new note, new reminder, calendar today). 19 tools, `eval/actions.py` at 75/75. Known ceilings, marked in `tools.py`: Music.app only and no "play this song", reminders carry no due date, repeating calendar events do not show, a timer cannot be cancelled.
+
 Gaps, in order:
 
 - [ ] **Know things.** `eval/basic_questions.py` at 60/65 or better, zero confidently wrong. First run 2026-09-20: **47/65, 18 wrong.** Improved with article reader + hands: **57/65, 4 wrong.** The remaining misses are four bugs, not thirteen:
@@ -306,8 +308,6 @@ Gaps, in order:
   - **Superlatives land on list pages.** "Largest country", "longest river", "tallest mountain" all return "This is a list of". Five misses. A list page is never an answer, same rule as the disambiguation fix.
   - **"Who was alan turing" answers with the project FAQ.** The name collides with the repo. A "who was <person>" question is never about the project.
   - **Four easy ones declined that used to pass** (days in a week, sky colour, spider legs, what bees make). The scorer also files that decline under wrong because its marker list misses the phrasing. Check for throttling first, then fix the markers.
-- [ ] **Personal tools.** Calendar today, new note, new reminder, weather, timer.
-- [ ] **Music.** Play, pause, skip, what's playing.
 - [ ] **Browser beyond opening.** List tabs, switch tab, close tab, read the rendered page through Chrome so JS sites stop coming back empty.
 - [ ] **A real harness.** One conversation that holds tool results across turns, shows a live tool log, and asks before anything that writes or deletes. The loop in `agent()` is the seed.
 - [ ] **Her own head.** Distill the big model's tool calls into a small one we trained, so the borrowed head can go. Memory-gated, may slip past 1.0.0. If it does, say so in the release notes.
