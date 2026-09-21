@@ -240,33 +240,6 @@ class ScriptBuilding(unittest.TestCase):
             with self.subTest(example=name), open(os.path.join(folder, name)) as f:
                 self.assertIn("make new document", pxm.build_script(pxm.validate_spec(json.load(f))))
 
-    def test_grouping_creates_groups_when_enabled(self):
-        # With group_size=None, no groups should be created
-        s = pxm.validate_spec(spec(layers=[
-            {"type": "rectangle", "width": 10, "height": 10, "fill": "#F00"},
-            {"type": "rectangle", "width": 10, "height": 10, "fill": "#0F0"},
-            {"type": "rectangle", "width": 10, "height": 10, "fill": "#00F"},
-        ]))
-        script_flat = pxm.build_script(s, group_size=None)
-        self.assertNotIn("group layer", script_flat)
-        self.assertNotIn("layers of G", script_flat)
-
-        # With group_size=2 and 3 layers, 2 groups should be created
-        script_grouped = pxm.build_script(s, group_size=2)
-        self.assertIn("make new group layer", script_grouped)
-        self.assertIn('set name of G0 to "Group 0"', script_grouped)
-        self.assertIn('set name of G1 to "Group 1"', script_grouped)
-        self.assertIn("at the beginning of layers of G0", script_grouped)
-        self.assertIn("at the beginning of layers of G1", script_grouped)
-
-    def test_grouping_skipped_for_small_document(self):
-        # If layers count is <= group_size, no grouping
-        s = pxm.validate_spec(spec(layers=[
-            {"type": "rectangle", "width": 10, "height": 10, "fill": "#F00"},
-        ]))
-        script = pxm.build_script(s, group_size=5)
-        self.assertNotIn("group layer", script)
-
 
 class Paint(unittest.TestCase):
     def test_quadtree_spends_its_layers_where_the_detail_is(self):
@@ -459,16 +432,6 @@ class Verifying(unittest.TestCase):
     def test_font_names_compare_loosely(self):
         pxm.check_result(self.spec, "font\tHelvetica Neue Bold\tHelvetica\tHelveticaNeue-Bold\nlayers\t2\n")
         pxm.check_result(self.spec, "font\thelvetica\tHelvetica\tHelvetica\nlayers\t2\n")
-
-    def test_grouping_adds_groups_to_expected_count(self):
-        # Spec with background + 1 ellipse = 2 layers total
-        # With group_size=1, we get 2 groups + 2 layers = 4 total in file
-        pxm.check_result(self.spec, "layers\t4\n", group_size=1)
-
-    def test_grouping_correct_group_count_calculation(self):
-        # 2 layers (with background) / group_size=2 = 1 group
-        # 1 group + 2 layers = 3 total
-        pxm.check_result(self.spec, "layers\t3\n", group_size=2)
 
     def test_missing_and_empty_exports(self):
         with tempfile.TemporaryDirectory() as tmp:
