@@ -1,4 +1,4 @@
-# Turing loop handoff (2026-09-21, late evening)
+# Turing loop handoff (2026-09-21, evening)
 
 The live `/loop` for this repo. Checkpoint rewrites this file every run. A new session reads it and picks up where the last one stopped.
 
@@ -9,16 +9,18 @@ Samantha to a 1.0.0 release, landing page to A+. `roadmap.md` "Road to 1.0.0" is
 Headless always: `SAMANTHA_HEADLESS=1`, never pop Chrome or any app. Fix at the root cause, never edit a test to pass. **Check free disk and free memory before any training or eval, 6GB disk minimum. One heavy job at a time, `ollama stop` first.** On 2026-09-21 training plus an eval filled swap, swap filled the disk, and the shell died. Never block in a foreground wait loop: start slow jobs in the background and end the turn. Haiku subagents, one at a time. Stop at 90% usage.
 
 ## Where things stand
-Shipped and all pushed/deployed: music and personal tools (19 tools, actions 77/77). Landing page is a working demo: her router runs in the browser, a stand-in Mac reacts, she can change the page itself, a model picks tools the rules miss behind a guard, lookups are live via wttr.in JSON (1200 char cap per reply). Security pass: CSP, JSON-only same-origin API, no eval, injection tests in `eval/web_demo.py`, SECURITY.md written. Live QA passed: web_demo.py tests weather, bad places, every chip, idle-reel lines (0 failures, 0 console errors); web_parity.py passes 77/77. Fixed complex logo routing (no adjectives allowed before "logo"). Knowledge 62/65 (one regression in code, not re-run yet). Her own tool picker trained twice: 395/484 on unseen phrasings against 30/463 for the regex. Self-grade A on the site and evals.
+v0.10.0 is out, Apache 2.0. Samantha has 30 tools: the first 20 plus ten image tools that drive Pixelmator Pro (`tools_image.py`). She paints photos in Pixelmator (`pixelmator/pxm.py paint`), her own 0.5B picker chooses the tool (394/501 unseen, 9 wrong picks past the guard, 0 right picks refused), and PaintBar puts painting in the menu bar (`menubar/`). A build lock stops two Pixelmator jobs colliding. `./gate.sh --full` runs every eval against `eval/baseline.json` and `./release.sh X.Y.Z "note"` refuses to ship on a red CI, a worse score or a dirty tree, then tags, publishes and deploys. Landing: the chat demo types its own commands, paints on the stand-in Mac, has native autocomplete, a privacy page and an ember accent. Docstrings 92 percent, every source file cited in `docs/ARCHITECTURE.md`. Blender 5.2 LTS is installed and unused.
 
 ## Next, in order
-1. Round three of the picker is trained (2026-09-21): 394/501 unseen, 73/77 actions, 93/94 questions, and it knows `paint_image`. 9 wrong picks still get past the guard, and 0 right picks are refused (eval/hands.py now counts both) in `tools.do()` (down from 21 after tightening `_sound()`). The adapter is gitignored and vanished from disk once already, so back it up to the LaCie.
-2. Re-run `eval/basic_questions.py` to confirm the sky fix and zero confidently wrong.
-3. Score Ternary-Bonsai-4B as a borrowed head: `eval/hands.py --model prism-ml/Ternary-Bonsai-4B-mlx-2bit` with `HF_HOME=/Volumes/LaCie/llm/huggingface`.
-4. Update the landing page Limitations text and `web/stats.json` with the new knowledge and picker numbers. README too.
-5. Score `voice-adapter` against `ada-1-adapter`. Still unscored.
-6. Roadmap boxes left: browser tabs, a real harness that asks before writes, the rest of her own head.
-7. Idea parked: train the tiny from-scratch model in `scratch/` with three-value weights, the Bonsai trick at a size this Mac can do.
+1. Live smoke run for the nine Pixelmator image tools. Only `image_info` has run for real.
+2. Two-step picking (family, then tool) and retrain the picker, BEFORE adding tools in bulk. `roadmap.md` "100 tools" has the families and the rules.
+3. Blender family, then the Shortcuts bridge, then MCP both ways.
+4. The harness for 1.0: one conversation that holds tool results, shows a live tool log and asks before anything that writes, sends or deletes.
+5. Finish docstrings: 11 left outside `pixelmator/`, 28 inside `pixelmator/pxm.py`.
+6. Sharp paintings: measure merging same-color neighbor cells. Layer grouping was measured slower and reverted, do not retry it.
+7. Still open from before: re-run `eval/basic_questions.py`, score Ternary-Bonsai-4B as a borrowed head, score `voice-adapter`.
+
+Lessons from 2026-09-21, keep them: helpers (Haiku agents) ship fast but need checking. One made the guard refuse "mute", one claimed 100 percent at 77, one left orphan builds running in Pixelmator. Read the diff, rerun the numbers, and wait for the real CI result before calling anything done.
 
 ## Restart prompt
 ```
