@@ -1,16 +1,16 @@
-# Loop
+# Turing loop handoff (2026-09-20, evening)
 
 The live `/loop` for this repo. Checkpoint rewrites this file every run. A new session reads it and picks up where the last one stopped.
 
 *Updated 2026-09-20, Sunday night.*
 
-## Goal
+## What the loop is
 Samantha to a 1.0.0 release, landing page to A+. `roadmap.md` "Road to 1.0.0" is the queue.
 
 ## Rules
 Headless always: `SAMANTHA_HEADLESS=1`, never pop Chrome or any app. Fix at the root cause, never edit a test to pass. Check free memory before any training. Haiku subagents, one at a time. Stop at 90% usage. One short ping per iteration.
 
-## State
+## Where things stand
 Shipped tonight: 13 tools, actions eval 54 of 54, knowledge 47 to 57 of 65, confidently wrong 18 to 4, a 1.7B model for her hands at about 5 seconds, article reader with a grounding check, logos built live in Pixelmator, new icon, landing page rebuilt around the chat with idle autoplay and release-style results. Self-grade B+.
 
 Running: the voice retrain into `voice-adapter/`, log in `voice-train.log`. Not scored yet.
@@ -24,5 +24,9 @@ Running: the voice retrain into `voice-adapter/`, log in `voice-train.log`. Not 
 6. Global `core.hooksPath` overrides this repo's pre-commit hook, so the eval gate never runs on commit. Chain it.
 7. Roadmap boxes: personal tools, music, browser tabs, a real harness, her own tool-calling model.
 
-## Resume
-`/loop` with the goal above. Read this file and `roadmap.md` first.
+## Restart prompt
+Paste this to pick the loop back up:
+
+```
+/loop Drive Samantha (~/Documents/Code/turing) to a 1.0.0 release and the landing page to A+. Read docs/LOOP-HANDOFF.md and roadmap.md "Road to 1.0.0" first. One item per iteration, in the order the handoff lists. SAMANTHA_HEADLESS=1 always, never pop Chrome or any visible app. Verify with tools.py self-check, test_chat.py, eval/score.py, eval/actions.py and eval/basic_questions.py. Fix at the root cause, never edit a test to pass. Check free memory before any training. Commit, push, npx wrangler deploy for site changes, self-grade honestly, clean finished items out of roadmap.md. Haiku subagents only, one at a time. Stop at 90% usage. One short ping per iteration.
+```

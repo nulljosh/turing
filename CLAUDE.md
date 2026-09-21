@@ -31,3 +31,6 @@ ever ships as its own real model, gets a name of its own too, not a
 - Landing page deploys via `npx wrangler deploy` (Workers assets, not Pages,
   matches weather/keyrate). `web/` is the asset root.
 - No daemon, no cron, training is invoked by hand every time.
+
+## The loop
+`docs/LOOP-HANDOFF.md` holds the live `/loop`: what it is, where things stand, what is next, and the restart prompt. Checkpoint rewrites it. Read it before resuming.
