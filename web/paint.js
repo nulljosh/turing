@@ -85,7 +85,6 @@ pics.forEach(([src, name], i) => {
   const b = document.createElement('button');
   b.type = 'button'; b.className = 'paint-pick'; b.title = name; b.setAttribute('aria-label', 'Paint ' + name);
   b.setAttribute('aria-pressed', i === 0);
-  b.style.width = b.style.height = '32px';
   b.innerHTML = '<img src="' + src + '" alt="" loading="lazy">';
   b.onclick = () => {
     pic = i;
