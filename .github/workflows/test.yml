@@ -28,6 +28,8 @@ jobs:
       # her utility tools: the Python side, and the JavaScript twin on the landing page, must say the same words
       - run: python3 tools_util.py
       - run: python3 eval/util_diff.py
+      # her hands over MCP: a real client conversation against the stdio server
+      - run: python3 test_mcp.py
 
   # eval/score.py is deliberately not run here: it needs the actual Qwen
   # model (MLX, Apple Silicon only) and a live brain API token, neither
