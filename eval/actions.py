@@ -131,6 +131,7 @@ CASES = [
 
 
 def main():
+    """Test the regex action router against known commands and expected tool firings."""
     verbose = "--verbose" in sys.argv
     minimum = None
     for i, arg in enumerate(sys.argv):
@@ -141,7 +142,9 @@ def main():
     calls = []
 
     def make_recorder(name):
+        """Create a mock tool that records when it was called."""
         def recorder(*args, **kwargs):
+            """Record this mock tool call and return ok."""
             calls.append((name, args, kwargs))
             return "ok"
         return recorder

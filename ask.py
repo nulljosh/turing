@@ -32,6 +32,7 @@ SYSTEM = (
 
 
 def brain_token():
+    """Load the brain API token from .env.local, or None if not found."""
     try:
         for line in open(BRAIN_ENV):
             if line.strip().startswith("BRAIN_TOKEN"):
@@ -42,6 +43,7 @@ def brain_token():
 
 
 def search(query, limit=3):
+    """Retrieve passages from brain RAG, biased toward Turing project sources."""
     # brain is a private, personal RAG service, a fresh clone of this repo
     # won't have brain/.env.local at all. Degrade to no retrieval context
     # instead of crashing, generation still runs, just without sources.
@@ -231,6 +233,7 @@ def _faq_vectors(headers):
 
 
 def _cosine(a, b):
+    """Compute cosine similarity between two vectors."""
     dot = sum(x * y for x, y in zip(a, b))
     na = math.sqrt(sum(x * x for x in a))
     nb = math.sqrt(sum(y * y for y in b))
@@ -320,6 +323,7 @@ def _stem(w):
 
 
 def _keywords(s):
+    """Extract content words from text, excluding stopwords and short words."""
     # len > 2, not > 3: this project's most distinctive words are three-letter
     # acronyms (faq, tui, cli, api), and excluding them threw away the single
     # strongest signal a question about them carries.
@@ -429,6 +433,7 @@ _CANT_PIN_DOWN = (
 
 
 def try_extract(question, results):
+    """Extract exact answers from retrieved context using pattern matching."""
     for q_pat, answer in FIXED_FACTS:
         if q_pat.search(question):
             return answer
@@ -461,6 +466,7 @@ _http_cache = None
 
 
 def _cache_load():
+    """Load the HTTP response cache from disk, initialize if missing."""
     global _http_cache
     if _http_cache is None:
         try:
@@ -471,6 +477,7 @@ def _cache_load():
 
 
 def _cache_get(url):
+    """Retrieve cached HTTP response if it exists and is not stale."""
     entry = _cache_load().get(hashlib.sha256(url.encode()).hexdigest())
     if not entry:
         return None
@@ -480,6 +487,7 @@ def _cache_get(url):
 
 
 def _cache_put(url, body):
+    """Store HTTP response in cache with a timestamp."""
     cache = _cache_load()
     cache[hashlib.sha256(url.encode()).hexdigest()] = {"t": time.time(), "body": body}
     try:
@@ -846,7 +854,9 @@ READER_URL = "http://localhost:11434/api/chat"
 
 
 def _is_definition_of(query, title):
-    """True when the article IS the thing asked about, so its summary is the
+    """Check if article title directly answers the question by name match.
+
+    True when the article IS the thing asked about, so its summary is the
     answer. "who is marie curie" against "Marie Curie": yes. "who invented the
     telephone" against "Telephone": no, the page is about the right topic and
     its first sentence is still not an answer."""
@@ -1078,6 +1088,7 @@ _WANTS_NUMBER = re.compile(
 
 
 def _wikipedia_answer_is_plausible(query, title, extract):
+    """Verify Wikipedia summary answer is relevant to the question, not a tangent."""
     subject = _keywords(query) - _keywords("what is are the a an how many much of in")
     if not subject:
         return True
@@ -1119,6 +1130,7 @@ PROJECT_KEYWORDS = {
 
 
 def is_project_question(question):
+    """Return True if question contains project keywords or is scoped to Turing."""
     q = question.lower()
     # ponytail: the one name that collides with the repo. "who was alan turing"
     # got the project FAQ. If a second collision ever shows up, make it a list.
@@ -1144,6 +1156,7 @@ _LOOKUP_IMPERATIVE = re.compile(r"^(?:tell me about|explain|describe|define)\b",
 
 
 def is_question(text):
+    """Return True if text looks like a question, not a task instruction."""
     # general_knowledge hits DDG/Wikipedia, which sometimes returns a
     # loosely-related instant answer for an imperative instruction too
     # ("write a commit message for X" once matched Wikipedia's "Git"
@@ -1154,6 +1167,7 @@ def is_question(text):
 
 
 def ask(question):
+    """Answer a question using local knowledge, FAQ matching, and retrieval-augmented generation."""
     # exact local answers first: no network, no ambiguity, and not subject
     # to the is_question() gate further down (see local_answer's docstring)
     exact, exact_source = local_answer(question)

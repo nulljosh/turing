@@ -214,10 +214,12 @@ _QFORM = ("what", "how", "which", "who", "is ", "am ", "do ", "any", "should ", 
 
 
 def _call(tool, arg):
+    """Format tool and argument as JSON for training."""
     return json.dumps({"tool": tool, "arg": arg})
 
 
 def _dress(rng, text, held):
+    """Add natural sentence variation (leads, tails, capitalization) to text."""
     leads, tails = LEADS[held], TAILS[held]
     if text.startswith(_QFORM):
         leads = [l for l in leads if l.split(" ")[0].strip(",") in ("", "hey", "ok", "yo", "samantha", "alright", "quick")] or [""]
@@ -242,6 +244,7 @@ def _pairs(rng, held, n):
 
 
 def build(held, per_template, seed):
+    """Build training or test set of command phrasings and expected tool calls."""
     rng, rows = random.Random(seed), {}
     for text in _pairs(rng, held, 30 if held else 220):
         rows.setdefault(_dress(rng, text, held), _call("agent", ""))
@@ -260,6 +263,7 @@ def build(held, per_template, seed):
 
 
 def main():
+    """Generate training, validation, and test data for tool picking, write JSONL files."""
     from actions import CASES
     from basic_questions import CASES as QUESTIONS
     reserved = {c[0].lower() for c in CASES} | {q[0].lower() for q in QUESTIONS}  # other evals stay unseen

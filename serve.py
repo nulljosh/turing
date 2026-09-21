@@ -32,6 +32,7 @@ DECLINES = (OUT_OF_SCOPE, LOOKUP_FAILED, NETWORK_DOWN, _CANT_PIN_DOWN)
 
 
 def answer_for(question):
+    """Get an answer from ask(), return UNKNOWN for declines or errors."""
     if not question:
         return "UNKNOWN", None
     answer, sources = ask(question)
@@ -42,7 +43,9 @@ def answer_for(question):
 
 
 class Handler(BaseHTTPRequestHandler):
+    """HTTP request handler for the OpenAI chat API compatible server."""
     def _send(self, payload, status=200):
+        """Send a JSON response with CORS headers."""
         body = json.dumps(payload).encode()
         self.send_response(status)
         self.send_header("content-type", "application/json")
@@ -63,9 +66,11 @@ class Handler(BaseHTTPRequestHandler):
         self.wfile.write(body)
 
     def do_OPTIONS(self):
+        """Handle CORS preflight request."""
         self._send({})
 
     def do_GET(self):
+        """Handle GET /v1/models to list available models."""
         if self.path.rstrip("/") == "/v1/models":
             self._send({"object": "list", "data": [
                 {"id": MODEL_NAME, "object": "model", "owned_by": "turing"}]})
@@ -73,6 +78,7 @@ class Handler(BaseHTTPRequestHandler):
             self._send({"error": "not found"}, 404)
 
     def do_POST(self):
+        """Handle POST /v1/chat/completions to answer questions."""
         if self.path.rstrip("/") != "/v1/chat/completions":
             self._send({"error": "not found"}, 404)
             return
@@ -106,10 +112,12 @@ class Handler(BaseHTTPRequestHandler):
         })
 
     def log_message(self, fmt, *args):
+        """Log HTTP requests to stderr instead of stdout."""
         sys.stderr.write(f"{self.address_string()} {fmt % args}\n")
 
 
 def main():
+    """Start the HTTP server on port 8127 (or --port argument)."""
     port = 8127
     if "--port" in sys.argv:
         port = int(sys.argv[sys.argv.index("--port") + 1])

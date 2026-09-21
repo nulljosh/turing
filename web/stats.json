@@ -1,7 +1,7 @@
 {
   "version": "0.9.0",
   "docs_coverage": {
-    "percent": 40,
+    "percent": 77,
     "files": {
       "test_nimble.py": {
         "total": 4,
@@ -9,11 +9,11 @@
       },
       "parse_log.py": {
         "total": 1,
-        "documented": 0
+        "documented": 1
       },
       "ask.py": {
         "total": 33,
-        "documented": 18
+        "documented": 30
       },
       "harvest_voice.py": {
         "total": 3,
@@ -25,23 +25,23 @@
       },
       "serve.py": {
         "total": 8,
-        "documented": 0
+        "documented": 8
       },
       "prep_data.py": {
         "total": 5,
-        "documented": 0
+        "documented": 5
       },
       "gen_hands_data.py": {
         "total": 5,
-        "documented": 1
+        "documented": 5
       },
       "chat.py": {
         "total": 12,
-        "documented": 5
+        "documented": 11
       },
       "test_chat.py": {
         "total": 18,
-        "documented": 0
+        "documented": 18
       },
       "stats.py": {
         "total": 6,
@@ -69,7 +69,7 @@
       },
       "eval/actions.py": {
         "total": 3,
-        "documented": 0
+        "documented": 3
       },
       "eval/web_demo.py": {
         "total": 5,

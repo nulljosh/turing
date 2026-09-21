@@ -115,6 +115,7 @@ def resolve_followup(question, last_subject):
 
 
 def clean(answer, question):
+    """Remove echoed scaffold and markdown headers from model output."""
     # the model sometimes echoes the prompt scaffold ("User: ...\nSamantha:")
     # back into its own answer, especially near the max-token cutoff
     for marker in ("\nUser:", "\nSamantha:", "User:", "Samantha:"):
@@ -142,6 +143,7 @@ def clean(answer, question):
 
 
 def generate(prompt, max_tokens=80):
+    """Call mlx_lm.generate to produce model output given a prompt."""
     out = subprocess.run(
         [
             os.path.join(os.path.dirname(os.path.abspath(__file__)), ".venv/bin/mlx_lm.generate"),
@@ -156,6 +158,7 @@ def generate(prompt, max_tokens=80):
 
 
 def build_prompt(history, context, question):
+    """Construct a model prompt including system message, conversation history, and context."""
     parts = [SYSTEM, ""]
     if history:
         parts.append("Recent conversation:")
@@ -268,6 +271,7 @@ def answer_turn(question, history, topic_active, last_subject=None):
 
 
 def chat():
+    """Run the interactive terminal chat loop."""
     history = []
     topic_active = False
     last_subject = None
@@ -286,9 +290,11 @@ def chat():
 
 
 def tui():
+    """Run the curses-based terminal UI for chat."""
     import curses
 
     def run(stdscr):
+        """Inner TUI loop that renders and processes input."""
         curses.curs_set(1)
         stdscr.scrollok(True)
         history = []

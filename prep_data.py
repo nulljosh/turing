@@ -24,10 +24,12 @@ OWN_REPEATS = 3        # how many times to repeat this repo's own docs (10x caus
 FLEET_CAP = 100         # max chunks pulled from the rest of the fleet + wiki
 
 def chunks(text, n=1500):
+    """Yield successive n-character chunks of text."""
     for i in range(0, len(text), n):
         yield text[i:i+n]
 
 def to_chat(topic, content):
+    """Convert a topic and content into a chat message pair."""
     return {
         "messages": [
             {"role": "user", "content": f"Tell me about {topic}."},
@@ -36,6 +38,7 @@ def to_chat(topic, content):
     }
 
 def read_examples(path):
+    """Parse instruction/response pairs from markdown file into chat format."""
     # Real instruction/response pairs (e.g. "write a commit message" ->
     # an actual past commit message), not "tell me about X" facts. The
     # generic to_chat() template can't represent a task instruction, so
@@ -61,6 +64,7 @@ def read_examples(path):
 
 
 def read_chunks(path, topic):
+    """Read markdown file and return chunked chat training examples for a topic."""
     # VAULT is a live iCloud folder, an evicted (not locally downloaded)
     # file can block a read for a long time waiting on a fetch, and it's
     # blocked deep enough (iCloud file provider IPC) that an in-process
@@ -78,6 +82,7 @@ def read_chunks(path, topic):
     return [to_chat(topic, c) for c in chunks(text) if len(c.strip()) >= 100]
 
 def collect():
+    """Gather and prepare training data from Turing docs and the fleet, write to JSONL."""
     own_paths = glob.glob(f"{TURING}/*.md") + glob.glob(f"{TURING}/eval/*.md")
     own_paths = [p for p in own_paths if p != EXAMPLES]
     own_examples = []

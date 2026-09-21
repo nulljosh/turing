@@ -9,18 +9,22 @@ from chat import clean, build_prompt, HISTORY_TURNS, project_scope, answer_turn,
 
 
 def test_clean_strips_echoed_user_turn():
+    """Verify clean() removes user echoes from model output."""
     assert clean("The license is MIT.\nUser: what else", "q") == "The license is MIT."
 
 
 def test_clean_strips_echoed_samantha_turn():
+    """Verify clean() removes Samantha echoes from model output."""
     assert clean("Answer here.\nSamantha: repeat", "q") == "Answer here."
 
 
 def test_clean_leaves_clean_answer_alone():
+    """Verify clean() passes through answer text with no echoes."""
     assert clean("Just a plain answer.", "q") == "Just a plain answer."
 
 
 def test_clean_strips_echo_at_position_zero():
+    """Verify clean() catches echoes at the start of model output, not just after leading text."""
     # real bug: "idx > 0" skipped a marker found at index 0, leaking the
     # raw scaffold straight through as the "answer" when the model's
     # output starts immediately with the echo, no leading newline
@@ -29,6 +33,7 @@ def test_clean_strips_echo_at_position_zero():
 
 
 def test_build_prompt_includes_history():
+    """Verify build_prompt() includes conversation history in the generated prompt."""
     history = [("What is Turing?", "The project.")]
     prompt = build_prompt(history, "ctx", "What's its first model called?")
     assert "What is Turing?" in prompt
@@ -37,6 +42,7 @@ def test_build_prompt_includes_history():
 
 
 def test_build_prompt_caps_to_history_turns():
+    """Verify build_prompt() limits history to HISTORY_TURNS and drops oldest turns."""
     history = [(f"q{i}", f"a{i}") for i in range(HISTORY_TURNS + 5)]
     prompt = build_prompt(history, "ctx", "new question")
     assert "q0" not in prompt
@@ -44,11 +50,13 @@ def test_build_prompt_caps_to_history_turns():
 
 
 def test_build_prompt_no_history_omits_section():
+    """Verify build_prompt() skips the history section when empty."""
     prompt = build_prompt([], "ctx", "first question")
     assert "Recent conversation:" not in prompt
 
 
 def test_scope_stays_active_across_keywordless_followup():
+    """Verify project_scope() maintains context for follow-ups lacking project keywords."""
     # real bug: "How confident does a match need to be?" right after "What
     # is the FAQ matcher?" has no project keyword AND no pronoun, and got
     # answered with a Wikipedia article about an unrelated comedian. A
@@ -60,11 +68,13 @@ def test_scope_stays_active_across_keywordless_followup():
 
 
 def test_scope_not_active_before_any_project_question():
+    """Verify project_scope() returns inactive for general knowledge questions."""
     scoped, active = project_scope("What is the capital of France?", False)
     assert not scoped and not active
 
 
 def test_scope_officeholder_overrides_active_topic():
+    """Verify officeholder queries break out of project scope even with active context."""
     # a live "who's the current X" lookup is a real, tested escape hatch,
     # a resumed project topic should never swallow it
     scoped, active = project_scope("What is Turing?", False)
@@ -74,11 +84,13 @@ def test_scope_officeholder_overrides_active_topic():
 
 
 def test_scope_direct_keyword_match_without_prior_history():
+    """Verify project_scope() recognizes project keywords in fresh questions."""
     scoped, active = project_scope("What is its first model called?", False)
     assert scoped and active
 
 
 def test_officeholder_outage_admits_it_instead_of_answering_from_faq():
+    """Verify answer_turn() reports network failure for officeholder lookups, not cached fallback."""
     # A dead Wikidata used to look identical to "not an officeholder
     # question", so the question fell through and FAQ.md answered with its
     # own description of this feature. Stays offline: the stub makes every
@@ -94,6 +106,7 @@ def test_officeholder_outage_admits_it_instead_of_answering_from_faq():
 
 
 def test_officeholder_empty_result_is_not_treated_as_an_outage():
+    """Verify empty officeholder results are treated as not-found, not network failure."""
     # the other half of the same distinction: a request that succeeds and
     # simply finds no office must still fall through normally, or every
     # "who is ..." question would start claiming the network is down
@@ -107,6 +120,7 @@ def test_officeholder_empty_result_is_not_treated_as_an_outage():
 
 
 def test_topic_switch_breaks_out_of_a_sticky_project_topic():
+    """Verify general knowledge questions can break the project topic state."""
     # real bug: the sticky flag had no exit except a who-query, so "what is
     # turing" then "what is the capital of japan" answered "the project."
     scoped, active = project_scope("What is Turing?", False)
@@ -119,6 +133,7 @@ def test_topic_switch_breaks_out_of_a_sticky_project_topic():
 
 
 def test_topic_switch_does_not_break_a_keywordless_project_followup():
+    """Verify shared vocabulary keeps project topic active even without explicit keywords."""
     # the case the sticky flag exists for must survive: this follow-up has
     # no project keyword, but shares "match" with the project vocabulary
     scoped, active = project_scope("What is the FAQ matcher?", False)
@@ -128,6 +143,7 @@ def test_topic_switch_does_not_break_a_keywordless_project_followup():
 
 
 def test_pronoun_followup_resolves_to_last_general_knowledge_subject():
+    """Verify resolve_followup() substitutes pronouns with their known subject."""
     # real bug: "who is steve jobs" answered correctly, then "what company
     # did he found" returned the 1997 slasher film "I Know What You Did Last
     # Summer", because nothing said who "he" was
@@ -137,10 +153,12 @@ def test_pronoun_followup_resolves_to_last_general_knowledge_subject():
 
 
 def test_pronoun_followup_without_a_subject_is_untouched():
+    """Verify resolve_followup() leaves pronouns alone when no subject is known."""
     assert resolve_followup("what company did he found", None) == "what company did he found"
 
 
 def test_followup_without_a_pronoun_is_untouched():
+    """Verify resolve_followup() passes through questions lacking pronouns."""
     assert resolve_followup("what is the capital of france", "steve jobs") == "what is the capital of france"
 
 

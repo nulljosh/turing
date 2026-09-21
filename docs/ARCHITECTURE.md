@@ -17,6 +17,9 @@ Once she is trained, `ask.py` and `chat.py` handle questions. Before answering, 
 | `parse_log.py` | Post-training: parses loss history from `train.log`, writes `web/status.json` for the landing page. |
 | `ask.py` + `chat.py` | Inference. Loads the trained adapter, retrieves facts from brain RAG, generates answers. `chat.py` wraps it in an interactive loop. |
 | `serve.py` | CLI server. Local REPL for chat sessions. |
+| `gate.sh` | Validation suite. Runs fast checks (chat, actions, parity, pixelmator, tools) against eval baselines. `release.sh` runs the full gate. |
+| `stats.py` | Generates documentation coverage metrics (docstring + file citation percentages) into web/stats.json. |
+| `worker.js` | Cloudflare Worker for the /api endpoints. Deploys the landing page assets via `wrangler deploy`. |
 | `tools.py` | The small fixed set of things Samantha can actually do on this Mac. Simple commands are matched by pattern and run straight away, with no model involved. Multi-step asks go to Ollama. Includes `paint_image` for the painting hands. |
 | `pixelmator/pxm.py` | Painter logic. Repaints a photo using quadtree algorithm (split most-wrong region into four cells). Drives Pixelmator Pro via AppleScript. Handles layer creation, coloring, and bounds checking. |
 | `pixelmator/arc_text.py` | Text-along-arc rendering for logo design (used by `make_logo` tool). |

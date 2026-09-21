@@ -8,6 +8,7 @@ train_re = re.compile(r"Iter (\d+): Train loss ([\d.]+)")
 val_re = re.compile(r"Iter (\d+): Val loss ([\d.]+)")
 
 def parse():
+    """Parse training log and write loss history plus roadmap to web/status.json."""
     text = open(LOG, errors="ignore").read()
     # the resilient wrapper appends every run to the same file and iter numbers
     # restart at 1 each run, only chart the most recent run's segment
