@@ -8,7 +8,7 @@
   var transcript = $('chat-transcript'), input = $('chat-input'), space = $('desk-space'), statusEl = $('chat-status');
   var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var typing = reduceMotion ? 0 : 14;
-  var isLive = false, busy = false, reel = false, idleTimer = 0, reelTimer = 0;
+  var isLive = false, busy = false, reel = false, idleTimer = 0, reelTimer = 0, lastUser = 0;
   var LOCAL = 'http://localhost:8127/v1/chat/completions';
 
   function el(tag, cls, text) {
@@ -616,7 +616,7 @@
   function idle() {
     stopReel();
     if (reduceMotion || isLive || document.hidden) return;
-    idleTimer = setTimeout(function () { if (!busy) { reel = true; desk.playing = false; nextReel(); } }, reelAt ? 6000 : 2200);
+    idleTimer = setTimeout(function () { if (!busy) { reel = true; desk.playing = false; nextReel(); } }, Date.now() - lastUser < 90000 ? 30000 : reelAt ? 6000 : 2200);  // a visitor's own drawing stays 30 seconds
   }
 
   function startDemo() {
@@ -629,10 +629,10 @@
     idle();
   }
 
-  $('chat-send').addEventListener('click', function () { stopReel(); send(null, idle); });
+  $('chat-send').addEventListener('click', function () { lastUser = Date.now(); stopReel(); send(null, idle); });
   input.addEventListener('keydown', function (e) {
     stopReel();
-    if (e.key === 'Enter') { e.preventDefault(); send(null, idle); }
+    if (e.key === 'Enter') { e.preventDefault(); lastUser = Date.now(); send(null, idle); }
   });
   ['pointerdown', 'touchstart'].forEach(function (ev) { document.addEventListener(ev, function () { if (reel) { stopReel(); input.value = ''; } idle(); }, true); });
   document.addEventListener('visibilitychange', idle);
