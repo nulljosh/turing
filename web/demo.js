@@ -375,6 +375,8 @@
     }
   };
   Object.keys(PAGE).forEach(function (k) { TOOLS[k] = PAGE[k]; });
+  // the utility tools run for real here, the same code as tools_util.py (eval/util_diff.py keeps the two honest)
+  Object.keys(S.util).forEach(function (k) { if (typeof S.util[k] === 'function') TOOLS[k] = S.util[k]; });
 
   setInterval(function () {
     if (desk.timerEnd && Date.now() >= desk.timerEnd) {
@@ -519,7 +521,11 @@
   // ---- idle reel: if nobody types, she shows what she does. Silent, and it stops the moment you touch anything ----
   var REEL = ['paint the mona lisa', 'change the title to Hello there', 'open chrome and go to github.com', 'set the volume to 40', 'paint the eniac', 'take a note the demo is live',
               'what is 17*23', 'make me a complex logo for a surf school', "what's the weather in tokyo", 'play some music', 'skip this song', 'paint the last supper',
-              'who painted the mona lisa', 'set a timer for 1 minute', 'scroll to the results', 'take a screenshot', 'do a barrel roll', 'who invented the telephone', 'reset the page'];
+              'who painted the mona lisa', 'set a timer for 1 minute', 'scroll to the results', 'take a screenshot', 'do a barrel roll', 'calculate 17*23', 'convert 72 f to c', 'time in tokyo', 'roll 2d6', 'is 91 prime', 'days until christmas', 'who invented the telephone', 'reset the page'];
+  // more phrasings for the input's autocomplete only. The reel stays short.
+  var MORE = ['tip on 45', 'roman numerals for 2026', 'sha256 of turing', 'base64 encode hello', 'morse sos', 'flip a coin', 'generate a strong password',
+              'make a uuid', 'random number between 1 and 100', 'count words in the quick brown fox', 'reverse the text hello', 'what day is it',
+              'convert 5 km to miles', 'calculate 15% of 80', 'factor 84', 'time in london', 'days until halloween', 'how much disk space do i have'];
   var reelAt = 0;
   function stopReel() { reel = false; clearTimeout(reelTimer); clearTimeout(idleTimer); }
   function nextReel() {
@@ -543,7 +549,7 @@
     say(null, [], "I'm Samantha. Tell me to do something, to the Mac up there or to this page, or ask me something. Type anything.");
     // No buttons. The reel shows what she does, and the same lines feed the input's native autocomplete.
     var suggest = $('chat-suggest');
-    REEL.forEach(function (q) { var o = document.createElement('option'); o.value = q; suggest.appendChild(o); });
+    REEL.concat(MORE).forEach(function (q) { var o = document.createElement('option'); o.value = q; suggest.appendChild(o); });
     fetch('faq.json').then(function (r) { return r.json(); }).then(function (f) { faq = f; }).catch(function () {});
     idle();
   }

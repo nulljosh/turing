@@ -231,7 +231,259 @@
   var PROJECT = /\b(?:turing|samantha|arthur|lora|faq|roadmap|project|repo|repository|model|adapter|eval|trained|training|fine.?tun\w*|mlx|qwen|yourself|you)\b/i;
   function isProject(q) { return PROJECT.test(q); }
 
+
+  // ---- the thirty-one utility tools, ported from tools_util.py. Same words back, so the two sides can be diffed. ----
+  var U = {};
+  function num(x) { x = Math.round(x * 1e10) / 1e10; return String(x); }
+
+  // arithmetic without eval: a small parser for + - * / // % ** ( ), a few functions, pi and e
+  var FUNCS = { sqrt: Math.sqrt, abs: Math.abs, round: Math.round, sin: Math.sin, cos: Math.cos, tan: Math.tan, log: Math.log10, ln: Math.log };
+  function calcParse(text) {
+    var toks = text.match(/\d+\.?\d*|\.\d+|\*\*|\/\/|[-+*\/%()]|[a-z]+/g) || [], i = 0;
+    if (toks.join("") !== text.replace(/\s+/g, "")) throw new Error("I only do plain arithmetic");
+    function peek() { return toks[i]; }
+    function atom() {
+      var t = toks[i++];
+      if (t === undefined) throw new Error("I only do plain arithmetic");
+      if (/^[\d.]/.test(t)) return parseFloat(t);
+      if (t === "pi") return Math.PI;
+      if (t === "e") return Math.E;
+      if (t === "(") { var v = expr(); if (toks[i++] !== ")") throw new Error("I only do plain arithmetic"); return v; }
+      if (FUNCS[t] && toks[i] === "(") { i++; var a = expr(); if (toks[i++] !== ")") throw new Error("I only do plain arithmetic"); return FUNCS[t](a); }
+      throw new Error("I only do plain arithmetic");
+    }
+    function power() {
+      var base = atom();
+      if (peek() === "**") { i++; var e = unary(); if (Math.abs(e) > 1000) throw new Error("that power is too big"); return Math.pow(base, e); }
+      return base;
+    }
+    function unary() {
+      if (peek() === "-") { i++; return -unary(); }
+      if (peek() === "+") { i++; return unary(); }
+      return power();
+    }
+    function term() {
+      var v = unary();
+      while (["*", "/", "//", "%"].indexOf(peek()) >= 0) {
+        var op = toks[i++], b = unary();
+        if ((op !== "*") && b === 0) throw new RangeError("zero");
+        v = op === "*" ? v * b : op === "/" ? v / b : op === "//" ? Math.floor(v / b) : v - b * Math.floor(v / b);
+      }
+      return v;
+    }
+    function expr() {
+      var v = term();
+      while (peek() === "+" || peek() === "-") { var op = toks[i++], b = term(); v = op === "+" ? v + b : v - b; }
+      return v;
+    }
+    var out = expr();
+    if (i < toks.length) throw new Error("I only do plain arithmetic");
+    return out;
+  }
+  U.calculate = function (expression) {
+    var text = expression.toLowerCase().replace(/x/g, "*").replace(/\^/g, "**").replace(/,/g, "").trim();
+    var m = /^(\d+(?:\.\d+)?)\s*% of (\d+(?:\.\d+)?)$/.exec(text);
+    if (m) return num(parseFloat(m[1]) * parseFloat(m[2]) / 100);
+    try {
+      var v = calcParse(text);
+      if (!isFinite(v)) throw new RangeError("zero");
+      return num(v);
+    } catch (e) {
+      if (e instanceof RangeError) return "You cannot divide by zero.";
+      return "Cannot work that out: " + (e.message === "that power is too big" ? e.message : "I only do plain arithmetic") + ".";
+    }
+  };
+
+  var LENGTH = { mm: 0.001, cm: 0.01, m: 1, km: 1000, "in": 0.0254, ft: 0.3048, yd: 0.9144, mi: 1609.344 };
+  var MASS = { g: 0.001, kg: 1, lb: 0.45359237, oz: 0.028349523125 };
+  var VOLUME = { ml: 0.001, l: 1, cup: 0.2365882365, gal: 3.785411784 };
+  var TIME = { s: 1, min: 60, h: 3600, day: 86400, week: 604800 };
+  var ALIAS = {
+    millimeter: "mm", millimeters: "mm", centimeter: "cm", centimeters: "cm", meter: "m", meters: "m", metre: "m", metres: "m",
+    kilometer: "km", kilometers: "km", kilometre: "km", kilometres: "km", inch: "in", inches: "in", foot: "ft", feet: "ft",
+    yard: "yd", yards: "yd", mile: "mi", miles: "mi", gram: "g", grams: "g", kilogram: "kg", kilograms: "kg", kilo: "kg", kilos: "kg",
+    pound: "lb", pounds: "lb", lbs: "lb", ounce: "oz", ounces: "oz", milliliter: "ml", milliliters: "ml", liter: "l", liters: "l",
+    litre: "l", litres: "l", cups: "cup", gallon: "gal", gallons: "gal", second: "s", seconds: "s", sec: "s", minute: "min",
+    minutes: "min", mins: "min", hour: "h", hours: "h", hr: "h", hrs: "h", days: "day", weeks: "week",
+    celsius: "c", centigrade: "c", fahrenheit: "f", kelvin: "k", "°c": "c", "°f": "f"
+  };
+  U.convert_units = function (text) {
+    var m = /^\s*(-?\d+(?:\.\d+)?)\s*([a-z°]+)\s+(?:to|in|into)\s+([a-z°]+)\s*$/.exec(text.toLowerCase());
+    if (!m) return 'Say it like "5 km to miles".';
+    var n = parseFloat(m[1]), a = ALIAS[m[2]] || m[2], b = ALIAS[m[3]] || m[3], temps = ["c", "f", "k"];
+    if (temps.indexOf(a) >= 0 && temps.indexOf(b) >= 0) {
+      var c = a === "c" ? n : a === "f" ? (n - 32) * 5 / 9 : n - 273.15;
+      var out = b === "c" ? c : b === "f" ? c * 9 / 5 + 32 : c + 273.15;
+      return num(n) + " " + a.toUpperCase() + " is " + num(Math.round(out * 100) / 100) + " " + b.toUpperCase() + ".";
+    }
+    var tables = [LENGTH, MASS, VOLUME, TIME];
+    for (var i = 0; i < tables.length; i++) {
+      var t = tables[i];
+      if (t.hasOwnProperty(a) && t.hasOwnProperty(b)) return num(n) + " " + a + " is " + num(Math.round(n * t[a] / t[b] * 1e4) / 1e4) + " " + b + ".";
+    }
+    return "I cannot convert " + m[2] + " to " + m[3] + ".";
+  };
+
+  var ZONES = { tokyo: "Asia/Tokyo", london: "Europe/London", paris: "Europe/Paris", berlin: "Europe/Berlin", "new york": "America/New_York",
+    "los angeles": "America/Los_Angeles", vancouver: "America/Vancouver", toronto: "America/Toronto", chicago: "America/Chicago",
+    denver: "America/Denver", sydney: "Australia/Sydney", dubai: "Asia/Dubai", singapore: "Asia/Singapore", "hong kong": "Asia/Hong_Kong",
+    mumbai: "Asia/Kolkata", delhi: "Asia/Kolkata", moscow: "Europe/Moscow", seoul: "Asia/Seoul", beijing: "Asia/Shanghai",
+    shanghai: "Asia/Shanghai", cairo: "Africa/Cairo", "sao paulo": "America/Sao_Paulo", "mexico city": "America/Mexico_City",
+    auckland: "Pacific/Auckland", honolulu: "Pacific/Honolulu" };
+  function clock(zone) {
+    var o = zone ? { timeZone: zone } : {};
+    return new Date().toLocaleTimeString("en-US", Object.assign({ hour: "numeric", minute: "2-digit" }, o)).replace(/ /g, " ");
+  }
+  U.time_in = function (place) {
+    var key = (place || "").toLowerCase().trim();
+    if (!key) return "It is " + clock() + ".";
+    var zone = ZONES[key] || place.trim().replace(/ /g, "_");
+    try {
+      var day = new Date().toLocaleDateString("en-US", { weekday: "long", timeZone: zone });
+      return "It is " + clock(zone) + " on " + day + " in " + place.trim().replace(/\b\w/g, function (c) { return c.toUpperCase(); }) + ".";
+    } catch (e) { return "I do not know the time zone for " + place.trim() + "."; }
+  };
+  U.current_date = function () {
+    return "It is " + new Date().toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" }) + ".";
+  };
+  var HOLIDAYS = { christmas: [12, 25], "new year": [1, 1], "new years": [1, 1], halloween: [10, 31], "canada day": [7, 1],
+                   "valentines day": [2, 14], "valentine's day": [2, 14] };
+  U.days_until = function (target) {
+    var key = target.toLowerCase().trim(), now = new Date(), y = now.getFullYear();
+    var today = Date.UTC(y, now.getMonth(), now.getDate()), d;
+    if (HOLIDAYS[key]) {
+      d = Date.UTC(y, HOLIDAYS[key][0] - 1, HOLIDAYS[key][1]);
+      if (d < today) d = Date.UTC(y + 1, HOLIDAYS[key][0] - 1, HOLIDAYS[key][1]);
+    } else {
+      var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(key);
+      d = m ? Date.UTC(+m[1], +m[2] - 1, +m[3]) : NaN;
+      if (m && new Date(d).getUTCMonth() !== +m[2] - 1) d = NaN;
+    }
+    if (isNaN(d)) return "Give me a date like 2026-12-25, or a holiday like christmas.";
+    var n = Math.round((d - today) / 864e5), dt = new Date(d);
+    if (n === 0) return "That is today.";
+    return Math.abs(n) + " day" + (Math.abs(n) === 1 ? "" : "s") + " " + (n > 0 ? "until" : "since") + " " +
+      dt.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" }) + ".";
+  };
+
+  function rnd(lo, hi) { return lo + Math.floor(Math.random() * (hi - lo + 1)); }
+  U.flip_coin = function () { return Math.random() < 0.5 ? "Heads." : "Tails."; };
+  U.roll_dice = function (spec) {
+    var m = /^(\d*)d(\d+)$/.exec((spec || "1d6").toLowerCase().trim() || "1d6");
+    if (!m) return 'Say it like "2d6" or "d20".';
+    var n = parseInt(m[1] || "1", 10), sides = parseInt(m[2], 10);
+    if (!(n >= 1 && n <= 100 && sides >= 2 && sides <= 1000)) return "Up to 100 dice with 2 to 1000 sides.";
+    var rolls = [], sum = 0;
+    for (var i = 0; i < n; i++) { var r = rnd(1, sides); rolls.push(r); sum += r; }
+    return n === 1 ? String(rolls[0]) : rolls.join(" + ") + " = " + sum;
+  };
+  U.random_number = function (bounds) {
+    var nums = ((bounds || "").match(/-?\d+/g) || []).slice(0, 2).map(Number);
+    return String(nums.length === 2 ? rnd(Math.min(nums[0], nums[1]), Math.max(nums[0], nums[1])) : rnd(1, 100));
+  };
+  U.make_password = function (length) {
+    var n = Math.max(8, Math.min(64, /^\d+$/.test(String(length).trim()) ? parseInt(length, 10) : 16));
+    var pool = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*-_", out = "";
+    var buf = new Uint32Array(n);
+    crypto.getRandomValues(buf);
+    for (var i = 0; i < n; i++) out += pool[buf[i] % pool.length];
+    return out;
+  };
+  U.make_uuid = function () { return crypto.randomUUID(); };
+
+  U.hash_text = function (text) {
+    return crypto.subtle.digest("SHA-256", new TextEncoder().encode(text)).then(function (buf) {
+      return Array.prototype.map.call(new Uint8Array(buf), function (b) { return ("0" + b.toString(16)).slice(-2); }).join("");
+    });
+  };
+  U.base64_encode = function (text) { return btoa(unescape(encodeURIComponent(text))); };
+  U.base64_decode = function (text) {
+    var t = text.trim();
+    try {
+      if (t.length % 4 || !/^[A-Za-z0-9+\/]*={0,2}$/.test(t)) throw new Error("bad");
+      return decodeURIComponent(escape(atob(t)));
+    } catch (e) { return "That is not valid base64 text."; }
+  };
+  U.word_count = function (text) {
+    var words = text.trim() ? text.trim().split(/\s+/).length : 0;
+    return words + " word" + (words === 1 ? "" : "s") + ", " + Array.from(text).length + " characters.";
+  };
+  U.reverse_text = function (text) { return Array.from(text).reverse().join(""); };
+  U.shout = function (text) { return text.toUpperCase(); };
+  var MORSE = {};
+  ("abcdefghijklmnopqrstuvwxyz0123456789").split("").forEach(function (c, i) {
+    MORSE[c] = (".- -... -.-. -.. . ..-. --. .... .. .--- -.- .-.. -- -. --- .--. --.- .-. ... - ..- ...- .-- -..- -.-- --.. " +
+                "----- .---- ..--- ...-- ....- ..... -.... --... ---.. ----.").split(" ")[i];
+  });
+  U.morse_code = function (text) {
+    var out = text.toLowerCase().split("").filter(function (c) { return MORSE[c]; }).map(function (c) { return MORSE[c]; }).join(" ");
+    return out || "Nothing there to translate.";
+  };
+  U.json_pretty = function (text) {
+    try { return JSON.stringify(JSON.parse(text), null, 2).slice(0, 2000); } catch (e) { return "That is not valid JSON."; }
+  };
+  U.is_prime = function (number) {
+    var s = String(number).trim();
+    if (!/^\d+$/.test(s) || +s < 2 || +s > 1e12) return "Give me a whole number from 2 to a trillion.";
+    var n = +s, factors = [], p = 2;
+    while (p * p <= n) { while (n % p === 0) { factors.push(p); n /= p; } p += p === 2 ? 1 : 2; }
+    if (n > 1) factors.push(n);
+    return factors.length === 1 ? s + " is prime." : s + " is not prime: " + factors.join(" x ") + ".";
+  };
+  U.roman_numeral = function (number) {
+    var s = String(number).trim();
+    if (!/^\d+$/.test(s) || +s < 1 || +s > 3999) return "Roman numerals run from 1 to 3999.";
+    var n = +s, out = "", table = [[1000, "M"], [900, "CM"], [500, "D"], [400, "CD"], [100, "C"], [90, "XC"], [50, "L"], [40, "XL"], [10, "X"], [9, "IX"], [5, "V"], [4, "IV"], [1, "I"]];
+    table.forEach(function (row) { while (n >= row[0]) { out += row[1]; n -= row[0]; } });
+    return out;
+  };
+  U.tip = function (amount) {
+    var bill = parseFloat(String(amount).replace("$", ""));
+    if (isNaN(bill)) return "Give me the bill amount.";
+    return "Tip on " + bill.toFixed(2) + ": " + [15, 18, 20].map(function (p) { return p + "% is " + (bill * p / 100).toFixed(2); }).join(", ") + ".";
+  };
+  // the ten that read or touch a real Mac. The stand-in Mac on this page has no disk, network or clipboard to show.
+  var REAL_MAC = "That one reads your real Mac, and this stand-in has no disk, memory or network. Run her on a Mac and it answers.";
+  ["disk_space", "uptime", "memory_usage", "cpu_load", "ip_address", "wifi_name", "system_info", "copy_to_clipboard", "sleep_display", "reveal_in_finder"]
+    .forEach(function (name) { U[name] = function () { return REAL_MAC; }; });
+  U.NEEDS_MAC = ["disk_space", "uptime", "memory_usage", "cpu_load", "ip_address", "wifi_name", "system_info", "copy_to_clipboard", "sleep_display", "reveal_in_finder"];
+
+  ROUTES.push.apply(ROUTES, [
+    [/^(?:calc(?:ulate)?|compute|work out|math)[: ]+(.+)$/i, function (m) { return ["calculate", m[1]]; }],
+    [/^convert (.+)$/i, function (m) { return ["convert_units", m[1]]; }],
+    [/^what time is it in (.+)$|^(?:what(?:'s| is) )?(?:the )?time in (.+)$/i, function (m) { return ["time_in", (m[1] || m[2])]; }],
+    [/^what(?:'s| is)(?: the)? date(?: today)?$|^what day is it(?: today)?$|^today'?s date$/i, function (m) { return ["current_date", ""]; }],
+    [/^(?:how many )?days? (?:until|till|to) (.+)$|^how long (?:until|till) (.+)$/i, function (m) { return ["days_until", (m[1] || m[2])]; }],
+    [/^(?:flip|toss) a coin$/i, function (m) { return ["flip_coin", ""]; }],
+    [/^roll (\d*d\d+)$/i, function (m) { return ["roll_dice", m[1]]; }],
+    [/^roll (?:a |the )?(?:dice|die)$/i, function (m) { return ["roll_dice", "1d6"]; }],
+    [/^(?:pick |give me |generate )?(?:a )?random number(?: (?:between|from) (.+))?$/i, function (m) { return ["random_number", (m[1] || "")]; }],
+    [/^(?:generate|make|create|give me)(?: me)? (?:a |an )?(?:strong |secure |random )?password(?:(?: of| with)? (\d+)(?: char\w*)?)?$/i, function (m) { return ["make_password", (m[1] || "16")]; }],
+    [/^(?:generate|make|create|give me)(?: me)? (?:a |an )?(?:new |random )?(?:uuid|guid)$/i, function (m) { return ["make_uuid", ""]; }],
+    [/^sha-?256(?: of)?[: ]+(.+)$|^hash(?: of|:) (.+)$/i, function (m) { return ["hash_text", ((m[1] || m[2]))]; }],
+    [/^base64 encode[: ]+(.+)$/i, function (m) { return ["base64_encode", m[1]]; }],
+    [/^base64 decode[: ]+(.+)$/i, function (m) { return ["base64_decode", m[1]]; }],
+    [/^(?:count (?:the )?words in|word count(?: of)?)[: ]+(.+)$/i, function (m) { return ["word_count", m[1]]; }],
+    [/^reverse(?: the)? (?:text|words?|string)[: ]+(.+)$|^reverse: (.+)$/i, function (m) { return ["reverse_text", ((m[1] || m[2]))]; }],
+    [/^(?:shout|uppercase)[: ]+(.+)$/i, function (m) { return ["shout", m[1]]; }],
+    [/^morse(?: code)?(?: for| of)?[: ]+(.+)$/i, function (m) { return ["morse_code", m[1]]; }],
+    [/^(?:pretty ?print|format|prettify) json[: ]+(.+)$/i, function (m) { return ["json_pretty", m[1]]; }],
+    [/^is (\d+) (?:a )?prime$|^(?:prime factors of|factor|factorize) (\d+)$/i, function (m) { return ["is_prime", (m[1] || m[2])]; }],
+    [/^roman numerals? (?:for |of )?(\d+)$|^(\d+) in roman numerals$/i, function (m) { return ["roman_numeral", (m[1] || m[2])]; }],
+    [/^(?:(?:what(?:'s| is) )?(?:the |a )?tip on|tip(?: for)?) \$?(\d+(?:\.\d+)?)$/i, function (m) { return ["tip", m[1]]; }],
+    [/^(?:check )?disk space$|^how much (?:disk |storage )?space (?:do i have|is (?:left|free))(?: left)?$|^how much storage (?:do i have|is left)$/i, function (m) { return ["disk_space", ""]; }],
+    [/^how long has (?:my mac|this mac|it) been (?:on|up|running)$|^uptime$/i, function (m) { return ["uptime", ""]; }],
+    [/^(?:how much )?(?:ram|memory)(?: (?:do i have|is free|is left|am i using))?$|^(?:ram|memory) usage$/i, function (m) { return ["memory_usage", ""]; }],
+    [/^(?:cpu|processor) (?:load|usage)$|^how busy is (?:my mac|the cpu)$|^load average$/i, function (m) { return ["cpu_load", ""]; }],
+    [/^(?:what(?:'s| is) )?my (?:local )?ip(?: address)?$/i, function (m) { return ["ip_address", ""]; }],
+    [/^(?:what|which) wi-?fi(?: network)?(?: am i (?:on|connected to))?$|^wi-?fi name$/i, function (m) { return ["wifi_name", ""]; }],
+    [/^(?:system|mac) info$|^what mac (?:is this|am i on)$|^about this mac$/i, function (m) { return ["system_info", ""]; }],
+    [/^copy (.+) to (?:the |my )?clipboard$/i, function (m) { return ["copy_to_clipboard", m[1]]; }],
+    [/^(?:lock|sleep)(?: the| my)? (?:screen|display)$/i, function (m) { return ["sleep_display", ""]; }],
+    [/^(?:reveal|show)(?: me)? (.+?) in finder$/i, function (m) { return ["reveal_in_finder", m[1]]; }]
+  ]);
+
   root.Samantha = { route: route, exact: exact, bare: bare, urlOf: urlOf, appMatch: appMatch, APPS: APPS, SITES: SITES,
                     stem: stem, keywords: keywords, isProject: isProject,
-                    pageRoute: pageRoute, section: section, sound: sound, duration: duration, COLORS: COLORS };
+                    pageRoute: pageRoute, section: section, sound: sound, duration: duration, COLORS: COLORS, util: U };
 })(typeof globalThis !== "undefined" ? globalThis : this);

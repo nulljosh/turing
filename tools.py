@@ -20,6 +20,7 @@ import subprocess
 import sys
 import urllib.parse
 import urllib.request
+import tools_util
 from tools_image import remove_background, upscale_image, enhance_image, grayscale_image, rotate_image, flip_image, resize_image, crop_square, convert_image, image_info
 
 AGENT_MODEL = "qwen3:1.7b"  # 8B was right but 7.6GB and minutes per run; 1.7B is right in 5s once the harness prefetches
@@ -425,6 +426,8 @@ TOOLS = {f.__name__: f for f in (open_app, open_url, web_search, current_tab, re
                                      clipboard, set_volume, battery, say, list_dir, read_file, make_logo, paint_image,
                                      music, weather, timer, new_note, new_reminder, calendar_today,
                                      remove_background, upscale_image, enhance_image, grayscale_image, rotate_image, flip_image, resize_image, crop_square, convert_image, image_info)}
+TOOLS.update({f.__name__: f for f in tools_util.TOOLS})
+globals().update({f.__name__: f for f in tools_util.TOOLS})  # eval/actions.py swaps every TOOLS name on this module for a recorder
 
 _UNIT = {"s": 1 / 60, "m": 1, "h": 60}
 
@@ -465,6 +468,17 @@ _ROUTES = (
      # ("the turing repo on github") is something to look for.
      lambda m: open_url(m.group(1)) if _url(m.group(1)) or (" " in m.group(1).strip() and not _app_match(m.group(1))) else open_app(m.group(1))),
 )
+
+
+def _util_route(name, arg):
+    """A tools_util route as a tools.py one. The function is looked up on this module at call
+    time, so eval/actions.py can swap it for a recorder like every other tool."""
+    takes = getattr(tools_util, name).__code__.co_argcount
+    return lambda m: globals()[name](arg(m)) if takes else globals()[name]()
+
+
+_ROUTES = _ROUTES + tuple((pat, _util_route(name, arg)) for pat, name, arg in tools_util.ROUTES)  # 31 utility tools: math, text, dice, this Mac's vitals
+
 # anything past the first verb phrase means more than one step: that is agent() work
 _MULTISTEP = re.compile(r"\b(?:and (?:then )?(?:tell|read|find|summar|poke|look|check|see|click)|poke around|then )", re.I)
 _ACTION = re.compile(r"^(?:open|launch|start|go to|visit|browse|pull up|search|google|look up|poke around|take a|grab a|screenshot|make|design|draw|paint|repaint|play|pause|skip|remind me|set a)\b", re.I)
@@ -706,6 +720,7 @@ def demo():
         assert all(a[0] in ("open", "osascript", "screencapture", "pbpaste", "pmset") for a in calls)
     finally:
         _run = real
+    tools_util.demo()
     print("tools ok")
 
 
