@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Privacy, Turing</title><link rel="icon" type="image/svg+xml" href="icon.svg">
+<style>
+:root{--bg:#fff;--fg:#1a1a1a;--muted:#6b6b6b;--ember:#E8A96A}
+@media (prefers-color-scheme:dark){:root{--bg:#000;--fg:#eaeaea;--muted:#9a9a9a}}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Helvetica,Arial,sans-serif;line-height:1.6}
+main{max-width:640px;margin:0 auto;padding:64px 16px}
+h1{font-size:clamp(36px,7vw,56px);letter-spacing:-0.03em;line-height:1.05;margin:0 0 24px}
+h2{font-size:20px;margin:32px 0 6px}
+a{color:inherit;text-decoration-color:var(--ember);text-decoration-thickness:2px;text-underline-offset:3px}
+p{margin:0 0 12px}.sub{color:var(--muted);font-size:14px}
+</style></head><body><main>
+<p><a href="/">Back to Turing</a></p>
+<h1>Privacy</h1>
+<p>Short version: no accounts, no ads, no cookies, nothing sold. Samantha herself runs on one Mac and never leaves it.</p>
+<h2>The demo on this site</h2>
+<p>Most commands run in your browser and go nowhere. When you ask a question the rules cannot answer, the text you typed is sent to a small Cloudflare Worker, which passes it to a Cloudflare Workers AI model to pick a tool or read a Wikipedia article. The Worker does not store what you type. Answers to common questions may be cached at Cloudflare's edge so the next person gets them faster.</p>
+<h2>What stays in your browser</h2>
+<p>Notes and reminders you make in the demo are kept in your own browser's local storage, the last twenty of each, so they survive a reload. Clear your site data and they are gone. They are never sent anywhere.</p>
+<h2>Other services the demo calls</h2>
+<p>Weather comes from wttr.in. Headlines come from the Hacker News API. Version info comes from the GitHub API. Each of those sees your IP address the way any website does.</p>
+<h2>Images you pick</h2>
+<p>"Your own image" in the painter is read inside your browser and drawn on the page. It is never uploaded.</p>
+<h2>Analytics</h2>
+<p>The site uses Cloudflare Web Analytics, which counts page views without cookies and without following you around.</p>
+<h2>The real Samantha</h2>
+<p>On the Mac she runs on, her models, her tools and everything you ask her stay on that machine. The code is open, so you can check: <a href="https://github.com/nulljosh/turing">github.com/nulljosh/turing</a>.</p>
+<p class="sub">Questions: open an issue on GitHub. Last updated September 2026.</p>
+</main></body></html>

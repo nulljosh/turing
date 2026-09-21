@@ -2,9 +2,9 @@
 
 # Turing
 
-[![version](https://img.shields.io/badge/version-v0.8.0-blue)](https://github.com/nulljosh/turing/releases)
-[![test](https://github.com/nulljosh/turing/actions/workflows/test.yml/badge.svg)](https://github.com/nulljosh/turing/actions/workflows/test.yml)
-![license](https://img.shields.io/badge/license-MIT-green) [![GitHub](https://img.shields.io/badge/GitHub-nulljosh%2Fturing-black?logo=github)](https://github.com/nulljosh/turing)
+[![version](https://img.shields.io/github/v/release/nulljosh/turing?label=version&color=blue)](https://github.com/nulljosh/turing/releases)
+[![test](https://github.com/nulljosh/turing/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/nulljosh/turing/actions/workflows/test.yml)
+![license](https://img.shields.io/badge/license-Apache--2.0-green) [![GitHub](https://img.shields.io/badge/GitHub-nulljosh%2Fturing-black?logo=github)](https://github.com/nulljosh/turing)
 
 Build small language models on one Mac. Samantha is a 0.5B model fine-tuned on your own writing, runs entirely on-device via MLX, and now has 30 hands to act on the world.
 

@@ -23,4 +23,4 @@ Samantha answers questions by retrieving real facts from `brain` RAG and generat
 The Mona Lisa at 3000 layers still looks blocky. Paintings above 4000 layers get cut off. 62 of 672 picks are still wrong; multi-step asks borrow a 1.7B model because training her own is the next roadmap item.
 
 ---
-MIT License, 2026 Joshua Trommel.
+Apache License 2.0, 2026 Joshua Trommel.
