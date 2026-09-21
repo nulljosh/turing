@@ -4,6 +4,7 @@
     PXM_LIVE=1 python3 -m unittest -v   also drives the real Pixelmator Pro on this Mac.
 """
 import contextlib
+import fcntl
 import io
 import json
 import os
@@ -11,6 +12,7 @@ import re
 import subprocess
 import sys
 import tempfile
+import threading
 import unittest
 from unittest import mock
 
@@ -530,6 +532,114 @@ class MacWithoutTheApp(unittest.TestCase):
         code, _, err = run_main("check")
         self.assertEqual(code, pxm.EXIT_ENV)
         self.assertIn("not installed", err)
+
+
+class BuildLock(unittest.TestCase):
+    """Tests for the file-based build lock (no app needed)."""
+
+    def setUp(self):
+        # Use a temp lock file for each test, not the real one.
+        self.lock_dir = tempfile.TemporaryDirectory()
+        self.lock_path = os.path.join(self.lock_dir.name, "test.lock")
+
+    def tearDown(self):
+        self.lock_dir.cleanup()
+
+    def test_lock_blocked_by_default(self):
+        """If lock is held, build_lock raises PxmError with code EXIT_ENV."""
+        # Acquire the lock from the same process using two file descriptors.
+        f1 = open(self.lock_path, 'a+')
+        fcntl.flock(f1, fcntl.LOCK_EX)
+        f1.write("other pid 9999\n")
+        f1.flush()
+        try:
+            with mock.patch.object(pxm, 'BUILD_LOCK_PATH', self.lock_path):
+                with self.assertRaises(pxm.PxmError) as cm:
+                    with pxm.build_lock("test", wait=False):
+                        pass
+            self.assertEqual(cm.exception.code, pxm.EXIT_ENV)
+            self.assertIn("Pixelmator Pro is busy", cm.exception.message)
+            self.assertIn("other pid 9999", cm.exception.message)
+            self.assertIn("--wait", cm.exception.hint)
+        finally:
+            fcntl.flock(f1, fcntl.LOCK_UN)
+            f1.close()
+
+    def test_lock_waits_when_flag_set(self):
+        """With wait=True, build_lock waits for the lock to be released."""
+        f1 = open(self.lock_path, 'a+')
+        fcntl.flock(f1, fcntl.LOCK_EX)
+        f1.write("other pid 9999\n")
+        f1.flush()
+        try:
+            # Spawn a thread that will release the lock after a short delay.
+            def release_lock():
+                import time
+                time.sleep(0.1)
+                fcntl.flock(f1, fcntl.LOCK_UN)
+            thread = threading.Thread(target=release_lock)
+            thread.daemon = True
+            thread.start()
+            # build_lock with wait=True should succeed.
+            with mock.patch.object(pxm, 'BUILD_LOCK_PATH', self.lock_path):
+                with pxm.build_lock("test", wait=True):
+                    pass
+                thread.join(timeout=1)
+        finally:
+            fcntl.flock(f1, fcntl.LOCK_UN)
+            f1.close()
+
+    def test_dry_run_skips_lock(self):
+        """--dry-run does not acquire the lock."""
+        with tempfile.TemporaryDirectory() as tmp:
+            spec_path = os.path.join(tmp, "spec.json")
+            with open(spec_path, "w") as f:
+                json.dump(spec(export=[]), f)
+            # Hold the lock so any real build would fail.
+            f1 = open(self.lock_path, 'a+')
+            fcntl.flock(f1, fcntl.LOCK_EX)
+            try:
+                with mock.patch.object(pxm, 'BUILD_LOCK_PATH', self.lock_path):
+                    code, out, err = run_main("logo", spec_path, "--dry-run")
+                    # Dry-run should not be blocked by the lock.
+                    self.assertEqual(code, 0)
+                    self.assertIn("make new document", out)  # Script output, not an error.
+            finally:
+                fcntl.flock(f1, fcntl.LOCK_UN)
+                f1.close()
+
+    def test_wait_flag_accepted_by_logo(self):
+        """--wait flag is accepted by logo command and doesn't block on dry-run."""
+        with tempfile.TemporaryDirectory() as tmp:
+            spec_path = os.path.join(tmp, "spec.json")
+            with open(spec_path, "w") as f:
+                json.dump(spec(export=[]), f)
+            # With --dry-run, --wait should parse without error and not block.
+            with mock.patch.object(pxm, 'BUILD_LOCK_PATH', self.lock_path):
+                code, out, err = run_main("logo", spec_path, "--wait", "--dry-run")
+                self.assertEqual(code, 0)
+
+    def test_wait_flag_accepted_by_paint(self):
+        """--wait flag is accepted by paint command."""
+        with tempfile.TemporaryDirectory() as tmp:
+            # Create a small test image (1x1 red PNG).
+            img_path = os.path.join(tmp, "test.png")
+            png_data = (
+                b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x01'
+                b'\x00\x00\x00\x01\x08\x02\x00\x00\x00\x90wS\xde\x00\x00\x00\x0c'
+                b'IDATx\x9cc\xf8\xcf\xc0\x00\x00\x00\x03\x00\x01O\xf5`\xde'
+                b'\x00\x00\x00\x00IEND\xaeB`\x82'
+            )
+            with open(img_path, 'wb') as f:
+                f.write(png_data)
+            out_path = os.path.join(tmp, "out.png")
+            # --wait with --dry-run should parse without error.
+            with mock.patch.object(pxm, 'BUILD_LOCK_PATH', self.lock_path):
+                code, out, err = run_main(
+                    "paint", img_path, "--out", out_path,
+                    "--wait", "--dry-run", "--shapes", "5"
+                )
+                self.assertEqual(code, 0)
 
 
 @unittest.skipUnless(LIVE, "set PXM_LIVE=1 on a Mac with Pixelmator Pro")

@@ -11,6 +11,8 @@ Stdlib only. Runs on the system python3 (3.9+).
     pxm.py run script.applescript   run raw AppleScript with decoded errors
 """
 import argparse
+import contextlib
+import fcntl
 import json
 import math
 import os
@@ -21,6 +23,7 @@ import sys
 import tempfile
 
 APP = "Pixelmator Pro"
+BUILD_LOCK_PATH = os.path.join(tempfile.gettempdir(), "pxm-build.lock")
 
 EXIT_USAGE = 2   # bad spec or arguments. Fix the input.
 EXIT_ENV = 3     # this Mac is not ready: no app, no permission, not macOS.
@@ -637,6 +640,7 @@ def cmd_run(args):
 
 
 def cmd_logo(args):
+    args._build_label = "logo %s" % os.path.basename(args.spec)
     with open(args.spec) as f:
         build(validate_spec(json.load(f)), args)
 
@@ -651,6 +655,7 @@ def paint_timeout(layers):
 def cmd_paint(args):
     if not 5 <= args.shapes <= 20000:
         raise PxmError("--shapes must be from 5 to 20000", code=EXIT_USAGE)
+    args._build_label = "paint %s" % os.path.basename(args.image)
     w, h, rows = read_pixels(os.path.expanduser(args.image), side=args.detail)
     scale = max(1, round(args.size / max(w, h)))
     layers = paint_layers(w, h, rows, args.shapes, scale, args.shape)
@@ -658,6 +663,42 @@ def cmd_paint(args):
     build(validate_spec({"width": w * scale, "height": h * scale, "layers": layers,
                          "export": args.out, "keep_open": True}), args,
           frame_every=max(1, len(layers) // 60))
+
+
+@contextlib.contextmanager
+def build_lock(label, wait=False):
+    """File-based lock for exclusive access to Pixelmator Pro builds.
+
+    Acquires an exclusive lock on BUILD_LOCK_PATH. If the lock is held,
+    optionally waits for it to be released. Writes the label and pid to the file
+    so callers can see what is building. Released by the kernel when the process dies,
+    so crashes never leave a stale lock.
+    """
+    lock_file = open(BUILD_LOCK_PATH, 'a+')
+    try:
+        try:
+            fcntl.flock(lock_file, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except IOError:
+            # Lock is held by another process.
+            lock_file.seek(0)
+            holder = lock_file.read().strip()
+            if wait:
+                # Block until lock is free, then try again.
+                fcntl.flock(lock_file, fcntl.LOCK_EX)
+            else:
+                raise PxmError(
+                    "Pixelmator Pro is busy: %s" % holder,
+                    hint="Wait for it to finish, or pass --wait to queue behind it.",
+                    code=EXIT_ENV) from None
+        # Lock acquired. Write label and pid.
+        lock_file.truncate(0)
+        lock_file.seek(0)
+        lock_file.write("%s pid %d\n" % (label, os.getpid()))
+        lock_file.flush()
+        yield
+    finally:
+        fcntl.flock(lock_file, fcntl.LOCK_UN)
+        lock_file.close()
 
 
 def build(spec, args, frame_every=1):
@@ -679,15 +720,18 @@ def build(spec, args, frame_every=1):
         if args.dry_run:
             print(script, end="")
             return
-        gif = os.path.abspath(os.path.expanduser(args.gif)) if args.gif else None
-        for path in spec["export"] + ([gif] if gif else []):
-            os.makedirs(os.path.dirname(path), exist_ok=True)
-        if args.headless:
-            hide_app()
-        check_result(spec, run_applescript(script, timeout=args.timeout))
-        check_exports(spec)
-        if gif:
-            make_gif(frames_dir, gif, spec["width"], spec["height"])
+        # Acquire lock for the real build. --wait blocks until lock is free.
+        wait = getattr(args, "wait", False)
+        with build_lock(args._build_label, wait=wait):
+            gif = os.path.abspath(os.path.expanduser(args.gif)) if args.gif else None
+            for path in spec["export"] + ([gif] if gif else []):
+                os.makedirs(os.path.dirname(path), exist_ok=True)
+            if args.headless:
+                hide_app()
+            check_result(spec, run_applescript(script, timeout=args.timeout))
+            check_exports(spec)
+            if gif:
+                make_gif(frames_dir, gif, spec["width"], spec["height"])
     finally:
         if frames_dir and not keep_frames:
             shutil.rmtree(frames_dir, ignore_errors=True)
@@ -713,6 +757,8 @@ def main(argv=None):
                    help="stay in the background: no focus steal, close the document after export")
     g.add_argument("--frames", metavar="DIR", help="keep progress frames here as the build runs")
     g.add_argument("--gif", metavar="PATH", help="also write a short GIF of the build (needs ffmpeg)")
+    g.add_argument("--wait", action="store_true",
+                   help="if another build is running, wait for it to finish instead of failing")
     g.add_argument("--timeout", type=int, default=120)
     g.set_defaults(fn=cmd_logo)
     p = sub.add_parser("paint", help="rebuild any image out of shape layers")
@@ -728,6 +774,8 @@ def main(argv=None):
     p.add_argument("--headless", action="store_true")
     p.add_argument("--frames", metavar="DIR", help="keep progress frames here as the build runs")
     p.add_argument("--gif", metavar="PATH")
+    p.add_argument("--wait", action="store_true",
+                   help="if another build is running, wait for it to finish instead of failing")
     p.add_argument("--timeout", type=int, default=120)
     p.set_defaults(fn=cmd_paint)
     args = ap.parse_args(argv)

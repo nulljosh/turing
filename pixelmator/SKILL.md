@@ -91,6 +91,7 @@ All from `cutout` ops. Real examples sit in `examples/`.
 
 ## Learned the hard way
 
+- Builds are serialized by a file-based lock. If another build is running, the command fails with "Pixelmator Pro is busy: <holder>". Pass `--wait` to queue behind it instead.
 - Rotation is counterclockwise. Get it backwards on curved text and every letter leans the wrong way. It reads as "crooked", not as "rotated wrong".
 - Judge text from a zoomed crop, never the whole image. `ffmpeg -i logo.png -vf crop=1000:230:300:20 crop.png`, then Read it.
 - Compare against the reference side by side before calling a recreation done. Fix the biggest visible difference first.
