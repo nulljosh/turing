@@ -11,10 +11,7 @@ git rev-parse "v$V" >/dev/null 2>&1 && { echo "v$V already exists"; exit 1; }
 # scratch/ holds a weights file git always calls changed. Everything else must be committed.
 [ -z "$(git status --porcelain | grep -v ' scratch/')" ] || { echo "commit your work first"; exit 1; }
 
-python3 test_chat.py | tail -1
-python3 eval/actions.py | tail -1
-python3 eval/web_parity.py | tail -1
-(cd pixelmator && python3 -m unittest 2>&1 | tail -1)
+./gate.sh --full
 
 echo "$V" > VERSION
 python3 stats.py >/dev/null

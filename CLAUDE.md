@@ -35,6 +35,9 @@ ever ships as its own real model, gets a name of its own too, not a
 ## Releases
 Every shipped ability or fix ends with `./release.sh X.Y.Z "what shipped"`. It runs the checks, bumps `VERSION`, regenerates the landing stats, tags, pushes, publishes the GitHub release and deploys. Patch for a fix, minor for a new ability. Never leave a day's work untagged: on 2026-09-21 76 commits piled up past v0.7.4 before anyone noticed.
 
+## The gate
+`./gate.sh` runs five fast checks (chat, actions, parity, pixelmator, tools) and compares against eval/baseline.json. `./gate.sh --full` also runs hands.py and the live web demo. Release.sh runs the full gate, so a release cannot ship on a worse number. Use `./gate.sh --update-baseline` to set new baselines only when all checks pass.
+
 ## Design system
 The landing page's tokens live at the top of `web/index.html`. True white in light mode, true black in dark. One accent, ember (`--ember` #E8A96A), lifted from her icon. Decor uses `--ember`, text uses `--ember-ink` so it stays readable in both themes. Ember goes on heading dots, link underlines, the slider, the Send button and the "now" bars. Nothing else gets color. No gradients, no second accent. Radius and spacing come from `--r-*` and `--s-*`.
 Page order is demo, hands, results, chart. Long text sits inside `details.more` so the page stays visual. Every section keeps its `<h2>`, because her page-control demo finds sections by heading. Results tiles read `stats.json`, never hardcode them.
