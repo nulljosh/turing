@@ -13,6 +13,7 @@ wrote handed to sh.
 """
 import html
 import json
+import math
 import os
 import re
 import subprocess
@@ -218,27 +219,79 @@ def _logo_layers(letters, palette, motif):
     return layers
 
 
+# "Complex" mode: same rule, bigger control panel. She turns seven dials, the
+# harness does the trigonometry, so whatever she picks comes out symmetric.
+_COMPLEX_SCHEMA = {"type": "object", "required": ["letters", "palette", "rings", "rays", "ray_style", "orbit_dots", "star_points"],
+                   "properties": {
+    "letters": {"type": "string", "minLength": 1, "maxLength": 2}, "palette": {"enum": list(PALETTES)},
+    "rings": {"type": "integer", "minimum": 2, "maximum": 5}, "rays": {"type": "integer", "minimum": 12, "maximum": 36},
+    "ray_style": {"enum": ["bars", "dots", "stars"]}, "orbit_dots": {"type": "integer", "minimum": 0, "maximum": 16},
+    "star_points": {"type": "integer", "minimum": 4, "maximum": 12}}}
+_WANTS_COMPLEX = re.compile(r"\b(?:complex|intricate|detailed|elaborate|ornate|fancy|crazy|insane)\b", re.I)
+
+
+def _complex_layers(letters, palette, rings, rays, ray_style, orbit_dots, star_points):
+    tile, ink, accent = PALETTES[palette]
+    C = 512
+
+    def polar(r, deg):  # clock angle, 0 at the top, screen y grows downward
+        t = math.radians(deg)
+        return round(C + r * math.sin(t)), round(C - r * math.cos(t))
+
+    L = [{"type": "rounded_rectangle", "name": "Tile", "width": 880, "height": 880, "corner_radius": 200, "fill": tile}]
+    for i in range(rays):
+        deg = 360 * i / rays
+        long = i % 2 == 0
+        cx, cy = polar(372 if long else 384, deg)
+        ray = {"name": f"Ray {i + 1}", "cx": cx, "cy": cy, "fill": accent, "opacity": 100 if long else 55}
+        if ray_style == "bars":
+            # pxm rotation is counterclockwise, a clock angle is clockwise
+            ray.update(type="rounded_rectangle", width=10, height=64 if long else 36, corner_radius=5, rotation=round((360 - deg) % 360, 2))
+        elif ray_style == "stars":
+            ray.update(type="star", width=34 if long else 22, height=34 if long else 22, points=4, radius=35)
+        else:
+            ray.update(type="ellipse", width=22 if long else 12, height=22 if long else 12)
+        L.append(ray)
+    for k in range(rings):
+        d = 620 - k * (300 // rings)
+        L.append({"type": "ellipse", "name": f"Ring {k + 1}", "width": d, "height": d, "stroke": accent if k % 2 == 0 else ink,
+                  "stroke_width": max(4, 16 - 3 * k), "opacity": 100 - 15 * k})
+    for j in range(orbit_dots):
+        cx, cy = polar(310 - (300 // rings) // 2, 360 * j / orbit_dots + 180 / orbit_dots)
+        L.append({"type": "ellipse", "name": f"Orbit {j + 1}", "cx": cx, "cy": cy, "width": 18, "height": 18, "fill": ink})
+    L.append({"type": "ellipse", "name": "Core", "width": 300, "height": 300, "fill": tile})
+    L.append({"type": "star", "name": "Burst", "width": 290, "height": 290, "points": star_points, "radius": 72, "fill": accent, "opacity": 28})
+    L.append({"type": "text", "name": "Mark", "text": letters.upper(), "font": "HelveticaNeue-Bold",
+              "size": 190 if len(letters) == 1 else 150, "color": ink})
+    return L
+
+
 def make_logo(description):
-    """Design a logo and build it live in Pixelmator Pro. Takes a short description of what the logo is for."""
+    """Design a logo and build it live in Pixelmator Pro. Takes a short description of what the logo is for. Say 'complex' for an intricate one."""
+    fancy = bool(_WANTS_COMPLEX.search(description))
     prompt = ("Pick a logo for this. letters: its one or two initials. palette: ember (warm amber on dark), ink (white and gold on "
-              "near-black), forest (green on dark), signal (red on dark), paper (dark on cream). motif: ring, spark, underline or dot. "
-              "Logo for: " + description)
-    body = json.dumps({"model": AGENT_MODEL, "stream": False, "think": False, "format": _LOGO_SCHEMA,
+              "near-black), forest (green on dark), signal (red on dark), paper (dark on cream). ")
+    prompt += ("This one should be intricate, so be bold with the numbers. rings: concentric rings. rays: marks around the rim. "
+               "ray_style: bars, dots or stars. orbit_dots: dots circling inside. star_points: points on the centre burst. "
+               if fancy else "motif: ring, spark, underline or dot. ") + "Logo for: " + description
+    body = json.dumps({"model": AGENT_MODEL, "stream": False, "think": False, "format": _COMPLEX_SCHEMA if fancy else _LOGO_SCHEMA,
                        "messages": [{"role": "user", "content": prompt}]}).encode()
     try:
         with urllib.request.urlopen(urllib.request.Request(OLLAMA_CHAT, body, {"Content-Type": "application/json"}), timeout=180) as r:
             pick = json.loads(json.load(r)["message"]["content"])
-        spec = {"layers": _logo_layers(pick["letters"], pick["palette"], pick["motif"])}
+        spec = {"layers": _complex_layers(**pick) if fancy else _logo_layers(pick["letters"], pick["palette"], pick["motif"])}
     except Exception as e:
         return f"I couldn't draft the design: {e}"
     out = os.path.expanduser("~/Desktop/samantha-logo.png")
     spec.update(width=1024, height=1024, export=[out], keep_open=not HEADLESS)
     path = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".samantha-logo.json")
     json.dump(spec, open(path, "w"), indent=1)
-    result = _run([sys.executable, PXM, "logo", path] + (["--headless"] if HEADLESS else []), timeout=180)
-    chose = f"{pick['letters'].upper()}, {pick['palette']}, {pick['motif']}"
-    return f"I went with {chose}. Built it in Pixelmator, saved to {out}." if os.path.exists(out) else f"Pixelmator refused my design: {result[-300:]}"
-
+    if os.path.exists(out):
+        os.remove(out)  # a stale file must not read as a fresh success
+    result = _run([sys.executable, PXM, "logo", path, "--timeout", "600"] + (["--headless"] if HEADLESS else []), timeout=620)
+    chose = ", ".join(f"{k} {v}" for k, v in pick.items())
+    return (f"I went with {chose}. {len(spec['layers'])} layers, built in Pixelmator, saved to {out}."
+            if os.path.exists(out) else f"Pixelmator refused my design: {result[-300:]}")
 
 TOOLS = {f.__name__: f for f in (open_app, open_url, web_search, current_tab, read_page, screenshot,
                                      clipboard, set_volume, battery, say, list_dir, read_file, make_logo)}
@@ -383,6 +436,8 @@ def demo():
         for pal in PALETTES:
             for motif in ("ring", "spark", "underline", "dot"):
                 assert _logo_layers("t", pal, motif)[0]["type"] == "rounded_rectangle"
+        big = _complex_layers("t", "ember", 5, 36, "bars", 16, 12)
+        assert len(big) == 1 + 36 + 5 + 16 + 3 and all(0 <= l.get("rotation", 0) < 360 for l in big)
         assert _named_page("poke around hacker news and tell me") == "https://news.ycombinator.com"
         assert _named_page("read github.com/nulljosh/turing.") == "https://github.com/nulljosh/turing"
         assert _named_page("open pixelmator then tell me my battery") is None
