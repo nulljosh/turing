@@ -31,7 +31,7 @@
       header{padding:64px 0 24px}
       .brand{display:flex;align-items:center;gap:16px}
       .brand img{border-radius:14px;flex:0 0 auto}
-      h1{font-size:28px;margin:0 0 4px;letter-spacing:-0.02em}
+      h1{font-size:clamp(40px,8vw,76px);line-height:1.02;letter-spacing:-0.03em;font-weight:700;margin:0}
       .sub{color:var(--muted);font-size:15px;margin:0}
       .status{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);
         border:1px solid var(--line);border-radius:999px;padding:4px 12px;margin-top:16px}
@@ -39,7 +39,9 @@
       .dot.training{animation:pulse 1.6s infinite}
       @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
       section{margin-top:40px}
-      h2{font-size:14px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:0 0 12px}
+      h2{font-size:28px;line-height:1.1;letter-spacing:-0.02em;font-weight:700;color:var(--fg);margin:0 0 12px}
+      section{margin-top:64px}
+      .paint-btn{display:block;width:100%;margin:0 0 8px;padding:8px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--fg);font:inherit;font-size:13px;cursor:pointer;text-align:center;box-sizing:border-box}
       .card{border:1px solid var(--line);border-radius:10px;padding:20px}
       canvas{width:100%;height:220px;display:block}
       .meta{display:flex;flex-wrap:wrap;gap:24px;font-size:13px;color:var(--muted);margin-top:12px}
@@ -234,6 +236,22 @@
           <img src="samantha-logo.png" width="160" alt="Logo for Turing designed by Samantha">
           <p class="sub" style="margin-top:8px">Her first job. Asked for a Turing logo, she drew this in Pixelmator Pro, layer by layer. Try "make me a logo" above.</p>
         </div>
+        <h3 style="margin-top:32px;font-size:20px;letter-spacing:-0.01em">She paints too</h3>
+        <p>Say "paint ~/Downloads/mona.jpg" and she rebuilds the photo inside Pixelmator Pro from colored squares, each one a real layer. She finds the patch that looks most wrong and splits it in four, again and again. No model draws it, so it costs nothing. Her own picker chooses the tool, even from wording it never trained on. This is the same method, live in your browser.</p>
+        <div class="card" style="margin-top:16px;display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start">
+          <canvas id="paint-c" aria-label="A painting rebuilt from squares" style="flex:1 1 240px;max-width:100%;min-width:0;height:auto;max-height:60vh;object-fit:contain;border-radius:6px"></canvas>
+          <div style="flex:1 1 180px;min-width:0;font-size:13px">
+            <div><b id="paint-n" style="font-size:22px">0</b> layers, <span id="paint-title">Mona Lisa</span></div>
+            <label style="display:block;margin:12px 0;color:var(--muted)">Layer budget<input id="paint-budget" type="range" min="50" max="6000" step="50" value="3000" style="width:100%"></label>
+            <button id="paint-again" type="button" class="paint-btn">Paint again</button>
+            <button id="paint-swap" type="button" class="paint-btn">The Last Supper</button>
+            <label class="paint-btn">Your own image<input id="paint-file" type="file" accept="image/*" style="display:none"></label>
+          </div>
+        </div>
+        <div style="margin-top:16px;text-align:center">
+          <img src="mona-lisa.gif" width="220" loading="lazy" alt="The Mona Lisa assembling from 2997 squares inside Pixelmator Pro">
+          <p class="sub" style="margin-top:8px">The real thing. 2997 layers, built in the app in eight minutes.</p>
+        </div>
       </section>
 
       <section>
@@ -336,7 +354,6 @@ python3 -m venv .venv && ./.venv/bin/pip install mlx-lm
         <p>Retrieval currently only searches this project's own docs on purpose, but its RAG index already spans the whole ~50-repo fleet. The real leveraged version isn't a bigger model, it's a wider index: drop that bias and this becomes a small local assistant that can answer questions across every project, not just this one. Not started yet, a real scope change, tracked in the README and roadmap as it develops.</p>
       </section>
 
-      <p><a href="/paint/">Watch her paint the Mona Lisa in Pixelmator Pro</a></p>
       <footer>
         <a href="https://github.com/nulljosh/turing">Source</a> &middot; <a href="https://heyitsmejosh.com/docs.html#turing">Docs</a> · README has the full write-up.
       </footer>
@@ -493,7 +510,7 @@ python3 -m venv .venv && ./.venv/bin/pip install mlx-lm
         docsHtml += '</div></div>';
 
         var limitHtml = '<div class="limitations"><p class="limitations-title">Limitations</p>' +
-          '<p>The 0.5B model cannot pick tools herself and borrows a 1.7B head for that. ' +
+          '<p>Her own 0.5B picker chooses tools, 394 of 501 on wording it never saw, and 21 wrong picks still slip past the guard. Multi-step jobs and logo choices borrow a 1.7B head. ' +
           'Knowledge bar is 60 of 65 with zero confidently wrong and she is at 57 with 4 wrong. ' +
           'Logos are dial choices from a fixed set, not free-hand design. ' +
           'She runs on one Mac only.</p></div>';
@@ -506,5 +523,6 @@ python3 -m venv .venv && ./.venv/bin/pip install mlx-lm
     </script>
     <script src="samantha.js"></script>
     <script src="demo.js"></script>
-  </body>
+  <script src="paint.js" defer></script>
+</body>
 </html>
