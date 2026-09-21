@@ -417,6 +417,7 @@ _I = re.I
 # (pattern, tool name, what to hand it). Names, not functions: tools.py looks each one up at call time.
 ROUTES = (
     (re.compile(r"^(?:calc(?:ulate)?|compute|work out|math)[: ]+(.+)$", _I), "calculate", lambda m: m.group(1)),
+    (re.compile(r"^(?:convert )?(\d+) (?:to|in|into) roman(?: numerals?)?$", _I), "roman_numeral", lambda m: m.group(1)),
     (re.compile(r"^convert (.+)$", _I), "convert_units", lambda m: m.group(1)),
     (re.compile(r"^what time is it in (.+)$|^(?:what(?:'s| is) )?(?:the )?time in (.+)$", _I), "time_in", lambda m: m.group(1) or m.group(2)),
     (re.compile(r"^what(?:'s| is)(?: the)? date(?: today)?$|^what day is it(?: today)?$|^today'?s date$", _I), "current_date", lambda m: ""),
@@ -494,6 +495,7 @@ def demo():
     assert hit("what is my ip") is not None and hit("how much disk space do i have").endswith("GB.")
     assert hit("copy hello world to my clipboard") == "Copied." and hit("what is turing") is None and hit("open chrome") is None
     assert hit("run shortcut zzz-not-real").startswith("I do not see") and hit("run tests") is None and hit("run the build") is None
+    assert hit("convert 2026 to roman numerals") == "MMXXVI" and hit("1999 in roman numerals") == "MCMXCIX"
     assert hit("hash browns are good") is None and hit("reverse psychology") is None and hit("reverse the text abc") == "cba" and hit("hash: hello").startswith("2cf2")
     print("tools_util ok")
 

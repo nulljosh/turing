@@ -55,6 +55,10 @@
       .meta b{color:var(--fg);font-weight:600}
       p{font-size:15px}
       footer{margin-top:56px;font-size:13px;color:var(--muted)}
+      /* Mobile first: every tap target is at least 44px, the fingers on a phone are not a mouse. */
+      #chat-input,#chat-send{min-height:44px;box-sizing:border-box}
+      details.more>summary{min-height:44px;display:flex;align-items:center}
+      footer a{display:inline-block;padding:14px 6px;margin:-14px -6px}
       /* the sprinkle: a dot on each heading, links, sliders, the one primary button, the 'now' bars */
       h2::before{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--ember);margin-right:10px;vertical-align:middle;position:relative;top:-3px}
       a{color:inherit;text-decoration-color:var(--ember);text-decoration-thickness:2px;text-underline-offset:3px}
@@ -86,10 +90,10 @@
       .rm-item.current .rm-dot{background:var(--fg)}
       .rm-item.done{color:var(--fg)}
       .rm-item:not(.done):not(.current){color:var(--muted)}
-      .rm-tag{margin-left:auto;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+      .rm-tag{margin-left:auto;font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
       .name-split{display:flex;gap:24px;margin-top:14px}
       .name-split div{display:flex;flex-direction:column;gap:2px}
-      .name-label{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+      .name-label{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
       .name-split b{font-size:16px}
       .sample-prompt{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin:0 0 8px}
       .sample-out{font-size:14px;font-style:italic;margin:0 0 10px}
@@ -109,7 +113,7 @@
       .fix-card[open] summary::before{content:"▾ "}
       .turn{margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
       .turn:first-of-type{border-top:none}
-      .turn-label{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin:0 0 4px}
+      .turn-label{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin:0 0 4px}
       .turn-q{font-size:14px;margin:0 0 6px}
       .turn-a{font-size:14px;margin:0;padding:8px 12px;border:1px solid var(--line);border-radius:6px}
       .turn-a.bad{color:var(--muted)}
@@ -141,7 +145,7 @@
       .chat-logo{margin:8px 0;text-align:center}
       .desk{--desk:#ecece8;border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-bottom:12px;background:var(--desk)}
       @media (prefers-color-scheme: dark){.desk{--desk:#1d1d1d}}
-      .desk-bar{display:flex;gap:12px;align-items:center;font-size:11px;padding:5px 10px;border-bottom:1px solid var(--line);color:var(--muted);white-space:nowrap;overflow:hidden}
+      .desk-bar{display:flex;gap:12px;align-items:center;font-size:12px;padding:5px 10px;border-bottom:1px solid var(--line);color:var(--muted);white-space:nowrap;overflow:hidden}
       .desk-bar b{color:var(--fg)}
       .desk-right{margin-left:auto;display:flex;gap:8px;align-items:center}
       .desk-vol-track{width:44px;height:4px;border-radius:2px;background:var(--line);overflow:hidden}
@@ -154,7 +158,7 @@
       .desk-space.painting .desk-paint-info{display:block}
       .desk-space.flash::after{content:"";position:absolute;inset:0;background:#fff;animation:flash .35s ease-out forwards;pointer-events:none}
       @keyframes flash{from{opacity:.85}to{opacity:0}}
-      .desk-file{position:absolute;right:10px;bottom:8px;font-size:10px;color:var(--muted)}
+      .desk-file{position:absolute;right:10px;bottom:8px;font-size:12px;color:var(--muted)}
       .win{position:absolute;width:min(290px,76%);background:var(--bg);border:1px solid var(--line);border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,.14);font-size:12px;animation:pop .16s ease-out}
       @keyframes pop{from{transform:scale(.96);opacity:0}to{transform:none;opacity:1}}
       @media (prefers-reduced-motion: reduce){.win{animation:none}}

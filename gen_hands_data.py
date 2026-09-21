@@ -70,6 +70,19 @@ TODOS = (["call mom", "buy milk", "take out the trash", "pay rent", "email the l
           "charge the bike lights", "book a haircut", "submit the app update", "call mom at 5", "stretch every hour",
           "cancel the free trial", "order cat food"], ["pick up dry cleaning", "feed the cat", "back up the mac", "text dad back"])
 VOLS = ([str(n) for n in range(0, 101, 5)] + ["12", "33", "67", "88"], ["42", "58", "73", "9"])
+HOLIDAYS = (["christmas", "halloween", "new year", "canada day", "valentines day", "2026-12-25", "2027-01-01", "2026-12-31"], ["2027-03-14", "2026-11-11", "2027-07-04"])
+DICE = (["2d6", "d20", "3d8", "1d6", "d12", "4d4", "d100", "2d10", "d8", "5d6"], ["3d6", "d4", "2d20", "6d6"])
+RANGES = (["between 1 and 10", "from 1 to 100", "between 5 and 50", "between 1 and 6", "from 10 to 20", "between 100 and 999", "from 1 to 1000"],
+          ["between 3 and 30", "from 50 to 60", "between 1 and 2"])
+LENGTHS = (["16", "20", "24", "12", "32", "10", "40", "64"], ["18", "28", "14"])
+WORDS = (["hello world", "turing", "samantha", "the quick brown fox", "open source", "correct horse battery staple", "ship it", "mona lisa"],
+         ["good morning", "hunter2", "eniac"])
+COUNTED = (["the quick brown fox jumps", "hello world", "one two three four five", "to be or not to be", "it was a dark and stormy night", "ship it today"],
+           ["a b c d", "we hold these truths", "call me ishmael"])
+BILLS = (["45", "100", "62.50", "28", "80", "12.75", "250", "9.99"], ["33", "150", "71.40"])
+NUMBERS = (["17", "91", "97", "221", "1009", "84", "600851475143", "2", "49", "7919"], ["13", "119", "561", "8"])
+YEARS = (["2026", "1999", "44", "9", "2024", "300", "1984", "14", "3999"], ["2027", "88", "1066"])
+MORSE = (["sos", "hello", "help", "turing", "ok", "samantha", "mayday"], ["ship", "morse", "hi"])
 NONE = ([""], [""])
 
 # tool: (train templates, held-out templates, fillers, arg). arg None copies the filler, a string is fixed.
@@ -148,6 +161,56 @@ SPEC = [
                         "what's my schedule today", "any meetings today", "calendar", "what's on the agenda",
                         "do i have anything today", "am i busy today"],
      ["what's my day look like", "anything on the books today", "show me today's events"], NONE, ""),
+    # the utility tools. Only the ones a model should choose: calculate, convert, dates, base64 and the rest have exact
+    # routes and overlap questions ask.py answers, and the ones with side effects (run_shortcut, clipboard, sleep) are named, never picked.
+    ("time_in", ["what time is it in {}", "time in {}", "what's the time in {}", "current time in {}", "what time is it over in {}",
+                 "tell me the time in {}", "what's the local time in {}", "time now in {}"],
+     ["how late is it in {}", "what's the clock say in {}", "what time is it right now in {}"], PLACES, None),
+    ("days_until", ["how many days until {}", "days until {}", "days till {}", "how long until {}", "how many days to {}", "how many days are left until {}"],
+     ["how many sleeps until {}", "how far away is {}", "count the days to {}"], HOLIDAYS, None),
+    ("flip_coin", ["flip a coin", "toss a coin", "heads or tails", "flip a coin for me", "coin flip", "flip a coin please"],
+     ["let's flip a coin", "settle it with a coin toss", "call it, heads or tails"], NONE, ""),
+    ("roll_dice", ["roll {}", "roll a {}", "throw {}", "roll me {}", "roll some {}", "can you roll {}"],
+     ["give me a roll of {}", "let's roll {}", "toss {}"], DICE, None),
+    ("random_number", ["pick a random number {}", "random number {}", "give me a random number {}", "generate a random number {}",
+                       "choose a number {}", "random number generator {}"],
+     ["i need a random number {}", "spit out a number {}", "surprise me with a number {}"], RANGES, None),
+    ("make_password", ["make a strong password with {} characters", "give me a {} character password", "new password, {} characters",
+                       "password of length {}", "generate a {} character password", "i need a {} character password"],
+     ["cook up a {} character password", "a secure password {} characters long", "make me a password that is {} characters"], LENGTHS, None),
+    ("make_password", ["generate a password", "make me a password", "new password", "give me a strong password", "create a secure password"],
+     ["i need a fresh password", "come up with a password"], NONE, ""),
+    ("make_uuid", ["generate a uuid", "make a uuid", "new uuid", "give me a random uuid", "i need a guid", "create a uuid"],
+     ["spit out a uuid", "mint a new uuid", "a fresh guid please"], NONE, ""),
+    ("hash_text", ["sha256 of {}", "what's the sha256 of {}", "get me the hash of {}", "sha-256 hash of {}", "compute the sha256 for {}", "hash the text {}"],
+     ["checksum for {}", "run {} through sha256", "what does {} hash to"], WORDS, None),
+    ("word_count", ["count the words in {}", "how many words are in {}", "word count of {}", "how many words in {}", "count words in {}"],
+     ["tally the words in {}", "what's the word count for {}"], COUNTED, None),
+    ("disk_space", ["how much disk space do i have", "how much storage is left", "disk space", "how full is my disk", "how much free space is on this mac",
+                    "check my disk space", "how much space is left on my mac"],
+     ["am i running out of storage", "what's my free space", "how much room is left on the drive"], NONE, ""),
+    ("uptime", ["how long has my mac been on", "uptime", "when did i last restart", "how long since i rebooted", "how long has this mac been running"],
+     ["how long has it been up", "when was the last reboot", "time since the last restart"], NONE, ""),
+    ("memory_usage", ["how much memory do i have", "how much ram is free", "ram usage", "memory usage", "how much ram do i have", "how much memory is left"],
+     ["is my ram full", "what's my memory looking like", "how much ram am i using"], NONE, ""),
+    ("cpu_load", ["cpu load", "how busy is my mac", "is my cpu busy", "processor usage", "what's the load average", "how hard is the cpu working"],
+     ["is the processor maxed out", "how loaded is my mac", "what's my cpu doing"], NONE, ""),
+    ("ip_address", ["what's my ip address", "my ip", "what's my local ip", "show my ip address", "what is my ip", "tell me my ip address"],
+     ["what address is this mac on", "give me my ip", "what's my network address"], NONE, ""),
+    ("wifi_name", ["what wifi am i on", "which wifi am i connected to", "wifi name", "what network am i on", "what's the wifi called", "which wifi is this"],
+     ["what wifi is my mac using", "name of the wifi i'm on", "am i on home wifi, what's it called"], NONE, ""),
+    ("system_info", ["system info", "what mac is this", "about this mac", "what chip does this mac have", "what version of macos am i on", "tell me about this computer"],
+     ["what kind of mac am i on", "give me the specs of this mac", "which macos is this"], NONE, ""),
+    ("list_shortcuts", ["list my shortcuts", "what shortcuts do i have", "show my shortcuts", "which shortcuts can you run", "show me all my shortcuts"],
+     ["what shortcuts are on this mac", "pull up my shortcuts list", "tell me my shortcuts"], NONE, ""),
+    ("tip", ["tip on {}", "what's the tip on {}", "how much should i tip on {}", "calculate the tip for {}", "tip for {}", "what's a good tip on {}"],
+     ["figure out the tip on {}", "tip me out on {}", "how much is the tip on a {} bill"], BILLS, None),
+    ("is_prime", ["is {} prime", "is {} a prime number", "factor {}", "prime factors of {}", "is {} a prime", "factorize {}"],
+     ["check if {} is prime", "break {} into primes", "can {} be divided evenly"], NUMBERS, None),
+    ("roman_numeral", ["roman numerals for {}", "what is {} in roman numerals", "write {} in roman numerals", "{} in roman numerals", "roman numeral for {}"],
+     ["how do you write {} in roman numerals", "show {} as roman numerals", "give me the roman numeral for {}"], YEARS, None),
+    ("morse_code", ["morse code for {}", "translate {} to morse", "write {} in morse code", "what is {} in morse", "morse {}"],
+     ["say {} in morse code", "turn {} into morse", "how do you send {} in morse"], MORSE, None),
     # more than one step, or reading a page and saying what it says: that is agent() work
     ("agent", ["poke around {} and tell me what's up", "go to {} and summarize it", "open {} and tell me the top story",
                "read {} and tell me what's new", "check {} and tell me if anything is interesting",
@@ -185,7 +248,10 @@ TRICKY = (["what is music theory", "who plays the next james bond", "what is the
            "who designed the apple logo", "what is a file system", "what is a folder", "who was the first to visit the moon",
            "what is a search engine", "why is reddit called reddit", "what is the play hamlet about", "how does a launch window work",
            "what is a skip list", "what does mute mean", "how do i read faster", "who set the record for the 100m",
-           "what is a start codon", "what are the open questions in physics", "say, what is the capital of peru"],
+           "what is a start codon", "what are the open questions in physics", "say, what is the capital of peru",
+           "what is a uuid", "how does a hash function work", "what is a coin worth", "how many days are in a year", "what is a prime number",
+           "who invented roman numerals", "how do dice work", "what is ram", "what is morse code", "what is a shortcut key", "who invented the tip",
+           "what is uptime in networking", "how many words are in the bible", "what is a wifi router", "what is an ip address", "what is a disk drive"],
           ["what is the speed of sound", "who wrote the song yesterday", "how do noise cancelling headphones work",
            "what is a battery made of", "why do we have leap years on the calendar", "is it bad to skip breakfast",
            "what is a volume in a book series", "who opened the first mcdonalds", "what does google do with my data",
@@ -256,7 +322,7 @@ def build(held, per_template, seed):
                 spoken, carried = f if isinstance(f, tuple) else (f, f)
                 rows.setdefault(_dress(rng, t.format(spoken), held), _call(tool, carried if arg is None else arg))
     for q in PLAIN[held] + (TRICKY[held] + TASKS[held]) * (1 if held else 3):
-        for _ in range(1 if held else 3):
+        for _ in range(1 if held else 5):  # 63 tools means more ways to mistake a question for a command
             text = q if rng.random() < 0.6 else rng.choice(["hey ", "ok ", "samantha ", "so ", "quick question, "]) + q
             rows.setdefault(text + ("?" if rng.random() < 0.3 else ""), _call(None, ""))
     return rows

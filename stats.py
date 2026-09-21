@@ -120,6 +120,9 @@ def main():
     """Gather coverage data and write stats to web/stats.json."""
     if "--check" in sys.argv:
         check()
+    os.environ.setdefault("SAMANTHA_HEADLESS", "1")
+    import tools  # the tools tile counts what she really has, not a number typed here
+    MEASURED["tools"]["after"] = len(tools.TOOLS)
     files_coverage, coverage_percent = collect_coverage()
     house_docs = check_house_docs()
     version = read_version()

@@ -60,8 +60,8 @@
         "documented": 18
       },
       "stats.py": {
-        "total": 6,
-        "documented": 6
+        "total": 7,
+        "documented": 7
       },
       "tools_util.py": {
         "total": 38,
@@ -74,6 +74,18 @@
       "mcp_server.py": {
         "total": 4,
         "documented": 4
+      },
+      "pixelmator/test_pxm.py": {
+        "total": 101,
+        "documented": 101
+      },
+      "pixelmator/pxm.py": {
+        "total": 33,
+        "documented": 33
+      },
+      "pixelmator/arc_text.py": {
+        "total": 3,
+        "documented": 3
       },
       "eval/run_eval.py": {
         "total": 1,
@@ -128,7 +140,7 @@
   "measured": {
     "tools": {
       "before": 0,
-      "after": 30
+      "after": 63
     },
     "actions_eval": "77/77",
     "knowledge_sweep": {

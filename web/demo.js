@@ -563,7 +563,9 @@
   document.addEventListener('visibilitychange', idle);
 
   paintBar();
-  // Joshua's own Mac runs the real thing on a local port. Everyone else gets the demo.
+  // Joshua's own Mac runs the real thing on a local port. Only look for it when asked (?local) or when the page itself is
+  // local: probing localhost from a public page shows every visitor a connection error, or a permission prompt in newer Chrome.
+  if (!/[?&]local\b/.test(location.search) && !/^(?:localhost|127\.0\.0\.1)$/.test(location.hostname)) { startDemo(); return; }
   fetch(LOCAL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ model: 'samantha', messages: [{ role: 'user', content: 'hi' }] }) })
     .then(function (r) {
       if (!r.ok) return startDemo();

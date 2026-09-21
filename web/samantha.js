@@ -450,6 +450,7 @@
 
   ROUTES.push.apply(ROUTES, [
     [/^(?:calc(?:ulate)?|compute|work out|math)[: ]+(.+)$/i, function (m) { return ["calculate", m[1]]; }],
+    [/^(?:convert )?(\d+) (?:to|in|into) roman(?: numerals?)?$/i, function (m) { return ["roman_numeral", m[1]]; }],
     [/^convert (.+)$/i, function (m) { return ["convert_units", m[1]]; }],
     [/^what time is it in (.+)$|^(?:what(?:'s| is) )?(?:the )?time in (.+)$/i, function (m) { return ["time_in", (m[1] || m[2])]; }],
     [/^what(?:'s| is)(?: the)? date(?: today)?$|^what day is it(?: today)?$|^today'?s date$/i, function (m) { return ["current_date", ""]; }],
