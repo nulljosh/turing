@@ -83,6 +83,7 @@
       .bg-nodes svg:nth-child(3){top:78%;left:12%;width:70px;animation-duration:38s;animation-delay:-20s}
       .bg-nodes svg:nth-child(4){top:20%;left:78%;width:100px;animation-duration:52s;animation-delay:-14s}
       @keyframes drift{0%,100%{translate:0 0}50%{translate:14px -18px}}
+      @media (prefers-reduced-motion:reduce){.bg-nodes svg,.dot.training,.wrap.roll{animation:none}}
       .graph-explainer{font-size:13px;color:var(--muted);margin-top:10px}
       .roadmap{display:flex;flex-direction:column;gap:0;margin-top:8px}
       .rm-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);font-size:14px}
