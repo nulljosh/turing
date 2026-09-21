@@ -9,6 +9,7 @@ import io
 import json
 import os
 import re
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -686,6 +687,27 @@ class Live(unittest.TestCase):
             code, _, err = run_main("run", path)
         self.assertEqual(code, pxm.EXIT_SCRIPT)
         self.assertIn("-1719", err)
+
+
+class PaintMagickTests(unittest.TestCase):
+    """The ImageMagick engine draws the same quadtree plan with no app."""
+
+    @unittest.skipUnless(shutil.which("magick"), "ImageMagick not installed")
+    def test_draws_a_png_of_the_right_size(self):
+        layers = [{"x": 0, "y": 0, "width": 8, "height": 6, "fill": "#FF0000"},
+                  {"x": 4, "y": 0, "width": 4, "height": 6, "fill": "#0000FF"}]
+        with tempfile.TemporaryDirectory() as d:
+            out = os.path.join(d, "p.png")
+            with contextlib.redirect_stdout(io.StringIO()):
+                pxm.paint_magick(8, 6, layers, [out])
+            data = open(out, "rb").read()
+        self.assertEqual(data[:8], b"\x89PNG\r\n\x1a\n")
+        self.assertEqual((int.from_bytes(data[16:20], "big"), int.from_bytes(data[20:24], "big")), (8, 6))
+
+    def test_gif_needs_the_pixelmator_engine(self):
+        args = pxm.argparse.Namespace(engine="magick", shapes=100, gif="x.gif", frames=None)
+        with self.assertRaises(pxm.PxmError):
+            pxm.cmd_paint(args)
 
 
 if __name__ == "__main__":

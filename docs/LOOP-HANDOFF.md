@@ -17,7 +17,7 @@ v0.10.0 is out, Apache 2.0. Samantha has 30 tools: the first 20 plus ten image t
 3. Blender family, then the Shortcuts bridge, then MCP both ways.
 4. The harness for 1.0: one conversation that holds tool results, shows a live tool log and asks before anything that writes, sends or deletes.
 5. Finish docstrings: 11 left outside `pixelmator/`, 28 inside `pixelmator/pxm.py`.
-6. A 20000 layer, --detail 512 Mona Lisa was building headless in Pixelmator to /tmp/pxmtest/m20k.png. Look at it. If crystal clear, raise paint defaults (--shapes, --detail) to match. If not, iterate.
+6. Painting is clear now: `pxm.py paint --engine magick` draws 40000 squares in about a second, and paint_image uses it (Pixelmator is the fallback and the watch-it-build showcase). Run the 5000 layer Pixelmator paint again only if the layered file is wanted.
 7. Run ./release.sh with a patch bump and the full gate once Pixelmator is free.
 9. Still open from before: re-run `eval/basic_questions.py`, score Ternary-Bonsai-4B as a borrowed head, score `voice-adapter`.
 

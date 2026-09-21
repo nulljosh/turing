@@ -62,6 +62,8 @@ python3 $PXM run script.applescript      # anything the spec can't do, with deco
 python3 $PXM paint mona.jpg --out mona.png --shapes 3000 --headless --gif mona.gif
 ```
 
+Add `--engine magick` to draw the same plan with ImageMagick instead of Pixelmator: no app, no layers to open, 40000 squares in about a second. `--shapes 40000 --detail 1024 --size 2048` gives a crisp painting. Pixelmator stays the way to watch it build and to get real layers; `--gif` and `--frames` need it.
+
 - `--shapes` is the layer budget (default 2000). `--detail` is the sampling grid (default 256). `--size` is the canvas. `--shape ellipse` gives a pointillist look.
 - `--out` repeats: `--out a.png --out a.pxd`.
 - Speed: about 10 layers a second, slower as the document fills. 3000 layers is roughly ten minutes. Start it with `run_in_background` and wait for the notification. Do not poll.

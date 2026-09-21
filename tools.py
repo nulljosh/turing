@@ -16,6 +16,7 @@ import json
 import math
 import os
 import re
+import shutil
 import subprocess
 import sys
 import urllib.parse
@@ -408,14 +409,20 @@ def make_logo(description):
             if os.path.exists(out) else f"Pixelmator refused my design: {result[-300:]}")
 
 def paint_image(path):
-    """Repaint a photo inside Pixelmator Pro out of thousands of colored squares, each a real layer. Takes the path of an image file."""
+    """Repaint a photo out of tens of thousands of colored squares. Takes the path of an image file."""
     full = _inside_home(path.strip().strip("'\""))
     if not full or not os.path.isfile(full):
         return f"I can't find an image at {path}."
     out = os.path.expanduser("~/Desktop/samantha-painting.png")
     if os.path.exists(out):
         os.remove(out)  # a stale file must not read as a fresh success
-    # ponytail: 800 layers is about a minute. Raise it when paint gets faster.
+    # ImageMagick draws the same plan in seconds, so she paints 40000 squares and the result is clear.
+    # Pixelmator (800 layers, about a minute) is the fallback when ImageMagick is not installed.
+    if shutil.which("magick"):
+        result = _run([sys.executable, PXM, "paint", full, "--out", out, "--engine", "magick", "--shapes", "40000",
+                       "--detail", "1024", "--size", "2048"], timeout=120)
+        if os.path.exists(out):
+            return f"Painted it from 40,000 squares, saved to {out}."
     result = _run([sys.executable, PXM, "paint", full, "--out", out, "--shapes", "800", "--size", "1024"]
                   + (["--headless"] if HEADLESS else []), timeout=600)
     return (f"Painted it from 800 layers in Pixelmator, saved to {out}." if os.path.exists(out)

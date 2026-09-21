@@ -657,13 +657,48 @@ def paint_timeout(layers):
     return int(120 + layers * 0.1 + layers * layers / 8000)
 
 
+def paint_magick(w, h, layers, outs):
+    """Draw the quadtree with ImageMagick: one MVG file of rectangles, one process, no app.
+
+    The plan is the same one Pixelmator builds, so the picture is identical; only the
+    executor changes. 30000 squares take seconds here, not the better part of an hour."""
+    magick = shutil.which("magick")
+    if not magick:
+        raise PxmError("ImageMagick is not installed", hint="brew install imagemagick", code=EXIT_ENV)
+    with tempfile.NamedTemporaryFile("w", suffix=".mvg", delete=False) as f:
+        f.write("stroke none\n")
+        for L in layers:
+            f.write("fill %s\nrectangle %d,%d %d,%d\n" % (L["fill"], L["x"], L["y"], L["x"] + L["width"] - 1, L["y"] + L["height"] - 1))
+        mvg = f.name
+    try:
+        for path in outs:
+            path = os.path.abspath(os.path.expanduser(path))
+            os.makedirs(os.path.dirname(path), exist_ok=True)
+            p = subprocess.run([magick, "-size", "%dx%d" % (w, h), "xc:black", "+antialias", "-draw", "@" + mvg, path],
+                               text=True, capture_output=True)
+            if p.returncode:
+                raise PxmError("magick failed", hint=p.stderr.strip()[-200:], code=EXIT_VERIFY)
+            print("exported: %s" % path)
+    finally:
+        os.unlink(mvg)
+    print("ok: %d squares, drawn with ImageMagick" % len(layers))
+
+
 def cmd_paint(args):
-    if not 5 <= args.shapes <= 20000:
-        raise PxmError("--shapes must be from 5 to 20000", code=EXIT_USAGE)
+    magick = args.engine == "magick"
+    if not 5 <= args.shapes <= (500000 if magick else 20000):
+        raise PxmError("--shapes must be from 5 to %d" % (500000 if magick else 20000), code=EXIT_USAGE)
+    if magick and (args.gif or args.frames):
+        raise PxmError("--gif and --frames need the Pixelmator engine", hint="Drop them, or use --engine pixelmator.", code=EXIT_USAGE)
     args._build_label = "paint %s" % os.path.basename(args.image)
     w, h, rows = read_pixels(os.path.expanduser(args.image), side=args.detail)
     scale = max(1, round(args.size / max(w, h)))
     layers = paint_layers(w, h, rows, args.shapes, scale, args.shape)
+    if magick:
+        if args.dry_run:
+            print("%d squares on a %dx%d canvas" % (len(layers), w * scale, h * scale))
+            return
+        return paint_magick(w * scale, h * scale, layers, args.out)
     args.timeout = max(args.timeout, paint_timeout(len(layers)))
     build(validate_spec({"width": w * scale, "height": h * scale, "layers": layers,
                          "export": args.out, "keep_open": True}), args,
@@ -770,7 +805,9 @@ def main(argv=None):
     p.add_argument("image")
     p.add_argument("--out", action="append", required=True, metavar="PATH",
                    help="export path, repeatable (png, svg, pxd...)")
-    p.add_argument("--shapes", type=int, default=2000, help="layer budget (default 2000)")
+    p.add_argument("--engine", choices=("pixelmator", "magick"), default="pixelmator",
+                   help="pixelmator builds it as layers you can open; magick draws the same plan in seconds")
+    p.add_argument("--shapes", type=int, default=2000, help="square budget (default 2000; up to 20000 in Pixelmator, 500000 with magick)")
     p.add_argument("--shape", choices=("rectangle", "ellipse"), default="rectangle")
     p.add_argument("--detail", type=int, default=256,
                    help="longest side of the grid the image is sampled on (default 256)")
