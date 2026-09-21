@@ -7,7 +7,7 @@ examples reliably learns style but not facts. This is the fix: keep facts
 in brain's live index, let the model reason over retrieved context instead
 of trying to recall them from weights. See roadmap.md, run 6.
 """
-import difflib, hashlib, json, math, os, re, subprocess, sys, time, urllib.parse, urllib.request
+import difflib, hashlib, html, json, math, os, re, subprocess, sys, time, urllib.parse, urllib.request
 
 # Every project-local path derives from this file, never from a hardcoded
 # ~/Documents/Code/turing. That absolute path meant a clone anywhere else
@@ -527,12 +527,17 @@ _QUESTION_PREFIX = re.compile(
 )
 
 
+_LOOKUP_PREFIX = re.compile(r"^(?:tell me (?:about|of)|explain|describe|define|what do you know about)\s+(?:the\s+)?", re.I)
+
+
 def normalize_query(query):
     """Strip leading question-word filler before hitting search APIs. "what is
     the capital of France" full-text-searches worse on Wikipedia than the
     stripped "capital of France", filler words dilute relevance ranking.
     """
-    stripped = _QUESTION_PREFIX.sub("", query.strip()).rstrip("?").strip()
+    # "tell me about ada lovelace" searched whole ranked Lord Byron first and
+    # "tell me about tokyo" ranked a samurai: the filler carried the search.
+    stripped = _LOOKUP_PREFIX.sub("", _QUESTION_PREFIX.sub("", query.strip())).rstrip("?").strip()
     return stripped or query
 
 
@@ -845,8 +850,11 @@ def _is_definition_of(query, title):
     answer. "who is marie curie" against "Marie Curie": yes. "who invented the
     telephone" against "Telephone": no, the page is about the right topic and
     its first sentence is still not an answer."""
+    # Equal, not contained. "what do bees make" sits inside the title "Bees
+    # Make Honey" and that page is a band, not a definition of anything asked.
+    # A bracket on the title only says which one: "Mercury (planet)".
     asked = set(_keywords(normalize_query(query)))
-    return bool(asked) and asked <= set(_keywords(title))
+    return bool(asked) and asked == set(_keywords(re.sub(r"\s*\([^)]*\)", "", title)))
 
 
 def read_article(query, title):
@@ -865,7 +873,7 @@ def read_article(query, title):
                      f"&exsectionformat=plain&redirects=1&titles={urllib.parse.quote(title)}&format=json&origin=*")
     pages = ((page or {}).get("query") or {}).get("pages") or {}
     text = next(iter(pages.values()), {}).get("extract", "")[:7000]
-    if not text:
+    if not text or "may refer to" in text[:300]:  # a disambiguation page is a list of names, never an answer
         return None
     body = json.dumps({"model": READER_MODEL, "stream": False, "think": False, "options": {"temperature": 0},
                        "messages": [
@@ -890,6 +898,30 @@ def read_article(query, title):
         answer = ""
     _cache_put(key, answer)
     return answer or None
+
+
+def _reading_order(asked, found):
+    """Which search hits are worth reading, best first. Two ways in. The title
+    shares a word with the question, or the search snippet holds every content
+    word of it: the Nile's title shares nothing with "longest river in the
+    world" and its snippet says exactly that. Pages named by nothing but the
+    question's own words go first. For "largest ocean" that is Ocean, ahead of
+    Ocean sunfish, whose page gave a confident answer about a fish.
+    """
+    topic, rest = [], []
+    for h in found:
+        title = h["title"]
+        named = set(_keywords(re.sub(r"\s*\([^)]*\)", "", title)))
+        if title.lower().startswith(("list of", "lists of")):
+            continue  # a table of many right-looking names, the reader pulled "United States" out of a GDP list
+        snippet = html.unescape(re.sub(r"<[^>]+>", "", h.get("snippet") or "")).lower()
+        # "sixth-largest" and "one of the largest" are not "largest"
+        hedged = re.search(r"\b(?:one of the|among the)\b|\w+-(?:large|long|tall|big|small|high|deep|fast|old)", snippet)
+        if named and named <= asked:
+            topic.append(title)
+        elif asked & named or (len(asked) > 1 and asked <= set(_keywords(snippet)) and not hedged):
+            rest.append(title)
+    return topic + rest
 
 
 def general_knowledge(query, skip_officeholder=False):
@@ -948,12 +980,13 @@ def general_knowledge(query, skip_officeholder=False):
     # frequently *related but wrong* rather than better. It also tripled
     # request volume, which made Wikipedia's rate limiting fire mid-eval and
     # turned the score itself unreliable. Reverted, measured, documented.
-    s = http_json(f"https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch={urllib.parse.quote(normalized)}&format=json&srlimit=3&origin=*", on_error=FETCH_FAILED)
+    s = http_json(f"https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch={urllib.parse.quote(normalized)}&format=json&srlimit=6&origin=*", on_error=FETCH_FAILED)
     if s is FETCH_FAILED:
         s = None
     else:
         reachable = True
-    hits = [h.get("title") for h in (s or {}).get("query", {}).get("search", []) if h.get("title")]
+    found = [h for h in (s or {}).get("query", {}).get("search", []) if h.get("title")]
+    hits = [h["title"] for h in found]
     title = hits[0] if hits else None
     if not title:
         # borrowed from nimble/docs/engine.js's wiki(): fulltext search and
@@ -978,21 +1011,20 @@ def general_knowledge(query, skip_officeholder=False):
             # which is a table, and a table has no sentence to read. The
             # second or third hit usually is the prose article that says it.
             asked = set(_keywords(normalize_query(query)))
-            for candidate in ([title] + [h for h in hits[1:] if h != title])[:3]:
+            for candidate in _reading_order(asked, found)[:3]:
                 # Two guards, both from real wrong answers. A page sharing no
                 # word with the question is search noise ("how many days are in
                 # a week" ranked Bodybuilding.com). And a "List of" page is a
                 # table of many right-looking names: the reader pulled "United
                 # States" out of a GDP list for "largest country", and the
                 # grounding check passed because the name really was on the page.
-                if candidate.lower().startswith(("list of", "lists of")) or not asked & set(_keywords(candidate)):
-                    continue
                 read = read_article(query, candidate)
                 if read:
                     return read, f"Wikipedia: {candidate}"
-            # a list page or an article merely near the topic is never an answer
-            if not extract or extract.lstrip().lower().startswith(("this is a list", "this list", "the following")):
-                extract = None
+            # The page is not the thing asked about and reading it found no
+            # answer, so its summary answers some other question. "who wrote
+            # 1984" came back as the plot of Murder, She Wrote this way.
+            extract = None
         if extract and _wikipedia_answer_is_plausible(query, title, extract):
             return extract.strip(), f"Wikipedia: {title}"
     # "I searched and found nothing" and "I could not reach anything to

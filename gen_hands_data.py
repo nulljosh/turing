@@ -1,0 +1,262 @@
+#!/usr/bin/env python3
+"""Training data for Samantha's own hands: a command in, one JSON tool call out.
+
+The 0.5B cannot learn facts. It can learn a shape. Picking a tool is a shape:
+"crank the volume to 40" becomes {"tool": "set_volume", "arg": "40"}. The arg
+is always words copied out of the command, never computed. "45 seconds" stays
+"45 seconds" and the harness does the division, same rule as make_logo: she
+chooses, the harness does the maths.
+
+Labels come from the templates below, not from the regex router, so the model
+is not a copy of the regex. The test set uses phrasings, fillers and polite
+wrappers that never appear in training. A model that only memorised the
+training templates fails it.
+
+Run: python3 gen_hands_data.py   (writes hands-data/{train,valid,test}.jsonl)
+"""
+import json
+import os
+import random
+import sys
+
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "eval"))
+
+SYSTEM = 'You are Samantha\'s hands. Reply with one JSON tool call. If this is not a command, reply {"tool": null, "arg": ""}.'
+
+APPS = (["safari", "chrome", "notes", "mail", "calendar", "music", "spotify", "pixelmator", "xcode", "terminal", "finder",
+         "messages", "photos", "preview", "maps", "facetime", "reminders", "system settings", "calculator", "textedit",
+         "slack", "discord"], ["podcasts", "books", "activity monitor", "stocks", "the weather app"])
+SITES = (["github.com", "youtube", "reddit", "hacker news", "twitter", "x.com", "gmail", "news.ycombinator.com", "apple.com",
+          "wikipedia.org", "heyitsmejosh.com", "nytimes.com", "amazon.ca", "google.com", "craigslist.org", "stackoverflow.com",
+          "netflix.com", "twitch.tv"], ["bbc.com", "espn.com", "letterboxd.com", "cloudflare.com", "arxiv.org"])
+TOPICS = (["mlx lora", "best pizza vancouver", "qwen3 benchmarks", "how to tie a tie", "cheap flights to tokyo",
+           "python 3.14 release notes", "m4 mac mini ram", "canucks score", "sourdough starter", "used bikes langley",
+           "weather radar", "swiftui navigation stack", "how to fix a flat tire", "best sci fi books", "cloudflare workers pricing",
+           "ramen near me", "how long to boil an egg", "factorio blueprints", "rdsp contribution limits", "guitar chords wonderwall",
+           "i386 paging tutorial", "bc ferries schedule", "standing desk reviews", "what time is the game"],
+          ["ternary quantization", "dog friendly hikes", "how to descale a kettle", "app store review times", "vintage ray bans", "sqlite full text search"])
+PHRASES = (["hello there", "dinner is ready", "good morning joshua", "test one two", "i am samantha", "the build is done",
+            "time to stretch", "your tea is ready", "meeting in five", "nice work", "the deploy is live", "bedtime"],
+           ["the laundry is done", "welcome home", "ship it"])
+DIRS = ([("~/Documents", "~/Documents"), ("~/Desktop", "~/Desktop"), ("~/Downloads", "~/Downloads"), ("my desktop", "~/Desktop"),
+         ("my downloads", "~/Downloads"), ("my documents", "~/Documents"), ("downloads", "~/Downloads"), ("the desktop", "~/Desktop"),
+         ("~/Documents/Code", "~/Documents/Code"), ("~/Pictures", "~/Pictures"), ("~/Music", "~/Music"), ("~/Movies", "~/Movies"),
+         ("~/Documents/Code/turing", "~/Documents/Code/turing"), ("the downloads folder", "~/Downloads"), ("my pictures", "~/Pictures")],
+        [("~/Documents/Code/nimble", "~/Documents/Code/nimble"), ("my music folder", "~/Music"), ("~/Desktop/old", "~/Desktop/old"),
+         ("the documents folder", "~/Documents")])
+FILES = (["~/notes.txt", "~/Documents/todo.md", "~/Desktop/ideas.txt", "~/Documents/Code/turing/README.md", "~/Downloads/receipt.txt",
+          "~/Documents/Code/turing/roadmap.md", "~/plan.md", "~/Documents/budget.csv", "~/Desktop/list.txt"],
+         ["~/Desktop/draft.md", "~/Documents/letter.txt", "~/Documents/Code/nimble/README.md"])
+BRANDS = (["a coffee shop called ember", "turing", "my bike repair business", "a podcast about space", "nimble", "a bakery",
+           "joshua tree os", "a surf school", "a chess club", "a record label", "my dog walking company", "a ramen bar",
+           "a climbing gym", "an indie game studio"], ["a bookstore", "a flower shop called petal", "a hot sauce brand", "windgate"])
+PLACES = (["tokyo", "vancouver", "langley", "new york", "london", "paris", "toronto", "seattle", "los angeles", "sydney", "berlin",
+           "mexico city"], ["calgary", "reykjavik", "cape town", "osaka"])
+SPANS = (["5 minutes", "10 minutes", "30 seconds", "an hour", "2 hours", "90 seconds", "15 min", "45 mins", "1 minute", "20 minutes",
+          "3 min", "half an hour", "25 minutes", "2 mins", "a minute", "ten minutes", "five minutes"],
+         ["12 minutes", "40 seconds", "7 min", "three minutes", "8 minutes"])
+SPANS_ADJ = (["5 minute", "10 minute", "30 second", "one hour", "two minute", "20 minute", "15 minute", "ten minute"],
+             ["12 minute", "45 second", "three minute"])
+NOTES = (["buy milk", "the door code is 4417", "call the dentist monday", "idea: a timer app for tea", "timers need a cancel button",
+          "wifi password is on the fridge", "pick up the package", "book flights for december", "rent is due on the first",
+          "gift idea for mom: a scarf", "the meeting moved to thursday", "try the new ramen place", "license plate is 8KX 221",
+          "samantha should learn spotify"], ["parking spot is level 3 row b", "return the library books", "blog idea: ternary weights",
+                                             "the plumber comes friday"])
+TODOS = (["call mom", "buy milk", "take out the trash", "pay rent", "email the landlord", "water the plants", "renew my passport",
+          "charge the bike lights", "book a haircut", "submit the app update", "call mom at 5", "stretch every hour",
+          "cancel the free trial", "order cat food"], ["pick up dry cleaning", "feed the cat", "back up the mac", "text dad back"])
+VOLS = ([str(n) for n in range(0, 101, 5)] + ["12", "33", "67", "88"], ["42", "58", "73", "9"])
+NONE = ([""], [""])
+
+# tool: (train templates, held-out templates, fillers, arg). arg None copies the filler, a string is fixed.
+# A filler that is a (spoken, arg) pair carries its own arg.
+SPEC = [
+    ("open_app", ["open {}", "launch {}", "start {}", "open up {}", "fire up {}", "bring up {}", "start up {}", "run {}",
+                  "i want {} open", "get {} open", "load up {}"],
+     ["boot up {}", "pop open {}", "switch to {}", "let's use {}"], APPS, None),
+    ("open_url", ["go to {}", "visit {}", "pull up {}", "open {}", "browse to {}", "take me to {}", "head to {}", "navigate to {}",
+                  "open {} in chrome", "load {}"],
+     ["jump over to {}", "get me to {}", "hop on {}", "bring me to {}"], SITES, None),
+    ("web_search", ["search for {}", "google {}", "look up {}", "search {}", "search the web for {}", "find {} online",
+                    "do a search for {}", "look {} up", "duckduckgo {}"],
+     ["run a search on {}", "see what the internet says about {}", "web search {}"], TOPICS, None),
+    ("current_tab", ["what's on my tab", "what tab is open", "what's in my current tab", "which page am i on",
+                     "what am i looking at in chrome", "what's the current tab", "what site is this", "what's open in chrome",
+                     "tell me what tab i'm on"],
+     ["what page is up right now", "which tab is showing", "what website am i on"], NONE, ""),
+    ("screenshot", ["take a screenshot", "screenshot", "grab a screenshot", "capture the screen", "screenshot this",
+                    "take a screen grab", "snap the screen", "capture my screen"],
+     ["get a picture of my screen", "screencap this", "take a screen shot"], NONE, ""),
+    ("clipboard", ["what's on my clipboard", "read my clipboard", "show me the clipboard", "what did i copy",
+                   "what's in the clipboard", "clipboard contents", "tell me what's on the clipboard", "read the clipboard"],
+     ["what did i just copy", "show what i have copied", "read out my clipboard"], NONE, ""),
+    ("set_volume", ["volume {}", "set the volume to {}", "set volume to {}", "turn the volume to {}", "volume at {}",
+                    "make the volume {}", "put the volume at {}", "turn it to {}", "volume {} percent",
+                    "turn the volume up to {}", "turn it down to {}", "bring it down to {}", "volume up to {}"],
+     ["crank the volume to {}", "bring the volume to {}", "change the volume to {}", "drop the volume down to {}"], VOLS, None),
+    ("set_volume", ["turn it up", "volume up", "louder", "turn the volume up", "make it louder", "turn up the volume"],
+     ["crank it up", "a bit louder", "raise the volume"], NONE, "up"),
+    ("set_volume", ["turn it down", "volume down", "quieter", "turn the volume down", "make it quieter", "turn down the volume"],
+     ["that's too loud", "lower the volume", "a bit quieter"], NONE, "down"),
+    ("set_volume", ["mute", "mute it", "mute the sound", "silence", "mute the volume"], ["kill the sound", "shut the sound off"], NONE, "0"),
+    ("battery", ["how's my battery", "battery level", "what's my battery", "how much battery do i have", "battery status",
+                 "check the battery", "how much charge is left", "what's the battery at", "am i plugged in"],
+     ["how much juice is left", "is the battery low", "what percent is my battery"], NONE, ""),
+    ("say", ["say {}", "say {} out loud", "speak the words {}", "announce {}", "say this: {}"],
+     ["say aloud {}", "use your voice to say {}"], PHRASES, None),
+    ("list_dir", ["list the files in {}", "show me the folder {}", "what's in {}", "list {}", "show the contents of {}",
+                  "what files are in {}", "ls {}"],
+     ["what do i have in {}", "show me what's inside {}", "files in {}"], DIRS, None),
+    ("read_file", ["read the file {}", "show me the file {}", "cat {}", "what does {} say", "read {}", "print {}"],
+     ["show the contents of the file {}", "what's written in {}", "display {}"], FILES, None),
+    ("make_logo", ["make a logo for {}", "design a logo for {}", "make me a logo for {}", "draw an icon for {}",
+                   "create a logo for {}", "build a logo for {}", "design an icon for {}", "i need a logo for {}"],
+     ["whip up a logo for {}", "logo for {}", "sketch an icon for {}"], BRANDS, None),
+    ("music", ["play", "play some music", "play music", "resume", "resume the music", "play my music", "hit play",
+               "start the music", "unpause"], ["put some music on", "keep playing", "let's hear some tunes"], NONE, "play"),
+    ("music", ["pause", "pause the music", "stop the music", "pause this song", "stop playing", "hold the music"],
+     ["pause it", "cut the music", "stop the song"], NONE, "pause"),
+    ("music", ["skip", "next song", "skip this song", "next track", "skip this one", "next", "play the next song"],
+     ["skip it", "i don't like this one, next", "go to the next track"], NONE, "next"),
+    ("music", ["previous song", "go back a song", "last song", "previous track", "play the previous song", "go back one"],
+     ["play that last one again", "back a track"], NONE, "previous"),
+    ("music", ["what's playing", "what song is this", "what is this song", "who sings this", "what's this track", "name this song"],
+     ["what am i listening to", "who is this artist", "what track is on"], NONE, "playing"),
+    ("weather", ["what's the weather", "weather", "how's the weather", "what's the weather like", "what's it like outside",
+                 "is it raining", "do i need a jacket", "weather today", "what's the temperature outside"],
+     ["how cold is it out", "is it nice out", "should i bring an umbrella"], NONE, ""),
+    ("weather", ["what's the weather in {}", "weather in {}", "how's the weather in {}", "is it raining in {}",
+                 "what's the temperature in {}", "weather for {}"],
+     ["what's it doing outside in {}", "forecast for {}", "how hot is it in {}"], PLACES, None),
+    ("timer", ["set a timer for {}", "timer for {}", "timer {}", "start a timer for {}", "count down {}", "put {} on the clock"],
+     ["countdown for {}", "let me know in {}", "time me for {}"], SPANS, None),
+    ("timer", ["set a {} timer", "start a {} timer", "{} timer"], ["give me a {} timer"], SPANS_ADJ, None),
+    ("new_note", ["take a note {}", "make a note {}", "note {}", "new note {}", "write down {}", "jot down {}",
+                  "make a note that says {}", "add a note: {}", "note to self {}", "write this down: {}"],
+     ["save a note saying {}", "put this in my notes: {}", "remember this in notes: {}"], NOTES, None),
+    ("new_reminder", ["remind me to {}", "add a reminder to {}", "set a reminder to {}", "reminder to {}",
+                      "create a reminder to {}", "don't let me forget to {}", "make a reminder: {}", "new reminder {}"],
+     ["i need a reminder to {}", "put {} on my reminders", "make sure i remember to {}"], TODOS, None),
+    ("calendar_today", ["what's on my calendar", "what's on my calendar today", "what do i have today", "my schedule",
+                        "what's my schedule today", "any meetings today", "calendar", "what's on the agenda",
+                        "do i have anything today", "am i busy today"],
+     ["what's my day look like", "anything on the books today", "show me today's events"], NONE, ""),
+    # more than one step, or reading a page and saying what it says: that is agent() work
+    ("agent", ["poke around {} and tell me what's up", "go to {} and summarize it", "open {} and tell me the top story",
+               "read {} and tell me what's new", "check {} and tell me if anything is interesting",
+               "look at {} then give me the gist", "what's on {}", "summarize {}", "what's new on {}"],
+     ["skim {} for me and report back", "dig through {} and find something good", "tldr {}"], SITES, ""),
+    ("agent", ["read this page and summarize it", "summarize this page", "what does this page say",
+               "take a screenshot and then tell me my battery", "open notes and read my clipboard",
+               "search for mlx lora and summarize what you find", "go to github then tell me what tab is open"],
+     ["tldr this page", "open safari and then tell me what's playing", "give me the gist of this tab"], NONE, ""),
+]
+
+# Not commands. The second list is the dangerous kind: a command word inside a question.
+PLAIN = (["what is the capital of japan", "who was marie curie", "how many legs does a spider have", "what year did world war 2 end",
+          "why is the sky blue", "how tall is mount everest", "what is 17*23", "what is 12 plus 9", "how do you spell necessary",
+          "what does ephemeral mean", "tell me about the roman empire", "explain photosynthesis", "who is steve jobs",
+          "what is turing", "who is samantha", "how was samantha trained", "what base model do you use", "is this project blocked",
+          "what's on the roadmap", "summarize what turing is in one sentence", "what is a lora", "hello", "hi", "thanks",
+          "how are you", "good morning", "who are you", "what can you do", "tell me a joke", "that's cool", "never mind", "ok",
+          "lol", "you're funny", "goodnight", "what is the largest planet", "who painted the mona lisa", "how far is the moon",
+          "what is the boiling point of water", "who wrote hamlet", "what language do they speak in brazil", "is a tomato a fruit",
+          "how old is the universe", "what is the square root of 144", "what is 15 percent of 80", "convert 10 miles to km",
+          "what time is it", "what day is it", "why did arthur fail", "what does the eval measure", "how big is the model",
+          "who invented the telephone", "what is the longest river", "how many continents are there", "what do bees make"],
+         ["who discovered penicillin", "what is the capital of canada", "how many bones are in the body", "yo", "what is 9 times 8",
+          "cheers", "what is the tallest building", "when did the titanic sink", "how do planes fly", "what is a neural network",
+          "what model are you", "is samantha open source"])
+TRICKY = (["what is music theory", "who plays the next james bond", "what is the weather system on jupiter", "how does a timer work",
+           "what is a screenshot", "why does my battery drain fast", "what does open source mean", "is chrome better than safari",
+           "who invented the calendar", "what is a reminder app", "how loud is a jet engine", "what is the volume of a sphere",
+           "how do i search a sorted array", "what is a note in music", "what is google", "what's the best way to take notes",
+           "how do clipboards work", "what is a logo", "when was youtube founded", "who owns github", "how does spotify pay artists",
+           "what is a tab in a browser", "what does pause mean", "what is the next prime after 7", "can you play chess",
+           "do you like music", "what's the loudest animal", "how many minutes are in a day", "how many seconds are in an hour",
+           "what is the difference between climate and weather", "what's the hottest temperature ever recorded",
+           "who designed the apple logo", "what is a file system", "what is a folder", "who was the first to visit the moon",
+           "what is a search engine", "why is reddit called reddit", "what is the play hamlet about", "how does a launch window work",
+           "what is a skip list", "what does mute mean", "how do i read faster", "who set the record for the 100m",
+           "what is a start codon", "what are the open questions in physics", "say, what is the capital of peru"],
+          ["what is the speed of sound", "who wrote the song yesterday", "how do noise cancelling headphones work",
+           "what is a battery made of", "why do we have leap years on the calendar", "is it bad to skip breakfast",
+           "what is a volume in a book series", "who opened the first mcdonalds", "what does google do with my data",
+           "how long is a marathon", "what does remind mean", "what is a timer in electronics", "who plays batman",
+           "what is the weather like on mars", "how do you design a good logo", "what is a web browser"])
+
+LEADS = (["", "", "", "", "hey ", "please ", "can you ", "could you ", "yo ", "ok ", "samantha ", "hey samantha, ", "i need you to ",
+          "would you ", "go ahead and ", "quick, "], ["do me a favor and ", "real quick can you ", "samantha could you please ", "alright "])
+TAILS = (["", "", "", "", " please", " for me", " thanks", " real quick", " now"], [" when you get a sec", " asap", " if you can"])
+_QFORM = ("what", "how", "which", "who", "is ", "am ", "do ", "any", "should ", "my ", "show ", "that's", "i ", "let's", "a bit")  # "can you what's playing" is not a sentence
+
+
+def _call(tool, arg):
+    return json.dumps({"tool": tool, "arg": arg})
+
+
+def _dress(rng, text, held):
+    leads, tails = LEADS[held], TAILS[held]
+    if text.startswith(_QFORM):
+        leads = [l for l in leads if l.split(" ")[0].strip(",") in ("", "hey", "ok", "yo", "samantha", "alright", "quick")] or [""]
+    out = rng.choice(leads) + text + rng.choice(tails)
+    roll = rng.random()
+    return out.capitalize() + rng.choice(".?!") if roll < 0.12 else out.capitalize() if roll < 0.2 else out
+
+
+JOINS = ([" and then ", " then ", ", then ", " and after that "], [" and once that's done ", " followed by: "])
+
+
+def _pairs(rng, held, n):
+    """Two single commands joined: more than one step, so agent. Built from the same templates so she learns the join, not the words."""
+    singles = []
+    for tool, train_t, held_t, fillers, arg in SPEC:
+        if tool == "agent":
+            continue
+        for t in (held_t if held else train_t):
+            f = rng.choice(fillers[held] or fillers[0])
+            singles.append(t.format(f[0] if isinstance(f, tuple) else f))
+    return [rng.choice(singles) + rng.choice(JOINS[held]) + rng.choice(singles) for _ in range(n)]
+
+
+def build(held, per_template, seed):
+    rng, rows = random.Random(seed), {}
+    for text in _pairs(rng, held, 30 if held else 220):
+        rows.setdefault(_dress(rng, text, held), _call("agent", ""))
+    for tool, train_t, held_t, fillers, arg in SPEC:
+        for t in (held_t if held else train_t):
+            # held-out phrasings get held-out fillers, plus a few seen ones: a new sentence around a known name
+            pool = (fillers[1] + fillers[0][:3]) if held else fillers[0]
+            for f in rng.sample(pool, min(len(pool), per_template)) * (1 if "{}" in t else per_template):
+                spoken, carried = f if isinstance(f, tuple) else (f, f)
+                rows.setdefault(_dress(rng, t.format(spoken), held), _call(tool, carried if arg is None else arg))
+    for q in PLAIN[held] + TRICKY[held] * (1 if held else 3):
+        for _ in range(1 if held else 3):
+            text = q if rng.random() < 0.6 else rng.choice(["hey ", "ok ", "samantha ", "so ", "quick question, "]) + q
+            rows.setdefault(text + ("?" if rng.random() < 0.3 else ""), _call(None, ""))
+    return rows
+
+
+def main():
+    from actions import CASES
+    from basic_questions import CASES as QUESTIONS
+    reserved = {c[0].lower() for c in CASES} | {q[0].lower() for q in QUESTIONS}  # other evals stay unseen
+    train = {k: v for k, v in build(0, 7, seed=7).items() if k.lower().rstrip(".?!") not in reserved}
+    test = {k: v for k, v in build(1, 4, seed=11).items() if k not in train}
+    items = list(train.items())
+    random.Random(3).shuffle(items)
+    valid, items = items[:80], items[80:]
+    os.makedirs("hands-data", exist_ok=True)
+    for name, rows in (("train", items), ("valid", valid), ("test", list(test.items()))):
+        with open(f"hands-data/{name}.jsonl", "w") as f:
+            for text, call in rows:
+                f.write(json.dumps({"messages": [{"role": "system", "content": SYSTEM}, {"role": "user", "content": text},
+                                                 {"role": "assistant", "content": call}]}) + "\n")
+        print(name, len(rows))
+    nulls = sum('"tool": null' in v for _, v in items)
+    assert len(items) > 1500 and 0.15 < nulls / len(items) < 0.4, (len(items), nulls)
+    assert not set(train) & set(test)
+
+
+if __name__ == "__main__":
+    main()

@@ -11,3 +11,5 @@ __pycache__/
 .http_cache.json
 .samantha-logo.json
 voice-train.log
+hands-data/
+hands-train.log

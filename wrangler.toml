@@ -1,4 +1,5 @@
 name = "turing"
+main = "worker.js"
 compatibility_date = "2025-07-01"
 
 workers_dev = false
@@ -6,6 +7,20 @@ routes = [{ pattern = "turing.heyitsmejosh.com", custom_domain = true }]
 
 [assets]
 directory = "web"
+binding = "ASSETS"
+
+# the 1B that reads articles for the landing demo. On the Mac this is Ollama.
+[ai]
+binding = "AI"
+
+# 20 questions a minute per visitor keeps the demo a demo
+[[ratelimits]]
+name = "LIMIT"
+namespace_id = "2109"
+
+  [ratelimits.simple]
+  limit = 20
+  period = 60
 
 [observability]
 enabled = true

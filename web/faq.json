@@ -1,0 +1,170 @@
+[
+{
+"q": "What is Turing?",
+"a": "Turing is the project: the pipeline, the repo, this whole effort to build small language models on consumer hardware. It is not a model itself. Turing is fixed as a name, the way Anthropic is fixed as a company name."
+},
+{
+"q": "Summarize what Turing is in one sentence.",
+"a": "Turing is a pipeline for building small language models on consumer hardware."
+},
+{
+"q": "What is Samantha?",
+"a": "Samantha is the first model Turing produced. It is a LoRA fine-tune of Qwen2.5-0.5B-Instruct-4bit, trained mostly on this project's own docs, plus a small capped sample of the wider fleet for house voice. Samantha is not pretrained from scratch, it starts from an already-trained small open model and adjusts it with a small set of trainable weight deltas."
+},
+{
+"q": "What is the relationship between Turing and Samantha?",
+"a": "The same relationship as Anthropic and Claude, or Anthropic and one specific Claude model like Haiku or Fable. The project name stays fixed. Each model Turing produces gets its own name, not a version-bumped name like \"Samantha-2\". The next model will have a different name entirely, chosen for whatever it is actually built for."
+},
+{
+"q": "Why doesn't Turing pretrain a model from scratch at full scale?",
+"a": "Needs data-center-scale compute: gigabytes of clean text and enough GPU time to make noise start looking like language. That's a research-lab budget, not a single Mac Mini's. Arthur (see next answer) already proved what happens when you try it anyway on consumer hardware, gibberish, no working checkpoint."
+},
+{
+"q": "What went wrong with Arthur?",
+"a": "Arthur was an earlier attempt at this same idea, months before Turing. Arthur tried to pretrain a language model completely from scratch on a single Mac, with no borrowed base weights. After a few days of training it produced gibberish. The project was abandoned."
+},
+{
+"q": "What base model does Samantha use?",
+"a": "Qwen2.5-0.5B-Instruct-4bit, downloaded from Hugging Face via the mlx-community org, run through Apple's MLX framework on-device."
+},
+{
+"q": "Was another base model tried?",
+"a": "Yes. Qwen3.5-0.8B-4bit was tried as a Phase 3 comparison, to see if a bigger base earns its extra cost before committing to one. It caused three crashes in a row on this machine (two plain out-of-memory crashes, then a Metal/GPU out-of-memory error mid-backprop even with plenty of free system RAM). That comparison is paused, not abandoned, ada-1b-adapter/ holds its unfinished state."
+},
+{
+"q": "What's the difference between LoRA and full fine-tuning?",
+"a": "LoRA (Low-Rank Adaptation) trains a small set of weight deltas on top of a frozen, already-trained base model, cheaper, faster, and it never touches or retrains the base model's own weights. Full fine-tuning retrains all of a model's weights directly, which needs far more memory, compute, and data to avoid destroying what the base model already knew. Samantha uses LoRA."
+},
+{
+"q": "Is Samantha fine-tuned or pretrained from scratch?",
+"a": "Fine-tuned. LoRA (Low-Rank Adaptation) trains a small set of weight deltas on top of a frozen, already-trained base model. It never retrains the base model's own weights from zero. The from-scratch idea (what Arthur tried, and what failed) lives on in this repo as a separate, deliberately small experiment, see the next answer."
+},
+{
+"q": "What is scratch/ in this repo?",
+"a": "A second, independent track alongside the main LoRA pipeline: a genuine from-scratch character-level transformer, built and trained with zero borrowed weights. Its own tiny architecture (scratch/model.py), its own training loop (scratch/train.py). It will not be fluent, that is expected and intentional, it is small on purpose."
+},
+{
+"q": "What data was Samantha trained on?",
+"a": "Primarily this repo's own docs (README, WHITEPAPER, roadmap.md, TROUBLESHOOTING.md, this FAQ, and eval result writeups), repeated a few times so they are not drowned out."
+},
+{
+"q": "Why does Samantha hallucinate, or sometimes make things up?",
+"a": "Not enough real, distinct training content yet to override the base model's habit of answering \"what is X\" questions with a plausible-sounding, generic, confident answer. Five training runs on 2026-09-13 confirmed this is the actual bottleneck, not the training format (fixed in run 2), not which fleet projects were included (fixed in run 3), not how aggressively existing content was repeated (tuned in runs 4 and 5)."
+},
+{
+"q": "Should Samantha try to beat Claude or GPT?",
+"a": "No. Samantha's base model is Qwen2.5-0.5B, so a LoRA fine-tune of it cannot outperform Qwen in general, only on the narrow thing it was actually fine-tuned for. The real benchmark is whether the fine-tuned version answers questions about this project better than the stock base model does, not whether it beats a frontier lab's model."
+},
+{
+"q": "What is the honest win condition?",
+"a": "Ask Samantha to draft something in house voice, or answer a real question about one of these projects, and have the answer be good enough to use without rewriting it. Not \"beat GPT.\""
+},
+{
+"q": "What is house voice?",
+"a": "Plain, short sentences. No em dashes anywhere, in code, UI, or prose. No emojis. No AI-brochure language like \"leverage\", \"seamlessly\", or \"robust\" used as filler. Say the problem, then the thing, then stop. This rule applies fleet-wide across every project, not just Turing."
+},
+{
+"q": "What tool actually runs training?",
+"a": "mlx_lm.lora, run through Apple's MLX framework, entirely on-device on this Mac Mini. No cloud GPU, no API cost. Always invoked through run_lora_capped.py, a thin wrapper that sets a Metal cache limit and memory limit before calling mlx_lm.lora's own unmodified entry point, see TROUBLESHOOTING.md for why that wrapper exists."
+},
+{
+"q": "Why was run_lora_capped.py written?",
+"a": "MLX's lazy-evaluation graph caches intermediate Metal (GPU) buffers, and on a memory-constrained machine during a long sustained training loop, that cache can grow without bound and eventually cause an out-of-memory crash mid-run, even with a small batch size and gradient checkpointing already enabled. This happened three times during Phase 3's base-model comparison before the cause was found."
+},
+{
+"q": "What is train_resilient.sh?",
+"a": "A wrapper around run_lora_capped.py for long unattended runs: it checks free memory before each attempt, auto-restarts on crash with a backoff delay, resumes from the last saved checkpoint instead of starting over, and gives up after a capped number of retries. It is not a daemon, it runs once when invoked and exits when the training finishes or the retries run out."
+},
+{
+"q": "How does the landing page get its loss chart data?",
+"a": "parse_log.py parses the most recent training run's log (previously train.log, now ada-1-adapter.resilient.log since training moved to the resilient wrapper) into web/status.json. The landing page fetches that file and renders the loss curve and roadmap-phase markers on a canvas, no charting library."
+},
+{
+"q": "What license is this project under?",
+"a": "MIT."
+},
+{
+"q": "Who maintains this project?",
+"a": "Joshua Trommel, listed as the author in LICENSE and WHITEPAPER.md."
+},
+{
+"q": "What's blocked or paused right now?",
+"a": "The Qwen3.5-0.8B base comparison (Phase 3) is paused after three crashes, the last being a real Metal/GPU memory-fit problem rather than a background-process conflict. Phase 2 (real eval prompts) is active but the model still scores poorly, see the eval/ folder's run-by-run results for the honest numbers."
+},
+{
+"q": "What does Phase 4 of the roadmap involve?",
+"a": "Retrieval instead of memorization: wiring Samantha to brain (the existing RAG-over-notes project) so it answers from live retrieved documents instead of trying to recall facts from its own trained weights. Confirmed working on 2026-09-13, this whole FAQ is part of what makes that retrieval accurate."
+},
+{
+"q": "Does Turing use a paid API or cloud service to train?",
+"a": "No. Training runs entirely on-device via Apple's MLX framework, no cloud GPU, no API cost. The only paid-adjacent thing involved is brain's Cloudflare Workers AI usage for retrieval embeddings, which is separate infrastructure, not part of training itself."
+},
+{
+"q": "Can I add my own FAQ entries?",
+"a": "Yes. FAQ.md is a plain markdown file, faq_match() in ask.py re-parses it fresh on every question, no rebuild step. Add a new ## Your question here header followed by a paragraph answer, in the same style as every existing entry, and it's immediately queryable."
+},
+{
+"q": "What happens if a question isn't in FAQ.md and isn't covered by the project docs either?",
+"a": "It falls through to retrieval plus generation, brain's index is searched for the closest real passages it has, then the base model generates an answer from that context. Quality varies at that point, that's the honest ceiling this whole project has been documenting, not a special error case."
+},
+{
+"q": "Can Samantha answer general-knowledge questions, not just project facts?",
+"a": "Yes, for clean factual/definitional queries (\"what's the capital of France\"), via a DuckDuckGo-instant-answer-then-Wikipedia-summary fallback (general_knowledge() in ask.py, reusing nimble's existing pattern)."
+},
+{
+"q": "Can it answer \"who's the president\" or \"who's the prime minister of X\" correctly?",
+"a": "Yes, as of 2026-09-13. DDG and a plain Wikipedia summary both describe the office, never today's actual holder, that was a real limitation for months."
+},
+{
+"q": "What would Phase 5 let Samantha actually do for someone?",
+"a": "In-voice drafting (journal entries, commit messages, README sections in house style), answering project-status questions from real data via retrieval instead of memorized weights, local autocomplete that never touches the network, or acting as a cheap first-pass judge/filter model on every commit or PR before anything reaches a bigger model."
+},
+{
+"q": "What should Samantha be used for eventually, and what will Turing never do on this hardware?",
+"a": "Eventually: in-voice drafting, project Q&A from real data via retrieval, local autocomplete, or acting as a cheap first-pass judge/filter model, not competing with frontier models. Never, on this Mac Mini: pretrain a foundation model from raw text at frontier scale, that needs data-center-scale compute and a research team's budget, not a personal project's. Beating Claude or GPT was never the goal."
+},
+{
+"q": "What is chat.py?",
+"a": "A multi-turn conversation loop on top of ask.py's retrieval. Same underlying model and same FAQ-matching/general-knowledge/retrieval/generation chain, but it carries the last few exchanges as short-term memory, so a follow-up question like \"what's its first model called\" correctly resolves \"its\" to whatever was discussed a turn earlier, instead of needing every question spelled out standalone."
+},
+{
+"q": "What's the actual difference between ask.py and chat.py?",
+"a": "ask.py is the one-shot core: a single question in, one grounded answer out, no memory of anything before it. chat.py wraps ask.py's exact same answer logic (FAQ-match, officeholder lookup, retrieval, generation) in a loop that also remembers recent turns, so it handles follow-ups and feels like a real conversation instead of restarting from zero every question."
+},
+{
+"q": "What is the FAQ-matcher?",
+"a": "faq_match() in ask.py: parses this file's own ## Question headers and answer paragraphs, fuzzy-matches an incoming question against them, and returns the real answer verbatim when confident, skipping retrieval and generation entirely. Added 2026-09-13 after hand-writing one-off fixes for failing eval questions turned into whack-a-mole."
+},
+{
+"q": "Why is there no live chat demo on the landing page?",
+"a": "The model runs locally via MLX on this Mac Mini, it isn't servable from a static Cloudflare Worker page without real hosting infrastructure (a running inference server, not just static files). Building that is real, separate infrastructure work, not attempted yet. Run chat.py locally instead for a real session."
+},
+{
+"q": "What's the current eval score?",
+"a": "As of 2026-09-14 there are four separate harnesses, because one number was hiding too much. eval/score.py scores 29 out of 29 on the hand-written set and 18 out of 18 on the held-out set. test_chat.py passes 18 out of 18 pure-function tests. eval/faq_paraphrase.py scores 13 out of 16 on natural rephrasings of questions the FAQ genuinely answers, a number that was 3 out of 16 before semantic matching landed."
+},
+{
+"q": "How long does a question actually take to answer, and how much memory does it use?",
+"a": "Measured directly on this Mac Mini: an FAQ-matched question (no model load at all) answers in about 0.04 seconds using about 26MB. A question that falls through to retrieval plus generation takes about 2 seconds and peaks around 570MB, mostly the base model loading into memory. Neither is slow enough to need a persistent server process, that's why ask.py is invoked fresh each time instead of running as a daemon."
+},
+{
+"q": "How does ask.py decide when to trust a FAQ match versus generate an answer?",
+"a": "A similarity score (Python's difflib, comparing the question to every FAQ question) has to clear a threshold (0.55) before the FAQ answer is used. Below that, it falls through to retrieval plus generation instead, so a genuinely novel question doesn't get force-matched to an unrelated FAQ entry."
+},
+{
+"q": "How do I boot into Samantha and chat with her?",
+"a": "Run ./samantha from the turing repo root. It activates the venv and launches chat.py's plain text loop, type a question, get an answer, exit or Ctrl+C to quit."
+},
+{
+"q": "Is there a TUI, not just a plain CLI?",
+"a": "Yes. ./samantha --tui launches a full-screen curses interface (chat.py's tui() function, stdlib curses, no new dependency), same conversation logic as the plain CLI, just a scrolling full-screen view instead of line-by-line prints. ./samantha with no flag stays plain-text."
+},
+{
+"q": "What happens if I run ./samantha with no flags at all?",
+"a": "Plain-text mode, the default. No flag means the ordinary line-by-line CLI (chat.py's chat() function), not the TUI. Only --tui changes that."
+},
+{
+"q": "Can Samantha be used from other apps, not just the terminal?",
+"a": "Yes. ./.venv/bin/python serve.py serves her over the OpenAI chat API shape on port 8127 (POST /v1/chat/completions, GET /v1/models), which is the one wire format most local-LLM tooling already speaks. Nimble needs no code changes at all: pick its Ollama engine and set the base URL to http://localhost:8127."
+}
+]

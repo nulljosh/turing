@@ -205,12 +205,25 @@ _TIMER = ("import sys,time,subprocess;time.sleep(float(sys.argv[1]));"
           "subprocess.run(['say','Time is up'])")
 
 
+_NUMBER_WORDS = {w: n for n, w in enumerate("zero one two three four five six seven eight nine ten".split())} | {"a": 1, "an": 1, "half": 0.5}
+
+
+def duration(text):
+    """Minutes in a spoken length of time: "90 seconds", "an hour", "half an hour", "5". None if it is not one."""
+    t = str(text).lower().strip()
+    m = re.match(r"^(\d+(?:\.\d+)?|[a-z]+)(?: an| a)?[ -]?(s|m|h)?[a-z]*$", t)
+    if not m:
+        return None
+    n = float(m.group(1)) if m.group(1)[0].isdigit() else _NUMBER_WORDS.get(m.group(1))
+    return None if n is None else round(n * {"s": 1 / 60, "m": 1, "h": 60}[m.group(2) or "m"], 4)
+
+
 def timer(minutes):
-    """Start a timer. Takes minutes, fractions allowed. Notifies and speaks when it is done."""
-    try:
-        secs = float(minutes) * 60
-    except ValueError:
-        return f"{minutes!r} is not a number of minutes."
+    """Start a timer. Takes a length of time: "5", "90 seconds", "half an hour". Notifies and speaks when it is done."""
+    span = duration(minutes)
+    if span is None:
+        return f"{minutes!r} is not a length of time."
+    secs = span * 60
     if not 0 < secs <= 86400:
         return "A timer runs from a second to a day."
     # ponytail: a sleeping child process. No cancel, gone on reboot. Fine for tea.
@@ -554,6 +567,7 @@ def demo():
         assert "don't read hidden" in read_file("~/.ssh/id_rsa") or "No file" in read_file("~/.ssh/id_rsa")
         assert "No file" in read_file("/etc/passwd") and "No folder" in list_dir("~/../..")
         assert act("play some music") == "Playing." and act("skip this song") == "Skipped." and act("pause") == "Paused."
+        assert [duration(x) for x in ("5", "90 seconds", "an hour", "half an hour", "ten minutes", "2 hrs", "soon")] == [5, 1.5, 60, 30, 10, 120, None]
         assert act("set a timer for 0 minutes").startswith("A timer runs") and act("what's playing") == "Nothing is playing."
         assert act("remind me to call mom") == "I'll remind you: call mom" and act("take a note buy milk") == "Noted: buy milk"
         assert act("what's on my calendar today") == "Nothing on the calendar today."
