@@ -103,7 +103,6 @@ All from `cutout` ops. Real examples sit in `examples/`.
 - GIFs of flat logos: no dithering, one palette for the whole clip. Dithering is what makes text look dirty.
 - Shapes with a numeric `x` and `y` are placed inside `make`, not with a second `set position`. One less round-trip per layer. Give numbers when you have them.
 - A headless build takes about six seconds. So iterate: build, Read the PNG, fix the spec, build again.
-- Layer grouping via `--group-size` reduces quadratic slowdown by putting layers inside groups instead of all at the top level. Group creation works with AppleScript and does not affect visual output.
 - Run `uvx ruff check .` and the tests before pushing. CI will fail the push otherwise.
 
 ## Exit codes
