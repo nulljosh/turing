@@ -42,6 +42,8 @@
       h2{font-size:28px;line-height:1.1;letter-spacing:-0.02em;font-weight:700;color:var(--fg);margin:0 0 12px}
       section{margin-top:64px}
       .paint-btn{display:block;width:100%;margin:0 0 8px;padding:8px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--fg);font:inherit;font-size:13px;cursor:pointer;text-align:center;box-sizing:border-box}
+      details.more>summary{cursor:pointer;font-size:15px;color:var(--muted);padding:6px 0}
+      details.more[open]>summary{margin-bottom:8px}
       .card{border:1px solid var(--line);border-radius:10px;padding:20px}
       canvas{width:100%;height:220px;display:block}
       .meta{display:flex;flex-wrap:wrap;gap:24px;font-size:13px;color:var(--muted);margin-top:12px}
@@ -198,7 +200,6 @@
           <div><span class="name-label">Project</span><b>Turing</b></div>
           <div><span class="name-label">Model</span><b>Samantha</b></div>
         </div>
-        <p class="sub" style="margin-top:10px">Turing = the lab. Samantha = the model it made. Same split as Anthropic = the company, Claude = the model.</p>
       </header>
 
       <section>
@@ -224,17 +225,9 @@
         </div>
       </section>
 
-      <section id="results-section">
-        <h2>Results</h2>
-        <div id="results-placeholder" style="font-size:13px;color:var(--muted)">Loading results...</div>
-      </section>
-
       <section>
         <h2>Hands</h2>
-        <p>Samantha runs on this Mac only. Before 2026-09-20 she couldn't do anything on the system. Now she has hands.</p>
-        <p>Her first job was a logo for Turing. She picked the design and drew it in Pixelmator Pro, layer by layer. Try "make me a logo" above.</p>
-        <h3 style="margin-top:32px;font-size:20px;letter-spacing:-0.01em">She paints too</h3>
-        <p>Say "paint ~/Downloads/mona.jpg" and she rebuilds the photo inside Pixelmator Pro from colored squares, each one a real layer. She finds the patch that looks most wrong and splits it in four, again and again. No model draws it, so it costs nothing. Her own picker chooses the tool, even from wording it never trained on. This is the same method, live in your browser.</p>
+        <p>She works the Mac. She designs logos. She paints. Watch.</p>
         <div class="card" style="margin-top:16px;display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start">
           <canvas id="paint-c" aria-label="A painting rebuilt from squares" style="flex:1 1 240px;max-width:100%;min-width:0;height:auto;max-height:60vh;object-fit:contain;border-radius:6px"></canvas>
           <div style="flex:1 1 180px;min-width:0;font-size:13px">
@@ -247,8 +240,13 @@
         </div>
         <div style="margin-top:16px;text-align:center">
           <img src="mona-lisa.gif" width="220" loading="lazy" alt="The Mona Lisa assembling from 2997 squares inside Pixelmator Pro">
-          <p class="sub" style="margin-top:8px">The real thing. 2997 layers, built in the app in eight minutes.</p>
+          <p class="sub" style="margin-top:8px">The real build in Pixelmator Pro. 2997 layers, eight minutes. Say "paint ~/Downloads/mona.jpg".</p>
         </div>
+      </section>
+
+      <section id="results-section">
+        <h2>Results</h2>
+        <div id="results-placeholder" style="font-size:13px;color:var(--muted)">Loading results...</div>
       </section>
 
       <section>
@@ -264,17 +262,20 @@
             <span>Iterations: <b id="iters">, </b></span>
             <span>Latest train loss: <b id="loss">, </b></span>
           </div>
-          <p class="graph-explainer">Lower is better. "Loss" is how surprised the model is by the actual next word each time it guesses, a falling line means it's getting less surprised, i.e. learning the pattern of our own writing. Bouncy is normal on a small dataset; it should smooth out as more data comes in.</p>
+          <p class="graph-explainer">Lower is better. A falling line means she is learning.</p>
         </div>
       </section>
 
       <section>
         <h2>What this is</h2>
+        <details class="more"><summary>How she was made</summary>
         <p>Samantha is a LoRA fine-tune of a small open base model, trained on the project's own Obsidian wiki and READMEs so it actually knows the codebase and writes in house voice. No from-scratch pretraining, that path was tried once (project code name Arthur) and produced gibberish. This time: small model, real data, short loop, iterate.</p>
+        </details>
       </section>
 
       <section>
         <h2>Real bugs, caught and fixed live</h2>
+        <details class="more"><summary>Open the transcripts</summary>
         <p class="sub" style="margin:0 0 4px">Click one open. These are real captured transcripts from actually running the CLI, not simulated. No live inference on this page, the model runs locally via MLX, not servable from a static site without real hosting infra.</p>
         <details class="fix-card">
           <summary>Fixed: Wikipedia hijack on "Is this project blocked?"</summary>
@@ -330,6 +331,7 @@
           <p class="sample-note" style="margin-top:8px">Trained on real instruction/response pairs harvested from this repo's own git history, so it learned actual task style, not just "tell me about X" facts.</p>
         </details>
         <p class="graph-explainer">29 of 29 on the hand-written eval set, 16 of 16 on a separate held-out set (automated scoring, not eyeballed). Still shaky on ambiguous general-knowledge questions, see <code>eval/</code> for the honest numbers.</p>
+        </details>
       </section>
 
       <section>
@@ -348,7 +350,9 @@ python3 -m venv .venv && ./.venv/bin/pip install mlx-lm
 
       <section>
         <h2>The big idea</h2>
+        <details class="more"><summary>Where this is going</summary>
         <p>Retrieval currently only searches this project's own docs on purpose, but its RAG index already spans the whole ~50-repo fleet. The real leveraged version isn't a bigger model, it's a wider index: drop that bias and this becomes a small local assistant that can answer questions across every project, not just this one. Not started yet, a real scope change, tracked in the README and roadmap as it develops.</p>
+        </details>
       </section>
 
       <footer>
@@ -461,9 +465,9 @@ python3 -m venv .venv && ./.venv/bin/pip install mlx-lm
         var m = s.measured;
         var docsCov = s.docs_coverage.percent;
         var html = '<div class="stat-tiles">' +
-          '<div class="stat-tile"><div class="stat-value">13</div><div class="stat-label">Tools</div></div>' +
-          '<div class="stat-tile"><div class="stat-value">75/75</div><div class="stat-label">Actions eval</div></div>' +
-          '<div class="stat-tile"><div class="stat-value">57/65</div><div class="stat-label">Knowledge</div></div>' +
+          '<div class="stat-tile"><div class="stat-value">' + m.tools.after + '</div><div class="stat-label">Tools</div></div>' +
+          '<div class="stat-tile"><div class="stat-value">' + m.actions_eval + '</div><div class="stat-label">Actions eval</div></div>' +
+          '<div class="stat-tile"><div class="stat-value">' + m.knowledge_sweep.after + '</div><div class="stat-label">Knowledge</div></div>' +
           '<div class="stat-tile"><div class="stat-value">' + docsCov + '%</div><div class="stat-label">Docs coverage</div></div>' +
           '</div>';
 
@@ -512,7 +516,7 @@ python3 -m venv .venv && ./.venv/bin/pip install mlx-lm
           'Logos are dial choices from a fixed set, not free-hand design. ' +
           'She runs on one Mac only.</p></div>';
 
-        placeholder.parentNode.innerHTML = '<h2>Results</h2>' + html + tableHtml + docsHtml + limitHtml;
+        placeholder.parentNode.innerHTML = '<h2>Results</h2>' + html + tableHtml + '<details class="more"><summary>Docs and limits</summary>' + docsHtml + limitHtml + '</details>';
       }).catch(() => {
         var placeholder = document.getElementById('results-placeholder');
         placeholder.textContent = 'stats unavailable';

@@ -520,8 +520,7 @@
   }
 
   function startDemo() {
-    statusEl.textContent = 'Live demo. Her real command rules run in your browser. What the rules miss, a small model picks a tool for, and a guard checks the pick. ' +
-      'She can act on the stand-in Mac and on this page itself. A 3B on Cloudflare stands in for the models on her Mac.';
+    statusEl.textContent = 'Live demo. She controls the stand-in Mac and this page. A 3B on Cloudflare stands in for the models on her Mac.';
     say(null, [], "I'm Samantha. Tell me to do something, to the Mac up there or to this page, or ask me something. Type anything.");
     var chips = $('chat-chips');
     ['change the title to Hello Joshua', 'dark mode', 'scroll to the results', 'do a barrel roll', 'play some music', 'set a timer for 1 minute',
