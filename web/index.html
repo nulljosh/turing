@@ -381,14 +381,14 @@ python3 -m venv .venv && ./.venv/bin/pip install mlx-lm
         const cssW = c.clientWidth;
         c.width = cssW * dpr; c.height = 220 * dpr;
         ctx.scale(dpr, dpr);
-        const w = cssW, h = 220, pad = 24;
+        const w = cssW, h = 220, pad = 24, padL = 44, padB = 34;  // room for axis numbers and titles
         const pts = s.train_loss;
         if (!pts.length) return;
         const xs = pts.map(p => p.iter), ys = pts.map(p => p.loss);
         const xMin = Math.min(...xs), xMax = Math.max(...xs, 1);
         const yMin = Math.min(...ys) * 0.95, yMax = Math.max(...ys) * 1.05;
-        const X = i => pad + (i - xMin) / (xMax - xMin || 1) * (w - pad*2);
-        const Y = v => h - pad - (v - yMin) / (yMax - yMin || 1) * (h - pad*2);
+        const X = i => padL + (i - xMin) / (xMax - xMin || 1) * (w - padL - pad);
+        const Y = v => h - padB - (v - yMin) / (yMax - yMin || 1) * (h - pad - padB);
         const fg = getComputedStyle(document.documentElement).getPropertyValue('--fg').trim() || '#1a1a1a';
         const line = getComputedStyle(document.documentElement).getPropertyValue('--line').trim() || '#ddd';
         const accent = getComputedStyle(document.documentElement).getPropertyValue('--muted').trim() || '#888';
@@ -407,18 +407,35 @@ python3 -m venv .venv && ./.venv/bin/pip install mlx-lm
         function draw() {
           ctx.clearRect(0, 0, w, h);
           ctx.strokeStyle = line; ctx.lineWidth = 1;
-          ctx.beginPath(); ctx.moveTo(pad, h-pad); ctx.lineTo(w-pad, h-pad); ctx.stroke();
+          ctx.beginPath(); ctx.moveTo(padL, h-padB); ctx.lineTo(w-pad, h-padB); ctx.moveTo(padL, pad); ctx.lineTo(padL, h-padB); ctx.stroke();
+          // Axes: four loss ticks with faint gridlines, iteration ticks along the bottom.
+          ctx.fillStyle = accent; ctx.font = '11px -apple-system, Helvetica, sans-serif';
+          ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+          for (let k = 0; k <= 3; k++) {
+            const v = yMin + (yMax - yMin) * k / 3, y = Y(v);
+            ctx.fillText(v.toFixed(2), padL - 6, y);
+            if (k) { ctx.strokeStyle = line; ctx.globalAlpha = .5; ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(w-pad, y); ctx.stroke(); ctx.globalAlpha = 1; }
+          }
+          ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+          for (let k = 0; k <= 4; k++) {
+            const it = xMin + (xMax - xMin) * k / 4;
+            ctx.fillText(Math.round(it), X(it), h - padB + 6);
+          }
+          ctx.fillText('iteration', padL + (w - padL - pad) / 2, h - 14);
+          ctx.save(); ctx.translate(11, pad + (h - pad - padB) / 2); ctx.rotate(-Math.PI / 2);
+          ctx.textBaseline = 'middle'; ctx.fillText('train loss', 0, 0); ctx.restore();
+          ctx.strokeStyle = line;
           ctx.beginPath();
           pts.forEach((p, i) => i === 0 ? ctx.moveTo(X(p.iter), Y(p.loss)) : ctx.lineTo(X(p.iter), Y(p.loss)));
           ctx.strokeStyle = fg; ctx.lineWidth = 2; ctx.stroke();
           markers.forEach(m => {
             const mx = X(m.iter);
             ctx.beginPath();
-            ctx.moveTo(mx, pad); ctx.lineTo(mx, h - pad);
+            ctx.moveTo(mx, pad); ctx.lineTo(mx, h - padB);
             ctx.strokeStyle = accent; ctx.lineWidth = 1; ctx.setLineDash([2, 3]);
             ctx.stroke(); ctx.setLineDash([]);
             ctx.beginPath();
-            ctx.arc(mx, h - pad, m.phase.done ? 4 : 3, 0, Math.PI * 2);
+            ctx.arc(mx, h - padB, m.phase.done ? 4 : 3, 0, Math.PI * 2);
             ctx.fillStyle = m.phase.done ? '#2e9e4a' : accent;
             ctx.fill();
           });
