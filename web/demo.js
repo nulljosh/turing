@@ -268,9 +268,15 @@
       return { play: 'Playing.', pause: 'Paused.', next: 'Skipped.', previous: 'Went back one.' }[c];
     },
     weather: function (place) {
-      return fetch('https://wttr.in/' + encodeURIComponent(place.trim()) + '?format=%l:+%C,+%t,+feels+%f').then(function (r) { return r.text(); })
-        .then(function (t) { return t.indexOf('°') >= 0 ? t.trim() : 'No weather for "' + place + '".'; })
-        .catch(function () { return "Couldn't get the weather."; });
+      // wttr.in serves its one-line format as a whole HTML page to browsers, so ask for JSON. Its nearest area can be a suburb, so a named place keeps its name.
+      var where = place.trim();
+      return fetch('https://wttr.in/' + encodeURIComponent(where) + '?format=j1').then(function (r) { return r.json(); })
+        .then(function (d) {
+          var c = d.current_condition[0];
+          return (where ? where.replace(/\b\w/g, function (l) { return l.toUpperCase(); }) : d.nearest_area[0].areaName[0].value) +
+            ': ' + c.weatherDesc[0].value.trim() + ', ' + c.temp_C + '°C, feels ' + c.FeelsLikeC + '°C';
+        })
+        .catch(function () { return where ? 'No weather for "' + where + '".' : "Couldn't get the weather."; });
     },
     timer: function (minutes) {
       var secs = (/^[\d.]+$/.test(String(minutes).trim()) ? parseFloat(minutes) : S.duration(minutes)) * 60;
@@ -372,6 +378,7 @@
     transcript.scrollTop = transcript.scrollHeight;
   }
   function say(_, calls, text, extra, done) {
+    text = String(text || '').slice(0, 1200); // no upstream gets to fill the transcript
     var d = el('div', 'chat-message');
     (calls || []).forEach(function (c) { d.appendChild(el('div', 'chat-tool-call', c)); });
     var body = el('div', 'chat-message-content');

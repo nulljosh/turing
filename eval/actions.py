@@ -24,6 +24,8 @@ CASES = [
     ("open chrome", "open_app", "chrome"),
     ("launch safari", "open_app", "safari"),
     ("start pixelmator", "open_app", "pixelmator"),
+    ("make me a logo for turing", "make_logo", "turing"),
+    ("make me a complex logo for a surf school", "make_logo", "complex a surf school"),
 
     # opening sites
     ("go to hacker news", "open_url", "hacker news"),
