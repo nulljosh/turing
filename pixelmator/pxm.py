@@ -641,14 +641,20 @@ def cmd_logo(args):
         build(validate_spec(json.load(f)), args)
 
 
+def paint_timeout(layers):
+    """Seconds to allow. Pixelmator slows as a document fills, so cost grows with the square
+    of the layer count. Measured: 3000 layers in 490 s, 4000 layers past 1119 s (it was cut off
+    at 3820, which is what this replaces). About three times the measured time."""
+    return int(120 + layers * 0.1 + layers * layers / 8000)
+
+
 def cmd_paint(args):
     if not 5 <= args.shapes <= 20000:
         raise PxmError("--shapes must be from 5 to 20000", code=EXIT_USAGE)
     w, h, rows = read_pixels(os.path.expanduser(args.image), side=args.detail)
     scale = max(1, round(args.size / max(w, h)))
     layers = paint_layers(w, h, rows, args.shapes, scale, args.shape)
-    # ponytail: every layer costs about 50 ms in the app. Thousands take minutes.
-    args.timeout = max(args.timeout, len(layers) // 4 + 120)
+    args.timeout = max(args.timeout, paint_timeout(len(layers)))
     build(validate_spec({"width": w * scale, "height": h * scale, "layers": layers,
                          "export": args.out, "keep_open": True}), args,
           frame_every=max(1, len(layers) // 60))

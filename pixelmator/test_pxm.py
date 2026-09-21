@@ -294,6 +294,11 @@ class Paint(unittest.TestCase):
         self.assertIn("NSRunningApplication", flat)
         self.assertNotIn("System Events", flat)
 
+    def test_the_timeout_outruns_what_the_app_really_took(self):
+        self.assertGreater(pxm.paint_timeout(3000), 490 * 2)   # measured 490 s
+        self.assertGreater(pxm.paint_timeout(4000), 1119 * 2)  # the old limit cut this one off
+        self.assertLess(pxm.paint_timeout(800), 600)           # small jobs still fail fast
+
     def test_paint_rejects_a_silly_layer_budget_before_touching_anything(self):
         code, _, err = run_main("paint", "nope.jpg", "--out", "x.png", "--shapes", "2")
         self.assertEqual(code, pxm.EXIT_USAGE)

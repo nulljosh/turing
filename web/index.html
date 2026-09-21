@@ -252,10 +252,17 @@
             <label class="paint-btn">Your own image<input id="paint-file" type="file" accept="image/*" style="display:none"></label>
           </div>
         </div>
-        <div style="margin-top:16px;text-align:center">
-          <img src="mona-lisa.gif" width="220" loading="lazy" alt="The Mona Lisa assembling from 2997 squares inside Pixelmator Pro">
-          <p class="sub" style="margin-top:8px">The real build in Pixelmator Pro. 2997 layers, eight minutes. Say "paint ~/Downloads/mona.jpg".</p>
+        <div style="margin-top:16px;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;align-items:end">
+          <figure style="margin:0;text-align:center">
+            <img src="mona-lisa.gif" loading="lazy" alt="The Mona Lisa assembling from 2997 squares inside Pixelmator Pro" style="max-width:100%;max-height:300px;border-radius:6px">
+            <figcaption class="sub" style="margin-top:8px">Mona Lisa. 2997 layers, eight minutes.</figcaption>
+          </figure>
+          <figure style="margin:0;text-align:center">
+            <img src="last-supper.png" loading="lazy" alt="The Last Supper rebuilt from 3820 squares inside Pixelmator Pro" style="max-width:100%;border-radius:6px">
+            <figcaption class="sub" style="margin-top:8px">The Last Supper. 3820 layers. The build was cut off at 95 percent, so one square is still blue.</figcaption>
+          </figure>
         </div>
+        <p class="sub" style="margin-top:12px">Both built in the real app. Say "paint ~/Downloads/mona.jpg", or use the paintbrush in the menu bar and watch it build.</p>
       </section>
 
       <section id="results-section">
@@ -525,7 +532,7 @@ python3 -m venv .venv && ./.venv/bin/pip install mlx-lm
         docsHtml += '</div></div>';
 
         var limitHtml = '<div class="limitations"><p class="limitations-title">Limitations</p>' +
-          '<p>Her own 0.5B picker chooses tools, 394 of 501 on wording it never saw, and 21 wrong picks still slip past the guard. Multi-step jobs and logo choices borrow a 1.7B head. ' +
+          '<p>Her own 0.5B picker chooses tools, 394 of 501 on wording it never saw, 9 wrong picks still slip past the guard, down from 21, and it refuses no right ones. Multi-step jobs and logo choices borrow a 1.7B head. ' +
           'Knowledge bar is 60 of 65 with zero confidently wrong and she is at 57 with 4 wrong. ' +
           'Logos are dial choices from a fixed set, not free-hand design. ' +
           'She runs on one Mac only.</p></div>';
