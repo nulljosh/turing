@@ -43,8 +43,8 @@ Every check on main and on every PR stays green, including the release and deplo
 ## File size
 No god files. Past about 500 lines a file gets split by what it does, with the old module re-exporting the moved names so nothing that imports it breaks. Targets now: ask.py, tools_util.py, tools.py, web/demo.js, web/samantha.js. One split per loop round, each behind the full check set.
 
-## Pull requests
-Claude handles its own PRs end to end: open one only when it will be merged, never leave one for the user to handle. Once CI passes on the head commit, merge it right away (merge commit), then restart the working branch from the new main. A red CI is fixed and re-pushed, not handed back.
+## Branches
+Work happens on main, no side branches and no PRs for Joshua to handle. Before every push, run the full CI check set locally (every test file, `tools.py`, `tools_util.py`, eval/actions.py, eval/web_parity.py, eval/util_diff.py, eval/laws.py, `stats.py --check`); push only when all pass. After the push, check every workflow run (test, release, deploy) and fix any red at once.
 
 ## Releases
 Releases cut themselves. Bump `VERSION` (patch for a fix, minor for a new ability), run `python3 stats.py` to refresh `web/stats.json`, and commit as `Release vX.Y.Z: what shipped`. When that lands on main and CI passes, `.github/workflows/release.yml` tags it and publishes the GitHub release. Nobody runs anything by hand. `./release.sh X.Y.Z "what shipped"` on the Mac still adds the full gate (her real model, Pixelmator, the live page) and the site deploy, whenever the Mac is used. Never leave a day's work untagged: on 2026-09-21 76 commits piled up past v0.7.4 before anyone noticed.
