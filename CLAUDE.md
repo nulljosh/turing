@@ -32,6 +32,9 @@ ever ships as its own real model, gets a name of its own too, not a
   matches weather/keyrate). `web/` is the asset root.
 - No daemon, no cron, training is invoked by hand every time.
 
+## Pull requests
+Claude handles its own PRs end to end: open one only when it will be merged, never leave one for the user to handle. Once CI passes on the head commit, merge it right away (merge commit), then restart the working branch from the new main. A red CI is fixed and re-pushed, not handed back.
+
 ## Releases
 Every shipped ability or fix ends with `./release.sh X.Y.Z "what shipped"`. It runs the checks, bumps `VERSION`, regenerates the landing stats, tags, pushes, publishes the GitHub release and deploys. Patch for a fix, minor for a new ability. Never leave a day's work untagged: on 2026-09-21 76 commits piled up past v0.7.4 before anyone noticed.
 
