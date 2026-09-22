@@ -122,9 +122,25 @@ def site_search(site, query):
 
 
 def web_search(query):
-    """Open a web search in Chrome for Joshua to look at. Returns NO results to you. To learn what a page says, use read_page."""
+    """Open a web search in Chrome for Joshua. A question ("how tall is everest") is also answered, with its source, from
+    the same lookup her questions use; anything else returns no results to you. To learn what a page says, use read_page."""
     _run(["open", "-a", BROWSER, "https://duckduckgo.com/?q=" + urllib.parse.quote_plus(query)])
-    return f"Searching for {query!r} in Chrome."
+    opened = f"Searching for {query!r} in Chrome."
+    answer = search_answer(query)
+    return f"{answer}\n{opened}" if answer else opened
+
+
+def search_answer(query):
+    """The answer to a searched question and where it came from, or None: a search should answer, not only open a tab.
+    Only a real question is looked up ("best pizza in vancouver" is a list to browse, not a fact). Never fails the search."""
+    try:
+        import ask
+        if not ask.is_question(query):
+            return None
+        text, source = ask.general_knowledge(query, hands=False)
+    except Exception:
+        return None
+    return f"{text} (Source: {source}.)" if text and isinstance(source, str) and source else None
 
 
 def current_tab():

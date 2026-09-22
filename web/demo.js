@@ -253,7 +253,13 @@
         a.href = url; a.target = '_blank'; a.rel = 'noopener';
         b.appendChild(a);
       });
-      return "Searching for '" + q + "' in Chrome.";
+      var opened = "Searching for '" + q + "' in Chrome.";
+      // same as tools.search_answer: a searched question is answered too, with its source. A list to browse is not.
+      if (!/\?$/.test(q.trim()) && !/^(?:who|what|why|when|where|which|how|is|are|was|were|does|do|did)\b/i.test(q.trim())) return opened;
+      return fetch('/api/ask', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ q: q }) })
+        .then(function (r) { return r.json(); })
+        .then(function (d) { return d && d.answer && d.source ? d.answer + ' (Source: ' + d.source + '.)\n' + opened : opened; })
+        .catch(function () { return opened; });
     },
     current_tab: function () { return desk.tab ? desk.tab.title + '\n' + desk.tab.url : 'Chrome has no window open.'; },
     screenshot: function () {

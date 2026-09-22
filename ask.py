@@ -860,7 +860,7 @@ def small_talk(query):
     return next((reply() for pattern, reply in _SMALLTALK if pattern.match(q)), None)
 
 
-def local_answer(query):
+def local_answer(query, hands=True):
     """Answers computable on this machine, exactly, with no network at all.
 
     Deliberately NOT gated behind is_question(). That gate exists to stop a
@@ -871,6 +871,8 @@ def local_answer(query):
     fahrenheit to celsius" was declined as out of scope while the exact same
     conversion answered fine through a question-shaped phrasing.
 
+    hands=False skips the tools, for a caller that is itself a tool (web_search answering a question).
+
     Returns (answer, source) or (None, None).
     """
     for fn, source in ((small_talk, "small talk"), (arithmetic, "arithmetic"), (clock, "system clock"), (convert, "unit conversion")):
@@ -880,6 +882,8 @@ def local_answer(query):
     # actions ("open chrome", "go to hacker news"): same shape, a recognisable
     # command with one right outcome. Here so ask.py, chat.py, the TUI and
     # serve.py all get hands from one place.
+    if not hands:
+        return None, None
     from tools import do
     try:
         done = do(query)
@@ -985,7 +989,7 @@ def _reading_order(asked, found):
     return topic + rest
 
 
-def general_knowledge(query, skip_officeholder=False):
+def general_knowledge(query, skip_officeholder=False, hands=True):
     """Same pattern as nimble/docs/engine.js's ddg()/wiki(): DuckDuckGo's
     Instant Answer API first, Wikipedia's summary API as fallback. No API
     key, no proxy needed here since this runs server-side, not a browser
@@ -998,7 +1002,7 @@ def general_knowledge(query, skip_officeholder=False):
     # skip_officeholder avoids a second identical Wikidata round trip when
     # the caller has already tried it. That matters under rate limiting,
     # which is exactly when this path runs.
-    exact, exact_source = local_answer(query)
+    exact, exact_source = local_answer(query, hands=hands)
     if exact:
         return exact, exact_source
 

@@ -103,6 +103,21 @@ class HarnessTests(unittest.TestCase):
         for command in ("open chrome and go to github.com", "make a logo for salt and pepper", "remind me to call mom and open the garage", "search for cats and dogs", "rock and roll"):
             self.assertIsNone(tools.chain(command), command)
 
+    def test_a_searched_question_is_answered_with_its_source(self):
+        """"google how tall is everest" opens the search and answers it; a non-question only opens the tab; a lookup that fails never fails the search."""
+        import ask
+        s, _, _ = self.session(False)
+        with mock.patch.object(tools, "_run", return_value=""), \
+             mock.patch.object(ask, "general_knowledge", return_value=("Everest is 8,849 m tall.", "Wikipedia")) as gk:
+            self.assertEqual(s.ask("google how tall is everest"),
+                             "Everest is 8,849 m tall. (Source: Wikipedia.)\nSearching for 'how tall is everest' in Chrome.")
+            gk.assert_called_once_with("how tall is everest", hands=False)
+            self.assertEqual(s.ask("google best pizza in vancouver"), "Searching for 'best pizza in vancouver' in Chrome.")
+        with mock.patch.object(tools, "_run", return_value=""), mock.patch.object(ask, "general_knowledge", side_effect=OSError("offline")):
+            self.assertEqual(s.ask("search for who painted the mona lisa"), "Searching for 'who painted the mona lisa' in Chrome.")
+        with mock.patch.object(tools, "_run", return_value=""), mock.patch.object(ask, "general_knowledge", return_value=(None, ask.UNREACHABLE)):
+            self.assertEqual(s.ask("google how tall is everest"), "Searching for 'how tall is everest' in Chrome.")
+
     def test_plan_runs_nothing(self):
         """Plan runs nothing."""
         with mock.patch.object(tools, "_run", return_value="") as run:
