@@ -39,7 +39,7 @@
   function urlOf(target) {
     var t = target.trim().replace(/^["']+|["']+$/g, "");
     if (SITES[t.toLowerCase()]) return SITES[t.toLowerCase()];
-    if (/^https?:\/\//i.test(t)) return t;
+    if (/^https?:\/\//i.test(t)) return /^https?:\/\/[^\s\/]/i.test(t) ? t : null;
     if (/^[\w-]+(\.[\w-]+)+(\/\S*)?$/.test(t)) return "https://" + t;
     return null;
   }
@@ -96,7 +96,8 @@
   var TAIL = /(?:[, ]+(?:please|for me|real quick|now|thanks|thank you))+$/i;
 
   function bare(query) {
-    return query.trim().replace(/[.!?]+$/, "").replace(/\b(what|how|where|who)s\b/gi, "$1's").replace(LEAD, "").replace(TAIL, "").trim();
+    return query.normalize("NFKC").replace(/[\x00-\x1f\x7f\u200b-\u200f\u202a-\u202e\u2060-\u2069\ufeff]/g, "").trim().replace(/[.!?]+$/, "")
+      .replace(/\b(what|how|where|who)s\b/gi, "$1's").replace(/(?:[,;]?\s+(?:and then|and|then))+$/i, "").replace(LEAD, "").replace(TAIL, "").trim();
   }
 
   // {tool, arg} for one exact command, {agent: true} for multi-step work, null for anything that is not a command
@@ -478,7 +479,7 @@
   };
   U.tip = function (amount) {
     var bill = parseFloat(String(amount).replace("$", ""));
-    if (isNaN(bill)) return "Give me the bill amount.";
+    if (!isFinite(bill) || bill < 0) return "Give me the bill amount.";
     return "Tip on " + bill.toFixed(2) + ": " + [15, 18, 20].map(function (p) { return p + "% is " + (bill * p / 100).toFixed(2); }).join(", ") + ".";
   };
   // memory across visits: the same three tools as tools_util.py, kept in this browser's localStorage instead of a file
@@ -537,7 +538,7 @@
 
   ROUTES.push.apply(ROUTES, [
     [/^(?:calc(?:ulate)?|compute|work out|math)[: ]+(.+)$/i, function (m) { return ["calculate", m[1]]; }],
-    [/^(?:convert )?(\d+) (?:to|in|into) roman(?: numerals?)?$/i, function (m) { return ["roman_numeral", m[1]]; }],
+    [/^(?:convert )?(-?\d+) (?:to|in|into) roman(?: numerals?)?$/i, function (m) { return ["roman_numeral", m[1]]; }],
     [/^convert (.+)$/i, function (m) { return ["convert_units", m[1]]; }],
     [/^what time is it in (.+)$|^(?:what(?:'s| is) )?(?:the )?time in (.+)$/i, function (m) { return ["time_in", (m[1] || m[2])]; }],
     [/^what(?:'s| is)(?: the)? date(?: today)?$|^what day is it(?: today)?$|^today'?s date$/i, function (m) { return ["current_date", ""]; }],
@@ -556,9 +557,9 @@
     [/^(?:shout|uppercase)[: ]+(.+)$/i, function (m) { return ["shout", m[1]]; }],
     [/^morse(?: code)?(?: for| of)?[: ]+(.+)$/i, function (m) { return ["morse_code", m[1]]; }],
     [/^(?:pretty ?print|format|prettify) json[: ]+(.+)$/i, function (m) { return ["json_pretty", m[1]]; }],
-    [/^is (\d+) (?:a )?prime$|^(?:prime factors of|factor|factorize) (\d+)$/i, function (m) { return ["is_prime", (m[1] || m[2])]; }],
-    [/^roman numerals? (?:for |of )?(\d+)$|^(\d+) in roman numerals$/i, function (m) { return ["roman_numeral", (m[1] || m[2])]; }],
-    [/^(?:(?:what(?:'s| is) )?(?:the |a )?tip on|tip(?: for)?) \$?(\d+(?:\.\d+)?)$/i, function (m) { return ["tip", m[1]]; }],
+    [/^is (-?\d+) (?:a )?prime$|^(?:prime factors of|factor|factorize) (-?\d+)$/i, function (m) { return ["is_prime", (m[1] || m[2])]; }],
+    [/^roman numerals? (?:for |of )?(-?\d+)$|^(-?\d+) in roman numerals$/i, function (m) { return ["roman_numeral", (m[1] || m[2])]; }],
+    [/^(?:(?:what(?:'s| is) )?(?:the |a )?tip on|tip(?: for)?) (-?\$?-?\d+(?:\.\d+)?)$/i, function (m) { return ["tip", m[1]]; }],
     [/^(?:check )?disk space$|^how much (?:disk |storage )?space (?:do i have|is (?:left|free))(?: left)?$|^how much storage (?:do i have|is left)$/i, function (m) { return ["disk_space", ""]; }],
     [/^how long has (?:my mac|this mac|it) been (?:on|up|running)$|^uptime$/i, function (m) { return ["uptime", ""]; }],
     [/^(?:how much )?(?:ram|memory)(?: (?:do i have|is free|is left|am i using))?$|^(?:ram|memory) usage$/i, function (m) { return ["memory_usage", ""]; }],

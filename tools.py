@@ -19,6 +19,7 @@ import re
 import shutil
 import subprocess
 import sys
+import unicodedata
 import urllib.parse
 import urllib.request
 import tools_util
@@ -92,7 +93,7 @@ def _url(target):
     if t.lower() in SITES:
         return SITES[t.lower()]
     if re.match(r"^https?://", t, re.I):
-        return t
+        return t if re.match(r"^https?://[^\s/]", t, re.I) else None
     if re.match(r"^[\w-]+(\.[\w-]+)+(/\S*)?$", t):
         return "https://" + t
     return None
@@ -100,6 +101,8 @@ def _url(target):
 
 def open_url(target):
     """Open a website in Chrome for Joshua to see. Returns no page contents. Takes a URL, a bare domain, or a known site name."""
+    if re.match(r"^(?:https?:)?/*:?/*$", target.strip(), re.I):
+        return "That address is empty. Give me a site, like github.com."
     url = _url(target)
     if not url:
         return web_search(target)
@@ -588,12 +591,17 @@ _LEAD = re.compile(r"^(?:(?:hey|ok|okay|yo|samantha|please|now|just)[, ]+)*"
 _TAIL = re.compile(r"(?:[, ]+(?:please|for me|real quick|now|thanks|thank you))+$", re.I)
 
 
+# invisible and look-alike characters: a full-width "ｏｐｅｎ" is "open", and a control or direction-override
+# character never rides into a note, a reminder or a search
+_INVISIBLE = re.compile(r"[\x00-\x1f\x7f\u200b-\u200f\u202a-\u202e\u2060-\u2069\ufeff]")
+_DANGLING = re.compile(r"(?:[,;]?\s+(?:and then|and|then))+$", re.I)  # "open youtube and" is just "open youtube"
 _CONTRACT = re.compile(r"\b(what|how|where|who)s\b", re.I)  # people type "whats the weather", the routes say "what's"
 
 
 def _bare(query):
     """Strip politeness markers (please, can you, etc.) from a command."""
-    q = _CONTRACT.sub(r"\1's", query.strip().rstrip(".!?"))
+    q = _INVISIBLE.sub("", unicodedata.normalize("NFKC", query)).strip().rstrip(".!?")
+    q = _DANGLING.sub("", _CONTRACT.sub(r"\1's", q))
     return _TAIL.sub("", _LEAD.sub("", q, count=1)).strip()
 
 
@@ -859,12 +867,34 @@ def chain(query, log=None, confirm=None):
     return "\n".join(replies)
 
 
+# a command with its object missing: ask for it instead of guessing ("search for" searched for the word "for")
+_INCOMPLETE = (
+    (re.compile(r"^(?:open|launch|start|go to|visit|browse to|pull up)(?: up)?$", re.I), "Open what? Name an app or a site."),
+    (re.compile(r"^(?:search|google|look up|search for|search the web for|look for)$", re.I), "Search for what?"),
+    (re.compile(r"^remind me(?: to| that| about)?$|^(?:set|add|create|make) (?:a )?reminder(?: to)?$", re.I), "Remind you of what?"),
+    (re.compile(r"^(?:take|make|write|add|new) (?:a |me a )?(?:new )?note(?: that says| saying)?$|^note$", re.I), "What should the note say?"),
+    (re.compile(r"^(?:set |start )?(?:a |an )?timer(?: for)?$", re.I), "For how long?"),
+    (re.compile(r"^say$", re.I), "Say what?"),
+)
+
+
+def missing(query):
+    """What to ask back when a command has no object ("open", "remind me to"), or None."""
+    q = _bare(query)
+    return next((ask for pattern, ask in _INCOMPLETE if pattern.match(q)), None)
+
+
 def do(query, log=None, confirm=None):
     """The one entry point. The regex router first: instant, exact, and it has
     never fired the wrong tool. Several plain commands in one sentence run in
     order. What it does not recognise goes to her own head, which understands
     phrasings nobody wrote a rule for. Multi-step work goes to agent().
     Anything else is not a command: None."""
+    if not query.strip():
+        return None
+    ask_back = missing(query)
+    if ask_back:
+        return ask_back
     # before the single routes, whose free-text arguments ("open (.+)") would swallow "and set the volume to 20"
     steps = chain(query, log=log, confirm=confirm)
     if steps:

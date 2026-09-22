@@ -36,6 +36,8 @@ class Session:
         """Answer one command. Returns the reply and records the turn. With or_none, a sentence that is not a command
         returns None and is not recorded, so a chat can hand it to the question chain."""
         q = query.strip()
+        if not q:
+            return None if or_none else "Say something, or tell me what to do."
         if _RECALL.match(tools._bare(q)):
             return self.recall()
         pointer = self.point_back(tools._bare(q))

@@ -294,6 +294,8 @@ def tip(amount):
         bill = float(str(amount).replace("$", ""))
     except ValueError:
         return "Give me the bill amount."
+    if not math.isfinite(bill) or bill < 0:
+        return "Give me the bill amount."
     return f"Tip on {bill:.2f}: " + ", ".join(f"{p}% is {bill * p / 100:.2f}" for p in (15, 18, 20)) + "."
 
 
@@ -785,7 +787,7 @@ _I = re.I
 # (pattern, tool name, what to hand it). Names, not functions: tools.py looks each one up at call time.
 ROUTES = (
     (re.compile(r"^(?:calc(?:ulate)?|compute|work out|math)[: ]+(.+)$", _I), "calculate", lambda m: m.group(1)),
-    (re.compile(r"^(?:convert )?(\d+) (?:to|in|into) roman(?: numerals?)?$", _I), "roman_numeral", lambda m: m.group(1)),
+    (re.compile(r"^(?:convert )?(-?\d+) (?:to|in|into) roman(?: numerals?)?$", _I), "roman_numeral", lambda m: m.group(1)),
     (re.compile(r"^convert (.+)$", _I), "convert_units", lambda m: m.group(1)),
     (re.compile(r"^what time is it in (.+)$|^(?:what(?:'s| is) )?(?:the )?time in (.+)$", _I), "time_in", lambda m: m.group(1) or m.group(2)),
     (re.compile(r"^what(?:'s| is)(?: the)? date(?: today)?$|^what day is it(?: today)?$|^today'?s date$", _I), "current_date", lambda m: ""),
@@ -804,9 +806,9 @@ ROUTES = (
     (re.compile(r"^(?:shout|uppercase)[: ]+(.+)$", _I), "shout", lambda m: m.group(1)),
     (re.compile(r"^morse(?: code)?(?: for| of)?[: ]+(.+)$", _I), "morse_code", lambda m: m.group(1)),
     (re.compile(r"^(?:pretty ?print|format|prettify) json[: ]+(.+)$", _I), "json_pretty", lambda m: m.group(1)),
-    (re.compile(r"^is (\d+) (?:a )?prime$|^(?:prime factors of|factor|factorize) (\d+)$", _I), "is_prime", lambda m: m.group(1) or m.group(2)),
-    (re.compile(r"^roman numerals? (?:for |of )?(\d+)$|^(\d+) in roman numerals$", _I), "roman_numeral", lambda m: m.group(1) or m.group(2)),
-    (re.compile(r"^(?:(?:what(?:'s| is) )?(?:the |a )?tip on|tip(?: for)?) \$?(\d+(?:\.\d+)?)$", _I), "tip", lambda m: m.group(1)),
+    (re.compile(r"^is (-?\d+) (?:a )?prime$|^(?:prime factors of|factor|factorize) (-?\d+)$", _I), "is_prime", lambda m: m.group(1) or m.group(2)),
+    (re.compile(r"^roman numerals? (?:for |of )?(-?\d+)$|^(-?\d+) in roman numerals$", _I), "roman_numeral", lambda m: m.group(1) or m.group(2)),
+    (re.compile(r"^(?:(?:what(?:'s| is) )?(?:the |a )?tip on|tip(?: for)?) (-?\$?-?\d+(?:\.\d+)?)$", _I), "tip", lambda m: m.group(1)),
     (re.compile(r"^(?:check )?disk space$|^how much (?:disk |storage )?space (?:do i have|is (?:left|free))(?: left)?$|^how much storage (?:do i have|is left)$", _I), "disk_space", lambda m: ""),
     (re.compile(r"^how long has (?:my mac|this mac|it) been (?:on|up|running)$|^uptime$", _I), "uptime", lambda m: ""),
     (re.compile(r"^(?:how much )?(?:ram|memory)(?: (?:do i have|is free|is left|am i using))?$|^(?:ram|memory) usage$", _I), "memory_usage", lambda m: ""),

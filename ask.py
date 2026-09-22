@@ -155,7 +155,8 @@ def load_faq():
     """
     if not os.path.exists(FAQ_PATH):
         return []
-    text = open(FAQ_PATH).read()
+    with open(FAQ_PATH, encoding="utf-8") as f:
+        text = f.read()
     pairs = []
     for block in re.split(r"\n## ", text)[1:]:
         lines = block.split("\n", 1)
@@ -693,6 +694,8 @@ def arithmetic(query):
             if isinstance(node, ast.Constant) and not isinstance(node.value, (int, float)):
                 return None
         value = eval(compile(tree, "<arithmetic>", "eval"), {"__builtins__": {}}, {})
+    except ZeroDivisionError:
+        return f"{expr} has no answer: you can't divide by zero."
     except Exception:
         return None
     if isinstance(value, float) and value.is_integer():

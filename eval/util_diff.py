@@ -33,7 +33,7 @@ FIXED = [
     "pretty print json {\"a\":[1,2]}", "format json {bad", "prettify json [1, 2, 3]",
     "is 17 prime", "is 91 a prime", "factor 84", "prime factors of 600851475143", "is 1 prime", "factorize 97",
     "roman numerals for 2026", "roman numeral 4", "1999 in roman numerals", "roman numerals for 4000",
-    "tip on 45", "what's the tip on 100", "tip for 12.5", "tip on 0",
+    "tip on 45", "what's the tip on 100", "tip for 12.5", "tip on 0", "tip on -10", "is -7 prime", "factor -12", "roman numerals for -5",
     "days until 2000-01-01", "days until 2999-12-31", "days until soon", "days until 2026-02-31",
     "recall my dog", "forget zebra", "can you please calculate 6*7 for me", "hey calculate 8 + 8", "please convert 10 km to miles",
 ]
