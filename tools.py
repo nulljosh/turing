@@ -763,9 +763,11 @@ def do(query, log=None, confirm=None):
 
 def demo():
     """Self-check for the router, the tools and the guard, with every subprocess mocked."""
-    global _run
-    calls, real = [], _run
+    global _run, installed_apps
+    calls, real, real_apps = [], _run, installed_apps
     _run = lambda argv, timeout=10: calls.append(argv) or ""
+    # a fixed /Applications, so the self-check means the same thing on a Mac, a Linux CI runner and anywhere else
+    installed_apps = lambda: {"google chrome": "Google Chrome", "safari": "Safari", "pixelmator pro": "Pixelmator Pro", "notes": "Notes"}
     try:
         assert act("open chrome") == "Opened Google Chrome."
         assert act("go to hacker news").startswith("Opened https://news.ycombinator.com")
@@ -804,7 +806,7 @@ def demo():
         assert not _sound("timer", "soon", "time me soon") and not _sound("rm_rf", "", "anything")
         assert all(a[0] in ("open", "osascript", "screencapture", "pbpaste", "pmset") for a in calls)
     finally:
-        _run = real
+        _run, installed_apps = real, real_apps
     tools_util.demo()
     assert NOT_FOR_MODELS <= set(TOOLS) and "run_shortcut" in NOT_FOR_MODELS  # side-effect tools never reach the model's menu
     print("tools ok")

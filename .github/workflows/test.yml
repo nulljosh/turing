@@ -27,6 +27,8 @@ jobs:
       - run: python3 eval/web_parity.py
       # her utility tools: the Python side, and the JavaScript twin on the landing page, must say the same words
       - run: python3 tools_util.py
+      # the router and every tool's self-check, all subprocesses and /Applications mocked
+      - run: SAMANTHA_HEADLESS=1 python3 tools.py
       - run: python3 eval/util_diff.py
       # her hands over MCP: a real client conversation against the stdio server
       - run: python3 test_mcp.py
