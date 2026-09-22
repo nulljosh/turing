@@ -332,7 +332,15 @@ def tui():
             stdscr.refresh()
             return stdscr.getkey().lower() == "y"
 
-        session = harness.Session(confirm=confirm, log=lambda line: lines.append(line))
+        def working(line):
+            """Show a tool call the moment it is found, with what she is doing, before the slow part runs."""
+            lines.append(line)
+            redraw()
+            h, w = stdscr.getmaxyx()
+            stdscr.addstr(h - 1, 0, f"working: {line.strip()}"[: w - 1])
+            stdscr.refresh()
+
+        session = harness.Session(confirm=confirm, log=working)
 
         def redraw():
             """Repaint the transcript and the input line."""

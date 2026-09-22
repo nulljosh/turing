@@ -54,228 +54,91 @@ def _get_image_dimensions(path):
     return None
 
 
-def remove_background(path):
-    """Remove the background from a photo. Takes the path of an image file."""
+def _image(path):
+    """The full path of an image inside the home folder, or None."""
     full = _inside_home(path.strip().strip("'\""))
-    if not full or not os.path.isfile(full) or not _is_image(full):
-        return f"No image at {path}."
+    return full if full and os.path.isfile(full) and _is_image(full) else None
 
-    out = os.path.expanduser("~/Desktop/samantha-nobg.png")
+
+def _pixelmator(full, step, out, lock, timeout=120, fmt="PNG"):
+    """Open full in Pixelmator Pro, run one AppleScript step on document d, export to out as fmt, close
+    without saving. The original is never touched. Returns an error to say, or None when it ran."""
     try:
         if os.path.exists(out):
             os.remove(out)
     except OSError:
         pass
-
+    script = (
+        'tell application "Pixelmator Pro"\n'
+        f'\tset d to open (POSIX file {pxm.as_string(full)})\n'
+        + (f'\t{step}\n' if step else '')
+        + f'\texport d to (POSIX file {pxm.as_string(out)}) as {fmt}\n'
+        '\tclose d saving no\n'
+        'end tell\n'
+    )
     try:
-        script = (
-            'tell application "Pixelmator Pro"\n'
-            f'\tset d to open (POSIX file {pxm.as_string(full)})\n'
-            '\tremove background d\n'
-            f'\texport d to (POSIX file {pxm.as_string(out)}) as PNG\n'
-            '\tclose d saving no\n'
-            'end tell\n'
-        )
-        with pxm.build_lock("remove background", wait=True):
+        with pxm.build_lock(lock, wait=True):
             if HEADLESS:
                 pxm.hide_app()
-            pxm.run_applescript(script, timeout=120)
+            pxm.run_applescript(script, timeout=timeout)
     except pxm.PxmError as e:
         return str(e)
+    return None
 
-    return f"Background removed, saved to {out}." if os.path.exists(out) else f"Failed to remove background."
+
+def _edit(path, step, name, lock, done, failed, timeout=120):
+    """The one-step edits: check the image, run the step, say where the result went."""
+    full = _image(path)
+    if not full:
+        return f"No image at {path}."
+    out = os.path.expanduser(f"~/Desktop/samantha-{name}.png")
+    err = _pixelmator(full, step, out, lock, timeout)
+    return err or (f"{done}, saved to {out}." if os.path.exists(out) else failed)
+
+
+def remove_background(path):
+    """Remove the background from a photo. Takes the path of an image file."""
+    return _edit(path, "remove background d", "nobg", "remove background", "Background removed", "Failed to remove background.")
 
 
 def upscale_image(path):
     """Increase image resolution by 300% using AI. Takes the path of an image file."""
-    full = _inside_home(path.strip().strip("'\""))
-    if not full or not os.path.isfile(full) or not _is_image(full):
-        return f"No image at {path}."
-
-    out = os.path.expanduser("~/Desktop/samantha-upscaled.png")
-    try:
-        if os.path.exists(out):
-            os.remove(out)
-    except OSError:
-        pass
-
-    try:
-        script = (
-            'tell application "Pixelmator Pro"\n'
-            f'\tset d to open (POSIX file {pxm.as_string(full)})\n'
-            '\tsuper resolution d\n'
-            f'\texport d to (POSIX file {pxm.as_string(out)}) as PNG\n'
-            '\tclose d saving no\n'
-            'end tell\n'
-        )
-        with pxm.build_lock("upscale image", wait=True):
-            if HEADLESS:
-                pxm.hide_app()
-            pxm.run_applescript(script, timeout=300)
-    except pxm.PxmError as e:
-        return str(e)
-
-    return f"Upscaled 3x, saved to {out}." if os.path.exists(out) else f"Failed to upscale image."
+    return _edit(path, "super resolution d", "upscaled", "upscale image", "Upscaled 3x", "Failed to upscale image.", timeout=300)
 
 
 def enhance_image(path):
     """Automatically enhance colors and contrast. Takes the path of an image file."""
-    full = _inside_home(path.strip().strip("'\""))
-    if not full or not os.path.isfile(full) or not _is_image(full):
-        return f"No image at {path}."
-
-    out = os.path.expanduser("~/Desktop/samantha-enhanced.png")
-    try:
-        if os.path.exists(out):
-            os.remove(out)
-    except OSError:
-        pass
-
-    try:
-        script = (
-            'tell application "Pixelmator Pro"\n'
-            f'\tset d to open (POSIX file {pxm.as_string(full)})\n'
-            '\tenhance layer 1 of d\n'
-            f'\texport d to (POSIX file {pxm.as_string(out)}) as PNG\n'
-            '\tclose d saving no\n'
-            'end tell\n'
-        )
-        with pxm.build_lock("enhance image", wait=True):
-            if HEADLESS:
-                pxm.hide_app()
-            pxm.run_applescript(script, timeout=120)
-    except pxm.PxmError as e:
-        return str(e)
-
-    return f"Enhanced, saved to {out}." if os.path.exists(out) else f"Failed to enhance image."
+    return _edit(path, "enhance layer 1 of d", "enhanced", "enhance image", "Enhanced", "Failed to enhance image.")
 
 
 def grayscale_image(path):
     """Convert image to grayscale. Takes the path of an image file."""
-    full = _inside_home(path.strip().strip("'\""))
-    if not full or not os.path.isfile(full) or not _is_image(full):
-        return f"No image at {path}."
-
-    out = os.path.expanduser("~/Desktop/samantha-grayscale.png")
-    try:
-        if os.path.exists(out):
-            os.remove(out)
-    except OSError:
-        pass
-
-    try:
-        script = (
-            'tell application "Pixelmator Pro"\n'
-            f'\tset d to open (POSIX file {pxm.as_string(full)})\n'
-            '\tset the black and white of the color adjustments of layer 1 of d to true\n'
-            f'\texport d to (POSIX file {pxm.as_string(out)}) as PNG\n'
-            '\tclose d saving no\n'
-            'end tell\n'
-        )
-        with pxm.build_lock("grayscale image", wait=True):
-            if HEADLESS:
-                pxm.hide_app()
-            pxm.run_applescript(script, timeout=120)
-    except pxm.PxmError as e:
-        return str(e)
-
-    return f"Converted to grayscale, saved to {out}." if os.path.exists(out) else f"Failed to convert to grayscale."
+    return _edit(path, "set the black and white of the color adjustments of layer 1 of d to true", "grayscale",
+                 "grayscale image", "Converted to grayscale", "Failed to convert to grayscale.")
 
 
 def rotate_image(args):
     """Rotate image by specified degrees. Takes 'path by 90' (default 90 degrees clockwise)."""
     match = re.match(r'^(.+?)\s+by\s+(\d+)$', args.strip(), re.I)
-    if match:
-        path, degrees = match.groups()
-        degrees = int(degrees)
-    else:
-        path = args.strip().strip("'\"")
-        degrees = 90
-
-    full = _inside_home(path.strip().strip("'\""))
-    if not full or not os.path.isfile(full) or not _is_image(full):
+    path, degrees = (match.group(1), int(match.group(2))) if match else (args.strip().strip("'\""), 90)
+    if not _image(path):
         return f"No image at {path}."
-
     degrees = degrees % 360
     if degrees not in (90, 180, 270):
         return f"Rotation must be 90, 180, or 270 degrees, got {degrees}."
-
-    out = os.path.expanduser("~/Desktop/samantha-rotated.png")
-    try:
-        if os.path.exists(out):
-            os.remove(out)
-    except OSError:
-        pass
-
-    if degrees == 90:
-        rotate_cmd = "rotate left d"
-    elif degrees == 180:
-        rotate_cmd = "rotate 180 d"
-    else:
-        rotate_cmd = "rotate right d"
-
-    try:
-        script = (
-            'tell application "Pixelmator Pro"\n'
-            f'\tset d to open (POSIX file {pxm.as_string(full)})\n'
-            f'\t{rotate_cmd}\n'
-            f'\texport d to (POSIX file {pxm.as_string(out)}) as PNG\n'
-            '\tclose d saving no\n'
-            'end tell\n'
-        )
-        with pxm.build_lock("rotate image", wait=True):
-            if HEADLESS:
-                pxm.hide_app()
-            pxm.run_applescript(script, timeout=120)
-    except pxm.PxmError as e:
-        return str(e)
-
-    return f"Rotated {degrees} degrees, saved to {out}." if os.path.exists(out) else f"Failed to rotate image."
+    step = {90: "rotate left d", 180: "rotate 180 d", 270: "rotate right d"}[degrees]
+    return _edit(path, step, "rotated", "rotate image", f"Rotated {degrees} degrees", "Failed to rotate image.")
 
 
 def flip_image(args):
     """Flip image horizontally or vertically. Takes 'path' (default horizontal) or 'path vertical'."""
     parts = args.strip().split()
     if len(parts) > 1 and parts[-1].lower() in ("vertical", "horizontally", "horizontal"):
-        direction = parts[-1].lower()
-        path = " ".join(parts[:-1])
+        direction, path = parts[-1].lower(), " ".join(parts[:-1])
     else:
-        direction = "horizontal"
-        path = args.strip()
-
-    full = _inside_home(path.strip().strip("'\""))
-    if not full or not os.path.isfile(full) or not _is_image(full):
-        return f"No image at {path}."
-
-    out = os.path.expanduser("~/Desktop/samantha-flipped.png")
-    try:
-        if os.path.exists(out):
-            os.remove(out)
-    except OSError:
-        pass
-
-    if direction.startswith("v"):
-        flip_cmd = "flip vertically d"
-    else:
-        flip_cmd = "flip horizontally d"
-
-    try:
-        script = (
-            'tell application "Pixelmator Pro"\n'
-            f'\tset d to open (POSIX file {pxm.as_string(full)})\n'
-            f'\t{flip_cmd}\n'
-            f'\texport d to (POSIX file {pxm.as_string(out)}) as PNG\n'
-            '\tclose d saving no\n'
-            'end tell\n'
-        )
-        with pxm.build_lock("flip image", wait=True):
-            if HEADLESS:
-                pxm.hide_app()
-            pxm.run_applescript(script, timeout=120)
-    except pxm.PxmError as e:
-        return str(e)
-
-    return f"Flipped {direction}, saved to {out}." if os.path.exists(out) else f"Failed to flip image."
+        direction, path = "horizontal", args.strip()
+    step = "flip vertically d" if direction.startswith("v") else "flip horizontally d"
+    return _edit(path, step, "flipped", "flip image", f"Flipped {direction}", "Failed to flip image.")
 
 
 def resize_image(args):
@@ -283,98 +146,38 @@ def resize_image(args):
     match = re.match(r'^(.+?)\s+to\s+(\d+)$', args.strip(), re.I)
     if not match:
         return f"Format should be 'path to pixels', e.g., 'photo.jpg to 1024'."
-
-    path, size_str = match.groups()
-    try:
-        size = int(size_str)
-    except ValueError:
-        return f"Size must be a number, got {size_str}."
-
+    path, size = match.group(1), int(match.group(2))
     if not 16 <= size <= 8000:
         return f"Size must be between 16 and 8000 pixels, got {size}."
-
-    full = _inside_home(path.strip().strip("'\""))
-    if not full or not os.path.isfile(full) or not _is_image(full):
+    full = _image(path)
+    if not full:
         return f"No image at {path}."
-
     dims = _get_image_dimensions(full)
     if not dims:
         return f"Could not read image dimensions from {path}."
-
     w, h = dims
     if max(w, h) == size:
         return f"Image already {size}px on longest side."
-
-    if w > h:
-        new_w, new_h = size, max(1, int(h * size / w))
-    else:
-        new_w, new_h = max(1, int(w * size / h)), size
-
-    out = os.path.expanduser("~/Desktop/samantha-resized.png")
-    try:
-        if os.path.exists(out):
-            os.remove(out)
-    except OSError:
-        pass
-
-    try:
-        script = (
-            'tell application "Pixelmator Pro"\n'
-            f'\tset d to open (POSIX file {pxm.as_string(full)})\n'
-            f'\tresize image d width {new_w} height {new_h}\n'
-            f'\texport d to (POSIX file {pxm.as_string(out)}) as PNG\n'
-            '\tclose d saving no\n'
-            'end tell\n'
-        )
-        with pxm.build_lock("resize image", wait=True):
-            if HEADLESS:
-                pxm.hide_app()
-            pxm.run_applescript(script, timeout=120)
-    except pxm.PxmError as e:
-        return str(e)
-
-    return f"Resized to {new_w}x{new_h}, saved to {out}." if os.path.exists(out) else f"Failed to resize image."
+    new_w, new_h = (size, max(1, int(h * size / w))) if w > h else (max(1, int(w * size / h)), size)
+    return _edit(path, f"resize image d width {new_w} height {new_h}", "resized", "resize image", f"Resized to {new_w}x{new_h}", "Failed to resize image.")
 
 
 def crop_square(path):
     """Crop image to a centered square. Takes the path of an image file."""
-    full = _inside_home(path.strip().strip("'\""))
-    if not full or not os.path.isfile(full) or not _is_image(full):
+    full = _image(path)
+    if not full:
         return f"No image at {path}."
-
     dims = _get_image_dimensions(full)
     if not dims:
         return f"Could not read image dimensions from {path}."
-
     w, h = dims
     side = min(w, h)
-    x = (w - side) // 2
-    y = (h - side) // 2
+    x, y = (w - side) // 2, (h - side) // 2
+    return _edit(path, f"crop d bounds {{{x}, {y}, {side}, {side}}} with delete mode", "square", "crop square",
+                 f"Cropped to {side}x{side} square", "Failed to crop image.")
 
-    out = os.path.expanduser("~/Desktop/samantha-square.png")
-    try:
-        if os.path.exists(out):
-            os.remove(out)
-    except OSError:
-        pass
 
-    try:
-        script = (
-            'tell application "Pixelmator Pro"\n'
-            f'\tset d to open (POSIX file {pxm.as_string(full)})\n'
-            f'\tcrop d bounds {{{x}, {y}, {side}, {side}}} with delete mode\n'
-            f'\texport d to (POSIX file {pxm.as_string(out)}) as PNG\n'
-            '\tclose d saving no\n'
-            'end tell\n'
-        )
-        with pxm.build_lock("crop square", wait=True):
-            if HEADLESS:
-                pxm.hide_app()
-            pxm.run_applescript(script, timeout=120)
-    except pxm.PxmError as e:
-        return str(e)
-
-    return f"Cropped to {side}x{side} square, saved to {out}." if os.path.exists(out) else f"Failed to crop image."
+_FORMATS = {"png": "PNG", "jpg": "JPEG", "jpeg": "JPEG", "webp": "WebP", "heic": "HEIC", "tiff": "TIFF", "tif": "TIFF", "pdf": "PDF"}
 
 
 def convert_image(args):
@@ -382,51 +185,21 @@ def convert_image(args):
     match = re.match(r'^(.+?)\s+to\s+(\w+)$', args.strip(), re.I)
     if not match:
         return f"Format should be 'path to format', e.g., 'photo.png to jpg'."
-
-    path, fmt = match.groups()
-    fmt = fmt.lower()
-
-    fmt_map = {
-        "png": "PNG", "jpg": "JPEG", "jpeg": "JPEG",
-        "webp": "WebP", "heic": "HEIC", "tiff": "TIFF", "tif": "TIFF", "pdf": "PDF"
-    }
-
-    if fmt not in fmt_map:
+    path, fmt = match.group(1), match.group(2).lower()
+    if fmt not in _FORMATS:
         return f"Unsupported format '{fmt}'. Use: png, jpg, webp, heic, tiff, pdf."
-
-    full = _inside_home(path.strip().strip("'\""))
-    if not full or not os.path.isfile(full) or not _is_image(full):
+    full = _image(path)
+    if not full:
         return f"No image at {path}."
-
     out = os.path.expanduser(f"~/Desktop/samantha-converted.{fmt}")
-    try:
-        if os.path.exists(out):
-            os.remove(out)
-    except OSError:
-        pass
-
-    try:
-        script = (
-            'tell application "Pixelmator Pro"\n'
-            f'\tset d to open (POSIX file {pxm.as_string(full)})\n'
-            f'\texport d to (POSIX file {pxm.as_string(out)}) as {fmt_map[fmt]}\n'
-            '\tclose d saving no\n'
-            'end tell\n'
-        )
-        with pxm.build_lock("convert image", wait=True):
-            if HEADLESS:
-                pxm.hide_app()
-            pxm.run_applescript(script, timeout=120)
-    except pxm.PxmError as e:
-        return str(e)
-
-    return f"Converted to {fmt.upper()}, saved to {out}." if os.path.exists(out) else f"Failed to convert image."
+    err = _pixelmator(full, None, out, "convert image", fmt=_FORMATS[fmt])
+    return err or (f"Converted to {fmt.upper()}, saved to {out}." if os.path.exists(out) else "Failed to convert image.")
 
 
 def image_info(path):
     """Read image dimensions and layer count. Takes the path of an image file (read-only)."""
-    full = _inside_home(path.strip().strip("'\""))
-    if not full or not os.path.isfile(full) or not _is_image(full):
+    full = _image(path)
+    if not full:
         return f"No image at {path}."
 
     dims = _get_image_dimensions(full)
@@ -440,7 +213,7 @@ def image_info(path):
 # The image tools as exact commands, so "make ~/Desktop/cat.png black and white" works with no model at all.
 # Same shape as tools_util.ROUTES: (pattern, tool name, argument). tools.py puts these ahead of the utilities,
 # so "convert cat.png to jpg" is an image and never a unit conversion. A path is one word ending in an image type.
-_P = r"(?:the )?(?:image |photo |picture |pic )?(?:at )?(\S+\.(?:jpe?g|png|heic|webp|tiff?|gif))"
+_P = r"(?:the )?(?:image |photo |picture |pic )?(?:at )?(\S+\.(?:jpe?g|png|heic|webp|tiff?))"
 _I = re.I
 ROUTES = (
     (re.compile(rf"^(?:make|turn|convert) {_P} (?:into )?(?:black and white|black & white|b&w|grayscale|greyscale)$|^(?:grayscale|greyscale|desaturate) {_P}$", _I),
