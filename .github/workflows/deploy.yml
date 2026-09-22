@@ -35,16 +35,22 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
+      # No token yet: skip, green, and say so. A missing secret is setup still to do, not a broken main.
       - name: Cloudflare token is set
+        id: token
         run: |
           if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
-            echo "::error::Not deployed: add the CLOUDFLARE_API_TOKEN repo secret (Settings > Secrets and variables > Actions)."
-            echo "Not deployed: the CLOUDFLARE_API_TOKEN repo secret is missing." >> "$GITHUB_STEP_SUMMARY"
-            exit 1
+            echo "::notice::Skipped deploy: no CLOUDFLARE_API_TOKEN repo secret yet. Deploy from the Mac with npx wrangler deploy."
+            echo "Skipped: no CLOUDFLARE_API_TOKEN repo secret yet, nothing was deployed." >> "$GITHUB_STEP_SUMMARY"
+            echo "set=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "set=true" >> "$GITHUB_OUTPUT"
           fi
       - name: Deploy
+        if: steps.token.outputs.set == 'true'
         run: npx --yes wrangler@4 deploy
       - name: The live page serves this version
+        if: steps.token.outputs.set == 'true'
         run: |
           V=$(tr -d '[:space:]' < VERSION)
           for i in 1 2 3 4 5 6 7 8 9 10 11 12; do

@@ -37,6 +37,12 @@ ever ships as its own real model, gets a name of its own too, not a
 ## Talking to Joshua
 TLDR only. A few lines at most, plain words, no walls of text, no play-by-play. Only speak up when something is done, broken, or needs him.
 
+## CI
+Every check on main and on every PR stays green, including the release and deploy workflows. Check all workflow runs after every push and merge, not just `test`. A check that cannot do its job yet (a missing secret) skips green with a notice, never red. A red check is fixed before anything else.
+
+## File size
+No god files. Past about 500 lines a file gets split by what it does, with the old module re-exporting the moved names so nothing that imports it breaks. Targets now: ask.py, tools_util.py, tools.py, web/demo.js, web/samantha.js. One split per loop round, each behind the full check set.
+
 ## Pull requests
 Claude handles its own PRs end to end: open one only when it will be merged, never leave one for the user to handle. Once CI passes on the head commit, merge it right away (merge commit), then restart the working branch from the new main. A red CI is fixed and re-pushed, not handed back.
 
