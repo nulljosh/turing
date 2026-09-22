@@ -1,147 +1,115 @@
 {
-  "version": "1.0.0",
+  "version": "1.1.0",
   "docs_coverage": {
     "percent": 100,
     "files": {
-      "tools_image.py": {
-        "total": 13,
-        "documented": 13
+      "test_memory.py": {
+        "total": 11,
+        "documented": 11
       },
       "test_tabs.py": {
         "total": 10,
         "documented": 10
       },
-      "test_reader.py": {
-        "total": 13,
-        "documented": 13
-      },
-      "harness.py": {
-        "total": 7,
-        "documented": 7
-      },
-      "test_nimble.py": {
+      "mcp_server.py": {
         "total": 4,
         "documented": 4
-      },
-      "parse_log.py": {
-        "total": 1,
-        "documented": 1
-      },
-      "test_harness.py": {
-        "total": 9,
-        "documented": 9
-      },
-      "ask.py": {
-        "total": 33,
-        "documented": 33
-      },
-      "test_tools_image.py": {
-        "total": 19,
-        "documented": 19
-      },
-      "harvest_voice.py": {
-        "total": 3,
-        "documented": 3
-      },
-      "tools.py": {
-        "total": 45,
-        "documented": 45
-      },
-      "serve.py": {
-        "total": 8,
-        "documented": 8
-      },
-      "prep_data.py": {
-        "total": 5,
-        "documented": 5
-      },
-      "test_screen.py": {
-        "total": 9,
-        "documented": 9
-      },
-      "gen_hands_data.py": {
-        "total": 5,
-        "documented": 5
-      },
-      "chat.py": {
-        "total": 13,
-        "documented": 13
-      },
-      "test_chat.py": {
-        "total": 20,
-        "documented": 20
       },
       "stats.py": {
         "total": 7,
         "documented": 7
       },
-      "tools_util.py": {
-        "total": 65,
-        "documented": 65
+      "test_screen.py": {
+        "total": 9,
+        "documented": 9
       },
-      "test_memory.py": {
-        "total": 11,
-        "documented": 11
+      "parse_log.py": {
+        "total": 1,
+        "documented": 1
+      },
+      "gen_hands_data.py": {
+        "total": 5,
+        "documented": 5
+      },
+      "harvest_voice.py": {
+        "total": 3,
+        "documented": 3
+      },
+      "test_reader.py": {
+        "total": 13,
+        "documented": 13
+      },
+      "chat.py": {
+        "total": 15,
+        "documented": 15
+      },
+      "harness.py": {
+        "total": 10,
+        "documented": 10
       },
       "test_mcp.py": {
         "total": 12,
         "documented": 12
       },
+      "tools_image.py": {
+        "total": 16,
+        "documented": 16
+      },
+      "test_chat.py": {
+        "total": 24,
+        "documented": 24
+      },
+      "test_edges.py": {
+        "total": 13,
+        "documented": 13
+      },
+      "prep_data.py": {
+        "total": 5,
+        "documented": 5
+      },
+      "tools.py": {
+        "total": 51,
+        "documented": 51
+      },
+      "tools_util.py": {
+        "total": 65,
+        "documented": 65
+      },
+      "test_nimble.py": {
+        "total": 4,
+        "documented": 4
+      },
+      "test_tools_image.py": {
+        "total": 22,
+        "documented": 22
+      },
+      "serve.py": {
+        "total": 8,
+        "documented": 8
+      },
       "test_documents.py": {
         "total": 9,
         "documented": 9
       },
-      "mcp_server.py": {
-        "total": 4,
-        "documented": 4
+      "ask.py": {
+        "total": 36,
+        "documented": 36
       },
-      "pixelmator/test_pxm.py": {
-        "total": 101,
-        "documented": 101
+      "test_harness.py": {
+        "total": 17,
+        "documented": 17
       },
       "pixelmator/pxm.py": {
         "total": 33,
         "documented": 33
       },
+      "pixelmator/test_pxm.py": {
+        "total": 101,
+        "documented": 101
+      },
       "pixelmator/arc_text.py": {
         "total": 3,
         "documented": 3
-      },
-      "eval/run_eval.py": {
-        "total": 1,
-        "documented": 1
-      },
-      "eval/basic_questions.py": {
-        "total": 1,
-        "documented": 1
-      },
-      "eval/hands.py": {
-        "total": 4,
-        "documented": 4
-      },
-      "eval/smoke_images.py": {
-        "total": 5,
-        "documented": 5
-      },
-      "eval/faq_paraphrase.py": {
-        "total": 1,
-        "documented": 1
-      },
-      "eval/web_parity.py": {
-        "total": 1,
-        "documented": 1
-      },
-      "eval/actions.py": {
-        "total": 3,
-        "documented": 3
-      },
-      "eval/laws.py": {
-        "total": 4,
-        "documented": 4
-      },
-      "eval/util_diff.py": {
-        "total": 2,
-        "documented": 2
       },
       "eval/a11y.py": {
         "total": 1,
@@ -151,9 +119,45 @@
         "total": 5,
         "documented": 5
       },
+      "eval/basic_questions.py": {
+        "total": 1,
+        "documented": 1
+      },
+      "eval/faq_paraphrase.py": {
+        "total": 1,
+        "documented": 1
+      },
       "eval/score.py": {
         "total": 2,
         "documented": 2
+      },
+      "eval/laws.py": {
+        "total": 4,
+        "documented": 4
+      },
+      "eval/actions.py": {
+        "total": 3,
+        "documented": 3
+      },
+      "eval/smoke_images.py": {
+        "total": 5,
+        "documented": 5
+      },
+      "eval/run_eval.py": {
+        "total": 1,
+        "documented": 1
+      },
+      "eval/util_diff.py": {
+        "total": 2,
+        "documented": 2
+      },
+      "eval/web_parity.py": {
+        "total": 1,
+        "documented": 1
+      },
+      "eval/hands.py": {
+        "total": 4,
+        "documented": 4
       }
     },
     "house_docs": {

@@ -36,7 +36,7 @@ ever ships as its own real model, gets a name of its own too, not a
 Claude handles its own PRs end to end: open one only when it will be merged, never leave one for the user to handle. Once CI passes on the head commit, merge it right away (merge commit), then restart the working branch from the new main. A red CI is fixed and re-pushed, not handed back.
 
 ## Releases
-Every shipped ability or fix ends with `./release.sh X.Y.Z "what shipped"`. It runs the checks, bumps `VERSION`, regenerates the landing stats, tags, pushes, publishes the GitHub release and deploys. Patch for a fix, minor for a new ability. Never leave a day's work untagged: on 2026-09-21 76 commits piled up past v0.7.4 before anyone noticed.
+Releases cut themselves. Bump `VERSION` (patch for a fix, minor for a new ability), run `python3 stats.py` to refresh `web/stats.json`, and commit as `Release vX.Y.Z: what shipped`. When that lands on main and CI passes, `.github/workflows/release.yml` tags it and publishes the GitHub release. Nobody runs anything by hand. `./release.sh X.Y.Z "what shipped"` on the Mac still adds the full gate (her real model, Pixelmator, the live page) and the site deploy, whenever the Mac is used. Never leave a day's work untagged: on 2026-09-21 76 commits piled up past v0.7.4 before anyone noticed.
 
 ## After every ship
 Update together, in the same pass: the landing page (abilities text and the demo), README, this file, `docs/ARCHITECTURE.md` (a row for every new file, checked by `eval/laws.py`), `architecture.svg` (the `architecture-svg` skill) and `progress.svg` (`python3 ~/Documents/Code/scripts/progress-svg.py .`, which reports files ARCHITECTURE.md does not name, and must say 100 percent documented). Docs coverage stays at 100 in the gate.
