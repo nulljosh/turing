@@ -28,8 +28,10 @@ ever ships as its own real model, gets a name of its own too, not a
 - `parse_log.py` regenerates `web/status.json` from `train.log` after every
   run, landing page reads it live (loss chart + roadmap tracker share the
   same file on purpose).
-- Landing page deploys via `npx wrangler deploy` (Workers assets, not Pages,
-  matches weather/keyrate). `web/` is the asset root.
+- Landing page deploys itself: `.github/workflows/deploy.yml` runs `wrangler deploy`
+  (Workers assets, not Pages, matches weather/keyrate) after CI passes on main, then
+  checks the live page serves the new VERSION. `web/` is the asset root. Needs the
+  CLOUDFLARE_API_TOKEN repo secret; `npx wrangler deploy` from the Mac still works.
 - No daemon, no cron, training is invoked by hand every time.
 
 ## Pull requests

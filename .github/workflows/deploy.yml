@@ -1,0 +1,55 @@
+name: deploy
+
+# The landing page deploys itself. When the test workflow passes on a push to main, this runs
+# `wrangler deploy` (worker.js plus web/ as Workers assets, see wrangler.toml), then checks the live
+# page serves the version in VERSION. Needs one repo secret, CLOUDFLARE_API_TOKEN (Cloudflare's
+# "Edit Cloudflare Workers" token template), and CLOUDFLARE_ACCOUNT_ID if the token sees more than
+# one account. Can also be started by hand from the Actions tab.
+on:
+  workflow_run:
+    workflows: [test]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    if: github.event_name == 'workflow_dispatch' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      SITE: https://turing.heyitsmejosh.com
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Cloudflare token is set
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
+            echo "::error::Not deployed: add the CLOUDFLARE_API_TOKEN repo secret (Settings > Secrets and variables > Actions)."
+            echo "Not deployed: the CLOUDFLARE_API_TOKEN repo secret is missing." >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
+      - name: Deploy
+        run: npx --yes wrangler@4 deploy
+      - name: The live page serves this version
+        run: |
+          V=$(tr -d '[:space:]' < VERSION)
+          for i in 1 2 3 4 5 6 7 8 9 10 11 12; do
+            got=$(curl -fsS "$SITE/stats.json?v=$GITHUB_RUN_ID" | python3 -c "import json,sys; print(json.load(sys.stdin).get('version',''))" || true)
+            [ "$got" = "$V" ] && curl -fsS -o /dev/null "$SITE/" && { echo "live: v$V"; echo "Deployed v$V to $SITE" >> "$GITHUB_STEP_SUMMARY"; exit 0; }
+            echo "live page says '$got', want '$V', waiting"; sleep 10
+          done
+          echo "::error::Deployed, but $SITE never served v$V"; exit 1
