@@ -8,7 +8,7 @@
   var transcript = $('chat-transcript'), input = $('chat-input'), space = $('desk-space'), statusEl = $('chat-status');
   var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var typing = reduceMotion ? 0 : 14;
-  var isLive = false, busy = false, reel = false, idleTimer = 0, reelTimer = 0, lastUser = 0;
+  var isLive = false, busy = false, reel = false, idleTimer = 0, reelTimer = 0, lastUser = 0, pending = null;
   var LOCAL = 'http://localhost:8127/v1/chat/completions';
 
   function el(tag, cls, text) {
@@ -598,11 +598,16 @@
 
   function send(question, done) {
     var q = (question || input.value).trim().slice(0, 200);
-    if (!q || busy) return;
+    if (!q) return;
+    // She is still answering: don't drop what was typed, hold it and send it the moment she's free.
+    if (busy) { pending = { q: q, done: done }; input.value = ''; return; }
     busy = true;
     input.value = '';
     addUser(q);
-    var finish = function () { busy = false; paintBar(); if (done) done(); };
+    var finish = function () {
+      busy = false; paintBar(); if (done) done();
+      if (pending) { var p = pending; pending = null; send(p.q, p.done); }
+    };
     if (isLive) {
       fetch(LOCAL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ model: 'samantha', messages: [{ role: 'user', content: q }] }) })
         .then(function (r) { return r.json(); })
