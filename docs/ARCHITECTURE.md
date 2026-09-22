@@ -37,6 +37,7 @@ Once she is trained, `ask.py` and `chat.py` handle questions. Before answering, 
 | `run_lora_capped.py` | Utility to run LoRA training with memory caps, protecting against OOM crashes on the 16GB machine. |
 | `train_resilient.sh` | Wrapper script for resilient training runs (retries on crash, memory limits). |
 | `release.sh` | Cut a release: run checks, bump VERSION, tag, push, publish GitHub release, deploy site. |
+| `.github/workflows/deploy.yml` | The landing page deploys itself: after the test workflow passes on main (or by hand), `wrangler deploy` ships worker.js and web/, then it waits until the live page serves the version in VERSION. Needs the CLOUDFLARE_API_TOKEN repo secret. |
 | `.github/workflows/release.yml` | Releases cut themselves: when the test workflow passes on a push to main whose VERSION has no tag yet, it tags that commit and publishes the GitHub release. No Mac gate, no deploy: those run with `release.sh` on the Mac. |
 | `test_nimble.py` | Integration tests for Nimble service integration (via serve.py REPL). |
 | `eval/hands.py` | Automated QA for tool picking and action execution. Measures precision of wrong picks and false refusals. |

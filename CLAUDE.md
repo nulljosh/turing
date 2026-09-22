@@ -28,9 +28,14 @@ ever ships as its own real model, gets a name of its own too, not a
 - `parse_log.py` regenerates `web/status.json` from `train.log` after every
   run, landing page reads it live (loss chart + roadmap tracker share the
   same file on purpose).
-- Landing page deploys via `npx wrangler deploy` (Workers assets, not Pages,
-  matches weather/keyrate). `web/` is the asset root.
+- Landing page deploys itself: `.github/workflows/deploy.yml` runs `wrangler deploy`
+  (Workers assets, not Pages, matches weather/keyrate) after CI passes on main, then
+  checks the live page serves the new VERSION. `web/` is the asset root. Needs the
+  CLOUDFLARE_API_TOKEN repo secret; `npx wrangler deploy` from the Mac still works.
 - No daemon, no cron, training is invoked by hand every time.
+
+## Talking to Joshua
+TLDR only. A few lines at most, plain words, no walls of text, no play-by-play. Only speak up when something is done, broken, or needs him.
 
 ## Pull requests
 Claude handles its own PRs end to end: open one only when it will be merged, never leave one for the user to handle. Once CI passes on the head commit, merge it right away (merge commit), then restart the working branch from the new main. A red CI is fixed and re-pushed, not handed back.
