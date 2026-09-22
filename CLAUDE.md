@@ -35,13 +35,13 @@ ever ships as its own real model, gets a name of its own too, not a
 - No daemon, no cron, training is invoked by hand every time.
 
 ## Talking to Joshua
-TLDR only. Every round that ships something adds one line, newest first, to docs/PROGRESS.md. A few lines at most, plain words, no walls of text, no play-by-play. Only speak up when something is done, broken, or needs him.
+TLDR only. Every round that ships something adds one line, newest first, to docs/PROGRESS.md, followed by the one-line `python3 eval/scorecard.py` (version, tools, tests, docs, laws, biggest file, router agreement). A few lines at most, plain words, no walls of text, no play-by-play. Only speak up when something is done, broken, or needs him.
 
 ## CI
 Every check on main and on every PR stays green, including the release and deploy workflows. Check all workflow runs after every push and merge, not just `test`. A check that cannot do its job yet (a missing secret) skips green with a notice, never red. A red check is fixed before anything else.
 
 ## File size
-No god files. Past about 500 lines a file gets split by what it does, with the old module re-exporting the moved names so nothing that imports it breaks. Targets now: ask.py, tools_util.py, tools.py, web/demo.js, web/samantha.js. One split per loop round, each behind the full check set.
+No god files. Past about 500 lines a file gets split by what it does, with the old module re-exporting the moved names so nothing that imports it breaks. Targets now: pixelmator/pxm.py, tools.py, tools_util.py, web/demo.js, web/samantha.js. Law 8 in eval/laws.py enforces a ceiling (MAX_LINES) on every Python file, CI included; lower it after each split, never raise it. One split per loop round, each behind the full check set.
 
 ## Usage
 The loop watches Claude usage every round: the session's `rate_limit_info` (from `get_session`) and its running cost. While status is allowed and there is no overage, a round every 15 minutes or so. On overage or any status other than allowed, taper: one round an hour, CI checks and red fixes only, until the window resets. Say so in one line when tapering.
