@@ -29,3 +29,16 @@ Is Qwen the best base for her tool picker, and can a picker be built with nothin
 ## Next
 
 Run the two closest candidates (Qwen2.5 and Qwen3) again at the full 900 iterations, in a quiet machine, before deciding anything. A from-scratch picker needs much more varied training text than templates can make, so the honest options are real paraphrase data or staying with a pretrained base.
+
+## Retrain on all 77 tools (2026-09-21, round five)
+
+Training data was written for the 27 model-eligible tools that had none (mostly what shipped this session: utility, image, tab and document tools). Test set grew from 1005 to 1213 rows to cover them. Scored on the same eval/hands.py, same 900 iterations:
+
+| Adapter | Unseen | Wrong picks past the guard | Right picks refused | Total |
+|---|---|---|---|---|
+| Round four (51 tools trained) | 686 / 1040 | 89 | 0 | 844 / 1213 |
+| Round five (77 tools trained) | 853 / 1040 | 85 | 19 | 1004 / 1213 |
+
+Round five is meaningfully more accurate on unseen phrasings (853 against 686) and about as safe on wrong picks (85 against 89), but it introduced 19 cases where a right pick gets refused by the guard, up from 0. That is a real regression: a working command starts failing for a reason a user cannot see. Most look like the guard added for `find_in_document`/`ask_document` (the tab-separated argument) being stricter than what the model actually produces, and the new tab and MCP tools tripping the older `_EVIDENCE`/`_AGAINST` word lists.
+
+**Decision: kept the round four adapter (51 tools).** The 26 tools added since round three still work through the exact router, never a model, so nothing is actually missing for a person using her, only for the trained picker's coverage. `hands-adapter-round5/` is not kept; the training data in `gen_hands_data.py` is, so a future attempt starts from data, not from zero. Worth another pass: relax the guard for the newer tools before retraining, or score `--min` gates per tool family instead of in aggregate.

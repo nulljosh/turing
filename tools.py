@@ -682,6 +682,11 @@ def _sound(tool, arg, query):
     if tool in ("list_dir", "read_file"):
         return bool(arg)
 
+    # "words<TAB>path": both halves have to be real, and the path has to be one she was actually given
+    if tool in ("find_in_document", "ask_document"):
+        words, _, path = arg.partition("\t")
+        return bool(words) and bool(path) and path.lower() in q_lower and words.lower() in q_lower
+
     # An app or a site with no name is never a real command.
     if not arg and tool in ("open_app", "open_url"):
         return False
