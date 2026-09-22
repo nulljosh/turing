@@ -35,6 +35,9 @@ ever ships as its own real model, gets a name of its own too, not a
 ## Releases
 Every shipped ability or fix ends with `./release.sh X.Y.Z "what shipped"`. It runs the checks, bumps `VERSION`, regenerates the landing stats, tags, pushes, publishes the GitHub release and deploys. Patch for a fix, minor for a new ability. Never leave a day's work untagged: on 2026-09-21 76 commits piled up past v0.7.4 before anyone noticed.
 
+## After every ship
+Update together, in the same pass: the landing page (abilities text and the demo), README, this file, `docs/ARCHITECTURE.md` (a row for every new file, checked by `eval/laws.py`), `architecture.svg` (the `architecture-svg` skill) and `progress.svg` (`python3 ~/Documents/Code/scripts/progress-svg.py .`, which reports files ARCHITECTURE.md does not name, and must say 100 percent documented). Docs coverage stays at 100 in the gate.
+
 ## The gate
 `./gate.sh` runs the docs-coverage rule, then five fast checks (chat, actions, parity, pixelmator, tools) and compares against eval/baseline.json. `./gate.sh --full` also runs hands.py and the live web demo. Release.sh runs the full gate, so a release cannot ship on a worse number. Use `./gate.sh --update-baseline` to set new baselines only when all checks pass.
 
