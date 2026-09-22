@@ -18,8 +18,22 @@
     var key = name.trim().toLowerCase().replace(/^(?:the |my )|(?: app)$/g, "");
     if (key === "chrome") key = "google chrome";
     var sorted = APPS.slice().sort();
-    return sorted.find(function (a) { return a.toLowerCase() === key; }) ||
-           sorted.find(function (a) { return a.toLowerCase().indexOf(key) === 0; }) || null;
+    var found = sorted.find(function (a) { return a.toLowerCase() === key; }) ||
+                sorted.find(function (a) { return a.toLowerCase().indexOf(key) === 0; }) || null;
+    // "photoshop" is what people call any photo editor: without Photoshop, it means the one this Mac has
+    return !found && (key === "photoshop" || key === "adobe photoshop") ? appMatch("pixelmator") : found;
+  }
+
+  var SITE_SEARCH = {
+    "youtube": "https://www.youtube.com/results?search_query=", "amazon": "https://www.amazon.com/s?k=",
+    "reddit": "https://www.reddit.com/search/?q=", "github": "https://github.com/search?q=",
+    "wikipedia": "https://en.wikipedia.org/w/index.php?search=", "google maps": "https://www.google.com/maps/search/",
+    "maps": "https://www.google.com/maps/search/"
+  };
+  var SITE_NAMES = Object.keys(SITE_SEARCH).sort(function (a, b) { return b.length - a.length; }).join("|");
+  // same as tools.site_search: quote_plus spells a space "+"
+  function siteSearch(site, query) {
+    return SITE_SEARCH[site.toLowerCase()] + encodeURIComponent(query.trim()).replace(/%20/g, "+");
   }
 
   function urlOf(target) {
@@ -38,7 +52,7 @@
     [/^(?:skip|next)(?: (?:this |the )?(?:song|track|one))?$/i, function () { return ["music", "next"]; }],
     [/^(?:previous|last|go back a|go back one)(?: (?:song|track))?$/i, function () { return ["music", "previous"]; }],
     [/^what(?:'s| is) (?:this song|playing)\b|^what song is (?:this|playing)/i, function () { return ["music", "playing"]; }],
-    [/^(?:what(?:'s| is) the |how(?:'s| is) the )?weather\b(?: like)?(?: today| outside| right now| now)*(?: (?:in|for) (.+))?$/i,
+    [/^(?:what(?:'s| is) the |how(?:'s| is) the |(?:look up|check|get) the )?weather\b(?: like)?(?: today| outside| right now| now)*(?: (?:in|for) (.+))?$/i,
      function (m) { return ["weather", m[1] || ""]; }],
     [/^(?:set |start )?(?:a |an )?(?:timer (?:for )?(\d+(?:\.\d+)?) ?(s|m|h)\w*|(\d+(?:\.\d+)?)[ -]?(s|m|h)\w* timer)$/i,
      function (m) { return ["timer", String(parseFloat(m[1] || m[3]) * UNIT[(m[2] || m[4]).toLowerCase()])]; }],
@@ -61,7 +75,10 @@
     [/^(?:read|show|cat)(?: me)? (?:the )?file (.+)$/i, function (m) { return ["read_file", m[1]]; }],
     [/^(?:take a |grab a )?screenshot\b/i, function () { return ["screenshot", ""]; }],
     [/^what(?:'s| is) (?:on |in )?(?:my |the )?(?:current |open )?(?:tab|chrome|browser)\b/i, function () { return ["current_tab", ""]; }],
-    [/^(?:search|google|look up)(?: the web)?(?: for)? (.+)$/i, function (m) { return ["web_search", m[1]]; }],
+    [new RegExp("^(?:search|look up|find) (?:on )?(" + SITE_NAMES + ") for (.+)$|^(?:search|look up) (.+) on (" + SITE_NAMES + ")$", "i"),
+     function (m) { return ["open_url", siteSearch(m[1] || m[4], m[2] || m[3])]; }],
+    [new RegExp("^(?:open |go to |pull up )?(" + SITE_NAMES + ") and search(?: it)?(?: for)? (.+)$", "i"), function (m) { return ["open_url", siteSearch(m[1], m[2])]; }],
+    [/^(?:search|google|look up)(?: search)?(?: (?:the web|online|the internet|on google|google))?(?: for)? (.+)$/i, function (m) { return ["web_search", m[1]]; }],
     [/^(?:open|launch|start) (?:up )?(?:chrome|the browser) (?:and |then )?(?:go to|open|visit|load) (.+)$/i, function (m) { return ["open_url", m[1]]; }],
     [/^(?:go to|visit|browse to|pull up) (.+)$/i, function (m) { return ["open_url", m[1]]; }],
     [/^(?:open|launch|start) (?:up )?(.+)$/i, function (m) {
@@ -75,7 +92,7 @@
   var TAIL = /(?:[, ]+(?:please|for me|real quick|now|thanks|thank you))+$/i;
 
   function bare(query) {
-    return query.trim().replace(/[.!?]+$/, "").replace(LEAD, "").replace(TAIL, "").trim();
+    return query.trim().replace(/[.!?]+$/, "").replace(/\b(what|how|where|who)s\b/gi, "$1's").replace(LEAD, "").replace(TAIL, "").trim();
   }
 
   // {tool, arg} for one exact command, {agent: true} for multi-step work, null for anything that is not a command
@@ -475,6 +492,26 @@
     .forEach(function (name) { U[name] = function () { return REAL_MAC; }; });
   U.NEEDS_MAC = ["disk_space", "uptime", "memory_usage", "cpu_load", "ip_address", "wifi_name", "system_info", "copy_to_clipboard", "sleep_display", "reveal_in_finder", "list_shortcuts", "run_shortcut", "list_mcp_tools", "call_mcp_tool", "list_tabs", "switch_tab", "close_tab", "read_tab", "read_screen", "read_document", "find_in_document", "ask_document", "ask_screen"];
 
+  // the image tools, same table as tools_image.ROUTES and ahead of the utilities. The stand-in Mac has no photos on disk.
+  var P = "(?:the )?(?:image |photo |picture |pic )?(?:at )?(\\S+\\.(?:jpe?g|png|heic|webp|tiff?|gif))";
+  ROUTES.push.apply(ROUTES, [
+    [new RegExp("^(?:make|turn|convert) " + P + " (?:into )?(?:black and white|black & white|b&w|grayscale|greyscale)$|^(?:grayscale|greyscale|desaturate) " + P + "$", "i"),
+     function (m) { return ["grayscale_image", m[1] || m[2]]; }],
+    [new RegExp("^(?:remove|cut out|erase|delete|take out) the background (?:from|of|in|on) " + P + "$", "i"), function (m) { return ["remove_background", m[1]]; }],
+    [new RegExp("^(?:upscale|enlarge|blow up) " + P + "$", "i"), function (m) { return ["upscale_image", m[1]]; }],
+    [new RegExp("^(?:enhance|auto[- ]?enhance|fix up|improve) " + P + "$", "i"), function (m) { return ["enhance_image", m[1]]; }],
+    [new RegExp("^rotate " + P + "(?: by (\\d+)(?: degrees)?)?$", "i"), function (m) { return ["rotate_image", m[1] + " by " + (m[2] || 90)]; }],
+    [new RegExp("^flip " + P + "(?: (horizontally|vertically|horizontal|vertical|upside down))?$", "i"),
+     function (m) { return ["flip_image", m[1] + (/^(?:vertically|vertical|upside down)$/i.test(m[2] || "") ? " vertical" : "")]; }],
+    [new RegExp("^(?:resize|scale) " + P + " to (\\d+)(?: ?px| pixels)?(?: wide)?$", "i"), function (m) { return ["resize_image", m[1] + " to " + m[2]]; }],
+    [new RegExp("^(?:crop|square up) " + P + "(?: (?:to |into )?(?:a )?square)?$", "i"), function (m) { return ["crop_square", m[1]]; }],
+    [new RegExp("^convert " + P + " (?:to|into) (?:a |an )?(png|jpe?g|webp|heic|tiff?|pdf)$", "i"), function (m) { return ["convert_image", m[1] + " to " + m[2]]; }],
+    [new RegExp("^(?:how big is " + P + "|(?:image )?(?:info|size|dimensions) (?:for|of|on) " + P + ")$", "i"), function (m) { return ["image_info", m[1] || m[2]]; }]
+  ]);
+  var NO_PHOTOS = "That one edits a photo on your real Mac in Pixelmator, and this stand-in has no photos on disk. Ask me to draw something instead.";
+  ["grayscale_image", "remove_background", "upscale_image", "enhance_image", "rotate_image", "flip_image", "resize_image", "crop_square", "convert_image", "image_info"]
+    .forEach(function (name) { U[name] = function () { return NO_PHOTOS; }; U.NEEDS_MAC.push(name); });
+
   ROUTES.push.apply(ROUTES, [
     [/^(?:calc(?:ulate)?|compute|work out|math)[: ]+(.+)$/i, function (m) { return ["calculate", m[1]]; }],
     [/^(?:convert )?(\d+) (?:to|in|into) roman(?: numerals?)?$/i, function (m) { return ["roman_numeral", m[1]]; }],
@@ -512,7 +549,7 @@
     [/^(?:list|show)(?: me)?(?: all)?(?: my)? shortcuts$|^what shortcuts do i have$/i, function (m) { return ["list_shortcuts", ""]; }],
     [/^(?:list|show)(?: me)?(?: all)?(?: my)? mcp tools$|^what mcp tools do i have$/i, function (m) { return ["list_mcp_tools", ""]; }],
     [/^call mcp (\S+ \S+(?: .+)?)$/i, function (m) { return ["call_mcp_tool", m[1]]; }],
-    [/^(?:list|show)(?: me)?(?: all)?(?: my| the)?(?: open)? (?:chrome )?tabs$|^what tabs (?:do i have|are open)(?: in chrome)?$/i, function (m) { return ["list_tabs", ""]; }],
+    [/^(?:list|show)(?: me)?(?: all)?(?: my| the)?(?: open)? (?:chrome )?tabs$|^what tabs (?:do i have(?: open)?|are open)(?: in chrome)?$/i, function (m) { return ["list_tabs", ""]; }],
     [/^switch to tab (\d+(?:\.\d+)?)$|^switch to (?:the )?(.+?) tab$/i, function (m) { return ["switch_tab", ((m[1] || m[2]))]; }],
     [/^close tab (\d+(?:\.\d+)?)$|^close (?:the )?(.+?) tab$/i, function (m) { return ["close_tab", ((m[1] || m[2]))]; }],
     [/^read tab (\d+(?:\.\d+)?)$|^read (?!(?:this|the current) tab$)(?:the )?(.+?) tab$|^read (?:this|the current) tab$/i, function (m) { return ["read_tab", ((m[1] || m[2] || ""))]; }],

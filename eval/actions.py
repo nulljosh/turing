@@ -40,6 +40,24 @@ CASES = [
     ("search for mlx lora", "web_search", "mlx"),
     ("google best pizza vancouver", "web_search", "pizza"),
     ("look up qwen3", "web_search", "qwen3"),
+    ("search google for mlx lora", "web_search", "mlx lora"),
+    ("google search for dogs", "web_search", "dogs"),
+    ("search youtube for lofi hip hop", "open_url", "youtube.com/results?search_query=lofi+hip+hop"),
+    ("go to youtube and search lofi", "open_url", "youtube.com/results?search_query=lofi"),
+    ("search wireless mice on amazon", "open_url", "amazon.com/s?k=wireless+mice"),
+    ("whats the weather", "weather", None),
+    ("look up the weather in vancouver", "weather", "vancouver"),
+    ("what tabs do i have open", "list_tabs", None),
+
+    # photos, exact, no model needed
+    ("make ~/Desktop/cat.png black and white", "grayscale_image", "~/Desktop/cat.png"),
+    ("remove the background from ~/Desktop/cat.jpg", "remove_background", "~/Desktop/cat.jpg"),
+    ("rotate the photo ~/a.png by 180", "rotate_image", "~/a.png by 180"),
+    ("flip ~/a.png vertically", "flip_image", "~/a.png vertical"),
+    ("resize ~/a.png to 500", "resize_image", "~/a.png to 500"),
+    ("convert ~/a.png to jpg", "convert_image", "~/a.png to jpg"),
+    ("crop ~/a.png to a square", "crop_square", "~/a.png"),
+    ("upscale ~/a.heic", "upscale_image", "~/a.heic"),
 
     # tab
     ("what's in my current tab", "current_tab", None),

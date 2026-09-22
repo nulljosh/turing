@@ -820,7 +820,7 @@ ROUTES = (
     (re.compile(r"^(?:list|show)(?: me)?(?: all)?(?: my)? shortcuts$|^what shortcuts do i have$", _I), "list_shortcuts", lambda m: ""),
     (re.compile(r"^(?:list|show)(?: me)?(?: all)?(?: my)? mcp tools$|^what mcp tools do i have$", _I), "list_mcp_tools", lambda m: ""),
     (re.compile(r"^call mcp (\S+ \S+(?: .+)?)$", _I), "call_mcp_tool", lambda m: m.group(1)),
-    (re.compile(r"^(?:list|show)(?: me)?(?: all)?(?: my| the)?(?: open)? (?:chrome )?tabs$|^what tabs (?:do i have|are open)(?: in chrome)?$", _I), "list_tabs", lambda m: ""),
+    (re.compile(r"^(?:list|show)(?: me)?(?: all)?(?: my| the)?(?: open)? (?:chrome )?tabs$|^what tabs (?:do i have(?: open)?|are open)(?: in chrome)?$", _I), "list_tabs", lambda m: ""),
     (re.compile(r"^switch to tab (\d+(?:\.\d+)?)$|^switch to (?:the )?(.+?) tab$", _I), "switch_tab", lambda m: (m.group(1) or m.group(2))),
     (re.compile(r"^close tab (\d+(?:\.\d+)?)$|^close (?:the )?(.+?) tab$", _I), "close_tab", lambda m: (m.group(1) or m.group(2))),
     (re.compile(r"^read tab (\d+(?:\.\d+)?)$|^read (?!(?:this|the current) tab$)(?:the )?(.+?) tab$|^read (?:this|the current) tab$", _I), "read_tab", lambda m: (m.group(1) or m.group(2) or "")),

@@ -63,6 +63,21 @@ class HarnessTests(unittest.TestCase):
         self.assertEqual(s.ask("calculate 2+2"), "4")
         self.assertEqual(len(s.history), 3)
 
+    def test_photoshop_means_the_photo_editor_this_mac_has(self):
+        """"open photoshop" opens Pixelmator when there is no Photoshop, and Photoshop when there is."""
+        with mock.patch.object(tools, "installed_apps", return_value={"pixelmator pro": "Pixelmator Pro"}):
+            self.assertEqual(tools._app_match("photoshop"), "Pixelmator Pro")
+        with mock.patch.object(tools, "installed_apps", return_value={"adobe photoshop 2026": "Adobe Photoshop 2026", "pixelmator pro": "Pixelmator Pro"}):
+            self.assertEqual(tools._app_match("adobe photoshop"), "Adobe Photoshop 2026")
+
+    def test_a_photo_edit_asks_first(self):
+        """An exact photo command is a write: it is shown and asked about before Pixelmator is touched."""
+        s, asked, shown = self.session(False)
+        with mock.patch.object(tools, "grayscale_image") as edit:
+            self.assertEqual(s.ask("make ~/Desktop/cat.png black and white"), "Okay, I will not.")
+        edit.assert_not_called()
+        self.assertEqual(asked, [("grayscale_image", ("~/Desktop/cat.png",))])
+
     def test_plan_runs_nothing(self):
         """Plan runs nothing."""
         with mock.patch.object(tools, "_run", return_value="") as run:

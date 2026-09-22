@@ -435,3 +435,24 @@ def image_info(path):
 
     w, h = dims
     return f"Image is {w}x{h} pixels, 1 layer (flattened)."
+
+
+# The image tools as exact commands, so "make ~/Desktop/cat.png black and white" works with no model at all.
+# Same shape as tools_util.ROUTES: (pattern, tool name, argument). tools.py puts these ahead of the utilities,
+# so "convert cat.png to jpg" is an image and never a unit conversion. A path is one word ending in an image type.
+_P = r"(?:the )?(?:image |photo |picture |pic )?(?:at )?(\S+\.(?:jpe?g|png|heic|webp|tiff?|gif))"
+_I = re.I
+ROUTES = (
+    (re.compile(rf"^(?:make|turn|convert) {_P} (?:into )?(?:black and white|black & white|b&w|grayscale|greyscale)$|^(?:grayscale|greyscale|desaturate) {_P}$", _I),
+     "grayscale_image", lambda m: m.group(1) or m.group(2)),
+    (re.compile(rf"^(?:remove|cut out|erase|delete|take out) the background (?:from|of|in|on) {_P}$", _I), "remove_background", lambda m: m.group(1)),
+    (re.compile(rf"^(?:upscale|enlarge|blow up) {_P}$", _I), "upscale_image", lambda m: m.group(1)),
+    (re.compile(rf"^(?:enhance|auto[- ]?enhance|fix up|improve) {_P}$", _I), "enhance_image", lambda m: m.group(1)),
+    (re.compile(rf"^rotate {_P}(?: by (\d+)(?: degrees)?)?$", _I), "rotate_image", lambda m: f"{m.group(1)} by {m.group(2) or 90}"),
+    (re.compile(rf"^flip {_P}(?: (horizontally|vertically|horizontal|vertical|upside down))?$", _I), "flip_image",
+     lambda m: m.group(1) + (" vertical" if (m.group(2) or "").lower() in ("vertically", "vertical", "upside down") else "")),
+    (re.compile(rf"^(?:resize|scale) {_P} to (\d+)(?: ?px| pixels)?(?: wide)?$", _I), "resize_image", lambda m: f"{m.group(1)} to {m.group(2)}"),
+    (re.compile(rf"^(?:crop|square up) {_P}(?: (?:to |into )?(?:a )?square)?$", _I), "crop_square", lambda m: m.group(1)),
+    (re.compile(rf"^convert {_P} (?:to|into) (?:a |an )?(png|jpe?g|webp|heic|tiff?|pdf)$", _I), "convert_image", lambda m: f"{m.group(1)} to {m.group(2)}"),
+    (re.compile(rf"^(?:how big is {_P}|(?:image )?(?:info|size|dimensions) (?:for|of|on) {_P})$", _I), "image_info", lambda m: m.group(1) or m.group(2)),
+)

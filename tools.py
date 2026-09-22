@@ -22,6 +22,7 @@ import sys
 import urllib.parse
 import urllib.request
 import tools_util
+import tools_image
 from tools_image import remove_background, upscale_image, enhance_image, grayscale_image, rotate_image, flip_image, resize_image, crop_square, convert_image, image_info
 
 AGENT_MODEL = "qwen3:1.7b"  # 8B was right but 7.6GB and minutes per run; 1.7B is right in 5s once the harness prefetches
@@ -69,7 +70,11 @@ def _app_match(name):
     if key == "chrome":
         key = "google chrome"
     # exact, then unique-prefix: "pixelmator" finds "Pixelmator Pro"
-    return apps.get(key) or next((v for k, v in sorted(apps.items()) if k.startswith(key)), None)
+    found = apps.get(key) or next((v for k, v in sorted(apps.items()) if k.startswith(key)), None)
+    # "photoshop" is what people call any photo editor: without Photoshop, it means the one this Mac has
+    if not found and key in ("photoshop", "adobe photoshop"):
+        return _app_match("pixelmator")
+    return found
 
 
 def open_app(name):
@@ -100,6 +105,20 @@ def open_url(target):
         return web_search(target)
     _run(["open", "-a", BROWSER, url])
     return f"Opened {url} in Chrome."
+
+
+SITE_SEARCH = {
+    "youtube": "https://www.youtube.com/results?search_query=", "amazon": "https://www.amazon.com/s?k=",
+    "reddit": "https://www.reddit.com/search/?q=", "github": "https://github.com/search?q=",
+    "wikipedia": "https://en.wikipedia.org/w/index.php?search=", "google maps": "https://www.google.com/maps/search/",
+    "maps": "https://www.google.com/maps/search/",
+}
+_SITE_NAMES = "|".join(sorted(SITE_SEARCH, key=len, reverse=True))
+
+
+def site_search(site, query):
+    """The address of a search on one site: "search youtube for lofi" is YouTube's own results page, not a web search."""
+    return SITE_SEARCH[site.lower()] + urllib.parse.quote_plus(query.strip())
 
 
 def web_search(query):
@@ -482,7 +501,7 @@ _ROUTES = (
     (re.compile(r"^(?:skip|next)(?: (?:this |the )?(?:song|track|one))?$", re.I), lambda m: music("next")),
     (re.compile(r"^(?:previous|last|go back a|go back one)(?: (?:song|track))?$", re.I), lambda m: music("previous")),
     (re.compile(r"^what(?:'s| is) (?:this song|playing)\b|^what song is (?:this|playing)", re.I), lambda m: music("playing")),
-    (re.compile(r"^(?:what(?:'s| is) the |how(?:'s| is) the )?weather\b(?: like)?(?: today| outside| right now| now)*(?: (?:in|for) (.+))?$", re.I),
+    (re.compile(r"^(?:what(?:'s| is) the |how(?:'s| is) the |(?:look up|check|get) the )?weather\b(?: like)?(?: today| outside| right now| now)*(?: (?:in|for) (.+))?$", re.I),
      lambda m: weather(m.group(1) or "")),
     (re.compile(r"^(?:set |start )?(?:a |an )?(?:timer (?:for )?(\d+(?:\.\d+)?) ?(s|m|h)\w*|(\d+(?:\.\d+)?)[ -]?(s|m|h)\w* timer)$", re.I),
      lambda m: timer(float(m.group(1) or m.group(3)) * _UNIT[(m.group(2) or m.group(4)).lower()])),
@@ -505,7 +524,10 @@ _ROUTES = (
     (re.compile(r"^(?:read|show|cat)(?: me)? (?:the )?file (.+)$", re.I), lambda m: read_file(m.group(1))),
     (re.compile(r"^(?:take a |grab a )?screenshot\b", re.I), lambda m: screenshot()),
     (re.compile(r"^what(?:'s| is) (?:on |in )?(?:my |the )?(?:current |open )?(?:tab|chrome|browser)\b", re.I), lambda m: current_tab()),
-    (re.compile(r"^(?:search|google|look up)(?: the web)?(?: for)? (.+)$", re.I), lambda m: web_search(m.group(1))),
+    (re.compile(rf"^(?:search|look up|find) (?:on )?({_SITE_NAMES}) for (.+)$|^(?:search|look up) (.+) on ({_SITE_NAMES})$", re.I),
+     lambda m: open_url(site_search(m.group(1) or m.group(4), m.group(2) or m.group(3)))),
+    (re.compile(rf"^(?:open |go to |pull up )?({_SITE_NAMES}) and search(?: it)?(?: for)? (.+)$", re.I), lambda m: open_url(site_search(m.group(1), m.group(2)))),
+    (re.compile(r"^(?:search|google|look up)(?: search)?(?: (?:the web|online|the internet|on google|google))?(?: for)? (.+)$", re.I), lambda m: web_search(m.group(1))),
     (re.compile(r"^(?:open|launch|start) (?:up )?(?:chrome|the browser) (?:and |then )?(?:go to|open|visit|load) (.+)$", re.I), lambda m: open_url(m.group(1))),
     (re.compile(r"^(?:go to|visit|browse to|pull up) (.+)$", re.I), lambda m: open_url(m.group(1))),
     (re.compile(r"^(?:open|launch|start) (?:up )?(.+)$", re.I),
@@ -516,12 +538,14 @@ _ROUTES = (
 
 
 def _util_route(name, arg):
-    """A tools_util route as a tools.py one. The function is looked up on this module at call
+    """A tools_util or tools_image route as a tools.py one. The function is looked up on this module at call
     time, so eval/actions.py can swap it for a recorder like every other tool."""
-    takes = getattr(tools_util, name).__code__.co_argcount
+    takes = TOOLS[name].__code__.co_argcount
     return lambda m: globals()[name](arg(m)) if takes else globals()[name]()
 
 
+# the image tools before the utilities, so "convert cat.png to jpg" is an image and never a unit conversion
+_ROUTES = _ROUTES + tuple((pat, _util_route(name, arg)) for pat, name, arg in tools_image.ROUTES)
 _ROUTES = _ROUTES + tuple((pat, _util_route(name, arg)) for pat, name, arg in tools_util.ROUTES)  # 31 utility tools: math, text, dice, this Mac's vitals
 
 # anything past the first verb phrase means more than one step: that is agent() work
@@ -538,9 +562,12 @@ _LEAD = re.compile(r"^(?:(?:hey|ok|okay|yo|samantha|please|now|just)[, ]+)*"
 _TAIL = re.compile(r"(?:[, ]+(?:please|for me|real quick|now|thanks|thank you))+$", re.I)
 
 
+_CONTRACT = re.compile(r"\b(what|how|where|who)s\b", re.I)  # people type "whats the weather", the routes say "what's"
+
+
 def _bare(query):
     """Strip politeness markers (please, can you, etc.) from a command."""
-    q = query.strip().rstrip(".!?")
+    q = _CONTRACT.sub(r"\1's", query.strip().rstrip(".!?"))
     return _TAIL.sub("", _LEAD.sub("", q, count=1)).strip()
 
 
