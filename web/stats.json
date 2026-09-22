@@ -1,5 +1,5 @@
 {
-  "version": "0.16.0",
+  "version": "0.17.0",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -28,8 +28,8 @@
         "documented": 1
       },
       "test_harness.py": {
-        "total": 8,
-        "documented": 8
+        "total": 9,
+        "documented": 9
       },
       "ask.py": {
         "total": 33,
@@ -64,8 +64,8 @@
         "documented": 5
       },
       "chat.py": {
-        "total": 12,
-        "documented": 12
+        "total": 13,
+        "documented": 13
       },
       "test_chat.py": {
         "total": 20,
@@ -118,6 +118,10 @@
       "eval/hands.py": {
         "total": 4,
         "documented": 4
+      },
+      "eval/smoke_images.py": {
+        "total": 5,
+        "documented": 5
       },
       "eval/faq_paraphrase.py": {
         "total": 1,
