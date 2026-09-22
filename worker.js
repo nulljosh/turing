@@ -66,7 +66,8 @@ async function readArticle(env, query, title) {
   const grounded = (claims.length > 1 ? claims.slice(1) : claims).every(c => hay.includes(c.toLowerCase().replace(/[.,]+$/, "")) || asked.includes(c.toLowerCase()));
   const declined = /unknown|does not (?:contain|mention|say|provide|specify)|doesn't (?:contain|mention|say)|not (?:mentioned|stated|specified|provided)|no (?:information|mention)/i.test(answer);
   // "The largest ocean." answers nothing: an answer has to bring a word the question did not have
-  const adds = S.keywords(answer).some(k => !S.keywords(query).includes(k));
+  const filler = ["your", "my", "our", "their", "his", "her", "its", "this", "that", "these", "those"];
+  const adds = S.keywords(answer).some(k => !S.keywords(query).includes(k) && !filler.includes(k));
   return answer && !declined && grounded && adds ? answer : null;
 }
 

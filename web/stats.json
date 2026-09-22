@@ -68,8 +68,8 @@
         "documented": 12
       },
       "test_chat.py": {
-        "total": 18,
-        "documented": 18
+        "total": 20,
+        "documented": 20
       },
       "stats.py": {
         "total": 7,
@@ -173,11 +173,11 @@
     "actions_eval": "77/77",
     "knowledge_sweep": {
       "before": "47/65",
-      "after": "61/65"
+      "after": "62/65"
     },
     "confidently_wrong": {
       "before": 18,
-      "after": 2
+      "after": 0
     },
     "picker_unseen_percent": {
       "before": 6,

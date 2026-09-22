@@ -13,8 +13,8 @@ from pathlib import Path
 MEASURED = {
     "tools": {"before": 0, "after": 30},
     "actions_eval": "77/77",
-    "knowledge_sweep": {"before": "47/65", "after": "61/65"},  # eval/basic_questions.py 2026-09-21
-    "confidently_wrong": {"before": 18, "after": 2},
+    "knowledge_sweep": {"before": "47/65", "after": "62/65"},  # eval/basic_questions.py 2026-09-21
+    "confidently_wrong": {"before": 18, "after": 0},
     "picker_unseen_percent": {"before": 6, "after": 83},  # regex router 30/463, her own picker 692/834, eval/hands.py
     "project_eval": "29/29",
     "chat_tests": "18/18",

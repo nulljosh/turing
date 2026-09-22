@@ -162,6 +162,22 @@ def test_followup_without_a_pronoun_is_untouched():
     assert resolve_followup("what is the capital of france", "steve jobs") == "what is the capital of france"
 
 
+def test_alan_turing_is_a_person_not_the_project_faq():
+    """Verify a question about Alan Turing skips FAQ.md, which would answer with the project's own blurb."""
+    import ask
+    with __import__("unittest.mock").mock.patch.object(ask, "general_knowledge", return_value=("Alan Turing was a mathematician.", "Wikipedia: Alan Turing")):
+        answer, sources = ask.ask("who was alan turing")
+    assert answer == "Alan Turing was a mathematician." and sources == ["Wikipedia: Alan Turing"]
+
+
+def test_an_answer_that_only_echoes_the_question_is_not_an_answer():
+    """Verify the reader guard: a pronoun swapped for "the" adds no information (an album called What Color Is Your Sky)."""
+    import ask
+    kw = lambda s: set(ask._keywords(s))
+    assert not (kw("What Color Is Your Sky") - kw("what color is the sky") - ask._ECHO_FILLER)
+    assert kw("The sky looks blue because of Rayleigh scattering") - kw("what color is the sky") - ask._ECHO_FILLER
+
+
 if __name__ == "__main__":
     tests = [v for k, v in list(globals().items()) if k.startswith("test_")]
     for t in tests:

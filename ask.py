@@ -856,6 +856,9 @@ READER_MODEL = "qwen3:1.7b"
 READER_URL = "http://localhost:11434/api/chat"
 
 
+_ECHO_FILLER = {"your", "my", "our", "their", "his", "her", "its", "this", "that", "these", "those"}
+
+
 def _is_definition_of(query, title):
     """Check if article title directly answers the question by name match.
 
@@ -878,7 +881,7 @@ def read_article(query, title):
     and may only answer from it, and the answer is checked against that text
     before anyone sees it. Returns a sentence or None.
     """
-    key = f"reader2:{READER_MODEL}:{title}:{query.lower().strip()}"
+    key = f"reader3:{READER_MODEL}:{title}:{query.lower().strip()}"
     cached = _cache_get(key)
     if cached is not None:
         return cached or None
@@ -907,7 +910,10 @@ def read_article(query, title):
     grounded = all(c.lower().rstrip(".,") in text.lower() or c.lower() in asked for c in claims[1:] or claims)
     # the 1.7B does not always say the word it was told to say
     declined = re.search(r"unknown|does not (?:contain|mention|say|provide|specify)|doesn't (?:contain|mention|say)|not (?:mentioned|stated|specified|provided)|no (?:information|mention)", answer, re.I)
-    if not answer or declined or not grounded:
+    # an answer has to bring a word the question did not have. "What Color Is Your Sky" (an album) echoes
+    # "what color is the sky" back at the asker, and a pronoun swapped in for "the" is not new information.
+    adds = set(_keywords(answer)) - set(_keywords(query)) - _ECHO_FILLER
+    if not answer or declined or not grounded or not adds:
         answer = ""
     _cache_put(key, answer)
     return answer or None
@@ -1203,7 +1209,8 @@ def ask(question):
                 return gk_answer, [gk_source]
             return LOOKUP_FAILED, []
 
-    faq_answer = faq_match(question)
+    # "who was alan turing" is about a person, and FAQ.md answers it with the project's own blurb
+    faq_answer = None if "alan turing" in question.lower() else faq_match(question)
     if faq_answer:
         return faq_answer, [FAQ_PATH]
 
