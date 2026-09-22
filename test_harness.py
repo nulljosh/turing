@@ -59,6 +59,14 @@ class HarnessTests(unittest.TestCase):
         run.assert_not_called()
         self.assertTrue(callable(tools.set_volume) and tools.set_volume.__name__ == "set_volume")  # swapped back
 
+    def test_a_question_is_handed_back_for_the_chat(self):
+        """With or_none a sentence that is not a command comes back as None and is not recorded, so chat.py can answer it."""
+        s, _, _ = self.session(False)
+        with mock.patch.object(tools, "pick", return_value=None):
+            self.assertIsNone(s.ask("what is the capital of france", or_none=True))
+            self.assertEqual(s.history, [])
+            self.assertEqual(s.ask("calculate 2+2", or_none=True), "4")
+
     def test_every_write_is_a_real_tool(self):
         """Every write is a real tool."""
         self.assertLessEqual(tools.WRITES, set(tools.TOOLS))

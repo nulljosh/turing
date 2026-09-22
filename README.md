@@ -15,7 +15,7 @@ Build small language models on one Mac. Samantha is a 0.5B model fine-tuned on y
 - **77 tools.** Her Mac (open apps and sites, search, read a page, screenshot, clipboard, volume, battery, music, timers, notes, reminders, calendar, weather), pictures (paint any photo, make a logo, remove a background, upscale, enhance, rotate, crop, convert), and 47 small utilities that need no app: math, unit conversion, time in any city, dice, passwords, hashes, base64, morse, this Mac's disk, memory and Wi-Fi, any Apple Shortcut you name, and your Chrome tabs (list, switch, close, read the rendered page), she can read your PDFs and documents, find passages and answer questions about them or about your screen (grounded: a made-up number or name is declined), she can read what is on your screen (macOS Vision OCR, asks first), and a memory that survives across sessions ("remember that my dog is called Biscuit")
 - **Draw anything on the landing page.** Type "draw a fox in the snow" and an image model on Cloudflare imagines it while she rebuilds the picture from 30,000 squares in front of you. The hero line above narrates what she is doing
 - **Her own logo.** The icon above was designed by her. Her model steers four dials (palette, cell count, shape, how many cells glow), the harness lays the cells on a golden-angle spiral, and there is no text in it. Every logo she makes is an icon with no text: a golden spiral by default, or say complex or simple; the spec is in `pixelmator/examples/turing-bloom.json`
-- **A harness.** `harness.py` keeps the conversation, prints every tool call before it runs, and asks before anything that writes or sends (a note, a reminder, a file, a Shortcut, the clipboard)
+- **A harness.** `chat.py` runs every command through `harness.py`, which keeps the conversation, prints every tool call before it runs, and asks before anything that writes or sends (a note, a reminder, a file, a Shortcut, the clipboard)
 - **MCP both ways.** `mcp_server.py` lets Claude Code or any other assistant use her tools, and she can call other MCP servers from `~/.samantha/mcp.json` (she asks first)
 - **Small enough to train at home** (Qwen2.5-0.5B LoRA on Apple Silicon via MLX, ~3.5GB memory)
 - **No hallucination** (retrieves real facts from brain RAG, FAQ matching, live officeholder lookup)
@@ -27,7 +27,7 @@ Build small language models on one Mac. Samantha is a 0.5B model fine-tuned on y
 ## Run it
 
 ```bash
-./.venv/bin/python chat.py            # talk to Samantha
+./.venv/bin/python chat.py            # talk to Samantha: she answers and acts, and asks before anything that writes
 ./.venv/bin/python ask.py "question"  # retrieve and answer
 ./.venv/bin/python harness.py          # a chat that asks before it writes
 python3 mcp_server.py                  # her tools over MCP (claude mcp add samantha -- python3 mcp_server.py)

@@ -25,8 +25,9 @@ class Session:
         """A conversation. confirm decides writes (no by default), log shows the tool log."""
         self.confirm, self.log, self.history = confirm or (lambda name, args: False), log, []
 
-    def ask(self, query):
-        """Answer one command. Returns the reply and records the turn."""
+    def ask(self, query, or_none=False):
+        """Answer one command. Returns the reply and records the turn. With or_none, a sentence that is not a command
+        returns None and is not recorded, so a chat can hand it to the question chain."""
         q = query.strip()
         if _RECALL.match(tools._bare(q)):
             return self.recall()
@@ -42,6 +43,8 @@ class Session:
         # what she was told to remember about this ask rides along with a multi-step task, never over MCP
         context += "".join(f"Remembered: {f}\n" for f in tools_util.recall_lines(q))
         result = tools.do((context + q) if context and tools._MULTISTEP.search(tools._bare(q)) else q, log=log, confirm=self.confirm)
+        if result is None and or_none:
+            return None
         result = result or "That is not a command I know. Ask me a question, or tell me to do something."
         self.history.append({"q": q, "calls": calls, "result": result})
         return result

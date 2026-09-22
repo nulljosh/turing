@@ -15,7 +15,7 @@ Once she is trained, `ask.py` and `chat.py` handle questions. Before answering, 
 | `prep_data.py` | Data pipeline. Walks Obsidian wiki + Code directory, chunks markdown into train/valid JSONL. Skips non-documentation. |
 | `train.py` (via `mlx_lm lora`) | Training orchestration. Launches LoRA fine-tune on the frozen base model (Qwen2.5-0.5B). Stores weights in `ada-1-adapter/`. |
 | `parse_log.py` | Post-training: parses loss history from `train.log`, writes `web/status.json` for the landing page. |
-| `ask.py` + `chat.py` | Inference. Loads the trained adapter, retrieves facts from brain RAG, generates answers. `chat.py` wraps it in an interactive loop. |
+| `ask.py` + `chat.py` | Inference. Loads the trained adapter, retrieves facts from brain RAG, generates answers. `chat.py` wraps it in an interactive loop, and hands every command ("set the volume to 30", "take a note buy milk") to `harness.py` first, which shows the tool call and asks before anything that writes. |
 | `serve.py` | CLI server. Local REPL for chat sessions. |
 | `gate.sh` | Validation suite. Runs fast checks (chat, actions, parity, pixelmator, tools) against eval baselines. `release.sh` runs the full gate. |
 | `stats.py` | Generates documentation coverage metrics (docstring + file citation percentages) into web/stats.json. |

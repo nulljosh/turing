@@ -272,10 +272,13 @@ def answer_turn(question, history, topic_active, last_subject=None):
 
 def chat():
     """Run the interactive terminal chat loop."""
+    import harness
     history = []
     topic_active = False
     last_subject = None
-    print("Samantha (Turing project assistant). Ctrl+C or 'exit' to quit.\n")
+    # commands ("set the volume to 30", "take a note buy milk") run through the harness: the tool call is shown, and anything that writes asks first
+    session = harness.Session(confirm=harness._ask_yes, log=print)
+    print("Samantha (Turing project assistant). She answers questions and does things on this Mac, and asks before anything that writes. Ctrl+C or 'exit' to quit.\n")
     while True:
         try:
             question = input("You: ").strip()
@@ -284,6 +287,11 @@ def chat():
             break
         if not question or question.lower() in EXIT_WORDS:
             break
+        did = session.ask(question, or_none=True)
+        if did is not None:
+            print(f"Samantha: {did}\n")
+            history.append((question, did))
+            continue
         answer, topic_active, last_subject = answer_turn(question, history, topic_active, last_subject)
         print(f"Samantha: {answer}\n")
         history.append((question, answer))
@@ -297,10 +305,20 @@ def tui():
         """Inner TUI loop that renders and processes input."""
         curses.curs_set(1)
         stdscr.scrollok(True)
+        import harness
         history = []
         topic_active = False
         last_subject = None
-        lines = ["Samantha (Turing project assistant). Ctrl+C or type 'exit' to quit.", ""]
+        lines = ["Samantha (Turing project assistant). She also does things on this Mac and asks before anything that writes. Ctrl+C or type 'exit' to quit.", ""]
+
+        def confirm(name, args):
+            """Ask on the bottom line whether to run a tool that writes or sends."""
+            h, _ = stdscr.getmaxyx()
+            stdscr.addstr(h - 1, 0, f"Run {name}({', '.join(args)})? [y/N] "[: stdscr.getmaxyx()[1] - 1])
+            stdscr.refresh()
+            return stdscr.getkey().lower() == "y"
+
+        session = harness.Session(confirm=confirm, log=lambda line: lines.append(line))
 
         def redraw():
             """Repaint the transcript and the input line."""
@@ -326,6 +344,12 @@ def tui():
             stdscr.erase()
             stdscr.addstr(0, 0, "thinking...")
             stdscr.refresh()
+            did = session.ask(question, or_none=True)
+            if did is not None:
+                history.append((question, did))
+                for l in (f"Samantha: {did}", ""):
+                    lines.extend(l.split("\n"))
+                continue
             answer, topic_active, last_subject = answer_turn(question, history, topic_active, last_subject)
             history.append((question, answer))
             for l in (f"Samantha: {answer}", ""):
