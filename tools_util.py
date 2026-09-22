@@ -1,4 +1,4 @@
-"""Samantha's utility tools: forty-three small things that need no app and no network.
+"""Samantha's utility tools: forty-five small things that need no app and no network.
 
 Math and text (calculate, convert_units, dice, hashes, base64...) are pure Python.
 The system readers (disk_space, uptime, memory_usage...) run one fixed argv each and
@@ -371,12 +371,69 @@ def sleep_display():
     return "Screen off."
 
 
-def reveal_in_finder(path):
-    """Show a file or folder in Finder. Only inside the home folder, never hidden files."""
+def _home_path(path):
+    """The real path of something inside the home folder, or None: outside it, hidden, or not there."""
     home = os.path.realpath(os.path.expanduser("~"))
-    full = os.path.realpath(os.path.expanduser(path.strip()))
+    full = os.path.realpath(os.path.expanduser(path.strip().strip("'\"")))
     rel = os.path.relpath(full, home)
     if rel.startswith("..") or any(part.startswith(".") and part != "." for part in rel.split(os.sep)) or not os.path.exists(full):
+        return None
+    return full
+
+
+def _doc_text(path):
+    """The text of a PDF, Word, RTF, HTML or plain text file, or (None, why). Home folder only, never hidden files."""
+    full = _home_path(path)
+    if not full or not os.path.isfile(full):
+        return None, f"No file {path.strip()} I am allowed to read."
+    ext = os.path.splitext(full)[1].lower()
+    if ext == ".pdf":
+        script = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pdf.swift")
+        text = _sh(["swift", script, full], timeout=90)
+    elif ext in (".docx", ".doc", ".rtf", ".rtfd", ".html", ".htm", ".odt", ".webarchive"):
+        text = _sh(["textutil", "-convert", "txt", "-stdout", full], timeout=30)
+    elif ext in (".txt", ".md", ".csv", ".json", ".log", ""):
+        try:
+            text = open(full, errors="replace").read(400_000)
+        except OSError:
+            text = ""
+    else:
+        return None, f"I do not read {ext} files."
+    text = re.sub(r"[ \t]+", " ", text or "").strip()
+    return (text, None) if text else (None, "I found no text in that file. It may be a scan.")
+
+
+def read_document(path):
+    """Read the text of a PDF, Word, RTF, HTML or text file in the home folder. The first 3000 characters."""
+    text, why = _doc_text(path)
+    return why if why else re.sub(r"\s*\n\s*", " ", text)[:3000]
+
+
+def find_in_document(request):
+    """Find the passages of a document that mention some words. Takes 'words<TAB>path'. Up to three passages."""
+    words, _, path = request.partition("\t")
+    text, why = _doc_text(path)
+    if why:
+        return why
+    want = _words(words)
+    if not want:
+        return "Tell me what to look for."
+    flat = re.sub(r"\s+", " ", text)
+    hits, seen = [], 0
+    for m in re.finditer(r"[^.!?\n]{0,160}(?:" + "|".join(re.escape(w) for w in sorted(want)) + r")[^.!?\n]{0,160}", flat, re.I):
+        if m.start() < seen:
+            continue
+        hits.append(m.group(0).strip())
+        seen = m.end()
+        if len(hits) == 3:
+            break
+    return " | ".join(hits) if hits else f"I do not see {words.strip()} in that document."
+
+
+def reveal_in_finder(path):
+    """Show a file or folder in Finder. Only inside the home folder, never hidden files."""
+    full = _home_path(path)
+    if not full:
         return f"No file or folder {path.strip()} I am allowed to show."
     if not HEADLESS:
         _sh(["open", "-R", full])
@@ -655,7 +712,7 @@ def call_mcp_tool(request):
 TOOLS = (calculate, convert_units, time_in, current_date, days_until, flip_coin, roll_dice, random_number, make_password,
          make_uuid, hash_text, base64_encode, base64_decode, word_count, reverse_text, shout, morse_code, json_pretty,
          is_prime, roman_numeral, tip, disk_space, uptime, memory_usage, cpu_load, ip_address, wifi_name, system_info,
-         copy_to_clipboard, sleep_display, reveal_in_finder, list_shortcuts, run_shortcut, list_mcp_tools, call_mcp_tool, list_tabs, switch_tab, close_tab, read_tab, remember, recall, forget, read_screen)
+         copy_to_clipboard, sleep_display, reveal_in_finder, list_shortcuts, run_shortcut, list_mcp_tools, call_mcp_tool, list_tabs, switch_tab, close_tab, read_tab, remember, recall, forget, read_screen, read_document, find_in_document)
 
 _I = re.I
 # (pattern, tool name, what to hand it). Names, not functions: tools.py looks each one up at call time.
@@ -702,6 +759,8 @@ ROUTES = (
     (re.compile(r"^read tab (\d+(?:\.\d+)?)$|^read (?!(?:this|the current) tab$)(?:the )?(.+?) tab$|^read (?:this|the current) tab$", _I), "read_tab", lambda m: (m.group(1) or m.group(2) or "")),
     (re.compile(r"^(?:read|ocr) (?:my |the )?screen$|^what(?:'s| is) on my screen$|^what does my screen say$", _I), "read_screen", lambda m: ""),
     (re.compile(r"^find (.+) on (?:my |the )?screen$|^is (.+) on (?:my |the )?screen$", _I), "read_screen", lambda m: (m.group(1) or m.group(2))),
+    (re.compile(r"^read (?:the )?(?:document|pdf|doc|file called) (.+)$", _I), "read_document", lambda m: m.group(1)),
+    (re.compile(r"^find (.+?) in (?:the )?(?:document|pdf|doc) (.+)$", _I), "find_in_document", lambda m: m.group(1) + "\t" + m.group(2)),
     (re.compile(r"^remember that (.+)$", _I), "remember", lambda m: m.group(1)),
     (re.compile(r"^(?:recall|what do you remember about|what did i tell you about) (.+)$", _I), "recall", lambda m: m.group(1)),
     (re.compile(r"^forget (?:that |about )?(.+)$", _I), "forget", lambda m: m.group(1)),
@@ -738,7 +797,7 @@ def demo():
     assert copy_to_clipboard("x") == "Copied." and sleep_display() == "Screen off." and reveal_in_finder("~").startswith("Showing")
     assert reveal_in_finder("~/.ssh").startswith("No file") and reveal_in_finder("/etc/passwd").startswith("No file")
     assert run_shortcut("zzz-not-real").startswith("I do not see") and (list_shortcuts().startswith("No Shortcuts") or "Shortcuts:" in list_shortcuts())
-    assert len(TOOLS) == 43 and all(f.__doc__ for f in TOOLS)
+    assert len(TOOLS) == 45 and all(f.__doc__ for f in TOOLS)
     call = lambda name, a: globals()[name](a) if globals()[name].__code__.co_argcount else globals()[name]()
     hit = lambda q: next((call(name, arg(m)) for pat, name, arg in ROUTES if (m := pat.match(q))), None)
     assert hit("calculate 17 * 23") == "391" and hit("convert 5 km to miles") == "5 km is 3.1069 mi."

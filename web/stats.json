@@ -72,8 +72,8 @@
         "documented": 7
       },
       "tools_util.py": {
-        "total": 57,
-        "documented": 57
+        "total": 61,
+        "documented": 61
       },
       "test_memory.py": {
         "total": 11,
@@ -82,6 +82,10 @@
       "test_mcp.py": {
         "total": 12,
         "documented": 12
+      },
+      "test_documents.py": {
+        "total": 9,
+        "documented": 9
       },
       "mcp_server.py": {
         "total": 4,
@@ -124,8 +128,8 @@
         "documented": 3
       },
       "eval/laws.py": {
-        "total": 3,
-        "documented": 3
+        "total": 4,
+        "documented": 4
       },
       "eval/util_diff.py": {
         "total": 2,
@@ -160,7 +164,7 @@
   "measured": {
     "tools": {
       "before": 0,
-      "after": 73
+      "after": 75
     },
     "actions_eval": "77/77",
     "knowledge_sweep": {

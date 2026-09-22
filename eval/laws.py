@@ -22,7 +22,7 @@ READ_ONLY = {"open_app", "open_url", "web_search", "current_tab", "read_page", "
              "list_dir", "read_file", "music", "weather", "timer", "calendar_today", "image_info", "calculate", "convert_units", "time_in",
              "current_date", "days_until", "flip_coin", "roll_dice", "random_number", "make_password", "make_uuid", "hash_text",
              "base64_encode", "base64_decode", "word_count", "reverse_text", "shout", "morse_code", "json_pretty", "is_prime", "roman_numeral",
-             "tip", "list_mcp_tools", "list_tabs", "switch_tab", "read_tab", "disk_space", "uptime", "memory_usage", "cpu_load", "ip_address", "wifi_name", "system_info", "list_shortcuts",
+             "tip", "read_document", "find_in_document", "list_mcp_tools", "list_tabs", "switch_tab", "read_tab", "disk_space", "uptime", "memory_usage", "cpu_load", "ip_address", "wifi_name", "system_info", "list_shortcuts",
              "reveal_in_finder"}
 # Tools whose side effect nobody sees coming. They never reach a model or MCP, whatever tools.NOT_FOR_MODELS says today.
 MUST_HIDE = {"run_shortcut", "copy_to_clipboard", "sleep_display", "call_mcp_tool", "close_tab", "remember", "recall", "forget", "read_screen"}
@@ -65,7 +65,7 @@ def broken():
             if not n.endswith("_image") and n not in ("crop_square", "remove_background")]
 
     for probe in ("~/.ssh/id_rsa", "/etc/passwd", "~/../../etc/passwd"):
-        for fn in (tools.read_file, tools.list_dir, tools_util_reveal()):
+        for fn in (tools.read_file, tools.list_dir, tools_util_reveal(), tools_util_doc()):
             if not re.search(r"(?i)no file|no folder|not allowed|don't read|can't", str(fn(probe))):
                 out.append(f"law 4: {fn.__name__}({probe!r}) was not refused")
 
@@ -88,6 +88,12 @@ def broken():
     if "startDemo(); return;" not in demo:
         out.append("law 7: web/demo.js must not probe localhost for every visitor")
     return out
+
+
+def tools_util_doc():
+    """read_document, which lives in tools_util."""
+    import tools_util
+    return tools_util.read_document
 
 
 def tools_util_reveal():
