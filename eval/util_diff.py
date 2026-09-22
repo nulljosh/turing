@@ -33,12 +33,12 @@ FIXED = [
     "pretty print json {\"a\":[1,2]}", "format json {bad", "prettify json [1, 2, 3]",
     "is 17 prime", "is 91 a prime", "factor 84", "prime factors of 600851475143", "is 1 prime", "factorize 97",
     "roman numerals for 2026", "roman numeral 4", "1999 in roman numerals", "roman numerals for 4000",
-    "tip on 45", "what's the tip on 100", "tip for 12.5", "tip on 0",
+    "tip on 45", "what's the tip on 100", "tip for 12.5", "tip on 0", "tip on -10", "is -7 prime", "factor -12", "roman numerals for -5",
     "days until 2000-01-01", "days until 2999-12-31", "days until soon", "days until 2026-02-31",
     "recall my dog", "forget zebra", "can you please calculate 6*7 for me", "hey calculate 8 + 8", "please convert 10 km to miles",
 ]
 NOT_COMMANDS = ["what is turing", "calculating machines are cool", "roll call", "hash browns are good", "reverse psychology"]
-SHAPES = {"flip a coin": r"(Heads|Tails)\.", "roll 2d6": r"\d+ \+ \d+ = \d+", "roll a die": r"[1-6]", "roll d20": r"\d+",
+SHAPES = {"flip a coin": r"(Heads|Tails)\.", "roll 2d6": r"\d+ \+ \d+ = \d+", "roll a die": r"[1-6]", "roll a d20": r"\d+", "roll d20": r"\d+",
           "random number between 5 and 9": r"[5-9]", "make me a password": r".{16}", "generate a strong password of 24 characters": r".{24}",
           "make a uuid": r"[0-9a-f-]{36}", "time in tokyo": r"It is \d+:\d\d [AP]M on \w+ in Tokyo\.", "what day is it": r"It is \w+, \w+ \d+, \d{4}\.",
           "days until christmas": r"\d+ days? until December 25, \d{4}\.|That is today\.", "roll 500d6": r"Up to 100 dice.*"}

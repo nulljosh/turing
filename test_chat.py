@@ -178,6 +178,47 @@ def test_an_answer_that_only_echoes_the_question_is_not_an_answer():
     assert kw("The sky looks blue because of Rayleigh scattering") - kw("what color is the sky") - ask._ECHO_FILLER
 
 
+def test_small_talk_answers_without_a_model_and_leaves_commands_alone():
+    """Verify a greeting or "what can you do" gets a real reply, and a command that starts like one still reaches the tools."""
+    import ask, tools
+    assert ask.local_answer("hi")[0].startswith("Hi.")
+    assert ask.local_answer("Hello there!")[1] == "small talk"
+    assert f"{len(tools.TOOLS)} tools" in ask.local_answer("what can you do?")[0]
+    assert "web search" in ask.local_answer("list your tools")[0] and ask.small_talk("tell me about your tools")
+    for command in ("hey calculate 8 + 8", "help me find a file", "thanks for nothing, who is alan turing"):
+        assert ask.small_talk(command) is None
+
+
+def test_a_missing_model_is_a_reply_not_a_crash():
+    """Verify a project question the model must write is answered honestly when the model is not installed."""
+    import chat
+    mock = __import__("unittest.mock").mock
+    with mock.patch.object(chat, "search", return_value=[{"text": "ctx"}]), mock.patch.object(chat, "try_extract", return_value=None), \
+         mock.patch.object(chat, "faq_match", return_value=None), mock.patch.object(chat, "subprocess") as sp:
+        sp.run.side_effect = FileNotFoundError(2, "No such file", ".venv/bin/mlx_lm.generate")
+        sp.SubprocessError = __import__("subprocess").SubprocessError
+        answer, _, _ = chat.answer_turn("write a commit message for the turing picker", [], True)
+    assert answer == chat.MODEL_DOWN
+
+
+def test_a_broken_tool_through_ask_is_a_reply():
+    """Verify ask.py and serve.py, which reach the tools through local_answer, report a missing command instead of crashing."""
+    import ask
+    mock = __import__("unittest.mock").mock
+    with mock.patch("subprocess.run", side_effect=FileNotFoundError(2, "No such file", "osascript")):
+        answer, source = ask.local_answer("set the volume to 30")
+    assert answer == "I tried that, but it did not work: osascript is not on this machine." and source == "tools"
+
+
+def test_any_failure_in_the_answer_chain_keeps_the_chat_alive():
+    """Verify safe_turn turns an unexpected error into a reply and keeps the conversation state."""
+    import chat
+    mock = __import__("unittest.mock").mock
+    with mock.patch.object(chat, "answer_turn", side_effect=RuntimeError("boom")):
+        answer, topic, subject = chat.safe_turn("anything", [], True, "steve jobs")
+    assert "boom" in answer and topic is True and subject == "steve jobs"
+
+
 if __name__ == "__main__":
     tests = [v for k, v in list(globals().items()) if k.startswith("test_")]
     for t in tests:

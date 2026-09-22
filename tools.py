@@ -19,9 +19,11 @@ import re
 import shutil
 import subprocess
 import sys
+import unicodedata
 import urllib.parse
 import urllib.request
 import tools_util
+import tools_image
 from tools_image import remove_background, upscale_image, enhance_image, grayscale_image, rotate_image, flip_image, resize_image, crop_square, convert_image, image_info
 
 AGENT_MODEL = "qwen3:1.7b"  # 8B was right but 7.6GB and minutes per run; 1.7B is right in 5s once the harness prefetches
@@ -69,7 +71,11 @@ def _app_match(name):
     if key == "chrome":
         key = "google chrome"
     # exact, then unique-prefix: "pixelmator" finds "Pixelmator Pro"
-    return apps.get(key) or next((v for k, v in sorted(apps.items()) if k.startswith(key)), None)
+    found = apps.get(key) or next((v for k, v in sorted(apps.items()) if k.startswith(key)), None)
+    # "photoshop" is what people call any photo editor: without Photoshop, it means the one this Mac has
+    if not found and key in ("photoshop", "adobe photoshop"):
+        return _app_match("pixelmator")
+    return found
 
 
 def open_app(name):
@@ -87,7 +93,7 @@ def _url(target):
     if t.lower() in SITES:
         return SITES[t.lower()]
     if re.match(r"^https?://", t, re.I):
-        return t
+        return t if re.match(r"^https?://[^\s/]", t, re.I) else None
     if re.match(r"^[\w-]+(\.[\w-]+)+(/\S*)?$", t):
         return "https://" + t
     return None
@@ -95,6 +101,8 @@ def _url(target):
 
 def open_url(target):
     """Open a website in Chrome for Joshua to see. Returns no page contents. Takes a URL, a bare domain, or a known site name."""
+    if re.match(r"^(?:https?:)?/*:?/*$", target.strip(), re.I):
+        return "That address is empty. Give me a site, like github.com."
     url = _url(target)
     if not url:
         return web_search(target)
@@ -102,10 +110,45 @@ def open_url(target):
     return f"Opened {url} in Chrome."
 
 
+SITE_SEARCH = {
+    "youtube": "https://www.youtube.com/results?search_query=", "amazon": "https://www.amazon.com/s?k=",
+    "reddit": "https://www.reddit.com/search/?q=", "github": "https://github.com/search?q=",
+    "wikipedia": "https://en.wikipedia.org/w/index.php?search=", "google maps": "https://www.google.com/maps/search/",
+    "maps": "https://www.google.com/maps/search/",
+}
+_SITE_NAMES = "|".join(sorted(SITE_SEARCH, key=len, reverse=True))
+
+
+def site_search(site, query):
+    """The address of a search on one site: "search youtube for lofi" is YouTube's own results page, not a web search."""
+    return SITE_SEARCH[site.lower()] + urllib.parse.quote_plus(query.strip())
+
+
+def search_url(query):
+    """The address of a web search for this query."""
+    return "https://duckduckgo.com/?q=" + urllib.parse.quote_plus(query)
+
+
 def web_search(query):
-    """Open a web search in Chrome for Joshua to look at. Returns NO results to you. To learn what a page says, use read_page."""
-    _run(["open", "-a", BROWSER, "https://duckduckgo.com/?q=" + urllib.parse.quote_plus(query)])
-    return f"Searching for {query!r} in Chrome."
+    """Open a web search in Chrome for Joshua. A question ("how tall is everest") is also answered, with its source, from
+    the same lookup her questions use; anything else returns no results to you. To learn what a page says, use read_page."""
+    _run(["open", "-a", BROWSER, search_url(query)])
+    opened = f"Searching for {query!r} in Chrome."
+    answer = search_answer(query)
+    return f"{answer}\n{opened}" if answer else opened
+
+
+def search_answer(query):
+    """The answer to a searched question and where it came from, or None: a search should answer, not only open a tab.
+    Only a real question is looked up ("best pizza in vancouver" is a list to browse, not a fact). Never fails the search."""
+    try:
+        import ask
+        if not ask.is_question(query):
+            return None
+        text, source = ask.general_knowledge(query, hands=False)
+    except Exception:
+        return None
+    return f"{text} (Source: {source}.)" if text and isinstance(source, str) and source else None
 
 
 def current_tab():
@@ -160,7 +203,7 @@ def current_volume():
 
 def battery():
     """Battery or power status of this Mac."""
-    return _run(["pmset", "-g", "batt"]).splitlines()[-1].strip()
+    return (_run(["pmset", "-g", "batt"]).splitlines() or ["No battery reading on this Mac."])[-1].strip()
 
 
 def say(text):
@@ -482,7 +525,7 @@ _ROUTES = (
     (re.compile(r"^(?:skip|next)(?: (?:this |the )?(?:song|track|one))?$", re.I), lambda m: music("next")),
     (re.compile(r"^(?:previous|last|go back a|go back one)(?: (?:song|track))?$", re.I), lambda m: music("previous")),
     (re.compile(r"^what(?:'s| is) (?:this song|playing)\b|^what song is (?:this|playing)", re.I), lambda m: music("playing")),
-    (re.compile(r"^(?:what(?:'s| is) the |how(?:'s| is) the )?weather\b(?: like)?(?: today| outside| right now| now)*(?: (?:in|for) (.+))?$", re.I),
+    (re.compile(r"^(?:what(?:'s| is) the |how(?:'s| is) the |(?:look up|check|get) the )?weather\b(?: like)?(?: today| outside| right now| now)*(?: (?:in|for) (.+))?$", re.I),
      lambda m: weather(m.group(1) or "")),
     (re.compile(r"^(?:set |start )?(?:a |an )?(?:timer (?:for )?(\d+(?:\.\d+)?) ?(s|m|h)\w*|(\d+(?:\.\d+)?)[ -]?(s|m|h)\w* timer)$", re.I),
      lambda m: timer(float(m.group(1) or m.group(3)) * _UNIT[(m.group(2) or m.group(4)).lower()])),
@@ -505,7 +548,12 @@ _ROUTES = (
     (re.compile(r"^(?:read|show|cat)(?: me)? (?:the )?file (.+)$", re.I), lambda m: read_file(m.group(1))),
     (re.compile(r"^(?:take a |grab a )?screenshot\b", re.I), lambda m: screenshot()),
     (re.compile(r"^what(?:'s| is) (?:on |in )?(?:my |the )?(?:current |open )?(?:tab|chrome|browser)\b", re.I), lambda m: current_tab()),
-    (re.compile(r"^(?:search|google|look up)(?: the web)?(?: for)? (.+)$", re.I), lambda m: web_search(m.group(1))),
+    (re.compile(rf"^(?:search|look up|find) (?:on )?({_SITE_NAMES}) for (.+)$|^(?:search|look up) (.+) on ({_SITE_NAMES})$", re.I),
+     lambda m: open_url(site_search(m.group(1) or m.group(4), m.group(2) or m.group(3)))),
+    (re.compile(rf"^(?:open |go to |pull up )?({_SITE_NAMES}) and search(?: it)?(?: for)? (.+)$", re.I), lambda m: open_url(site_search(m.group(1), m.group(2)))),
+    (re.compile(r"^(?:search|google|look up)(?: search)?(?: (?:the web|online|the internet|on google|google))?(?: for)? (.+)$", re.I), lambda m: web_search(m.group(1))),
+    (re.compile(r"^(?:read|summari[sz]e|fetch) (?:me )?(?:the )?(?:page |site |website )?(?:at )?(https?://\S+|[\w-]+(?:\.[\w-]+)+(?:/\S*)?)$|^what does (https?://\S+|[\w-]+(?:\.[\w-]+)+(?:/\S*)?) say$", re.I),
+     lambda m: read_page(m.group(1) or m.group(2))),
     (re.compile(r"^(?:open|launch|start) (?:up )?(?:chrome|the browser) (?:and |then )?(?:go to|open|visit|load) (.+)$", re.I), lambda m: open_url(m.group(1))),
     (re.compile(r"^(?:go to|visit|browse to|pull up) (.+)$", re.I), lambda m: open_url(m.group(1))),
     (re.compile(r"^(?:open|launch|start) (?:up )?(.+)$", re.I),
@@ -516,12 +564,17 @@ _ROUTES = (
 
 
 def _util_route(name, arg):
-    """A tools_util route as a tools.py one. The function is looked up on this module at call
+    """A tools_util or tools_image route as a tools.py one. The function is looked up on this module at call
     time, so eval/actions.py can swap it for a recorder like every other tool."""
-    takes = getattr(tools_util, name).__code__.co_argcount
+    takes = TOOLS[name].__code__.co_argcount
     return lambda m: globals()[name](arg(m)) if takes else globals()[name]()
 
 
+# the catch-all routes whose argument is any text: a sentence they swallow may really be several commands
+_GREEDY = {_ROUTES[-2][0], _ROUTES[-1][0]}
+
+# the image tools before the utilities, so "convert cat.png to jpg" is an image and never a unit conversion
+_ROUTES = _ROUTES + tuple((pat, _util_route(name, arg)) for pat, name, arg in tools_image.ROUTES)
 _ROUTES = _ROUTES + tuple((pat, _util_route(name, arg)) for pat, name, arg in tools_util.ROUTES)  # 31 utility tools: math, text, dice, this Mac's vitals
 
 # anything past the first verb phrase means more than one step: that is agent() work
@@ -538,9 +591,17 @@ _LEAD = re.compile(r"^(?:(?:hey|ok|okay|yo|samantha|please|now|just)[, ]+)*"
 _TAIL = re.compile(r"(?:[, ]+(?:please|for me|real quick|now|thanks|thank you))+$", re.I)
 
 
+# invisible and look-alike characters: a full-width "ｏｐｅｎ" is "open", and a control or direction-override
+# character never rides into a note, a reminder or a search
+_INVISIBLE = re.compile(r"[\x00-\x1f\x7f\u200b-\u200f\u202a-\u202e\u2060-\u2069\ufeff]")
+_DANGLING = re.compile(r"(?:[,;]?\s+(?:and then|and|then))+$", re.I)  # "open youtube and" is just "open youtube"
+_CONTRACT = re.compile(r"\b(what|how|where|who)s\b", re.I)  # people type "whats the weather", the routes say "what's"
+
+
 def _bare(query):
     """Strip politeness markers (please, can you, etc.) from a command."""
-    q = query.strip().rstrip(".!?")
+    q = _INVISIBLE.sub("", unicodedata.normalize("NFKC", query)).strip().rstrip(".!?")
+    q = _DANGLING.sub("", _CONTRACT.sub(r"\1's", q))
     return _TAIL.sub("", _LEAD.sub("", q, count=1)).strip()
 
 
@@ -767,11 +828,77 @@ def plan(query):
     return calls
 
 
+_STEP = re.compile(r"\s*(?:,? and then |,? then |,? and |; )\s*", re.I)
+_THEN = re.compile(r"\bthen\b|;", re.I)
+_TELL = re.compile(r"^(?:tell|show|give|read) me (?:my |the )?|^(?:also|and) ", re.I)
+
+
+def _route_of(command):
+    """The pattern of the first route that takes this bare command, or None."""
+    return next((p for p, _ in _ROUTES if p.match(command)), None)
+
+
+def chain(query, log=None, confirm=None):
+    """Several plain commands in one sentence, run in order with no model: "open youtube and set the volume
+    to 20". Only when every step routes on its own; one step the router does not know and it is agent() work.
+    Each step is shown, and a write still waits for its own yes. Returns the replies, or None."""
+    whole = _bare(query.splitlines()[-1])
+    # "then" always means another step. A plain "and" may be part of one: a real route for the whole
+    # sentence wins ("open chrome and go to github.com", "remind me to call mom and dad")
+    if not _THEN.search(whole) and _route_of(whole) not in (None, *_GREEDY):
+        return None
+    parts = [_TELL.sub("", p).strip() for p in _STEP.split(whole)]
+    if len(parts) < 2 or not all(parts):
+        return None
+    # a later step that only a catch-all takes ("open the garage") is more likely words than a command
+    if any(_route_of(p) in _GREEDY for p in parts[1:]):
+        return None
+    steps = [plan(p) for p in parts]
+    if not all(len(s) == 1 for s in steps):
+        return None
+    replies = []
+    for part, [(name, args)] in zip(parts, steps):
+        if log:
+            log(f"  [{name}({', '.join(args)})]")
+        if confirm and name in WRITES and not confirm(name, args):
+            replies.append(f"Skipped {name}.")
+            continue
+        replies.append(act(part))
+    return "\n".join(replies)
+
+
+# a command with its object missing: ask for it instead of guessing ("search for" searched for the word "for")
+_INCOMPLETE = (
+    (re.compile(r"^(?:open|launch|start|go to|visit|browse to|pull up)(?: up)?$", re.I), "Open what? Name an app or a site."),
+    (re.compile(r"^(?:search|google|look up|search for|search the web for|look for)$", re.I), "Search for what?"),
+    (re.compile(r"^remind me(?: to| that| about)?$|^(?:set|add|create|make) (?:a )?reminder(?: to)?$", re.I), "Remind you of what?"),
+    (re.compile(r"^(?:take|make|write|add|new) (?:a |me a )?(?:new )?note(?: that says| saying)?$|^note$", re.I), "What should the note say?"),
+    (re.compile(r"^(?:set |start )?(?:a |an )?timer(?: for)?$", re.I), "For how long?"),
+    (re.compile(r"^say$", re.I), "Say what?"),
+)
+
+
+def missing(query):
+    """What to ask back when a command has no object ("open", "remind me to"), or None."""
+    q = _bare(query)
+    return next((ask for pattern, ask in _INCOMPLETE if pattern.match(q)), None)
+
+
 def do(query, log=None, confirm=None):
     """The one entry point. The regex router first: instant, exact, and it has
-    never fired the wrong tool. What it does not recognise goes to her own
-    head, which understands phrasings nobody wrote a rule for. Multi-step work
-    goes to agent(). Anything else is not a command: None."""
+    never fired the wrong tool. Several plain commands in one sentence run in
+    order. What it does not recognise goes to her own head, which understands
+    phrasings nobody wrote a rule for. Multi-step work goes to agent().
+    Anything else is not a command: None."""
+    if not query.strip():
+        return None
+    ask_back = missing(query)
+    if ask_back:
+        return ask_back
+    # before the single routes, whose free-text arguments ("open (.+)") would swallow "and set the volume to 20"
+    steps = chain(query, log=log, confirm=confirm)
+    if steps:
+        return steps
     if confirm or log:
         for name, args in plan(query):
             if log:

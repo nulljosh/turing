@@ -309,5 +309,61 @@ class TestImageTools(unittest.TestCase):
                 os.remove(test_file)
 
 
+class TestEveryToolScript(unittest.TestCase):
+    """Pins the exact AppleScript step, export format, timeout and reply of every image tool, so a refactor cannot drift."""
+
+    CASES = [
+        (tools_image.remove_background, "{p}", "remove background d", "nobg.png", "PNG", 120, "Background removed"),
+        (tools_image.upscale_image, "{p}", "super resolution d", "upscaled.png", "PNG", 300, "Upscaled 3x"),
+        (tools_image.enhance_image, "{p}", "enhance layer 1 of d", "enhanced.png", "PNG", 120, "Enhanced"),
+        (tools_image.grayscale_image, "{p}", "set the black and white of the color adjustments of layer 1 of d to true", "grayscale.png", "PNG", 120, "Converted to grayscale"),
+        (tools_image.rotate_image, "{p} by 180", "rotate 180 d", "rotated.png", "PNG", 120, "Rotated 180 degrees"),
+        (tools_image.rotate_image, "{p}", "rotate left d", "rotated.png", "PNG", 120, "Rotated 90 degrees"),
+        (tools_image.flip_image, "{p} vertical", "flip vertically d", "flipped.png", "PNG", 120, "Flipped vertical"),
+        (tools_image.flip_image, "{p}", "flip horizontally d", "flipped.png", "PNG", 120, "Flipped horizontal"),
+        (tools_image.resize_image, "{p} to 500", "resize image d width 500 height 250", "resized.png", "PNG", 120, "Resized to 500x250"),
+        (tools_image.crop_square, "{p}", "crop d bounds {250, 0, 500, 500} with delete mode", "square.png", "PNG", 120, "Cropped to 500x500 square"),
+        (tools_image.convert_image, "{p} to jpg", None, "converted.jpg", "JPEG", 120, "Converted to JPG"),
+    ]
+
+    def test_every_tool(self):
+        """Each tool sends one open, its step, one export and a close without saving, and says where the result went."""
+        path = os.path.join(os.path.expanduser("~"), "samantha-test-every.png")
+        with open(path, "wb") as f:
+            f.write(b"fake png")
+        try:
+            for fn, args, step, out, fmt, timeout, said in self.CASES:
+                with self.subTest(fn=fn.__name__, args=args), patch("tools_image.pxm.build_lock"), patch("tools_image.pxm.hide_app"), \
+                     patch("tools_image.pxm.run_applescript") as run, patch("tools_image._get_image_dimensions", return_value=(1000, 500)):
+                    result = fn(args.format(p=path))
+                    script, kwargs = run.call_args[0][0], run.call_args[1]
+                    lines = [l.strip() for l in script.splitlines()]
+                    self.assertEqual(lines[0], 'tell application "Pixelmator Pro"')
+                    self.assertTrue(lines[1].startswith("set d to open (POSIX file"))
+                    self.assertEqual(lines[2:-3], [step] if step else [])
+                    self.assertTrue(lines[-3].startswith("export d to (POSIX file") and lines[-3].endswith(f"samantha-{out}\") as {fmt}"), lines[-3])
+                    self.assertEqual(lines[-2:], ["close d saving no", "end tell"])
+                    self.assertEqual(kwargs["timeout"], timeout)
+                    # nothing was really exported, so the reply is the honest failure, never a claimed success
+                    self.assertTrue(result.startswith("Failed"), result)
+                with patch("tools_image.pxm.build_lock"), patch("tools_image.pxm.hide_app"), patch("tools_image.pxm.run_applescript"), \
+                     patch("tools_image._get_image_dimensions", return_value=(1000, 500)), patch("os.path.exists", return_value=True), patch("os.remove"):
+                    self.assertTrue(fn(args.format(p=path)).startswith(said + ", saved to "), fn.__name__)
+        finally:
+            os.remove(path)
+
+    def test_a_pixelmator_error_is_said_not_raised(self):
+        """A Pixelmator failure comes back as its message."""
+        path = os.path.join(os.path.expanduser("~"), "samantha-test-err.png")
+        with open(path, "wb") as f:
+            f.write(b"fake png")
+        try:
+            with patch("tools_image.pxm.PxmError", MockPxmError), patch("tools_image.pxm.build_lock"), patch("tools_image.pxm.hide_app"), \
+                 patch("tools_image.pxm.run_applescript", side_effect=MockPxmError("Pixelmator Pro is not installed")):
+                self.assertEqual(tools_image.enhance_image(path), "Pixelmator Pro is not installed")
+        finally:
+            os.remove(path)
+
+
 if __name__ == "__main__":
     unittest.main()

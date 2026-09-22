@@ -18,14 +18,28 @@
     var key = name.trim().toLowerCase().replace(/^(?:the |my )|(?: app)$/g, "");
     if (key === "chrome") key = "google chrome";
     var sorted = APPS.slice().sort();
-    return sorted.find(function (a) { return a.toLowerCase() === key; }) ||
-           sorted.find(function (a) { return a.toLowerCase().indexOf(key) === 0; }) || null;
+    var found = sorted.find(function (a) { return a.toLowerCase() === key; }) ||
+                sorted.find(function (a) { return a.toLowerCase().indexOf(key) === 0; }) || null;
+    // "photoshop" is what people call any photo editor: without Photoshop, it means the one this Mac has
+    return !found && (key === "photoshop" || key === "adobe photoshop") ? appMatch("pixelmator") : found;
+  }
+
+  var SITE_SEARCH = {
+    "youtube": "https://www.youtube.com/results?search_query=", "amazon": "https://www.amazon.com/s?k=",
+    "reddit": "https://www.reddit.com/search/?q=", "github": "https://github.com/search?q=",
+    "wikipedia": "https://en.wikipedia.org/w/index.php?search=", "google maps": "https://www.google.com/maps/search/",
+    "maps": "https://www.google.com/maps/search/"
+  };
+  var SITE_NAMES = Object.keys(SITE_SEARCH).sort(function (a, b) { return b.length - a.length; }).join("|");
+  // same as tools.site_search: quote_plus spells a space "+"
+  function siteSearch(site, query) {
+    return SITE_SEARCH[site.toLowerCase()] + encodeURIComponent(query.trim()).replace(/%20/g, "+");
   }
 
   function urlOf(target) {
     var t = target.trim().replace(/^["']+|["']+$/g, "");
     if (SITES[t.toLowerCase()]) return SITES[t.toLowerCase()];
-    if (/^https?:\/\//i.test(t)) return t;
+    if (/^https?:\/\//i.test(t)) return /^https?:\/\/[^\s\/]/i.test(t) ? t : null;
     if (/^[\w-]+(\.[\w-]+)+(\/\S*)?$/.test(t)) return "https://" + t;
     return null;
   }
@@ -38,7 +52,7 @@
     [/^(?:skip|next)(?: (?:this |the )?(?:song|track|one))?$/i, function () { return ["music", "next"]; }],
     [/^(?:previous|last|go back a|go back one)(?: (?:song|track))?$/i, function () { return ["music", "previous"]; }],
     [/^what(?:'s| is) (?:this song|playing)\b|^what song is (?:this|playing)/i, function () { return ["music", "playing"]; }],
-    [/^(?:what(?:'s| is) the |how(?:'s| is) the )?weather\b(?: like)?(?: today| outside| right now| now)*(?: (?:in|for) (.+))?$/i,
+    [/^(?:what(?:'s| is) the |how(?:'s| is) the |(?:look up|check|get) the )?weather\b(?: like)?(?: today| outside| right now| now)*(?: (?:in|for) (.+))?$/i,
      function (m) { return ["weather", m[1] || ""]; }],
     [/^(?:set |start )?(?:a |an )?(?:timer (?:for )?(\d+(?:\.\d+)?) ?(s|m|h)\w*|(\d+(?:\.\d+)?)[ -]?(s|m|h)\w* timer)$/i,
      function (m) { return ["timer", String(parseFloat(m[1] || m[3]) * UNIT[(m[2] || m[4]).toLowerCase()])]; }],
@@ -61,7 +75,12 @@
     [/^(?:read|show|cat)(?: me)? (?:the )?file (.+)$/i, function (m) { return ["read_file", m[1]]; }],
     [/^(?:take a |grab a )?screenshot\b/i, function () { return ["screenshot", ""]; }],
     [/^what(?:'s| is) (?:on |in )?(?:my |the )?(?:current |open )?(?:tab|chrome|browser)\b/i, function () { return ["current_tab", ""]; }],
-    [/^(?:search|google|look up)(?: the web)?(?: for)? (.+)$/i, function (m) { return ["web_search", m[1]]; }],
+    [new RegExp("^(?:search|look up|find) (?:on )?(" + SITE_NAMES + ") for (.+)$|^(?:search|look up) (.+) on (" + SITE_NAMES + ")$", "i"),
+     function (m) { return ["open_url", siteSearch(m[1] || m[4], m[2] || m[3])]; }],
+    [new RegExp("^(?:open |go to |pull up )?(" + SITE_NAMES + ") and search(?: it)?(?: for)? (.+)$", "i"), function (m) { return ["open_url", siteSearch(m[1], m[2])]; }],
+    [/^(?:search|google|look up)(?: search)?(?: (?:the web|online|the internet|on google|google))?(?: for)? (.+)$/i, function (m) { return ["web_search", m[1]]; }],
+    [/^(?:read|summari[sz]e|fetch) (?:me )?(?:the )?(?:page |site |website )?(?:at )?(https?:\/\/\S+|[\w-]+(?:\.[\w-]+)+(?:\/\S*)?)$|^what does (https?:\/\/\S+|[\w-]+(?:\.[\w-]+)+(?:\/\S*)?) say$/i,
+     function (m) { return ["read_page", m[1] || m[2]]; }],
     [/^(?:open|launch|start) (?:up )?(?:chrome|the browser) (?:and |then )?(?:go to|open|visit|load) (.+)$/i, function (m) { return ["open_url", m[1]]; }],
     [/^(?:go to|visit|browse to|pull up) (.+)$/i, function (m) { return ["open_url", m[1]]; }],
     [/^(?:open|launch|start) (?:up )?(.+)$/i, function (m) {
@@ -69,13 +88,16 @@
       return urlOf(g) || (g.trim().indexOf(" ") >= 0 && !appMatch(g)) ? ["open_url", g] : ["open_app", g];
     }]
   ];
+  // the catch-all routes whose argument is any text, same as tools._GREEDY
+  var GREEDY = [ROUTES[ROUTES.length - 2][0], ROUTES[ROUTES.length - 1][0]];
   var MULTISTEP = /\b(?:and (?:then )?(?:tell|read|find|summar|poke|look|check|see|click)|poke around|then )/i;
   var ACTION = /^(?:open|launch|start|go to|visit|browse|pull up|search|google|look up|poke around|take a|grab a|screenshot|make|design|draw|play|pause|skip|remind me|set a)\b/i;
   var LEAD = /^(?:(?:hey|ok|okay|yo|samantha|please|now|just)[, ]+)*(?:(?:can|could|would|will) you (?:please )?|i (?:want|need|would like|'d like) (?:you )?to |let's |go ahead and )?(?:please )?/i;
   var TAIL = /(?:[, ]+(?:please|for me|real quick|now|thanks|thank you))+$/i;
 
   function bare(query) {
-    return query.trim().replace(/[.!?]+$/, "").replace(LEAD, "").replace(TAIL, "").trim();
+    return query.normalize("NFKC").replace(/[\x00-\x1f\x7f\u200b-\u200f\u202a-\u202e\u2060-\u2069\ufeff]/g, "").trim().replace(/[.!?]+$/, "")
+      .replace(/\b(what|how|where|who)s\b/gi, "$1's").replace(/(?:[,;]?\s+(?:and then|and|then))+$/i, "").replace(LEAD, "").replace(TAIL, "").trim();
   }
 
   // {tool, arg} for one exact command, {agent: true} for multi-step work, null for anything that is not a command
@@ -87,6 +109,24 @@
       if (m) { var r = ROUTES[i][1](m); return { tool: r[0], arg: r[1] }; }
     }
     return ACTION.test(q) ? { agent: true } : null;
+  }
+
+  function routeOf(command) {
+    for (var i = 0; i < ROUTES.length; i++) if (ROUTES[i][0].test(command)) return ROUTES[i][0];
+    return null;
+  }
+
+  // same rule as tools.chain: the steps of "open youtube and set the volume to 20", or null when it is one command
+  function chain(query) {
+    var whole = bare(query.split("\n").pop());
+    if (!/\bthen\b|;/i.test(whole) && routeOf(whole) && GREEDY.indexOf(routeOf(whole)) < 0) return null;
+    var parts = whole.split(/\s*(?:,? and then |,? then |,? and |; )\s*/i).map(function (p) {
+      return p.replace(/^(?:tell|show|give|read) me (?:my |the )?|^(?:also|and) /i, "").trim();
+    });
+    if (parts.length < 2 || !parts.every(Boolean)) return null;
+    if (parts.slice(1).some(function (p) { return GREEDY.indexOf(routeOf(p)) >= 0; })) return null;
+    var steps = parts.map(function (p) { return route(p); });
+    return steps.every(function (r) { return r && r.tool; }) ? steps : null;
   }
 
   // ---- the page itself is a thing she can act on. Landing page only: tools.py has no page. ----
@@ -439,7 +479,7 @@
   };
   U.tip = function (amount) {
     var bill = parseFloat(String(amount).replace("$", ""));
-    if (isNaN(bill)) return "Give me the bill amount.";
+    if (!isFinite(bill) || bill < 0) return "Give me the bill amount.";
     return "Tip on " + bill.toFixed(2) + ": " + [15, 18, 20].map(function (p) { return p + "% is " + (bill * p / 100).toFixed(2); }).join(", ") + ".";
   };
   // memory across visits: the same three tools as tools_util.py, kept in this browser's localStorage instead of a file
@@ -475,15 +515,36 @@
     .forEach(function (name) { U[name] = function () { return REAL_MAC; }; });
   U.NEEDS_MAC = ["disk_space", "uptime", "memory_usage", "cpu_load", "ip_address", "wifi_name", "system_info", "copy_to_clipboard", "sleep_display", "reveal_in_finder", "list_shortcuts", "run_shortcut", "list_mcp_tools", "call_mcp_tool", "list_tabs", "switch_tab", "close_tab", "read_tab", "read_screen", "read_document", "find_in_document", "ask_document", "ask_screen"];
 
+  // the image tools, same table as tools_image.ROUTES and ahead of the utilities. The stand-in Mac has no photos on disk.
+  var P = "(?:the )?(?:image |photo |picture |pic )?(?:at )?(\\S+\\.(?:jpe?g|png|heic|webp|tiff?))";
+  ROUTES.push.apply(ROUTES, [
+    [new RegExp("^(?:make|turn|convert) " + P + " (?:into )?(?:black and white|black & white|b&w|grayscale|greyscale)$|^(?:grayscale|greyscale|desaturate) " + P + "$", "i"),
+     function (m) { return ["grayscale_image", m[1] || m[2]]; }],
+    [new RegExp("^(?:remove|cut out|erase|delete|take out) the background (?:from|of|in|on) " + P + "$", "i"), function (m) { return ["remove_background", m[1]]; }],
+    [new RegExp("^(?:upscale|enlarge|blow up) " + P + "$", "i"), function (m) { return ["upscale_image", m[1]]; }],
+    [new RegExp("^(?:enhance|auto[- ]?enhance|fix up|improve) " + P + "$", "i"), function (m) { return ["enhance_image", m[1]]; }],
+    [new RegExp("^rotate " + P + "(?: by (\\d+)(?: degrees)?)?$", "i"), function (m) { return ["rotate_image", m[1] + " by " + (m[2] || 90)]; }],
+    [new RegExp("^flip " + P + "(?: (horizontally|vertically|horizontal|vertical|upside down))?$", "i"),
+     function (m) { return ["flip_image", m[1] + (/^(?:vertically|vertical|upside down)$/i.test(m[2] || "") ? " vertical" : "")]; }],
+    [new RegExp("^(?:resize|scale) " + P + " to (\\d+)(?: ?px| pixels)?(?: wide)?$", "i"), function (m) { return ["resize_image", m[1] + " to " + m[2]]; }],
+    [new RegExp("^(?:crop|square up) " + P + "(?: (?:to |into )?(?:a )?square)?$", "i"), function (m) { return ["crop_square", m[1]]; }],
+    [new RegExp("^convert " + P + " (?:to|into) (?:a |an )?(png|jpe?g|webp|heic|tiff?|pdf)$", "i"), function (m) { return ["convert_image", m[1] + " to " + m[2]]; }],
+    [new RegExp("^(?:how big is " + P + "|(?:image )?(?:info|size|dimensions) (?:for|of|on) " + P + ")$", "i"), function (m) { return ["image_info", m[1] || m[2]]; }]
+  ]);
+  U.read_page = function () { return "Reading a page happens on her real Mac, which fetches it. Here I can open it for you: say \"go to\" and the address."; };
+  var NO_PHOTOS = "That one edits a photo on your real Mac in Pixelmator, and this stand-in has no photos on disk. Ask me to draw something instead.";
+  ["grayscale_image", "remove_background", "upscale_image", "enhance_image", "rotate_image", "flip_image", "resize_image", "crop_square", "convert_image", "image_info"]
+    .forEach(function (name) { U[name] = function () { return NO_PHOTOS; }; U.NEEDS_MAC.push(name); });
+
   ROUTES.push.apply(ROUTES, [
     [/^(?:calc(?:ulate)?|compute|work out|math)[: ]+(.+)$/i, function (m) { return ["calculate", m[1]]; }],
-    [/^(?:convert )?(\d+) (?:to|in|into) roman(?: numerals?)?$/i, function (m) { return ["roman_numeral", m[1]]; }],
+    [/^(?:convert )?(-?\d+) (?:to|in|into) roman(?: numerals?)?$/i, function (m) { return ["roman_numeral", m[1]]; }],
     [/^convert (.+)$/i, function (m) { return ["convert_units", m[1]]; }],
     [/^what time is it in (.+)$|^(?:what(?:'s| is) )?(?:the )?time in (.+)$/i, function (m) { return ["time_in", (m[1] || m[2])]; }],
     [/^what(?:'s| is)(?: the)? date(?: today)?$|^what day is it(?: today)?$|^today'?s date$/i, function (m) { return ["current_date", ""]; }],
     [/^(?:how many )?days? (?:until|till|to) (.+)$|^how long (?:until|till) (.+)$/i, function (m) { return ["days_until", (m[1] || m[2])]; }],
     [/^(?:flip|toss) a coin$/i, function (m) { return ["flip_coin", ""]; }],
-    [/^roll (\d*d\d+)$/i, function (m) { return ["roll_dice", m[1]]; }],
+    [/^roll (?:a |an )?(\d*d\d+)$/i, function (m) { return ["roll_dice", m[1]]; }],
     [/^roll (?:a |the )?(?:dice|die)$/i, function (m) { return ["roll_dice", "1d6"]; }],
     [/^(?:pick |give me |generate )?(?:a )?random number(?: (?:between|from) (.+))?$/i, function (m) { return ["random_number", (m[1] || "")]; }],
     [/^(?:generate|make|create|give me)(?: me)? (?:a |an )?(?:strong |secure |random )?password(?:(?: of| with)? (\d+)(?: char\w*)?)?$/i, function (m) { return ["make_password", (m[1] || "16")]; }],
@@ -496,9 +557,9 @@
     [/^(?:shout|uppercase)[: ]+(.+)$/i, function (m) { return ["shout", m[1]]; }],
     [/^morse(?: code)?(?: for| of)?[: ]+(.+)$/i, function (m) { return ["morse_code", m[1]]; }],
     [/^(?:pretty ?print|format|prettify) json[: ]+(.+)$/i, function (m) { return ["json_pretty", m[1]]; }],
-    [/^is (\d+) (?:a )?prime$|^(?:prime factors of|factor|factorize) (\d+)$/i, function (m) { return ["is_prime", (m[1] || m[2])]; }],
-    [/^roman numerals? (?:for |of )?(\d+)$|^(\d+) in roman numerals$/i, function (m) { return ["roman_numeral", (m[1] || m[2])]; }],
-    [/^(?:(?:what(?:'s| is) )?(?:the |a )?tip on|tip(?: for)?) \$?(\d+(?:\.\d+)?)$/i, function (m) { return ["tip", m[1]]; }],
+    [/^is (-?\d+) (?:a )?prime$|^(?:prime factors of|factor|factorize) (-?\d+)$/i, function (m) { return ["is_prime", (m[1] || m[2])]; }],
+    [/^roman numerals? (?:for |of )?(-?\d+)$|^(-?\d+) in roman numerals$/i, function (m) { return ["roman_numeral", (m[1] || m[2])]; }],
+    [/^(?:(?:what(?:'s| is) )?(?:the |a )?tip on|tip(?: for)?) (-?\$?-?\d+(?:\.\d+)?)$/i, function (m) { return ["tip", m[1]]; }],
     [/^(?:check )?disk space$|^how much (?:disk |storage )?space (?:do i have|is (?:left|free))(?: left)?$|^how much storage (?:do i have|is left)$/i, function (m) { return ["disk_space", ""]; }],
     [/^how long has (?:my mac|this mac|it) been (?:on|up|running)$|^uptime$/i, function (m) { return ["uptime", ""]; }],
     [/^(?:how much )?(?:ram|memory)(?: (?:do i have|is free|is left|am i using))?$|^(?:ram|memory) usage$/i, function (m) { return ["memory_usage", ""]; }],
@@ -512,7 +573,7 @@
     [/^(?:list|show)(?: me)?(?: all)?(?: my)? shortcuts$|^what shortcuts do i have$/i, function (m) { return ["list_shortcuts", ""]; }],
     [/^(?:list|show)(?: me)?(?: all)?(?: my)? mcp tools$|^what mcp tools do i have$/i, function (m) { return ["list_mcp_tools", ""]; }],
     [/^call mcp (\S+ \S+(?: .+)?)$/i, function (m) { return ["call_mcp_tool", m[1]]; }],
-    [/^(?:list|show)(?: me)?(?: all)?(?: my| the)?(?: open)? (?:chrome )?tabs$|^what tabs (?:do i have|are open)(?: in chrome)?$/i, function (m) { return ["list_tabs", ""]; }],
+    [/^(?:list|show)(?: me)?(?: all)?(?: my| the)?(?: open)? (?:chrome )?tabs$|^what tabs (?:do i have(?: open)?|are open)(?: in chrome)?$/i, function (m) { return ["list_tabs", ""]; }],
     [/^switch to tab (\d+(?:\.\d+)?)$|^switch to (?:the )?(.+?) tab$/i, function (m) { return ["switch_tab", ((m[1] || m[2]))]; }],
     [/^close tab (\d+(?:\.\d+)?)$|^close (?:the )?(.+?) tab$/i, function (m) { return ["close_tab", ((m[1] || m[2]))]; }],
     [/^read tab (\d+(?:\.\d+)?)$|^read (?!(?:this|the current) tab$)(?:the )?(.+?) tab$|^read (?:this|the current) tab$/i, function (m) { return ["read_tab", ((m[1] || m[2] || ""))]; }],
@@ -529,7 +590,7 @@
     [/^run (?:the |my )?shortcut (.+)$|^run (.+) shortcut$/i, function (m) { return ["run_shortcut", ((m[1] || m[2]))]; }]
   ]);
 
-  root.Samantha = { route: route, exact: exact, bare: bare, urlOf: urlOf, appMatch: appMatch, APPS: APPS, SITES: SITES,
+  root.Samantha = { route: route, chain: chain, exact: exact, bare: bare, urlOf: urlOf, appMatch: appMatch, APPS: APPS, SITES: SITES,
                     stem: stem, keywords: keywords, isProject: isProject,
                     pageRoute: pageRoute, section: section, sound: sound, duration: duration, COLORS: COLORS, util: U };
 })(typeof globalThis !== "undefined" ? globalThis : this);
