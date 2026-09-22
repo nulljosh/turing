@@ -3,9 +3,7 @@
 The live `/loop` for this repo. Checkpoint rewrites this file every run. A new session reads it and picks up where the last one stopped.
 
 ## What the loop is
-Samantha to a 1.0.0 release, landing page to A+. Ship features with quality gates: every feature ships with tests, eval/laws.py green, docs 100 percent, phone-size QA on the landing page, and CI green. Each cycle: take the top roadmap item or hunt a real gap (what comparable assistants do that she cannot: Siri, Apple Intelligence, Claude+ChatGPT desktop, Open Interpreter, Raycast, Ollama agents), add it to roadmap.md under "Gaps found", build the fix, test it, deploy it, delete the line when shipped. No code ships untagged. Prune roadmap, refresh landing/README/CLAUDE.md after every tag.
-
-After every ship: landing page, README, CLAUDE.md, docs/ARCHITECTURE.md, architecture.svg and progress.svg, all in the same pass (see CLAUDE.md "After every ship").
+v1.0.0 shipped 2026-09-21. Now: v2.0 and beyond, same gap-hunt process, driven with subagents instead of raw backgrounded bash for anything over a few minutes. Each iteration: take the top open roadmap item under "Gaps found by the loop" (GUI control with approval, voice input, then whatever the next search turns up), or search the web for the next real gap. Build the smallest honest fix with tests, run the gate, laws, a11y and phone QA, ship it as its own release, refresh the landing page/README/CLAUDE.md/graphs.
 
 ## Rules
 Headless always: `SAMANTHA_HEADLESS=1`. Check free disk and memory before training (6GB min). One heavy job at a time. Haiku subagents one at a time, sequential not parallel. Stop at 90% usage. Root-cause fixes only, never edit tests to pass. Code review diffs before calling anything done.
