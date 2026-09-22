@@ -642,12 +642,16 @@
     [new RegExp("^convert " + P + " (?:to|into) (?:a |an )?(png|jpe?g|webp|heic|tiff?|pdf)$", "i"), function (m) { return ["convert_image", m[1] + " to " + m[2]]; }],
     [new RegExp("^(?:how big is " + P + "|(?:image )?(?:info|size|dimensions) (?:for|of|on) " + P + ")$", "i"), function (m) { return ["image_info", m[1] || m[2]]; }]
   ]);
+  U.ask_claude = function () { return "Asking Claude happens on her real Mac, with your own Anthropic key, and she asks you before anything leaves it. This page never sends your words anywhere but its own lookup."; };
+  U.NEEDS_MAC.push("ask_claude");
   U.read_page = function () { return "Reading a page happens on her real Mac, which fetches it. Here I can open it for you: say \"go to\" and the address."; };
   var NO_PHOTOS = "That one edits a photo on your real Mac in Pixelmator, and this stand-in has no photos on disk. Ask me to draw something instead.";
   ["grayscale_image", "remove_background", "upscale_image", "enhance_image", "rotate_image", "flip_image", "resize_image", "crop_square", "convert_image", "image_info"]
     .forEach(function (name) { U[name] = function () { return NO_PHOTOS; }; U.NEEDS_MAC.push(name); });
 
   ROUTES.push.apply(ROUTES, [
+    // only by name, same as tools_util.ROUTES
+    [/^(?:ask|have|let) claude(?: to| about| whether| if|:|,)?\s+(.+)$|^(?:hey )?claude[,:]\s*(.+)$/i, function (m) { return ["ask_claude", m[1] || m[2]]; }],
     // a time in one zone to another: ahead of convert_units, same as tools_util.ROUTES
     [/^(?:what(?:'s| is)(?: the time)?|what time is|when is|convert)?\s*((?:noon|midnight|\d{1,2}:\d{2}(?:\s*(?:am|pm|a\.m\.|p\.m\.))?|\d{1,2}\s*(?:am|pm|a\.m\.|p\.m\.))\s+.*\b(?:in|to)\s+.+)$/i,
      function (m) { return ["convert_time", m[1]]; }],

@@ -56,6 +56,9 @@ CASES = [
 
     ("what is 100 days from now", "date_math", "100 days from"),
     ("what time is 3pm pst in tokyo", "convert_time", "3pm pst in tokyo"),
+    ("ask claude why is the sky blue", "ask_claude", "why is the sky blue"),
+    ("claude, explain monads simply", "ask_claude", "explain monads simply"),
+    ("have claude write a haiku about turing", "ask_claude", "write a haiku about turing"),
     ("convert 3pm pst to tokyo", "convert_time", "3pm pst to tokyo"),
     ("15:30 london to new york", "convert_time", "15:30 london to new york"),
     ("convert 5 km to miles", "convert_units", "5 km to miles"),

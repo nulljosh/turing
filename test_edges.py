@@ -28,7 +28,8 @@ WEIRD = ["", " ", "?", "!!!", "\n", "\t\t", "a" * 5000, "open ", "open", "go to"
          "say " + "x" * 10000, "remember ", "forget ", "recall ", "switch to tab 999", "close tab -1", "what is 1/0", "what is 0/0",
          "\x00", "open \x00chrome", "search for ‮reversed", "ｏｐｅｎ ｃｈｒｏｍｅ", "OPEN CHROME", "open chrome.", "please please please open chrome",
          "take a note " + "é" * 100, "remind me to ", "google how tall is everest?", "make .png black and white", "convert ~/a.png to exe",
-         "open youtube and and and set the volume to 20", ";;;", "then then then", "hi" * 1000, "🤖" * 50, "​​", "what is ﻿2+2"]
+         "open youtube and and and set the volume to 20", ";;;", "then then then", "hi" * 1000, "🤖" * 50, "​​", "what is ﻿2+2",
+         "ask claude", "claude,", "ask claude " + "x" * 30000, "claude: \x00", "ask claude why is the sky blue"]
 
 
 def offline():
@@ -36,7 +37,8 @@ def offline():
     return [mock.patch.object(tools, "_run", return_value=""),
             mock.patch("subprocess.run", side_effect=FileNotFoundError(2, "No such file", "osascript")),
             mock.patch("subprocess.Popen", side_effect=FileNotFoundError(2, "No such file", "say")),
-            mock.patch("urllib.request.urlopen", side_effect=OSError("offline"))]
+            mock.patch("urllib.request.urlopen", side_effect=OSError("offline")),
+            mock.patch.dict(sys.modules, {"anthropic": None})]  # never a real, billed Claude call, even on a Mac with a key
 
 
 class NeverCrash(unittest.TestCase):
