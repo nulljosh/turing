@@ -18,6 +18,8 @@ import tools_util
 
 _RECALL = re.compile(r"^(?:what did you (?:just )?do|what have you done|show (?:me )?(?:the )?(?:tool )?(?:log|history)|history)$", re.I)
 
+_AGAIN = re.compile(r"^(?:again|do (?:that|it) again|one more time|repeat that|same again|once more)$", re.I)
+
 
 class Session:
     """One conversation. confirm(name, args) -> bool decides writes; log(line) shows the tool log."""
@@ -32,6 +34,9 @@ class Session:
         q = query.strip()
         if _RECALL.match(tools._bare(q)):
             return self.recall()
+        if _AGAIN.match(tools._bare(q)):
+            # the same command once more, through the same asking: a write still waits for a yes
+            return self.ask(self.history[-1]["q"]) if self.history else "Nothing to do again yet."
         calls = []
 
         def log(line):

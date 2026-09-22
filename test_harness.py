@@ -78,6 +78,16 @@ class HarnessTests(unittest.TestCase):
         edit.assert_not_called()
         self.assertEqual(asked, [("grayscale_image", ("~/Desktop/cat.png",))])
 
+    def test_again_repeats_the_last_command_and_still_asks(self):
+        """"do that again" runs the last command once more, and a write asks again."""
+        s, asked, _ = self.session(False)
+        self.assertEqual(s.ask("again"), "Nothing to do again yet.")
+        self.assertEqual(s.ask("calculate 6*7"), "42")
+        self.assertEqual(s.ask("do that again"), "42")
+        s.ask("take a note buy milk")
+        self.assertEqual(s.ask("one more time"), "Okay, I will not.")
+        self.assertEqual(len(asked), 2)
+
     def test_plan_runs_nothing(self):
         """Plan runs nothing."""
         with mock.patch.object(tools, "_run", return_value="") as run:
