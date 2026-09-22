@@ -35,7 +35,7 @@ ever ships as its own real model, gets a name of its own too, not a
 - No daemon, no cron, training is invoked by hand every time.
 
 ## Talking to Joshua
-TLDR only. A few lines at most, plain words, no walls of text, no play-by-play. Only speak up when something is done, broken, or needs him.
+TLDR only. Every round that ships something adds one line, newest first, to docs/PROGRESS.md. A few lines at most, plain words, no walls of text, no play-by-play. Only speak up when something is done, broken, or needs him.
 
 ## CI
 Every check on main and on every PR stays green, including the release and deploy workflows. Check all workflow runs after every push and merge, not just `test`. A check that cannot do its job yet (a missing secret) skips green with a notice, never red. A red check is fixed before anything else.
