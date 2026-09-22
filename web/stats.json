@@ -11,6 +11,10 @@
         "total": 10,
         "documented": 10
       },
+      "test_reader.py": {
+        "total": 13,
+        "documented": 13
+      },
       "harness.py": {
         "total": 7,
         "documented": 7
@@ -72,8 +76,8 @@
         "documented": 7
       },
       "tools_util.py": {
-        "total": 61,
-        "documented": 61
+        "total": 65,
+        "documented": 65
       },
       "test_memory.py": {
         "total": 11,
@@ -164,7 +168,7 @@
   "measured": {
     "tools": {
       "before": 0,
-      "after": 75
+      "after": 77
     },
     "actions_eval": "77/77",
     "knowledge_sweep": {

@@ -313,7 +313,6 @@ Gaps, in order:
 The loop compares her with other assistants (Siri and Shortcuts, Apple Intelligence, Claude and ChatGPT desktop with MCP, Open Interpreter, Raycast AI, local Ollama agents), adds each real gap here with where it was seen, builds it, then deletes the line once it ships (history lives in git). Newest and biggest first.
 
 - [ ] Answer questions about what is on the screen (read_screen shipped: OCR text only, now feed it to the reader model)
-- [ ] Answer questions about a document (read_document and find_in_document shipped: text and passages, now feed them to the reader model for a summary)
 - [ ] Control the GUI with approval: click and type in an app, every step confirmed by the harness first. Seen in Claude computer use, Open Interpreter
 - [ ] Voice in as well as out: she can speak, she cannot listen. A local Whisper on MLX would do it
 

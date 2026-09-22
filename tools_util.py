@@ -1,4 +1,4 @@
-"""Samantha's utility tools: forty-five small things that need no app and no network.
+"""Samantha's utility tools: forty-seven small things that need no app and no network.
 
 Math and text (calculate, convert_units, dice, hashes, base64...) are pure Python.
 The system readers (disk_space, uptime, memory_usage...) run one fixed argv each and
@@ -23,6 +23,7 @@ import secrets
 import shutil
 import string
 import subprocess
+import urllib.request
 import uuid
 from datetime import date, datetime
 from zoneinfo import ZoneInfo
@@ -430,6 +431,72 @@ def find_in_document(request):
     return " | ".join(hits) if hits else f"I do not see {words.strip()} in that document."
 
 
+OLLAMA_CHAT = "http://localhost:11434/api/chat"
+READER = "qwen3:1.7b"  # the same small reader ask.py uses for articles: it reads text, it does not recall
+
+
+def _passages(text, question, limit=5000):
+    """The parts of a long text that share the most words with a question, in reading order, up to a size limit."""
+    if len(text) <= limit:
+        return text
+    chunks = [c.strip() for c in re.split(r"(?<=[.!?])\s+|\n{2,}", text) if c.strip()]
+    want = _words(question)
+    ranked = sorted(range(len(chunks)), key=lambda i: -len(want & _words(chunks[i])))
+    keep, size = [], 0
+    for i in ranked:
+        if size + len(chunks[i]) > limit:
+            break
+        keep.append(i)
+        size += len(chunks[i]) + 1
+    return " ".join(chunks[i] for i in sorted(keep))
+
+
+def _read_and_answer(text, question):
+    """Ask the local reader model one question about a text and check the answer against the text. None if it cannot say."""
+    body = json.dumps({"model": READER, "stream": False, "think": False, "options": {"temperature": 0}, "messages": [
+        {"role": "system", "content": "Answer the question in one short sentence using ONLY the text. If the text does not contain the answer, reply exactly UNKNOWN."},
+        {"role": "user", "content": f"Text:\n{_passages(text, question)}\n\nQuestion: {question}"}]}).encode()
+    try:
+        req = urllib.request.Request(OLLAMA_CHAT, body, {"Content-Type": "application/json"})
+        with urllib.request.urlopen(req, timeout=120) as r:
+            answer = json.load(r)["message"]["content"]
+    except Exception:
+        return "NO_MODEL"
+    answer = re.sub(r"(?s)<think>.*?</think>", "", answer).strip()
+    # every number and every capitalised name in the answer must be in the text or in the question: a guess is worse than a decline
+    claims = re.findall(r"\d[\d,.]*\d|\d|\b[A-Z][a-z]{2,}\b", answer)
+    grounded = all(c.lower().rstrip(".,") in text.lower() or c.lower() in question.lower() for c in claims[1:] or claims)
+    declined = re.search(r"unknown|does not (?:contain|mention|say|provide|specify)|doesn't (?:contain|mention|say)|not (?:mentioned|stated|specified|provided)|no (?:information|mention)", answer, re.I)
+    return None if not answer or declined or not grounded else answer
+
+
+def ask_document(request):
+    """Answer a question about a document in the home folder, from its text only. Takes 'question<TAB>path'. Needs Ollama running."""
+    question, _, path = request.partition("\t")
+    text, why = _doc_text(path)
+    if why:
+        return why
+    if not question.strip():
+        return "Ask me something about the document."
+    got = _read_and_answer(text, question)
+    if got == "NO_MODEL":
+        return "My reader needs Ollama running with " + READER + ". These are the closest passages instead: " + find_in_document(question + "\t" + path)
+    return got or "I could not find that in the document."
+
+
+def ask_screen(question):
+    """Answer a question about what is on the screen right now, from its text only. Private, asks first, needs Ollama running."""
+    if HEADLESS:
+        return "Would read the screen and answer."
+    seen = read_screen()
+    if not seen or seen.startswith(("I could not", "Would")):
+        return seen
+    got = _read_and_answer(seen.replace(" | ", "\n"), question)
+    if got == "NO_MODEL":
+        return "My reader needs Ollama running with " + READER + ". Here is what the screen says: " + seen[:600]
+    return got or "I could not find that on the screen."
+
+
 def reveal_in_finder(path):
     """Show a file or folder in Finder. Only inside the home folder, never hidden files."""
     full = _home_path(path)
@@ -712,7 +779,7 @@ def call_mcp_tool(request):
 TOOLS = (calculate, convert_units, time_in, current_date, days_until, flip_coin, roll_dice, random_number, make_password,
          make_uuid, hash_text, base64_encode, base64_decode, word_count, reverse_text, shout, morse_code, json_pretty,
          is_prime, roman_numeral, tip, disk_space, uptime, memory_usage, cpu_load, ip_address, wifi_name, system_info,
-         copy_to_clipboard, sleep_display, reveal_in_finder, list_shortcuts, run_shortcut, list_mcp_tools, call_mcp_tool, list_tabs, switch_tab, close_tab, read_tab, remember, recall, forget, read_screen, read_document, find_in_document)
+         copy_to_clipboard, sleep_display, reveal_in_finder, list_shortcuts, run_shortcut, list_mcp_tools, call_mcp_tool, list_tabs, switch_tab, close_tab, read_tab, remember, recall, forget, read_screen, read_document, find_in_document, ask_document, ask_screen)
 
 _I = re.I
 # (pattern, tool name, what to hand it). Names, not functions: tools.py looks each one up at call time.
@@ -761,6 +828,9 @@ ROUTES = (
     (re.compile(r"^find (.+) on (?:my |the )?screen$|^is (.+) on (?:my |the )?screen$", _I), "read_screen", lambda m: (m.group(1) or m.group(2))),
     (re.compile(r"^read (?:the )?(?:document|pdf|doc|file called) (.+)$", _I), "read_document", lambda m: m.group(1)),
     (re.compile(r"^find (.+?) in (?:the )?(?:document|pdf|doc) (.+)$", _I), "find_in_document", lambda m: m.group(1) + "\t" + m.group(2)),
+    (re.compile(r"^what does (?:the )?(?:document|pdf|doc) (\S+) say about (.+)$", _I), "ask_document", lambda m: "what does it say about " + m.group(2) + "\t" + m.group(1)),
+    (re.compile(r"^in (?:the )?(?:document|pdf|doc) (\S+?),? (.+)$", _I), "ask_document", lambda m: m.group(2) + "\t" + m.group(1)),
+    (re.compile(r"^(?:on|from) my screen,? (.+)$", _I), "ask_screen", lambda m: m.group(1)),
     (re.compile(r"^remember that (.+)$", _I), "remember", lambda m: m.group(1)),
     (re.compile(r"^(?:recall|what do you remember about|what did i tell you about) (.+)$", _I), "recall", lambda m: m.group(1)),
     (re.compile(r"^forget (?:that |about )?(.+)$", _I), "forget", lambda m: m.group(1)),
@@ -797,7 +867,7 @@ def demo():
     assert copy_to_clipboard("x") == "Copied." and sleep_display() == "Screen off." and reveal_in_finder("~").startswith("Showing")
     assert reveal_in_finder("~/.ssh").startswith("No file") and reveal_in_finder("/etc/passwd").startswith("No file")
     assert run_shortcut("zzz-not-real").startswith("I do not see") and (list_shortcuts().startswith("No Shortcuts") or "Shortcuts:" in list_shortcuts())
-    assert len(TOOLS) == 45 and all(f.__doc__ for f in TOOLS)
+    assert len(TOOLS) == 47 and all(f.__doc__ for f in TOOLS)
     call = lambda name, a: globals()[name](a) if globals()[name].__code__.co_argcount else globals()[name]()
     hit = lambda q: next((call(name, arg(m)) for pat, name, arg in ROUTES if (m := pat.match(q))), None)
     assert hit("calculate 17 * 23") == "391" and hit("convert 5 km to miles") == "5 km is 3.1069 mi."
