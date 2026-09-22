@@ -37,7 +37,7 @@ Goal: a full version you sit down and chat with, and she calls tools, without ev
 - v1.1.0 published by the release workflow (first automatic release). Deploy workflow merged; waits on the CLOUDFLARE_API_TOKEN repo secret (the user will deploy from the Mac for now).
 - date_math (tool 78): "100 days from now", "3 weeks ago", "2 months after 2026-01-31" (month-end clamp), "what day of the week was July 4 1976", "days between X and Y", years 1 to 9999. Python and JS agree word for word (util_diff 183/183). Found and fixed: strftime %Y writes year 1 as "1" on Linux and "0001" on macOS, so dates are spelled by hand.
 
-- God-file splits: tools_util.py 985 -> 644 (util_math.py, util_dates.py); ask.py 1319 -> 717 (ask_faq.py, ask_local.py). Old modules re-export every moved name; behavior checked unchanged (FAQ paraphrase 5/16 with 0 wrong, prompts 26/29, all tests and evals). Next targets: tools.py 977, ask.py 717 (web lookups), web/demo.js 710, web/samantha.js ~720, tools_util.py 644.
+- God-file splits: tools_util.py 985 -> 644 (util_math.py, util_dates.py); ask.py 1319 -> 717 (ask_faq.py, ask_local.py). Old modules re-export every moved name; behavior checked unchanged (FAQ paraphrase 5/16 with 0 wrong, prompts 26/29, all tests and evals). tools.py 977 -> 816 (tools_logo.py). Next targets: tools.py 816, ask.py 717 (web lookups), web/demo.js 710, web/samantha.js ~720, tools_util.py 644.
 - CI: deploy skips green without the Cloudflare secret. Every workflow run on main is green.
 
 ## Where things stand
