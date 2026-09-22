@@ -55,6 +55,10 @@ CASES = [
     ("read the file ~/notes.txt", "read_file", "notes.txt"),
 
     ("what is 100 days from now", "date_math", "100 days from"),
+    ("what time is 3pm pst in tokyo", "convert_time", "3pm pst in tokyo"),
+    ("convert 3pm pst to tokyo", "convert_time", "3pm pst to tokyo"),
+    ("15:30 london to new york", "convert_time", "15:30 london to new york"),
+    ("convert 5 km to miles", "convert_units", "5 km to miles"),
     ("what day of the week was july 4 1976", "date_math", "weekday july 4 1976"),
     ("how many days between 2026-01-01 and christmas", "date_math", "between 2026-01-01 and christmas"),
     ("3 weeks ago", "date_math", "3 weeks ago"),

@@ -1,4 +1,4 @@
-"""Samantha's utility tools: forty-eight small things that need no app and no network, and their ROUTES.
+"""Samantha's utility tools: forty-nine small things that need no app and no network, and their ROUTES.
 
 Math, units, chance and text live in util_math.py, time and dates in util_dates.py; this module re-exports them.
 The system readers (disk_space, uptime, memory_usage...) run one fixed argv each and
@@ -526,7 +526,7 @@ def call_mcp_tool(request):
     return ("Error from " + server + ": " if res.get("isError") else "") + (text[:2000] or "Done, with no text back.")
 
 
-TOOLS = (calculate, convert_units, time_in, current_date, days_until, date_math, flip_coin, roll_dice, random_number, make_password,
+TOOLS = (calculate, convert_units, time_in, convert_time, current_date, days_until, date_math, flip_coin, roll_dice, random_number, make_password,
          make_uuid, hash_text, base64_encode, base64_decode, word_count, reverse_text, shout, morse_code, json_pretty,
          is_prime, roman_numeral, tip, disk_space, uptime, memory_usage, cpu_load, ip_address, wifi_name, system_info,
          copy_to_clipboard, sleep_display, reveal_in_finder, list_shortcuts, run_shortcut, list_mcp_tools, call_mcp_tool, list_tabs, switch_tab, close_tab, read_tab, remember, recall, forget, read_screen, read_document, find_in_document, ask_document, ask_screen)
@@ -534,6 +534,9 @@ TOOLS = (calculate, convert_units, time_in, current_date, days_until, date_math,
 _I = re.I
 # (pattern, tool name, what to hand it). Names, not functions: tools.py looks each one up at call time.
 ROUTES = (
+    # a time in one zone to another: ahead of convert_units, so "convert 3pm pst to tokyo" is a time, not a unit
+    (re.compile(r"^(?:what(?:'s| is)(?: the time)?|what time is|when is|convert)?\s*((?:noon|midnight|\d{1,2}:\d{2}(?:\s*(?:am|pm|a\.m\.|p\.m\.))?|\d{1,2}\s*(?:am|pm|a\.m\.|p\.m\.))\s+.*\b(?:in|to)\s+.+)$", _I),
+     "convert_time", lambda m: m.group(1)),
     (re.compile(r"^(?:calc(?:ulate)?|compute|work out|math)[: ]+(.+)$", _I), "calculate", lambda m: m.group(1)),
     (re.compile(r"^(?:convert )?(-?\d+) (?:to|in|into) roman(?: numerals?)?$", _I), "roman_numeral", lambda m: m.group(1)),
     (re.compile(r"^convert (.+)$", _I), "convert_units", lambda m: m.group(1)),
@@ -622,7 +625,7 @@ def demo():
     assert copy_to_clipboard("x") == "Copied." and sleep_display() == "Screen off." and reveal_in_finder("~").startswith("Showing")
     assert reveal_in_finder("~/.ssh").startswith("No file") and reveal_in_finder("/etc/passwd").startswith("No file")
     assert run_shortcut("zzz-not-real").startswith("I do not see") and (list_shortcuts().startswith("No Shortcuts") or "Shortcuts:" in list_shortcuts())
-    assert len(TOOLS) == 48 and all(f.__doc__ for f in TOOLS)
+    assert len(TOOLS) == 49 and all(f.__doc__ for f in TOOLS)
     call = lambda name, a: globals()[name](a) if globals()[name].__code__.co_argcount else globals()[name]()
     hit = lambda q: next((call(name, arg(m)) for pat, name, arg in ROUTES if (m := pat.match(q))), None)
     assert hit("calculate 17 * 23") == "391" and hit("convert 5 km to miles") == "5 km is 3.1069 mi."

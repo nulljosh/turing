@@ -174,6 +174,57 @@ class Dates(unittest.TestCase):
         self.assertEqual(tools.plan("days until christmas"), [("days_until", ("christmas",))])
 
 
+class TimeZones(unittest.TestCase):
+    """convert_time is exact across daylight time, midnight and bad input."""
+
+    def frozen(self, y, mo, d):
+        """util_dates with today fixed to one date, so a conversion has one right answer."""
+        import util_dates
+        from datetime import datetime as real
+
+        class Fixed(real):
+            """now() is noon UTC on the given day, in whatever zone is asked."""
+            @classmethod
+            def now(cls, tz=None):
+                """The frozen moment."""
+                from datetime import timezone
+                t = real(y, mo, d, 12, 0, tzinfo=timezone.utc)
+                return t.astimezone(tz) if tz else t.replace(tzinfo=None)
+
+        return mock.patch.object(util_dates, "datetime", Fixed)
+
+    def test_winter_and_summer(self):
+        """3pm Pacific is 8am next day in Tokyo in winter and 7am in summer: daylight time is followed, not ignored."""
+        import util_dates
+        with self.frozen(2026, 1, 15):
+            self.assertEqual(util_dates.convert_time("3pm pst in tokyo"), "3:00 PM PST is 8:00 AM on Friday in Tokyo.")
+        with self.frozen(2026, 7, 15):
+            self.assertEqual(util_dates.convert_time("3pm pst in tokyo"), "3:00 PM PST is 7:00 AM on Thursday in Tokyo.")
+            self.assertEqual(util_dates.convert_time("15:30 london to new york"), "3:30 PM London is 10:30 AM on Wednesday in New York.")
+
+    def test_the_spring_forward_gap_answers(self):
+        """2:30am on the night clocks jump does not exist in Pacific time; it still gets an answer, never a crash."""
+        import util_dates
+        with self.frozen(2026, 3, 8):
+            self.assertTrue(util_dates.convert_time("2:30am pst in utc").startswith("2:30 AM PST is "))
+
+    def test_bad_times_and_zones(self):
+        """Impossible times and unknown zones are said plainly."""
+        import util_dates
+        self.assertEqual(util_dates.convert_time("13pm pst in tokyo"), "13pm is not a time I can read. Try 3pm, 3:30 pm or 15:30.")
+        self.assertEqual(util_dates.convert_time("9:75 pst in tokyo"), "9:75 is not a time I can read. Try 3pm, 3:30 pm or 15:30.")
+        self.assertEqual(util_dates.convert_time("3pm pst in narnia"), "I do not know the time zone for narnia.")
+        self.assertEqual(util_dates.convert_time("3pm atlantis to tokyo"), "I do not know the time zone for atlantis.")
+        self.assertEqual(util_dates.convert_time("tokyo"), 'Say it like "3pm PST in Tokyo" or "15:30 London to New York".')
+        self.assertEqual(util_dates.convert_time("3pm pst in Not/AZone"), "I do not know the time zone for Not/AZone.")
+
+    def test_routes_leave_units_alone(self):
+        """A bare number is a unit, not a clock: convert 5 km to miles stays a unit conversion."""
+        self.assertEqual(tools.plan("convert 5 km to miles"), [("convert_units", ("5 km to miles",))])
+        self.assertEqual(tools.plan("convert 3pm pst to tokyo"), [("convert_time", ("3pm pst to tokyo",))])
+        self.assertEqual(tools.plan("what time is it in tokyo"), [("time_in", ("tokyo",))])
+
+
 class Logo(unittest.TestCase):
     """Her icon is hers: the committed files are exactly what her designer draws, and every layer type renders."""
 

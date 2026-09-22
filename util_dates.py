@@ -28,6 +28,68 @@ def time_in(place=""):
     return datetime.now(zone).strftime(f"It is %-I:%M %p on %A in {place.strip().title()}.")
 
 
+# what people type for a zone. Pacific, Mountain, Central and Eastern follow daylight time: "3pm PST" in July means
+# Pacific time, the way everyone uses it, not a fixed UTC-8.
+_TZ_ABBR = {"pst": "America/Los_Angeles", "pdt": "America/Los_Angeles", "pt": "America/Los_Angeles", "pacific": "America/Los_Angeles",
+            "mst": "America/Denver", "mdt": "America/Denver", "mt": "America/Denver", "mountain": "America/Denver",
+            "cst": "America/Chicago", "cdt": "America/Chicago", "ct": "America/Chicago", "central": "America/Chicago",
+            "est": "America/New_York", "edt": "America/New_York", "et": "America/New_York", "eastern": "America/New_York",
+            "gmt": "UTC", "utc": "UTC", "bst": "Europe/London", "cet": "Europe/Paris", "cest": "Europe/Paris",
+            "jst": "Asia/Tokyo", "kst": "Asia/Seoul", "ist": "Asia/Kolkata", "aest": "Australia/Sydney", "hst": "Pacific/Honolulu"}
+_CLOCK = re.compile(r"(noon|midnight|\d{1,2}(?::\d{2})?\s*(?:am|pm|a\.m\.|p\.m\.)?)", re.I)
+
+
+def _tz(name):
+    """A zone from a city, an abbreviation or an IANA name, and how to say it; None when it is not one."""
+    key = name.lower().strip().removesuffix(" time").strip()
+    zone = _TZ_ABBR.get(key) or _ZONES.get(key) or (name.strip().replace(" ", "_") if "/" in name else None)
+    if not zone:
+        return None
+    try:
+        return ZoneInfo(zone), key.upper() if key in _TZ_ABBR and len(key) <= 4 else (key.title() if "/" not in key else name.strip())
+    except Exception:
+        return None
+
+
+def _clock_of(text):
+    """(hour, minute) from "3pm", "3:30 pm", "15:30", "noon" or "midnight", or None."""
+    t = text.lower().replace(".", "").replace(" ", "")
+    if t in ("noon", "midnight"):
+        return (12 if t == "noon" else 0), 0
+    m = re.fullmatch(r"(\d{1,2})(?::(\d{2}))?(am|pm)?", t)
+    if not m:
+        return None
+    h, mi, half = int(m.group(1)), int(m.group(2) or 0), m.group(3)
+    if mi > 59 or (half and not 1 <= h <= 12) or (not half and h > 23):
+        return None
+    return (h % 12 + (12 if half == "pm" else 0)) if half else h, mi
+
+
+def _hm(d):
+    """3:05 PM."""
+    return f"{d.hour % 12 or 12}:{d.minute:02d} {'AM' if d.hour < 12 else 'PM'}"
+
+
+def convert_time(request):
+    """A time in one zone as the time in another, today: "3pm PST in Tokyo", "15:30 London to New York", "9am in Sydney"
+    (from here). Cities, zone abbreviations (PST, EST, GMT, JST...) and IANA names; daylight time handled."""
+    m = re.fullmatch(r"\s*(noon|midnight|\d{1,2}(?::\d{2})?\s*(?:am|pm|a\.m\.|p\.m\.)?)\s*(.*?)\s*\b(?:in|to)\s+(.+?)\s*", request, re.I)
+    if not m:
+        return 'Say it like "3pm PST in Tokyo" or "15:30 London to New York".'
+    hm = _clock_of(m.group(1))
+    if not hm:
+        return f"{m.group(1).strip()} is not a time I can read. Try 3pm, 3:30 pm or 15:30."
+    src_text = re.sub(r"^(?:in|from)\s+", "", m.group(2).strip(), flags=re.I)
+    src = _tz(src_text) if src_text else (datetime.now().astimezone().tzinfo, "here")
+    dst = _tz(m.group(3))
+    if not src or not dst:
+        return f"I do not know the time zone for {(m.group(3) if not dst else src_text).strip()}."
+    today = datetime.now(src[0]).date()
+    start = datetime(today.year, today.month, today.day, *hm, tzinfo=src[0])
+    end = start.astimezone(dst[0])
+    return f"{_hm(start)} {src[1]} is {_hm(end)} on {_DAY_NAMES[end.weekday()]} in {dst[1]}."
+
+
 def current_date():
     """Today's date and weekday."""
     return datetime.now().strftime("It is %A, %B %-d, %Y.")

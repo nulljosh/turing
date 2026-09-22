@@ -383,6 +383,53 @@
       return "It is " + clock(zone) + " on " + day + " in " + place.trim().replace(/\b\w/g, function (c) { return c.toUpperCase(); }) + ".";
     } catch (e) { return "I do not know the time zone for " + place.trim() + "."; }
   };
+  // convert_time: same grammar and words as util_dates.convert_time. Zone math is Intl only, no library.
+  var TZ_ABBR = { pst: "America/Los_Angeles", pdt: "America/Los_Angeles", pt: "America/Los_Angeles", pacific: "America/Los_Angeles",
+    mst: "America/Denver", mdt: "America/Denver", mt: "America/Denver", mountain: "America/Denver",
+    cst: "America/Chicago", cdt: "America/Chicago", ct: "America/Chicago", central: "America/Chicago",
+    est: "America/New_York", edt: "America/New_York", et: "America/New_York", eastern: "America/New_York",
+    gmt: "UTC", utc: "UTC", bst: "Europe/London", cet: "Europe/Paris", cest: "Europe/Paris",
+    jst: "Asia/Tokyo", kst: "Asia/Seoul", ist: "Asia/Kolkata", aest: "Australia/Sydney", hst: "Pacific/Honolulu" };
+  function tzOf(name) {
+    var key = name.toLowerCase().trim().replace(/ time$/, "").trim();
+    var zone = TZ_ABBR[key] || ZONES[key] || (name.indexOf("/") >= 0 ? name.trim().replace(/ /g, "_") : null);
+    if (!zone) return null;
+    try { new Intl.DateTimeFormat("en-US", { timeZone: zone }); } catch (e) { return null; }
+    var label = TZ_ABBR[key] && key.length <= 4 ? key.toUpperCase() : name.indexOf("/") >= 0 ? name.trim() : key.replace(/\b\w/g, function (c) { return c.toUpperCase(); });
+    return { zone: zone, label: label };
+  }
+  function clockOf(text) {
+    var t = text.toLowerCase().replace(/\./g, "").replace(/ /g, "");
+    if (t === "noon" || t === "midnight") return [t === "noon" ? 12 : 0, 0];
+    var m = /^(\d{1,2})(?::(\d{2}))?(am|pm)?$/.exec(t);
+    if (!m) return null;
+    var h = +m[1], mi = +(m[2] || 0), half = m[3];
+    if (mi > 59 || (half && !(h >= 1 && h <= 12)) || (!half && h > 23)) return null;
+    return [half ? h % 12 + (half === "pm" ? 12 : 0) : h, mi];
+  }
+  // the wall clock in a zone at an instant, as numbers
+  function wall(zone, t) {
+    var o = { hourCycle: "h23", year: "numeric", month: "numeric", day: "numeric", hour: "numeric", minute: "numeric", second: "numeric", weekday: "long" };
+    if (zone) o.timeZone = zone;
+    var p = {};
+    new Intl.DateTimeFormat("en-US", o).formatToParts(new Date(t)).forEach(function (x) { p[x.type] = x.value; });
+    return { y: +p.year, mo: +p.month, d: +p.day, h: +p.hour % 24, mi: +p.minute, s: +p.second, day: p.weekday };
+  }
+  function offsetAt(zone, t) { var w = wall(zone, t); return Date.UTC(w.y, w.mo - 1, w.d, w.h, w.mi, w.s) - Math.floor(t / 1000) * 1000; }
+  function hm(w) { return (w.h % 12 || 12) + ":" + (w.mi < 10 ? "0" : "") + w.mi + " " + (w.h < 12 ? "AM" : "PM"); }
+  U.convert_time = function (request) {
+    var m = /^\s*(noon|midnight|\d{1,2}(?::\d{2})?\s*(?:am|pm|a\.m\.|p\.m\.)?)\s*(.*?)\s*\b(?:in|to)\s+(.+?)\s*$/i.exec(request);
+    if (!m) return 'Say it like "3pm PST in Tokyo" or "15:30 London to New York".';
+    var c = clockOf(m[1]);
+    if (!c) return m[1].trim() + " is not a time I can read. Try 3pm, 3:30 pm or 15:30.";
+    var srcText = m[2].trim().replace(/^(?:in|from)\s+/i, "");
+    var src = srcText ? tzOf(srcText) : { zone: undefined, label: "here" }, dst = tzOf(m[3]);
+    if (!src || !dst) return "I do not know the time zone for " + (!dst ? m[3] : srcText).trim() + ".";
+    var today = wall(src.zone, Date.now()), guess = Date.UTC(today.y, today.mo - 1, today.d, c[0], c[1]);
+    var t = guess - offsetAt(src.zone, guess);
+    t = guess - offsetAt(src.zone, t);  // once more, in case daylight time starts or ends in between
+    return hm(wall(src.zone, t)) + " " + src.label + " is " + hm(wall(dst.zone, t)) + " on " + wall(dst.zone, t).day + " in " + dst.label + ".";
+  };
   U.current_date = function () {
     return "It is " + new Date().toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" }) + ".";
   };
@@ -601,6 +648,9 @@
     .forEach(function (name) { U[name] = function () { return NO_PHOTOS; }; U.NEEDS_MAC.push(name); });
 
   ROUTES.push.apply(ROUTES, [
+    // a time in one zone to another: ahead of convert_units, same as tools_util.ROUTES
+    [/^(?:what(?:'s| is)(?: the time)?|what time is|when is|convert)?\s*((?:noon|midnight|\d{1,2}:\d{2}(?:\s*(?:am|pm|a\.m\.|p\.m\.))?|\d{1,2}\s*(?:am|pm|a\.m\.|p\.m\.))\s+.*\b(?:in|to)\s+.+)$/i,
+     function (m) { return ["convert_time", m[1]]; }],
     [/^(?:calc(?:ulate)?|compute|work out|math)[: ]+(.+)$/i, function (m) { return ["calculate", m[1]]; }],
     [/^(?:convert )?(-?\d+) (?:to|in|into) roman(?: numerals?)?$/i, function (m) { return ["roman_numeral", m[1]]; }],
     [/^convert (.+)$/i, function (m) { return ["convert_units", m[1]]; }],
