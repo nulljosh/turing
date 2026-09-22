@@ -303,6 +303,15 @@ Gaps, in order:
 
 - [ ] **Her own head, the rest.** Attempted 2026-09-21 (docs/BAKEOFF.md "round five"): training data now exists for all 77 tools, but the retrain refused 19 right picks it used to allow, so the shipped picker still covers the first 51. Not blocking 1.0.0: the other 26 tools work through the exact router.
 
+### How we compete with trillion-dollar labs (set 2026-09-22)
+We will not out-think Claude or GPT: that is data centres and years. We win where they structurally can't follow:
+1. **It's yours and it's local.** Runs on your Mac, no account, no per-query cost, nothing leaves the machine. They can't ship that without giving away the model.
+2. **Hands on your real computer.** Exact, instant tools (77 and counting) that open, edit, search, remember, and ask before writing. Frontier chat apps still mostly live in a browser tab.
+3. **Never confidently wrong.** Grounded answers with sources, declines instead of guessing. A small model that says "I don't know" beats a big one that invents.
+4. **Borrow their brains, legally.** Use frontier models as teachers (Phase 6 distillation) and as tools she can call when asked, so her floor rises with theirs.
+5. **Tiny and fast.** 0.5B picks tools in milliseconds on a Mac Mini. Speed and reliability are the product.
+Every loop iteration should move one of these five.
+
 ### Gaps found by the loop
 The loop compares her with other assistants (Siri and Shortcuts, Apple Intelligence, Claude and ChatGPT desktop with MCP, Open Interpreter, Raycast AI, local Ollama agents), adds each real gap here with where it was seen, builds it, then deletes the line once it ships (history lives in git). Newest and biggest first.
 
