@@ -362,6 +362,5 @@ The model picks, the code does. More menu is more power. Rules: every tool ships
 - [ ] Shortcuts bridge: `run_shortcut(name)` runs any Apple Shortcut, so one tool opens hundreds of actions the user already owns
 - [ ] MCP both ways: serve her tools over MCP so other assistants can use her hands, and let her call MCP servers so any MCP tool becomes hers
 - [ ] Blender family (Blender 5.2 LTS is installed, runs with no window: `blender -b -P script.py`): render a scene to an image, make a simple 3D object from a fixed menu, turn a logo into 3D text, convert between 3D formats, report what is in a file. Same rules as every family: new file, mocked unit tests that pass on Linux, one live smoke run each
-- [ ] Live smoke run for the nine Pixelmator image tools in `tools_image.py`. Only `image_info` has run for real
 - [ ] Sharp paintings: 20,000 layers removes the blocky look and 60,000 looks photographic (simulated offline). Grouping layers was measured SLOWER (460 s against 336 s flat for 2000 layers) and reverted. Hiding the app is the one proven speed-up. Next idea to measure: merge same-color neighbor cells so each layer buys more picture
 

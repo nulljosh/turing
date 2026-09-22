@@ -135,7 +135,7 @@ def enhance_image(path):
         script = (
             'tell application "Pixelmator Pro"\n'
             f'\tset d to open (POSIX file {pxm.as_string(full)})\n'
-            '\tenh d\n'
+            '\tenhance layer 1 of d\n'
             f'\texport d to (POSIX file {pxm.as_string(out)}) as PNG\n'
             '\tclose d saving no\n'
             'end tell\n'
@@ -167,7 +167,7 @@ def grayscale_image(path):
         script = (
             'tell application "Pixelmator Pro"\n'
             f'\tset d to open (POSIX file {pxm.as_string(full)})\n'
-            '\tset the black and white of the color adjustments of d to true\n'
+            '\tset the black and white of the color adjustments of layer 1 of d to true\n'
             f'\texport d to (POSIX file {pxm.as_string(out)}) as PNG\n'
             '\tclose d saving no\n'
             'end tell\n'

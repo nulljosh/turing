@@ -52,6 +52,8 @@ if [ "$1" = "--full" ]; then
 		HANDS_REFUSED=$(echo "$OUT" | grep -o "[0-9]* right picks refused" | cut -d' ' -f1)
 	fi
 
+	python3 eval/smoke_images.py 2>&1 | tail -3 || true
+	python3 eval/smoke_images.py >/dev/null 2>&1 || { echo "FAIL image tools smoke run"; exit 1; }
 	.venv/bin/python eval/a11y.py https://turing.heyitsmejosh.com 2>&1 | tail -5 || true  # shown, and the release reads it
 	.venv/bin/python eval/a11y.py https://turing.heyitsmejosh.com >/dev/null 2>&1 || { echo "FAIL accessibility audit"; exit 1; }
 	if .venv/bin/python eval/web_demo.py https://turing.heyitsmejosh.com 2>&1 | grep -q "^ok:"; then
