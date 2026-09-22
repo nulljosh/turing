@@ -185,6 +185,18 @@ class Logo(unittest.TestCase):
             with open(os.path.join(here, path)) as f:
                 self.assertEqual(f.read(), tools_logo.icon_svg(), path)
 
+    def test_the_blueprint_matches_the_icon(self):
+        """docs/icon-blueprint.svg is generated from the icon's own layers, and the icon keeps the measured proportions."""
+        import tools_logo
+        here = os.path.dirname(os.path.abspath(__file__))
+        with open(os.path.join(here, "docs", "icon-blueprint.svg")) as f:
+            self.assertEqual(f.read(), tools_logo.icon_blueprint_svg())
+        m = tools_logo.icon_measures()
+        self.assertTrue(0.70 <= m["fill"] <= 0.80, m["fill"])  # the mark keeps a real margin inside the tile
+        self.assertGreaterEqual(m["gap"] / 1024 * 16, 0.95)  # the dark ring is still a whole pixel at 16 px
+        self.assertGreaterEqual(m["contrast"]["core on tile"], 7)
+        self.assertGreaterEqual(m["contrast"]["accent on tile"], 7)
+
     def test_flower_reads_small(self):
         """The flower: accent petals only, none inside the dark ring, one ink core drawn last, never text."""
         import math
