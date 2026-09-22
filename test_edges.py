@@ -157,7 +157,8 @@ class Dates(unittest.TestCase):
                 """The frozen day."""
                 return real_date(2026, 9, 22)
 
-        with mock.patch.object(u, "date", Frozen):
+        import util_dates
+        with mock.patch.object(util_dates, "date", Frozen):  # date_math lives in util_dates, re-exported by tools_util
             self.assertEqual(u.date_math("100 days from"), "100 days from now is Thursday, December 31, 2026.")
             self.assertEqual(u.date_math("3 weeks ago"), "3 weeks ago is Tuesday, September 1, 2026.")
             self.assertEqual(u.date_math("5 days from tomorrow"), "5 days from tomorrow is Monday, September 28, 2026.")
