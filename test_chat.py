@@ -95,14 +95,13 @@ def test_officeholder_outage_admits_it_instead_of_answering_from_faq():
     # question", so the question fell through and FAQ.md answered with its
     # own description of this feature. Stays offline: the stub makes every
     # request fail, so this never touches the network.
-    import ask
-    real = ask.http_json
-    ask.http_json = lambda url, timeout=8, on_error=None: on_error
-    try:
+    import ask, ask_web
+    dead = lambda url, timeout=8, on_error=None: on_error
+    # the officeholder lookup lives in ask_web, the encyclopedia fallback in ask: both see the outage
+    with __import__("unittest.mock").mock.patch.object(ask_web, "http_json", dead), \
+         __import__("unittest.mock").mock.patch.object(ask, "http_json", dead):
         answer, _, _ = answer_turn("who is the current prime minister of canada", [], False)
-        assert answer == ask.LOOKUP_FAILED, answer
-    finally:
-        ask.http_json = real
+    assert answer == ask.LOOKUP_FAILED, answer
 
 
 def test_officeholder_empty_result_is_not_treated_as_an_outage():
@@ -110,13 +109,9 @@ def test_officeholder_empty_result_is_not_treated_as_an_outage():
     # the other half of the same distinction: a request that succeeds and
     # simply finds no office must still fall through normally, or every
     # "who is ..." question would start claiming the network is down
-    import ask
-    real = ask.http_json
-    ask.http_json = lambda url, timeout=8, on_error=None: {"search": []}
-    try:
+    import ask, ask_web
+    with __import__("unittest.mock").mock.patch.object(ask_web, "http_json", lambda url, timeout=8, on_error=None: {"search": []}):
         assert ask.current_officeholder("who is the wizard of oz") == (None, None)
-    finally:
-        ask.http_json = real
 
 
 def test_topic_switch_breaks_out_of_a_sticky_project_topic():
