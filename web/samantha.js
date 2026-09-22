@@ -86,6 +86,8 @@
       return urlOf(g) || (g.trim().indexOf(" ") >= 0 && !appMatch(g)) ? ["open_url", g] : ["open_app", g];
     }]
   ];
+  // the catch-all routes whose argument is any text, same as tools._GREEDY
+  var GREEDY = [ROUTES[ROUTES.length - 2][0], ROUTES[ROUTES.length - 1][0]];
   var MULTISTEP = /\b(?:and (?:then )?(?:tell|read|find|summar|poke|look|check|see|click)|poke around|then )/i;
   var ACTION = /^(?:open|launch|start|go to|visit|browse|pull up|search|google|look up|poke around|take a|grab a|screenshot|make|design|draw|play|pause|skip|remind me|set a)\b/i;
   var LEAD = /^(?:(?:hey|ok|okay|yo|samantha|please|now|just)[, ]+)*(?:(?:can|could|would|will) you (?:please )?|i (?:want|need|would like|'d like) (?:you )?to |let's |go ahead and )?(?:please )?/i;
@@ -104,6 +106,24 @@
       if (m) { var r = ROUTES[i][1](m); return { tool: r[0], arg: r[1] }; }
     }
     return ACTION.test(q) ? { agent: true } : null;
+  }
+
+  function routeOf(command) {
+    for (var i = 0; i < ROUTES.length; i++) if (ROUTES[i][0].test(command)) return ROUTES[i][0];
+    return null;
+  }
+
+  // same rule as tools.chain: the steps of "open youtube and set the volume to 20", or null when it is one command
+  function chain(query) {
+    var whole = bare(query.split("\n").pop());
+    if (!/\bthen\b|;/i.test(whole) && routeOf(whole) && GREEDY.indexOf(routeOf(whole)) < 0) return null;
+    var parts = whole.split(/\s*(?:,? and then |,? then |,? and |; )\s*/i).map(function (p) {
+      return p.replace(/^(?:tell|show|give|read) me (?:my |the )?|^(?:also|and) /i, "").trim();
+    });
+    if (parts.length < 2 || !parts.every(Boolean)) return null;
+    if (parts.slice(1).some(function (p) { return GREEDY.indexOf(routeOf(p)) >= 0; })) return null;
+    var steps = parts.map(function (p) { return route(p); });
+    return steps.every(function (r) { return r && r.tool; }) ? steps : null;
   }
 
   // ---- the page itself is a thing she can act on. Landing page only: tools.py has no page. ----
@@ -566,7 +586,7 @@
     [/^run (?:the |my )?shortcut (.+)$|^run (.+) shortcut$/i, function (m) { return ["run_shortcut", ((m[1] || m[2]))]; }]
   ]);
 
-  root.Samantha = { route: route, exact: exact, bare: bare, urlOf: urlOf, appMatch: appMatch, APPS: APPS, SITES: SITES,
+  root.Samantha = { route: route, chain: chain, exact: exact, bare: bare, urlOf: urlOf, appMatch: appMatch, APPS: APPS, SITES: SITES,
                     stem: stem, keywords: keywords, isProject: isProject,
                     pageRoute: pageRoute, section: section, sound: sound, duration: duration, COLORS: COLORS, util: U };
 })(typeof globalThis !== "undefined" ? globalThis : this);

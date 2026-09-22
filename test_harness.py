@@ -88,6 +88,21 @@ class HarnessTests(unittest.TestCase):
         self.assertEqual(s.ask("one more time"), "Okay, I will not.")
         self.assertEqual(len(asked), 2)
 
+    def test_plain_commands_chain_without_a_model(self):
+        """Two commands in one sentence both run, in order, each shown, and a write in the chain still asks."""
+        s, asked, shown = self.session(False)
+        with mock.patch.object(tools, "_run", return_value=""):
+            self.assertEqual(s.ask("open youtube and set the volume to 20"), "Opened https://youtube.com in Chrome.\nVolume at 20.")
+            self.assertEqual(shown, ["  [open_url(youtube)]", "  [set_volume(20)]"])
+            reply = s.ask("calculate 6*7, then take a note buy milk")
+        self.assertEqual(reply, "42\nSkipped new_note.")
+        self.assertEqual(asked, [("new_note", ("buy milk",))])
+
+    def test_an_and_inside_one_command_is_not_a_chain(self):
+        """A route for the whole sentence wins, and a later step only a catch-all takes is words, not a command."""
+        for command in ("open chrome and go to github.com", "make a logo for salt and pepper", "remind me to call mom and open the garage", "search for cats and dogs", "rock and roll"):
+            self.assertIsNone(tools.chain(command), command)
+
     def test_plan_runs_nothing(self):
         """Plan runs nothing."""
         with mock.patch.object(tools, "_run", return_value="") as run:

@@ -566,6 +566,10 @@
     // bare() strips "can you", "please" and the rest, the same as every other command
     var plain = S.bare(q), paintMatch = /^(?:paint|repaint|draw|imagine|sketch|illustrate|(?:generate|make|create)(?: me)?(?: an?)?(?: image| picture| painting| drawing| photo) of)\b/i.exec(plain);
     if (paintMatch) return runTool('paint', plain.slice(paintMatch[0].length)).then(function (o) { return { calls: [o.call], text: o.text, node: o.node }; });
+    var steps = S.chain(q);
+    if (steps) return steps.reduce(function (chain, r) {
+      return chain.then(function (acc) { return runTool(r.tool, r.arg).then(function (o) { acc.calls.push(o.call); acc.text.push(o.text); return acc; }); });
+    }, Promise.resolve({ calls: [], text: [] })).then(function (a) { return { calls: a.calls, text: a.text.join('\n') }; });
     var r = S.pageRoute(q, names()) || S.route(q);
     if (r && r.tool) return runTool(r.tool, r.arg).then(function (o) { return { calls: [o.call], text: o.text, node: o.node }; });
     if (r && r.agent) return agent(q);

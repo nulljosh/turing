@@ -179,7 +179,7 @@ def current_volume():
 
 def battery():
     """Battery or power status of this Mac."""
-    return _run(["pmset", "-g", "batt"]).splitlines()[-1].strip()
+    return (_run(["pmset", "-g", "batt"]).splitlines() or ["No battery reading on this Mac."])[-1].strip()
 
 
 def say(text):
@@ -544,6 +544,9 @@ def _util_route(name, arg):
     return lambda m: globals()[name](arg(m)) if takes else globals()[name]()
 
 
+# the catch-all routes whose argument is any text: a sentence they swallow may really be several commands
+_GREEDY = {_ROUTES[-2][0], _ROUTES[-1][0]}
+
 # the image tools before the utilities, so "convert cat.png to jpg" is an image and never a unit conversion
 _ROUTES = _ROUTES + tuple((pat, _util_route(name, arg)) for pat, name, arg in tools_image.ROUTES)
 _ROUTES = _ROUTES + tuple((pat, _util_route(name, arg)) for pat, name, arg in tools_util.ROUTES)  # 31 utility tools: math, text, dice, this Mac's vitals
@@ -794,11 +797,55 @@ def plan(query):
     return calls
 
 
+_STEP = re.compile(r"\s*(?:,? and then |,? then |,? and |; )\s*", re.I)
+_THEN = re.compile(r"\bthen\b|;", re.I)
+_TELL = re.compile(r"^(?:tell|show|give|read) me (?:my |the )?|^(?:also|and) ", re.I)
+
+
+def _route_of(command):
+    """The pattern of the first route that takes this bare command, or None."""
+    return next((p for p, _ in _ROUTES if p.match(command)), None)
+
+
+def chain(query, log=None, confirm=None):
+    """Several plain commands in one sentence, run in order with no model: "open youtube and set the volume
+    to 20". Only when every step routes on its own; one step the router does not know and it is agent() work.
+    Each step is shown, and a write still waits for its own yes. Returns the replies, or None."""
+    whole = _bare(query.splitlines()[-1])
+    # "then" always means another step. A plain "and" may be part of one: a real route for the whole
+    # sentence wins ("open chrome and go to github.com", "remind me to call mom and dad")
+    if not _THEN.search(whole) and _route_of(whole) not in (None, *_GREEDY):
+        return None
+    parts = [_TELL.sub("", p).strip() for p in _STEP.split(whole)]
+    if len(parts) < 2 or not all(parts):
+        return None
+    # a later step that only a catch-all takes ("open the garage") is more likely words than a command
+    if any(_route_of(p) in _GREEDY for p in parts[1:]):
+        return None
+    steps = [plan(p) for p in parts]
+    if not all(len(s) == 1 for s in steps):
+        return None
+    replies = []
+    for part, [(name, args)] in zip(parts, steps):
+        if log:
+            log(f"  [{name}({', '.join(args)})]")
+        if confirm and name in WRITES and not confirm(name, args):
+            replies.append(f"Skipped {name}.")
+            continue
+        replies.append(act(part))
+    return "\n".join(replies)
+
+
 def do(query, log=None, confirm=None):
     """The one entry point. The regex router first: instant, exact, and it has
-    never fired the wrong tool. What it does not recognise goes to her own
-    head, which understands phrasings nobody wrote a rule for. Multi-step work
-    goes to agent(). Anything else is not a command: None."""
+    never fired the wrong tool. Several plain commands in one sentence run in
+    order. What it does not recognise goes to her own head, which understands
+    phrasings nobody wrote a rule for. Multi-step work goes to agent().
+    Anything else is not a command: None."""
+    # before the single routes, whose free-text arguments ("open (.+)") would swallow "and set the volume to 20"
+    steps = chain(query, log=log, confirm=confirm)
+    if steps:
+        return steps
     if confirm or log:
         for name, args in plan(query):
             if log:
