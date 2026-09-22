@@ -170,6 +170,95 @@ def days_until(target):
     return "That is today." if n == 0 else f"{abs(n)} day{'s' * (abs(n) != 1)} {'until' if n > 0 else 'since'} {d.strftime('%B %-d, %Y')}."
 
 
+_MONTHS = {m: i for i, m in enumerate(("january", "february", "march", "april", "may", "june", "july", "august",
+                                         "september", "october", "november", "december"), 1)}
+_MONTHS.update({m[:3]: i for m, i in list(_MONTHS.items())})
+_MONTHS["sept"] = 9
+_COUNT = {"a": 1, "an": 1, "one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6, "seven": 7, "eight": 8, "nine": 9, "ten": 10}
+
+
+def _day(text):
+    """A date from what people type: today, tomorrow, yesterday, 2026-12-25, July 4 1976, 4 July 1976, or a holiday
+    (its next date). None when it is not one, or not a real day."""
+    t = re.sub(r"[,.]|\b(?:the|of)\b|(?<=\d)(?:st|nd|rd|th)\b", " ", text.lower()).split()
+    key, today = " ".join(t), date.today()
+    try:
+        if key in ("today", "now"):
+            return today
+        if key in ("tomorrow", "yesterday"):
+            return date.fromordinal(today.toordinal() + (1 if key == "tomorrow" else -1))
+        if key in _HOLIDAYS:
+            d = date(today.year, *_HOLIDAYS[key])
+            return d if d >= today else date(today.year + 1, *_HOLIDAYS[key])
+        if len(t) == 1:
+            return date.fromisoformat(t[0])
+        if len(t) == 3 and t[0] in _MONTHS and t[1].isdigit() and t[2].isdigit():
+            return date(int(t[2]), _MONTHS[t[0]], int(t[1]))
+        if len(t) == 3 and t[1] in _MONTHS and t[0].isdigit() and t[2].isdigit():
+            return date(int(t[2]), _MONTHS[t[1]], int(t[0]))
+    except (ValueError, OverflowError):
+        return None
+    return None
+
+
+def _shift(d, n, unit):
+    """d moved by n days, weeks, months or years. A month or year landing past the month's end keeps to its last day."""
+    if unit in ("day", "week"):
+        return date.fromordinal(d.toordinal() + n * (7 if unit == "week" else 1))
+    months = d.month - 1 + n * (12 if unit == "year" else 1)
+    y, m = d.year + months // 12, months % 12 + 1
+    last = (date(y + (m == 12), m % 12 + 1, 1).toordinal() - 1) - date(y, m, 1).toordinal() + 1
+    return date(y, m, min(d.day, last))
+
+
+_MONTH_NAMES = ("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December")
+_DAY_NAMES = ("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
+
+
+def _long(d):
+    """July 4, 1976. Spelled out by hand: strftime's %Y writes year 1 as "1" on Linux and "0001" on macOS."""
+    return f"{_MONTH_NAMES[d.month - 1]} {d.day}, {d.year}"
+
+
+def _say(d):
+    """A date the way she says it: Sunday, July 4, 1976."""
+    return f"{_DAY_NAMES[d.weekday()]}, {_long(d)}"
+
+
+def date_math(question):
+    """Dates worked out exactly. Takes "100 days from now", "3 weeks ago", "2 months after 2026-01-31",
+    "weekday July 4 1976" or "between 2026-01-01 and christmas"."""
+    q = question.strip().lower()
+    bad = 'Say it like "100 days from now", "weekday July 4 1976" or "between 2026-01-01 and 2026-12-25".'
+    try:
+        m = re.fullmatch(r"(\d{1,6}|a|an|one|two|three|four|five|six|seven|eight|nine|ten) (day|week|month|year)s? (from|after|before|ago)(?: (.+))?", q)
+        if m:
+            n = int(m.group(1)) if m.group(1).isdigit() else _COUNT[m.group(1)]
+            base = date.today() if m.group(3) == "ago" or m.group(4) in (None, "now", "today") else _day(m.group(4))
+            if m.group(3) == "ago" and m.group(4) or base is None:
+                return bad
+            d = _shift(base, -n if m.group(3) in ("before", "ago") else n, m.group(2))
+            said = q + " now" if q.endswith(" from") else q  # the router drops a trailing "now" as filler
+            return f"{said[0].upper() + said[1:]} is {_say(d)}."
+        m = re.fullmatch(r"weekday (.+)", q)
+        if m:
+            d = _day(m.group(1))
+            if not d:
+                return bad
+            tense = "is" if d == date.today() else "was" if d < date.today() else "will be"
+            return f"{_long(d)} {tense} a {_DAY_NAMES[d.weekday()]}."
+        m = re.fullmatch(r"between (.+?) and (.+)", q)
+        if m:
+            a, b = _day(m.group(1)), _day(m.group(2))
+            if not a or not b:
+                return bad
+            n = abs((b - a).days)
+            return f"{n:,} day{'s' * (n != 1)} between {_long(a)} and {_long(b)}."
+    except (ValueError, OverflowError):
+        return "That date is out of range: I can do years 1 to 9999."
+    return bad
+
+
 # ---------- chance ----------
 
 def flip_coin():
@@ -778,7 +867,7 @@ def call_mcp_tool(request):
     return ("Error from " + server + ": " if res.get("isError") else "") + (text[:2000] or "Done, with no text back.")
 
 
-TOOLS = (calculate, convert_units, time_in, current_date, days_until, flip_coin, roll_dice, random_number, make_password,
+TOOLS = (calculate, convert_units, time_in, current_date, days_until, date_math, flip_coin, roll_dice, random_number, make_password,
          make_uuid, hash_text, base64_encode, base64_decode, word_count, reverse_text, shout, morse_code, json_pretty,
          is_prime, roman_numeral, tip, disk_space, uptime, memory_usage, cpu_load, ip_address, wifi_name, system_info,
          copy_to_clipboard, sleep_display, reveal_in_finder, list_shortcuts, run_shortcut, list_mcp_tools, call_mcp_tool, list_tabs, switch_tab, close_tab, read_tab, remember, recall, forget, read_screen, read_document, find_in_document, ask_document, ask_screen)
@@ -791,7 +880,12 @@ ROUTES = (
     (re.compile(r"^convert (.+)$", _I), "convert_units", lambda m: m.group(1)),
     (re.compile(r"^what time is it in (.+)$|^(?:what(?:'s| is) )?(?:the )?time in (.+)$", _I), "time_in", lambda m: m.group(1) or m.group(2)),
     (re.compile(r"^what(?:'s| is)(?: the)? date(?: today)?$|^what day is it(?: today)?$|^today'?s date$", _I), "current_date", lambda m: ""),
+    (re.compile(r"^(?:how many )?days? between (.+?) and (.+)$", _I), "date_math", lambda m: f"between {m.group(1)} and {m.group(2)}"),
     (re.compile(r"^(?:how many )?days? (?:until|till|to) (.+)$|^how long (?:until|till) (.+)$", _I), "days_until", lambda m: m.group(1) or m.group(2)),
+    (re.compile(r"^(?:what(?:'s| is)(?: the date)? |what day is |when is |what date is )?((?:\d{1,6}|a|an|one|two|three|four|five|six|seven|eight|nine|ten) (?:day|week|month|year)s? (?:from(?: .+)?|ago|after .+|before .+))$", _I),
+     "date_math", lambda m: m.group(1)),
+    (re.compile(r"^(?:what )?day of (?:the )?week (?:is|was|will be|for) (.+)$|^what day (?:is|was|will be) ((?:\w+ \d{1,2}(?:st|nd|rd|th)?,? \d{3,4})|(?:\d{1,2} \w+ \d{3,4})|\d{4}-\d{2}-\d{2})$", _I),
+     "date_math", lambda m: "weekday " + (m.group(1) or m.group(2))),
     (re.compile(r"^(?:flip|toss) a coin$", _I), "flip_coin", lambda m: ""),
     (re.compile(r"^roll (?:a |an )?(\d*d\d+)$", _I), "roll_dice", lambda m: m.group(1)),
     (re.compile(r"^roll (?:a |the )?(?:dice|die)$", _I), "roll_dice", lambda m: "1d6"),
@@ -869,7 +963,7 @@ def demo():
     assert copy_to_clipboard("x") == "Copied." and sleep_display() == "Screen off." and reveal_in_finder("~").startswith("Showing")
     assert reveal_in_finder("~/.ssh").startswith("No file") and reveal_in_finder("/etc/passwd").startswith("No file")
     assert run_shortcut("zzz-not-real").startswith("I do not see") and (list_shortcuts().startswith("No Shortcuts") or "Shortcuts:" in list_shortcuts())
-    assert len(TOOLS) == 47 and all(f.__doc__ for f in TOOLS)
+    assert len(TOOLS) == 48 and all(f.__doc__ for f in TOOLS)
     call = lambda name, a: globals()[name](a) if globals()[name].__code__.co_argcount else globals()[name]()
     hit = lambda q: next((call(name, arg(m)) for pat, name, arg in ROUTES if (m := pat.match(q))), None)
     assert hit("calculate 17 * 23") == "391" and hit("convert 5 km to miles") == "5 km is 3.1069 mi."

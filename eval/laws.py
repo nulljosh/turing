@@ -20,7 +20,7 @@ import tools
 # tools.NOT_FOR_MODELS, and this list says which tools count as read-only. Anything not here and not classified fails law 1.
 READ_ONLY = {"open_app", "open_url", "web_search", "current_tab", "read_page", "screenshot", "clipboard", "set_volume", "battery", "say",
              "list_dir", "read_file", "music", "weather", "timer", "calendar_today", "image_info", "calculate", "convert_units", "time_in",
-             "current_date", "days_until", "flip_coin", "roll_dice", "random_number", "make_password", "make_uuid", "hash_text",
+             "current_date", "days_until", "date_math", "flip_coin", "roll_dice", "random_number", "make_password", "make_uuid", "hash_text",
              "base64_encode", "base64_decode", "word_count", "reverse_text", "shout", "morse_code", "json_pretty", "is_prime", "roman_numeral",
              "tip", "read_document", "find_in_document", "ask_document", "list_mcp_tools", "list_tabs", "switch_tab", "read_tab", "disk_space", "uptime", "memory_usage", "cpu_load", "ip_address", "wifi_name", "system_info", "list_shortcuts",
              "reveal_in_finder"}
