@@ -10,3 +10,23 @@ step 1400 ep 3.8 loss 0.4024 175s
 step 1600 ep 4.4 loss 0.2952 200s
 step 1800 ep 4.9 loss 0.3652 225s
 step 2000 ep 5.5 loss 0.1995 250s
+step 2200 ep 6.0 loss 0.1456 275s
+step 2400 ep 6.6 loss 0.1775 300s
+step 2600 ep 7.1 loss 0.0436 325s
+step 2800 ep 7.7 loss 0.0067 349s
+step 3000 ep 8.2 loss 0.0286 373s
+step 3200 ep 8.8 loss 0.0228 398s
+step 3400 ep 9.3 loss 0.0099 422s
+step 3600 ep 9.9 loss 0.0063 447s
+step 3800 ep 10.4 loss 0.0033 472s
+step 4000 ep 11.0 loss 0.0022 496s
+step 4200 ep 11.5 loss 0.0011 521s
+step 4400 ep 12.1 loss 0.0008 545s
+step 4600 ep 12.6 loss 0.0011 570s
+step 4800 ep 13.2 loss 0.0008 594s
+step 5000 ep 13.7 loss 0.0006 615s
+step 5200 ep 14.3 loss 0.0006 637s
+step 5400 ep 14.8 loss 0.0005 672s
+step 5600 ep 15.4 loss 0.0008 736s
+step 5800 ep 15.9 loss 0.0017 799s
+done 14.0 min, 5925 steps

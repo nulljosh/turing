@@ -1,0 +1,5 @@
+unseen: 248/834
+actions: 70/79
+questions: 71/94
+389/1007 passed, 517 picked the wrong tool, 198 of those get past the guard in tools.do(), 0 right picks refused by the guard
+params 1826746, file 7.32 MB, train 14.0 min, 19.1 ms/query, exp1

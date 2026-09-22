@@ -15,3 +15,10 @@ hands-data/
 hands-train.log
 menubar/build/
 .claude/
+
+scratch-picker/exp*/
+scratch-picker/t/
+scratch-picker/__pycache__/
+
+hands-adapter-*/
+*.npz
