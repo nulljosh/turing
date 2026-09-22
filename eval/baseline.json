@@ -1,8 +1,8 @@
 {
-  "chat": 18,
-  "actions": 77,
-  "parity": 77,
-  "hands_passed": 850,
-  "hands_past_guard": 4,
+  "chat": 20,
+  "actions": 79,
+  "parity": 79,
+  "hands_passed": 844,
+  "hands_past_guard": 89,
   "hands_refused": 0
 }
