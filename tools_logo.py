@@ -111,21 +111,29 @@ def _complex_layers(palette, rings, rays, ray_style, orbit_dots, star_points):
 # Default mode: no letters at all. She turns four dials, the harness lays the cells on a golden-angle spiral (the way a
 # sunflower packs its seeds), so it is never symmetric in the same way twice and never has text.
 _BLOOM_SCHEMA = {"type": "object", "required": ["palette", "cells", "shape", "lit"], "properties": {
-    "palette": {"enum": list(PALETTES)}, "cells": {"type": "integer", "minimum": 55, "maximum": 233},
+    "style": {"enum": ["spiral", "flower"]},
+    "palette": {"enum": list(PALETTES)}, "cells": {"type": "integer", "minimum": 13, "maximum": 233},
     "shape": {"enum": ["circle", "square"]}, "lit": {"type": "integer", "minimum": 1, "maximum": 5}}}
 
 
-def _bloom_layers(palette, cells, shape, lit):
-    """A wordless logo: cells on a golden-angle spiral, growing outward, with a few lit in the accent color."""
+def _bloom_layers(palette, cells, shape, lit, style="spiral"):
+    """A wordless logo: cells on a golden-angle spiral, growing outward, with a few lit in the accent color.
+    style "flower" packs the cells into accent petals around a clear dark ring and one bright core, so the
+    mark still reads as a sunflower with a lit centre at 16 pixels, the way a browser tab shows it."""
+    if style == "flower":
+        return _flower_layers(palette, cells, shape)
     tile, ink, accent = PALETTES[palette]
     C, golden = 512, math.radians(137.507764)
     fib = [n for n in (1, 3, 8, 21, 55, 144, 233) if n <= cells]
     bright = set(fib[-lit:]) | {1}
+    # fewer cells are drawn bigger, so the spiral fills the same disc: 144 is the reference size, and 21 cells
+    # read as a bold sunflower even as a 16 pixel browser tab icon
+    k = math.sqrt(144 / cells)
     L = [{"type": "rounded_rectangle", "name": "Tile", "width": 880, "height": 880, "corner_radius": 200, "fill": tile}]
     for i in range(1, cells + 1):
         f = math.sqrt((i - 1) / (cells - 1))  # cell 1 sits exactly on the centre: the one cell under the head
         r, theta = 335 * f, i * golden
-        size = round(14 + 30 * f + ((44 if i == 1 else 16) if i in bright else 0))
+        size = round(k * (14 + 30 * f + ((44 if i == 1 else 16) if i in bright else 0)))
         cell = {"name": f"Cell {i}", "cx": round(C + r * math.cos(theta)), "cy": round(C + r * math.sin(theta)), "width": size, "height": size,
                 "fill": accent if i in bright else ink, "opacity": 100 if i in bright else round(52 + 40 * f)}
         if shape == "square":
@@ -133,6 +141,29 @@ def _bloom_layers(palette, cells, shape, lit):
         else:
             cell["type"] = "ellipse"
         L.append(cell)
+    return L
+
+
+def _flower_layers(palette, cells, shape):
+    """The flower bloom: the same golden-angle spiral, cells packed until they nearly touch, the inner ones cleared
+    to a dark ring, and one core in the palette's ink. Graded at 180, 64, 32 and 16 pixels on light and dark pages."""
+    tile, ink, accent = PALETTES[palette]
+    C, golden, k = 512, math.radians(137.507764), 1.45 * math.sqrt(144 / cells)
+    L = [{"type": "rounded_rectangle", "name": "Tile", "width": 880, "height": 880, "corner_radius": 200, "fill": tile}]
+    for i in range(2, cells + 1):
+        f = math.sqrt((i - 1) / (cells - 1))
+        if f < 0.45:  # the dark ring that makes the core read as the one cell under the head
+            continue
+        r, theta = 335 * f, i * golden
+        size = round(k * (14 + 30 * f))
+        cell = {"name": f"Petal {i}", "cx": round(C + r * math.cos(theta)), "cy": round(C + r * math.sin(theta)),
+                "width": size, "height": size, "fill": accent, "opacity": round(85 + 15 * f)}
+        if shape == "square":
+            cell.update(type="rounded_rectangle", corner_radius=max(2, size // 6), rotation=round(math.degrees(theta) % 360, 2))
+        else:
+            cell["type"] = "ellipse"
+        L.append(cell)
+    L.append({"type": "ellipse", "name": "Core", "cx": C, "cy": C, "width": 180, "height": 180, "fill": ink})
     return L
 
 
@@ -150,7 +181,9 @@ def make_logo(description):
         prompt = "Pick a simple icon logo with no letters or text at all. " + pal + "motif: ring, spark, bars or dot. Logo for: " + description
     else:
         prompt = ("Pick an icon logo, no letters or text at all. " + pal + "cells: how many cells spiral out from the centre, a Fibonacci "
-                  "number reads best. shape: circle or square. lit: how many cells glow in the accent color. Logo for: " + description)
+                  "number reads best. shape: circle or square. lit: how many cells glow in the accent color. "
+                  "style: spiral (open cells, best big) or flower (packed petals round one bright core, reads even as a tiny tab icon). "
+                  "Logo for: " + description)
     body = json.dumps({"model": _tools().AGENT_MODEL, "stream": False, "think": False, "format": _COMPLEX_SCHEMA if fancy else _LOGO_SCHEMA if simple else _BLOOM_SCHEMA,
                        "messages": [{"role": "user", "content": prompt}]}).encode()
     try:
@@ -189,3 +222,50 @@ def paint_image(path):
                   + (["--headless"] if HEADLESS else []), timeout=600)
     return (f"Painted it from 800 layers in Pixelmator, saved to {out}." if os.path.exists(out)
             else f"Pixelmator refused the painting: {result[-300:]}")
+
+
+def layers_to_svg(layers, note=""):
+    """Her layer spec as an SVG, no Pixelmator needed: the same rounded tile, ellipses and stars pxm builds, on the
+    1024 canvas cropped to the 880 tile. note rides along as a comment saying who picked what."""
+    def num(v):
+        """A coordinate without trailing zeros."""
+        return f"{v:.2f}".rstrip("0").rstrip(".")
+
+    def paint(l):
+        """Fill, stroke and opacity attributes of a layer."""
+        a = f' fill="{l["fill"].lower()}"' if l.get("fill") else ' fill="none"'
+        if l.get("stroke"):
+            a += f' stroke="{l["stroke"].lower()}" stroke-width="{num(l.get("stroke_width", 1))}"'
+        if l.get("opacity", 100) != 100:
+            a += f' opacity="{num(l["opacity"] / 100)}"'
+        return a
+
+    out = ['<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="72 72 880 880">']
+    if note:
+        out.append(f"  <!-- {note.replace('--', '-')} -->")
+    for l in layers:
+        cx, cy, w, h = l.get("cx", 512), l.get("cy", 512), l.get("width", 0), l.get("height", 0)
+        turn = f' transform="rotate({num(l["rotation"])} {num(cx)} {num(cy)})"' if l.get("rotation") else ""
+        if l["type"] == "rounded_rectangle":
+            out.append(f'  <rect x="{num(cx - w / 2)}" y="{num(cy - h / 2)}" width="{num(w)}" height="{num(h)}" rx="{num(l.get("corner_radius", 0))}"{paint(l)}{turn}/>')
+        elif l["type"] == "ellipse":
+            out.append(f'  <ellipse cx="{num(cx)}" cy="{num(cy)}" rx="{num(w / 2)}" ry="{num(h / 2)}"{paint(l)}{turn}/>')
+        elif l["type"] == "star":
+            n, R = int(l.get("points", 5)), w / 2
+            r = R * l.get("radius", 50) / 100  # pxm's radius is the inner radius, as a percent of the outer one
+            pts = " ".join(f"{num(cx + (R if k % 2 == 0 else r) * math.cos(math.pi * k / n - math.pi / 2))},"
+                           f"{num(cy + (R if k % 2 == 0 else r) * h / w * math.sin(math.pi * k / n - math.pi / 2))}" for k in range(2 * n))
+            out.append(f'  <polygon points="{pts}"{paint(l)}{turn}/>')
+        else:
+            raise ValueError(f"no SVG for a {l['type']} layer")
+    return "\n".join(out + ["</svg>"]) + "\n"
+
+
+ICON = ("ember", 89, "circle", 1, "flower")  # the dials behind web/icon.svg and icon.svg
+ICON_NOTE = ("Made with Samantha: her logo designer laid 89 ember petals on a golden-angle spiral (style flower), cleared a dark ring, "
+             "and lit one core, the cell under the tape head. Rebuild with tools_logo.icon_svg(); spec in pixelmator/examples/turing-flower.json.")
+
+
+def icon_svg():
+    """Turing's own icon, rebuilt from her designer: the exact bytes of web/icon.svg and icon.svg."""
+    return layers_to_svg(_bloom_layers(*ICON), ICON_NOTE)

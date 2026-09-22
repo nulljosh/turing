@@ -112,24 +112,29 @@
     return svg('polygon', { points: pts.join(' '), fill: fill, opacity: opacity == null ? 1 : opacity });
   }
   function hash(s) { var h = 5381; for (var i = 0; i < s.length; i++) h = ((h * 33) ^ s.charCodeAt(i)) >>> 0; return h; }
-  // Default: no letters. Cells on a golden-angle spiral, the same layout as tools._bloom_layers; cell 1 sits on the centre.
+  // Default: no letters. Cells on a golden-angle spiral, the same layout as tools_logo._bloom_layers; cell 1 sits on the centre.
+  // style flower is her icon's look: packed accent petals round a dark ring and one bright core (tools_logo._flower_layers).
   function drawBloom(desc) {
     var h = hash(desc.toLowerCase()), names = Object.keys(PALETTES), palette = names[h % names.length], p = PALETTES[palette];
     var tile = p[0], ink = p[1], accent = p[2], cells = [55, 89, 144, 233][(h >>> 3) % 4], shape = (h >>> 5) % 2 ? 'square' : 'circle', lit = 1 + (h >>> 7) % 5;
+    var style = (h >>> 9) % 2 ? 'flower' : 'spiral', flower = style === 'flower', k = Math.sqrt(144 / cells) * (flower ? 1.45 : 1);
     var root = svg('svg', { viewBox: '0 0 1024 1024', role: 'img', 'aria-label': 'A wordless logo: a golden spiral of cells' });
     root.appendChild(svg('rect', { x: 72, y: 72, width: 880, height: 880, rx: 200, fill: tile }));
     var golden = 137.507764 * Math.PI / 180, fib = [1, 3, 8, 21, 55, 144, 233].filter(function (n) { return n <= cells; });
-    var bright = fib.slice(-lit).concat([1]);
-    for (var i = 1; i <= cells; i++) {
+    var bright = flower ? [] : fib.slice(-lit).concat([1]), drawn = 1;
+    for (var i = flower ? 2 : 1; i <= cells; i++) {
       var f = Math.sqrt((i - 1) / (cells - 1)), r = 335 * f, th = i * golden, on = bright.indexOf(i) >= 0;
-      var size = Math.round(14 + 30 * f + (on ? (i === 1 ? 44 : 16) : 0)), x = 512 + r * Math.cos(th), y = 512 + r * Math.sin(th);
-      var op = on ? 1 : (52 + 40 * f) / 100, fill = on ? accent : ink;
+      if (flower && f < 0.45) continue;
+      var size = Math.round(k * (14 + 30 * f + (on ? (i === 1 ? 44 : 16) : 0))), x = 512 + Math.round(r * Math.cos(th)), y = 512 + Math.round(r * Math.sin(th));
+      var op = flower ? (85 + 15 * f) / 100 : on ? 1 : (52 + 40 * f) / 100, fill = flower || on ? accent : ink;
+      drawn++;
       root.appendChild(shape === 'square'
         ? svg('rect', { x: x - size / 2, y: y - size / 2, width: size, height: size, rx: Math.max(2, Math.floor(size / 6)), fill: fill, opacity: op,
-                        transform: 'rotate(' + (th * 180 / Math.PI % 360).toFixed(2) + ' ' + x.toFixed(1) + ' ' + y.toFixed(1) + ')' })
+                        transform: 'rotate(' + (th * 180 / Math.PI % 360).toFixed(2) + ' ' + x + ' ' + y + ')' })
         : svg('circle', { cx: x, cy: y, r: size / 2, fill: fill, opacity: op }));
     }
-    return { svg: root, text: 'I went with palette ' + palette + ', cells ' + cells + ', shape ' + shape + ', lit ' + lit + '. ' + (cells + 1) +
+    if (flower) { root.appendChild(svg('circle', { cx: 512, cy: 512, r: 90, fill: ink })); drawn++; }
+    return { svg: root, text: 'I went with palette ' + palette + ', cells ' + cells + ', shape ' + shape + ', style ' + style + (flower ? '' : ', lit ' + lit) + '. ' + drawn +
              ' layers, no text. Here a hash of your words turns the dials. On the Mac her 1.7B picks them.' };
   }
   function drawLogo(desc) {

@@ -174,5 +174,45 @@ class Dates(unittest.TestCase):
         self.assertEqual(tools.plan("days until christmas"), [("days_until", ("christmas",))])
 
 
+class Logo(unittest.TestCase):
+    """Her icon is hers: the committed files are exactly what her designer draws, and every layer type renders."""
+
+    def test_the_icon_is_rebuilt_from_her_designer(self):
+        """web/icon.svg and icon.svg are byte for byte tools_logo.icon_svg(): nobody hand-edits her logo."""
+        import tools_logo
+        here = os.path.dirname(os.path.abspath(__file__))
+        for path in ("web/icon.svg", "icon.svg"):
+            with open(os.path.join(here, path)) as f:
+                self.assertEqual(f.read(), tools_logo.icon_svg(), path)
+
+    def test_flower_reads_small(self):
+        """The flower: accent petals only, none inside the dark ring, one ink core drawn last, never text."""
+        import math
+        import tools_logo
+        tile, ink, accent = tools_logo.PALETTES["ember"]
+        layers = tools_logo._bloom_layers(*tools_logo.ICON)
+        petals, core = layers[1:-1], layers[-1]
+        self.assertEqual((core["name"], core["fill"]), ("Core", ink))
+        self.assertTrue(petals and all(p["fill"] == accent for p in petals))
+        self.assertTrue(all(math.hypot(p["cx"] - 512, p["cy"] - 512) > 0.4 * 335 for p in petals))
+        self.assertFalse(any(l["type"] == "text" for l in layers))
+        self.assertIn("flower", tools_logo._BLOOM_SCHEMA["properties"]["style"]["enum"])
+
+    def test_every_layer_type_renders(self):
+        """Tiles, ellipses (filled and stroked), rotated squares and stars all become SVG, and an unknown layer is refused."""
+        import tools_logo
+        for layers in (tools_logo._logo_layers("ember", "ring"), tools_logo._logo_layers("ink", "spark"),
+                       tools_logo._complex_layers("forest", 3, 24, "stars", 8, 8), tools_logo._bloom_layers("paper", 55, "square", 2)):
+            svg = tools_logo.layers_to_svg(layers)
+            self.assertTrue(svg.startswith("<svg") and svg.rstrip().endswith("</svg>"))
+            self.assertEqual(svg.count("\n  <"), len(layers))
+        self.assertIn('stroke="#e8a96a"', tools_logo.layers_to_svg(tools_logo._logo_layers("ember", "ring")))
+        self.assertIn("<polygon", tools_logo.layers_to_svg(tools_logo._logo_layers("ember", "spark")))
+        self.assertIn("rotate(", tools_logo.layers_to_svg(tools_logo._bloom_layers("ember", 21, "square", 1)))
+        self.assertIn("<!-- a -note -->", tools_logo.layers_to_svg([], "a --note"))  # a comment can never close early
+        with self.assertRaises(ValueError):
+            tools_logo.layers_to_svg([{"type": "text", "text": "TURING"}])
+
+
 if __name__ == "__main__":
     unittest.main()
