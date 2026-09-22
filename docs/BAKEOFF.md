@@ -18,6 +18,8 @@ Is Qwen the best base for her tool picker, and can a picker be built with nothin
 
 **A picker built from nothing does not work yet.** With no pretraining it handles the wordings it was trained on (70 of 79 hand-written commands) and fails new ones (30 percent of unseen phrasings, 198 wrong picks past the guard). Pretraining is what teaches a model that "how late is it in Tokyo" and "time in Tokyo" mean the same thing, and 23,000 synthetic rows do not teach that. A bigger model with augmentation did slightly worse (220 of 834), not better: training loss went to nearly zero in both runs, which is memorizing the templates. The from-scratch code is in `scratch-picker/` (a 3 to 13 MB character transformer with tool, argument-mode and span heads, 1.5 ms a query) if someone wants to try it with far more varied data.
 
+**Where the from-scratch model fails.** Only 41 of its 586 misses on unseen phrasings had the right tool and a wrong argument, so the argument-copying part works and tool choice is the problem. New verbs are the trigger: "boot up" and "pop open" never appeared in its training rows, so "boot up podcasts" came back as no tool, and "boot up stocks" as a web search. Music commands were sent to open_app or web_search, and volume commands to the agent or to say.
+
 ## Caveats
 
 - Timings are not comparable. Other jobs shared the machine.
