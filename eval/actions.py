@@ -49,6 +49,11 @@ CASES = [
     ("look up the weather in vancouver", "weather", "vancouver"),
     ("what tabs do i have open", "list_tabs", None),
 
+    ("read github.com/nulljosh/turing", "read_page", "github.com/nulljosh/turing"),
+    ("summarize https://example.com/post", "read_page", "https://example.com/post"),
+    ("what does news.ycombinator.com say", "read_page", "news.ycombinator.com"),
+    ("read the file ~/notes.txt", "read_file", "notes.txt"),
+
     # photos, exact, no model needed
     ("make ~/Desktop/cat.png black and white", "grayscale_image", "~/Desktop/cat.png"),
     ("remove the background from ~/Desktop/cat.jpg", "remove_background", "~/Desktop/cat.jpg"),

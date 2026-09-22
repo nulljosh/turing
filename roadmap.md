@@ -306,7 +306,8 @@ Gaps, in order:
 ### Gaps found by the loop
 The loop compares her with other assistants (Siri and Shortcuts, Apple Intelligence, Claude and ChatGPT desktop with MCP, Open Interpreter, Raycast AI, local Ollama agents), adds each real gap here with where it was seen, builds it, then deletes the line once it ships (history lives in git). Newest and biggest first.
 
-- [ ] Follow-ups that point back: "open it", "read that page", "summarize it" after a search or an open. Seen in every chat assistant
+- [ ] Streamed replies: frontier chats print words as they come; her model answers arrive all at once after a pause. mlx_lm has stream_generate. Seen in every chat app. Mac-only to test
+- [ ] Say what she is doing while a slow tool runs ("Opening Pixelmator...", a spinner in the TUI). Seen in Claude, ChatGPT tool use
 - [ ] Control the GUI with approval: click and type in an app, every step confirmed by the harness first. Seen in Claude computer use, Open Interpreter
 - [ ] Voice in as well as out: she can speak, she cannot listen. A local Whisper on MLX would do it
 

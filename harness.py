@@ -18,6 +18,10 @@ import tools_util
 
 _RECALL = re.compile(r"^(?:what did you (?:just )?do|what have you done|show (?:me )?(?:the )?(?:tool )?(?:log|history)|history)$", re.I)
 
+# "read it", "what does that page say", "open it": the page she last opened or searched
+_READ_IT = re.compile(r"^(?:read|summari[sz]e|what does|what's on|what is on) (?:it|that|this|that page|this page|the page|that site|that link)(?: say| for me| to me)?$", re.I)
+_OPEN_IT = re.compile(r"^(?:open|show|pull up|go to|go back to) (?:it|that|that page|that site|that link|there)(?: again)?$|^go there$", re.I)
+_PAGE_CALL = re.compile(r"^\[(open_url|web_search|read_page)\((.+)\)\]$")
 _AGAIN = re.compile(r"^(?:again|do (?:that|it) again|one more time|repeat that|same again|once more)$", re.I)
 
 
@@ -34,7 +38,10 @@ class Session:
         q = query.strip()
         if _RECALL.match(tools._bare(q)):
             return self.recall()
-        if _AGAIN.match(tools._bare(q)):
+        pointer = self.point_back(tools._bare(q))
+        if pointer:
+            q = pointer
+        elif _AGAIN.match(tools._bare(q)):
             # the same command once more, through the same asking: a write still waits for a yes
             return self.ask(self.history[-1]["q"]) if self.history else "Nothing to do again yet."
         calls = []
@@ -58,6 +65,24 @@ class Session:
         result = result or "That is not a command I know. Ask me a question, or tell me to do something."
         self.history.append({"q": q, "calls": calls, "result": result})
         return result
+
+    def last_page(self):
+        """The address of the page she last opened, searched or read in this conversation, or None."""
+        for h in reversed(self.history):
+            for call in reversed(h["calls"]):
+                m = _PAGE_CALL.match(call)
+                if m and m.group(1) == "web_search":
+                    return tools.search_url(m.group(2))
+                if m and tools._url(m.group(2)):
+                    return tools._url(m.group(2))
+        return None
+
+    def point_back(self, bare):
+        """ "read it" or "open that" as the command it points at, or None when it points at nothing."""
+        page = (_READ_IT.match(bare) or _OPEN_IT.match(bare)) and self.last_page()
+        if not page:
+            return None
+        return f"read {page}" if _READ_IT.match(bare) else f"go to {page}"
 
     def recall(self):
         """What was done so far, from the record, no model involved."""

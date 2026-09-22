@@ -79,6 +79,8 @@
      function (m) { return ["open_url", siteSearch(m[1] || m[4], m[2] || m[3])]; }],
     [new RegExp("^(?:open |go to |pull up )?(" + SITE_NAMES + ") and search(?: it)?(?: for)? (.+)$", "i"), function (m) { return ["open_url", siteSearch(m[1], m[2])]; }],
     [/^(?:search|google|look up)(?: search)?(?: (?:the web|online|the internet|on google|google))?(?: for)? (.+)$/i, function (m) { return ["web_search", m[1]]; }],
+    [/^(?:read|summari[sz]e|fetch) (?:me )?(?:the )?(?:page |site |website )?(?:at )?(https?:\/\/\S+|[\w-]+(?:\.[\w-]+)+(?:\/\S*)?)$|^what does (https?:\/\/\S+|[\w-]+(?:\.[\w-]+)+(?:\/\S*)?) say$/i,
+     function (m) { return ["read_page", m[1] || m[2]]; }],
     [/^(?:open|launch|start) (?:up )?(?:chrome|the browser) (?:and |then )?(?:go to|open|visit|load) (.+)$/i, function (m) { return ["open_url", m[1]]; }],
     [/^(?:go to|visit|browse to|pull up) (.+)$/i, function (m) { return ["open_url", m[1]]; }],
     [/^(?:open|launch|start) (?:up )?(.+)$/i, function (m) {
@@ -528,6 +530,7 @@
     [new RegExp("^convert " + P + " (?:to|into) (?:a |an )?(png|jpe?g|webp|heic|tiff?|pdf)$", "i"), function (m) { return ["convert_image", m[1] + " to " + m[2]]; }],
     [new RegExp("^(?:how big is " + P + "|(?:image )?(?:info|size|dimensions) (?:for|of|on) " + P + ")$", "i"), function (m) { return ["image_info", m[1] || m[2]]; }]
   ]);
+  U.read_page = function () { return "Reading a page happens on her real Mac, which fetches it. Here I can open it for you: say \"go to\" and the address."; };
   var NO_PHOTOS = "That one edits a photo on your real Mac in Pixelmator, and this stand-in has no photos on disk. Ask me to draw something instead.";
   ["grayscale_image", "remove_background", "upscale_image", "enhance_image", "rotate_image", "flip_image", "resize_image", "crop_square", "convert_image", "image_info"]
     .forEach(function (name) { U[name] = function () { return NO_PHOTOS; }; U.NEEDS_MAC.push(name); });

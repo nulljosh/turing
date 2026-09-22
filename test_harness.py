@@ -118,6 +118,19 @@ class HarnessTests(unittest.TestCase):
         with mock.patch.object(tools, "_run", return_value=""), mock.patch.object(ask, "general_knowledge", return_value=(None, ask.UNREACHABLE)):
             self.assertEqual(s.ask("google how tall is everest"), "Searching for 'how tall is everest' in Chrome.")
 
+    def test_it_and_that_point_at_the_last_page(self):
+        """"read it" reads the page she last opened, "open it" after a search opens that search, and with nothing opened they are not guessed."""
+        s, _, shown = self.session(False)
+        self.assertEqual(s.point_back("read it"), None)
+        with mock.patch.object(tools, "_run", return_value=""), mock.patch.object(tools, "read_page", return_value="Hello page") as read:
+            s.ask("go to github.com/nulljosh/turing")
+            self.assertEqual(s.ask("read it"), "Hello page")
+            read.assert_called_once_with("https://github.com/nulljosh/turing")
+            self.assertEqual(s.ask("what does that page say"), "Hello page")
+            s.ask("search for mlx lora")
+            self.assertEqual(s.ask("open it again"), "Opened https://duckduckgo.com/?q=mlx+lora in Chrome.")
+        self.assertIn("  [read_page(https://github.com/nulljosh/turing)]", shown)
+
     def test_plan_runs_nothing(self):
         """Plan runs nothing."""
         with mock.patch.object(tools, "_run", return_value="") as run:

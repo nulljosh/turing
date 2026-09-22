@@ -121,10 +121,15 @@ def site_search(site, query):
     return SITE_SEARCH[site.lower()] + urllib.parse.quote_plus(query.strip())
 
 
+def search_url(query):
+    """The address of a web search for this query."""
+    return "https://duckduckgo.com/?q=" + urllib.parse.quote_plus(query)
+
+
 def web_search(query):
     """Open a web search in Chrome for Joshua. A question ("how tall is everest") is also answered, with its source, from
     the same lookup her questions use; anything else returns no results to you. To learn what a page says, use read_page."""
-    _run(["open", "-a", BROWSER, "https://duckduckgo.com/?q=" + urllib.parse.quote_plus(query)])
+    _run(["open", "-a", BROWSER, search_url(query)])
     opened = f"Searching for {query!r} in Chrome."
     answer = search_answer(query)
     return f"{answer}\n{opened}" if answer else opened
@@ -544,6 +549,8 @@ _ROUTES = (
      lambda m: open_url(site_search(m.group(1) or m.group(4), m.group(2) or m.group(3)))),
     (re.compile(rf"^(?:open |go to |pull up )?({_SITE_NAMES}) and search(?: it)?(?: for)? (.+)$", re.I), lambda m: open_url(site_search(m.group(1), m.group(2)))),
     (re.compile(r"^(?:search|google|look up)(?: search)?(?: (?:the web|online|the internet|on google|google))?(?: for)? (.+)$", re.I), lambda m: web_search(m.group(1))),
+    (re.compile(r"^(?:read|summari[sz]e|fetch) (?:me )?(?:the )?(?:page |site |website )?(?:at )?(https?://\S+|[\w-]+(?:\.[\w-]+)+(?:/\S*)?)$|^what does (https?://\S+|[\w-]+(?:\.[\w-]+)+(?:/\S*)?) say$", re.I),
+     lambda m: read_page(m.group(1) or m.group(2))),
     (re.compile(r"^(?:open|launch|start) (?:up )?(?:chrome|the browser) (?:and |then )?(?:go to|open|visit|load) (.+)$", re.I), lambda m: open_url(m.group(1))),
     (re.compile(r"^(?:go to|visit|browse to|pull up) (.+)$", re.I), lambda m: open_url(m.group(1))),
     (re.compile(r"^(?:open|launch|start) (?:up )?(.+)$", re.I),
