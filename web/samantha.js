@@ -406,6 +406,70 @@
       dt.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" }) + ".";
   };
 
+  // date_math: same grammar and words as tools_util.date_math. Dates are whole days in UTC, today is the visitor's local day.
+  var MONTH_NAMES = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  var DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  var MONTHS = {}, COUNT = { a: 1, an: 1, one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10 };
+  MONTH_NAMES.forEach(function (m, i) { MONTHS[m.toLowerCase()] = i + 1; MONTHS[m.toLowerCase().slice(0, 3)] = i + 1; });
+  MONTHS.sept = 9;
+  function todayUTC() { var n = new Date(); return Date.UTC(n.getFullYear(), n.getMonth(), n.getDate()); }
+  function mkday(y, m, d) {
+    if (y < 1 || y > 9999) return null;
+    var t = new Date(Date.UTC(2000, m - 1, d)); t.setUTCFullYear(y);
+    return t.getUTCMonth() === m - 1 && t.getUTCDate() === d ? t.getTime() : null;
+  }
+  function parseDay(text) {
+    var t = text.toLowerCase().replace(/[,.]|\b(?:the|of)\b|(\d)(?:st|nd|rd|th)\b/g, function (x, dg) { return dg ? dg + " " : " "; }).trim().split(/\s+/);
+    var key = t.join(" "), today = todayUTC(), now = new Date(today);
+    if (key === "today" || key === "now") return today;
+    if (key === "tomorrow" || key === "yesterday") return today + (key === "tomorrow" ? 1 : -1) * 864e5;
+    if (HOLIDAYS[key]) {
+      var h = mkday(now.getUTCFullYear(), HOLIDAYS[key][0], HOLIDAYS[key][1]);
+      return h >= today ? h : mkday(now.getUTCFullYear() + 1, HOLIDAYS[key][0], HOLIDAYS[key][1]);
+    }
+    var m;
+    if (t.length === 1 && (m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(t[0]))) return mkday(+m[1], +m[2], +m[3]);
+    if (t.length === 3 && MONTHS[t[0]] && /^\d+$/.test(t[1]) && /^\d+$/.test(t[2])) return mkday(+t[2], MONTHS[t[0]], +t[1]);
+    if (t.length === 3 && MONTHS[t[1]] && /^\d+$/.test(t[0]) && /^\d+$/.test(t[2])) return mkday(+t[2], MONTHS[t[1]], +t[0]);
+    return null;
+  }
+  function shiftDay(d, n, unit) {
+    if (unit === "day" || unit === "week") return d + n * (unit === "week" ? 7 : 1) * 864e5;
+    var x = new Date(d), months = x.getUTCMonth() + n * (unit === "year" ? 12 : 1);
+    var y = x.getUTCFullYear() + Math.floor(months / 12), m = ((months % 12) + 12) % 12 + 1;
+    var last = new Date(Date.UTC(2000, m, 0)); last.setUTCFullYear(y, m, 0);
+    return mkday(y, m, Math.min(x.getUTCDate(), last.getUTCDate()));
+  }
+  function longDate(d) { var x = new Date(d); return MONTH_NAMES[x.getUTCMonth()] + " " + x.getUTCDate() + ", " + x.getUTCFullYear(); }
+  function sayDay(d) { return DAY_NAMES[new Date(d).getUTCDay()] + ", " + longDate(d); }
+  U.date_math = function (question) {
+    var q = String(question).trim().toLowerCase(), m, d;
+    var bad = 'Say it like "100 days from now", "weekday July 4 1976" or "between 2026-01-01 and 2026-12-25".';
+    var range = "That date is out of range: I can do years 1 to 9999.";
+    if ((m = /^(\d{1,6}|a|an|one|two|three|four|five|six|seven|eight|nine|ten) (day|week|month|year)s? (from|after|before|ago)(?: (.+))?$/.exec(q))) {
+      var n = /^\d/.test(m[1]) ? +m[1] : COUNT[m[1]];
+      var base = m[3] === "ago" || !m[4] || m[4] === "now" || m[4] === "today" ? todayUTC() : parseDay(m[4]);
+      if ((m[3] === "ago" && m[4]) || base === null) return bad;
+      d = shiftDay(base, m[3] === "before" || m[3] === "ago" ? -n : n, m[2]);
+      if (d === null || isNaN(d) || new Date(d).getUTCFullYear() < 1 || new Date(d).getUTCFullYear() > 9999) return range;
+      var said = / from$/.test(q) ? q + " now" : q;
+      return said[0].toUpperCase() + said.slice(1) + " is " + sayDay(d) + ".";
+    }
+    if ((m = /^weekday (.+)$/.exec(q))) {
+      d = parseDay(m[1]);
+      if (d === null) return bad;
+      var tense = d === todayUTC() ? "is" : d < todayUTC() ? "was" : "will be";
+      return longDate(d) + " " + tense + " a " + DAY_NAMES[new Date(d).getUTCDay()] + ".";
+    }
+    if ((m = /^between (.+?) and (.+)$/.exec(q))) {
+      var a = parseDay(m[1]), b = parseDay(m[2]);
+      if (a === null || b === null) return bad;
+      var days = Math.round(Math.abs(b - a) / 864e5);
+      return days.toLocaleString("en-US") + " day" + (days === 1 ? "" : "s") + " between " + longDate(a) + " and " + longDate(b) + ".";
+    }
+    return bad;
+  };
+
   function rnd(lo, hi) { return lo + Math.floor(Math.random() * (hi - lo + 1)); }
   U.flip_coin = function () { return Math.random() < 0.5 ? "Heads." : "Tails."; };
   U.roll_dice = function (spec) {
@@ -542,7 +606,12 @@
     [/^convert (.+)$/i, function (m) { return ["convert_units", m[1]]; }],
     [/^what time is it in (.+)$|^(?:what(?:'s| is) )?(?:the )?time in (.+)$/i, function (m) { return ["time_in", (m[1] || m[2])]; }],
     [/^what(?:'s| is)(?: the)? date(?: today)?$|^what day is it(?: today)?$|^today'?s date$/i, function (m) { return ["current_date", ""]; }],
+    [/^(?:how many )?days? between (.+?) and (.+)$/i, function (m) { return ["date_math", "between " + m[1] + " and " + m[2]]; }],
     [/^(?:how many )?days? (?:until|till|to) (.+)$|^how long (?:until|till) (.+)$/i, function (m) { return ["days_until", (m[1] || m[2])]; }],
+    [/^(?:what(?:'s| is)(?: the date)? |what day is |when is |what date is )?((?:\d{1,6}|a|an|one|two|three|four|five|six|seven|eight|nine|ten) (?:day|week|month|year)s? (?:from(?: .+)?|ago|after .+|before .+))$/i,
+     function (m) { return ["date_math", m[1]]; }],
+    [/^(?:what )?day of (?:the )?week (?:is|was|will be|for) (.+)$|^what day (?:is|was|will be) ((?:\w+ \d{1,2}(?:st|nd|rd|th)?,? \d{3,4})|(?:\d{1,2} \w+ \d{3,4})|\d{4}-\d{2}-\d{2})$/i,
+     function (m) { return ["date_math", "weekday " + (m[1] || m[2])]; }],
     [/^(?:flip|toss) a coin$/i, function (m) { return ["flip_coin", ""]; }],
     [/^roll (?:a |an )?(\d*d\d+)$/i, function (m) { return ["roll_dice", m[1]]; }],
     [/^roll (?:a |the )?(?:dice|die)$/i, function (m) { return ["roll_dice", "1d6"]; }],

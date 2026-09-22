@@ -123,5 +123,56 @@ class Typing(unittest.TestCase):
         self.assertEqual(ask.arithmetic("what is 6/3"), "6/3 = 2")
 
 
+class Dates(unittest.TestCase):
+    """date_math is exact at the edges: month ends, leap days, year 1 and 9999, bad dates, today moving."""
+
+    def test_fixed_dates(self):
+        """Known answers, independent of today."""
+        import tools_util as u
+        self.assertEqual(u.date_math("weekday july 4 1976"), "July 4, 1976 was a Sunday.")
+        self.assertEqual(u.date_math("2 months after 2026-01-31"), "2 months after 2026-01-31 is Tuesday, March 31, 2026.")
+        self.assertEqual(u.date_math("1 month after january 31 2024"), "1 month after january 31 2024 is Thursday, February 29, 2024.")
+        self.assertEqual(u.date_math("ten years after 2016-02-29"), "Ten years after 2016-02-29 is Saturday, February 28, 2026.")
+        self.assertEqual(u.date_math("between 9999-12-31 and 0001-01-01"), "3,652,058 days between December 31, 9999 and January 1, 1.")
+        self.assertEqual(u.date_math("weekday 29th february 2024"), "February 29, 2024 was a Thursday.")
+
+    def test_bad_and_out_of_range(self):
+        """Impossible dates and years past 9999 are said, never raised."""
+        import tools_util as u
+        bad = u.date_math("nonsense")
+        for q in ("weekday 2023-02-29", "weekday feb 30 2026", "between 2026-01-01 and someday", "3 days ago yesterday", "5 days after nowhere", "", "weekday "):
+            self.assertEqual(u.date_math(q), bad, q)
+        for q in ("999999 years from now", "1 day before 0001-01-01", "1 day after 9999-12-31"):
+            self.assertEqual(u.date_math(q), "That date is out of range: I can do years 1 to 9999.", q)
+
+    def test_relative_to_a_frozen_today(self):
+        """"from now", "ago", tomorrow and the tense of a weekday all follow today."""
+        import tools_util as u
+        from datetime import date as real_date
+
+        class Frozen(real_date):
+            """Today is 2026-09-22."""
+            @classmethod
+            def today(cls):
+                """The frozen day."""
+                return real_date(2026, 9, 22)
+
+        import util_dates
+        with mock.patch.object(util_dates, "date", Frozen):  # date_math lives in util_dates, re-exported by tools_util
+            self.assertEqual(u.date_math("100 days from"), "100 days from now is Thursday, December 31, 2026.")
+            self.assertEqual(u.date_math("3 weeks ago"), "3 weeks ago is Tuesday, September 1, 2026.")
+            self.assertEqual(u.date_math("5 days from tomorrow"), "5 days from tomorrow is Monday, September 28, 2026.")
+            self.assertEqual(u.date_math("weekday today"), "September 22, 2026 is a Tuesday.")
+            self.assertEqual(u.date_math("weekday christmas"), "December 25, 2026 will be a Friday.")
+
+    def test_routes(self):
+        """What people type reaches date_math, and "what day is it" still reaches the clock."""
+        self.assertEqual(tools.plan("what is 100 days from now"), [("date_math", ("100 days from",))])
+        self.assertEqual(tools.plan("what day of the week was july 4 1976"), [("date_math", ("weekday july 4 1976",))])
+        self.assertEqual(tools.plan("how many days between 2026-01-01 and christmas"), [("date_math", ("between 2026-01-01 and christmas",))])
+        self.assertEqual(tools.plan("what day is it"), [("current_date", ())])
+        self.assertEqual(tools.plan("days until christmas"), [("days_until", ("christmas",))])
+
+
 if __name__ == "__main__":
     unittest.main()

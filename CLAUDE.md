@@ -37,6 +37,12 @@ ever ships as its own real model, gets a name of its own too, not a
 ## Talking to Joshua
 TLDR only. A few lines at most, plain words, no walls of text, no play-by-play. Only speak up when something is done, broken, or needs him.
 
+## CI
+Every check on main and on every PR stays green, including the release and deploy workflows. Check all workflow runs after every push and merge, not just `test`. A check that cannot do its job yet (a missing secret) skips green with a notice, never red. A red check is fixed before anything else.
+
+## File size
+No god files. Past about 500 lines a file gets split by what it does, with the old module re-exporting the moved names so nothing that imports it breaks. Targets now: ask.py, tools_util.py, tools.py, web/demo.js, web/samantha.js. One split per loop round, each behind the full check set.
+
 ## Pull requests
 Claude handles its own PRs end to end: open one only when it will be merged, never leave one for the user to handle. Once CI passes on the head commit, merge it right away (merge commit), then restart the working branch from the new main. A red CI is fixed and re-pushed, not handed back.
 
@@ -50,7 +56,7 @@ Update together, in the same pass: the landing page (abilities text and the demo
 `./gate.sh` runs the docs-coverage rule, then five fast checks (chat, actions, parity, pixelmator, tools) and compares against eval/baseline.json. `./gate.sh --full` also runs hands.py and the live web demo. Release.sh runs the full gate, so a release cannot ship on a worse number. Use `./gate.sh --update-baseline` to set new baselines only when all checks pass.
 
 ## Tools and the harness
-`tools.py` is the router and the first 30 tools. `tools_util.py` adds 47 utilities (math, time, chance, text, this Mac's vitals, Shortcuts) and their `ROUTES` table, which `tools.py` appends. Every one has a JavaScript twin in `web/samantha.js`, generated from the same table; `eval/util_diff.py` diffs the two word for word and must stay green. A new tool needs: the function with a docstring, a route, the JS route (regenerate the block from the Python table), a case in `eval/util_diff.py`, and its row in `docs/ARCHITECTURE.md`. The trained picker only knows the first 30 tools; new ones work through the router until it is retrained. The image tools have exact routes too (`tools_image.ROUTES`, ahead of the utilities so "convert cat.png to jpg" is never a unit conversion). A tool that breaks, or a missing answer model, is a reply in chat, never a crash: `harness.Session.ask`, `ask.local_answer` and `chat.safe_turn` catch it.
+`tools.py` is the router and the first 30 tools. `tools_util.py` adds 48 utilities (math, time, dates, chance, text, this Mac's vitals, Shortcuts) and their `ROUTES` table, which `tools.py` appends. Every one has a JavaScript twin in `web/samantha.js`, generated from the same table; `eval/util_diff.py` diffs the two word for word and must stay green. A new tool needs: the function with a docstring, a route, the JS route (regenerate the block from the Python table), a case in `eval/util_diff.py`, and its row in `docs/ARCHITECTURE.md`. The trained picker only knows the first 30 tools; new ones work through the router until it is retrained. The image tools have exact routes too (`tools_image.ROUTES`, ahead of the utilities so "convert cat.png to jpg" is never a unit conversion). A tool that breaks, or a missing answer model, is a reply in chat, never a crash: `harness.Session.ask`, `ask.local_answer` and `chat.safe_turn` catch it.
 Anything that writes, sends or leaves a file goes in `tools.WRITES` and asks first through `harness.py`. Tools that fire a side effect nobody sees coming (`NOT_FOR_MODELS`) never reach a model's menu and are not served over MCP (`mcp_server.py`).
 The landing demo draws anything: `/api/draw` in `worker.js` runs an image model on Workers AI (5 a minute per visitor, cached a day), and `web/paint.js` rebuilds the picture from 30,000 squares. `eval/web_demo.py` covers it live.
 Logos: `make_logo` always makes an icon, never text. Three modes: golden spiral (the default; her model picks palette, cell count, shape and how many glow), complex (say "complex"), and simple (say "simple" or "minimal": ring, spark, bars or dot). The icon in `web/icon.svg` came from the spiral; rebuild it from `pixelmator/examples/turing-bloom.json`.

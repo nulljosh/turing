@@ -54,6 +54,11 @@ CASES = [
     ("what does news.ycombinator.com say", "read_page", "news.ycombinator.com"),
     ("read the file ~/notes.txt", "read_file", "notes.txt"),
 
+    ("what is 100 days from now", "date_math", "100 days from"),
+    ("what day of the week was july 4 1976", "date_math", "weekday july 4 1976"),
+    ("how many days between 2026-01-01 and christmas", "date_math", "between 2026-01-01 and christmas"),
+    ("3 weeks ago", "date_math", "3 weeks ago"),
+
     # photos, exact, no model needed
     ("make ~/Desktop/cat.png black and white", "grayscale_image", "~/Desktop/cat.png"),
     ("remove the background from ~/Desktop/cat.jpg", "remove_background", "~/Desktop/cat.jpg"),
