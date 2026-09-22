@@ -8,6 +8,14 @@ v1.0.0 shipped 2026-09-21. Now: v2.0 and beyond, same gap-hunt process, driven w
 ## Rules
 Headless always: `SAMANTHA_HEADLESS=1`. Check free disk and memory before training (6GB min). One heavy job at a time. Haiku subagents one at a time, sequential not parallel. Stop at 90% usage. Root-cause fixes only, never edit tests to pass. Code review diffs before calling anything done.
 
+## Chat + tools release pass (2026-09-22, cloud session, branch claude/full-release-chat-tools-x5i81k)
+Goal: a full version you sit down and chat with, and she calls tools, without ever dying mid-conversation. Driven from a Linux container (no Mac, no MLX weights, no osascript), which is exactly what exposed these:
+- Fixed: one tool failing (missing `osascript`, a hung app) crashed chat.py. `harness.Session.ask` now turns any tool exception into "I tried set_volume(30), but it did not work: osascript is not on this machine." and records the turn. `ask.local_answer` (ask.py, serve.py) does the same.
+- Fixed: the answer model missing or hanging crashed chat.py. `generate` has a 180s timeout, a failure gives `MODEL_DOWN`, and `safe_turn` guards the whole answer chain in the plain chat and the TUI.
+- Fixed: "hi", "how are you", "thanks", "what can you do", "list your tools" had no answer outside the web demo. `ask.small_talk`, anchored to the whole message so "hey calculate 8 + 8" still hits tools. The ability list counts `tools.TOOLS` live.
+- Fixed: "roll a d20" missed the dice route (Python and JS twin, util_diff case added).
+- Not done here, needs the Mac: `./release.sh`, `./gate.sh --full`, landing deploy, graphs. Tag this as a patch (1.0.1) from the Mac after pulling.
+
 ## Where things stand
 v0.14.0 shipped. Samantha has 73 tools: 30 photo/paint (tools_image.py, Pixelmator), 27 utilities (math/time/dice/passwords/hashes/Mac vitals), 10 chrome tabs (list/switch/close/read), MCP client (list/call other servers), memory (remember/recall/forget), read_screen (Vision OCR), eval/a11y.py (4-mode accessibility audit). Landing: draw-anything via /api/draw on Cloudflare, demo's Chrome window opens real pages (Wikipedia live, others get real tab), Chrome tab tools in the interface, skip link, scroll-in sections, full-screen demo, wordless logos (golden spiral default), new icon she designed. Knowledge 62/65. Gate: eval/laws.py (73 tools classified), eval/a11y.py (axe-core 4 modes), eval/hands.py (77/77 actions), eval/web_demo.py (0 failures), eval/web_parity.py (77/77 parity), docs 100 percent enforced. Picker bake-off: Qwen3-0.6B 683/834 unseen vs Qwen2.5 671/834, from-scratch pickers 1.8M/3.2M params hit only 248/220. Model weights gitignored (in history but untracked).
 

@@ -14,6 +14,8 @@ import subprocess
 
 HISTORY_TURNS = 3  # how many prior exchanges to keep as short-term memory
 
+MODEL_DOWN = "My own model isn't answering on this machine right now, so I can't write that one. Questions I can look up and things I can do still work."
+
 EXIT_WORDS = ("exit", "quit", "bye", "q")  # natural quit phrasings that should stop the loop, not get generated on
 
 
@@ -152,7 +154,7 @@ def generate(prompt, max_tokens=80):
             "--prompt", prompt,
             "--max-tokens", str(max_tokens),
         ],
-        capture_output=True, text=True,
+        capture_output=True, text=True, timeout=180,
     )
     return out.stdout.split("==========")[1].strip() if "==========" in out.stdout else out.stdout.strip()
 
@@ -232,7 +234,11 @@ def answer_turn(question, history, topic_active, last_subject=None):
         else:
             context = "\n\n---\n\n".join(r["text"][:800] for r in results)
             prompt = build_prompt(history, context, question)
-            answer = clean(generate(prompt), question)
+            try:
+                answer = clean(generate(prompt), question) or MODEL_DOWN
+            except (OSError, subprocess.SubprocessError):
+                # the weights live in .venv on the Mac; without them, or if the model hangs, say so
+                answer = MODEL_DOWN
 
     # topic_active is meant to track "has this conversation actually been
     # about the project so far", not just "did the current question's own
@@ -270,6 +276,14 @@ def answer_turn(question, history, topic_active, last_subject=None):
     return answer, topic_active, last_subject
 
 
+def safe_turn(question, history, topic_active, last_subject):
+    """answer_turn, but a failure anywhere in the answer chain is a reply, never the end of the conversation."""
+    try:
+        return answer_turn(question, history, topic_active, last_subject)
+    except Exception as e:
+        return f"Something broke while I was answering that ({type(e).__name__}: {e}). Ask again, or ask something else.", topic_active, last_subject
+
+
 def chat():
     """Run the interactive terminal chat loop."""
     import harness
@@ -292,7 +306,7 @@ def chat():
             print(f"Samantha: {did}\n")
             history.append((question, did))
             continue
-        answer, topic_active, last_subject = answer_turn(question, history, topic_active, last_subject)
+        answer, topic_active, last_subject = safe_turn(question, history, topic_active, last_subject)
         print(f"Samantha: {answer}\n")
         history.append((question, answer))
 
@@ -350,7 +364,7 @@ def tui():
                 for l in (f"Samantha: {did}", ""):
                     lines.extend(l.split("\n"))
                 continue
-            answer, topic_active, last_subject = answer_turn(question, history, topic_active, last_subject)
+            answer, topic_active, last_subject = safe_turn(question, history, topic_active, last_subject)
             history.append((question, answer))
             for l in (f"Samantha: {answer}", ""):
                 lines.extend(l.split("\n"))

@@ -38,7 +38,7 @@ FIXED = [
     "recall my dog", "forget zebra", "can you please calculate 6*7 for me", "hey calculate 8 + 8", "please convert 10 km to miles",
 ]
 NOT_COMMANDS = ["what is turing", "calculating machines are cool", "roll call", "hash browns are good", "reverse psychology"]
-SHAPES = {"flip a coin": r"(Heads|Tails)\.", "roll 2d6": r"\d+ \+ \d+ = \d+", "roll a die": r"[1-6]", "roll d20": r"\d+",
+SHAPES = {"flip a coin": r"(Heads|Tails)\.", "roll 2d6": r"\d+ \+ \d+ = \d+", "roll a die": r"[1-6]", "roll a d20": r"\d+", "roll d20": r"\d+",
           "random number between 5 and 9": r"[5-9]", "make me a password": r".{16}", "generate a strong password of 24 characters": r".{24}",
           "make a uuid": r"[0-9a-f-]{36}", "time in tokyo": r"It is \d+:\d\d [AP]M on \w+ in Tokyo\.", "what day is it": r"It is \w+, \w+ \d+, \d{4}\.",
           "days until christmas": r"\d+ days? until December 25, \d{4}\.|That is today\.", "roll 500d6": r"Up to 100 dice.*"}

@@ -10,6 +10,7 @@ reminder, a file on the Desktop, a Shortcut, the clipboard) waits for a yes.
 Run: python3 harness.py        (a chat in the terminal)
 """
 import re
+import subprocess
 import sys
 
 import tools
@@ -42,7 +43,11 @@ class Session:
         context = "".join(f"Earlier: {h['q']} -> {h['result'][:120]}\n" for h in self.history[-3:])
         # what she was told to remember about this ask rides along with a multi-step task, never over MCP
         context += "".join(f"Remembered: {f}\n" for f in tools_util.recall_lines(q))
-        result = tools.do((context + q) if context and tools._MULTISTEP.search(tools._bare(q)) else q, log=log, confirm=self.confirm)
+        try:
+            result = tools.do((context + q) if context and tools._MULTISTEP.search(tools._bare(q)) else q, log=log, confirm=self.confirm)
+        except Exception as e:
+            # one tool breaking (a missing command, a hung app) is a reply, never the end of the conversation
+            result = failed(calls, e)
         if result is None and or_none:
             return None
         result = result or "That is not a command I know. Ask me a question, or tell me to do something."
@@ -54,6 +59,18 @@ class Session:
         if not self.history:
             return "Nothing yet."
         return "\n".join(f"{h['q']}: " + (", ".join(h["calls"]) or "answered directly") for h in self.history[-5:])
+
+
+def failed(calls, e):
+    """Say plainly which tool broke and why, instead of claiming it worked or crashing."""
+    what = calls[-1].strip("[] ") if calls else "that"
+    if isinstance(e, FileNotFoundError):
+        why = f"{e.filename or 'a command it needs'} is not on this machine"
+    elif isinstance(e, subprocess.TimeoutExpired):
+        why = f"it took longer than {e.timeout:g} seconds"
+    else:
+        why = str(e) or type(e).__name__
+    return f"I tried {what}, but it did not work: {why}."
 
 
 def _ask_yes(name, args):

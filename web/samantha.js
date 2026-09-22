@@ -483,7 +483,7 @@
     [/^what(?:'s| is)(?: the)? date(?: today)?$|^what day is it(?: today)?$|^today'?s date$/i, function (m) { return ["current_date", ""]; }],
     [/^(?:how many )?days? (?:until|till|to) (.+)$|^how long (?:until|till) (.+)$/i, function (m) { return ["days_until", (m[1] || m[2])]; }],
     [/^(?:flip|toss) a coin$/i, function (m) { return ["flip_coin", ""]; }],
-    [/^roll (\d*d\d+)$/i, function (m) { return ["roll_dice", m[1]]; }],
+    [/^roll (?:a |an )?(\d*d\d+)$/i, function (m) { return ["roll_dice", m[1]]; }],
     [/^roll (?:a |the )?(?:dice|die)$/i, function (m) { return ["roll_dice", "1d6"]; }],
     [/^(?:pick |give me |generate )?(?:a )?random number(?: (?:between|from) (.+))?$/i, function (m) { return ["random_number", (m[1] || "")]; }],
     [/^(?:generate|make|create|give me)(?: me)? (?:a |an )?(?:strong |secure |random )?password(?:(?: of| with)? (\d+)(?: char\w*)?)?$/i, function (m) { return ["make_password", (m[1] || "16")]; }],

@@ -51,6 +51,18 @@ class HarnessTests(unittest.TestCase):
         self.assertEqual(s.recall(), "calculate 2+2: [calculate(2+2)]\nroman numerals for 2026: [roman_numeral(2026)]")
         self.assertEqual(s.ask("what did you just do"), s.recall())
 
+    def test_a_broken_tool_is_a_reply_not_a_crash(self):
+        """A tool whose command is missing or hangs says so, the chat keeps going, and the turn is recorded."""
+        import subprocess
+        s, _, _ = self.session(True)
+        with mock.patch("subprocess.run", side_effect=FileNotFoundError(2, "No such file", "osascript")):
+            reply = s.ask("set the volume to 30")
+        self.assertEqual(reply, "I tried set_volume(30), but it did not work: osascript is not on this machine.")
+        with mock.patch("subprocess.run", side_effect=subprocess.TimeoutExpired("osascript", 10)):
+            self.assertIn("longer than 10 seconds", s.ask("set the volume to 40"))
+        self.assertEqual(s.ask("calculate 2+2"), "4")
+        self.assertEqual(len(s.history), 3)
+
     def test_plan_runs_nothing(self):
         """Plan runs nothing."""
         with mock.patch.object(tools, "_run", return_value="") as run:

@@ -825,6 +825,41 @@ def clock(query):
     return None
 
 
+_SMALLTALK = (
+    (re.compile(r"^(?:hi|hello|hey|yo|hiya|good (?:morning|evening|afternoon))(?: there| samantha)?[!.?]*$", re.I),
+     lambda: "Hi. Ask me something, or tell me to do something on this Mac."),
+    (re.compile(r"^(?:how are you|how's it going|how are things)(?: doing| today)?[!.?]*$", re.I),
+     lambda: "Running fine, and ready. What do you need?"),
+    (re.compile(r"^(?:thanks|thank you|thx|cheers|ty)(?: so much| samantha)?[!.?]*$", re.I), lambda: "Any time."),
+    (re.compile(r"^(?:what can you do|what do you do|help|what are your (?:abilities|skills)|what can i ask you)[!.?]*$", re.I),
+     lambda: abilities()),
+    (re.compile(r"^(?:list|show me|what are|tell me about|which are) (?:all )?(?:of )?your tools[!.?]*$|^tools[!.?]*$", re.I), lambda: tool_list()),
+)
+
+
+def abilities():
+    """What she can do, in one paragraph, counted from the live tool table so it never drifts."""
+    import tools
+    return (f"I answer questions: this project from its own docs, the rest from Wikipedia and the web, and I say so "
+            f"instead of guessing. I also do things on this Mac with {len(tools.TOOLS)} tools: open apps and sites, search the web, "
+            "Chrome tabs, notes, reminders, timers, music and volume, edit and paint pictures in Pixelmator, logos, math, time, "
+            "dice, text, your documents and your screen. Anything that writes or sends asks you first. "
+            'Try "google best pizza near me", "open pixelmator" or "make this photo black and white". Say "list your tools" for all of them.')
+
+
+def tool_list():
+    """Every tool she has, by name, straight from the tool table."""
+    import tools
+    return f"{len(tools.TOOLS)} tools: " + ", ".join(n.replace("_", " ") for n in sorted(tools.TOOLS)) + "."
+
+
+def small_talk(query):
+    """A greeting, a thanks, or "what can you do": a fixed, honest reply, no model and no lookup.
+    Anchored to the whole message, so "hey calculate 8 + 8" and "help me find a file" still reach the tools."""
+    q = query.strip()
+    return next((reply() for pattern, reply in _SMALLTALK if pattern.match(q)), None)
+
+
 def local_answer(query):
     """Answers computable on this machine, exactly, with no network at all.
 
@@ -838,7 +873,7 @@ def local_answer(query):
 
     Returns (answer, source) or (None, None).
     """
-    for fn, source in ((arithmetic, "arithmetic"), (clock, "system clock"), (convert, "unit conversion")):
+    for fn, source in ((small_talk, "small talk"), (arithmetic, "arithmetic"), (clock, "system clock"), (convert, "unit conversion")):
         exact = fn(query)
         if exact:
             return exact, source
@@ -846,7 +881,12 @@ def local_answer(query):
     # command with one right outcome. Here so ask.py, chat.py, the TUI and
     # serve.py all get hands from one place.
     from tools import do
-    done = do(query)
+    try:
+        done = do(query)
+    except Exception as e:
+        # a tool that breaks is an honest reply, the same words the chat harness gives
+        from harness import failed
+        return failed([], e), "tools"
     if done:
         return done, "tools"
     return None, None

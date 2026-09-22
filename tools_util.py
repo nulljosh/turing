@@ -791,7 +791,7 @@ ROUTES = (
     (re.compile(r"^what(?:'s| is)(?: the)? date(?: today)?$|^what day is it(?: today)?$|^today'?s date$", _I), "current_date", lambda m: ""),
     (re.compile(r"^(?:how many )?days? (?:until|till|to) (.+)$|^how long (?:until|till) (.+)$", _I), "days_until", lambda m: m.group(1) or m.group(2)),
     (re.compile(r"^(?:flip|toss) a coin$", _I), "flip_coin", lambda m: ""),
-    (re.compile(r"^roll (\d*d\d+)$", _I), "roll_dice", lambda m: m.group(1)),
+    (re.compile(r"^roll (?:a |an )?(\d*d\d+)$", _I), "roll_dice", lambda m: m.group(1)),
     (re.compile(r"^roll (?:a |the )?(?:dice|die)$", _I), "roll_dice", lambda m: "1d6"),
     (re.compile(r"^(?:pick |give me |generate )?(?:a )?random number(?: (?:between|from) (.+))?$", _I), "random_number", lambda m: m.group(1) or ""),
     (re.compile(r"^(?:generate|make|create|give me)(?: me)? (?:a |an )?(?:strong |secure |random )?password(?:(?: of| with)? (\d+)(?: char\w*)?)?$", _I), "make_password", lambda m: m.group(1) or "16"),
