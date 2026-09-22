@@ -1,5 +1,5 @@
 {
-  "version": "1.1.0",
+  "version": "1.2.0",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -14,6 +14,10 @@
       "mcp_server.py": {
         "total": 4,
         "documented": 4
+      },
+      "ask_faq.py": {
+        "total": 10,
+        "documented": 10
       },
       "stats.py": {
         "total": 7,
@@ -31,6 +35,10 @@
         "total": 5,
         "documented": 5
       },
+      "util_dates.py": {
+        "total": 8,
+        "documented": 8
+      },
       "harvest_voice.py": {
         "total": 3,
         "documented": 3
@@ -47,6 +55,14 @@
         "total": 10,
         "documented": 10
       },
+      "ask_local.py": {
+        "total": 9,
+        "documented": 9
+      },
+      "util_math.py": {
+        "total": 20,
+        "documented": 20
+      },
       "test_mcp.py": {
         "total": 12,
         "documented": 12
@@ -60,8 +76,8 @@
         "documented": 24
       },
       "test_edges.py": {
-        "total": 13,
-        "documented": 13
+        "total": 20,
+        "documented": 20
       },
       "prep_data.py": {
         "total": 5,
@@ -72,8 +88,8 @@
         "documented": 51
       },
       "tools_util.py": {
-        "total": 65,
-        "documented": 65
+        "total": 42,
+        "documented": 42
       },
       "test_nimble.py": {
         "total": 4,
@@ -92,8 +108,8 @@
         "documented": 9
       },
       "ask.py": {
-        "total": 36,
-        "documented": 36
+        "total": 17,
+        "documented": 17
       },
       "test_harness.py": {
         "total": 17,
@@ -176,7 +192,7 @@
   "measured": {
     "tools": {
       "before": 0,
-      "after": 77
+      "after": 78
     },
     "actions_eval": "77/77",
     "knowledge_sweep": {
