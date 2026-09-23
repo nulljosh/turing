@@ -2,6 +2,7 @@
 
 TLDR per loop round, newest first. The loop adds a line every round it ships something, then the scorecard.
 
+- 2026-09-22: Distillation round 3 (2 more epochs on the same 499 lessons) reverted: answered right 20 -> 16 of 43, declined right 16 -> 15 of 16. Overfitting, not progress. Restored the round-2 checkpoint (ada-1-adapter.bak-20260922-round2), confirmed back to 20/43, 16/16, score.py 29/29. Repeating the same lessons is not the lever; more distinct lessons is.
 - 2026-09-22: v3.0.1: her answers stop after two sentences (where her lessons end and invention began) with a light repetition penalty. Held-out answers 19 -> 20 of 43, declines 16/16, score.py 29/29. The misses are wrong facts in the first sentence, not length: the next lever is training, not decoding.
   `v3.0.1 · 86 tools · 170 tests · docs coverage 100% · laws all hold · biggest tools.py 753 · actions 131/131 · parity 131/131 · util_diff 195/195`
 - 2026-09-22: 🎉🎉 v3.0.0: she sees and she researches. "research the history of the printing press" reads Wikipedia, her library and your notes, and the local 9B writes a cited brief in about 40 seconds warm; uncited or unsupported sentences are cut. With eyes (v2.1.0) that is 3.0.

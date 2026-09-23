@@ -26,6 +26,7 @@ Headless always: `SAMANTHA_HEADLESS=1`. Check free disk and memory before traini
 - Distillation round 2 taught declining (3/16 -> 16/16) but not answering (19/43 flat). Next round: more answerable lessons, harder distractors (same-repo passages), and check she does not over-decline.
 - WHITEPAPER.md is for people, not engineers: refresh it at every minor or major release (version line, what she can do, measured numbers, honest limits), short sentences, no jargon. It sat at v0.8.0 while she reached v3.0.0.
 - Diagnose before spending teacher tokens: reading her failed answers showed she starts right then invents, but capping length only moved 19 -> 20 of 43; her first sentence is often wrong. Measure the cheap fix, then pay for the expensive one.
+- More epochs on the same lesson set overfits and drops both scores: confirmed by reverting round 3. The next distillation round needs more distinct passages/lessons, not more passes over the same 499.
 - The user reads TLDRs: one line per update, what she can do now.
 - Usage, read from the [usage] line every round: session under 60% and weekly under 50%, full rounds about every 15 minutes. Session 60 to 80% or weekly 50 to 70%, one small round per 30 minutes, Haiku for mechanical work. Session over 80% or weekly over 70%, CI and red fixes only, hourly. Session over 90%, stop until the reset. Say it in one line when tapering. Training and evals run on the Mac, not on Claude, so they are free: prefer them.
 
