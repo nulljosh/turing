@@ -43,6 +43,7 @@ jobs:
       - run: python3 test_gui.py
       - run: python3 test_see.py
       - run: python3 test_research.py
+      - run: python3 test_write.py
       - run: python3 test_tabs.py
       - run: python3 test_memory.py
       - run: python3 test_screen.py

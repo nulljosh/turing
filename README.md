@@ -6,7 +6,7 @@
 [![test](https://github.com/nulljosh/turing/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/nulljosh/turing/actions/workflows/test.yml)
 ![license](https://img.shields.io/badge/license-Apache--2.0-green) [![GitHub](https://img.shields.io/badge/GitHub-nulljosh%2Fturing-black?logo=github)](https://github.com/nulljosh/turing)
 
-A small model, Samantha, that runs entirely on your Mac and gets real work done. 87 tools, 0.5B parameters, nothing leaves the machine.
+A small model, Samantha, that runs entirely on your Mac and gets real work done. 88 tools, 0.5B parameters, nothing leaves the machine.
 
 [turing.heyitsmejosh.com](https://turing.heyitsmejosh.com)
 
@@ -20,6 +20,7 @@ A small model, Samantha, that runs entirely on your Mac and gets real work done.
 - **Knows things offline.** Her library holds the fieldbook plus ~10,000 Wikipedia articles; she answers only from a real page and says which one.
 - **Does the rest of the Mac.** Apps, tabs, notes, reminders, calendar, files, documents, math, time zones, dice, hashes, Shortcuts, memory across sessions.
 - **Draws.** Type "draw a fox in the snow" on the landing page and she rebuilds it live from 30,000 squares.
+- **Writes files.** "Draft an email about X", "write a doc about X": the local model drafts it, she saves it to your home folder, asking first.
 - **Never guesses.** Every answer traces to a real source; unsupported claims are dropped, not printed.
 
 ## Run it

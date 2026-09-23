@@ -63,6 +63,10 @@ CASES = [
     ("research the history of the printing press", "research", "the history of the printing press"),
     ("save that", "save_research", ""),
     ("save it to ~/Desktop/notes.md", "save_research", "~/Desktop/notes.md"),
+    ("draft an email about the v3.1 release", "write_document", "the v3.1 release"),
+    ("write a doc about the roadmap", "write_document", "the roadmap"),
+    ("draft me a file for the meeting notes", "write_document", "the meeting notes"),
+    ("write a note about the meeting", "new_note", "about the meeting"),  # "note" stays with new_note, never write_document
     ("do some research on kinship", "research", "kinship"),
     ("deep dive into mitochondria", "research", "mitochondria"),
     ("write me a brief on the silk road", "research", "the silk road"),

@@ -1,5 +1,5 @@
 {
-  "version": "3.1.0",
+  "version": "3.2.0",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -116,8 +116,8 @@
         "documented": 9
       },
       "test_distill.py": {
-        "total": 9,
-        "documented": 9
+        "total": 10,
+        "documented": 10
       },
       "voice.py": {
         "total": 5,
@@ -155,6 +155,10 @@
         "total": 10,
         "documented": 10
       },
+      "test_write.py": {
+        "total": 7,
+        "documented": 7
+      },
       "test_memory.py": {
         "total": 11,
         "documented": 11
@@ -170,6 +174,10 @@
       "util_math.py": {
         "total": 20,
         "documented": 20
+      },
+      "tools_write.py": {
+        "total": 1,
+        "documented": 1
       },
       "tools_see.py": {
         "total": 6,
@@ -280,7 +288,7 @@
   "measured": {
     "tools": {
       "before": 0,
-      "after": 87
+      "after": 88
     },
     "actions_eval": "77/77",
     "knowledge_sweep": {
