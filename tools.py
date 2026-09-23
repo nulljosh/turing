@@ -492,52 +492,6 @@ def model_tools():
     return {n: f for n, f in TOOLS.items() if n not in NOT_FOR_MODELS}
 
 
-def agent(task, max_steps=6, log=None, confirm=None):
-    """Multi-step: let qwen3:8b drive TOOLS until it has an answer."""
-    messages = [
-        {"role": "system", "content": "You are Samantha, acting on Joshua's Mac through tools. Do what is asked in as few tool calls as possible, then answer in two or three plain sentences. Never invent page contents, read the page first."},
-        {"role": "user", "content": task},
-    ]
-    # A small model asked to "poke around hacker news" opens a search and then
-    # invents three stories. Same lesson as the rest of this project: the
-    # harness retrieves, the model only reads. If the task names a page, it is
-    # already fetched before the model says a word.
-    named = _named_page(task)
-    if named:
-        if log:
-            log(f"  [read_page({named})]")
-        messages[1]["content"] += f"\n\nI already fetched {named} for you. Its text:\n{read_page(named)}"
-    for _ in range(max_steps):
-        body = json.dumps({"model": AGENT_MODEL, "messages": messages, "stream": False, "think": False,
-                           "tools": [_schema(f) for f in model_tools().values()]}).encode()
-        req = urllib.request.Request(OLLAMA_CHAT, body, {"Content-Type": "application/json"})
-        try:
-            with urllib.request.urlopen(req, timeout=180) as r:
-                msg = json.load(r)["message"]
-        except Exception as e:
-            return f"My hands need Ollama running with {AGENT_MODEL}, and it didn't answer: {e}"
-        messages.append(msg)
-        calls = msg.get("tool_calls") or []
-        if not calls:
-            return re.sub(r"(?s)<think>.*?</think>", "", msg.get("content", "")).strip()
-        for c in calls:
-            name, args = c["function"]["name"], c["function"].get("arguments") or {}
-            fn = model_tools().get(name)
-            try:
-                if not fn:
-                    result = f"No tool named {name}."
-                elif confirm and name in WRITES and not confirm(name, tuple(map(str, args.values()))):
-                    result = "The user said no."
-                else:
-                    takes = fn.__code__.co_varnames[:fn.__code__.co_argcount]
-                    args = {k: v for k, v in args.items() if k in takes}
-                    result = fn(**args)
-            except Exception as e:
-                result = f"{name} failed: {e}"
-            if log:
-                log(f"  [{name}({', '.join(map(str, args.values()))})]")
-            messages.append({"role": "tool", "tool_name": name, "content": str(result)})
-    return "I ran out of steps before finishing that."
 
 
 HANDS_ADAPTER = os.path.join(os.path.dirname(os.path.abspath(__file__)), "hands-adapter")
@@ -549,6 +503,7 @@ _hands = None
 # is really about that tool. Round four confused ip_address with wifi_name and let "let me know in 10 minutes" write a note.
 _EVIDENCE = {
     "disk_space": r"disk|storage|space|drive|room|full", "uptime": r"\bup\b|uptime|restart|reboot|been on|running|booted",
+    "current_tab": r"\btab\b|page|site|browser|chrome|safari|article|reading|looking at", "list_tabs": r"\btabs\b",
     "memory_usage": r"memory|\bram\b", "cpu_load": r"cpu|processor|load|busy|maxed|working|doing", "ip_address": r"\bip\b|address",
     "wifi_name": r"wi-?fi|network", "system_info": r"system|\bmac\b|macos|chip|computer|specs|about this", "list_shortcuts": r"shortcut",
     "flip_coin": r"coin|heads|tails", "make_uuid": r"uuid|guid", "time_in": r"time|clock|late", "days_until": r"\bday|sleeps|until|till|far away|count",
@@ -818,3 +773,6 @@ if __name__ == "__main__":
         print(do(" ".join(sys.argv[1:]), log=print) or "Not an action.")
     else:
         demo()
+
+
+from tools_agent import agent  # noqa: E402  (split out for file size; re-exported so tools.agent still works)

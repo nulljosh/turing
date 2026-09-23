@@ -25,6 +25,7 @@ OUT = os.path.join(HERE, "data", "distill")
 DECLINE = "My notes don't cover that."
 PASSAGE = 800  # characters, what chat.py hands the model per retrieved passage
 PER_REPO = 12  # so one busy repo cannot crowd out the rest of the fleet
+NAMES = ("README.md", "WHITEPAPER.md")  # prose; CLAUDE.md and roadmap.md are terse notes that taught fragment answers
 SECRET = re.compile(r"sk-[A-Za-z0-9]|ghp_|xox[bp]-|AKIA[0-9A-Z]|BEGIN [A-Z ]*KEY|api[_-]?key\s*[:=]|password\s*[:=]|token\s*[:=]", re.I)
 STOP = set("a an and are as at be by for from has have how i in is it its of on or that the this to was were what "
            "when where which who why will with you your do does did not no can so if".split())
@@ -52,7 +53,7 @@ def passages(n, seed=0):
     """n readable passages from the project's own docs and the fleet's READMEs, whitepapers and CLAUDE.md files."""
     code = prep_data.CODE
     paths = glob.glob(f"{HERE}/*.md") + glob.glob(f"{HERE}/docs/*.md")
-    for name in ("README.md", "WHITEPAPER.md", "CLAUDE.md", "roadmap.md"):
+    for name in NAMES:
         paths += glob.glob(f"{code}/*/{name}")
     # a git worktree (its .git is a file, not a folder) is a copy of a repo already here: four Joshua Tree
     # worktrees once made up 229 of 400 passages
@@ -87,6 +88,12 @@ def check(q, a, passage):
         return "em dash or emoji"
     if re.search(r"\b(?:the )?(?:passage|context|text|document)s? (?:says|states|mentions|does)", a, re.I):
         return "talks about the passage"
+    # the first teacher copied note fragments ("No deadline pinned - iOS/Mac companion app...") and asked
+    # "How does Bookrank use this?": a real question names its subject, a real answer is a whole sentence
+    if re.search(r"\b(?:this|that|these|those|it)\s*\?$", q.strip(), re.I) or not q.strip().endswith("?"):
+        return "vague question"
+    if not re.match(r"[A-Z0-9]", a.strip()) or not a.strip().endswith((".", "!")) or re.search(r" - |;|\s/\s|\|", a):
+        return "not a sentence"
     missing = _words(a) - _words(passage) - _words(q)
     if len(missing) > max(1, len(_words(a)) // 5):
         return "not grounded: " + " ".join(sorted(missing)[:5])

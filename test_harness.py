@@ -152,5 +152,37 @@ class HarnessTests(unittest.TestCase):
         self.assertLessEqual(tools.WRITES, set(tools.TOOLS))
 
 
+class AgentGrounding(unittest.TestCase):
+    """The multi-step agent answers only after a tool or a fetched page: its own words alone are a guess."""
+
+    def reply(self, *messages):
+        """A stand-in Ollama that answers each request with the next message."""
+        queue = list(messages)
+
+        def urlopen(req, timeout=None):
+            """Hand back the next scripted message."""
+            import io, json
+            return io.BytesIO(json.dumps({"message": queue.pop(0)}).encode())
+        return mock.patch("urllib.request.urlopen", side_effect=urlopen)
+
+    def test_an_answer_with_no_tool_is_handed_back(self):
+        """No tool call and no page: None, so the answer chain looks it up instead (score.py caught invented answers)."""
+        with self.reply({"role": "assistant", "content": "The loss chart is typically sourced from a backend API."}):
+            self.assertIsNone(tools.agent("How does the landing page get its loss chart data?"))
+        with self.reply({"role": "assistant", "content": '{"name": "memory_usage", "arguments": {"}}'}):
+            self.assertIsNone(tools.agent("How long does an answer take?"))
+
+    def test_an_answer_after_a_tool_stands(self):
+        """A tool ran, so the closing answer is read from its result and kept."""
+        call = {"role": "assistant", "content": "", "tool_calls": [{"function": {"name": "flip_coin", "arguments": {}}}]}
+        with self.reply(call, {"role": "assistant", "content": "It came up heads."}):
+            self.assertEqual(tools.agent("flip a coin and tell me"), "It came up heads.")
+
+    def test_a_tab_needs_a_word_for_it(self):
+        """current_tab only when the sentence speaks of a tab, page or browser: "what's blocked in this project" is not one."""
+        self.assertFalse(tools._sound("current_tab", "", "What's blocked or paused in this project right now?"))
+        self.assertTrue(tools._sound("current_tab", "", "what page am i on"))
+
+
 if __name__ == "__main__":
     unittest.main()

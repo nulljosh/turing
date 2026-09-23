@@ -1,5 +1,5 @@
 {
-  "version": "1.7.0",
+  "version": "1.7.1",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -40,8 +40,8 @@
         "documented": 21
       },
       "test_harness.py": {
-        "total": 17,
-        "documented": 17
+        "total": 23,
+        "documented": 23
       },
       "ask.py": {
         "total": 7,
@@ -55,13 +55,17 @@
         "total": 3,
         "documented": 3
       },
+      "tools_agent.py": {
+        "total": 1,
+        "documented": 1
+      },
       "ask_local.py": {
         "total": 9,
         "documented": 9
       },
       "tools.py": {
-        "total": 45,
-        "documented": 45
+        "total": 44,
+        "documented": 44
       },
       "ask_faq.py": {
         "total": 10,

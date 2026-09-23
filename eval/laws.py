@@ -31,7 +31,7 @@ SPOKEN = {"ask_llm": "ask qwen why is the sky blue", "new_note": "take a note bu
           "copy_to_clipboard": "copy hello to my clipboard", "sleep_display": "sleep the screen", "run_shortcut": "run shortcut morning",
           "paint_image": "paint ~/Desktop/mona.jpg", "call_mcp_tool": "call mcp samantha calculate {}", "close_tab": "close the github tab", "remember": "remember that my dog is called biscuit", "forget": "forget biscuit", "read_screen": "read my screen", "ask_screen": "on my screen, what is the total"}
 # Law 8: no god files. A ratchet: it only ever moves down, lowered after each split lands (CLAUDE.md, File size).
-MAX_LINES = 825
+MAX_LINES = 810
 PEOPLE_READ = ["README.md", "CLAUDE.md", "WHITEPAPER.md", "FAQ.md", "roadmap.md", "LAWS.md", "docs/ARCHITECTURE.md", "web/index.html",
                "web/demo.js", "web/samantha.js", "web/faq.json"]
 

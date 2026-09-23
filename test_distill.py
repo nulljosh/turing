@@ -28,7 +28,11 @@ class Check(unittest.TestCase):
         cases = {("", "x"): "empty", ("q", "Supabase. " * 40): "too long",
                  ("q", "Supabase \u2014 for auth."): "em dash or emoji", ("q", "Supabase for auth \U0001F600"): "em dash or emoji",
                  ("q", "The passage says Supabase."): "talks about the passage",
-                 ("What does Epiphany use for auth?", "Firebase with Google OAuth and Okta."): "not grounded"}
+                 ("What does Epiphany use for auth?", "Firebase with Google OAuth and Okta."): "not grounded",
+                 ("How does Epiphany use this?", "Epiphany uses Supabase for auth."): "vague question",
+                 ("Epiphany auth", "Epiphany uses Supabase for auth."): "vague question",
+                 ("What does Epiphany use for auth?", "supabase for auth"): "not a sentence",
+                 ("What does Epiphany use for auth?", "Supabase - auth; Upstash / data."): "not a sentence"}
         for (q, a), why in cases.items():
             self.assertTrue((distill.check(q, a, PASSAGE) or "").startswith(why), (q, a))
 
@@ -71,6 +75,7 @@ class Build(unittest.TestCase):
         self.assertFalse(any("widget0 daily" in r["messages"][0]["content"] or "widget1 daily" in r["messages"][0]["content"] for r in train))
         for r in train + held:
             prompt, answer = r["messages"][0]["content"], r["messages"][1]["content"]
+            self.assertIn(answer, [distill.DECLINE] + [f"Project {i} ships widget{i}." for i in range(20)])
             self.assertTrue(prompt.startswith(chat.build_prompt([], "", "q").split("Context:")[0]))
             has_own = any(f"widget{i} daily" in prompt and f"project {i} ship?" in prompt for i in range(20))
             self.assertEqual(answer == distill.DECLINE, not has_own)
