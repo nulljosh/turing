@@ -414,7 +414,10 @@ def tui():
 
 
 if __name__ == "__main__":
-    if "--tui" in sys.argv:
+    if "--voice" in sys.argv:
+        import voice
+        voice.converse()
+    elif "--tui" in sys.argv:
         tui()
     else:
         chat()

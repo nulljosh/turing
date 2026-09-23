@@ -308,7 +308,7 @@ The loop runs in the cloud and cannot reach Cloudflare or this Mac. Tick a box w
 
 - [x] Deploy the site (done 2026-09-22, by hand; CI still skips until CLOUDFLARE_API_TOKEN is a repo secret): `npx wrangler deploy` in the repo (or add the `CLOUDFLARE_API_TOKEN` repo secret once and it deploys itself on every push)
 - [x] ask_llm (was ask_claude): ask any LLM on this Mac by name, or the biggest (oMLX Qwen3.5-9B, then Ollama qwen3:8b), no key needed (2026-09-22)
-- [ ] Try voice in and GUI control once the loop builds them: they need a real mic and a real screen. Streamed replies shipped and were tried here (v1.5.0)
+- [ ] Try voice and GUI control on the Mac: `python3 chat.py --voice` needs the microphone once (macOS asks). GUI control once the loop builds it
 
 ### How we compete with trillion-dollar labs (set 2026-09-22)
 We will not out-think Claude or GPT: that is data centres and years. We win where they structurally can't follow:
@@ -322,7 +322,7 @@ Every loop iteration should move one of these five.
 ### Gaps found by the loop
 The loop compares her with other assistants (Siri and Shortcuts, Apple Intelligence, Claude and ChatGPT desktop with MCP, Open Interpreter, Raycast AI, local Ollama agents), adds each real gap here with where it was seen, builds it, then deletes the line once it ships (history lives in git). Newest and biggest first.
 
-- [ ] Voice in as well as out, as a real conversation: talk, she listens (Whisper on MLX), answers aloud, you can cut in. Seen in ChatGPT and Gemini voice modes. 2.0.0
+- [ ] Voice, the rest: you can cut in while she speaks, and a wake word. Voice in shipped v1.8.0 (python3 chat.py --voice, Whisper on MLX). Seen in ChatGPT and Gemini voice modes
 - [ ] See pictures: "what is in this photo", "read this screenshot", "what's wrong with this chart" through a local vision model (Qwen2.5-VL or Gemma 3 on oMLX/Ollama). Screen reading today is text only. Seen in every frontier chat
 - [ ] Deep research: "research X" reads 5 to 10 pages, the library and her notes, then writes a short cited brief with the bigger local model. Seen in ChatGPT and Gemini Deep Research, Perplexity
 - [ ] Run code for answers: stats on a CSV, a chart, a unit-heavy calculation, in a sandboxed Python that asks first. Seen in ChatGPT data analysis, Claude analysis tool

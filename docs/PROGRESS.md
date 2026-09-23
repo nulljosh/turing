@@ -2,6 +2,8 @@
 
 TLDR per loop round, newest first. The loop adds a line every round it ships something, then the scorecard.
 
+- 2026-09-22: 🎉 v1.8.0: talk to her. `python3 chat.py --voice`: sox records until you stop, Whisper large-v3-turbo on MLX transcribes on the Mac, the harness answers, she says it aloud. Verified with a question rendered by `say` (heard "What is 2 plus 2?"). Half of 2.0.
+  `v1.8.0 · 80 tools · 151 tests · docs coverage 100% · laws all hold · biggest tools.py 778 · actions 114/114 · parity 114/114 · util_diff 195/195`
 - 2026-09-22: v1.7.1: score.py 25/29 -> 29/29. Project questions were hijacked by her hands: "what's blocked" listed a Chrome tab, others got invented or half-written tool-call answers. current_tab now needs a word for it, and the agent's answer counts only after it used a tool. tools.py 826 -> 778 (tools_agent.py), ceiling 825 -> 810.
   `v1.7.1 · 80 tools · 144 tests · docs coverage 100% · laws all hold · biggest pixelmator/test_pxm.py 806 · actions 114/114 · parity 114/114 · util_diff 195/195`
 - 2026-09-22: 🎉 v1.7.0: her own library. The fieldbook plus ~10,000 Wikipedia vital-article leads offline; she answers what-is and who-was questions from the page of that name and says which. Knowledge 58/65, 0 confidently wrong (web rate-limited during the run). Retrained on everything, kept (val loss 1.98 -> 1.83). distill.py ready for the teacher.

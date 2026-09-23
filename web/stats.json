@@ -1,8 +1,12 @@
 {
-  "version": "1.7.1",
+  "version": "1.8.0",
   "docs_coverage": {
     "percent": 100,
     "files": {
+      "test_voice.py": {
+        "total": 10,
+        "documented": 10
+      },
       "tools_image.py": {
         "total": 16,
         "documented": 16
@@ -94,6 +98,10 @@
       "test_distill.py": {
         "total": 9,
         "documented": 9
+      },
+      "voice.py": {
+        "total": 5,
+        "documented": 5
       },
       "gen_hands_data.py": {
         "total": 5,
