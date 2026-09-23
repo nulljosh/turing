@@ -604,7 +604,7 @@ def pick(query):
 
 # Tools that leave something behind or send something out: a note, a reminder, a file on the
 # Desktop, a Shortcut, the clipboard, a dark screen. The harness asks before any of these run.
-WRITES = {"ask_llm", "ask_screen", "read_screen", "remember", "forget", "close_tab", "call_mcp_tool", "new_note", "new_reminder", "make_logo", "paint_image", "run_shortcut", "copy_to_clipboard", "sleep_display",
+WRITES = {"ask_llm", "click_text", "type_text", "press_key", "ask_screen", "read_screen", "remember", "forget", "close_tab", "call_mcp_tool", "new_note", "new_reminder", "make_logo", "paint_image", "run_shortcut", "copy_to_clipboard", "sleep_display",
           "remove_background", "upscale_image", "enhance_image", "grayscale_image", "rotate_image", "flip_image",
           "resize_image", "crop_square", "convert_image"}
 
@@ -670,6 +670,8 @@ _INCOMPLETE = (
     (re.compile(r"^(?:take|make|write|add|new) (?:a |me a )?(?:new )?note(?: that says| saying)?$|^note$", re.I), "What should the note say?"),
     (re.compile(r"^(?:set |start )?(?:a |an )?timer(?: for)?$", re.I), "For how long?"),
     (re.compile(r"^say$", re.I), "Say what?"),
+    (re.compile(r"^(?:click|tap)(?: on)?$", re.I), 'Click what? Say it like "click Sign in".'),
+    (re.compile(r"^type$", re.I), 'Type what? Say it like "type hello".'),
     (re.compile(rf"^(?:(?:ask|hey|have) )?(?:{tools_util._LLM_NAMES})[,:]?$", re.I), 'Ask what? Say it like "ask qwen why the sky is blue".'),
 )
 

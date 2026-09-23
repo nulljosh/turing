@@ -40,6 +40,7 @@ jobs:
       - run: python3 test_library.py
       - run: python3 test_distill.py
       - run: python3 test_voice.py
+      - run: python3 test_gui.py
       - run: python3 test_tabs.py
       - run: python3 test_memory.py
       - run: python3 test_screen.py

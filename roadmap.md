@@ -308,12 +308,12 @@ The loop runs in the cloud and cannot reach Cloudflare or this Mac. Tick a box w
 
 - [x] Deploy the site (done 2026-09-22, by hand; CI still skips until CLOUDFLARE_API_TOKEN is a repo secret): `npx wrangler deploy` in the repo (or add the `CLOUDFLARE_API_TOKEN` repo secret once and it deploys itself on every push)
 - [x] ask_llm (was ask_claude): ask any LLM on this Mac by name, or the biggest (oMLX Qwen3.5-9B, then Ollama qwen3:8b), no key needed (2026-09-22)
-- [ ] Try voice and GUI control on the Mac: `python3 chat.py --voice` needs the microphone once (macOS asks). GUI control once the loop builds it
+- [ ] Try voice and on-screen control on the Mac: `python3 chat.py --voice` needs the microphone once, "click ..." needs cliclick (installed) plus Screen Recording and Accessibility for the terminal (macOS asks)
 
 ### How we compete with trillion-dollar labs (set 2026-09-22)
 We will not out-think Claude or GPT: that is data centres and years. We win where they structurally can't follow:
 1. **It's yours and it's local.** Runs on your Mac, no account, no per-query cost, nothing leaves the machine. They can't ship that without giving away the model.
-2. **Hands on your real computer.** Exact, instant tools (77 and counting) that open, edit, search, remember, and ask before writing. Frontier chat apps still mostly live in a browser tab.
+2. **Hands on your real computer.** Exact, instant tools (83 and counting) that open, edit, search, remember, and ask before writing. Frontier chat apps still mostly live in a browser tab.
 3. **Never confidently wrong.** Grounded answers with sources, declines instead of guessing. A small model that says "I don't know" beats a big one that invents.
 4. **Borrow their brains, legally.** Use frontier models as teachers (Phase 6 distillation) and as tools she can call when asked, so her floor rises with theirs.
 5. **Tiny and fast.** 0.5B picks tools in milliseconds on a Mac Mini. Speed and reliability are the product.
@@ -331,7 +331,7 @@ The loop compares her with other assistants (Siri and Shortcuts, Apple Intellige
 - [ ] Write real files: draft an email, a doc or a slide outline into Pages, Mail or a markdown file, asking first. Seen in Claude artifacts, ChatGPT canvas, Apple Writing Tools
 - [ ] Read mail: "anything from the bank today", "summarize my unread" through Mail.app, read only. Seen in Gemini in Gmail, Apple Intelligence
 - [ ] Remind me later without a daemon: "tell me the weather every morning" becomes a Reminder or a Shortcuts automation she sets up, asking first. Seen in ChatGPT tasks, Gemini scheduled actions
-- [ ] Control the GUI with approval: click and type in an app, every step confirmed by the harness first. Seen in Claude computer use, Open Interpreter
+- [ ] GUI control, the rest: multi-step flows ("log in to X") planned by the agent with a yes per step, clicking icons that have no text, and a picture of where she will click. Click, type and press shipped in v2.0.0. Seen in Claude computer use, Open Interpreter
 
 ### Phase 6: Distillation, not scale (month 4+, optional/ambitious)
 Instead of chasing bigger bases, use a frontier model (Claude) to generate high-quality synthetic training examples in our exact style, then distill that into Samantha. This is literally how most useful small models are built today, nobody pretrains from raw internet text anymore if they can help it.

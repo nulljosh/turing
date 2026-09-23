@@ -8,6 +8,7 @@ training: `eval` scores her on them, before and after.
 
     python3 distill.py passages 400     # grow data/distill/passages.jsonl to 400, append-only, for the teacher
     (the teacher writes data/distill/qa.jsonl: {"id", "q", "a"} per line, two per passage)
+    python3 distill.py judge            # the local 9B reads every pair: does the answer answer the question?
     python3 distill.py build            # data/distill/{train,valid,heldout}.jsonl
     python3 distill.py eval 60          # her answers on held-out prompts: answered right, declined right
 """
@@ -101,6 +102,34 @@ def check(q, a, passage):
     return None
 
 
+def judge(log=print):
+    """A second reader for every teacher pair: the biggest local model says whether the answer answers the question.
+    Word checks cannot catch a grounded answer to a different question ("How does Blockframe keep its theme
+    separate?" answered with engine files). Verdicts go to judged.jsonl, one per pair, and build() skips the noes.
+    Costs no Claude usage: it runs on this Mac. Returns (yes, no)."""
+    import tools_llm
+    path = os.path.join(OUT, "judged.jsonl")
+    done = {(j["id"], j["q"]) for j in map(json.loads, open(path))} if os.path.exists(path) else set()
+    counts = [0, 0]
+    with open(path, "a") as out:
+        for qa in map(json.loads, open(os.path.join(OUT, "qa.jsonl"))):
+            if (qa["id"], qa["q"]) in done:
+                continue
+            ask = [{"role": "user", "content": f"Question: {qa['q']}\nAnswer: {qa['a']}\n\nDoes the answer directly answer "
+                                               "this exact question? Reply with one word: yes or no."}]
+            try:
+                text, _ = tools_llm._ask_omlx(ask, tools_llm.MODEL)
+            except Exception as e:
+                log(f"the judge is not answering ({e}); start oMLX and run judge again, it picks up where it stopped")
+                break
+            ok = text.strip().lower().startswith("yes")
+            counts[not ok] += 1
+            out.write(json.dumps({"id": qa["id"], "q": qa["q"], "ok": ok}) + "\n")
+            out.flush()
+    log(f"judged yes {counts[0]}, no {counts[1]}")
+    return tuple(counts)
+
+
 def _prompt(question, texts):
     """The exact prompt chat.py builds for a fresh question and these retrieved passages."""
     import chat
@@ -131,6 +160,8 @@ def build(seed=0, negatives=3):
     held = _split(ids)
     sets = {"train": [], "heldout": []}
     kept, rejected = 0, {}
+    judged = os.path.join(OUT, "judged.jsonl")
+    noes = {(j["id"], j["q"]) for j in map(json.loads, open(judged)) if not j["ok"]} if os.path.exists(judged) else set()
     for line in open(os.path.join(OUT, "qa.jsonl")):
         try:
             qa = json.loads(line)
@@ -138,7 +169,7 @@ def build(seed=0, negatives=3):
         except (ValueError, KeyError):
             rejected["unreadable"] = rejected.get("unreadable", 0) + 1
             continue
-        why = check(qa["q"], qa["a"], p["text"])
+        why = check(qa["q"], qa["a"], p["text"]) or ("judged off the question" if (p["id"], qa["q"]) in noes else None)
         if why:
             rejected[why.split(":")[0]] = rejected.get(why.split(":")[0], 0) + 1
             continue
@@ -199,6 +230,8 @@ if __name__ == "__main__":
             for i, p in enumerate(fresh):
                 f.write(json.dumps({**p, "id": len(have) + i}) + "\n")
         print(f"{len(have)} kept, {len(fresh)} added -> {path}")
+    elif cmd == "judge":
+        judge()
     elif cmd == "build":
         kept, rejected = build()
         print(f"kept {kept} pairs, rejected {sum(rejected.values())}: {rejected}")

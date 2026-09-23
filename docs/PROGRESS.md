@@ -2,6 +2,8 @@
 
 TLDR per loop round, newest first. The loop adds a line every round it ships something, then the scorecard.
 
+- 2026-09-22: 🎉🎉 v2.0.0: talk to her and she works your screen. "click Sign in", "type hello", "press return": she reads the screen with Vision OCR to find the words, clicks with cliclick, and asks before every step. With voice in (v1.8.0) that is 2.0: speak, she listens, acts on the Mac with your yes, and answers aloud. All local.
+  `v2.0.0 · 83 tools · 158 tests · docs coverage 100% · laws all hold · biggest tools.py 780 · actions 121/121 · parity 121/121 · util_diff 195/195`
 - 2026-09-22: 🎉 v1.8.0: talk to her. `python3 chat.py --voice`: sox records until you stop, Whisper large-v3-turbo on MLX transcribes on the Mac, the harness answers, she says it aloud. Verified with a question rendered by `say` (heard "What is 2 plus 2?"). Half of 2.0.
   `v1.8.0 · 80 tools · 151 tests · docs coverage 100% · laws all hold · biggest tools.py 778 · actions 114/114 · parity 114/114 · util_diff 195/195`
 - 2026-09-22: v1.7.1: score.py 25/29 -> 29/29. Project questions were hijacked by her hands: "what's blocked" listed a Chrome tab, others got invented or half-written tool-call answers. current_tab now needs a word for it, and the agent's answer counts only after it used a tool. tools.py 826 -> 778 (tools_agent.py), ceiling 825 -> 810.

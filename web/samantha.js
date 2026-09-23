@@ -644,12 +644,20 @@
   ]);
   U.ask_llm = function () { return "On her real Mac she hands a hard question to another LLM running there: name one (ask qwen, ask llama, ask gemma) or say ask claude for the biggest. She asks you first and nothing leaves the Mac. This page never sends your words anywhere but its own lookup."; };
   U.NEEDS_MAC.push("ask_llm");
+  ["click_text", "type_text", "press_key"].forEach(function (name) {
+    U[name] = function () { return "Clicking, typing and pressing keys happen on her real Mac, where she reads the screen to find what you named and asks before every step."; };
+    U.NEEDS_MAC.push(name);
+  });
   U.read_page = function () { return "Reading a page happens on her real Mac, which fetches it. Here I can open it for you: say \"go to\" and the address."; };
   var NO_PHOTOS = "That one edits a photo on your real Mac in Pixelmator, and this stand-in has no photos on disk. Ask me to draw something instead.";
   ["grayscale_image", "remove_background", "upscale_image", "enhance_image", "rotate_image", "flip_image", "resize_image", "crop_square", "convert_image", "image_info"]
     .forEach(function (name) { U[name] = function () { return NO_PHOTOS; }; U.NEEDS_MAC.push(name); });
 
   ROUTES.push.apply(ROUTES, [
+    // her hands on the screen, same as tools_util.ROUTES: a named key before a click
+    [/^(?:press|hit|push)(?: the)? (return|enter|tab|escape|esc|space|delete|backspace|up|down|left|right|page up|page down|home|end)(?: key| button)?$/i, function (m) { return ["press_key", m[1]]; }],
+    [/^(?:click|tap|press)(?: on)?(?: the)? ["']?(.+?)["']?(?: button| link| tab)?$/i, function (m) { return ["click_text", m[1]]; }],
+    [/^type(?: in| out)? ["']?(.+?)["']?$/i, function (m) { return ["type_text", m[1]]; }],
     // only by name, same as tools_util.ROUTES
     [/^(?:ask|have|let) (claude|chatgpt|gpt(?:-?\d[\w.]*)?|gemini|(?:an? |the )?(?:llm|(?:bigger|big) model)|qwen[\w.:-]*|llama[\w.:-]*|mistral[\w.:-]*|gemma[\w.:-]*|phi[\w.:-]*|deepseek[\w.:-]*)(?: to| about| whether| if|:|,)?\s+(.+)$|^(?:hey )?(claude|chatgpt|gpt(?:-?\d[\w.]*)?|gemini|(?:an? |the )?(?:llm|(?:bigger|big) model)|qwen[\w.:-]*|llama[\w.:-]*|mistral[\w.:-]*|gemma[\w.:-]*|phi[\w.:-]*|deepseek[\w.:-]*)[,:]\s*(.+)$/i, function (m) { return ["ask_llm", (m[1] || m[3]) + "\t" + (m[2] || m[4])]; }],
     // a time in one zone to another: ahead of convert_units, same as tools_util.ROUTES

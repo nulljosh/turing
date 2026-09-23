@@ -44,6 +44,7 @@ def _sh(argv, timeout=5):
 from util_math import *  # noqa: F401,F403
 from util_math import _num, _eval, _OPS, _FUNCS, _CONSTS, _LENGTH, _MASS, _VOLUME, _TIME, _UNIT_ALIASES, _TEMPS, _MORSE  # noqa: F401
 from util_dates import *  # noqa: F401,F403
+from tools_gui import click_text, type_text, press_key  # noqa: E402  (her hands on the screen, in their own file)
 from tools_llm import ask_llm, NAMES as _LLM_NAMES  # noqa: E402  (hands a hard question to another LLM on this Mac, in its own file)
 from util_dates import _ZONES, _HOLIDAYS, _MONTHS, _COUNT, _day, _shift, _long, _say, _MONTH_NAMES, _DAY_NAMES  # noqa: F401
 
@@ -530,7 +531,7 @@ def call_mcp_tool(request):
 TOOLS = (ask_llm, calculate, convert_units, time_in, convert_time, current_date, days_until, date_math, flip_coin, roll_dice, random_number, make_password,
          make_uuid, hash_text, base64_encode, base64_decode, word_count, reverse_text, shout, morse_code, json_pretty,
          is_prime, roman_numeral, tip, disk_space, uptime, memory_usage, cpu_load, ip_address, wifi_name, system_info,
-         copy_to_clipboard, sleep_display, reveal_in_finder, list_shortcuts, run_shortcut, list_mcp_tools, call_mcp_tool, list_tabs, switch_tab, close_tab, read_tab, remember, recall, forget, read_screen, read_document, find_in_document, ask_document, ask_screen)
+         copy_to_clipboard, sleep_display, reveal_in_finder, list_shortcuts, run_shortcut, list_mcp_tools, call_mcp_tool, list_tabs, switch_tab, close_tab, read_tab, remember, recall, forget, read_screen, read_document, find_in_document, ask_document, ask_screen, click_text, type_text, press_key)
 
 _I = re.I
 # (pattern, tool name, what to hand it). Names, not functions: tools.py looks each one up at call time.
@@ -538,6 +539,10 @@ ROUTES = (
     # only by name: "ask qwen ...", "llama, ...", "ask claude ..." (the harness asks before handing it over)
     (re.compile(rf"^(?:ask|have|let) ({_LLM_NAMES})(?: to| about| whether| if|:|,)?\s+(.+)$|^(?:hey )?({_LLM_NAMES})[,:]\s*(.+)$", _I),
      "ask_llm", lambda m: (m.group(1) or m.group(3)) + "\t" + (m.group(2) or m.group(4))),
+    # her hands on the screen, each step asked first: a named key before a click, so "press tab" is a key, not the word
+    (re.compile(r"^(?:press|hit|push)(?: the)? (return|enter|tab|escape|esc|space|delete|backspace|up|down|left|right|page up|page down|home|end)(?: key| button)?$", _I), "press_key", lambda m: m.group(1)),
+    (re.compile(r"^(?:click|tap|press)(?: on)?(?: the)? [\"']?(.+?)[\"']?(?: button| link| tab)?$", _I), "click_text", lambda m: m.group(1)),
+    (re.compile(r"^type(?: in| out)? [\"']?(.+?)[\"']?$", _I), "type_text", lambda m: m.group(1)),
     # a time in one zone to another: ahead of convert_units, so "convert 3pm pst to tokyo" is a time, not a unit
     (re.compile(r"^(?:what(?:'s| is)(?: the time)?|what time is|when is|convert)?\s*((?:noon|midnight|\d{1,2}:\d{2}(?:\s*(?:am|pm|a\.m\.|p\.m\.))?|\d{1,2}\s*(?:am|pm|a\.m\.|p\.m\.))\s+.*\b(?:in|to)\s+.+)$", _I),
      "convert_time", lambda m: m.group(1)),
@@ -629,7 +634,7 @@ def demo():
     assert copy_to_clipboard("x") == "Copied." and sleep_display() == "Screen off." and reveal_in_finder("~").startswith("Showing")
     assert reveal_in_finder("~/.ssh").startswith("No file") and reveal_in_finder("/etc/passwd").startswith("No file")
     assert run_shortcut("zzz-not-real").startswith("I do not see") and (list_shortcuts().startswith("No Shortcuts") or "Shortcuts:" in list_shortcuts())
-    assert len(TOOLS) == 50 and all(f.__doc__ for f in TOOLS)
+    assert len(TOOLS) == 53 and all(f.__doc__ for f in TOOLS)
     call = lambda name, a: globals()[name](a) if globals()[name].__code__.co_argcount else globals()[name]()
     hit = lambda q: next((call(name, arg(m)) for pat, name, arg in ROUTES if (m := pat.match(q))), None)
     assert hit("calculate 17 * 23") == "391" and hit("convert 5 km to miles") == "5 km is 3.1069 mi."

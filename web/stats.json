@@ -1,5 +1,5 @@
 {
-  "version": "1.8.0",
+  "version": "2.0.0",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -46,6 +46,10 @@
       "test_harness.py": {
         "total": 23,
         "documented": 23
+      },
+      "tools_gui.py": {
+        "total": 8,
+        "documented": 8
       },
       "ask.py": {
         "total": 7,
@@ -116,12 +120,16 @@
         "documented": 25
       },
       "distill.py": {
-        "total": 10,
-        "documented": 10
+        "total": 11,
+        "documented": 11
       },
       "stats.py": {
         "total": 7,
         "documented": 7
+      },
+      "test_gui.py": {
+        "total": 11,
+        "documented": 11
       },
       "tools_util.py": {
         "total": 42,
@@ -248,7 +256,7 @@
   "measured": {
     "tools": {
       "before": 0,
-      "after": 80
+      "after": 83
     },
     "actions_eval": "77/77",
     "knowledge_sweep": {
