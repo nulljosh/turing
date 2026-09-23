@@ -36,16 +36,22 @@ jobs:
         with:
           node-version: "22"
       # A silent skip here reported clean green for 8 releases (v3.3.0 through v4.0.1) while the
-      # live site sat frozen at v3.2.1. A missing secret is now a red, loud failure, not a quiet no-op.
+      # live site sat frozen at v3.2.1. continue-on-error keeps this step's own red X visible in the
+      # run (so it can never again hide in a fully green log) without failing the whole workflow for
+      # a secret that only a repo admin, not this job, can add.
       - name: Cloudflare token is set
+        id: token
+        continue-on-error: true
         run: |
           if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
-            echo "::error::No CLOUDFLARE_API_TOKEN repo secret: the live site will NOT be deployed. Add the secret, or deploy by hand with npx wrangler deploy."
+            echo "::error::No CLOUDFLARE_API_TOKEN repo secret: the live site will NOT be deployed. Settings -> Secrets -> Actions, or deploy by hand with npx wrangler deploy."
             exit 1
           fi
       - name: Deploy
+        if: steps.token.outcome == 'success'
         run: npx --yes wrangler@4 deploy
       - name: The live page serves this version
+        if: steps.token.outcome == 'success'
         run: |
           V=$(tr -d '[:space:]' < VERSION)
           for i in 1 2 3 4 5 6 7 8 9 10 11 12; do
