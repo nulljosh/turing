@@ -47,5 +47,7 @@ Her own picker knows a subset of tools; the rest route through exact regex match
 ## More
 
 - [`WHITEPAPER.md`](WHITEPAPER.md): architecture and voice
+- [`SOUL.md`](SOUL.md): who she is and what she optimizes for
+- [`SAFETY.md`](SAFETY.md): what she will and will not do, and how that is enforced
 - [`roadmap.md`](roadmap.md): the honest phase-by-phase plan
 - [`architecture.svg`](architecture.svg): how the pieces fit together

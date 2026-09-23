@@ -319,6 +319,13 @@ We will not out-think Claude or GPT: that is data centres and years. We win wher
 5. **Tiny and fast.** 0.5B picks tools in milliseconds on a Mac Mini. Speed and reliability are the product.
 Every loop iteration should move one of these five.
 
+### Compatibility, honestly scoped (set 2026-09-23)
+Samantha's whole design is Mac plus MLX (Apple Silicon), and that is not a detail to port around, it is the reason she is free, fast and private. Each step below changes what runs where, in real, increasing order of cost:
+1. **Native macOS GUI**, buildable now. Same shape as `menubar/PaintBar.swift` already in this repo: a real chat window instead of only `chat.py` in a terminal. No backend change, MLX stays exactly as is.
+2. **Windows and Linux.** MLX is Apple Silicon only, full stop. This means a second inference backend (llama.cpp is the obvious one), not a recompile. Real engineering, its own phase, not a checkbox on this one.
+3. **iPhone and Android.** A phone cannot run a model her size at a useful speed today. Two honest shapes, not a port: a genuinely small on-device model built for a phone, or the phone as a thin client talking to your own Mac as a server over your network. Either way it is closer to a new product than a build-out of this one.
+Ship in that order. Skipping straight to phone apps without 1 and 2 first would mean nothing shared with this codebase at all.
+
 ### Gaps found by the loop
 The loop compares her with other assistants (Siri and Shortcuts, Apple Intelligence, Claude and ChatGPT desktop with MCP, Open Interpreter, Raycast AI, local Ollama agents), adds each real gap here with where it was seen, builds it, then deletes the line once it ships (history lives in git). Newest and biggest first.
 
