@@ -72,11 +72,12 @@ v3.0.1 shipped 2026-09-22 on the Mac: she researches via Wikipedia and her libra
 
 ## Next, in order (toward 4.0.0: she does whole jobs)
 1. DONE: multi-step screen work ("log me into X") shipped via tools_screen_agent.py, a dedicated agent with click_text/type_text/press_key/see_screen, every step confirmed, never on the general model menu.
-2. Research, the rest: pages beyond Wikipedia, follow-ups on a brief, save a brief to a file.
+2. DONE: save_research writes the last brief to a file ("save that", "save it to X"), asking first. Research follow-ups (pages beyond Wikipedia, asking about a brief already given) still open.
 3. Distillation round 4: more distinct passages and lessons (not more epochs on round 2), harder same-repo distractors, measure answering (19/43) and declining separately.
 4. Read mail, write real files, translate, run code for answers (roadmap.md "Gaps found by the loop").
-5. File size: tools.py, tools_util.py, web/demo.js, web/samantha.js.
+5. File size: tools.py is exactly at the 760 ceiling (not over, no CI failure). A clean split exists (the Mac-primitive functions, `_run` through `read_file`, into tools_mac.py, same pattern as tools_agent.py) but touches a widely-imported core file; do it in a low-usage window with the full gate run after, not as a rushed mid-session change. tools_util.py, web/demo.js, web/samantha.js also still oversized by house style, none over a hard ceiling.
 Loads off the LaCie drive run about 24 seconds per GB: the 9B takes about 4 minutes cold. Warm it (POST localhost:8000/v1/models/<id>/load) before timing anything that uses it.
+Real hang found and fixed 2026-09-23: eval/laws.py's law 3 was invoking READ_ONLY tools for real when testing "no", not just WRITES ones; a READ_ONLY entry in SPOKEN (research) made a live Wikipedia + local-LLM call and hung on a cold model. Now only WRITES entries are actually invoked, since that's all confirm can gate.
 
 ## Restart prompt
 ```
