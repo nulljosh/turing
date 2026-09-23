@@ -494,9 +494,6 @@ def model_tools():
 
 
 
-HANDS_ADAPTER = os.path.join(os.path.dirname(os.path.abspath(__file__)), "hands-adapter")
-HANDS_SYSTEM = 'You are Samantha\'s hands. Reply with one JSON tool call. If this is not a command, reply {"tool": null, "arg": ""}.'
-_hands = None
 
 
 # A pick with no argument to check (disk_space, uptime...) or a loose one needs evidence in the sentence: some word that
@@ -572,34 +569,6 @@ def _sound(tool, arg, query):
 
     # Default: arg must appear in the query (lowercased)
     return tool in TOOLS and arg.lower() in q_lower
-
-
-def pick(query):
-    """Her own head for tool picking: the 0.5B with hands-adapter, trained by
-    gen_hands_data.py, scored by eval/hands.py. Returns (tool, arg), ("agent",
-    ""), or None when it is not a command, the pick is unsound, or the adapter
-    or MLX is not here. None always means: carry on as if she had not looked."""
-    global _hands
-    if _hands is None:
-        try:
-            from mlx_lm import load
-            _hands = load("mlx-community/Qwen2.5-0.5B-Instruct-4bit", adapter_path=HANDS_ADAPTER) if os.path.isdir(HANDS_ADAPTER) else False
-        except Exception:
-            _hands = False
-    if not _hands:
-        return None
-    from mlx_lm import generate
-    model, tok = _hands
-    prompt = tok.apply_chat_template([{"role": "system", "content": HANDS_SYSTEM}, {"role": "user", "content": query}],
-                                     add_generation_prompt=True, tokenize=False)
-    try:
-        got = json.loads(re.search(r"\{.*?\}", generate(model, tok, prompt=prompt, max_tokens=48, verbose=False), re.S).group(0))
-        tool, arg = got.get("tool"), str(got.get("arg") or "").strip()
-    except Exception:
-        return None
-    if tool == "agent":
-        return "agent", ""
-    return (tool, arg) if tool and _sound(tool, arg, query) else None
 
 
 # Tools that leave something behind or send something out: a note, a reminder, a file on the
@@ -708,6 +677,8 @@ def do(query, log=None, confirm=None):
         return done
     if _MULTISTEP.search(_bare(query)):
         return agent(query, log=log, confirm=confirm)
+    if _faq_knows(query):
+        return None  # a question her own FAQ answers is about her, not a job for her hands
     picked = pick(query)
     if picked and picked[0] != "agent":
         if log:
@@ -777,4 +748,4 @@ if __name__ == "__main__":
         demo()
 
 
-from tools_agent import agent  # noqa: E402  (split out for file size; re-exported so tools.agent still works)
+from tools_agent import agent, pick, _faq_knows, HANDS_ADAPTER, HANDS_SYSTEM  # noqa: E402,F401  (her hands' choices, split out for size; re-exported)

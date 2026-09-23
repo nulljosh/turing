@@ -1,5 +1,5 @@
 {
-  "version": "2.0.0",
+  "version": "2.0.1",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -44,8 +44,8 @@
         "documented": 21
       },
       "test_harness.py": {
-        "total": 23,
-        "documented": 23
+        "total": 24,
+        "documented": 24
       },
       "tools_gui.py": {
         "total": 8,
@@ -64,16 +64,16 @@
         "documented": 3
       },
       "tools_agent.py": {
-        "total": 1,
-        "documented": 1
+        "total": 3,
+        "documented": 3
       },
       "ask_local.py": {
         "total": 9,
         "documented": 9
       },
       "tools.py": {
-        "total": 44,
-        "documented": 44
+        "total": 43,
+        "documented": 43
       },
       "ask_faq.py": {
         "total": 10,

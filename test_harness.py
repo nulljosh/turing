@@ -178,6 +178,12 @@ class AgentGrounding(unittest.TestCase):
         with self.reply(call, {"role": "assistant", "content": "It came up heads."}):
             self.assertEqual(tools.agent("flip a coin and tell me"), "It came up heads.")
 
+    def test_questions_her_faq_answers_skip_her_hands(self):
+        """The FAQ outranks the picker and agent, never an exact route: "how much memory does it use" is about her."""
+        with mock.patch.object(tools, "pick", side_effect=AssertionError("picked")), mock.patch.object(tools, "agent", side_effect=AssertionError("agent")):
+            self.assertIsNone(tools.do("How long does it take to get an answer, and how much memory does it use?"))
+        self.assertIn("4", tools.do("calculate 2+2"))  # exact routes still answer first
+
     def test_a_tab_needs_a_word_for_it(self):
         """current_tab only when the sentence speaks of a tab, page or browser: "what's blocked in this project" is not one."""
         self.assertFalse(tools._sound("current_tab", "", "What's blocked or paused in this project right now?"))
