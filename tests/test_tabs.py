@@ -5,7 +5,7 @@ import unittest
 from unittest import mock
 
 os.environ["SAMANTHA_HEADLESS"] = "1"
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import tools_util as u
 
 FAKE = "1.1\tHacker News\thttps://news.ycombinator.com/\n1.2\tturing: a tiny assistant\thttps://github.com/nulljosh/turing\n2.1\tInbox (3)\thttps://mail.google.com/mail/u/0/\n"

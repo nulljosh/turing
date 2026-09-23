@@ -72,7 +72,7 @@ def collect_coverage():
             total_items += total
             total_documented += documented
 
-    for py_file in repo_root.glob("eval/*.py"):
+    for py_file in sorted(repo_root.glob("eval/*.py")) + sorted(repo_root.glob("tests/*.py")) + sorted(repo_root.glob("training/*.py")):
         total, documented = count_docstrings(py_file)
         if total > 0:
             files_coverage[f"eval/{py_file.name}"] = {"total": total, "documented": documented}
@@ -90,7 +90,7 @@ def check_house_docs():
         "README.md": Path("README.md").exists(),
         "WHITEPAPER.md": Path("WHITEPAPER.md").exists(),
         "FAQ.md": Path("FAQ.md").exists(),
-        "TROUBLESHOOTING.md": Path("TROUBLESHOOTING.md").exists(),
+        "TROUBLESHOOTING.md": Path("training/TROUBLESHOOTING.md").exists(),
         "CLAUDE.md": Path("CLAUDE.md").exists(),
         "roadmap.md": Path("roadmap.md").exists(),
         "LICENSE": Path("LICENSE").exists(),

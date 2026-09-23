@@ -1,6 +1,6 @@
 """tools_gui.py: her hands on the screen. The screen reader and cliclick are stood in for, so no test ever clicks.
 
-Run: python3 test_gui.py
+Run: python3 tests/test_gui.py
 """
 import os
 import sys
@@ -8,7 +8,7 @@ import unittest
 from unittest import mock
 
 os.environ["SAMANTHA_HEADLESS"] = "1"
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import harness
 import tools
 import tools_gui

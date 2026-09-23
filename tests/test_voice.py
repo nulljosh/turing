@@ -1,7 +1,7 @@
 """voice.py: what she does with what she hears. Fake ears and a fake mouth stand in, so no test needs a microphone.
 VOICE_LIVE=1 also renders a question with macOS `say` and transcribes it with the real Whisper.
 
-Run: python3 test_voice.py
+Run: python3 tests/test_voice.py
 """
 import os
 import subprocess
@@ -11,7 +11,7 @@ import unittest
 from unittest import mock
 
 os.environ["SAMANTHA_HEADLESS"] = "1"
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import voice
 
 

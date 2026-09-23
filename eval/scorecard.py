@@ -24,7 +24,7 @@ def run(*argv):
 def biggest():
     """The largest Python file and its line count."""
     sizes = []
-    for path in glob.glob(os.path.join(REPO, "*.py")) + glob.glob(os.path.join(REPO, "eval", "*.py")) + glob.glob(os.path.join(REPO, "pixelmator", "*.py")):
+    for path in glob.glob(os.path.join(REPO, "*.py")) + glob.glob(os.path.join(REPO, "tests", "*.py")) + glob.glob(os.path.join(REPO, "training", "*.py")) + glob.glob(os.path.join(REPO, "eval", "*.py")) + glob.glob(os.path.join(REPO, "pixelmator", "*.py")):
         with open(path) as f:
             sizes.append((sum(1 for _ in f), os.path.relpath(path, REPO)))
     return max(sizes)
@@ -33,7 +33,7 @@ def biggest():
 def card():
     """The scorecard as one line."""
     import tools
-    tests = sum(len(re.findall(r"^\s+def test_|^def test_", open(p).read(), re.M)) for p in glob.glob(os.path.join(REPO, "test_*.py")))
+    tests = sum(len(re.findall(r"^\s+def test_|^def test_", open(p).read(), re.M)) for p in glob.glob(os.path.join(REPO, "tests", "test_*.py")) + glob.glob(os.path.join(REPO, "pixelmator", "test_*.py")))
     with open(os.path.join(REPO, "VERSION")) as f:
         version = f.read().strip()
     lines, name = biggest()

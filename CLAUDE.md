@@ -10,7 +10,7 @@ model swap), not "Samantha-2". The Qwen3.5-0.8B comparison base, if it
 ever ships as its own real model, gets a name of its own too, not a
 "-1b" suffix.
 
-- `.venv/` holds mlx-lm. `python3 prep_data.py` rebuilds `data/train.jsonl`
+- `.venv/` holds mlx-lm. `python3 training/prep_data.py` rebuilds `data/train.jsonl`
   and `data/valid.jsonl` from the Obsidian wiki + fleet READMEs/roadmap.md/
   CLAUDE.md files. Never commit `data/` or `*-adapter/`, they're gitignored
   on purpose (derived from private notes, and just weights).
@@ -25,7 +25,7 @@ ever ships as its own real model, gets a name of its own too, not a
   character-level transformer with zero borrowed weights, kept deliberately
   tiny. It will not be fluent. That's the point, it proves we can build one
   from nothing without repeating the earlier Arthur gibberish failure.
-- `parse_log.py` regenerates `web/status.json` from `train.log` after every
+- `training/parse_log.py` regenerates `web/status.json` from `train.log` after every
   run, landing page reads it live (loss chart + roadmap tracker share the
   same file on purpose).
 - Landing page deploys itself: `.github/workflows/deploy.yml` runs `wrangler deploy`
@@ -33,6 +33,7 @@ ever ships as its own real model, gets a name of its own too, not a
   checks the live page serves the new VERSION. `web/` is the asset root. Needs the
   CLOUDFLARE_API_TOKEN repo secret; `npx wrangler deploy` from the Mac still works.
 - No daemon, no cron, training is invoked by hand every time.
+- Layout: her code at the root (ask_*, tools_*, chat, harness, serve, mcp_server, library, voice), `tests/` (every test_*.py, run from the root: `python3 tests/test_x.py`), `training/` (prep_data, distill, gen_hands_data, harvest_voice, run_lora_capped, train_resilient, parse_log, TRAINING_EXAMPLES, TROUBLESHOOTING), `swift/` (ocr, pdf), `eval/`, `pixelmator/`, `gui/`, `menubar/`, `web/`, `docs/` (ARCHITECTURE, ABILITIES, HISTORY, PROGRESS, LOOP-HANDOFF). No loose files at the root: a new script goes in the folder that owns it.
 
 ## Talking to Joshua
 TLDR only. Every round that ships something adds one line, newest first, to docs/PROGRESS.md, followed by the one-line `python3 eval/scorecard.py` (version, tools, tests, docs, laws, biggest file, router agreement). A few lines at most, plain words, no walls of text, no play-by-play. Only speak up when something is done, broken, or needs him. Every release gets celebrated: one upbeat line to Joshua (and a push notification when he is away) naming what she can do now, and a 🎉 on its line in docs/PROGRESS.md.

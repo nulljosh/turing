@@ -48,7 +48,7 @@ while [ "$attempt" -lt "$MAX_RETRIES" ]; do
   fi
 
   log "attempt $attempt: starting (free=${FREE_MB}MB, resume=${RESUME_FLAG:+yes})"
-  ./.venv/bin/python run_lora_capped.py \
+  ./.venv/bin/python "$(dirname "$0")/run_lora_capped.py" \
     --model "$MODEL" \
     --train --data "${DATA:-./data}" --iters "$ITERS" \
     --grad-checkpoint $RESUME_FLAG \

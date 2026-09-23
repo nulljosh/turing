@@ -16,7 +16,7 @@ BASELINE="eval/baseline.json"
 # Run all checks and collect results
 echo "=== fast checks ==="
 
-OUT=$(python3 test_chat.py 2>&1 | tail -1)
+OUT=$(python3 tests/test_chat.py 2>&1 | tail -1)
 CHAT=$(echo "$OUT" | cut -d/ -f1)
 
 OUT=$(python3 eval/actions.py 2>&1 | tail -1)

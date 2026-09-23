@@ -18,7 +18,7 @@ OUT = os.path.expanduser("~/Documents/Code/turing/data/train.jsonl")
 VAULT = os.path.expanduser("~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Code")
 CODE = os.path.expanduser("~/Documents/Code")
 TURING = os.path.expanduser("~/Documents/Code/turing")
-EXAMPLES = os.path.expanduser("~/Documents/Code/turing/TRAINING_EXAMPLES.md")
+EXAMPLES = os.path.expanduser("~/Documents/Code/turing/training/TRAINING_EXAMPLES.md")
 
 OWN_REPEATS = 3        # how many times to repeat this repo's own docs (10x caused overfitting/collapse, see eval run 3)
 FLEET_CAP = None        # everything from the fleet + wiki + journal (was 100 until 2026-09-22: "train it on everything")

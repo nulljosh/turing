@@ -1,85 +1,25 @@
-# Turing loop handoff (2026-09-23, cloud loop wrapped up, Mac picks it up)
-
-The live `/loop` for this repo. Checkpoint rewrites this file every run. A new session reads it and picks up where the last one stopped.
+# Turing loop handoff (2026-09-23, evening)
 
 ## What the loop is
-Never-ending build-out of Samantha. No finish line: each iteration compares her with frontier assistants (Claude, ChatGPT, Gemini, Siri/Apple Intelligence, Open Interpreter, Raycast AI), writes each real gap into roadmap.md "Gaps found by the loop" with where it was seen, then builds the top one: smallest honest fix, tests, checks, commit, push, delete the shipped line. Every iteration first checks every workflow run (test, release, deploy) on main and the branch and fixes any red before anything else, and splits one god file (CLAUDE.md "File size"). Every iteration also hardens her: error handling and edge cases (empty, huge, unicode, negative, malformed, missing files, offline) with a test for each. And leaves the code better: more tests for what exists, dead code removed, duplication folded, slow paths made fast. Never at the cost of a check. When the gap list runs thin, compare again. Mac-only work (training, Pixelmator, voice, GUI control, release.sh, deploy) is queued for a Mac session; a cloud session builds everything that tests on Linux.
 
-## North star
-roadmap.md "How we compete with trillion-dollar labs": local, hands on the real Mac, never confidently wrong, distill from frontier teachers, tiny and fast. Each iteration moves one. Taper (longer waits, smaller iterations) if the user says Claude usage is tight.
-
-## Rules
-Headless always: `SAMANTHA_HEADLESS=1`. Check free disk and memory before training (6GB min). One heavy job at a time. Haiku subagents one at a time, sequential not parallel. Stop at 90% usage. Root-cause fixes only, never edit tests to pass. Code review diffs before calling anything done.
-
-## Loop lessons (the loop improves itself: add one whenever a round teaches something)
-- Any new answer path (a fallback, a library, a model) runs `eval/basic_questions.py` before it ships and must keep 0 confidently wrong. The library went 6 wrong, then 2, then was cut back to exact page titles. Word overlap is not reading.
-- Run the knowledge eval with full output to a file, never piped through tail: the wrong answers are the part you need.
-- Wikipedia rate-limits after a bulk fetch (429). Space bulk jobs away from evals that hit the web, or the eval measures the outage.
-- Ollama loads models off the external LaCie drive and its loader can stall past 5 minutes; oMLX on :8000 is the fast local path. A client that disconnects aborts Ollama's load, so a short timeout means it never gets warm.
-- Grep new files for a literal em dash before the gate (write it as an escape in code). Substring checks in tests: "widget1" matches "widget10".
-- Keep weights only on measured evidence: score.py and a held-out set before and after, and back up the adapter first (/Volumes/LaCie/llm/turing/ada-1-adapter.bak-*).
-- Read a sample of any teacher's output by eye before training on it. The first teacher (Haiku) passed a word-overlap check with note fragments and "How does Bookrank use this?". The checks now demand a standalone question and a whole sentence, and the teacher is Sonnet with good and bad examples.
-- Held-out sets must never move: distill's passages.jsonl is append-only and split.json fixes held and trained ids for good. Docs change under us (tonight's edits shifted passage 10), so regenerating would have leaked trained questions into the eval.
-- Pilot first, measure, then scale: 150 passages, 90 iterations, held-out answers 2/13 -> 3/13 and declines 0/1 -> 1/1, score.py still 29/29, then 394 more passages.
-- Splitting a module that imports its parent: import the parent inside the function, or running the parent as a script breaks on a circular import.
-- A pre-flight memory check must count what macOS will hand back (free + inactive + speculative + purgeable), and training unloads the local chat servers first: counting only free pages refused to train with 35% free, and oMLX plus Ollama were holding 5GB.
-- Distillation round 2 taught declining (3/16 -> 16/16) but not answering (19/43 flat). Next round: more answerable lessons, harder distractors (same-repo passages), and check she does not over-decline.
-- WHITEPAPER.md is for people, not engineers: refresh it at every minor or major release (version line, what she can do, measured numbers, honest limits), short sentences, no jargon. It sat at v0.8.0 while she reached v3.0.0.
-- Diagnose before spending teacher tokens: reading her failed answers showed she starts right then invents, but capping length only moved 19 -> 20 of 43; her first sentence is often wrong. Measure the cheap fix, then pay for the expensive one.
-- More epochs on the same lesson set overfits and drops both scores: confirmed by reverting round 3. The next distillation round needs more distinct passages/lessons, not more passes over the same 499.
-- The user reads TLDRs: one line per update, what she can do now.
-- Usage, read from the [usage] line every round: session under 60% and weekly under 50%, full rounds about every 15 minutes. Session 60 to 80% or weekly 50 to 70%, one small round per 30 minutes, Haiku for mechanical work. Session over 80% or weekly over 70%, CI and red fixes only, hourly. Session over 90%, stop until the reset. Say it in one line when tapering. Training and evals run on the Mac, not on Claude, so they are free: prefer them.
-
-## Chat + tools release pass (2026-09-22, cloud session, branch claude/full-release-chat-tools-x5i81k)
-Goal: a full version you sit down and chat with, and she calls tools, without ever dying mid-conversation. Driven from a Linux container (no Mac, no MLX weights, no osascript), which is exactly what exposed these:
-- Fixed: one tool failing (missing `osascript`, a hung app) crashed chat.py. `harness.Session.ask` now turns any tool exception into "I tried set_volume(30), but it did not work: osascript is not on this machine." and records the turn. `ask.local_answer` (ask.py, serve.py) does the same.
-- Fixed: the answer model missing or hanging crashed chat.py. `generate` has a 180s timeout, a failure gives `MODEL_DOWN`, and `safe_turn` guards the whole answer chain in the plain chat and the TUI.
-- Fixed: "hi", "how are you", "thanks", "what can you do", "list your tools" had no answer outside the web demo. `ask.small_talk`, anchored to the whole message so "hey calculate 8 + 8" still hits tools. The ability list counts `tools.TOOLS` live.
-- Fixed: "roll a d20" missed the dice route (Python and JS twin, util_diff case added).
-- Fixed: typed phrasings that missed. "search google for X" searched for "google for X"; "search youtube for X" / "go to youtube and search X" / "search X on amazon" now open that site's own results (`tools.site_search`); "whats"/"hows" without the apostrophe; "look up the weather in X"; "what tabs do i have open"; "open photoshop" opens Pixelmator when there's no Photoshop.
-- Fixed: photo edits needed the picker model. Ten exact image routes in `tools_image.ROUTES` ("make ~/Desktop/cat.png black and white", "remove the background from X", "rotate X by 180", "resize X to 500", "convert X to jpg"...), still asking first. JS twin says those need the real Mac. actions.py 95/95, parity 95/95.
-- Added: "again" / "do that again" / "one more time" repeats the last command through the harness, so a write asks again.
-- Releases are automatic now: bump VERSION + stats.py + a "Release vX.Y.Z: ..." commit, merge, and .github/workflows/release.yml tags and publishes once CI passes. v1.1.0 goes out this way. Mac-only extras, whenever the user happens to be on the Mac (never asked of them): ./gate.sh --full and the landing deploy (npx wrangler deploy).
-
-## Shipped in the build-out loop (2026-09-22)
-- Chains: "open youtube and set the volume to 20", "calculate 6*7, then take a note buy milk" run every step in order with no model (`tools.chain`, JS `Samantha.chain`, demo.js). "then" always splits; a plain "and" splits only a sentence a catch-all route would swallow, and a later step only a catch-all takes is words, not a command. Each step is shown and a write still asks.
-
-- Search answers: "google how tall is everest" opens the tab and answers with its source (`tools.search_answer`, reusing ask.general_knowledge with `hands=False` so a search never re-enters the tools). A non-question ("google best pizza") only opens the tab. Demo does the same through /api/ask. Not live-tested from the cloud container (its network blocks the open web); run a real search on the Mac.
-
-- Follow-ups: "read it", "what does that page say", "open it again" point at the page she last opened, searched or read (`Session.last_page`, `point_back`). With nothing opened they are not guessed. New exact route: "read github.com/x", "summarize https://...", "what does X say" -> read_page (JS says it needs the real Mac).
-
-- TUI shows each tool call the moment it is found ("working: [open_app(pixelmator)]") instead of a bare "thinking..." until the end. Smoke tested in a pty.
-- Cleanup: tools_image.py 458 -> 231 lines. Ten copies of open/step/export/close folded into `_pixelmator` and `_edit`. A new table test pins every tool's exact AppleScript, timeout and reply; it passes on the old and the new code alike. `.gif` dropped from the photo routes (the tools never took gifs).
-
-- Hardening pass: a ~100-input weird sweep (empty, huge, unicode, negative, half-finished, offline, no osascript) now in `test_edges.py` and CI. Fixed what it found: empty input errored; "open"/"search for"/"remind me to"/"take a note"/"set a timer" now ask for what's missing (`tools.missing`); "is -7 prime" answered with the prime-minister FAQ entry (negatives now reach their tools); "tip on -10" and a 400-digit bill; "go to http://"; dangling "and"/"then"; full-width letters and control/bidi characters (NFKC + strip, Python and JS); "what is 1/0" says why; an unclosed FAQ.md handle.
-
-- v1.1.0 published by the release workflow (first automatic release). Deploy workflow merged; waits on the CLOUDFLARE_API_TOKEN repo secret (the user will deploy from the Mac for now).
-- date_math (tool 78): "100 days from now", "3 weeks ago", "2 months after 2026-01-31" (month-end clamp), "what day of the week was July 4 1976", "days between X and Y", years 1 to 9999. Python and JS agree word for word (util_diff 183/183). Found and fixed: strftime %Y writes year 1 as "1" on Linux and "0001" on macOS, so dates are spelled by hand.
-
-- God-file splits: tools_util.py 985 -> 644 (util_math.py, util_dates.py); ask.py 1319 -> 717 (ask_faq.py, ask_local.py) -> 388 (ask_web.py; two test_chat outage tests now stub ask_web.http_json, where the code moved). Old modules re-export every moved name; behavior checked unchanged (FAQ paraphrase 5/16 with 0 wrong, prompts 26/29, all tests and evals). tools.py 977 -> 816 (tools_logo.py). Next targets: tools.py 822, web/demo.js, web/samantha.js, tools_util.py 644 (web lookups), web/demo.js 710, web/samantha.js ~720, tools_util.py 644.
-- CI: deploy skips green without the Cloudflare secret. Every workflow run on main is green.
-
-- New icon, made with her designer: tools_logo gained style "flower" (89 ember petals, dark ring, one lit core) and layers_to_svg (her designs without Pixelmator). Graded on contact sheets at 180/64/32/16 px on white and black against the old 144-dot spiral (a grey blob at 16 px) and her simple motifs (generic); inspired by what frontier LLM marks share (one bold radial silhouette, flat, one accent) without copying any. web/icon.svg, icon.svg (README) and web/samantha-logo.png (og:image) all rebuilt; test_edges pins them to tools_logo.icon_svg(). Demo's drawBloom ported (spiral size scaling, flower style). On the Mac her 1.7B can pick style flower too. Pro review graded it A- (mark 85% of tile, 36-unit ring vanishing at 16 px, core only 1.31:1 on petals), so the flower was re-proportioned: mark 78%, ring 63 units (a full pixel at 16 px), core Ø160; docs/icon-blueprint.svg measures it and a test enforces it.
-
-- convert_time (tool 79): "what time is 3pm PST in Tokyo", "15:30 London to New York", "9am in Sydney" (from here). Cities, PST/EST/GMT/JST..., IANA names, daylight time followed; JS twin does the zone math with Intl alone and agrees word for word (util_diff 195/195). Route needs am/pm, a colon, noon or midnight so "convert 5 km to miles" stays a unit. Released as v1.3.0.
-
-- ask_claude (tool 80, north star 4, "borrow their brains"): "ask claude ...", "claude, ...", "have claude ..." sends a hard question to claude-opus-5 through the official anthropic SDK (medium effort, server-side refusal fallbacks) and marks the answer as Claude's. Only by name; WRITES (asks first) and NOT_FOR_MODELS (no model menu, no MCP); every failure is a plain reply. test_claude.py runs a fake SDK; checked against the real SDK 1.8.0 here, which found that a missing key raises TypeError (now read by message). The never-crash sweep blocks the SDK so tests can never make a billed call. User setup on the Mac: .venv/bin/pip install anthropic, and ANTHROPIC_API_KEY or ant auth login. Released as v1.4.0.
-
-- pixelmator/pxm.py 865 -> 621: the spec trust boundary (exit codes, shape tables, PxmError, validate_spec) moved to pxm_spec.py. Every example spec's AppleScript is byte-identical before and after; law 8 ceiling 870 -> 825.
+One ability per minor release, a major when a whole roadmap family completes, until version 10. Each round: a frontier check first (ChatGPT, Claude, Gemini, Apple Intelligence, Operator-style agents; any real gap goes under "Gaps found by the loop" in roadmap.md with where it was seen), then the easiest, most relevant open gap, built, dogfooded for real on this Mac (the new ability plus one old one), full gate plus every file in tests/ green, docs and landing page in the same commit, push, CI checked, a line in docs/PROGRESS.md. Celebrate at 5.0.0 and 6.0.0 (4.0.0 and 100 tools are done). Every version gets a tag and a GitHub release from release.yml.
 
 ## Where things stand
-v3.0.1 shipped 2026-09-22 on the Mac: she researches via Wikipedia and her library (fieldbook fields), the local 9B writes cited briefs, drops answers without sources. She sees screenshots and photos (Qwen2.5-VL 3B on MLX), screen control via OCR (reads screen, clicks text you name). Voice in (Whisper on MLX) and out (say). Hands: 86 tools (30 photo/paint, 27 utilities, 10 chrome tabs, MCP client, memory, read_screen, accessibility, web search, calculator, logo maker, music). Tool picker retrained to 395/484 on unseen. Landing: interactive demo with voice and vision queries live. Knowledge 62/65 (zero confidently wrong). Distillation round 3 reverted (overfit, 20 -> 16 answered, 16 -> 15 declined); round 2 kept (declines 16/16, security pass). Evals green: 77 actions, web parity. Apache 2.0.
 
-## Next, in order (toward 4.0.0: she does whole jobs)
-1. DONE: multi-step screen work ("log me into X") shipped via tools_screen_agent.py, a dedicated agent with click_text/type_text/press_key/see_screen, every step confirmed, never on the general model menu.
-2. DONE: save_research writes the last brief to a file ("save that", "save it to X"), asking first. Research follow-ups (pages beyond Wikipedia, asking about a brief already given) still open.
-3. Distillation round 4: more distinct passages and lessons (not more epochs on round 2), harder same-repo distractors, measure answering (19/43) and declining separately.
-4. Read mail, write real files, translate, run code for answers (roadmap.md "Gaps found by the loop").
-5. File size: tools.py is exactly at the 760 ceiling (not over, no CI failure). A clean split exists (the Mac-primitive functions, `_run` through `read_file`, into tools_mac.py, same pattern as tools_agent.py) but touches a widely-imported core file; do it in a low-usage window with the full gate run after, not as a rushed mid-session change. tools_util.py, web/demo.js, web/samantha.js also still oversized by house style, none over a hard ceiling.
-Loads off the LaCie drive run about 24 seconds per GB: the 9B takes about 4 minutes cold. Warm it (POST localhost:8000/v1/models/<id>/load) before timing anything that uses it.
-Real hang found and fixed 2026-09-23: eval/laws.py's law 3 was invoking READ_ONLY tools for real when testing "no", not just WRITES ones; a READ_ONLY entry in SPOKEN (research) made a live Wikipedia + local-LLM call and hung on a cold model. Now only WRITES entries are actually invoked, since that's all confirm can gate.
+v4.0.1, 101 tools (audited, all distinct), 275 tests, docs 100%, laws all hold, CI green. Today shipped v3.5.0 through v4.0.1: transcribe_video, unread_mail, summarize, translate, timed reminders, the files family (read and write halves), the docs de-spam, and the tidy (tests/, training/, swift/, roadmap 94 KB to 15 KB with docs/HISTORY.md, README simplified with docs/ABILITIES.md). Usage was the limit at close, not the work.
+
+## Next, in order
+
+1. Docs in her voice: the README intro is hand-written to SOUL.md; the 9B timed out cold twice. Warm it first (any ask), then have it redo the README intro, docs/ABILITIES.md and WHITEPAPER.md in first person, check facts and house rules by hand.
+2. What needs me: one answer from unread mail, today's calendar and due reminders. The Reminders AppleScript must skip `missing value` due dates inside the loop, a `whose` filter on due date errors out (probed today).
+3. Am I free: calendar gaps for a day or a week.
+4. Camera eyes: one frame through ffmpeg avfoundation, then see_image.
+5. Edit the last draft: rewrite the file write_document just saved, showing the diff, asking first.
+6. Then the remaining gaps in roadmap.md, easiest first. tools.py is at 737 of 760 lines: the next tool there forces a split.
 
 ## Restart prompt
+
 ```
-/loop Keep building Samantha (turing) on the Mac, forever, improving the loop itself as you go (add to "Loop lessons"). Read docs/LOOP-HANDOFF.md and roadmap.md first. Each iteration: compare her with frontier assistants (Claude, ChatGPT, Gemini, Siri, Open Interpreter), add each real gap to roadmap.md "Gaps found by the loop" with where it was seen, then build the top one that can be tested here: smallest honest fix with tests, run the CI checks (tests, eval/actions.py, eval/web_parity.py, eval/util_diff.py, eval/laws.py, stats.py --check), keep web/samantha.js in step, then one cleanup (a test for something untested, dead code out, duplication folded, a slow path made fast), commit, push, delete the shipped line, and rewrite LOOP-HANDOFF.md. Queue Mac-only work instead of faking it. Never stop on your own.
+/loop until version 10. ultrathink
+keep close watch on usage. read docs/LOOP-HANDOFF.md first.
 ```

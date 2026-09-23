@@ -1,7 +1,7 @@
 """chat_pipe.py: the JSON-line protocol a native GUI drives instead of a terminal. A fake ask_fn stands in, so no
 test needs a real model; a separate live test drives the real subprocess.
 
-Run: python3 test_chat_pipe.py
+Run: python3 tests/test_chat_pipe.py
 """
 import json
 import os
@@ -10,7 +10,7 @@ import sys
 import unittest
 
 os.environ["SAMANTHA_HEADLESS"] = "1"
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import chat_pipe
 
 

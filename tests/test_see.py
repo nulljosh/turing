@@ -1,6 +1,6 @@
 """tools_see.py: her eyes. The vision model and the screenshot are stood in for, so no test needs MLX or a screen.
 
-Run: python3 test_see.py
+Run: python3 tests/test_see.py
 """
 import os
 import sys
@@ -9,7 +9,7 @@ import unittest
 from unittest import mock
 
 os.environ["SAMANTHA_HEADLESS"] = "1"
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import harness
 import tools
 import tools_see

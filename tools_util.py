@@ -144,7 +144,7 @@ def _doc_text(path):
         return None, f"No file {path.strip()} I am allowed to read."
     ext = os.path.splitext(full)[1].lower()
     if ext == ".pdf":
-        script = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pdf.swift")
+        script = os.path.join(os.path.dirname(os.path.abspath(__file__)), "swift", "pdf.swift")
         text = _sh(["swift", script, full], timeout=90)
     elif ext in (".docx", ".doc", ".rtf", ".rtfd", ".html", ".htm", ".odt", ".webarchive"):
         text = _sh(["textutil", "-convert", "txt", "-stdout", full], timeout=30)
@@ -391,7 +391,7 @@ def read_screen(query=""):
     os.close(fd)
     try:
         _sh(["screencapture", "-x", "-t", "png", shot], timeout=15)
-        script = os.path.join(os.path.dirname(os.path.abspath(__file__)), "ocr.swift")
+        script = os.path.join(os.path.dirname(os.path.abspath(__file__)), "swift", "ocr.swift")
         text = _sh(["swift", script, shot], timeout=90)
     finally:
         os.unlink(shot)

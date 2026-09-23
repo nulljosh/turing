@@ -6,7 +6,7 @@ import json, os, sys, time, random, math
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.dirname(HERE)
 os.environ["SAMANTHA_HEADLESS"] = "1"
-sys.path[:0] = [REPO, os.path.join(REPO, "eval")]
+sys.path[:0] = [REPO, os.path.join(REPO, "eval"), os.path.join(REPO, "training")]
 import numpy as np
 import mlx.core as mx
 import mlx.nn as nn

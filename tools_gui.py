@@ -37,7 +37,7 @@ def screen_boxes():
     os.close(fd)
     try:
         _run(["screencapture", "-x", "-m", "-t", "png", shot], timeout=15)
-        out = _run(["swift", os.path.join(HERE, "ocr.swift"), "--boxes", shot], timeout=90)
+        out = _run(["swift", os.path.join(HERE, "swift", "ocr.swift"), "--boxes", shot], timeout=90)
     finally:
         os.unlink(shot)
     return parse_boxes(out)

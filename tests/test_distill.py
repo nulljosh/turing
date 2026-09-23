@@ -1,6 +1,6 @@
 """distill.py: what a teacher pair must pass before she trains on it, and how her held-out answers are scored.
 
-Run: python3 test_distill.py
+Run: python3 tests/test_distill.py
 """
 import json
 import os
@@ -10,7 +10,8 @@ import unittest
 from unittest import mock
 
 os.environ["SAMANTHA_HEADLESS"] = "1"
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "training"))
 import distill
 
 PASSAGE = "Epiphany uses Supabase for auth and Upstash Redis for portfolio data. Stripe handles web payments since July."

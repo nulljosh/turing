@@ -1,7 +1,7 @@
 """Edge cases and error handling for the whole chat path: empty, huge, unicode, negative, malformed, half-finished,
 offline and missing-command input. Nothing here may raise, and every reply is honest about what happened.
 
-Run: python3 test_edges.py
+Run: python3 tests/test_edges.py
 """
 import os
 import sys
@@ -10,7 +10,7 @@ from unittest import mock
 
 os.environ["SAMANTHA_HEADLESS"] = "1"
 os.environ["SAMANTHA_MEMORY"] = "/nonexistent/samantha-memory.json"  # never read or write anyone's real memory
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import ask
 import chat
 import harness
@@ -242,7 +242,7 @@ class Logo(unittest.TestCase):
     def test_the_icon_is_rebuilt_from_her_designer(self):
         """web/icon.svg and icon.svg are byte for byte tools_logo.icon_svg(): nobody hand-edits her logo."""
         import tools_logo
-        here = os.path.dirname(os.path.abspath(__file__))
+        here = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         for path in ("web/icon.svg", "icon.svg"):
             with open(os.path.join(here, path)) as f:
                 self.assertEqual(f.read(), tools_logo.icon_svg(), path)
@@ -250,7 +250,7 @@ class Logo(unittest.TestCase):
     def test_the_blueprint_matches_the_icon(self):
         """docs/icon-blueprint.svg is generated from the icon's own layers, and the icon keeps the measured proportions."""
         import tools_logo
-        here = os.path.dirname(os.path.abspath(__file__))
+        here = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         with open(os.path.join(here, "docs", "icon-blueprint.svg")) as f:
             self.assertEqual(f.read(), tools_logo.icon_blueprint_svg())
         m = tools_logo.icon_measures()

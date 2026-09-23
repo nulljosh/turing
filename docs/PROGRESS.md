@@ -2,6 +2,9 @@
 
 TLDR per loop round, newest first. The loop adds a line every round it ships something, then the scorecard.
 
+- 2026-09-23: v4.0.1, the tidy. Direct request: no loose files, simpler README, cleaner docs. Twenty test files moved to tests/, the training scripts and their two docs to training/, the Swift helpers to swift/; every path reference, CI step and self-check updated, full suite green from the new folders. roadmap.md went from 94 KB of mixed plan and diary to 15 KB of plan; the diary is docs/HISTORY.md, word for word. The README is short and points at docs/ABILITIES.md for the full list. The intro is in her own voice, first person. The 9B was asked to write it (briefed with SOUL.md) and timed out cold twice, so this one is hand-written to SOUL.md; the next round retries with a warm model, logged under Gaps.
+  `v4.0.1 · 101 tools · 275 tests (the scorecard now counts pixelmator's too) · docs coverage 100% · laws all hold · biggest tools.py 737 · actions 170/170 · parity 170/170 · util_diff 215/215`
+
 - 2026-09-23: 🎉🎉🎉 v4.0.0, and 100 tools crossed (101, audited: no two do the same job). The files family is complete: "move", "copy", "rename", "zip", "unzip", "trash" any file or folder inside home, each asking first, Trash via Finder so nothing is ever hard-deleted, a name never a path, never the whole home folder. Dogfooded for real on this Mac: a full round trip of all six, plus two refusals. Dogfood caught one real bug before shipping: "find b.txt" missed a file made seconds earlier (Spotlight lag), so find_file now walks the usual folders before saying no. Version rule from today: a major when a whole roadmap family completes.
   `v4.0.0 · 101 tools · 202 tests · docs coverage 100% · laws all hold · biggest tools.py 737 · actions 170/170 · parity 170/170 · util_diff 215/215`
 

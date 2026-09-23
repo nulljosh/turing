@@ -12,11 +12,11 @@ If it fails, the pipe is broken regardless of what the other suites say.
 Starts and stops serve.py itself, on a port unlikely to collide, so there
 is nothing to set up first.
 
-Usage: ./.venv/bin/python test_nimble.py
+Usage: ./.venv/bin/python tests/test_nimble.py
 """
 import json, os, subprocess, sys, time, urllib.error, urllib.request
 
-HERE = os.path.dirname(os.path.abspath(__file__))
+HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PORT = 8131
 BASE = f"http://localhost:{PORT}"
 

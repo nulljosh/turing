@@ -18,6 +18,7 @@ import time
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, REPO)
 sys.path.insert(0, os.path.join(REPO, "eval"))
+sys.path.insert(0, os.path.join(REPO, "training"))
 os.environ["SAMANTHA_HEADLESS"] = "1"
 import tools
 from gen_hands_data import SYSTEM

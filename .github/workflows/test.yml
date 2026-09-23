@@ -17,11 +17,11 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: python3 test_chat.py
+      - run: python3 tests/test_chat.py
       # her hands: the Pixelmator driver's own unit tests, no app needed
       - run: cd pixelmator && python3 -m unittest
       # her image tools: unit tests for the image processing tools, mocked
-      - run: python3 test_tools_image.py
+      - run: python3 tests/test_tools_image.py
       # the regex router, and the landing page's JavaScript port of it, must agree on every case
       - run: python3 eval/actions.py
       - run: python3 eval/web_parity.py
@@ -31,25 +31,25 @@ jobs:
       - run: SAMANTHA_HEADLESS=1 python3 tools.py
       - run: python3 eval/util_diff.py
       # her hands over MCP: a real client conversation against the stdio server
-      - run: python3 test_mcp.py
-      - run: python3 test_harness.py
+      - run: python3 tests/test_mcp.py
+      - run: python3 tests/test_harness.py
       # edge cases: empty, huge, unicode, negative, half-finished and offline input, never a crash
-      - run: python3 test_edges.py
+      - run: python3 tests/test_edges.py
       # ask_llm against fake local servers: never a real model call in CI
-      - run: python3 test_llm.py
-      - run: python3 test_library.py
-      - run: python3 test_distill.py
-      - run: python3 test_voice.py
-      - run: python3 test_chat_pipe.py
-      - run: python3 test_gui.py
-      - run: python3 test_see.py
-      - run: python3 test_research.py
-      - run: python3 test_write.py
-      - run: python3 test_tabs.py
-      - run: python3 test_memory.py
-      - run: python3 test_screen.py
-      - run: python3 test_documents.py
-      - run: python3 test_reader.py
+      - run: python3 tests/test_llm.py
+      - run: python3 tests/test_library.py
+      - run: python3 tests/test_distill.py
+      - run: python3 tests/test_voice.py
+      - run: python3 tests/test_chat_pipe.py
+      - run: python3 tests/test_gui.py
+      - run: python3 tests/test_see.py
+      - run: python3 tests/test_research.py
+      - run: python3 tests/test_write.py
+      - run: python3 tests/test_tabs.py
+      - run: python3 tests/test_memory.py
+      - run: python3 tests/test_screen.py
+      - run: python3 tests/test_documents.py
+      - run: python3 tests/test_reader.py
       # the laws in LAWS.md, checked against every tool
       - run: python3 eval/laws.py
 

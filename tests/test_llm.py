@@ -1,6 +1,6 @@
 """ask_llm: hands a hard question to another LLM on this Mac. A fake urlopen stands in, so no test needs oMLX or Ollama.
 
-Run: python3 test_llm.py
+Run: python3 tests/test_llm.py
 """
 import io
 import json
@@ -11,7 +11,7 @@ import unittest
 from unittest import mock
 
 os.environ["SAMANTHA_HEADLESS"] = "1"
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import harness
 import tools
 import tools_llm

@@ -1,0 +1,38 @@
+# What she can do
+
+Every ability, in the words you say. Anything that writes, sends or looks at your screen asks first. The landing page runs the same router in the browser, so every line here works there too, except the ones that need a real Mac (the page says so).
+
+## Talk and listen
+
+- **Talk.** `./.venv/bin/python chat.py --voice`: you speak, Whisper transcribes on the Mac, she answers out loud.
+- **Transcribe.** "Transcribe the video ~/Desktop/clip.mp4": the words out of any video or audio file in your home folder, same Whisper pipeline.
+
+## See
+
+- **Look.** "Look at my screen and tell me what's wrong with this chart", "what's in ~/Desktop/cat.png": a local vision model answers. Asks first.
+- **Read the screen.** "Read my screen", "find Sign in on my screen": the system's own text recognition.
+
+## Know
+
+- **Answer.** Questions go down a ladder: exact routes, her own picker, the project FAQ and your notes, then Wikipedia and DuckDuckGo, then her offline library (the fieldbook plus ~10,000 Wikipedia leads). If nothing holds the answer she says so.
+- **Research.** "Research the history of the printing press": Wikipedia, her library and your notes, then a brief with a source after every sentence. "Save that" writes it to a file.
+- **Summarize.** "Summarize ~/Desktop/report.pdf", "summarize this page", "summarize my unread mail": three to five real sentences from the biggest local model.
+- **Translate.** "Translate good morning to French", "how do you say thank you in Japanese", "translate the page github.com into Spanish". Offline.
+- **Ask a bigger brain.** "Ask qwen why the sky is blue", "ask claude ...": the question goes to a bigger model on your Mac, never the cloud, and the answer names the model.
+- **Remember.** "Remember that my dog is called Biscuit", "what do you remember about my dog", "forget Biscuit". A file only she reads.
+
+## Do
+
+- **Apps and sites.** Open an app, go to a site, search the web or one site, read a page, list, switch, read and close Chrome tabs.
+- **Her hands.** "Click Sign in", "type hello", "press return", "log me into X": she reads the screen, acts one step at a time, asks before each.
+- **Files.** "Find resume.docx", "what did I just download", "how big is ~/Movies", "read the document ~/notes.pdf", "find milk in the document ~/notes.pdf", then "move", "copy", "rename", "zip", "unzip", "trash" any of them. Trash is Finder's Trash, never a hard delete.
+- **Write.** "Draft an email about the release", "write a doc about the roadmap": the local model drafts it, she saves it in your home folder.
+- **Mail, calendar, reminders, notes.** "Unread mail", "anything from the bank in my mail", "what's on my calendar today", "remind me tomorrow at 9am to call mom", "take a note buy milk".
+- **The Mac.** Volume, battery, music, timers, the weather, the clipboard, screenshots, disk space, memory, Wi-Fi, IP, uptime, system info, sleep the screen, show a file in Finder, run any Apple Shortcut by name.
+- **Pictures.** "Draw a fox in the snow" (on the landing page), "paint ~/Desktop/mona.jpg" from 30,000 squares, "make me a logo for turing" (always an icon, never text), and remove a background, upscale, enhance, grayscale, rotate, flip, resize, crop, convert.
+- **Math, time, chance, text.** Calculate, convert units, tips, primes and factors, roman numerals, the time in any city, dates and days between, dice, coins, random numbers, passwords, UUIDs, SHA-256, base64, word counts, morse, tidy JSON.
+- **Plug in.** She speaks MCP both ways: any assistant can use her tools, and she can call another server's tools when you name it.
+
+## Limits, plainly
+
+Her own picker knows the first 51 tools by wording; the rest route through exact matches. Multi-step work borrows a small local model (qwen3:1.7b through Ollama). The tools that read this Mac only work on a Mac; the landing page says so. She never calls another MCP server on her own. She cannot reason like a frontier model and does not try; see `roadmap.md` for what is next and `LAWS.md` for what she will never do.

@@ -1,6 +1,6 @@
 """tools_write.py: drafting and saving a real file. The writer model and the home folder are stood in for.
 
-Run: python3 test_write.py
+Run: python3 tests/test_write.py
 """
 import os
 import sys
@@ -9,7 +9,7 @@ import unittest
 from unittest import mock
 
 os.environ["SAMANTHA_HEADLESS"] = "1"
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import tools
 import tools_write
 

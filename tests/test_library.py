@@ -1,6 +1,6 @@
 """library.py: her offline library. A stand-in Wikipedia fills a temporary library, so no test touches the network.
 
-Run: python3 test_library.py
+Run: python3 tests/test_library.py
 """
 import os
 import sys
@@ -10,7 +10,7 @@ import urllib.error
 from unittest import mock
 
 os.environ["SAMANTHA_HEADLESS"] = "1"
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import library
 
 LEADS = {

@@ -1,7 +1,7 @@
 """tools_screen_agent.py: multi-step screen jobs. A fake urlopen and fake screen tools stand in, so no test clicks
 anything or reaches Ollama.
 
-Run: python3 test_screen_agent.py
+Run: python3 tests/test_screen_agent.py
 """
 import io
 import json
@@ -11,7 +11,7 @@ import unittest
 from unittest import mock
 
 os.environ["SAMANTHA_HEADLESS"] = "1"
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import tools
 import tools_screen_agent
 

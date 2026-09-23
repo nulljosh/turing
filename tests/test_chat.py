@@ -3,8 +3,12 @@ loop): clean() stripping echoed scaffold, build_prompt() history handling.
 This is the one thing that was never automated, only manually eyeballed
 once when the indentation bug got fixed (see roadmap.md).
 
-Usage: ./.venv/bin/python test_chat.py
+Usage: ./.venv/bin/python tests/test_chat.py
 """
+import os
+import sys
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from chat import clean, build_prompt, HISTORY_TURNS, project_scope, answer_turn, resolve_followup, subject_of
 
 
