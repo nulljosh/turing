@@ -145,7 +145,9 @@ def clean(answer, question):
 
 _answerer = None  # (model, tokenizer), loaded once per chat: a fresh process per turn spent ~2s reloading her before a word
 STOPS = ("\nUser:", "\nSamantha:", "User:", "Samantha:", "\n##")  # the scaffold clean() cuts at; streaming stops there too
-HOLD = max(map(len, STOPS))  # characters held back while streaming, so a half-written marker is never shown
+HOLD = max(map(len, STOPS))
+SENTENCES = int(os.environ.get("SAMANTHA_SENTENCES", "2"))  # 0 lets her run to max_tokens
+REPETITION = float(os.environ.get("SAMANTHA_REPETITION", "1.1"))  # 0 turns the penalty off  # characters held back while streaming, so a half-written marker is never shown
 
 
 def _model():
@@ -166,10 +168,16 @@ def generate(prompt, max_tokens=80, on_text=None):
     model, tok = _model()
     prompt = tok.apply_chat_template([{"role": "user", "content": prompt}], add_generation_prompt=True, tokenize=False)
     text, shown = "", 0
-    for r in stream_generate(model, tok, prompt, max_tokens=max_tokens):
+    penalty = None
+    if REPETITION:  # a light repetition penalty: past the answer she loops ("deeper than the deeper one")
+        from mlx_lm.sample_utils import make_logits_processors
+        penalty = make_logits_processors(repetition_penalty=REPETITION)
+    for r in stream_generate(model, tok, prompt, max_tokens=max_tokens, logits_processors=penalty):
         text += r.text
         if any(m in text for m in STOPS):
             break
+        if SENTENCES and len(re.findall(r"[.!?](?:\s|$)", text)) >= SENTENCES:
+            break  # her lessons answer in one or two sentences; what she writes after that is where she invents
         if on_text and len(text) - HOLD > shown:
             on_text(text[shown:len(text) - HOLD])
             shown = len(text) - HOLD

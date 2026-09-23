@@ -202,14 +202,29 @@ def test_replies_stream_and_stop_at_echoed_scaffold():
     mock = __import__("unittest.mock").mock
     pieces = ["Train", "ing runs", " on the", " Mac.", "\nUs", "er: and", " more"]
     fake = types.ModuleType("mlx_lm")
-    fake.stream_generate = lambda model, tok, prompt, max_tokens: (types.SimpleNamespace(text=p) for p in pieces)
+    fake.stream_generate = lambda model, tok, prompt, max_tokens, **kw: (types.SimpleNamespace(text=p) for p in pieces)
     tok = types.SimpleNamespace(apply_chat_template=lambda msgs, **kw: msgs[0]["content"])
     got = []
-    with mock.patch.dict(sys.modules, {"mlx_lm": fake}), mock.patch.object(chat, "_model", return_value=(None, tok)):
+    with mock.patch.dict(sys.modules, {"mlx_lm": fake}), mock.patch.object(chat, "_model", return_value=(None, tok)), \
+            mock.patch.object(chat, "REPETITION", 0):
         text = chat.generate("p", on_text=got.append)
     assert "".join(got) and "User" not in "".join(got) and "Us" not in "".join(got)[-3:]
     assert "Training runs on the Mac.".startswith("".join(got))
     assert chat.clean(text, "q") == "Training runs on the Mac."
+
+
+def test_replies_stop_after_two_sentences():
+    """Verify generation stops after two sentences, where her lessons end and invention begins."""
+    import sys, types
+    import chat
+    mock = __import__("unittest.mock").mock
+    pieces = ["Roost uses Supabase.", " It has no backend.", " So the filter state resets", " on every navigation."]
+    fake = types.ModuleType("mlx_lm")
+    fake.stream_generate = lambda model, tok, prompt, max_tokens, **kw: (types.SimpleNamespace(text=p) for p in pieces)
+    tok = types.SimpleNamespace(apply_chat_template=lambda msgs, **kw: msgs[0]["content"])
+    with mock.patch.dict(sys.modules, {"mlx_lm": fake}), mock.patch.object(chat, "_model", return_value=(None, tok)), \
+            mock.patch.object(chat, "SENTENCES", 2), mock.patch.object(chat, "REPETITION", 0):
+        assert chat.generate("p") == "Roost uses Supabase. It has no backend."
 
 
 def test_a_broken_tool_through_ask_is_a_reply():

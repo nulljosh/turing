@@ -2,6 +2,8 @@
 
 TLDR per loop round, newest first. The loop adds a line every round it ships something, then the scorecard.
 
+- 2026-09-22: v3.0.1: her answers stop after two sentences (where her lessons end and invention began) with a light repetition penalty. Held-out answers 19 -> 20 of 43, declines 16/16, score.py 29/29. The misses are wrong facts in the first sentence, not length: the next lever is training, not decoding.
+  `v3.0.1 · 86 tools · 170 tests · docs coverage 100% · laws all hold · biggest tools.py 753 · actions 131/131 · parity 131/131 · util_diff 195/195`
 - 2026-09-22: 🎉🎉 v3.0.0: she sees and she researches. "research the history of the printing press" reads Wikipedia, her library and your notes, and the local 9B writes a cited brief in about 40 seconds warm; uncited or unsupported sentences are cut. With eyes (v2.1.0) that is 3.0.
   `v3.0.0 · 86 tools · 169 tests · docs coverage 100% · laws all hold · biggest tools.py 753 · actions 131/131 · parity 131/131 · util_diff 195/195`
 - 2026-09-22: 🎉 v2.1.0: she can see. "look at my screen and tell me...", "what's in ~/Desktop/cat.png": Qwen2.5-VL 3B on MLX looks and answers, on the Mac, asked first. Live on the real screen: right gist, some details off (called the Dock a taskbar). Half of 3.0.

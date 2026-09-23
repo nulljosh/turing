@@ -1,5 +1,5 @@
 {
-  "version": "3.0.0",
+  "version": "3.0.1",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -128,8 +128,8 @@
         "documented": 18
       },
       "test_chat.py": {
-        "total": 25,
-        "documented": 25
+        "total": 26,
+        "documented": 26
       },
       "distill.py": {
         "total": 11,
