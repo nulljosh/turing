@@ -20,6 +20,7 @@ Every ability, in the words you say. Anything that writes, sends or looks at you
 - **Translate.** "Translate good morning to French", "how do you say thank you in Japanese", "translate the page github.com into Spanish". Offline.
 - **Ask a bigger brain.** "Ask qwen why the sky is blue", "ask claude ...": the question goes to a bigger model on your Mac, never the cloud, and the answer names the model.
 - **Remember.** "Remember that my dog is called Biscuit", "what do you remember about my dog", "forget Biscuit". A file only she reads.
+- **Answer inside Joshua Tree.** The from-scratch i386 kernel's own Chat app talks to her over `/api/chat`, an Ollama-compatible endpoint (`worker.js`); she answers from a condensed pack of the OS's own docs (`web/jt_docs.js`) before falling back to the general pipeline above.
 
 ## Do
 
