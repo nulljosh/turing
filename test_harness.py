@@ -8,6 +8,7 @@ os.environ["SAMANTHA_HEADLESS"] = "1"
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import harness
 import tools
+import tools_apps
 
 
 class HarnessTests(unittest.TestCase):
@@ -22,7 +23,7 @@ class HarnessTests(unittest.TestCase):
     def test_a_no_stops_the_write(self):
         """A no stops the write."""
         s, asked, shown = self.session(False)
-        with mock.patch.object(tools, "_app") as run:
+        with mock.patch.object(tools_apps, "_app") as run:
             self.assertEqual(s.ask("take a note buy milk"), "Okay, I will not.")
         run.assert_not_called()
         self.assertEqual(asked, [("new_note", ("buy milk",))])
@@ -31,7 +32,7 @@ class HarnessTests(unittest.TestCase):
     def test_a_yes_runs_it_once(self):
         """A yes runs it once."""
         s, asked, _ = self.session(True)
-        with mock.patch.object(tools, "_app") as run:
+        with mock.patch.object(tools_apps, "_app") as run:
             self.assertEqual(s.ask("take a note buy milk"), "Noted: buy milk")
         self.assertEqual(run.call_count, 1)
         self.assertEqual(len(asked), 1)
