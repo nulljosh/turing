@@ -1,5 +1,5 @@
 {
-  "version": "1.4.1",
+  "version": "1.4.2",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -104,12 +104,12 @@
         "documented": 11
       },
       "test_claude.py": {
-        "total": 14,
-        "documented": 14
+        "total": 17,
+        "documented": 17
       },
       "tools_claude.py": {
-        "total": 1,
-        "documented": 1
+        "total": 4,
+        "documented": 4
       },
       "util_math.py": {
         "total": 20,

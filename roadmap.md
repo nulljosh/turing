@@ -307,7 +307,7 @@ Gaps, in order:
 The loop runs in the cloud and cannot reach Cloudflare or this Mac. Tick a box when done, the loop picks it up.
 
 - [x] Deploy the site (done 2026-09-22, by hand; CI still skips until CLOUDFLARE_API_TOKEN is a repo secret): `npx wrangler deploy` in the repo (or add the `CLOUDFLARE_API_TOKEN` repo secret once and it deploys itself on every push)
-- [x] ask_claude: asks the biggest local Ollama model (qwen3:8b) instead of Claude, no key needed (2026-09-22)
+- [x] ask_claude: asks the biggest local model (oMLX Qwen3.5-9B, then Ollama qwen3:8b) instead of Claude, no key needed (2026-09-22)
 - [ ] Try streamed replies, voice in and GUI control once the loop builds them: they need her real model and a real screen
 
 ### How we compete with trillion-dollar labs (set 2026-09-22)

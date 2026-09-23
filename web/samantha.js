@@ -642,7 +642,7 @@
     [new RegExp("^convert " + P + " (?:to|into) (?:a |an )?(png|jpe?g|webp|heic|tiff?|pdf)$", "i"), function (m) { return ["convert_image", m[1] + " to " + m[2]]; }],
     [new RegExp("^(?:how big is " + P + "|(?:image )?(?:info|size|dimensions) (?:for|of|on) " + P + ")$", "i"), function (m) { return ["image_info", m[1] || m[2]]; }]
   ]);
-  U.ask_claude = function () { return "On her real Mac she hands a hard question to the biggest model Ollama has there, and she asks you first. Nothing leaves the Mac. This page never sends your words anywhere but its own lookup."; };
+  U.ask_claude = function () { return "On her real Mac she hands a hard question to the biggest model running there (oMLX or Ollama), and she asks you first. Nothing leaves the Mac. This page never sends your words anywhere but its own lookup."; };
   U.NEEDS_MAC.push("ask_claude");
   U.read_page = function () { return "Reading a page happens on her real Mac, which fetches it. Here I can open it for you: say \"go to\" and the address."; };
   var NO_PHOTOS = "That one edits a photo on your real Mac in Pixelmator, and this stand-in has no photos on disk. Ask me to draw something instead.";

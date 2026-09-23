@@ -1,4 +1,4 @@
-"""ask_claude: hands a hard question to the biggest local model. A fake urlopen stands in, so no test needs Ollama.
+"""ask_claude: hands a hard question to the biggest local model. A fake urlopen stands in, so no test needs oMLX or Ollama.
 
 Run: python3 test_claude.py
 """
@@ -17,60 +17,82 @@ import tools
 import tools_claude
 
 
-class FakeOllama:
-    """Stands in for urlopen: records each request body, then answers or fails as told."""
+class FakeServers:
+    """Stands in for urlopen: each local server (oMLX, Ollama) answers or fails as told, and every request is recorded."""
 
-    def __init__(self, reply=None, error=None):
-        """What to answer with, or what to raise."""
-        self.reply, self.error, self.calls = reply, error, []
+    def __init__(self, omlx=None, ollama=None):
+        """What each server answers with (a dict) or raises (an exception). None means it is not running."""
+        self.by_url = {tools_claude.OMLX_CHAT: omlx, tools_claude.OLLAMA_CHAT: ollama}
+        self.calls = []
 
     def __call__(self, req, timeout=None):
-        """One request: record its body, then fail or answer."""
-        self.calls.append(json.loads(req.data))
-        if self.error:
-            raise self.error
-        return io.BytesIO(json.dumps(self.reply).encode())
+        """One request: record which server and body, then fail or answer."""
+        self.calls.append((req.full_url, json.loads(req.data)))
+        got = self.by_url[req.full_url]
+        if got is None:
+            raise urllib.error.URLError("refused")
+        if isinstance(got, Exception):
+            raise got
+        return io.BytesIO(json.dumps(got).encode())
 
 
-def answer(text, done="stop"):
+def omlx(text, finish="stop"):
+    """A reply shaped like oMLX's OpenAI-style chat."""
+    return {"choices": [{"message": {"role": "assistant", "content": text}, "finish_reason": finish}]}
+
+
+def ollama(text, done="stop"):
     """A reply shaped like Ollama's /api/chat."""
     return {"message": {"role": "assistant", "content": text}, "done_reason": done}
+
+
+def http(code):
+    """An HTTP error from a local server."""
+    return urllib.error.HTTPError("http://localhost", code, "", {}, None)
 
 
 class AskClaude(unittest.TestCase):
     """What she says back, for every way the call can go."""
 
-    def ask(self, question, **fake):
-        """Ask through a fake Ollama; returns the reply and the fake, to read what was sent."""
-        f = FakeOllama(**fake)
+    def ask(self, question, **servers):
+        """Ask through fake local servers; returns the reply and the fake, to read what was sent."""
+        f = FakeServers(**servers)
         with mock.patch("urllib.request.urlopen", f):
             return tools_claude.ask_claude(question), f
 
-    def test_an_answer_is_marked_as_the_local_models(self):
-        """The text comes back with where it came from, and the request stays on this Mac."""
-        reply, f = self.ask("why is the sky blue", reply=answer("<think>hmm</think>Rayleigh scattering."))
+    def test_omlx_answers_first_and_is_named(self):
+        """oMLX is asked first, the answer names its model, and the request stays on this Mac."""
+        reply, f = self.ask("why is the sky blue", omlx=omlx("<think>hmm</think>Rayleigh scattering."), ollama=ollama("never"))
         self.assertEqual(reply, f"Rayleigh scattering.\n(Answered by {tools_claude.MODEL} on this Mac, not by me.)")
-        self.assertEqual(f.calls[0]["model"], tools_claude.MODEL)
-        self.assertEqual(f.calls[0]["messages"][-1], {"role": "user", "content": "why is the sky blue"})
-        self.assertTrue(tools_claude.OLLAMA_CHAT.startswith("http://localhost:"))
+        self.assertEqual([u for u, _ in f.calls], [tools_claude.OMLX_CHAT])
+        self.assertEqual(f.calls[0][1]["messages"][-1], {"role": "user", "content": "why is the sky blue"})
+        self.assertTrue(all(u.startswith("http://localhost:") for u in (tools_claude.OMLX_CHAT, tools_claude.OLLAMA_CHAT)))
+
+    def test_ollama_when_omlx_is_down(self):
+        """No oMLX, or oMLX erroring: Ollama answers and is named."""
+        for down in (None, http(500)):
+            reply, f = self.ask("q", omlx=down, ollama=ollama("Because."))
+            self.assertEqual(reply, f"Because.\n(Answered by {tools_claude.OLLAMA_MODEL} on this Mac, not by me.)")
+            self.assertEqual(f.calls[-1][1]["model"], tools_claude.OLLAMA_MODEL)
 
     def test_cut_and_empty(self):
         """A cut answer says so, an empty one is not passed off as an answer."""
-        self.assertIn("cut short", self.ask("q", reply=answer("partial", done="length"))[0])
-        self.assertEqual(self.ask("q", reply=answer("   "))[0], f"{tools_claude.MODEL} sent back no answer.")
+        self.assertIn("cut short", self.ask("q", omlx=omlx("partial", finish="length"))[0])
+        self.assertIn("cut short", self.ask("q", ollama=ollama("partial", done="length"))[0])
+        self.assertEqual(self.ask("q", omlx=omlx("   "))[0], f"{tools_claude.MODEL} sent back no answer.")
 
     def test_every_error_is_a_sentence(self):
-        """Model missing, server error, Ollama not running: each gets its own honest reply."""
-        http = lambda code: urllib.error.HTTPError(tools_claude.OLLAMA_CHAT, code, "", {}, None)
-        self.assertIn("ollama pull", self.ask("q", error=http(404))[0])
-        self.assertIn("error 500", self.ask("q", error=http(500))[0])
-        self.assertIn("could not reach Ollama", self.ask("q", error=urllib.error.URLError("refused"))[0])
-        self.assertIn("could not reach Ollama", self.ask("q", error=TimeoutError())[0])
+        """Nothing running, model missing, server error, still loading, a garbled reply: each gets an honest reply."""
+        self.assertIn("could not reach a local model", self.ask("q")[0])
+        self.assertIn("ollama pull", self.ask("q", ollama=http(404))[0])
+        self.assertIn("error 500", self.ask("q", omlx=http(500), ollama=http(500))[0])
+        self.assertIn("still loading", self.ask("q", omlx=TimeoutError())[0])
+        self.assertIn("could not reach a local model", self.ask("q", omlx={"weird": 1})[0])
 
     def test_empty_and_huge(self):
-        """Nothing asked, and a question over the limit: neither reaches the model."""
+        """Nothing asked, and a question over the limit: neither reaches a model."""
         self.assertEqual(tools_claude.ask_claude("   "), 'Ask what? Say it like "ask claude why the sky is blue".')
-        reply, f = self.ask("x" * (tools_claude.LIMIT + 1), reply=answer("never"))
+        reply, f = self.ask("x" * (tools_claude.LIMIT + 1), omlx=omlx("never"))
         self.assertIn("too long", reply)
         self.assertEqual(f.calls, [])
 
@@ -80,7 +102,7 @@ class OnlyWithAYes(unittest.TestCase):
 
     def test_asks_first_and_a_no_sends_nothing(self):
         """A no sends nothing; a yes sends the question once."""
-        m = FakeOllama(reply=answer("Because."))
+        m = FakeServers(omlx=omlx("Because."))
         asked = []
         with mock.patch("urllib.request.urlopen", m):
             no = harness.Session(confirm=lambda n, a: asked.append((n, a)) or False, log=lambda l: None).ask("ask claude why is the sky blue")
