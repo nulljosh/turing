@@ -2,6 +2,7 @@
 
 TLDR per loop round, newest first. The loop adds a line every round it ships something, then the scorecard.
 
+- 2026-09-22: Distillation round 2 kept: 499 Sonnet-written, 9B-judged lessons. On 59 held-out questions she now declines 16/16 when her notes lack the answer (was 3/16), answers right unchanged at 19/43. score.py 28/29, the miss is a flaky route ("how much memory does it use" goes to her hands, which report the Mac's memory), not the weights. train_resilient.sh now counts reclaimable memory and unloads oMLX and Ollama models first.
 - 2026-09-22: 🎉🎉 v2.0.0: talk to her and she works your screen. "click Sign in", "type hello", "press return": she reads the screen with Vision OCR to find the words, clicks with cliclick, and asks before every step. With voice in (v1.8.0) that is 2.0: speak, she listens, acts on the Mac with your yes, and answers aloud. All local.
   `v2.0.0 · 83 tools · 158 tests · docs coverage 100% · laws all hold · biggest tools.py 780 · actions 121/121 · parity 121/121 · util_diff 195/195`
 - 2026-09-22: 🎉 v1.8.0: talk to her. `python3 chat.py --voice`: sox records until you stop, Whisper large-v3-turbo on MLX transcribes on the Mac, the harness answers, she says it aloud. Verified with a question rendered by `say` (heard "What is 2 plus 2?"). Half of 2.0.
