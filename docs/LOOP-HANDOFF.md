@@ -24,6 +24,7 @@ Headless always: `SAMANTHA_HEADLESS=1`. Check free disk and memory before traini
 - Splitting a module that imports its parent: import the parent inside the function, or running the parent as a script breaks on a circular import.
 - A pre-flight memory check must count what macOS will hand back (free + inactive + speculative + purgeable), and training unloads the local chat servers first: counting only free pages refused to train with 35% free, and oMLX plus Ollama were holding 5GB.
 - Distillation round 2 taught declining (3/16 -> 16/16) but not answering (19/43 flat). Next round: more answerable lessons, harder distractors (same-repo passages), and check she does not over-decline.
+- WHITEPAPER.md is for people, not engineers: refresh it at every minor or major release (version line, what she can do, measured numbers, honest limits), short sentences, no jargon. It sat at v0.8.0 while she reached v3.0.0.
 - The user reads TLDRs: one line per update, what she can do now.
 - Usage, read from the [usage] line every round: session under 60% and weekly under 50%, full rounds about every 15 minutes. Session 60 to 80% or weekly 50 to 70%, one small round per 30 minutes, Haiku for mechanical work. Session over 80% or weekly over 70%, CI and red fixes only, hourly. Session over 90%, stop until the reset. Say it in one line when tapering. Training and evals run on the Mac, not on Claude, so they are free: prefer them.
 
