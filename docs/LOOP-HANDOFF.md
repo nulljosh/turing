@@ -63,14 +63,14 @@ Goal: a full version you sit down and chat with, and she calls tools, without ev
 - pixelmator/pxm.py 865 -> 621: the spec trust boundary (exit codes, shape tables, PxmError, validate_spec) moved to pxm_spec.py. Every example spec's AppleScript is byte-identical before and after; law 8 ceiling 870 -> 825.
 
 ## Where things stand
-The loop runs on the Mac now (2026-09-22). Tonight: v1.4.1 to v1.6.0 shipped. ask_llm asks any LLM on this Mac by name (oMLX Qwen3.5-9B first, Ollama second), replies stream in the chat and the TUI, the site deploys by hand after each ship. Samantha retrained on everything (5,680 chunks, val loss 1.98 -> 1.83, score.py unchanged at 25/29, kept). Built, not yet shipped: library.py (fieldbook + ~10,000 Wikipedia vital-article leads in SQLite, exact-title answers only, waiting on a 0-wrong knowledge run) and distill.py (a teacher writes grounded Q/A over real passages, wrapped in her exact prompt, with declines; held-out eval before and after).
+v2.0.0 shipped 2026-09-22 on the Mac: voice in (chat.py --voice, Whisper on MLX) and hands on the screen (click_text, type_text, press_key, every step asked first). Same night: ask any local LLM by name (ask_llm), streamed replies, her offline library (~10,000 Wikipedia vital-article leads, exact-title answers, 0 confidently wrong), retrain on everything (val loss 1.98 -> 1.83), score.py 29/29 after the hands stopped hijacking project questions, tools.py and test_pxm.py split (ceiling 780). Distillation: 600 Sonnet-written pairs over real passages, a local 9B judge reads every pair, pilot trained (held-out 2/13 -> 3/13 answered, 0/1 -> 1/1 declined).
 
-## Next, in order
-1. Ship library.py once eval/basic_questions.py shows 0 confidently wrong (v1.7.0).
-2. Distillation: `distill.py build`, `distill.py eval 60` on the current adapter (baseline), train on data/distill mixed with a sample of data/train (DATA=... ./train_resilient.sh), eval again, keep only if answered-right rises and declined-right does not fall. Then more passages, more rounds.
-3. Fix the routing bug behind score.py's 4 misses: project questions ("what's blocked", "how long does an answer take") get hijacked by the tool agent (listed Chrome tabs, emitted a raw tool call).
-4. 2.0.0: voice in (Whisper on MLX) and GUI control with approval. Then pictures (local vision model) and deep research, per roadmap.md "Gaps found by the loop".
-5. Split tools.py (822) and lower MAX_LINES.
+## Next, in order (toward 3.0.0: she sees and she researches)
+1. Finish distillation round 2: `distill.py judge` (resumable), `build`, `eval` baseline on the new held-out, train on data/distill (DATA=./data/distill, ~2 epochs), eval again, keep only on a rise with score.py still 29/29.
+2. See pictures: a local vision model (Qwen2.5-VL or Gemma 3 on oMLX) behind "what's in this photo", "what's on my screen" beyond OCR. 3.0 half one.
+3. Deep research: "research X" reads 5 to 10 pages plus the library and notes, the 9B writes a short cited brief. 3.0 half two.
+4. GUI control, the rest: multi-step flows through the agent with a yes per step; icons without text.
+5. File size: tools.py 778, tools_util.py 651, web/demo.js, web/samantha.js; lower MAX_LINES after each split.
 
 ## Restart prompt
 ```
