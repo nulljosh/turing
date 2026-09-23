@@ -2,6 +2,8 @@
 
 TLDR per loop round, newest first. The loop adds a line every round it ships something, then the scorecard.
 
+- 2026-09-22: 🎉 v1.7.0: her own library. The fieldbook plus ~10,000 Wikipedia vital-article leads offline; she answers what-is and who-was questions from the page of that name and says which. Knowledge 58/65, 0 confidently wrong (web rate-limited during the run). Retrained on everything, kept (val loss 1.98 -> 1.83). distill.py ready for the teacher.
+  `v1.7.0 · 80 tools · 141 tests · docs coverage 100% · laws all hold · biggest tools.py 820 · actions 114/114 · parity 114/114 · util_diff 195/195`
 - 2026-09-22: 🎉 v1.6.0: ask any LLM on this Mac by name (ask qwen, ask llama, ask gemma; claude or gpt means the biggest). A model that is not here gets the list of what is. ask_claude is now ask_llm.
   `v1.6.0 · 80 tools · 129 tests · docs coverage 100% · laws all hold · biggest tools.py 820 · actions 114/114 · parity 114/114 · util_diff 195/195`
 - 2026-09-22: v1.5.1: the curses TUI streams her words too (pty smoke tested). Retrain on everything running: 5,680 chunks, was 985.

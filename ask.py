@@ -15,6 +15,8 @@ import difflib, hashlib, html, json, math, os, re, subprocess, sys, time, urllib
 # that reason, because project_vocabulary() came back with no FAQ words in
 # it and every question looked like a change of subject.
 REPO = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, REPO)
+import library  # noqa: E402  (her offline library, the last stop in general_knowledge)
 
 BRAIN_ENV = os.path.expanduser("~/Documents/Code/brain/.env.local")
 BRAIN_URL = "https://brain.heyitsmejosh.com/api/search"
@@ -225,6 +227,12 @@ def general_knowledge(query, skip_officeholder=False, hands=True):
             extract = None
         if extract and _wikipedia_answer_is_plausible(query, title, extract):
             return extract.strip(), f"Wikipedia: {title}"
+    # The web had nothing, or could not be reached: her own library
+    # (library.py, saved Wikipedia leads and the fieldbook) may still. It
+    # answers only on an exact page or every word asked, and names the page.
+    shelf_answer, shelf_source = library.look_up(query)
+    if shelf_answer:
+        return shelf_answer, shelf_source
     # "I searched and found nothing" and "I could not reach anything to
     # search" are different answers and the user deserves the true one.
     # Confirmed live: with Wikipedia rate-limiting this session, ordinary

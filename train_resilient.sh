@@ -5,6 +5,7 @@
 # Still no daemon: you run this by hand, it exits when done or out of retries.
 #
 # Usage: ./train_resilient.sh <model> <adapter-path> <iters> [max_retries]
+# DATA=./data/stage picks another folder of train.jsonl + valid.jsonl (default ./data).
 
 set -u
 MODEL="${1:?model required}"
@@ -38,7 +39,7 @@ while [ "$attempt" -lt "$MAX_RETRIES" ]; do
   log "attempt $attempt: starting (free=${FREE_MB}MB, resume=${RESUME_FLAG:+yes})"
   ./.venv/bin/python run_lora_capped.py \
     --model "$MODEL" \
-    --train --data ./data --iters "$ITERS" \
+    --train --data "${DATA:-./data}" --iters "$ITERS" \
     --grad-checkpoint $RESUME_FLAG \
     --adapter-path "$ADAPTER" \
     >> "$LOG" 2>&1
