@@ -1,4 +1,4 @@
-# Turing loop handoff (2026-09-22, checkpoint)
+# Turing loop handoff (2026-09-23, cloud loop wrapped up, Mac picks it up)
 
 The live `/loop` for this repo. Checkpoint rewrites this file every run. A new session reads it and picks up where the last one stopped.
 
@@ -49,13 +49,15 @@ Goal: a full version you sit down and chat with, and she calls tools, without ev
 - pixelmator/pxm.py 865 -> 621: the spec trust boundary (exit codes, shape tables, PxmError, validate_spec) moved to pxm_spec.py. Every example spec's AppleScript is byte-identical before and after; law 8 ceiling 870 -> 825.
 
 ## Where things stand
-v0.14.0 shipped. Samantha has 73 tools: 30 photo/paint (tools_image.py, Pixelmator), 27 utilities (math/time/dice/passwords/hashes/Mac vitals), 10 chrome tabs (list/switch/close/read), MCP client (list/call other servers), memory (remember/recall/forget), read_screen (Vision OCR), eval/a11y.py (4-mode accessibility audit). Landing: draw-anything via /api/draw on Cloudflare, demo's Chrome window opens real pages (Wikipedia live, others get real tab), Chrome tab tools in the interface, skip link, scroll-in sections, full-screen demo, wordless logos (golden spiral default), new icon she designed. Knowledge 62/65. Gate: eval/laws.py (73 tools classified), eval/a11y.py (axe-core 4 modes), eval/hands.py (77/77 actions), eval/web_demo.py (0 failures), eval/web_parity.py (77/77 parity), docs 100 percent enforced. Picker bake-off: Qwen3-0.6B 683/834 unseen vs Qwen2.5 671/834, from-scratch pickers 1.8M/3.2M params hit only 248/220. Model weights gitignored (in history but untracked).
+The cloud loop stopped on 2026-09-23 so the loop can move to the Mac. Everything is on main (1b324ce and earlier), nothing is left on a side branch.
+v1.4.0, 80 tools, all workflow runs green. Scorecard: `v1.4.0 · 80 tools · 125 tests · docs coverage 100% · laws all hold · biggest tools.py 820 · actions 110/110 · parity 110/110 · util_diff 195/195`.
+The live site has not been deployed from the cloud (no Cloudflare access), so it likely shows an older version. roadmap.md "Joshua's Mac to-do" lists what needs the keyboard.
 
 ## Next, in order
-Top of roadmap.md "Gaps found by the loop". Cloud-buildable first:
-1. Streamed replies from her own model (mlx_lm stream_generate), Mac-only to test
-2. Next frontier comparison pass: find three more gaps
-Mac-only, queued: release 1.1.0, GUI control with approval, voice in.
+1. On the Mac: `npx wrangler deploy`, then `./gate.sh --full` to check her real model, Pixelmator and the live page against v1.4.0.
+2. Split tools.py (822, the biggest; tests patch tools._run, _app, installed_apps, pick, read_page, grayscale_image, and plan() swaps tools-module globals, so re-export and patch where the names live), then lower MAX_LINES in eval/laws.py. Then pixelmator/test_pxm.py 806, tools_util.py 651, web/demo.js, web/samantha.js.
+3. Top of roadmap.md "Gaps found by the loop", Mac-first now: streamed replies (mlx_lm stream_generate), voice in (Whisper on MLX), GUI control with approval.
+4. ask_claude with a real key: one live question to confirm the request shape against the real API.
 
 ## Restart prompt
 ```
