@@ -303,6 +303,13 @@ Gaps, in order:
 
 - [ ] **Her own head, the rest.** Attempted 2026-09-21 (docs/BAKEOFF.md "round five"): training data now exists for all 77 tools, but the retrain refused 19 right picks it used to allow, so the shipped picker still covers the first 51. Not blocking 1.0.0: the other 26 tools work through the exact router.
 
+### Joshua's Mac to-do (only these need the keyboard)
+The loop runs in the cloud and cannot reach Cloudflare or this Mac. Tick a box when done, the loop picks it up.
+
+- [ ] Deploy the site: `npx wrangler deploy` in the repo (or add the `CLOUDFLARE_API_TOKEN` repo secret once and it deploys itself on every push)
+- [ ] Turn on ask_claude: `.venv/bin/pip install anthropic`, then set `ANTHROPIC_API_KEY` (or `ant auth login`)
+- [ ] Try streamed replies, voice in and GUI control once the loop builds them: they need her real model and a real screen
+
 ### How we compete with trillion-dollar labs (set 2026-09-22)
 We will not out-think Claude or GPT: that is data centres and years. We win where they structurally can't follow:
 1. **It's yours and it's local.** Runs on your Mac, no account, no per-query cost, nothing leaves the machine. They can't ship that without giving away the model.
