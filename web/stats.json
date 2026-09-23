@@ -1,5 +1,5 @@
 {
-  "version": "3.4.1",
+  "version": "3.5.0",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -152,8 +152,8 @@
         "documented": 11
       },
       "tools_util.py": {
-        "total": 42,
-        "documented": 42
+        "total": 43,
+        "documented": 43
       },
       "test_chat_pipe.py": {
         "total": 15,
@@ -200,8 +200,8 @@
         "documented": 34
       },
       "test_documents.py": {
-        "total": 9,
-        "documented": 9
+        "total": 12,
+        "documented": 12
       },
       "mcp_server.py": {
         "total": 4,
@@ -296,7 +296,7 @@
   "measured": {
     "tools": {
       "before": 0,
-      "after": 88
+      "after": 89
     },
     "actions_eval": "77/77",
     "knowledge_sweep": {

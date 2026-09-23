@@ -165,6 +165,22 @@ def read_document(path):
     return why if why else re.sub(r"\s*\n\s*", " ", text)[:3000]
 
 
+_VIDEO_EXTS = (".mp4", ".mov", ".m4v", ".avi", ".mkv", ".webm", ".mp3", ".wav", ".m4a", ".aac", ".flac")
+
+
+def transcribe_video(path):
+    """What is said in a video or audio file in the home folder, via the same Whisper pipeline voice.py uses for the
+    mic (ffmpeg decodes the audio track from any container, so a video needs no separate extraction step)."""
+    full = _home_path(path)
+    if not full or not os.path.isfile(full):
+        return f"No file {path.strip()} I am allowed to read."
+    if os.path.splitext(full)[1].lower() not in _VIDEO_EXTS:
+        return f"I do not transcribe {os.path.splitext(full)[1] or 'that'} files."
+    import voice
+    text = voice.transcribe(full)
+    return text if text else "I heard no speech in that file."
+
+
 def find_in_document(request):
     """Find the passages of a document that mention some words. Takes 'words<TAB>path'. Up to three passages."""
     words, _, path = request.partition("\t")
@@ -534,7 +550,7 @@ def call_mcp_tool(request):
 TOOLS = (ask_llm, calculate, convert_units, time_in, convert_time, current_date, days_until, date_math, flip_coin, roll_dice, random_number, make_password,
          make_uuid, hash_text, base64_encode, base64_decode, word_count, reverse_text, shout, morse_code, json_pretty,
          is_prime, roman_numeral, tip, disk_space, uptime, memory_usage, cpu_load, ip_address, wifi_name, system_info,
-         copy_to_clipboard, sleep_display, reveal_in_finder, list_shortcuts, run_shortcut, list_mcp_tools, call_mcp_tool, list_tabs, switch_tab, close_tab, read_tab, remember, recall, forget, read_screen, read_document, find_in_document, ask_document, ask_screen, click_text, type_text, press_key, see_screen, see_image, research, save_research, write_document)
+         copy_to_clipboard, sleep_display, reveal_in_finder, list_shortcuts, run_shortcut, list_mcp_tools, call_mcp_tool, list_tabs, switch_tab, close_tab, read_tab, remember, recall, forget, read_screen, read_document, find_in_document, ask_document, ask_screen, click_text, type_text, press_key, see_screen, see_image, research, save_research, write_document, transcribe_video)
 
 _I = re.I
 # (pattern, tool name, what to hand it). Names, not functions: tools.py looks each one up at call time.
@@ -605,6 +621,8 @@ ROUTES = (
     (re.compile(r"^(?:read|ocr) (?:my |the )?screen$|^what(?:'s| is) on my screen$|^what does my screen say$", _I), "read_screen", lambda m: ""),
     (re.compile(r"^find (.+) on (?:my |the )?screen$|^is (.+) on (?:my |the )?screen$", _I), "read_screen", lambda m: (m.group(1) or m.group(2))),
     (re.compile(r"^read (?:the )?(?:document|pdf|doc|file called) (.+)$", _I), "read_document", lambda m: m.group(1)),
+    (re.compile(r"^transcribe (?:the )?(?:video|audio|recording|file) (.+)$", _I), "transcribe_video", lambda m: m.group(1)),
+    (re.compile(r"^what does (?:the )?(?:video|audio|recording) (.+) say$", _I), "transcribe_video", lambda m: m.group(1)),
     (re.compile(r"^find (.+?) in (?:the )?(?:document|pdf|doc) (.+)$", _I), "find_in_document", lambda m: m.group(1) + "\t" + m.group(2)),
     (re.compile(r"^what does (?:the )?(?:document|pdf|doc) (\S+) say about (.+)$", _I), "ask_document", lambda m: "what does it say about " + m.group(2) + "\t" + m.group(1)),
     (re.compile(r"^in (?:the )?(?:document|pdf|doc) (\S+?),? (.+)$", _I), "ask_document", lambda m: m.group(2) + "\t" + m.group(1)),
@@ -645,7 +663,7 @@ def demo():
     assert copy_to_clipboard("x") == "Copied." and sleep_display() == "Screen off." and reveal_in_finder("~").startswith("Showing")
     assert reveal_in_finder("~/.ssh").startswith("No file") and reveal_in_finder("/etc/passwd").startswith("No file")
     assert run_shortcut("zzz-not-real").startswith("I do not see") and (list_shortcuts().startswith("No Shortcuts") or "Shortcuts:" in list_shortcuts())
-    assert len(TOOLS) == 58 and all(f.__doc__ for f in TOOLS)
+    assert len(TOOLS) == 59 and all(f.__doc__ for f in TOOLS)
     call = lambda name, a: globals()[name](a) if globals()[name].__code__.co_argcount else globals()[name]()
     hit = lambda q: next((call(name, arg(m)) for pat, name, arg in ROUTES if (m := pat.match(q))), None)
     assert hit("calculate 17 * 23") == "391" and hit("convert 5 km to miles") == "5 km is 3.1069 mi."

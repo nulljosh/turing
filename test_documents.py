@@ -1,4 +1,5 @@
-"""Reading documents: text, RTF and PDF files in the home folder, and refusing everything else."""
+"""Reading documents: text, RTF and PDF files in the home folder, and refusing everything else.
+VOICE_LIVE=1 also runs a real video through Whisper, same gate as test_voice.py's Live class."""
 import os
 import shutil
 import subprocess
@@ -69,6 +70,26 @@ class DocumentTests(unittest.TestCase):
         empty = os.path.join(self.dir, "empty.txt")
         open(empty, "w").write("   \n")
         self.assertIn("found no text", u.read_document(empty))
+
+    def test_transcribe_video_refuses_what_it_should(self):
+        """Same home-folder gate as read_document, plus its own extension whitelist, no Whisper ever loaded."""
+        for bad in ("~/.ssh/id_rsa", "/etc/passwd", os.path.join(self.dir, "missing.mp4")):
+            self.assertIn("allowed to read", u.transcribe_video(bad))
+        self.assertEqual(u.transcribe_video(self.txt), "I do not transcribe .txt files.")
+
+
+@unittest.skipUnless(os.environ.get("VOICE_LIVE") == "1" and sys.platform == "darwin", "VOICE_LIVE=1 on a Mac runs the real Whisper")
+class TranscribeVideoLive(unittest.TestCase):
+    """The real pipeline: macOS says a question, ffmpeg wraps it as a video file, Whisper reads it back."""
+
+    def test_transcribes_a_video_file(self):
+        """A .mp4 with only an audio track still transcribes: ffmpeg pulls the audio track from any container."""
+        with tempfile.TemporaryDirectory(dir=os.path.expanduser("~")) as d:
+            aiff, mp4 = os.path.join(d, "q.aiff"), os.path.join(d, "q.mp4")
+            subprocess.run(["say", "-o", aiff, "What is two plus two?"], check=True)
+            subprocess.run(["ffmpeg", "-loglevel", "error", "-y", "-i", aiff, "-c:a", "aac", mp4], check=True)
+            text = u.transcribe_video(mp4).lower()
+        self.assertTrue("2 plus 2" in text or "two plus two" in text, text)
 
 
 if __name__ == "__main__":

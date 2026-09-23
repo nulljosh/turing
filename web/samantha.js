@@ -627,9 +627,9 @@
   };
   // the ten that read or touch a real Mac. The stand-in Mac on this page has no disk, network or clipboard to show.
   var REAL_MAC = "That one reads your real Mac, and this stand-in has no disk, memory or network. Run her on a Mac and it answers.";
-  ["disk_space", "uptime", "memory_usage", "cpu_load", "ip_address", "wifi_name", "system_info", "copy_to_clipboard", "sleep_display", "reveal_in_finder", "list_shortcuts", "run_shortcut", "list_mcp_tools", "call_mcp_tool", "list_tabs", "switch_tab", "close_tab", "read_tab", "read_screen", "read_document", "find_in_document", "ask_document", "ask_screen"]
+  ["disk_space", "uptime", "memory_usage", "cpu_load", "ip_address", "wifi_name", "system_info", "copy_to_clipboard", "sleep_display", "reveal_in_finder", "list_shortcuts", "run_shortcut", "list_mcp_tools", "call_mcp_tool", "list_tabs", "switch_tab", "close_tab", "read_tab", "read_screen", "read_document", "find_in_document", "ask_document", "ask_screen", "transcribe_video"]
     .forEach(function (name) { U[name] = function () { return REAL_MAC; }; });
-  U.NEEDS_MAC = ["disk_space", "uptime", "memory_usage", "cpu_load", "ip_address", "wifi_name", "system_info", "copy_to_clipboard", "sleep_display", "reveal_in_finder", "list_shortcuts", "run_shortcut", "list_mcp_tools", "call_mcp_tool", "list_tabs", "switch_tab", "close_tab", "read_tab", "read_screen", "read_document", "find_in_document", "ask_document", "ask_screen"];
+  U.NEEDS_MAC = ["disk_space", "uptime", "memory_usage", "cpu_load", "ip_address", "wifi_name", "system_info", "copy_to_clipboard", "sleep_display", "reveal_in_finder", "list_shortcuts", "run_shortcut", "list_mcp_tools", "call_mcp_tool", "list_tabs", "switch_tab", "close_tab", "read_tab", "read_screen", "read_document", "find_in_document", "ask_document", "ask_screen", "transcribe_video"];
 
   // the image tools, same table as tools_image.ROUTES and ahead of the utilities. The stand-in Mac has no photos on disk.
   var P = "(?:the )?(?:image |photo |picture |pic )?(?:at )?(\\S+\\.(?:jpe?g|png|heic|webp|tiff?))";
@@ -733,6 +733,8 @@
     [/^(?:read|ocr) (?:my |the )?screen$|^what(?:'s| is) on my screen$|^what does my screen say$/i, function (m) { return ["read_screen", ""]; }],
     [/^find (.+) on (?:my |the )?screen$|^is (.+) on (?:my |the )?screen$/i, function (m) { return ["read_screen", ((m[1] || m[2]))]; }],
     [/^read (?:the )?(?:document|pdf|doc|file called) (.+)$/i, function (m) { return ["read_document", m[1]]; }],
+    [/^transcribe (?:the )?(?:video|audio|recording|file) (.+)$/i, function (m) { return ["transcribe_video", m[1]]; }],
+    [/^what does (?:the )?(?:video|audio|recording) (.+) say$/i, function (m) { return ["transcribe_video", m[1]]; }],
     [/^find (.+?) in (?:the )?(?:document|pdf|doc) (.+)$/i, function (m) { return ["find_in_document", m[1] + "\t" + m[2]]; }],
     [/^what does (?:the )?(?:document|pdf|doc) (\S+) say about (.+)$/i, function (m) { return ["ask_document", "what does it say about " + m[2] + "\t" + m[1]]; }],
     [/^in (?:the )?(?:document|pdf|doc) (\S+?),? (.+)$/i, function (m) { return ["ask_document", m[2] + "\t" + m[1]]; }],

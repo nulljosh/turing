@@ -6,13 +6,14 @@
 [![test](https://github.com/nulljosh/turing/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/nulljosh/turing/actions/workflows/test.yml)
 ![license](https://img.shields.io/badge/license-Apache--2.0-green) [![GitHub](https://img.shields.io/badge/GitHub-nulljosh%2Fturing-black?logo=github)](https://github.com/nulljosh/turing)
 
-A small model, Samantha, that runs entirely on your Mac and gets real work done. 88 tools, 0.5B parameters, nothing leaves the machine.
+A small model, Samantha, that runs entirely on your Mac and gets real work done. 89 tools, 0.5B parameters, nothing leaves the machine.
 
 [turing.heyitsmejosh.com](https://turing.heyitsmejosh.com)
 
 ## What she does
 
 - **Talks.** `chat.py --voice`: you speak, Whisper transcribes, she answers out loud.
+- **Transcribes video and audio.** "Transcribe the video ~/Desktop/clip.mp4" pulls the words out with the same Whisper pipeline, any file in your home folder.
 - **Sees.** Look at your screen or a photo and ask about it; a local vision model answers.
 - **Researches.** "Research X" reads Wikipedia, her library and your notes, writes a brief that cites every claim, and saves it if you ask.
 - **Uses your apps.** "Click Sign in", "type hello", "log me into X": she reads the screen and acts, step by step, asking first.
