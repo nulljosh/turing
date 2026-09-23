@@ -397,7 +397,15 @@ def tui():
                 for l in (f"Samantha: {did}", ""):
                     lines.extend(l.split("\n"))
                 continue
-            answer, topic_active, last_subject = safe_turn(question, history, topic_active, last_subject)
+            live = len(lines)
+            lines.append("Samantha: ")
+
+            def show(piece):
+                """Grow her line as she writes it; the finished answer replaces it below."""
+                lines[live] += piece.replace("\n", " ")
+                redraw()
+            answer, topic_active, last_subject = safe_turn(question, history, topic_active, last_subject, on_text=show)
+            del lines[live:]
             history.append((question, answer))
             for l in (f"Samantha: {answer}", ""):
                 lines.extend(l.split("\n"))

@@ -21,7 +21,7 @@ TURING = os.path.expanduser("~/Documents/Code/turing")
 EXAMPLES = os.path.expanduser("~/Documents/Code/turing/TRAINING_EXAMPLES.md")
 
 OWN_REPEATS = 3        # how many times to repeat this repo's own docs (10x caused overfitting/collapse, see eval run 3)
-FLEET_CAP = 100         # max chunks pulled from the rest of the fleet + wiki
+FLEET_CAP = None        # everything from the fleet + wiki + journal (was 100 until 2026-09-22: "train it on everything")
 
 def chunks(text, n=1500):
     """Yield successive n-character chunks of text."""
@@ -83,7 +83,7 @@ def read_chunks(path, topic):
 
 def collect():
     """Gather and prepare training data from Turing docs and the fleet, write to JSONL."""
-    own_paths = glob.glob(f"{TURING}/*.md") + glob.glob(f"{TURING}/eval/*.md")
+    own_paths = glob.glob(f"{TURING}/*.md") + glob.glob(f"{TURING}/eval/*.md") + glob.glob(f"{TURING}/docs/*.md")
     own_paths = [p for p in own_paths if p != EXAMPLES]
     own_examples = []
     for p in own_paths:
@@ -102,7 +102,9 @@ def collect():
     fleet_paths += glob.glob(f"{CODE}/**/WHITEPAPER.md", recursive=True)
     fleet_paths += glob.glob(f"{CODE}/**/roadmap.md", recursive=True)
     fleet_paths += glob.glob(f"{CODE}/**/CLAUDE.md", recursive=True)
-    fleet_paths = [p for p in fleet_paths if not p.startswith(TURING) and "/node_modules/" not in p and "/.git/" not in p]
+    fleet_paths += glob.glob(f"{CODE}/*/docs/*.md")  # architecture notes, whitepaper drafts
+    fleet_paths += glob.glob(f"{CODE}/journal/_posts/*.md")  # the journal, in his own words
+    fleet_paths = [p for p in fleet_paths if not p.startswith(TURING) and not any(d in p for d in ("/node_modules/", "/.git/", "/_external/", "/.build/", "/Pods/", "/.venv/"))]
     seen = set()
     fleet_examples = []
     for p in fleet_paths:
@@ -114,7 +116,7 @@ def collect():
 
     random.seed(0)
     random.shuffle(fleet_examples)
-    fleet_examples = fleet_examples[:FLEET_CAP]
+    fleet_examples = fleet_examples[:FLEET_CAP]  # [:None] keeps all
 
     all_examples = own_examples * OWN_REPEATS + fleet_examples
     random.shuffle(all_examples)

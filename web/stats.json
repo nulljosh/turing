@@ -1,5 +1,5 @@
 {
-  "version": "1.5.0",
+  "version": "1.5.1",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -80,8 +80,8 @@
         "documented": 5
       },
       "chat.py": {
-        "total": 17,
-        "documented": 17
+        "total": 18,
+        "documented": 18
       },
       "test_chat.py": {
         "total": 25,
