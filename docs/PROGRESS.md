@@ -2,6 +2,9 @@
 
 TLDR per loop round, newest first. The loop adds a line every round it ships something, then the scorecard.
 
+- 2026-09-23: 🎉 v3.5.0: transcribe_video, a new tool. "Transcribe the video ~/Desktop/clip.mp4" pulls the words out of any video or audio file in your home folder through the same Whisper pipeline voice.py already runs for the mic, no separate extraction step (ffmpeg already decodes the audio track from any container). Verified against a real spoken .mp4 on this Mac, not just the guard rails.
+  `v3.5.0 · 89 tools · 202 tests · docs coverage 100% · laws all hold · biggest tools.py 760 · actions 140/140 · parity 140/140 · util_diff 199/199`
+
 - 2026-09-23: Distillation round 4 kept: harder same-repo distractors (prefer other passages from the same project over unrelated ones) plus one training pass on the enlarged set. Held-out answered 13 -> 16 of 43, declined 8 -> 13 of 15 (both measured on the new harder set), score.py steady at 29/29.
 - 2026-09-22: Distillation round 3 (2 more epochs on the same 499 lessons) reverted: answered right 20 -> 16 of 43, declined right 16 -> 15 of 16. Overfitting, not progress. Restored the round-2 checkpoint (ada-1-adapter.bak-20260922-round2), confirmed back to 20/43, 16/16, score.py 29/29. Repeating the same lessons is not the lever; more distinct lessons is.
 - 2026-09-22: v3.0.1: her answers stop after two sentences (where her lessons end and invention began) with a light repetition penalty. Held-out answers 19 -> 20 of 43, declines 16/16, score.py 29/29. The misses are wrong facts in the first sentence, not length: the next lever is training, not decoding.
