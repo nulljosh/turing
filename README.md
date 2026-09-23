@@ -20,8 +20,8 @@ A small model, Samantha, that runs entirely on your Mac and gets real work done.
 - **Asks a bigger brain when stuck.** "Ask qwen ...", "ask claude ..." hands hard questions to another local model, never the cloud.
 - **Knows things offline.** Her library holds the fieldbook plus ~10,000 Wikipedia articles; she answers only from a real page and says which one.
 - **Summarizes.** "Summarize ~/Desktop/report.pdf", "summarize this page", "summarize my unread mail": three to five real sentences from the biggest local model, not a one-liner.
-- **Translates, offline.** "Translate good morning to French", "how do you say thank you in Japanese", "translate the page github.com into Spanish": the local model does it, nothing leaves the Mac.
-- **Does the rest of the Mac.** Apps, tabs, notes, reminders, calendar, unread mail, files, documents, math, time zones, dice, hashes, Shortcuts, memory across sessions.
+- **Translates, offline.** "Translate good morning to French", "how do you say thank you in Japanese", "translate the page github.com into Spanish": the local model does it.
+- **Does the rest of the Mac.** Apps, tabs, notes, reminders with a time, calendar, unread mail, files, documents, math, time zones, dice, hashes, Shortcuts, memory across sessions.
 - **Draws.** Type "draw a fox in the snow" on the landing page and she rebuilds it live from 30,000 squares.
 - **Writes files.** "Draft an email about X", "write a doc about X": the local model drafts it, she saves it to your home folder, asking first.
 - **Never guesses.** Every answer traces to a real source; unsupported claims are dropped, not printed.

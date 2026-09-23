@@ -2,6 +2,9 @@
 
 TLDR per loop round, newest first. The loop adds a line every round it ships something, then the scorecard.
 
+- 2026-09-23: 🎉 v3.9.0: reminders with a real due date. "Remind me tomorrow at 9am to call mom", "in 20 minutes water the plants", "at 5 to pay rent", "pay rent on friday at noon" all set the time in Reminders.app (a bare 1 to 7 means the afternoon); "every morning" is declined honestly, Reminders only takes repeats from its own window. Verified on this Mac: created a real reminder, read its due date back, deleted it. Found and fixed a swapped capture-group bug in the time parser before shipping. Docs refresh, direct request: "nothing leaves the Mac" was said ten times across the landing page, README and ARCHITECTURE; it is now said once per doc.
+  `v3.9.0 · 92 tools · 202 tests · docs coverage 100% · laws all hold · biggest tools.py 733 · actions 154/154 · parity 154/154 · util_diff 203/203`
+
 - 2026-09-23: 🎉 v3.8.0: translate, a new tool, offline. "Translate good morning to French", "how do you say thank you in Japanese", "translate the page github.com into Spanish": the biggest local model does it, nothing leaves the Mac. The target must be a real language name from tools.LANGUAGES, so "translate 5 km to miles" is declined instead of hijacked. Verified live: "bonjour, comment allez-vous" and "ありがとうございます。" from the real 9B on this Mac.
   `v3.8.0 · 92 tools · 202 tests · docs coverage 100% · laws all hold · biggest tools.py 720 · actions 154/154 · parity 154/154 · util_diff 203/203`
 

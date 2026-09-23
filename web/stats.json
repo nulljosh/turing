@@ -1,5 +1,5 @@
 {
-  "version": "3.8.0",
+  "version": "3.9.0",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -128,8 +128,8 @@
         "documented": 5
       },
       "tools_apps.py": {
-        "total": 9,
-        "documented": 9
+        "total": 10,
+        "documented": 10
       },
       "gen_hands_data.py": {
         "total": 5,

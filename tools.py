@@ -694,6 +694,19 @@ def demo():
         assert [duration(x) for x in ("5", "90 seconds", "an hour", "half an hour", "ten minutes", "2 hrs", "soon")] == [5, 1.5, 60, 30, 10, 120, None]
         assert act("set a timer for 0 minutes").startswith("A timer runs") and act("what's playing") == "Nothing is playing."
         assert act("remind me to call mom") == "I'll remind you: call mom" and act("take a note buy milk") == "Noted: buy milk"
+        import tools_apps
+        from datetime import date, datetime, timedelta
+        t, due, why = tools_apps._when("call mom tomorrow at 9am")
+        assert (t, due.date(), due.hour, due.minute, why) == ("call mom", date.today() + timedelta(days=1), 9, 0, None)
+        t, due, _ = tools_apps._when("at 5 to pay rent")
+        assert (t, due.hour) == ("pay rent", 17) and due > datetime.now()
+        t, due, _ = tools_apps._when("in 20 minutes water the plants")
+        assert t == "water the plants" and 19 <= (due - datetime.now()).total_seconds() / 60 <= 20
+        t, due, _ = tools_apps._when("pay rent on friday at noon")
+        assert (t, due.weekday(), due.hour) == ("pay rent", 4, 12) and due.date() > date.today()
+        assert tools_apps._when("call mom") == ("call mom", None, None)
+        assert tools_apps._when("water the plants every morning")[2].startswith("I can set a reminder once")
+        assert act("remind me tomorrow at 9am to call mom").startswith("I'll remind you: call mom, ")
         assert act("what's on my calendar today") == "Nothing on the calendar today."
         assert act("what is the weather system") is None and act("play chess with me") is None  # questions, not commands
         if not HEADLESS:  # headless never reaches osascript at all

@@ -92,11 +92,74 @@ def new_note(text):
     return f"Noted: {text[:80]}"
 
 
+_WEEKDAYS = ("monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday")
+_TIME = r"(noon|midnight|\d{1,2}(?::\d{2})?\s*(?:am|pm|a\.m\.|p\.m\.)?)"
+_DAY = r"(today|tonight|tomorrow|" + "|".join(_WEEKDAYS) + r"|\d{4}-\d{2}-\d{2})"
+_WHEN_TAIL = re.compile(rf"^(.+?)(?:\s+in\s+(\S+(?:\s+\S+)?)|\s+(?:on\s+)?{_DAY}(?:\s+at\s+{_TIME})?|\s+at\s+{_TIME}(?:\s+(?:on\s+)?{_DAY})?)$", re.I)
+_WHEN_HEAD = re.compile(rf"^((?:in\s+\S+(?:\s+\S+)?|(?:on\s+)?{_DAY}(?:\s+at\s+{_TIME})?|at\s+{_TIME}(?:\s+(?:on\s+)?{_DAY})?))\s+(?:to|that|about)?\s*(.+)$", re.I)
+_DUE = '''on run argv
+set d to current date
+set day of d to 1
+set year of d to (item 2 of argv) as integer
+set month of d to (item 3 of argv) as integer
+set day of d to (item 4 of argv) as integer
+set hours of d to (item 5 of argv) as integer
+set minutes of d to (item 6 of argv) as integer
+set seconds of d to 0
+tell application "Reminders" to make new reminder with properties {name:item 1 of argv, due date:d}
+end run'''
+
+
+def _when(text):
+    """(title, due datetime or None, why) from a reminder: "call mom tomorrow at 9am", "in 20 minutes water the
+    plants", "on friday at 5pm pay rent". A bare hour of 1 to 7 means the afternoon. Repeats are a why, not a date."""
+    from datetime import date, datetime, timedelta
+    from util_dates import _clock_of, _day
+    if re.search(r"\b(?:every|each|daily|weekly|hourly)\b", text, re.I):
+        return text, None, ("I can set a reminder once, with a time, but not one that repeats: Reminders only takes "
+                            "repeats from its own window. Say it like \"remind me tomorrow at 9am to water the plants\".")
+    m = _WHEN_TAIL.match(text)
+    if not m:
+        head = _WHEN_HEAD.match(text)
+        if not head:
+            return text, None, None
+        m = _WHEN_TAIL.match(f"{head.group(head.re.groups)} {head.group(1)}")
+    title, span = m.group(1).strip(), m.group(2)
+    day_word = m.group(3) or m.group(6)  # "tomorrow at 9am" fills 3 and 4; "at 9am tomorrow" fills 5 and 6
+    clock = m.group(4) or m.group(5)
+    now = datetime.now()
+    if span:
+        mins = duration(span)
+        return (title, now + timedelta(minutes=mins), None) if mins else (text, None, None)
+    when = now.date()
+    if day_word:
+        w = day_word.lower()
+        if w in _WEEKDAYS:
+            when = when + timedelta(days=(_WEEKDAYS.index(w) - when.weekday()) % 7 or 7)
+        elif w != "tonight":
+            when = _day(w) or when
+    hm = _clock_of(clock) if clock else ((20, 0) if (day_word or "").lower() == "tonight" else (9, 0))
+    if not hm:
+        return text, None, None
+    h, mi = hm
+    if clock and not re.search(r"am|pm|a\.m|p\.m|noon|midnight", clock, re.I) and 1 <= h <= 7:
+        h += 12  # ponytail: "at 5" is five in the afternoon; say 5am if you mean it
+    due = datetime(when.year, when.month, when.day, h, mi)
+    if not day_word and due <= now:
+        due += timedelta(days=1)
+    return title, due, None
+
+
 def new_reminder(text):
-    """Add a reminder to the Reminders app."""
-    # ponytail: no due date, "at 5" stays in the title. Parse times when that gets annoying.
-    _app('on run argv\ntell application "Reminders" to make new reminder with properties {name:item 1 of argv}\nend run', text)
-    return f"I'll remind you: {text[:80]}"
+    """Add a reminder to the Reminders app, with a due date when one is said ("tomorrow at 9am", "in 20 minutes", "on friday")."""
+    title, due, why = _when(text.strip())
+    if why:
+        return why
+    if not due:
+        _app('on run argv\ntell application "Reminders" to make new reminder with properties {name:item 1 of argv}\nend run', title)
+        return f"I'll remind you: {title[:80]}"
+    _app(_DUE, title, str(due.year), str(due.month), str(due.day), str(due.hour), str(due.minute))
+    return f"I'll remind you: {title[:80]}, {due.strftime('%A %B %-d at %-I:%M %p')}."
 
 
 # ponytail: a repeating event only shows on the day it was first made, Calendar's scripting does not expand them. EventKit if that bites.
