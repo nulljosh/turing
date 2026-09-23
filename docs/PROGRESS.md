@@ -2,6 +2,8 @@
 
 TLDR per loop round, newest first. The loop adds a line every round it ships something, then the scorecard.
 
+- 2026-09-23: pixelmator/pxm.py split 865 -> 621 (pxm_spec.py); every example spec's AppleScript byte-identical; file-size ceiling 870 -> 825.
+  `v1.4.0 · 80 tools · 125 tests · docs coverage 100% · laws all hold · biggest tools.py 820 · actions 110/110 · parity 110/110 · util_diff 195/195`
 - 2026-09-22: loop strengthened: a scorecard every round (eval/scorecard.py) and law 8, a file-size ceiling that only goes down.
   `v1.4.0 · 80 tools · 125 tests · docs coverage 100% · laws all hold · biggest pixelmator/pxm.py 865 · actions 110/110 · parity 110/110 · util_diff 195/195`
 
