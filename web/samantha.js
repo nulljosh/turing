@@ -82,8 +82,14 @@
      function (m) { return ["open_url", siteSearch(m[1] || m[4], m[2] || m[3])]; }],
     [new RegExp("^(?:open |go to |pull up )?(" + SITE_NAMES + ") and search(?: it)?(?: for)? (.+)$", "i"), function (m) { return ["open_url", siteSearch(m[1], m[2])]; }],
     [/^(?:search|google|look up)(?: search)?(?: (?:the web|online|the internet|on google|google))?(?: for)? (.+)$/i, function (m) { return ["web_search", m[1]]; }],
-    [/^(?:read|summari[sz]e|fetch) (?:me )?(?:the )?(?:page |site |website )?(?:at )?(https?:\/\/\S+|[\w-]+(?:\.[\w-]+)+(?:\/\S*)?)$|^what does (https?:\/\/\S+|[\w-]+(?:\.[\w-]+)+(?:\/\S*)?) say$/i,
+    [/^(?:read|fetch) (?:me )?(?:the )?(?:page |site |website )?(?:at )?(https?:\/\/\S+|[\w-]+(?:\.[\w-]+)+(?:\/\S*)?)$|^what does (https?:\/\/\S+|[\w-]+(?:\.[\w-]+)+(?:\/\S*)?) say$/i,
      function (m) { return ["read_page", m[1] || m[2]]; }],
+    [/^summari[sz]e (?:this |the )?(?:page|tab)$/i, function () { return ["summarize", ""]; }],
+    [/^summari[sz]e (?:my |the )?(?:unread )?(?:mail|email|inbox)$/i, function () { return ["summarize", "mail"]; }],
+    [/^summari[sz]e (?:me )?(?:the )?(?:document|pdf|doc|file called) (.+)$/i, function (m) { return ["summarize", m[1]]; }],
+    [/^summari[sz]e (~\/\S+|\/\S+)$/i, function (m) { return ["summarize", m[1]]; }],
+    [/^summari[sz]e (?:me )?(?:the )?(?:page |site |website )?(?:at )?(https?:\/\/\S+|[\w-]+(?:\.[\w-]+)+(?:\/\S*)?)$/i,
+     function (m) { return ["summarize", m[1]]; }],
     [/^(?:open|launch|start) (?:up )?(?:chrome|the browser) (?:and |then )?(?:go to|open|visit|load) (.+)$/i, function (m) { return ["open_url", m[1]]; }],
     [/^(?:go to|visit|browse to|pull up) (.+)$/i, function (m) { return ["open_url", m[1]]; }],
     [/^(?:open|launch|start) (?:up )?(.+)$/i, function (m) {
@@ -667,6 +673,7 @@
     U.NEEDS_MAC.push(name);
   });
   U.read_page = function () { return "Reading a page happens on her real Mac, which fetches it. Here I can open it for you: say \"go to\" and the address."; };
+  U.summarize = function () { return "Summarizing happens on her real Mac, which reads the document or page and hands it to the biggest local model there. This stand-in has none of that."; };
   var NO_PHOTOS = "That one edits a photo on your real Mac in Pixelmator, and this stand-in has no photos on disk. Ask me to draw something instead.";
   ["grayscale_image", "remove_background", "upscale_image", "enhance_image", "rotate_image", "flip_image", "resize_image", "crop_square", "convert_image", "image_info"]
     .forEach(function (name) { U[name] = function () { return NO_PHOTOS; }; U.NEEDS_MAC.push(name); });

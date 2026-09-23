@@ -6,7 +6,7 @@
 [![test](https://github.com/nulljosh/turing/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/nulljosh/turing/actions/workflows/test.yml)
 ![license](https://img.shields.io/badge/license-Apache--2.0-green) [![GitHub](https://img.shields.io/badge/GitHub-nulljosh%2Fturing-black?logo=github)](https://github.com/nulljosh/turing)
 
-A small model, Samantha, that runs entirely on your Mac and gets real work done. 90 tools, 0.5B parameters, nothing leaves the machine.
+A small model, Samantha, that runs entirely on your Mac and gets real work done. 91 tools, 0.5B parameters, nothing leaves the machine.
 
 [turing.heyitsmejosh.com](https://turing.heyitsmejosh.com)
 
@@ -19,6 +19,7 @@ A small model, Samantha, that runs entirely on your Mac and gets real work done.
 - **Uses your apps.** "Click Sign in", "type hello", "log me into X": she reads the screen and acts, step by step, asking first.
 - **Asks a bigger brain when stuck.** "Ask qwen ...", "ask claude ..." hands hard questions to another local model, never the cloud.
 - **Knows things offline.** Her library holds the fieldbook plus ~10,000 Wikipedia articles; she answers only from a real page and says which one.
+- **Summarizes.** "Summarize ~/Desktop/report.pdf", "summarize this page", "summarize my unread mail": three to five real sentences from the biggest local model, not a one-liner.
 - **Does the rest of the Mac.** Apps, tabs, notes, reminders, calendar, unread mail, files, documents, math, time zones, dice, hashes, Shortcuts, memory across sessions.
 - **Draws.** Type "draw a fox in the snow" on the landing page and she rebuilds it live from 30,000 squares.
 - **Writes files.** "Draft an email about X", "write a doc about X": the local model drafts it, she saves it to your home folder, asking first.

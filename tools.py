@@ -173,6 +173,32 @@ def read_page(target=""):
     return re.sub(r"\s+", " ", text).strip()[:3000]
 
 
+def summarize(target=""):
+    """A real summary, three to five plain sentences from the biggest local model on this Mac, not the one-sentence
+    answer a lookup gives. Takes a document path in your home folder, a page (a URL, a site name, or nothing for the
+    current Chrome tab), or "my unread mail" for the inbox."""
+    target = target.strip()
+    doc_exts = (".pdf", ".doc", ".docx", ".rtf", ".rtfd", ".html", ".htm", ".odt", ".webarchive", ".txt", ".md", ".csv", ".json", ".log")
+    looks_like_path = target.startswith(("~", "/")) or target.lower().endswith(doc_exts)
+    if re.fullmatch(r"(?:my |the )?(?:unread )?(?:mail|email|inbox)", target, re.I):
+        text = unread_mail("")
+    elif target and looks_like_path:
+        text, why = tools_util._doc_text(target)
+        if why:
+            return why
+        text = text[:8000]
+    else:
+        text = read_page(target)
+    text = text.strip()
+    if len(text) < 400:
+        return text  # already short: a summary of a summary is nothing
+    import tools_llm
+    prompt = ("Summarize the following in three to five plain sentences. No headings, no lists, no em dashes, "
+              "and do not mention that you are summarizing.\n\n" + text[:8000])
+    reply = tools_llm.ask_llm(prompt)
+    return reply.rsplit("\n(Answered by", 1)[0]
+
+
 def screenshot():
     """Take a screenshot of the screen and return the file path."""
     path = os.path.expanduser("~/Desktop/samantha-shot.png")
@@ -249,7 +275,7 @@ def read_file(path):
 from tools_logo import *  # noqa: E402,F401,F403
 from tools_logo import _logo_layers, _complex_layers, _bloom_layers, _LOGO_SCHEMA, _COMPLEX_SCHEMA, _BLOOM_SCHEMA, _WANTS_SIMPLE, _WANTS_COMPLEX  # noqa: E402,F401
 
-TOOLS = {f.__name__: f for f in (open_app, open_url, web_search, current_tab, read_page, screenshot,
+TOOLS = {f.__name__: f for f in (open_app, open_url, web_search, current_tab, read_page, summarize, screenshot,
                                      clipboard, set_volume, battery, say, list_dir, read_file, make_logo, paint_image,
                                      music, weather, timer, new_note, new_reminder, calendar_today, unread_mail,
                                      remove_background, upscale_image, enhance_image, grayscale_image, rotate_image, flip_image, resize_image, crop_square, convert_image, image_info)}
@@ -294,8 +320,14 @@ _ROUTES = (
      lambda m: open_url(site_search(m.group(1) or m.group(4), m.group(2) or m.group(3)))),
     (re.compile(rf"^(?:open |go to |pull up )?({_SITE_NAMES}) and search(?: it)?(?: for)? (.+)$", re.I), lambda m: open_url(site_search(m.group(1), m.group(2)))),
     (re.compile(r"^(?:search|google|look up)(?: search)?(?: (?:the web|online|the internet|on google|google))?(?: for)? (.+)$", re.I), lambda m: web_search(m.group(1))),
-    (re.compile(r"^(?:read|summari[sz]e|fetch) (?:me )?(?:the )?(?:page |site |website )?(?:at )?(https?://\S+|[\w-]+(?:\.[\w-]+)+(?:/\S*)?)$|^what does (https?://\S+|[\w-]+(?:\.[\w-]+)+(?:/\S*)?) say$", re.I),
+    (re.compile(r"^(?:read|fetch) (?:me )?(?:the )?(?:page |site |website )?(?:at )?(https?://\S+|[\w-]+(?:\.[\w-]+)+(?:/\S*)?)$|^what does (https?://\S+|[\w-]+(?:\.[\w-]+)+(?:/\S*)?) say$", re.I),
      lambda m: read_page(m.group(1) or m.group(2))),
+    (re.compile(r"^summari[sz]e (?:this |the )?(?:page|tab)$", re.I), lambda m: summarize("")),
+    (re.compile(r"^summari[sz]e (?:my |the )?(?:unread )?(?:mail|email|inbox)$", re.I), lambda m: summarize("mail")),
+    (re.compile(r"^summari[sz]e (?:me )?(?:the )?(?:document|pdf|doc|file called) (.+)$", re.I), lambda m: summarize(m.group(1))),
+    (re.compile(r"^summari[sz]e (~/\S+|/\S+)$", re.I), lambda m: summarize(m.group(1))),
+    (re.compile(r"^summari[sz]e (?:me )?(?:the )?(?:page |site |website )?(?:at )?(https?://\S+|[\w-]+(?:\.[\w-]+)+(?:/\S*)?)$", re.I),
+     lambda m: summarize(m.group(1))),
     (re.compile(r"^(?:open|launch|start) (?:up )?(?:chrome|the browser) (?:and |then )?(?:go to|open|visit|load) (.+)$", re.I), lambda m: open_url(m.group(1))),
     (re.compile(r"^(?:go to|visit|browse to|pull up) (.+)$", re.I), lambda m: open_url(m.group(1))),
     (re.compile(r"^(?:open|launch|start) (?:up )?(.+)$", re.I),
@@ -629,6 +661,9 @@ def demo():
         assert _named_page("read github.com/nulljosh/turing.") == "https://github.com/nulljosh/turing"
         assert _named_page("open pixelmator then tell me my battery") is None
         assert not is_action("Summarize what Turing is in one sentence.")  # real eval prompt, was hijacked
+        assert act("summarize this page") == "No page to read."
+        assert act("summarize my unread mail") == "No unread mail."
+        assert "No file" in act("summarize ~/samantha-test-does-not-exist.pdf")
         assert act("volume 30") == "Volume at 30." and act("set the volume to 250") == "Volume at 100."
         assert "don't read hidden" in read_file("~/.ssh/id_rsa") or "No file" in read_file("~/.ssh/id_rsa")
         assert "No file" in read_file("/etc/passwd") and "No folder" in list_dir("~/../..")

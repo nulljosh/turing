@@ -333,9 +333,7 @@ The loop compares her with other assistants (Siri and Shortcuts, Apple Intellige
 - [ ] See better: the 3B vision model gets the gist but misnames details (called the Dock a taskbar); try a 7B when memory allows, and let click_text use her eyes for icons with no text. Seeing shipped v2.1.0 (see_screen, see_image)
 - [ ] Research, the rest: pages beyond Wikipedia (news, docs), follow-up questions on a brief, and saving a brief to a file. Research shipped v3.0.0
 - [ ] Run code for answers: stats on a CSV, a chart, a unit-heavy calculation, in a sandboxed Python that asks first. Seen in ChatGPT data analysis, Claude analysis tool
-- [ ] Summarize anything long with the 9B (a PDF, a page, a thread) instead of the 1.7B reader's one sentence. Seen in every frontier chat
 - [ ] Translate text and pages, offline. Seen in every frontier chat, Apple Intelligence
-- [ ] Summarize my unread mail: unread_mail (shipped) reads the inbox, "anything from the bank" narrows it; summarizing a long thread with the 9B is the piece left. Seen in Gemini in Gmail, Apple Intelligence
 - [ ] Remind me later without a daemon: "tell me the weather every morning" becomes a Reminder or a Shortcuts automation she sets up, asking first. Seen in ChatGPT tasks, Gemini scheduled actions
 - [ ] GUI control, the rest: multi-step flows ("log in to X") planned by the agent with a yes per step, clicking icons that have no text, and a picture of where she will click. Click, type and press shipped in v2.0.0. Seen in Claude computer use, Open Interpreter
 

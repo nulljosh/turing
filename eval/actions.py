@@ -50,7 +50,6 @@ CASES = [
     ("what tabs do i have open", "list_tabs", None),
 
     ("read github.com/nulljosh/turing", "read_page", "github.com/nulljosh/turing"),
-    ("summarize https://example.com/post", "read_page", "https://example.com/post"),
     ("what does news.ycombinator.com say", "read_page", "news.ycombinator.com"),
     ("read the file ~/notes.txt", "read_file", "notes.txt"),
 
@@ -195,6 +194,12 @@ CASES = [
     ("anything from the bank in my mail today", "unread_mail", "the bank"),
     ("email from amazon", "unread_mail", "amazon"),
     ("transcribe the video ~/Desktop/clip.mp4", "transcribe_video", "~/Desktop/clip.mp4"),
+    ("summarize ~/Desktop/report.pdf", "summarize", "~/Desktop/report.pdf"),
+    ("summarize this page", "summarize", ""),
+    ("summarize my unread mail", "summarize", "mail"),
+    ("summarize https://example.com/post", "summarize", "https://example.com/post"),
+    ("summarize what turing is in one sentence", None, None),
+    ("summarize github.com", "summarize", "github.com"),
     # these look like the new commands and are not
     ("what is the weather system on jupiter", None, None),
     ("what is music theory", None, None),

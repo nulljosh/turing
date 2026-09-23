@@ -2,6 +2,9 @@
 
 TLDR per loop round, newest first. The loop adds a line every round it ships something, then the scorecard.
 
+- 2026-09-23: 🎉 v3.7.0: summarize, a new tool. "Summarize ~/Desktop/report.pdf", "summarize this page" or "summarize my unread mail" hands the text to the biggest local model for a real three-to-five-sentence summary, not the 1.7B reader's one line; anything under 400 characters is short enough to just read back. Verified against a real PDF and a real page (github.com) with the actual cold-loaded 9B on this Mac, not a stub. Found and fixed a real routing bug before shipping: a greedy catch-all regex was hijacking plain FAQ questions ("summarize what Turing is") into the tool; narrowed to five precise, shape-specific routes (bare page/tab, mail, explicit document filler, a home path, a URL/domain) so a sentence that names no real resource still falls through honestly. Also fixed the "summarize a page" synonym on the old read_page route, which used to just dump raw text under the word "summarize" with no actual summarizing.
+  `v3.7.0 · 91 tools · 202 tests · docs coverage 100% · laws all hold · biggest tools.py 697 · actions 150/150 · parity 150/150 · util_diff 203/203`
+
 - 2026-09-23: 🎉 v3.6.0: unread_mail, a new tool. "Unread mail" or "anything from the bank in my mail" reads Mail.app's inbox across every account, read only, a word narrows it to messages naming that word. Verified against this Mac's real inbox, not a stub. tools.py crossed the 760-line ceiling adding it, so tools_apps.py splits out the Mac-app-control cluster (music, weather, timer, notes, reminders, calendar, mail); tools.py re-exports every name, same pattern as tools_image.py.
   `v3.6.0 · 90 tools · 202 tests · docs coverage 100% · laws all hold · biggest tools_util.py 685 · actions 145/145 · parity 145/145 · util_diff 203/203`
 
