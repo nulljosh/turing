@@ -2,6 +2,9 @@
 
 TLDR per loop round, newest first. The loop adds a line every round it ships something, then the scorecard.
 
+- 2026-09-23: 🎉 v3.10.0: the files family, read half, in its own tools_files.py. "Find resume.docx" (Spotlight inside home, newest first, node_modules and Library copies skipped), "what did I just download" (size and age), "how big is ~/Movies" (a real count). Verified live on this Mac. Version rule set today: a major bump when a whole roadmap family completes, so the write half (move, rename, zip, trash, each asking first) is 4.0.0.
+  `v3.10.0 · 95 tools · 202 tests · docs coverage 100% · laws all hold · biggest tools.py 737 · actions 161/161 · parity 161/161 · util_diff 209/209`
+
 - 2026-09-23: 🎉 v3.9.0: reminders with a real due date. "Remind me tomorrow at 9am to call mom", "in 20 minutes water the plants", "at 5 to pay rent", "pay rent on friday at noon" all set the time in Reminders.app (a bare 1 to 7 means the afternoon); "every morning" is declined honestly, Reminders only takes repeats from its own window. Verified on this Mac: created a real reminder, read its due date back, deleted it. Found and fixed a swapped capture-group bug in the time parser before shipping. Docs refresh, direct request: "nothing leaves the Mac" was said ten times across the landing page, README and ARCHITECTURE; it is now said once per doc.
   `v3.9.0 · 92 tools · 202 tests · docs coverage 100% · laws all hold · biggest tools.py 733 · actions 154/154 · parity 154/154 · util_diff 203/203`
 

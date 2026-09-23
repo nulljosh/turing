@@ -203,6 +203,13 @@ CASES = [
     ("translate the page github.com into spanish", "translate", "github.com\tspanish"),
     ("how do you say thank you in japanese", "translate", "thank you\tjapanese"),
     ("translate 5 km to miles", None, None),
+    ("find report.pdf", "find_file", "report.pdf"),
+    ("where is my resume.docx", "find_file", "resume.docx"),
+    ("what's in my downloads", "recent_downloads", None),
+    ("what did i just download", "recent_downloads", None),
+    ("how big is ~/Documents", "folder_size", "~/Documents"),
+    ("find milk in document ~/notes.pdf", "find_in_document", "milk"),
+    ("find sign in on my screen", "read_screen", "sign in"),
     ("summarize github.com", "summarize", "github.com"),
     # these look like the new commands and are not
     ("what is the weather system on jupiter", None, None),

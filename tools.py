@@ -23,6 +23,8 @@ import urllib.request
 import tools_util
 import tools_image
 from tools_image import remove_background, upscale_image, enhance_image, grayscale_image, rotate_image, flip_image, resize_image, crop_square, convert_image, image_info
+import tools_files
+from tools_files import find_file, recent_downloads, folder_size
 
 AGENT_MODEL = "qwen3:1.7b"  # 8B was right but 7.6GB and minutes per run; 1.7B is right in 5s once the harness prefetches
 OLLAMA_CHAT = "http://localhost:11434/api/chat"
@@ -299,7 +301,8 @@ from tools_logo import _logo_layers, _complex_layers, _bloom_layers, _LOGO_SCHEM
 TOOLS = {f.__name__: f for f in (open_app, open_url, web_search, current_tab, read_page, summarize, translate, screenshot,
                                      clipboard, set_volume, battery, say, list_dir, read_file, make_logo, paint_image,
                                      music, weather, timer, new_note, new_reminder, calendar_today, unread_mail,
-                                     remove_background, upscale_image, enhance_image, grayscale_image, rotate_image, flip_image, resize_image, crop_square, convert_image, image_info)}
+                                     remove_background, upscale_image, enhance_image, grayscale_image, rotate_image, flip_image, resize_image, crop_square, convert_image, image_info,
+                                     find_file, recent_downloads, folder_size)}
 TOOLS.update({f.__name__: f for f in tools_util.TOOLS})
 globals().update({f.__name__: f for f in tools_util.TOOLS})  # eval/actions.py swaps every TOOLS name on this module for a recorder
 
@@ -372,6 +375,7 @@ _GREEDY = {_ROUTES[-2][0], _ROUTES[-1][0]}
 
 # the image tools before the utilities, so "convert cat.png to jpg" is an image and never a unit conversion
 _ROUTES = _ROUTES + tuple((pat, _util_route(name, arg)) for pat, name, arg in tools_image.ROUTES)
+_ROUTES = _ROUTES + tuple((pat, _util_route(name, arg)) for pat, name, arg in tools_files.ROUTES)  # find a file, downloads, folder size
 _ROUTES = _ROUTES + tuple((pat, _util_route(name, arg)) for pat, name, arg in tools_util.ROUTES)  # 31 utility tools: math, text, dice, this Mac's vitals
 
 # anything past the first verb phrase means more than one step: that is agent() work

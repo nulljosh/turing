@@ -329,6 +329,11 @@ Ship in that order. Skipping straight to phone apps without 1 and 2 first would 
 ### Gaps found by the loop
 The loop compares her with other assistants (Siri and Shortcuts, Apple Intelligence, Claude and ChatGPT desktop with MCP, Open Interpreter, Raycast AI, local Ollama agents), adds each real gap here with where it was seen, builds it, then deletes the line once it ships (history lives in git). Newest and biggest first.
 
+- [ ] Camera eyes: "what am I holding", "read this label" through the Mac's camera (one frame via ffmpeg avfoundation, then the same vision model see_image uses), asking first. Seen in Gemini Live, ChatGPT voice with video
+- [ ] Edit the last draft: "make it shorter", "friendlier", "add a line about Friday" rewrites the file write_document just saved, showing the diff and asking first. Seen in ChatGPT canvas, Claude artifacts
+- [ ] What needs me: "what needs my attention" is one answer built from unread mail, today's calendar and due reminders, ranked, with the 9B writing the three lines. Seen in Apple Intelligence priority notifications, Gemini in Gmail
+- [ ] Am I free: "do I have time Thursday afternoon", "when am I free this week" read the calendar's gaps, not just today's list. Seen in Siri, Gemini with Calendar
+- [ ] Draw on the Mac, not just the page: local image generation (Flux or SD through MLX) is a 6 GB model on a 16 GB Mac, so it only runs with everything else closed; a real ability, honestly scoped. Seen in ChatGPT images, Gemini
 - [ ] Voice, the rest: you can cut in while she speaks, and a wake word. Voice in shipped v1.8.0 (python3 chat.py --voice, Whisper on MLX). Seen in ChatGPT and Gemini voice modes
 - [ ] See better: the 3B vision model gets the gist but misnames details (called the Dock a taskbar); try a 7B when memory allows, and let click_text use her eyes for icons with no text. Seeing shipped v2.1.0 (see_screen, see_image)
 - [ ] Research, the rest: pages beyond Wikipedia (news, docs), follow-up questions on a brief, and saving a brief to a file. Research shipped v3.0.0
@@ -373,7 +378,7 @@ The model picks, the code does. More menu is more power. Rules: every tool ships
 
 - [ ] Two-step picking: she picks a family first, then a tool inside it, so no single choice is bigger than about twelve. Retrain the picker for it and score it before adding tools in bulk
 - [ ] Image family through Pixelmator (`edit_image` with a fixed menu): remove background, upscale, auto enhance, crop, resize, rotate, flip, grayscale, convert format, export
-- [ ] Files family: find a file, move, copy, rename, zip, unzip, folder size, disk space, recent downloads, move to Trash (asks first)
+- [ ] Files family, the write half: move, copy, rename, zip, unzip, move to Trash (each asks first). The read half shipped in tools_files.py: find a file, recent downloads, folder size; disk space was already there
 - [ ] System family: dark mode, wifi, bluetooth, do not disturb, lock, sleep, brightness, uptime, ip address, running apps, quit an app
 - [ ] Organizer family: list reminders, complete a reminder, add a calendar event, tomorrow's calendar, search notes, append to a note
 - [ ] Browser family: list tabs, switch tab, close tab, read the rendered page, download a file

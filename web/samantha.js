@@ -642,9 +642,9 @@
   };
   // the ten that read or touch a real Mac. The stand-in Mac on this page has no disk, network or clipboard to show.
   var REAL_MAC = "That one reads your real Mac, and this stand-in has no disk, memory or network. Run her on a Mac and it answers.";
-  ["disk_space", "uptime", "memory_usage", "cpu_load", "ip_address", "wifi_name", "system_info", "copy_to_clipboard", "sleep_display", "reveal_in_finder", "list_shortcuts", "run_shortcut", "list_mcp_tools", "call_mcp_tool", "list_tabs", "switch_tab", "close_tab", "read_tab", "read_screen", "read_document", "find_in_document", "ask_document", "ask_screen", "transcribe_video", "unread_mail"]
+  ["disk_space", "uptime", "memory_usage", "cpu_load", "ip_address", "wifi_name", "system_info", "copy_to_clipboard", "sleep_display", "reveal_in_finder", "list_shortcuts", "run_shortcut", "list_mcp_tools", "call_mcp_tool", "list_tabs", "switch_tab", "close_tab", "read_tab", "read_screen", "read_document", "find_in_document", "ask_document", "ask_screen", "transcribe_video", "unread_mail", "find_file", "recent_downloads", "folder_size"]
     .forEach(function (name) { U[name] = function () { return REAL_MAC; }; });
-  U.NEEDS_MAC = ["disk_space", "uptime", "memory_usage", "cpu_load", "ip_address", "wifi_name", "system_info", "copy_to_clipboard", "sleep_display", "reveal_in_finder", "list_shortcuts", "run_shortcut", "list_mcp_tools", "call_mcp_tool", "list_tabs", "switch_tab", "close_tab", "read_tab", "read_screen", "read_document", "find_in_document", "ask_document", "ask_screen", "transcribe_video", "unread_mail"];
+  U.NEEDS_MAC = ["disk_space", "uptime", "memory_usage", "cpu_load", "ip_address", "wifi_name", "system_info", "copy_to_clipboard", "sleep_display", "reveal_in_finder", "list_shortcuts", "run_shortcut", "list_mcp_tools", "call_mcp_tool", "list_tabs", "switch_tab", "close_tab", "read_tab", "read_screen", "read_document", "find_in_document", "ask_document", "ask_screen", "transcribe_video", "unread_mail", "find_file", "recent_downloads", "folder_size"];
 
   // the image tools, same table as tools_image.ROUTES and ahead of the utilities. The stand-in Mac has no photos on disk.
   var P = "(?:the )?(?:image |photo |picture |pic )?(?:at )?(\\S+\\.(?:jpe?g|png|heic|webp|tiff?))";
@@ -661,6 +661,12 @@
     [new RegExp("^(?:crop|square up) " + P + "(?: (?:to |into )?(?:a )?square)?$", "i"), function (m) { return ["crop_square", m[1]]; }],
     [new RegExp("^convert " + P + " (?:to|into) (?:a |an )?(png|jpe?g|webp|heic|tiff?|pdf)$", "i"), function (m) { return ["convert_image", m[1] + " to " + m[2]]; }],
     [new RegExp("^(?:how big is " + P + "|(?:image )?(?:info|size|dimensions) (?:for|of|on) " + P + ")$", "i"), function (m) { return ["image_info", m[1] || m[2]]; }]
+  ]);
+  // the file tools, same table as tools_files.ROUTES. The stand-in Mac has no disk to search.
+  ROUTES.push.apply(ROUTES, [
+    [/^(?:find|locate|where(?:'s| is)|search for)(?: the| my| a)?(?: file)?(?: called| named)? (\S+\.\w{1,5})$/i, function (m) { return ["find_file", m[1]]; }],
+    [/^(?:what(?:'s| is) in |show(?: me)? |list )?(?:my )?(?:recent |latest |newest )?downloads$|^what did i (?:just )?download$/i, function () { return ["recent_downloads", "5"]; }],
+    [/^(?:how big is|(?:what(?:'s| is) the )?size of|folder size (?:of|for)) (?:the |my )?(?:folder )?(\S+)$/i, function (m) { return ["folder_size", m[1]]; }]
   ]);
   U.ask_llm = function () { return "On her real Mac she hands a hard question to another LLM running there: name one (ask qwen, ask llama, ask gemma) or say ask claude for the biggest. She asks you first and nothing leaves the Mac. This page never sends your words anywhere but its own lookup."; };
   U.NEEDS_MAC.push("ask_llm");
