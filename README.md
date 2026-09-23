@@ -29,6 +29,7 @@ A small model, Samantha, that runs entirely on your Mac and gets real work done.
 ./.venv/bin/python chat.py                 # talk to her: answers and acts, asks before writing
 ./.venv/bin/python chat.py --voice          # same, but spoken
 ./.venv/bin/python ask.py "question"        # one-shot retrieve and answer
+./gui/build.sh && open gui/build/SamanthaGUI.app   # a real Mac window instead of the terminal
 python3 mcp_server.py                       # her tools over MCP
 ./gate.sh                                   # every check, docs coverage first
 ./release.sh 0.12.0 "what shipped"          # cut a release

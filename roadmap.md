@@ -321,7 +321,7 @@ Every loop iteration should move one of these five.
 
 ### Compatibility, honestly scoped (set 2026-09-23)
 Samantha's whole design is Mac plus MLX (Apple Silicon), and that is not a detail to port around, it is the reason she is free, fast and private. Each step below changes what runs where, in real, increasing order of cost:
-1. **Native macOS GUI**, buildable now. Same shape as `menubar/PaintBar.swift` already in this repo: a real chat window instead of only `chat.py` in a terminal. No backend change, MLX stays exactly as is.
+1. **Native macOS GUI, SHIPPED.** `gui/SamanthaGUI.swift`, same shape as `menubar/PaintBar.swift`: a real chat window driving `chat_pipe.py` (the exact answer chain, kept warm the whole session), a native confirm bar before any write. No backend change, MLX stays exactly as is.
 2. **Windows and Linux.** MLX is Apple Silicon only, full stop. This means a second inference backend (llama.cpp is the obvious one), not a recompile. Real engineering, its own phase, not a checkbox on this one.
 3. **iPhone and Android.** A phone cannot run a model her size at a useful speed today. Two honest shapes, not a port: a genuinely small on-device model built for a phone, or the phone as a thin client talking to your own Mac as a server over your network. Either way it is closer to a new product than a build-out of this one.
 Ship in that order. Skipping straight to phone apps without 1 and 2 first would mean nothing shared with this codebase at all.
@@ -335,6 +335,7 @@ The loop compares her with other assistants (Siri and Shortcuts, Apple Intellige
 - [ ] Run code for answers: stats on a CSV, a chart, a unit-heavy calculation, in a sandboxed Python that asks first. Seen in ChatGPT data analysis, Claude analysis tool
 - [ ] Summarize anything long with the 9B (a PDF, a page, a thread) instead of the 1.7B reader's one sentence. Seen in every frontier chat
 - [ ] Translate text and pages, offline. Seen in every frontier chat, Apple Intelligence
+- [ ] Transcribe a video: pull the audio track, run it through the same Whisper pipeline voice.py already has. Seen in every frontier chat's file upload
 - [ ] Read mail: "anything from the bank today", "summarize my unread" through Mail.app, read only. Seen in Gemini in Gmail, Apple Intelligence
 - [ ] Remind me later without a daemon: "tell me the weather every morning" becomes a Reminder or a Shortcuts automation she sets up, asking first. Seen in ChatGPT tasks, Gemini scheduled actions
 - [ ] GUI control, the rest: multi-step flows ("log in to X") planned by the agent with a yes per step, clicking icons that have no text, and a picture of where she will click. Click, type and press shipped in v2.0.0. Seen in Claude computer use, Open Interpreter
