@@ -1,11 +1,15 @@
 {
-  "version": "3.2.1",
+  "version": "3.3.0",
   "docs_coverage": {
     "percent": 100,
     "files": {
       "test_voice.py": {
         "total": 10,
         "documented": 10
+      },
+      "chat_pipe.py": {
+        "total": 11,
+        "documented": 11
       },
       "tools_image.py": {
         "total": 16,
@@ -150,6 +154,10 @@
       "tools_util.py": {
         "total": 42,
         "documented": 42
+      },
+      "test_chat_pipe.py": {
+        "total": 15,
+        "documented": 15
       },
       "ask_web.py": {
         "total": 10,
