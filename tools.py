@@ -715,7 +715,7 @@ _INCOMPLETE = (
     (re.compile(r"^(?:take|make|write|add|new) (?:a |me a )?(?:new )?note(?: that says| saying)?$|^note$", re.I), "What should the note say?"),
     (re.compile(r"^(?:set |start )?(?:a |an )?timer(?: for)?$", re.I), "For how long?"),
     (re.compile(r"^say$", re.I), "Say what?"),
-    (re.compile(r"^(?:(?:ask|hey|have) )?claude[,:]?$", re.I), 'Ask Claude what? Say it like "ask claude why the sky is blue".'),
+    (re.compile(r"^(?:(?:ask|hey|have) )?claude[,:]?$", re.I), 'Ask what? Say it like "ask claude why the sky is blue".'),
 )
 
 

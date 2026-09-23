@@ -1,12 +1,17 @@
-"""Samantha asks Claude: the one tool that sends your words off this Mac, to Anthropic's frontier model, for the questions
-a 0.5B model cannot think through. It runs only when you name it ("ask claude ..."), the harness asks before every call,
-it never reaches a model's menu or MCP, and every answer says it came from Claude.
+"""Samantha asks a bigger model: for the questions a 0.5B model cannot think through, she hands them to the largest model
+Ollama has on this Mac (qwen3:8b by default). Nothing leaves the Mac and no API key is needed. It still answers to
+"ask claude ..." so old habits and the picker keep working, it runs only when named, and every answer says who gave it.
 
-Needs the official SDK (`.venv/bin/pip install anthropic`) and a credential: ANTHROPIC_API_KEY, or `ant auth login`.
+Needs Ollama running with the model pulled: `ollama pull qwen3:8b`. SAMANTHA_BIG_MODEL picks another one.
 """
+import json
 import os
+import re
+import urllib.error
+import urllib.request
 
-MODEL = os.environ.get("SAMANTHA_CLAUDE_MODEL", "claude-opus-5")
+OLLAMA_CHAT = "http://localhost:11434/api/chat"
+MODEL = os.environ.get("SAMANTHA_BIG_MODEL", "qwen3:8b")
 LIMIT = 20000  # characters; a longer question is refused, never silently cut
 SYSTEM = ("You are answering one question for Samantha, a small assistant that runs on her user's Mac and asked you because "
           "the question needs more than she can do. Answer in plain language and briefly: a few sentences unless the question "
@@ -14,46 +19,27 @@ SYSTEM = ("You are answering one question for Samantha, a small assistant that r
 
 
 def ask_claude(question):
-    """Ask Claude, Anthropic's frontier model, a question too hard for her and return its answer, marked as Claude's.
-    Sends the question off this Mac, so it asks first and runs only when named. Needs the anthropic package and a key."""
+    """Ask the biggest local model a question too hard for her and return its answer, marked as its own.
+    Stays on this Mac. Answers to "ask claude ..." by name; needs Ollama running with the model pulled."""
     q = question.strip()
     if not q:
-        return 'Ask Claude what? Say it like "ask claude why the sky is blue".'
+        return 'Ask what? Say it like "ask claude why the sky is blue".'
     if len(q) > LIMIT:
         return f"That is too long to send in one go: {len(q):,} characters, and the limit is {LIMIT:,}. Ask about one part at a time."
+    body = json.dumps({"model": MODEL, "stream": False, "think": False, "messages": [
+        {"role": "system", "content": SYSTEM}, {"role": "user", "content": q}]}).encode()
     try:
-        import anthropic
-    except ImportError:
-        return "To ask Claude I need the anthropic package: run .venv/bin/pip install anthropic, then ask again."
-    try:
-        client = anthropic.Anthropic()
-        # fallbacks "default": if Claude's safety classifiers decline, the API reruns it on the model Anthropic recommends
-        response = client.beta.messages.create(
-            model=MODEL, max_tokens=16000, system=SYSTEM, output_config={"effort": "medium"},
-            betas=["server-side-fallback-2026-07-01"], fallbacks="default",
-            messages=[{"role": "user", "content": q}],
-        )
-    except anthropic.AuthenticationError:
-        return "Claude did not accept the API key. Set ANTHROPIC_API_KEY or run ant auth login, then ask again."
-    except anthropic.PermissionDeniedError:
-        return "That API key is not allowed to use Claude's messages. Check its permissions in the Claude Console."
-    except anthropic.RateLimitError:
-        return "Claude is rate limiting right now. Try again in a minute."
-    except anthropic.APIStatusError as e:
-        return f"Claude could not answer just now (error {e.status_code}). Try again later."
-    except anthropic.APIConnectionError:
-        return "I could not reach Claude. Check the internet connection, then ask again."
-    except Exception as e:
-        # no credential at all: the SDK raises a TypeError ("Could not resolve authentication method") before any request
-        if "authentication" in str(e).lower() or "api_key" in str(e).lower():
-            return "To ask Claude I need an Anthropic API key: set ANTHROPIC_API_KEY or run ant auth login, then ask again."
-        if isinstance(e, TypeError) and "unexpected keyword" in str(e):  # a package too old for fallbacks or output_config
-            return "The anthropic package is too old for this: run .venv/bin/pip install -U anthropic, then ask again."
-        return f"Asking Claude failed: {e}"
-    if response.stop_reason == "refusal":
-        return "Claude declined to answer that one."
-    text = "".join(b.text for b in response.content if b.type == "text").strip()
+        req = urllib.request.Request(OLLAMA_CHAT, body, {"Content-Type": "application/json"})
+        with urllib.request.urlopen(req, timeout=300) as r:
+            reply = json.load(r)
+    except urllib.error.HTTPError as e:
+        if e.code == 404:
+            return f"The model {MODEL} is not on this Mac yet: run ollama pull {MODEL}, then ask again."
+        return f"The local model could not answer just now (error {e.code}). Try again later."
+    except (urllib.error.URLError, TimeoutError, OSError):
+        return "I could not reach Ollama. Start it (open the Ollama app or run ollama serve), then ask again."
+    text = re.sub(r"(?s)<think>.*?</think>", "", reply.get("message", {}).get("content", "")).strip()
     if not text:
-        return "Claude sent back no answer."
-    cut = " (Claude hit its length limit, so this is cut short.)" if response.stop_reason == "max_tokens" else ""
-    return f"{text}{cut}\n(Answered by Claude, {response.model}, not by me.)"
+        return f"{MODEL} sent back no answer."
+    cut = " (It hit its length limit, so this is cut short.)" if reply.get("done_reason") == "length" else ""
+    return f"{text}{cut}\n(Answered by {MODEL} on this Mac, not by me.)"

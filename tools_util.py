@@ -44,7 +44,7 @@ def _sh(argv, timeout=5):
 from util_math import *  # noqa: F401,F403
 from util_math import _num, _eval, _OPS, _FUNCS, _CONSTS, _LENGTH, _MASS, _VOLUME, _TIME, _UNIT_ALIASES, _TEMPS, _MORSE  # noqa: F401
 from util_dates import *  # noqa: F401,F403
-from tools_claude import ask_claude  # noqa: E402  (the one tool that leaves the Mac, in its own file)
+from tools_claude import ask_claude  # noqa: E402  (hands a hard question to the biggest local model, in its own file)
 from util_dates import _ZONES, _HOLIDAYS, _MONTHS, _COUNT, _day, _shift, _long, _say, _MONTH_NAMES, _DAY_NAMES  # noqa: F401
 
 
@@ -535,7 +535,7 @@ TOOLS = (ask_claude, calculate, convert_units, time_in, convert_time, current_da
 _I = re.I
 # (pattern, tool name, what to hand it). Names, not functions: tools.py looks each one up at call time.
 ROUTES = (
-    # only by name: "ask claude ...", "claude, ..." (the harness asks before anything leaves the Mac)
+    # only by name: "ask claude ...", "claude, ..." (the harness asks before handing it over)
     (re.compile(r"^(?:ask|have|let) claude(?: to| about| whether| if|:|,)?\s+(.+)$|^(?:hey )?claude[,:]\s*(.+)$", _I),
      "ask_claude", lambda m: m.group(1) or m.group(2)),
     # a time in one zone to another: ahead of convert_units, so "convert 3pm pst to tokyo" is a time, not a unit

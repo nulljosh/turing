@@ -1,10 +1,12 @@
-"""ask_claude: the one tool that leaves the Mac. A fake anthropic module stands in, so no test ever calls the real API.
+"""ask_claude: hands a hard question to the biggest local model. A fake urlopen stands in, so no test needs Ollama.
 
 Run: python3 test_claude.py
 """
+import io
+import json
 import os
 import sys
-import types
+import urllib.error
 import unittest
 from unittest import mock
 
@@ -15,105 +17,72 @@ import tools
 import tools_claude
 
 
-def fake_anthropic(reply=None, error=None):
-    """A stand-in for the anthropic package: its error classes, and a client whose beta.messages.create records the call."""
-    m = types.ModuleType("anthropic")
-    m.APIError = type("APIError", (Exception,), {})
-    m.APIConnectionError = type("APIConnectionError", (m.APIError,), {})
-    m.APIStatusError = type("APIStatusError", (m.APIError,), {"status_code": 500})
-    for name in ("AuthenticationError", "PermissionDeniedError", "RateLimitError"):  # the SDK's status errors subclass APIStatusError
-        setattr(m, name, type(name, (m.APIStatusError,), {}))
-    m.calls = []
+class FakeOllama:
+    """Stands in for urlopen: records each request body, then answers or fails as told."""
 
-    def create(**kw):
-        """Record the request, then fail or answer as told."""
-        m.calls.append(kw)
-        if error:
-            raise error(m)
-        return reply
+    def __init__(self, reply=None, error=None):
+        """What to answer with, or what to raise."""
+        self.reply, self.error, self.calls = reply, error, []
 
-    client = types.SimpleNamespace(beta=types.SimpleNamespace(messages=types.SimpleNamespace(create=create)))
-    m.Anthropic = lambda: client
-    return m
+    def __call__(self, req, timeout=None):
+        """One request: record its body, then fail or answer."""
+        self.calls.append(json.loads(req.data))
+        if self.error:
+            raise self.error
+        return io.BytesIO(json.dumps(self.reply).encode())
 
 
-def answer(text, stop="end_turn", model="claude-opus-5"):
-    """A response shaped like the SDK's: text blocks, a stop reason and the model that served it."""
-    blocks = [types.SimpleNamespace(type="thinking", thinking=""), types.SimpleNamespace(type="text", text=text)]
-    return types.SimpleNamespace(content=blocks, stop_reason=stop, model=model)
+def answer(text, done="stop"):
+    """A reply shaped like Ollama's /api/chat."""
+    return {"message": {"role": "assistant", "content": text}, "done_reason": done}
 
 
 class AskClaude(unittest.TestCase):
     """What she says back, for every way the call can go."""
 
     def ask(self, question, **fake):
-        """Ask through a fake SDK; returns the reply and the fake, to read what was sent."""
-        m = fake_anthropic(**fake)
-        with mock.patch.dict(sys.modules, {"anthropic": m}):
-            return tools_claude.ask_claude(question), m
+        """Ask through a fake Ollama; returns the reply and the fake, to read what was sent."""
+        f = FakeOllama(**fake)
+        with mock.patch("urllib.request.urlopen", f):
+            return tools_claude.ask_claude(question), f
 
-    def test_an_answer_is_marked_as_claudes(self):
-        """The text comes back with where it came from, and the request is the documented shape."""
-        reply, m = self.ask("why is the sky blue", reply=answer("Rayleigh scattering."))
-        self.assertEqual(reply, "Rayleigh scattering.\n(Answered by Claude, claude-opus-5, not by me.)")
-        sent = m.calls[0]
-        self.assertEqual(sent["model"], "claude-opus-5")
-        self.assertEqual(sent["messages"], [{"role": "user", "content": "why is the sky blue"}])
-        self.assertEqual((sent["fallbacks"], sent["betas"]), ("default", ["server-side-fallback-2026-07-01"]))
-        self.assertNotIn("thinking", sent)  # adaptive thinking is on by default; never sent disabled
+    def test_an_answer_is_marked_as_the_local_models(self):
+        """The text comes back with where it came from, and the request stays on this Mac."""
+        reply, f = self.ask("why is the sky blue", reply=answer("<think>hmm</think>Rayleigh scattering."))
+        self.assertEqual(reply, f"Rayleigh scattering.\n(Answered by {tools_claude.MODEL} on this Mac, not by me.)")
+        self.assertEqual(f.calls[0]["model"], tools_claude.MODEL)
+        self.assertEqual(f.calls[0]["messages"][-1], {"role": "user", "content": "why is the sky blue"})
+        self.assertTrue(tools_claude.OLLAMA_CHAT.startswith("http://localhost:"))
 
-    def test_a_fallback_model_is_named(self):
-        """When a fallback served it, the reply names the model that actually answered."""
-        reply, _ = self.ask("q", reply=answer("ok", model="claude-opus-4-8"))
-        self.assertTrue(reply.endswith("(Answered by Claude, claude-opus-4-8, not by me.)"))
-
-    def test_refusal_cut_and_empty(self):
-        """A refusal is said plainly, a cut answer says so, an empty one is not passed off as an answer."""
-        self.assertEqual(self.ask("q", reply=answer("", stop="refusal"))[0], "Claude declined to answer that one.")
-        self.assertIn("cut short", self.ask("q", reply=answer("partial", stop="max_tokens"))[0])
-        self.assertEqual(self.ask("q", reply=answer("   "))[0], "Claude sent back no answer.")
+    def test_cut_and_empty(self):
+        """A cut answer says so, an empty one is not passed off as an answer."""
+        self.assertIn("cut short", self.ask("q", reply=answer("partial", done="length"))[0])
+        self.assertEqual(self.ask("q", reply=answer("   "))[0], f"{tools_claude.MODEL} sent back no answer.")
 
     def test_every_error_is_a_sentence(self):
-        """Key, permission, rate limit, server, network, old SDK and no credential: each gets its own honest reply."""
-        cases = {
-            lambda m: m.AuthenticationError(): "did not accept the API key",
-            lambda m: m.PermissionDeniedError(): "not allowed",
-            lambda m: m.RateLimitError(): "rate limiting",
-            lambda m: m.APIConnectionError(): "could not reach Claude",
-            lambda m: TypeError("unexpected keyword argument 'fallbacks'"): "too old",
-            lambda m: Exception("Could not resolve authentication method"): "need an Anthropic API key",
-            # what the real SDK (1.8.0) raises with no key at all, found by running it: a TypeError, not an API error
-            lambda m: TypeError("Could not resolve authentication method. Expected one of api_key, auth_token"): "need an Anthropic API key",
-            lambda m: Exception("something odd"): "Asking Claude failed: something odd",
-        }
-        for make, words in cases.items():
-            self.assertIn(words, self.ask("q", error=make)[0])
+        """Model missing, server error, Ollama not running: each gets its own honest reply."""
+        http = lambda code: urllib.error.HTTPError(tools_claude.OLLAMA_CHAT, code, "", {}, None)
+        self.assertIn("ollama pull", self.ask("q", error=http(404))[0])
+        self.assertIn("error 500", self.ask("q", error=http(500))[0])
+        self.assertIn("could not reach Ollama", self.ask("q", error=urllib.error.URLError("refused"))[0])
+        self.assertIn("could not reach Ollama", self.ask("q", error=TimeoutError())[0])
 
-        def server(m):
-            """A 529 from the API."""
-            e = m.APIStatusError()
-            e.status_code = 529
-            return e
-        self.assertEqual(self.ask("q", error=server)[0], "Claude could not answer just now (error 529). Try again later.")
-
-    def test_no_sdk_empty_and_huge(self):
-        """No anthropic package, nothing asked, and a question over the limit: none of them reach the network."""
-        with mock.patch.dict(sys.modules, {"anthropic": None}):
-            self.assertIn("pip install anthropic", tools_claude.ask_claude("q"))
-        self.assertEqual(tools_claude.ask_claude("   "), 'Ask Claude what? Say it like "ask claude why the sky is blue".')
-        reply, m = self.ask("x" * (tools_claude.LIMIT + 1), reply=answer("never"))
+    def test_empty_and_huge(self):
+        """Nothing asked, and a question over the limit: neither reaches the model."""
+        self.assertEqual(tools_claude.ask_claude("   "), 'Ask what? Say it like "ask claude why the sky is blue".')
+        reply, f = self.ask("x" * (tools_claude.LIMIT + 1), reply=answer("never"))
         self.assertIn("too long", reply)
-        self.assertEqual(m.calls, [])
+        self.assertEqual(f.calls, [])
 
 
 class OnlyWithAYes(unittest.TestCase):
-    """The harness asks before anything leaves the Mac, and no model or MCP client can reach the tool."""
+    """The harness asks before handing it over, and no model or MCP client can reach the tool."""
 
     def test_asks_first_and_a_no_sends_nothing(self):
         """A no sends nothing; a yes sends the question once."""
-        m = fake_anthropic(reply=answer("Because."))
+        m = FakeOllama(reply=answer("Because."))
         asked = []
-        with mock.patch.dict(sys.modules, {"anthropic": m}):
+        with mock.patch("urllib.request.urlopen", m):
             no = harness.Session(confirm=lambda n, a: asked.append((n, a)) or False, log=lambda l: None).ask("ask claude why is the sky blue")
             self.assertEqual((no, m.calls), ("Okay, I will not.", []))
             yes = harness.Session(confirm=lambda n, a: True, log=lambda l: None).ask("claude, why is the sky blue")
@@ -133,7 +102,7 @@ class OnlyWithAYes(unittest.TestCase):
         self.assertEqual(tools.plan("have claude write a haiku"), [("ask_claude", ("write a haiku",))])
         self.assertEqual(tools.plan("claude: what is a monad"), [("ask_claude", ("what is a monad",))])
         self.assertEqual(tools.plan("ask claude"), [])  # nothing to ask, so nothing is sent
-        self.assertEqual(tools.do("ask claude"), 'Ask Claude what? Say it like "ask claude why the sky is blue".')
+        self.assertEqual(tools.do("ask claude"), 'Ask what? Say it like "ask claude why the sky is blue".')
         self.assertEqual(tools.plan("claude shannon invented information theory"), [])
 
 

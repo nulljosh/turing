@@ -54,10 +54,10 @@ v1.4.0, 80 tools, all workflow runs green. Scorecard: `v1.4.0 · 80 tools · 125
 The live site has not been deployed from the cloud (no Cloudflare access), so it likely shows an older version. roadmap.md "Joshua's Mac to-do" lists what needs the keyboard.
 
 ## Next, in order
-1. On the Mac: `npx wrangler deploy`, then `./gate.sh --full` to check her real model, Pixelmator and the live page against v1.4.0.
+1. On the Mac: site deployed by hand 2026-09-22; run `./gate.sh --full` to check her real model, Pixelmator and the live page against v1.4.0.
 2. Split tools.py (822, the biggest; tests patch tools._run, _app, installed_apps, pick, read_page, grayscale_image, and plan() swaps tools-module globals, so re-export and patch where the names live), then lower MAX_LINES in eval/laws.py. Then pixelmator/test_pxm.py 806, tools_util.py 651, web/demo.js, web/samantha.js.
 3. Top of roadmap.md "Gaps found by the loop", Mac-first now: streamed replies (mlx_lm stream_generate), voice in (Whisper on MLX), GUI control with approval.
-4. ask_claude with a real key: one live question to confirm the request shape against the real API.
+4. ask_claude now asks the biggest local Ollama model (qwen3:8b, SAMANTHA_BIG_MODEL) instead of Claude: the user will not hand out API keys. No anthropic SDK, nothing leaves the Mac.
 
 ## Restart prompt
 ```
