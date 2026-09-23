@@ -113,7 +113,6 @@
       .name-split b{font-size:16px}
       .sample-prompt{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin:0 0 8px}
       .sample-out{font-size:14px;font-style:italic;margin:0 0 10px}
-      .sample-note{font-size:13px;color:var(--muted);margin:0}
       #chart-wrap{position:relative}
       #chart{cursor:pointer;touch-action:pan-y}
       #tooltip{position:absolute;pointer-events:none;background:var(--fg);color:var(--bg);font-size:12px;
@@ -122,17 +121,6 @@
       #tooltip.show{opacity:1}
       #tooltip b{display:block;margin-bottom:2px}
       .chart-hint{font-size:12px;color:var(--muted);margin:6px 0 0;text-align:center}
-      .fix-card{border:1px solid var(--line);border-radius:10px;padding:16px 20px;margin-top:12px}
-      .fix-card summary{cursor:pointer;font-size:14px;font-weight:600;list-style:none}
-      .fix-card summary::-webkit-details-marker{display:none}
-      .fix-card summary::before{content:"▸ ";color:var(--muted)}
-      .fix-card[open] summary::before{content:"▾ "}
-      .turn{margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
-      .turn:first-of-type{border-top:none}
-      .turn-label{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin:0 0 4px}
-      .turn-q{font-size:14px;margin:0 0 6px}
-      .turn-a{font-size:14px;margin:0;padding:8px 12px;border:1px solid var(--line);border-radius:6px}
-      .turn-a.bad{color:var(--muted)}
       .stat-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px;margin-top:16px}
       .stat-tile{border:1px solid var(--line);border-radius:10px;padding:16px;text-align:center}
       .stat-value{font-size:30px;font-weight:700;letter-spacing:-0.03em;font-variant-numeric:tabular-nums;margin:0 0 4px;color:var(--fg)}
@@ -339,67 +327,6 @@
       </section>
 
       <section>
-        <h2>Real bugs, caught and fixed live</h2>
-        <details class="more"><summary>Open the transcripts</summary>
-        <p class="sub" style="margin:0 0 4px">Click one open. These are real captured transcripts from actually running the CLI, not simulated. No live inference on this page, the model runs locally via MLX, not servable from a static site without real hosting infra.</p>
-        <details class="fix-card">
-          <summary>Fixed: Wikipedia hijack on "Is this project blocked?"</summary>
-          <div class="turn">
-            <p class="turn-label">Before &middot; v0.6.6</p>
-            <p class="turn-q">Q: Is this project blocked?</p>
-            <p class="turn-a bad">"Many domain names are blocked in mainland China under the country's Internet censorship policy..." &mdash; wrong topic entirely, hijacked by a Wikipedia search.</p>
-          </div>
-          <div class="turn">
-            <p class="turn-label">After &middot; v0.7.0</p>
-            <p class="turn-q">Q: Is this project blocked?</p>
-            <p class="turn-a good">"The Qwen3.5-0.8B base comparison is blocked, it doesn't fit this machine's training memory budget even with the Metal cache-limit fix applied."</p>
-          </div>
-        </details>
-        <details class="fix-card">
-          <summary>Fixed: chat.py forgetting the conversation one turn later</summary>
-          <div class="turn">
-            <p class="turn-label">Turn 1</p>
-            <p class="turn-q">You: What is Turing?</p>
-            <p class="turn-a good">Samantha: "Turing is the project: the pipeline, the repo, this whole effort to build small language models on consumer hardware."</p>
-          </div>
-          <div class="turn">
-            <p class="turn-label">Turn 2, before &middot; v0.7.0</p>
-            <p class="turn-q">You: What is its first model called?</p>
-            <p class="turn-a bad">Samantha: "A large language model (LLM) is an AI model trained on a vast amount of text..." &mdash; no memory of turn 1 at all.</p>
-          </div>
-          <div class="turn">
-            <p class="turn-label">Turn 2, after &middot; v0.7.1</p>
-            <p class="turn-q">You: What is its first model called?</p>
-            <p class="turn-a good">Samantha: "Turing's first model is Samantha, fixed as a name."</p>
-          </div>
-        </details>
-        <details class="fix-card">
-          <summary>Fixed: hallucinated training method when retrieval came up empty</summary>
-          <div class="turn">
-            <p class="turn-label">Before &middot; v0.6.6</p>
-            <p class="turn-q">Q: What tool trains the adapter?</p>
-            <p class="turn-a bad">"...trained using a different method (Adversarial Training for Speech, ATR), not LoRA." &mdash; fabricated, ATR isn't a real thing here.</p>
-          </div>
-          <div class="turn">
-            <p class="turn-label">After &middot; v0.7.0</p>
-            <p class="turn-q">Q: What tool trains the adapter?</p>
-            <p class="turn-a good">"I don't have that pinned down confidently from what's currently indexed, not going to guess at the specifics." &mdash; honest, not a guess.</p>
-          </div>
-        </details>
-        <details class="fix-card">
-          <summary>Working: real generation, not a lookup</summary>
-          <div class="turn">
-            <p class="turn-label">Prompt</p>
-            <p class="turn-q">Write a one-line commit message for fixing an MLX memory leak during training.</p>
-            <p class="turn-a good">"Fix a real MLX memory leak during long unattended runs"</p>
-          </div>
-          <p class="sample-note" style="margin-top:8px">Trained on real instruction/response pairs harvested from this repo's own git history, so it learned actual task style, not just "tell me about X" facts.</p>
-        </details>
-        <p class="graph-explainer">29 of 29 on the hand-written eval set, 16 of 16 on a separate held-out set (automated scoring, not eyeballed). Still shaky on ambiguous general-knowledge questions, see <code>eval/</code> for the honest numbers.</p>
-        </details>
-      </section>
-
-      <section>
         <h2>Run it yourself</h2>
         <div class="card">
           <pre style="white-space:pre-wrap;font-size:13px;margin:0;font-family:ui-monospace,Menlo,monospace">git clone https://github.com/nulljosh/turing
@@ -416,7 +343,7 @@ python3 -m venv .venv && ./.venv/bin/pip install mlx-lm
       <section>
         <h2>The big idea</h2>
         <details class="more"><summary>Where this is going</summary>
-        <p>Retrieval currently only searches this project's own docs on purpose, but its RAG index already spans the whole ~50-repo fleet. The real leveraged version isn't a bigger model, it's a wider index: drop that bias and this becomes a small local assistant that can answer questions across every project, not just this one. Not started yet, a real scope change, tracked in the README and roadmap as it develops.</p>
+        <p>A small model on your own Mac cannot out-think a frontier model, and it does not try. It wins by staying private, free per question, and honest: it looks things up instead of guessing, and it asks before it acts. Next: whole jobs done end to end, not just single steps, still asking first at every one. See <code>roadmap.md</code> for the live plan.</p>
         </details>
       </section>
 
