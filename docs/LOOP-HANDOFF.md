@@ -18,6 +18,10 @@ Headless always: `SAMANTHA_HEADLESS=1`. Check free disk and memory before traini
 - Ollama loads models off the external LaCie drive and its loader can stall past 5 minutes; oMLX on :8000 is the fast local path. A client that disconnects aborts Ollama's load, so a short timeout means it never gets warm.
 - Grep new files for a literal em dash before the gate (write it as an escape in code). Substring checks in tests: "widget1" matches "widget10".
 - Keep weights only on measured evidence: score.py and a held-out set before and after, and back up the adapter first (/Volumes/LaCie/llm/turing/ada-1-adapter.bak-*).
+- Read a sample of any teacher's output by eye before training on it. The first teacher (Haiku) passed a word-overlap check with note fragments and "How does Bookrank use this?". The checks now demand a standalone question and a whole sentence, and the teacher is Sonnet with good and bad examples.
+- Held-out sets must never move: distill's passages.jsonl is append-only and split.json fixes held and trained ids for good. Docs change under us (tonight's edits shifted passage 10), so regenerating would have leaked trained questions into the eval.
+- Pilot first, measure, then scale: 150 passages, 90 iterations, held-out answers 2/13 -> 3/13 and declines 0/1 -> 1/1, score.py still 29/29, then 394 more passages.
+- Splitting a module that imports its parent: import the parent inside the function, or running the parent as a script breaks on a circular import.
 - The user reads TLDRs: one line per update, what she can do now.
 - Usage, read from the [usage] line every round: session under 60% and weekly under 50%, full rounds about every 15 minutes. Session 60 to 80% or weekly 50 to 70%, one small round per 30 minutes, Haiku for mechanical work. Session over 80% or weekly over 70%, CI and red fixes only, hourly. Session over 90%, stop until the reset. Say it in one line when tapering. Training and evals run on the Mac, not on Claude, so they are free: prefer them.
 

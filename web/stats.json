@@ -92,8 +92,8 @@
         "documented": 9
       },
       "test_distill.py": {
-        "total": 8,
-        "documented": 8
+        "total": 9,
+        "documented": 9
       },
       "gen_hands_data.py": {
         "total": 5,
@@ -108,8 +108,8 @@
         "documented": 25
       },
       "distill.py": {
-        "total": 9,
-        "documented": 9
+        "total": 10,
+        "documented": 10
       },
       "stats.py": {
         "total": 7,
@@ -155,9 +155,13 @@
         "total": 9,
         "documented": 9
       },
+      "pixelmator/test_pxm_run.py": {
+        "total": 48,
+        "documented": 48
+      },
       "pixelmator/test_pxm.py": {
-        "total": 101,
-        "documented": 101
+        "total": 53,
+        "documented": 53
       },
       "pixelmator/pxm.py": {
         "total": 24,

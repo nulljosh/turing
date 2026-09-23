@@ -71,14 +71,26 @@ class Build(unittest.TestCase):
             self.assertEqual((kept, rejected), (20, {"unreadable": 1}))
             train = [json.loads(l) for l in open(os.path.join(d, "train.jsonl"))]
             held = [json.loads(l) for l in open(os.path.join(d, "heldout.jsonl"))]
-        self.assertEqual(len(held), 4)  # passages 0 and 1: one answer and one decline each
-        self.assertFalse(any("widget0 daily" in r["messages"][0]["content"] or "widget1 daily" in r["messages"][0]["content"] for r in train))
+        self.assertEqual(len(held), 4)  # passages 0 and 10: one answer and one decline each
+        self.assertFalse(any("widget0 daily" in r["messages"][0]["content"] or "widget10 daily" in r["messages"][0]["content"] for r in train))
         for r in train + held:
             prompt, answer = r["messages"][0]["content"], r["messages"][1]["content"]
             self.assertIn(answer, [distill.DECLINE] + [f"Project {i} ships widget{i}." for i in range(20)])
             self.assertTrue(prompt.startswith(chat.build_prompt([], "", "q").split("Context:")[0]))
             has_own = any(f"widget{i} daily" in prompt and f"project {i} ship?" in prompt for i in range(20))
             self.assertEqual(answer == distill.DECLINE, not has_own)
+
+
+    def test_the_split_never_moves(self):
+        """Adding passages keeps every earlier held-out and trained passage where it was."""
+        with tempfile.TemporaryDirectory() as d, mock.patch.object(distill, "OUT", d):
+            with open(os.path.join(d, "split.json"), "w") as f:
+                json.dump({"held": [0, 1, 2], "trained": [3, 10]}, f)
+            held = distill._split(list(range(25)))
+            saved = json.load(open(os.path.join(d, "split.json")))
+        self.assertEqual(held, {0, 1, 2, 20})  # 10 stays trained; only new multiples of 10 join
+        self.assertIn(10, saved["trained"])
+        self.assertEqual(set(saved["held"]) | set(saved["trained"]), set(range(25)))
 
 
 if __name__ == "__main__":

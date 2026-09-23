@@ -6,7 +6,7 @@ builds at inference (chat.build_prompt, three passages), and questions paired wi
 answer teach her to say "My notes don't cover that." instead of guessing. A tenth of the passages never reach
 training: `eval` scores her on them, before and after.
 
-    python3 distill.py passages 400     # data/distill/passages.jsonl, for the teacher
+    python3 distill.py passages 400     # grow data/distill/passages.jsonl to 400, append-only, for the teacher
     (the teacher writes data/distill/qa.jsonl: {"id", "q", "a"} per line, two per passage)
     python3 distill.py build            # data/distill/{train,valid,heldout}.jsonl
     python3 distill.py eval 60          # her answers on held-out prompts: answered right, declined right
@@ -24,7 +24,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(HERE, "data", "distill")
 DECLINE = "My notes don't cover that."
 PASSAGE = 800  # characters, what chat.py hands the model per retrieved passage
-PER_REPO = 12  # so one busy repo cannot crowd out the rest of the fleet
+PER_REPO = 25  # so one busy repo cannot crowd out the rest of the fleet
 NAMES = ("README.md", "WHITEPAPER.md")  # prose; CLAUDE.md and roadmap.md are terse notes that taught fragment answers
 SECRET = re.compile(r"sk-[A-Za-z0-9]|ghp_|xox[bp]-|AKIA[0-9A-Z]|BEGIN [A-Z ]*KEY|api[_-]?key\s*[:=]|password\s*[:=]|token\s*[:=]", re.I)
 STOP = set("a an and are as at be by for from has have how i in is it its of on or that the this to was were what "
@@ -55,6 +55,7 @@ def passages(n, seed=0):
     paths = glob.glob(f"{HERE}/*.md") + glob.glob(f"{HERE}/docs/*.md")
     for name in NAMES:
         paths += glob.glob(f"{code}/*/{name}")
+    paths += glob.glob(f"{code}/*/docs/*.md")  # architecture notes and whitepapers: prose
     # a git worktree (its .git is a file, not a folder) is a copy of a repo already here: four Joshua Tree
     # worktrees once made up 229 of 400 passages
     worktree = lambda p: os.path.isfile(os.path.join(code, os.path.relpath(p, code).split(os.sep)[0], ".git"))
@@ -106,13 +107,28 @@ def _prompt(question, texts):
     return chat.build_prompt([], "\n\n---\n\n".join(texts), question)
 
 
+def _split(ids):
+    """Which passages are held out, fixed for good in split.json: once held out, always held out, and once trained on,
+    never held out, so adding passages never slides the eval onto questions she has already learned. A new passage
+    is held out when its id is a multiple of 10."""
+    path = os.path.join(OUT, "split.json")
+    split = json.load(open(path)) if os.path.exists(path) else {"held": [], "trained": []}
+    known = set(split["held"]) | set(split["trained"])
+    for i in ids:
+        if i not in known:
+            split["held" if i % 10 == 0 else "trained"].append(i)
+    with open(path, "w") as f:
+        json.dump(split, f)
+    return set(split["held"])
+
+
 def build(seed=0, negatives=3):
     """Checked pairs into chat-format train, valid and held-out sets. One in `negatives` questions is also asked
     over three passages that do not hold its answer, with the decline as the target. Returns (kept, rejected)."""
     rnd = random.Random(seed)
     ps = {p["id"]: p for p in map(json.loads, open(os.path.join(OUT, "passages.jsonl")))}
     ids = sorted(ps)
-    held = set(ids[:max(1, len(ids) // 10)])
+    held = _split(ids)
     sets = {"train": [], "heldout": []}
     kept, rejected = 0, {}
     for line in open(os.path.join(OUT, "qa.jsonl")):
@@ -174,11 +190,15 @@ if __name__ == "__main__":
     os.makedirs(OUT, exist_ok=True)
     cmd = sys.argv[1] if len(sys.argv) > 1 else ""
     if cmd == "passages":
-        ps = passages(int(sys.argv[2]) if len(sys.argv) > 2 else 400)
-        with open(os.path.join(OUT, "passages.jsonl"), "w") as f:
-            for p in ps:
-                f.write(json.dumps(p) + "\n")
-        print(f"{len(ps)} passages from {len({p['source'] for p in ps})} files -> {OUT}/passages.jsonl")
+        # append-only: docs change under us, so passages already handed out keep their ids and text for good
+        path = os.path.join(OUT, "passages.jsonl")
+        have = [json.loads(l) for l in open(path)] if os.path.exists(path) else []
+        seen = {p["text"][:80] for p in have}
+        fresh = [p for p in passages(10 ** 6) if p["text"][:80] not in seen][:max(0, int(sys.argv[2]) - len(have)) if len(sys.argv) > 2 else None]
+        with open(path, "a") as f:
+            for i, p in enumerate(fresh):
+                f.write(json.dumps({**p, "id": len(have) + i}) + "\n")
+        print(f"{len(have)} kept, {len(fresh)} added -> {path}")
     elif cmd == "build":
         kept, rejected = build()
         print(f"kept {kept} pairs, rejected {sum(rejected.values())}: {rejected}")
