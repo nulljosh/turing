@@ -80,6 +80,24 @@ class Build(unittest.TestCase):
             has_own = any(f"widget{i} daily" in prompt and f"project {i} ship?" in prompt for i in range(20))
             self.assertEqual(answer == distill.DECLINE, not has_own)
 
+    def test_distractors_prefer_the_same_repo_when_there_are_enough(self):
+        """A repo with plenty of other passages fills distractors from itself first: harder to tell apart than a
+        random unrelated project, so she has to attend to the actual fact asked, not just the vocabulary."""
+        with tempfile.TemporaryDirectory() as d, mock.patch.object(distill, "OUT", d):
+            with open(os.path.join(d, "passages.jsonl"), "w") as f:
+                for i in range(4):  # four passages, same repo: enough same-repo distractors to fill both slots
+                    f.write(json.dumps({"id": i, "source": f"epiphany/file{i}.md", "text": f"Epiphany feature {i} does thing {i}."}) + "\n")
+                f.write(json.dumps({"id": 4, "source": "unrelated/README.md", "text": "Unrelated project ships widget4 daily."}) + "\n")
+            with open(os.path.join(d, "qa.jsonl"), "w") as f:
+                f.write(json.dumps({"id": 0, "q": "What does Epiphany feature 0 do?", "a": "Epiphany feature 0 does thing 0."}) + "\n")
+            distill.build(negatives=0)
+            rows = [json.loads(l) for l in open(os.path.join(d, "train.jsonl"))] + [json.loads(l) for l in open(os.path.join(d, "heldout.jsonl"))]
+        prompt = rows[0]["messages"][0]["content"]
+        self.assertIn("Epiphany feature 0 does thing 0.", prompt)  # the real passage
+        # both distractors came from the same repo (epiphany), not the one unrelated passage available
+        self.assertNotIn("Unrelated project", prompt)
+        epiphany_others = sum(f"Epiphany feature {i} does thing {i}." in prompt for i in (1, 2, 3))
+        self.assertEqual(epiphany_others, 2)
 
     def test_the_split_never_moves(self):
         """Adding passages keeps every earlier held-out and trained passage where it was."""

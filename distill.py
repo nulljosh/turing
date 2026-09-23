@@ -176,13 +176,19 @@ def build(seed=0, negatives=3):
         kept += 1
         # a held-out passage never appears in a training prompt, even as a distractor, or its answer leaks into training
         pool = [i for i in ids if (p["id"] in held or i not in held) and ps[i]["source"] != p["source"]]
-        others = [ps[i]["text"] for i in rnd.sample(pool, 3)]
+        # harder distractors: prefer other passages from the SAME repo (genuinely similar vocabulary, forces her to
+        # attend to the actual fact asked, not just which project's words appear), fill the rest from anywhere
+        repo = p["source"].split(os.sep)[0]
+        same_repo = [i for i in pool if ps[i]["source"].split(os.sep)[0] == repo]
+        chosen = rnd.sample(same_repo, min(2, len(same_repo)))
+        chosen += rnd.sample([i for i in pool if i not in chosen], 3 - len(chosen))
+        others = [ps[i]["text"] for i in chosen]
         texts = [p["text"]] + others[:2]
         rnd.shuffle(texts)
         name = "heldout" if p["id"] in held else "train"
         sets[name].append({"messages": [{"role": "user", "content": _prompt(qa["q"], texts)},
                                         {"role": "assistant", "content": qa["a"].strip()}], "answerable": True})
-        if rnd.randrange(negatives) == 0:
+        if negatives and rnd.randrange(negatives) == 0:  # negatives=0 means no decline examples, not a crash
             sets[name].append({"messages": [{"role": "user", "content": _prompt(qa["q"], others)},
                                             {"role": "assistant", "content": DECLINE}], "answerable": False})
     rnd.shuffle(sets["train"])
