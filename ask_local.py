@@ -16,6 +16,18 @@ _ARITH_WORDS = (
     (r"\bx\b", "*"),
 )
 _ARITH_OK = re.compile(r"^[\d\s+\-*/().]+$")
+_NUM = r"-?\d+(?:\.\d+)?"
+# Unambiguous math idioms, unlike "times"/"plus": nobody says "square root of 81" to mean anything else, so widening
+# _ARITH_OK for exactly these does not reopen the newspaper-hijack risk the narrow regex above exists to prevent.
+_ARITH_PHRASES = (
+    (rf"square root of ({_NUM})", r"sqrt(\1)"),
+    (rf"cube root of ({_NUM})", r"(\1)**(1/3)"),
+    (rf"({_NUM}) squared", r"(\1)**2"),
+    (rf"({_NUM}) cubed", r"(\1)**3"),
+    (rf"({_NUM}) to the power of ({_NUM})", r"(\1)**(\2)"),
+    (rf"({_NUM})\s*%\s*of\s*({_NUM})", r"((\1)/100)*(\2)"),
+)
+_ARITH_SAFE_CALL = re.compile(r"^[\d\s+\-*/().]*$")  # what is left once sqrt(...) itself is stripped out below
 
 
 def arithmetic(query):
@@ -37,14 +49,17 @@ def arithmetic(query):
     expr = re.sub(r"^(?:what\s+(?:is|are)|calculate|compute)\s+", "", expr, flags=re.I).strip()
     for pattern, symbol in _ARITH_WORDS:
         expr = re.sub(pattern, symbol, expr, flags=re.I)
+    for pattern, replacement in _ARITH_PHRASES:  # square root of, X squared, X% of Y: unambiguous, safe to widen for
+        expr = re.sub(pattern, replacement, expr, flags=re.I)
     expr = expr.strip()
-    if not expr or not _ARITH_OK.match(expr) or not any(c.isdigit() for c in expr):
+    check = re.sub(r"\bsqrt\(", "(", expr)  # the one function name these phrases can produce; strip it to validate the rest
+    if not expr or not _ARITH_SAFE_CALL.match(check) or not any(c.isdigit() for c in check):
         return None
-    if not any(op in expr for op in "+-*/"):
+    if not any(op in expr for op in "+-*/") and "sqrt(" not in expr:
         return None  # a bare number isn't a question
 
-    allowed = (ast.Expression, ast.BinOp, ast.UnaryOp, ast.Constant,
-               ast.Add, ast.Sub, ast.Mult, ast.Div, ast.USub, ast.UAdd)
+    allowed = (ast.Expression, ast.BinOp, ast.UnaryOp, ast.Constant, ast.Call, ast.Name, ast.Load,
+               ast.Add, ast.Sub, ast.Mult, ast.Div, ast.Pow, ast.USub, ast.UAdd)
     try:
         tree = ast.parse(expr, mode="eval")
         for node in ast.walk(tree):
@@ -52,7 +67,11 @@ def arithmetic(query):
                 return None
             if isinstance(node, ast.Constant) and not isinstance(node.value, (int, float)):
                 return None
-        value = eval(compile(tree, "<arithmetic>", "eval"), {"__builtins__": {}}, {})
+            if isinstance(node, ast.Call) and (not isinstance(node.func, ast.Name) or node.func.id != "sqrt" or node.keywords):
+                return None
+            if isinstance(node, ast.Name) and node.id != "sqrt":
+                return None
+        value = eval(compile(tree, "<arithmetic>", "eval"), {"__builtins__": {}}, {"sqrt": math.sqrt})
     except ZeroDivisionError:
         return f"{expr} has no answer: you can't divide by zero."
     except Exception:

@@ -228,11 +228,18 @@ struct ChatView: View {
         }
     }
 
+    /// Return and the Send button both go through this, so the field clears exactly the same way either time.
+    private func submit() {
+        samantha.send(text)
+        text = ""
+    }
+
     private var inputBar: some View {
         HStack {
-            TextField("Talk to Samantha", text: $text, onCommit: { samantha.send(text); text = "" })
+            TextField("Talk to Samantha", text: $text)
                 .textFieldStyle(.roundedBorder).disabled(inputDisabled)
-            Button("Send") { samantha.send(text); text = "" }.disabled(text.isEmpty || inputDisabled)
+                .onSubmit(submit)
+            Button("Send", action: submit).disabled(text.isEmpty || inputDisabled)
         }.padding(10)
     }
 }

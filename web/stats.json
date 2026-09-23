@@ -1,5 +1,5 @@
 {
-  "version": "3.4.0",
+  "version": "3.4.1",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -196,8 +196,8 @@
         "documented": 12
       },
       "test_edges.py": {
-        "total": 33,
-        "documented": 33
+        "total": 34,
+        "documented": 34
       },
       "test_documents.py": {
         "total": 9,

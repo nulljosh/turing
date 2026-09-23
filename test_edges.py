@@ -124,6 +124,15 @@ class Typing(unittest.TestCase):
         self.assertEqual(ask.arithmetic("what is 0/0"), "0/0 has no answer: you can't divide by zero.")
         self.assertEqual(ask.arithmetic("what is 6/3"), "6/3 = 2")
 
+    def test_natural_math_phrases(self):
+        """Square root, percent-of, squared/cubed and power all compute; "10 times 7" still never hijacks to a search."""
+        self.assertEqual(ask.arithmetic("what is the square root of 81"), "sqrt(81) = 9")
+        self.assertEqual(ask.arithmetic("what is 15% of 200"), "((15)/100)*(200) = 30")
+        self.assertEqual(ask.arithmetic("what is 4 squared"), "(4)**2 = 16")
+        self.assertEqual(ask.arithmetic("what is 2 cubed"), "(2)**3 = 8")
+        self.assertEqual(ask.arithmetic("what is 2 to the power of 10"), "(2)**(10) = 1024")
+        self.assertEqual(ask.arithmetic("what is 10 times 7"), "10 * 7 = 70")  # the original newspaper-hijack case
+
 
 class Dates(unittest.TestCase):
     """date_math is exact at the edges: month ends, leap days, year 1 and 9999, bad dates, today moving."""
