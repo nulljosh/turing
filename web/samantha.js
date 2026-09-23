@@ -653,6 +653,8 @@
   U.NEEDS_MAC.push("research");
   U.save_research = function () { return "Saving a brief to a file happens on her real Mac, and she asks first."; };
   U.NEEDS_MAC.push("save_research");
+  U.write_document = function () { return "Drafting and saving a file happens on her real Mac, with the local model, and she asks first."; };
+  U.NEEDS_MAC.push("write_document");
   ["see_screen", "see_image"].forEach(function (name) {
     U[name] = function () { return "Looking at pictures and the screen happens on her real Mac, with a vision model that runs there, and she asks first."; };
     U.NEEDS_MAC.push(name);
@@ -670,6 +672,7 @@
     // deep research, same as tools_util.ROUTES
     [/^(?:research|do (?:some )?research (?:on|into)|deep dive (?:into|on)|write (?:me )?a (?:research )?brief (?:on|about)) (.+)$/i, function (m) { return ["research", m[1]]; }],
     [/^save (?:that|it|the brief|this brief)(?: to (.+))?$/i, function (m) { return ["save_research", m[1] || ""]; }],
+    [/^(?:draft|write)(?: me)? (?:a |an )?(?:doc(?:ument)?|email|file)(?: about| for| on)? (.+)$/i, function (m) { return ["write_document", m[1]]; }],
     // her eyes, same as tools_util.ROUTES
     [/^(?:look at|describe|see|check out) (?:my |the )?screen(?:,? and (.+))?$|^what do you see(?: on (?:my |the )?screen)?$/i, function (m) { return ["see_screen", m[1] || ""]; }],
     [/^(?:what(?:'s| is) in|describe|look at) (\S+\.(?:png|jpe?g|heic|gif|webp|tiff?|bmp))(?:,? and (.+))?$/i, function (m) { return ["see_image", (m[2] || "") + "\t" + m[1]]; }],
