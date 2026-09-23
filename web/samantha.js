@@ -91,6 +91,8 @@
   // the catch-all routes whose argument is any text, same as tools._GREEDY
   var GREEDY = [ROUTES[ROUTES.length - 2][0], ROUTES[ROUTES.length - 1][0]];
   var MULTISTEP = /\b(?:and (?:then )?(?:tell|read|find|summar|poke|look|check|see|click)|poke around|then )/i;
+  // "look at my screen and tell me what's wrong" is one question about one picture, not two steps, same as tools._EYES
+  var EYES = /^(?:look at|describe|see|check out|what(?:'s| is) in) (?:(?:my |the )?screen|\S+\.(?:png|jpe?g|heic|gif|webp|tiff?|bmp))\b/i;
   var ACTION = /^(?:open|launch|start|go to|visit|browse|pull up|search|google|look up|poke around|take a|grab a|screenshot|make|design|draw|play|pause|skip|remind me|set a)\b/i;
   var LEAD = /^(?:(?:hey|ok|okay|yo|samantha|please|now|just)[, ]+)*(?:(?:can|could|would|will) you (?:please )?|i (?:want|need|would like|'d like) (?:you )?to |let's |go ahead and )?(?:please )?/i;
   var TAIL = /(?:[, ]+(?:please|for me|real quick|now|thanks|thank you))+$/i;
@@ -103,7 +105,7 @@
   // {tool, arg} for one exact command, {agent: true} for multi-step work, null for anything that is not a command
   function route(query) {
     var q = bare(query);
-    if (MULTISTEP.test(q)) return { agent: true };
+    if (MULTISTEP.test(q) && !EYES.test(q)) return { agent: true };
     for (var i = 0; i < ROUTES.length; i++) {
       var m = ROUTES[i][0].exec(q);
       if (m) { var r = ROUTES[i][1](m); return { tool: r[0], arg: r[1] }; }
@@ -644,6 +646,10 @@
   ]);
   U.ask_llm = function () { return "On her real Mac she hands a hard question to another LLM running there: name one (ask qwen, ask llama, ask gemma) or say ask claude for the biggest. She asks you first and nothing leaves the Mac. This page never sends your words anywhere but its own lookup."; };
   U.NEEDS_MAC.push("ask_llm");
+  ["see_screen", "see_image"].forEach(function (name) {
+    U[name] = function () { return "Looking at pictures and the screen happens on her real Mac, with a vision model that runs there, and she asks first."; };
+    U.NEEDS_MAC.push(name);
+  });
   ["click_text", "type_text", "press_key"].forEach(function (name) {
     U[name] = function () { return "Clicking, typing and pressing keys happen on her real Mac, where she reads the screen to find what you named and asks before every step."; };
     U.NEEDS_MAC.push(name);
@@ -654,6 +660,9 @@
     .forEach(function (name) { U[name] = function () { return NO_PHOTOS; }; U.NEEDS_MAC.push(name); });
 
   ROUTES.push.apply(ROUTES, [
+    // her eyes, same as tools_util.ROUTES
+    [/^(?:look at|describe|see|check out) (?:my |the )?screen(?:,? and (.+))?$|^what do you see(?: on (?:my |the )?screen)?$/i, function (m) { return ["see_screen", m[1] || ""]; }],
+    [/^(?:what(?:'s| is) in|describe|look at) (\S+\.(?:png|jpe?g|heic|gif|webp|tiff?|bmp))(?:,? and (.+))?$/i, function (m) { return ["see_image", (m[2] || "") + "\t" + m[1]]; }],
     // her hands on the screen, same as tools_util.ROUTES: a named key before a click
     [/^(?:press|hit|push)(?: the)? (return|enter|tab|escape|esc|space|delete|backspace|up|down|left|right|page up|page down|home|end)(?: key| button)?$/i, function (m) { return ["press_key", m[1]]; }],
     [/^(?:click|tap|press)(?: on)?(?: the)? ["']?(.+?)["']?(?: button| link| tab)?$/i, function (m) { return ["click_text", m[1]]; }],

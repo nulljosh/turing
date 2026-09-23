@@ -1,5 +1,5 @@
 {
-  "version": "2.0.1",
+  "version": "2.1.0",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -42,6 +42,10 @@
       "test_llm.py": {
         "total": 21,
         "documented": 21
+      },
+      "test_see.py": {
+        "total": 11,
+        "documented": 11
       },
       "test_harness.py": {
         "total": 24,
@@ -151,6 +155,10 @@
         "total": 20,
         "documented": 20
       },
+      "tools_see.py": {
+        "total": 6,
+        "documented": 6
+      },
       "test_mcp.py": {
         "total": 12,
         "documented": 12
@@ -256,7 +264,7 @@
   "measured": {
     "tools": {
       "before": 0,
-      "after": 83
+      "after": 85
     },
     "actions_eval": "77/77",
     "knowledge_sweep": {

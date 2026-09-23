@@ -419,6 +419,8 @@ _ROUTES = _ROUTES + tuple((pat, _util_route(name, arg)) for pat, name, arg in to
 
 # anything past the first verb phrase means more than one step: that is agent() work
 _MULTISTEP = re.compile(r"\b(?:and (?:then )?(?:tell|read|find|summar|poke|look|check|see|click)|poke around|then )", re.I)
+# "look at my screen and tell me what's wrong" is one question about one picture, not two steps
+_EYES = re.compile(r"^(?:look at|describe|see|check out|what(?:'s| is) in) (?:(?:my |the )?screen|\S+\.(?:png|jpe?g|heic|gif|webp|tiff?|bmp))\b", re.I)
 _ACTION = re.compile(r"^(?:open|launch|start|go to|visit|browse|pull up|search|google|look up|poke around|take a|grab a|screenshot|make|design|draw|paint|repaint|play|pause|skip|remind me|set a)\b", re.I)
 
 
@@ -448,7 +450,7 @@ def _bare(query):
 def act(query):
     """Do a recognisable single command, exactly. Returns the result or None."""
     q = _bare(query)
-    if _MULTISTEP.search(q):
+    if _MULTISTEP.search(q) and not _EYES.search(q):
         return None
     for pattern, fn in _ROUTES:
         m = pattern.match(q)
@@ -484,7 +486,7 @@ def _named_page(task):
 # These fire something with a side effect the user did not see coming (a Shortcut can send a
 # message, a clipboard write loses what was there, the screen goes dark). Only a command that
 # names them runs them, never a model's own choice. The real fix is the harness asking first.
-NOT_FOR_MODELS = {"ask_llm", "run_shortcut", "copy_to_clipboard", "sleep_display", "call_mcp_tool", "close_tab", "remember", "recall", "forget", "read_screen", "ask_screen"}  # her memory is private: only her own commands and the harness touch it
+NOT_FOR_MODELS = {"ask_llm", "see_screen", "see_image", "run_shortcut", "copy_to_clipboard", "sleep_display", "call_mcp_tool", "close_tab", "remember", "recall", "forget", "read_screen", "ask_screen"}  # her memory is private: only her own commands and the harness touch it
 
 
 def model_tools():
@@ -573,7 +575,7 @@ def _sound(tool, arg, query):
 
 # Tools that leave something behind or send something out: a note, a reminder, a file on the
 # Desktop, a Shortcut, the clipboard, a dark screen. The harness asks before any of these run.
-WRITES = {"ask_llm", "click_text", "type_text", "press_key", "ask_screen", "read_screen", "remember", "forget", "close_tab", "call_mcp_tool", "new_note", "new_reminder", "make_logo", "paint_image", "run_shortcut", "copy_to_clipboard", "sleep_display",
+WRITES = {"ask_llm", "see_screen", "see_image", "click_text", "type_text", "press_key", "ask_screen", "read_screen", "remember", "forget", "close_tab", "call_mcp_tool", "new_note", "new_reminder", "make_logo", "paint_image", "run_shortcut", "copy_to_clipboard", "sleep_display",
           "remove_background", "upscale_image", "enhance_image", "grayscale_image", "rotate_image", "flip_image",
           "resize_image", "crop_square", "convert_image"}
 
@@ -675,7 +677,7 @@ def do(query, log=None, confirm=None):
     done = act(query)
     if done:
         return done
-    if _MULTISTEP.search(_bare(query)):
+    if _MULTISTEP.search(_bare(query)) and not _EYES.search(_bare(query)):
         return agent(query, log=log, confirm=confirm)
     if _faq_knows(query):
         return None  # a question her own FAQ answers is about her, not a job for her hands
