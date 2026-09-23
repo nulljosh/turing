@@ -322,8 +322,16 @@ Every loop iteration should move one of these five.
 ### Gaps found by the loop
 The loop compares her with other assistants (Siri and Shortcuts, Apple Intelligence, Claude and ChatGPT desktop with MCP, Open Interpreter, Raycast AI, local Ollama agents), adds each real gap here with where it was seen, builds it, then deletes the line once it ships (history lives in git). Newest and biggest first.
 
+- [ ] Voice in as well as out, as a real conversation: talk, she listens (Whisper on MLX), answers aloud, you can cut in. Seen in ChatGPT and Gemini voice modes. 2.0.0
+- [ ] See pictures: "what is in this photo", "read this screenshot", "what's wrong with this chart" through a local vision model (Qwen2.5-VL or Gemma 3 on oMLX/Ollama). Screen reading today is text only. Seen in every frontier chat
+- [ ] Deep research: "research X" reads 5 to 10 pages, the library and her notes, then writes a short cited brief with the bigger local model. Seen in ChatGPT and Gemini Deep Research, Perplexity
+- [ ] Run code for answers: stats on a CSV, a chart, a unit-heavy calculation, in a sandboxed Python that asks first. Seen in ChatGPT data analysis, Claude analysis tool
+- [ ] Summarize anything long with the 9B (a PDF, a page, a thread) instead of the 1.7B reader's one sentence. Seen in every frontier chat
+- [ ] Translate text and pages, offline. Seen in every frontier chat, Apple Intelligence
+- [ ] Write real files: draft an email, a doc or a slide outline into Pages, Mail or a markdown file, asking first. Seen in Claude artifacts, ChatGPT canvas, Apple Writing Tools
+- [ ] Read mail: "anything from the bank today", "summarize my unread" through Mail.app, read only. Seen in Gemini in Gmail, Apple Intelligence
+- [ ] Remind me later without a daemon: "tell me the weather every morning" becomes a Reminder or a Shortcuts automation she sets up, asking first. Seen in ChatGPT tasks, Gemini scheduled actions
 - [ ] Control the GUI with approval: click and type in an app, every step confirmed by the harness first. Seen in Claude computer use, Open Interpreter
-- [ ] Voice in as well as out: she can speak, she cannot listen. A local Whisper on MLX would do it
 
 ### Phase 6: Distillation, not scale (month 4+, optional/ambitious)
 Instead of chasing bigger bases, use a frontier model (Claude) to generate high-quality synthetic training examples in our exact style, then distill that into Samantha. This is literally how most useful small models are built today, nobody pretrains from raw internet text anymore if they can help it.

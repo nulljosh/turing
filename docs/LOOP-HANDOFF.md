@@ -11,6 +11,16 @@ roadmap.md "How we compete with trillion-dollar labs": local, hands on the real 
 ## Rules
 Headless always: `SAMANTHA_HEADLESS=1`. Check free disk and memory before training (6GB min). One heavy job at a time. Haiku subagents one at a time, sequential not parallel. Stop at 90% usage. Root-cause fixes only, never edit tests to pass. Code review diffs before calling anything done.
 
+## Loop lessons (the loop improves itself: add one whenever a round teaches something)
+- Any new answer path (a fallback, a library, a model) runs `eval/basic_questions.py` before it ships and must keep 0 confidently wrong. The library went 6 wrong, then 2, then was cut back to exact page titles. Word overlap is not reading.
+- Run the knowledge eval with full output to a file, never piped through tail: the wrong answers are the part you need.
+- Wikipedia rate-limits after a bulk fetch (429). Space bulk jobs away from evals that hit the web, or the eval measures the outage.
+- Ollama loads models off the external LaCie drive and its loader can stall past 5 minutes; oMLX on :8000 is the fast local path. A client that disconnects aborts Ollama's load, so a short timeout means it never gets warm.
+- Grep new files for a literal em dash before the gate (write it as an escape in code). Substring checks in tests: "widget1" matches "widget10".
+- Keep weights only on measured evidence: score.py and a held-out set before and after, and back up the adapter first (/Volumes/LaCie/llm/turing/ada-1-adapter.bak-*).
+- The user reads TLDRs: one line per update, what she can do now.
+- Usage, read from the [usage] line every round: session under 60% and weekly under 50%, full rounds about every 15 minutes. Session 60 to 80% or weekly 50 to 70%, one small round per 30 minutes, Haiku for mechanical work. Session over 80% or weekly over 70%, CI and red fixes only, hourly. Session over 90%, stop until the reset. Say it in one line when tapering. Training and evals run on the Mac, not on Claude, so they are free: prefer them.
+
 ## Chat + tools release pass (2026-09-22, cloud session, branch claude/full-release-chat-tools-x5i81k)
 Goal: a full version you sit down and chat with, and she calls tools, without ever dying mid-conversation. Driven from a Linux container (no Mac, no MLX weights, no osascript), which is exactly what exposed these:
 - Fixed: one tool failing (missing `osascript`, a hung app) crashed chat.py. `harness.Session.ask` now turns any tool exception into "I tried set_volume(30), but it did not work: osascript is not on this machine." and records the turn. `ask.local_answer` (ask.py, serve.py) does the same.
@@ -49,17 +59,16 @@ Goal: a full version you sit down and chat with, and she calls tools, without ev
 - pixelmator/pxm.py 865 -> 621: the spec trust boundary (exit codes, shape tables, PxmError, validate_spec) moved to pxm_spec.py. Every example spec's AppleScript is byte-identical before and after; law 8 ceiling 870 -> 825.
 
 ## Where things stand
-The cloud loop stopped on 2026-09-23 so the loop can move to the Mac. Everything is on main (1b324ce and earlier), nothing is left on a side branch.
-v1.4.0, 80 tools, all workflow runs green. Scorecard: `v1.4.0 · 80 tools · 125 tests · docs coverage 100% · laws all hold · biggest tools.py 820 · actions 110/110 · parity 110/110 · util_diff 195/195`.
-The live site has not been deployed from the cloud (no Cloudflare access), so it likely shows an older version. roadmap.md "Joshua's Mac to-do" lists what needs the keyboard.
+The loop runs on the Mac now (2026-09-22). Tonight: v1.4.1 to v1.6.0 shipped. ask_llm asks any LLM on this Mac by name (oMLX Qwen3.5-9B first, Ollama second), replies stream in the chat and the TUI, the site deploys by hand after each ship. Samantha retrained on everything (5,680 chunks, val loss 1.98 -> 1.83, score.py unchanged at 25/29, kept). Built, not yet shipped: library.py (fieldbook + ~10,000 Wikipedia vital-article leads in SQLite, exact-title answers only, waiting on a 0-wrong knowledge run) and distill.py (a teacher writes grounded Q/A over real passages, wrapped in her exact prompt, with declines; held-out eval before and after).
 
 ## Next, in order
-1. On the Mac: site deployed by hand 2026-09-22; run `./gate.sh --full` to check her real model, Pixelmator and the live page against v1.4.0.
-2. Split tools.py (822, the biggest; tests patch tools._run, _app, installed_apps, pick, read_page, grayscale_image, and plan() swaps tools-module globals, so re-export and patch where the names live), then lower MAX_LINES in eval/laws.py. Then pixelmator/test_pxm.py 806, tools_util.py 651, web/demo.js, web/samantha.js.
-3. Top of roadmap.md "Gaps found by the loop", Mac-first now: streamed replies SHIPPED v1.5.0 in the plain chat (model loaded once, a warm turn is about 1s, was 2s+ reloading per turn; the TUI streams too since v1.5.1), then voice in (Whisper on MLX), GUI control with approval. 2.0.0 = GUI control + voice in.
-4. ask_claude became ask_llm (v1.6.0): ask any LLM on this Mac by name (ask qwen, ask llama, ask gemma; ask claude or gpt means the biggest). Default is the biggest local model: oMLX Qwen3.5-9B first (warm answers in about a second), Ollama qwen3:8b as fallback. Ollama loads from the external LaCie drive and its loader stalled past 5 minutes on 2026-09-22, which is why oMLX goes first: the user will not hand out API keys. No anthropic SDK, nothing leaves the Mac.
+1. Ship library.py once eval/basic_questions.py shows 0 confidently wrong (v1.7.0).
+2. Distillation: `distill.py build`, `distill.py eval 60` on the current adapter (baseline), train on data/distill mixed with a sample of data/train (DATA=... ./train_resilient.sh), eval again, keep only if answered-right rises and declined-right does not fall. Then more passages, more rounds.
+3. Fix the routing bug behind score.py's 4 misses: project questions ("what's blocked", "how long does an answer take") get hijacked by the tool agent (listed Chrome tabs, emitted a raw tool call).
+4. 2.0.0: voice in (Whisper on MLX) and GUI control with approval. Then pictures (local vision model) and deep research, per roadmap.md "Gaps found by the loop".
+5. Split tools.py (822) and lower MAX_LINES.
 
 ## Restart prompt
 ```
-/loop Keep building Samantha (turing). Read docs/LOOP-HANDOFF.md and roadmap.md first. Each iteration: compare her with frontier assistants (Claude, ChatGPT, Gemini, Siri, Open Interpreter), add each real gap to roadmap.md "Gaps found by the loop" with where it was seen, then build the top one that can be tested here: smallest honest fix with tests, run the CI checks (tests, eval/actions.py, eval/web_parity.py, eval/util_diff.py, eval/laws.py, stats.py --check), keep web/samantha.js in step, then one cleanup (a test for something untested, dead code out, duplication folded, a slow path made fast), commit, push, delete the shipped line, and rewrite LOOP-HANDOFF.md. Queue Mac-only work instead of faking it. Never stop on your own.
+/loop Keep building Samantha (turing) on the Mac, forever, improving the loop itself as you go (add to "Loop lessons"). Read docs/LOOP-HANDOFF.md and roadmap.md first. Each iteration: compare her with frontier assistants (Claude, ChatGPT, Gemini, Siri, Open Interpreter), add each real gap to roadmap.md "Gaps found by the loop" with where it was seen, then build the top one that can be tested here: smallest honest fix with tests, run the CI checks (tests, eval/actions.py, eval/web_parity.py, eval/util_diff.py, eval/laws.py, stats.py --check), keep web/samantha.js in step, then one cleanup (a test for something untested, dead code out, duplication folded, a slow path made fast), commit, push, delete the shipped line, and rewrite LOOP-HANDOFF.md. Queue Mac-only work instead of faking it. Never stop on your own.
 ```
