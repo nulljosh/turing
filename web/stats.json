@@ -1,5 +1,5 @@
 {
-  "version": "3.10.0",
+  "version": "4.0.0",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -208,8 +208,8 @@
         "documented": 12
       },
       "tools_files.py": {
-        "total": 6,
-        "documented": 6
+        "total": 14,
+        "documented": 14
       },
       "mcp_server.py": {
         "total": 4,
@@ -304,7 +304,7 @@
   "measured": {
     "tools": {
       "before": 0,
-      "after": 95
+      "after": 101
     },
     "actions_eval": "77/77",
     "knowledge_sweep": {

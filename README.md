@@ -6,7 +6,7 @@
 [![test](https://github.com/nulljosh/turing/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/nulljosh/turing/actions/workflows/test.yml)
 ![license](https://img.shields.io/badge/license-Apache--2.0-green) [![GitHub](https://img.shields.io/badge/GitHub-nulljosh%2Fturing-black?logo=github)](https://github.com/nulljosh/turing)
 
-A small model, Samantha, that runs entirely on your Mac and gets real work done. 95 tools, 0.5B parameters, nothing leaves the machine.
+A small model, Samantha, that runs entirely on your Mac and gets real work done. 101 tools, 0.5B parameters, nothing leaves the machine.
 
 [turing.heyitsmejosh.com](https://turing.heyitsmejosh.com)
 
@@ -21,7 +21,7 @@ A small model, Samantha, that runs entirely on your Mac and gets real work done.
 - **Knows things offline.** Her library holds the fieldbook plus ~10,000 Wikipedia articles; she answers only from a real page and says which one.
 - **Summarizes.** "Summarize ~/Desktop/report.pdf", "summarize this page", "summarize my unread mail": three to five real sentences from the biggest local model, not a one-liner.
 - **Translates, offline.** "Translate good morning to French", "how do you say thank you in Japanese", "translate the page github.com into Spanish": the local model does it.
-- **Finds your files.** "Find resume.docx", "what did I just download", "how big is ~/Movies": Spotlight, your Downloads, and a real count.
+- **Handles your files.** "Find resume.docx", "what did I just download", "how big is ~/Movies"; then "move", "copy", "rename", "zip", "unzip", "trash" any of them, asking first, Trash never a hard delete.
 - **Does the rest of the Mac.** Apps, tabs, notes, reminders with a time, calendar, unread mail, files, documents, math, time zones, dice, hashes, Shortcuts, memory across sessions.
 - **Draws.** Type "draw a fox in the snow" on the landing page and she rebuilds it live from 30,000 squares.
 - **Writes files.** "Draft an email about X", "write a doc about X": the local model drafts it, she saves it to your home folder, asking first.

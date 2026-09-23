@@ -2,6 +2,9 @@
 
 TLDR per loop round, newest first. The loop adds a line every round it ships something, then the scorecard.
 
+- 2026-09-23: 🎉🎉🎉 v4.0.0, and 100 tools crossed (101, audited: no two do the same job). The files family is complete: "move", "copy", "rename", "zip", "unzip", "trash" any file or folder inside home, each asking first, Trash via Finder so nothing is ever hard-deleted, a name never a path, never the whole home folder. Dogfooded for real on this Mac: a full round trip of all six, plus two refusals. Dogfood caught one real bug before shipping: "find b.txt" missed a file made seconds earlier (Spotlight lag), so find_file now walks the usual folders before saying no. Version rule from today: a major when a whole roadmap family completes.
+  `v4.0.0 · 101 tools · 202 tests · docs coverage 100% · laws all hold · biggest tools.py 737 · actions 170/170 · parity 170/170 · util_diff 215/215`
+
 - 2026-09-23: 🎉 v3.10.0: the files family, read half, in its own tools_files.py. "Find resume.docx" (Spotlight inside home, newest first, node_modules and Library copies skipped), "what did I just download" (size and age), "how big is ~/Movies" (a real count). Verified live on this Mac. Version rule set today: a major bump when a whole roadmap family completes, so the write half (move, rename, zip, trash, each asking first) is 4.0.0.
   `v3.10.0 · 95 tools · 202 tests · docs coverage 100% · laws all hold · biggest tools.py 737 · actions 161/161 · parity 161/161 · util_diff 209/209`
 

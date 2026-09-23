@@ -378,7 +378,6 @@ The model picks, the code does. More menu is more power. Rules: every tool ships
 
 - [ ] Two-step picking: she picks a family first, then a tool inside it, so no single choice is bigger than about twelve. Retrain the picker for it and score it before adding tools in bulk
 - [ ] Image family through Pixelmator (`edit_image` with a fixed menu): remove background, upscale, auto enhance, crop, resize, rotate, flip, grayscale, convert format, export
-- [ ] Files family, the write half: move, copy, rename, zip, unzip, move to Trash (each asks first). The read half shipped in tools_files.py: find a file, recent downloads, folder size; disk space was already there
 - [ ] System family: dark mode, wifi, bluetooth, do not disturb, lock, sleep, brightness, uptime, ip address, running apps, quit an app
 - [ ] Organizer family: list reminders, complete a reminder, add a calendar event, tomorrow's calendar, search notes, append to a note
 - [ ] Browser family: list tabs, switch tab, close tab, read the rendered page, download a file

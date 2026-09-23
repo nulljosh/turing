@@ -2,7 +2,7 @@
 
 **v3.0.0** | September 2026
 
-Turing builds small language models on one Mac. Its first model, Samantha, is a 0.5B model trained on your own writing. She will never out-think a frontier model. She does not try to. She runs on your Mac, costs nothing per question, keeps everything on the machine, and gets real work done with 95 exact tools. When a question is too hard for her, she borrows a bigger brain that also lives on the Mac. You can type to her or talk to her. She can see your screen, click in your apps, and research a topic with sources. She asks before anything that changes something.
+Turing builds small language models on one Mac. Its first model, Samantha, is a 0.5B model trained on your own writing. She will never out-think a frontier model. She does not try to. She runs on your Mac, costs nothing per question, keeps everything on the machine, and gets real work done with 101 exact tools. When a question is too hard for her, she borrows a bigger brain that also lives on the Mac. You can type to her or talk to her. She can see your screen, click in your apps, and research a topic with sources. She asks before anything that changes something.
 
 ## The core idea
 

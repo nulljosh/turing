@@ -24,7 +24,7 @@ import tools_util
 import tools_image
 from tools_image import remove_background, upscale_image, enhance_image, grayscale_image, rotate_image, flip_image, resize_image, crop_square, convert_image, image_info
 import tools_files
-from tools_files import find_file, recent_downloads, folder_size
+from tools_files import find_file, recent_downloads, folder_size, move_file, copy_file, rename_file, zip_file, unzip_file, trash_file
 
 AGENT_MODEL = "qwen3:1.7b"  # 8B was right but 7.6GB and minutes per run; 1.7B is right in 5s once the harness prefetches
 OLLAMA_CHAT = "http://localhost:11434/api/chat"
@@ -302,7 +302,7 @@ TOOLS = {f.__name__: f for f in (open_app, open_url, web_search, current_tab, re
                                      clipboard, set_volume, battery, say, list_dir, read_file, make_logo, paint_image,
                                      music, weather, timer, new_note, new_reminder, calendar_today, unread_mail,
                                      remove_background, upscale_image, enhance_image, grayscale_image, rotate_image, flip_image, resize_image, crop_square, convert_image, image_info,
-                                     find_file, recent_downloads, folder_size)}
+                                     find_file, recent_downloads, folder_size, move_file, copy_file, rename_file, zip_file, unzip_file, trash_file)}
 TOOLS.update({f.__name__: f for f in tools_util.TOOLS})
 globals().update({f.__name__: f for f in tools_util.TOOLS})  # eval/actions.py swaps every TOOLS name on this module for a recorder
 
@@ -542,7 +542,7 @@ def _sound(tool, arg, query):
 # Desktop, a Shortcut, the clipboard, a dark screen. The harness asks before any of these run.
 WRITES = {"ask_llm", "see_screen", "see_image", "click_text", "type_text", "press_key", "ask_screen", "read_screen", "remember", "forget", "close_tab", "call_mcp_tool", "new_note", "new_reminder", "make_logo", "paint_image", "run_shortcut", "copy_to_clipboard", "sleep_display", "save_research", "write_document",
           "remove_background", "upscale_image", "enhance_image", "grayscale_image", "rotate_image", "flip_image",
-          "resize_image", "crop_square", "convert_image"}
+          "resize_image", "crop_square", "convert_image", "move_file", "copy_file", "rename_file", "zip_file", "unzip_file", "trash_file"}
 
 
 def plan(query):
