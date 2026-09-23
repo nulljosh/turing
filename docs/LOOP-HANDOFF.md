@@ -8,6 +8,15 @@ One ability per minor release, a major when a whole roadmap family completes, un
 
 v4.0.1, 101 tools (audited, all distinct), 275 tests, docs 100%, laws all hold, CI green. Today shipped v3.5.0 through v4.0.1: transcribe_video, unread_mail, summarize, translate, timed reminders, the files family (read and write halves), the docs de-spam, and the tidy (tests/, training/, swift/, roadmap 94 KB to 15 KB with docs/HISTORY.md, README simplified with docs/ABILITIES.md). Usage was the limit at close, not the work.
 
+## Found today, worth knowing
+
+- The 9B through Ollama takes over five minutes to load cold on this Mac; twice a 280 second and once a 900 second budget was not enough after a long idle. Warm it with a throwaway ask first, then do the real one. Once warm it answers in seconds (summarize and translate were both verified that way).
+- Spotlight lags a few seconds on a brand new file; find_file now walks the usual folders before saying no.
+- Reminders AppleScript: a `whose due date < d` filter errors on reminders with no due date (missing value); check inside the loop instead.
+- mlx_whisper already shells out to ffmpeg, so a video needs no audio extraction step; transcribe_video is one function.
+- Moving files into folders broke three tests that assumed the repo root (test_chat, test_tools_image, test_edges) and the scorecard's test count; all fixed, but the local gate only runs a subset, so run every file in tests/ before pushing. CI runs them all.
+- At close, this checkout was on a branch named jt-chat that another session created; v4.0.1 was committed there and fast-forwarded onto main. Check `git branch --show-current` before committing.
+
 ## Next, in order
 
 1. Docs in her voice: the README intro is hand-written to SOUL.md; the 9B timed out cold twice. Warm it first (any ask), then have it redo the README intro, docs/ABILITIES.md and WHITEPAPER.md in first person, check facts and house rules by hand.
