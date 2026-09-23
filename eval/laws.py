@@ -18,7 +18,7 @@ import tools
 
 # The tools that leave a mark or change the Mac. A new tool that does either must be added to one of tools.WRITES or
 # tools.NOT_FOR_MODELS, and this list says which tools count as read-only. Anything not here and not classified fails law 1.
-READ_ONLY = {"open_app", "open_url", "web_search", "current_tab", "read_page", "screenshot", "clipboard", "set_volume", "battery", "say",
+READ_ONLY = {"research", "open_app", "open_url", "web_search", "current_tab", "read_page", "screenshot", "clipboard", "set_volume", "battery", "say",
              "list_dir", "read_file", "music", "weather", "timer", "calendar_today", "image_info", "calculate", "convert_units", "time_in",
              "current_date", "days_until", "date_math", "convert_time", "flip_coin", "roll_dice", "random_number", "make_password", "make_uuid", "hash_text",
              "base64_encode", "base64_decode", "word_count", "reverse_text", "shout", "morse_code", "json_pretty", "is_prime", "roman_numeral",
@@ -27,7 +27,7 @@ READ_ONLY = {"open_app", "open_url", "web_search", "current_tab", "read_page", "
 # Tools whose side effect nobody sees coming. They never reach a model or MCP, whatever tools.NOT_FOR_MODELS says today.
 MUST_HIDE = {"ask_llm", "see_screen", "see_image", "run_shortcut", "copy_to_clipboard", "sleep_display", "call_mcp_tool", "close_tab", "remember", "recall", "forget", "read_screen", "ask_screen"}
 # A spoken command for each write tool that has a route. The image tools are picked by her model or the agent, never by a route.
-SPOKEN = {"ask_llm": "ask qwen why is the sky blue", "see_screen": "look at my screen", "see_image": "what's in ~/Desktop/cat.png", "click_text": "click Sign in", "type_text": "type hello", "press_key": "press return", "new_note": "take a note buy milk", "new_reminder": "remind me to call mom", "make_logo": "make me a logo for turing",
+SPOKEN = {"ask_llm": "ask qwen why is the sky blue", "research": "research the printing press", "see_screen": "look at my screen", "see_image": "what's in ~/Desktop/cat.png", "click_text": "click Sign in", "type_text": "type hello", "press_key": "press return", "new_note": "take a note buy milk", "new_reminder": "remind me to call mom", "make_logo": "make me a logo for turing",
           "copy_to_clipboard": "copy hello to my clipboard", "sleep_display": "sleep the screen", "run_shortcut": "run shortcut morning",
           "paint_image": "paint ~/Desktop/mona.jpg", "call_mcp_tool": "call mcp samantha calculate {}", "close_tab": "close the github tab", "remember": "remember that my dog is called biscuit", "forget": "forget biscuit", "read_screen": "read my screen", "ask_screen": "on my screen, what is the total"}
 # Law 8: no god files. A ratchet: it only ever moves down, lowered after each split lands (CLAUDE.md, File size).

@@ -67,12 +67,13 @@ Goal: a full version you sit down and chat with, and she calls tools, without ev
 ## Where things stand
 v2.0.0 shipped 2026-09-22 on the Mac: voice in (chat.py --voice, Whisper on MLX) and hands on the screen (click_text, type_text, press_key, every step asked first). Same night: ask any local LLM by name (ask_llm), streamed replies, her offline library (~10,000 Wikipedia vital-article leads, exact-title answers, 0 confidently wrong), retrain on everything (val loss 1.98 -> 1.83), score.py 29/29 after the hands stopped hijacking project questions, tools.py and test_pxm.py split (ceiling 780). Distillation: 600 Sonnet-written pairs over real passages, a local 9B judge reads every pair, pilot trained (held-out 2/13 -> 3/13 answered, 0/1 -> 1/1 declined).
 
-## Next, in order (toward 3.0.0: she sees and she researches)
-1. DONE round 2 (declines 16/16). Round 3 targets answering (19/43): more passages, same-repo distractors. Also fix the flaky route: "how much memory does it use" (about her) goes to her hands and reports the Mac's memory. Was: finish distillation round 2: `distill.py judge` (resumable), `build`, `eval` baseline on the new held-out, train on data/distill (DATA=./data/distill, ~2 epochs), eval again, keep only on a rise with score.py still 29/29.
-2. See pictures: a local vision model (Qwen2.5-VL or Gemma 3 on oMLX) behind "what's in this photo", "what's on my screen" beyond OCR. 3.0 half one.
-3. Deep research: "research X" reads 5 to 10 pages plus the library and notes, the 9B writes a short cited brief. 3.0 half two.
-4. GUI control, the rest: multi-step flows through the agent with a yes per step; icons without text.
-5. File size: tools.py 778, tools_util.py 651, web/demo.js, web/samantha.js; lower MAX_LINES after each split.
+## Next, in order (toward 4.0.0: she does whole jobs)
+1. Distillation round 3: she declines right (16/16) but answers right only 19/43. More answerable lessons, same-repo distractors, check she does not over-decline.
+2. Multi-step screen work: "log me into X" planned by the agent, a yes per step, her eyes for icons without text.
+3. Research, the rest: pages beyond Wikipedia, follow-ups on a brief, save a brief to a file.
+4. Read mail, write real files, translate, run code for answers (roadmap.md "Gaps found by the loop").
+5. File size: tools.py, tools_util.py, web/demo.js, web/samantha.js.
+Loads off the LaCie drive run about 24 seconds per GB: the 9B takes about 4 minutes cold. Warm it (POST localhost:8000/v1/models/<id>/load) before timing anything that uses it.
 
 ## Restart prompt
 ```

@@ -646,6 +646,8 @@
   ]);
   U.ask_llm = function () { return "On her real Mac she hands a hard question to another LLM running there: name one (ask qwen, ask llama, ask gemma) or say ask claude for the biggest. She asks you first and nothing leaves the Mac. This page never sends your words anywhere but its own lookup."; };
   U.NEEDS_MAC.push("ask_llm");
+  U.research = function () { return "Research happens on her real Mac: she reads Wikipedia, her library and your notes, and a bigger local model writes a short brief that cites every source."; };
+  U.NEEDS_MAC.push("research");
   ["see_screen", "see_image"].forEach(function (name) {
     U[name] = function () { return "Looking at pictures and the screen happens on her real Mac, with a vision model that runs there, and she asks first."; };
     U.NEEDS_MAC.push(name);
@@ -660,6 +662,8 @@
     .forEach(function (name) { U[name] = function () { return NO_PHOTOS; }; U.NEEDS_MAC.push(name); });
 
   ROUTES.push.apply(ROUTES, [
+    // deep research, same as tools_util.ROUTES
+    [/^(?:research|do (?:some )?research (?:on|into)|deep dive (?:into|on)|write (?:me )?a (?:research )?brief (?:on|about)) (.+)$/i, function (m) { return ["research", m[1]]; }],
     // her eyes, same as tools_util.ROUTES
     [/^(?:look at|describe|see|check out) (?:my |the )?screen(?:,? and (.+))?$|^what do you see(?: on (?:my |the )?screen)?$/i, function (m) { return ["see_screen", m[1] || ""]; }],
     [/^(?:what(?:'s| is) in|describe|look at) (\S+\.(?:png|jpe?g|heic|gif|webp|tiff?|bmp))(?:,? and (.+))?$/i, function (m) { return ["see_image", (m[2] || "") + "\t" + m[1]]; }],

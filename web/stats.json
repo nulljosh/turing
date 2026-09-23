@@ -1,5 +1,5 @@
 {
-  "version": "2.1.0",
+  "version": "3.0.0",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -10,6 +10,10 @@
       "tools_image.py": {
         "total": 16,
         "documented": 16
+      },
+      "tools_research.py": {
+        "total": 4,
+        "documented": 4
       },
       "test_library.py": {
         "total": 11,
@@ -94,6 +98,10 @@
       "tools_logo.py": {
         "total": 18,
         "documented": 18
+      },
+      "test_research.py": {
+        "total": 7,
+        "documented": 7
       },
       "prep_data.py": {
         "total": 5,
@@ -264,7 +272,7 @@
   "measured": {
     "tools": {
       "before": 0,
-      "after": 85
+      "after": 86
     },
     "actions_eval": "77/77",
     "knowledge_sweep": {
