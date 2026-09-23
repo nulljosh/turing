@@ -211,108 +211,7 @@ def say(text):
     return f"Saying: {text[:80]}"
 
 
-def _app(script, *args):
-    """AppleScript that drives another app. Text rides in argv, never spliced into the script. Headless does nothing: no app launches, no note gets written."""
-    return "" if HEADLESS else _run(["osascript", "-e", script, *args], timeout=30)
-
-
-_MUSIC = {"play": ("play", "Playing."), "pause": ("pause", "Paused."),
-          "next": ("next track", "Skipped."), "previous": ("previous track", "Went back one.")}
-_NOW_PLAYING = '''if application "Music" is running then
-tell application "Music"
-if player state is playing then return (name of current track) & " by " & (artist of current track)
-end tell
-end if
-return ""'''
-
-
-def music(command):
-    """Control the Music app. command is one of: play, pause, next, previous, playing."""
-    c = command.strip().lower()
-    if c == "playing":
-        return _app(_NOW_PLAYING) or "Nothing is playing."
-    if c not in _MUSIC:
-        return f"I can play, pause, skip, go back, or tell you what's playing. Not {command!r}."
-    # ponytail: Music.app only, no "play <song>". Add a library search when she gets asked for one.
-    _app(f'tell application "Music" to {_MUSIC[c][0]}')
-    return _MUSIC[c][1]
-
-
-def weather(place=""):
-    """Current weather. Takes a city, or nothing for here."""
-    # ponytail: wttr.in one-liner, located by IP. Swap for Open-Meteo if it gets flaky.
-    url = "https://wttr.in/" + urllib.parse.quote(place.strip()) + "?format=%l:+%C,+%t,+feels+%f"
-    try:
-        with urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": "curl/8"}), timeout=10) as r:
-            out = r.read(300).decode("utf-8", "ignore").strip()
-    except Exception as e:
-        return f"Couldn't get the weather: {e}"
-    return out if "°" in out else f"No weather for {place!r}."
-
-
-_TIMER = ("import sys,time,subprocess;time.sleep(float(sys.argv[1]));"
-          "subprocess.run(['osascript','-e','display notification \"Time is up.\" with title \"Samantha\" sound name \"Glass\"']);"
-          "subprocess.run(['say','Time is up'])")
-
-
-_NUMBER_WORDS = {w: n for n, w in enumerate("zero one two three four five six seven eight nine ten".split())} | {"a": 1, "an": 1, "half": 0.5}
-
-
-def duration(text):
-    """Minutes in a spoken length of time: "90 seconds", "an hour", "half an hour", "5". None if it is not one."""
-    t = str(text).lower().strip()
-    m = re.match(r"^(\d+(?:\.\d+)?|[a-z]+)(?: an| a)?[ -]?(s|m|h)?[a-z]*$", t)
-    if not m:
-        return None
-    n = float(m.group(1)) if m.group(1)[0].isdigit() else _NUMBER_WORDS.get(m.group(1))
-    return None if n is None else round(n * {"s": 1 / 60, "m": 1, "h": 60}[m.group(2) or "m"], 4)
-
-
-def timer(minutes):
-    """Start a timer. Takes a length of time: "5", "90 seconds", "half an hour". Notifies and speaks when it is done."""
-    span = duration(minutes)
-    if span is None:
-        return f"{minutes!r} is not a length of time."
-    secs = span * 60
-    if not 0 < secs <= 86400:
-        return "A timer runs from a second to a day."
-    # ponytail: a sleeping child process. No cancel, gone on reboot. Fine for tea.
-    if not HEADLESS:
-        subprocess.Popen([sys.executable, "-c", _TIMER, str(secs)], start_new_session=True)
-    return f"Timer set for {secs / 60:g} minutes." if secs >= 60 else f"Timer set for {secs:g} seconds."
-
-
-def new_note(text):
-    """Create a note in the Notes app."""
-    _app('on run argv\ntell application "Notes" to make new note with properties {body:item 1 of argv}\nend run', text)
-    return f"Noted: {text[:80]}"
-
-
-def new_reminder(text):
-    """Add a reminder to the Reminders app."""
-    # ponytail: no due date, "at 5" stays in the title. Parse times when that gets annoying.
-    _app('on run argv\ntell application "Reminders" to make new reminder with properties {name:item 1 of argv}\nend run', text)
-    return f"I'll remind you: {text[:80]}"
-
-
-# ponytail: a repeating event only shows on the day it was first made, Calendar's scripting does not expand them. EventKit if that bites.
-_TODAY = '''set d0 to current date
-set time of d0 to 0
-set d1 to d0 + 1 * days
-set out to ""
-tell application "Calendar"
-repeat with c in calendars
-repeat with e in (every event of c whose start date is greater than or equal to d0 and start date is less than d1)
-set out to out & (time string of (get start date of e)) & " " & (summary of e) & linefeed
-end repeat
-end repeat
-end tell
-return out'''
-
-
-def calendar_today():
-    """What is on the calendar today."""
-    return _app(_TODAY) or "Nothing on the calendar today."
+from tools_apps import music, weather, timer, duration, new_note, new_reminder, calendar_today, unread_mail, _MUSIC  # noqa: E402,F401
 
 
 HOME = os.path.realpath(os.path.expanduser("~"))
@@ -352,7 +251,7 @@ from tools_logo import _logo_layers, _complex_layers, _bloom_layers, _LOGO_SCHEM
 
 TOOLS = {f.__name__: f for f in (open_app, open_url, web_search, current_tab, read_page, screenshot,
                                      clipboard, set_volume, battery, say, list_dir, read_file, make_logo, paint_image,
-                                     music, weather, timer, new_note, new_reminder, calendar_today,
+                                     music, weather, timer, new_note, new_reminder, calendar_today, unread_mail,
                                      remove_background, upscale_image, enhance_image, grayscale_image, rotate_image, flip_image, resize_image, crop_square, convert_image, image_info)}
 TOOLS.update({f.__name__: f for f in tools_util.TOOLS})
 globals().update({f.__name__: f for f in tools_util.TOOLS})  # eval/actions.py swaps every TOOLS name on this module for a recorder
@@ -374,6 +273,9 @@ _ROUTES = (
     (re.compile(r"^(?:(?:make|create|take|write|add|new) (?:a |me a )?(?:new )?note|note)(?: that says| saying| that|:)? (.+)$", re.I), lambda m: new_note(m.group(1))),
     (re.compile(r"^what(?:'s| is) on (?:my |the )?(?:calendar|schedule|agenda)\b|^(?:my )?(?:calendar|schedule|agenda)(?: for)?(?: today)?$|^what do i have (?:on )?today", re.I),
      lambda m: calendar_today()),
+    (re.compile(r"^(?:check (?:my )?|do i have |is there )?(?:any )?(?:new |unread )?(?:mail|email)\??$", re.I), lambda m: unread_mail("")),
+    (re.compile(r"^(?:is there |do i have )?anything from (.+?) in my (?:mail|email|inbox)(?: today)?\??$|^(?:mail|email) from (.+?)(?: today)?\??$", re.I),
+     lambda m: unread_mail(m.group(1) or m.group(2))),
     (re.compile(r"^(?:make|design|draw|create|build)(?: me)? (?:a |an )?((?:(?:complex|intricate|detailed|elaborate|ornate|fancy|crazy|insane|original|wordless|abstract|textless) )*)(?:logo|icon)(?: for| of)? (.+)$", re.I), lambda m: make_logo((m.group(1) or "") + m.group(2))),
     (re.compile(r"^(?:paint|repaint)(?: me)? (?:a picture of |a painting of |the (?:image|photo|picture) (?:at )?)?(\S+\.(?:jpe?g|png|heic|webp|tiff?))$", re.I), lambda m: paint_image(m.group(1))),
     (re.compile(r"^(?:(?:show me |tell me )?what(?:'s| is) (?:on|in) (?:my |the )?clipboard|(?:read|show)(?: me)? (?:my |the )?clipboard)\b", re.I), lambda m: clipboard()),

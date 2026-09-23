@@ -2,6 +2,9 @@
 
 TLDR per loop round, newest first. The loop adds a line every round it ships something, then the scorecard.
 
+- 2026-09-23: 🎉 v3.6.0: unread_mail, a new tool. "Unread mail" or "anything from the bank in my mail" reads Mail.app's inbox across every account, read only, a word narrows it to messages naming that word. Verified against this Mac's real inbox, not a stub. tools.py crossed the 760-line ceiling adding it, so tools_apps.py splits out the Mac-app-control cluster (music, weather, timer, notes, reminders, calendar, mail); tools.py re-exports every name, same pattern as tools_image.py.
+  `v3.6.0 · 90 tools · 202 tests · docs coverage 100% · laws all hold · biggest tools_util.py 685 · actions 145/145 · parity 145/145 · util_diff 203/203`
+
 - 2026-09-23: 🎉 v3.5.0: transcribe_video, a new tool. "Transcribe the video ~/Desktop/clip.mp4" pulls the words out of any video or audio file in your home folder through the same Whisper pipeline voice.py already runs for the mic, no separate extraction step (ffmpeg already decodes the audio track from any container). Verified against a real spoken .mp4 on this Mac, not just the guard rails.
   `v3.5.0 · 89 tools · 202 tests · docs coverage 100% · laws all hold · biggest tools.py 760 · actions 140/140 · parity 140/140 · util_diff 199/199`
 

@@ -190,6 +190,11 @@ CASES = [
     ("make a note that says the door code is 4417", "new_note", "door code"),
     ("what's on my calendar today", "calendar_today", None),
     ("what do i have today", "calendar_today", None),
+    ("unread mail", "unread_mail", ""),
+    ("do i have any new email", "unread_mail", ""),
+    ("anything from the bank in my mail today", "unread_mail", "the bank"),
+    ("email from amazon", "unread_mail", "amazon"),
+    ("transcribe the video ~/Desktop/clip.mp4", "transcribe_video", "~/Desktop/clip.mp4"),
     # these look like the new commands and are not
     ("what is the weather system on jupiter", None, None),
     ("what is music theory", None, None),

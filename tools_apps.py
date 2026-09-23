@@ -1,0 +1,150 @@
+"""Samantha driving the Mac's own apps: Music, Weather (a web lookup), timers, Notes, Reminders, Calendar, Mail.
+Split out of tools.py to keep it under the line-count law (CLAUDE.md, File size); every name is re-exported there
+so nothing that imports tools stops working.
+"""
+import os
+import re
+import subprocess
+import sys
+import urllib.parse
+import urllib.request
+
+HEADLESS = os.environ.get("SAMANTHA_HEADLESS") == "1"
+
+
+def _app(script, *args):
+    """AppleScript that drives another app. Text rides in argv, never spliced into the script. Headless does nothing: no app launches, no note gets written."""
+    if HEADLESS:
+        return ""
+    r = subprocess.run(["osascript", "-e", script, *args], capture_output=True, text=True, timeout=30)
+    return (r.stdout or r.stderr).strip()
+
+
+_MUSIC = {"play": ("play", "Playing."), "pause": ("pause", "Paused."),
+          "next": ("next track", "Skipped."), "previous": ("previous track", "Went back one.")}
+_NOW_PLAYING = '''if application "Music" is running then
+tell application "Music"
+if player state is playing then return (name of current track) & " by " & (artist of current track)
+end tell
+end if
+return ""'''
+
+
+def music(command):
+    """Control the Music app. command is one of: play, pause, next, previous, playing."""
+    c = command.strip().lower()
+    if c == "playing":
+        return _app(_NOW_PLAYING) or "Nothing is playing."
+    if c not in _MUSIC:
+        return f"I can play, pause, skip, go back, or tell you what's playing. Not {command!r}."
+    # ponytail: Music.app only, no "play <song>". Add a library search when she gets asked for one.
+    _app(f'tell application "Music" to {_MUSIC[c][0]}')
+    return _MUSIC[c][1]
+
+
+def weather(place=""):
+    """Current weather. Takes a city, or nothing for here."""
+    # ponytail: wttr.in one-liner, located by IP. Swap for Open-Meteo if it gets flaky.
+    url = "https://wttr.in/" + urllib.parse.quote(place.strip()) + "?format=%l:+%C,+%t,+feels+%f"
+    try:
+        with urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": "curl/8"}), timeout=10) as r:
+            out = r.read(300).decode("utf-8", "ignore").strip()
+    except Exception as e:
+        return f"Couldn't get the weather: {e}"
+    return out if "°" in out else f"No weather for {place!r}."
+
+
+_TIMER = ("import sys,time,subprocess;time.sleep(float(sys.argv[1]));"
+          "subprocess.run(['osascript','-e','display notification \"Time is up.\" with title \"Samantha\" sound name \"Glass\"']);"
+          "subprocess.run(['say','Time is up'])")
+
+
+_NUMBER_WORDS = {w: n for n, w in enumerate("zero one two three four five six seven eight nine ten".split())} | {"a": 1, "an": 1, "half": 0.5}
+
+
+def duration(text):
+    """Minutes in a spoken length of time: "90 seconds", "an hour", "half an hour", "5". None if it is not one."""
+    t = str(text).lower().strip()
+    m = re.match(r"^(\d+(?:\.\d+)?|[a-z]+)(?: an| a)?[ -]?(s|m|h)?[a-z]*$", t)
+    if not m:
+        return None
+    n = float(m.group(1)) if m.group(1)[0].isdigit() else _NUMBER_WORDS.get(m.group(1))
+    return None if n is None else round(n * {"s": 1 / 60, "m": 1, "h": 60}[m.group(2) or "m"], 4)
+
+
+def timer(minutes):
+    """Start a timer. Takes a length of time: "5", "90 seconds", "half an hour". Notifies and speaks when it is done."""
+    span = duration(minutes)
+    if span is None:
+        return f"{minutes!r} is not a length of time."
+    secs = span * 60
+    if not 0 < secs <= 86400:
+        return "A timer runs from a second to a day."
+    # ponytail: a sleeping child process. No cancel, gone on reboot. Fine for tea.
+    if not HEADLESS:
+        subprocess.Popen([sys.executable, "-c", _TIMER, str(secs)], start_new_session=True)
+    return f"Timer set for {secs / 60:g} minutes." if secs >= 60 else f"Timer set for {secs:g} seconds."
+
+
+def new_note(text):
+    """Create a note in the Notes app."""
+    _app('on run argv\ntell application "Notes" to make new note with properties {body:item 1 of argv}\nend run', text)
+    return f"Noted: {text[:80]}"
+
+
+def new_reminder(text):
+    """Add a reminder to the Reminders app."""
+    # ponytail: no due date, "at 5" stays in the title. Parse times when that gets annoying.
+    _app('on run argv\ntell application "Reminders" to make new reminder with properties {name:item 1 of argv}\nend run', text)
+    return f"I'll remind you: {text[:80]}"
+
+
+# ponytail: a repeating event only shows on the day it was first made, Calendar's scripting does not expand them. EventKit if that bites.
+_TODAY = '''set d0 to current date
+set time of d0 to 0
+set d1 to d0 + 1 * days
+set out to ""
+tell application "Calendar"
+repeat with c in calendars
+repeat with e in (every event of c whose start date is greater than or equal to d0 and start date is less than d1)
+set out to out & (time string of (get start date of e)) & " " & (summary of e) & linefeed
+end repeat
+end repeat
+end tell
+return out'''
+
+
+def calendar_today():
+    """What is on the calendar today."""
+    return _app(_TODAY) or "Nothing on the calendar today."
+
+
+_UNREAD_MAIL = '''on run argv
+set q to item 1 of argv
+set out to ""
+set n to 0
+tell application "Mail"
+    set msgs to (messages of inbox whose read status is false)
+    repeat with m in msgs
+        set n to n + 1
+        if n > 25 then exit repeat
+        set s to (sender of m) as string
+        set subj to (subject of m) as string
+        if q is "" or s contains q or subj contains q then
+            set out to out & s & " || " & subj & linefeed
+        end if
+    end repeat
+end tell
+return out
+end run'''
+
+
+def unread_mail(query=""):
+    """Unread mail in your inbox, across every account, read only. A word narrows it to messages naming that word
+    in the sender or subject, so "anything from the bank" only shows those."""
+    out = _app(_UNREAD_MAIL, query.strip())
+    if not out.strip():
+        return f"No unread mail from or about {query.strip()!r}." if query.strip() else "No unread mail."
+    lines = [l for l in out.splitlines() if l.strip()]
+    shown = "\n".join(lines[:10])
+    return shown + (f"\n...and {len(lines) - 10} more." if len(lines) > 10 else "")
