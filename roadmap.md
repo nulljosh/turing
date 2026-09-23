@@ -306,8 +306,8 @@ Gaps, in order:
 ### Joshua's Mac to-do (only these need the keyboard)
 The loop runs in the cloud and cannot reach Cloudflare or this Mac. Tick a box when done, the loop picks it up.
 
-- [ ] Deploy the site: `npx wrangler deploy` in the repo (or add the `CLOUDFLARE_API_TOKEN` repo secret once and it deploys itself on every push)
-- [ ] Turn on ask_claude: `.venv/bin/pip install anthropic`, then set `ANTHROPIC_API_KEY` (or `ant auth login`)
+- [x] Deploy the site (done 2026-09-22, by hand; CI still skips until CLOUDFLARE_API_TOKEN is a repo secret): `npx wrangler deploy` in the repo (or add the `CLOUDFLARE_API_TOKEN` repo secret once and it deploys itself on every push)
+- [ ] Turn on ask_claude: anthropic is installed, still need to set `ANTHROPIC_API_KEY` (or `ant auth login`)
 - [ ] Try streamed replies, voice in and GUI control once the loop builds them: they need her real model and a real screen
 
 ### How we compete with trillion-dollar labs (set 2026-09-22)
