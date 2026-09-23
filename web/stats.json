@@ -1,7 +1,7 @@
 {
   "version": "3.0.1",
   "docs_coverage": {
-    "percent": 100,
+    "percent": 99,
     "files": {
       "test_voice.py": {
         "total": 10,
@@ -58,6 +58,10 @@
       "tools_gui.py": {
         "total": 8,
         "documented": 8
+      },
+      "tools_screen_agent.py": {
+        "total": 3,
+        "documented": 3
       },
       "ask.py": {
         "total": 7,
@@ -154,6 +158,10 @@
       "test_memory.py": {
         "total": 11,
         "documented": 11
+      },
+      "test_screen_agent.py": {
+        "total": 18,
+        "documented": 16
       },
       "tools_llm.py": {
         "total": 6,

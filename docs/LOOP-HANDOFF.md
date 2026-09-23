@@ -68,12 +68,12 @@ Goal: a full version you sit down and chat with, and she calls tools, without ev
 - pixelmator/pxm.py 865 -> 621: the spec trust boundary (exit codes, shape tables, PxmError, validate_spec) moved to pxm_spec.py. Every example spec's AppleScript is byte-identical before and after; law 8 ceiling 870 -> 825.
 
 ## Where things stand
-v2.0.0 shipped 2026-09-22 on the Mac: voice in (chat.py --voice, Whisper on MLX) and hands on the screen (click_text, type_text, press_key, every step asked first). Same night: ask any local LLM by name (ask_llm), streamed replies, her offline library (~10,000 Wikipedia vital-article leads, exact-title answers, 0 confidently wrong), retrain on everything (val loss 1.98 -> 1.83), score.py 29/29 after the hands stopped hijacking project questions, tools.py and test_pxm.py split (ceiling 780). Distillation: 600 Sonnet-written pairs over real passages, a local 9B judge reads every pair, pilot trained (held-out 2/13 -> 3/13 answered, 0/1 -> 1/1 declined).
+v3.0.1 shipped 2026-09-22 on the Mac: she researches via Wikipedia and her library (fieldbook fields), the local 9B writes cited briefs, drops answers without sources. She sees screenshots and photos (Qwen2.5-VL 3B on MLX), screen control via OCR (reads screen, clicks text you name). Voice in (Whisper on MLX) and out (say). Hands: 86 tools (30 photo/paint, 27 utilities, 10 chrome tabs, MCP client, memory, read_screen, accessibility, web search, calculator, logo maker, music). Tool picker retrained to 395/484 on unseen. Landing: interactive demo with voice and vision queries live. Knowledge 62/65 (zero confidently wrong). Distillation round 3 reverted (overfit, 20 -> 16 answered, 16 -> 15 declined); round 2 kept (declines 16/16, security pass). Evals green: 77 actions, web parity. Apache 2.0.
 
 ## Next, in order (toward 4.0.0: she does whole jobs)
-1. Distillation round 3: she declines right (16/16) but answers right only 19/43. More answerable lessons, same-repo distractors, check she does not over-decline.
-2. Multi-step screen work: "log me into X" planned by the agent, a yes per step, her eyes for icons without text.
-3. Research, the rest: pages beyond Wikipedia, follow-ups on a brief, save a brief to a file.
+1. DONE: multi-step screen work ("log me into X") shipped via tools_screen_agent.py, a dedicated agent with click_text/type_text/press_key/see_screen, every step confirmed, never on the general model menu.
+2. Research, the rest: pages beyond Wikipedia, follow-ups on a brief, save a brief to a file.
+3. Distillation round 4: more distinct passages and lessons (not more epochs on round 2), harder same-repo distractors, measure answering (19/43) and declining separately.
 4. Read mail, write real files, translate, run code for answers (roadmap.md "Gaps found by the loop").
 5. File size: tools.py, tools_util.py, web/demo.js, web/samantha.js.
 Loads off the LaCie drive run about 24 seconds per GB: the 9B takes about 4 minutes cold. Warm it (POST localhost:8000/v1/models/<id>/load) before timing anything that uses it.
