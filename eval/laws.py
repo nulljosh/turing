@@ -27,7 +27,7 @@ READ_ONLY = {"research", "open_app", "open_url", "web_search", "current_tab", "r
 # Tools whose side effect nobody sees coming. They never reach a model or MCP, whatever tools.NOT_FOR_MODELS says today.
 MUST_HIDE = {"ask_llm", "see_screen", "see_image", "click_text", "type_text", "press_key", "run_shortcut", "copy_to_clipboard", "sleep_display", "call_mcp_tool", "close_tab", "remember", "recall", "forget", "read_screen", "ask_screen"}
 # A spoken command for each write tool that has a route. The image tools are picked by her model or the agent, never by a route.
-SPOKEN = {"ask_llm": "ask qwen why is the sky blue", "research": "research the printing press", "see_screen": "look at my screen", "see_image": "what's in ~/Desktop/cat.png", "click_text": "click Sign in", "type_text": "type hello", "press_key": "press return", "new_note": "take a note buy milk", "new_reminder": "remind me to call mom", "make_logo": "make me a logo for turing",
+SPOKEN = {"ask_llm": "ask qwen why is the sky blue", "research": "research the printing press", "save_research": "save that", "see_screen": "look at my screen", "see_image": "what's in ~/Desktop/cat.png", "click_text": "click Sign in", "type_text": "type hello", "press_key": "press return", "new_note": "take a note buy milk", "new_reminder": "remind me to call mom", "make_logo": "make me a logo for turing",
           "copy_to_clipboard": "copy hello to my clipboard", "sleep_display": "sleep the screen", "run_shortcut": "run shortcut morning",
           "paint_image": "paint ~/Desktop/mona.jpg", "call_mcp_tool": "call mcp samantha calculate {}", "close_tab": "close the github tab", "remember": "remember that my dog is called biscuit", "forget": "forget biscuit", "read_screen": "read my screen", "ask_screen": "on my screen, what is the total"}
 # Law 8: no god files. A ratchet: it only ever moves down, lowered after each split lands (CLAUDE.md, File size).
@@ -53,12 +53,18 @@ def broken():
     import tempfile
     mem = os.path.join(tempfile.mkdtemp(), "memory.json")
     os.environ["SAMANTHA_MEMORY"] = mem  # a denied remember must leave no file behind, and must never touch the real one
+    # Only WRITES tools are gated by confirm at all (harness.ask passes confirm straight into tools.do, which
+    # only checks it for names in WRITES), so a READ_ONLY entry left in SPOKEN has nothing for this law to verify
+    # and would otherwise run for real: "research" made a live Wikipedia fetch plus a real local-LLM call here
+    # and hung the whole gate on a cold model. Skip anything this law cannot actually test.
     for name, spoken in SPOKEN.items():
+        if name not in tools.WRITES:
+            continue
         with mock.patch.object(tools, "_run") as run, mock.patch.object(tools, "_app") as app, mock.patch("subprocess.run") as sp, \
                 mock.patch("subprocess.Popen") as po, mock.patch("tools_util.subprocess.run") as usp:
             reply = harness.Session(confirm=lambda n, a: False, log=lambda line: None).ask(spoken)
             ran = run.call_count + app.call_count + sp.call_count + po.call_count + usp.call_count
-        if name in tools.WRITES and (ran or reply != "Okay, I will not."):
+        if ran or reply != "Okay, I will not.":
             out.append(f"law 3: saying no to {name!r} ({spoken!r}) still ran {ran} command(s), reply {reply!r}")
     if os.path.exists(mem):
         out.append("law 3: saying no to remember or forget still wrote the memory file")

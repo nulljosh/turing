@@ -61,6 +61,8 @@ CASES = [
     ("log into gmail and check my email", None, None),
     ("walk me through checkout", None, None),
     ("research the history of the printing press", "research", "the history of the printing press"),
+    ("save that", "save_research", ""),
+    ("save it to ~/Desktop/notes.md", "save_research", "~/Desktop/notes.md"),
     ("do some research on kinship", "research", "kinship"),
     ("deep dive into mitochondria", "research", "mitochondria"),
     ("write me a brief on the silk road", "research", "the silk road"),

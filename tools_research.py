@@ -4,6 +4,7 @@ biggest local model (tools_llm: oMLX, then Ollama), which writes four to six sen
 Then the brief is checked: a sentence with a number no source contains, or with no citation, is dropped, and if
 nothing survives she says so. Nothing leaves the Mac except the Wikipedia reads.
 """
+import os
 import re
 import urllib.parse
 
@@ -64,6 +65,40 @@ def check(brief, texts):
     return " ".join(keep)
 
 
+_last = {"topic": None, "brief": None}  # the most recent brief this process wrote, for "save that"
+
+
+def _slug(topic):
+    """A filesystem-safe file name from a topic."""
+    return re.sub(r"[^a-z0-9]+", "-", topic.lower()).strip("-")[:60] or "brief"
+
+
+def _write_target(path):
+    """Where a brief may be saved: inside the home folder, no hidden folders, or None if not."""
+    home = os.path.realpath(os.path.expanduser("~"))
+    full = os.path.realpath(os.path.expanduser(path.strip().strip("'\"")))
+    rel = os.path.relpath(full, home)
+    if rel.startswith("..") or any(part.startswith(".") and part != "." for part in rel.split(os.sep)):
+        return None
+    return full
+
+
+def save_research(path=""):
+    """Save the last research brief to a file (default ~/Desktop/research-<topic>.md). Asks first."""
+    if not _last["brief"]:
+        return "I have not researched anything yet this session. Ask me to research something first."
+    path = path.strip() or f"~/Desktop/research-{_slug(_last['topic'])}.md"
+    if not path.lower().endswith((".md", ".txt")):
+        path += ".md"
+    full = _write_target(path)
+    if not full:
+        return f"I can only save inside your home folder, not {path}."
+    os.makedirs(os.path.dirname(full), exist_ok=True)
+    with open(full, "w") as f:
+        f.write(f"# {_last['topic']}\n\n{_last['brief']}\n")
+    return f"Saved to {full}."
+
+
 def research(topic):
     """Research a topic: read Wikipedia, her library and your notes, and write a short brief citing each source."""
     topic = topic.strip().rstrip("?.!")
@@ -80,4 +115,5 @@ def research(topic):
     if not kept:
         return f"I read {len(found)} sources on {topic} but could not write a brief I can stand behind. {brief if brief.startswith(('I could not', 'The local model')) else ''}".strip()
     cites = "\n".join(f"[{i}] {name}" for i, (name, _) in enumerate(found, 1) if f"[{i}]" in kept)
-    return f"{kept}\n\nSources:\n{cites}"
+    _last["topic"], _last["brief"] = topic, f"{kept}\n\nSources:\n{cites}"
+    return _last["brief"]

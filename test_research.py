@@ -4,6 +4,7 @@ Run: python3 test_research.py
 """
 import os
 import sys
+import tempfile
 import unittest
 from unittest import mock
 
@@ -52,6 +53,52 @@ class Research(unittest.TestCase):
         """The ways people ask for research."""
         self.assertEqual(tools.plan("research the silk road"), [("research", ("the silk road",))])
         self.assertEqual(tools.plan("deep dive into kinship"), [("research", ("kinship",))])
+
+
+class SaveResearch(unittest.TestCase):
+    """Saving the last brief to a file: only inside home, only after a real brief exists."""
+
+    def setUp(self):
+        """Start clean: no brief remembered from another test."""
+        self.saved = dict(tools_research._last)
+        tools_research._last["topic"] = tools_research._last["brief"] = None
+
+    def tearDown(self):
+        """Put any prior state back."""
+        tools_research._last.update(self.saved)
+
+    def test_nothing_to_save_yet(self):
+        """Saving before ever researching is an honest sentence, no file written."""
+        self.assertIn("have not researched anything", tools_research.save_research())
+
+    def test_saves_to_a_default_path_from_the_topic(self):
+        """No path given: a markdown file named after the topic lands on the Desktop."""
+        tools_research._last["topic"], tools_research._last["brief"] = "the silk road", "It connected Asia and Europe [1]."
+        with tempfile.TemporaryDirectory() as home:
+            with mock.patch("os.path.expanduser", side_effect=lambda p: p.replace("~", home)):
+                result = tools_research.save_research()
+            path = os.path.realpath(os.path.join(home, "Desktop", "research-the-silk-road.md"))
+            self.assertEqual(result, f"Saved to {path}.")
+            self.assertIn("It connected Asia and Europe [1].", open(path).read())
+
+    def test_saves_to_a_named_path(self):
+        """A named path is honored, and .md is added if missing."""
+        tools_research._last["topic"], tools_research._last["brief"] = "kinship", "A social bond [1]."
+        with tempfile.TemporaryDirectory() as home:
+            with mock.patch("os.path.expanduser", side_effect=lambda p: p.replace("~", home)):
+                result = tools_research.save_research("~/Documents/kinship-notes")
+            path = os.path.realpath(os.path.join(home, "Documents", "kinship-notes.md"))
+            self.assertEqual(result, f"Saved to {path}.")
+
+    def test_refuses_outside_home(self):
+        """A path outside the home folder is refused, nothing written."""
+        tools_research._last["topic"], tools_research._last["brief"] = "x", "y [1]."
+        self.assertIn("only save inside your home folder", tools_research.save_research("/etc/notes.md"))
+
+    def test_route(self):
+        """The ways people ask to save what she just researched."""
+        self.assertEqual(tools.plan("save that"), [("save_research", ("",))])
+        self.assertEqual(tools.plan("save it to ~/Desktop/notes.md"), [("save_research", ("~/Desktop/notes.md",))])
 
 
 if __name__ == "__main__":
