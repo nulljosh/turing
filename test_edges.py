@@ -29,7 +29,7 @@ WEIRD = ["", " ", "?", "!!!", "\n", "\t\t", "a" * 5000, "open ", "open", "go to"
          "\x00", "open \x00chrome", "search for ‮reversed", "ｏｐｅｎ ｃｈｒｏｍｅ", "OPEN CHROME", "open chrome.", "please please please open chrome",
          "take a note " + "é" * 100, "remind me to ", "google how tall is everest?", "make .png black and white", "convert ~/a.png to exe",
          "open youtube and and and set the volume to 20", ";;;", "then then then", "hi" * 1000, "🤖" * 50, "​​", "what is ﻿2+2",
-         "ask claude", "claude,", "ask claude " + "x" * 30000, "claude: \x00", "ask claude why is the sky blue"]
+         "ask claude", "claude,", "ask claude " + "x" * 30000, "claude: \x00", "ask claude why is the sky blue", "ask qwen", "ask llama " + "y" * 30000, "ask phi hi"]
 
 
 def offline():

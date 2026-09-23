@@ -1,5 +1,5 @@
 {
-  "version": "1.5.1",
+  "version": "1.6.0",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -26,6 +26,10 @@
       "parse_log.py": {
         "total": 1,
         "documented": 1
+      },
+      "test_llm.py": {
+        "total": 21,
+        "documented": 21
       },
       "test_harness.py": {
         "total": 17,
@@ -103,13 +107,9 @@
         "total": 11,
         "documented": 11
       },
-      "test_claude.py": {
-        "total": 17,
-        "documented": 17
-      },
-      "tools_claude.py": {
-        "total": 4,
-        "documented": 4
+      "tools_llm.py": {
+        "total": 6,
+        "documented": 6
       },
       "util_math.py": {
         "total": 20,

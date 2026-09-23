@@ -205,7 +205,7 @@ def abilities():
     return (f"I answer questions: this project from its own docs, the rest from Wikipedia and the web, and I say so "
             f"instead of guessing. I also do things on this Mac with {len(tools.TOOLS)} tools: open apps and sites, search the web, "
             "Chrome tabs, notes, reminders, timers, music and volume, edit and paint pictures in Pixelmator, logos, math, time, "
-            "dice, text, your documents and your screen, and for a hard question you can say ask claude. Anything that writes or sends asks you first. "
+            "dice, text, your documents and your screen, and for a hard question you can ask another LLM on this Mac by name (ask qwen, ask llama, or ask claude for the biggest). Anything that writes or sends asks you first. "
             'Try "google best pizza near me", "open pixelmator" or "make this photo black and white". Say "list your tools" for all of them.')
 
 

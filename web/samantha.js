@@ -642,8 +642,8 @@
     [new RegExp("^convert " + P + " (?:to|into) (?:a |an )?(png|jpe?g|webp|heic|tiff?|pdf)$", "i"), function (m) { return ["convert_image", m[1] + " to " + m[2]]; }],
     [new RegExp("^(?:how big is " + P + "|(?:image )?(?:info|size|dimensions) (?:for|of|on) " + P + ")$", "i"), function (m) { return ["image_info", m[1] || m[2]]; }]
   ]);
-  U.ask_claude = function () { return "On her real Mac she hands a hard question to the biggest model running there (oMLX or Ollama), and she asks you first. Nothing leaves the Mac. This page never sends your words anywhere but its own lookup."; };
-  U.NEEDS_MAC.push("ask_claude");
+  U.ask_llm = function () { return "On her real Mac she hands a hard question to another LLM running there: name one (ask qwen, ask llama, ask gemma) or say ask claude for the biggest. She asks you first and nothing leaves the Mac. This page never sends your words anywhere but its own lookup."; };
+  U.NEEDS_MAC.push("ask_llm");
   U.read_page = function () { return "Reading a page happens on her real Mac, which fetches it. Here I can open it for you: say \"go to\" and the address."; };
   var NO_PHOTOS = "That one edits a photo on your real Mac in Pixelmator, and this stand-in has no photos on disk. Ask me to draw something instead.";
   ["grayscale_image", "remove_background", "upscale_image", "enhance_image", "rotate_image", "flip_image", "resize_image", "crop_square", "convert_image", "image_info"]
@@ -651,7 +651,7 @@
 
   ROUTES.push.apply(ROUTES, [
     // only by name, same as tools_util.ROUTES
-    [/^(?:ask|have|let) claude(?: to| about| whether| if|:|,)?\s+(.+)$|^(?:hey )?claude[,:]\s*(.+)$/i, function (m) { return ["ask_claude", m[1] || m[2]]; }],
+    [/^(?:ask|have|let) (claude|chatgpt|gpt(?:-?\d[\w.]*)?|gemini|(?:an? |the )?(?:llm|(?:bigger|big) model)|qwen[\w.:-]*|llama[\w.:-]*|mistral[\w.:-]*|gemma[\w.:-]*|phi[\w.:-]*|deepseek[\w.:-]*)(?: to| about| whether| if|:|,)?\s+(.+)$|^(?:hey )?(claude|chatgpt|gpt(?:-?\d[\w.]*)?|gemini|(?:an? |the )?(?:llm|(?:bigger|big) model)|qwen[\w.:-]*|llama[\w.:-]*|mistral[\w.:-]*|gemma[\w.:-]*|phi[\w.:-]*|deepseek[\w.:-]*)[,:]\s*(.+)$/i, function (m) { return ["ask_llm", (m[1] || m[3]) + "\t" + (m[2] || m[4])]; }],
     // a time in one zone to another: ahead of convert_units, same as tools_util.ROUTES
     [/^(?:what(?:'s| is)(?: the time)?|what time is|when is|convert)?\s*((?:noon|midnight|\d{1,2}:\d{2}(?:\s*(?:am|pm|a\.m\.|p\.m\.))?|\d{1,2}\s*(?:am|pm|a\.m\.|p\.m\.))\s+.*\b(?:in|to)\s+.+)$/i,
      function (m) { return ["convert_time", m[1]]; }],
