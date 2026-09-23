@@ -1,5 +1,5 @@
 {
-  "version": "3.7.0",
+  "version": "3.8.0",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -88,8 +88,8 @@
         "documented": 9
       },
       "tools.py": {
-        "total": 36,
-        "documented": 36
+        "total": 37,
+        "documented": 37
       },
       "ask_faq.py": {
         "total": 10,
@@ -300,7 +300,7 @@
   "measured": {
     "tools": {
       "before": 0,
-      "after": 91
+      "after": 92
     },
     "actions_eval": "77/77",
     "knowledge_sweep": {

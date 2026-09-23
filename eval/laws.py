@@ -24,7 +24,7 @@ READ_ONLY = {"research", "open_app", "open_url", "web_search", "current_tab", "r
              "current_date", "days_until", "date_math", "convert_time", "flip_coin", "roll_dice", "random_number", "make_password", "make_uuid", "hash_text",
              "base64_encode", "base64_decode", "word_count", "reverse_text", "shout", "morse_code", "json_pretty", "is_prime", "roman_numeral",
              "tip", "read_document", "find_in_document", "ask_document", "list_mcp_tools", "list_tabs", "switch_tab", "read_tab", "disk_space", "uptime", "memory_usage", "cpu_load", "ip_address", "wifi_name", "system_info", "list_shortcuts",
-             "reveal_in_finder", "transcribe_video", "unread_mail", "summarize"}
+             "reveal_in_finder", "transcribe_video", "unread_mail", "summarize", "translate"}
 # Tools whose side effect nobody sees coming. They never reach a model or MCP, whatever tools.NOT_FOR_MODELS says today.
 MUST_HIDE = {"ask_llm", "see_screen", "see_image", "click_text", "type_text", "press_key", "run_shortcut", "copy_to_clipboard", "sleep_display", "call_mcp_tool", "close_tab", "remember", "recall", "forget", "read_screen", "ask_screen"}
 # A spoken command for each write tool that has a route. The image tools are picked by her model or the agent, never by a route.

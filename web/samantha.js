@@ -45,6 +45,10 @@
   }
 
   var UNIT = { s: 1 / 60, m: 1, h: 60 };
+  // same list as tools.LANGUAGES: a real language name, so "translate 5 km to miles" never reaches translate
+  var LANGUAGES = "english|french|spanish|german|italian|portuguese|dutch|swedish|norwegian|danish|finnish|polish|czech|" +
+    "romanian|hungarian|ukrainian|russian|greek|turkish|arabic|hebrew|hindi|japanese|chinese|mandarin|" +
+    "cantonese|korean|vietnamese|thai|indonesian|latin";
   // same table, same order as _ROUTES in tools.py. First match wins.
   var ROUTES = [
     [/^(?:play|resume)(?: (?:the |some |my )?(?:music|song|tunes))?$/i, function () { return ["music", "play"]; }],
@@ -90,6 +94,8 @@
     [/^summari[sz]e (~\/\S+|\/\S+)$/i, function (m) { return ["summarize", m[1]]; }],
     [/^summari[sz]e (?:me )?(?:the )?(?:page |site |website )?(?:at )?(https?:\/\/\S+|[\w-]+(?:\.[\w-]+)+(?:\/\S*)?)$/i,
      function (m) { return ["summarize", m[1]]; }],
+    [new RegExp("^translate (?:the page |the site )?(.+?) (?:to|into) (" + LANGUAGES + ")$|^how do you say (.+?) in (" + LANGUAGES + ")$", "i"),
+     function (m) { return ["translate", (m[1] || m[3]) + "\t" + (m[2] || m[4])]; }],
     [/^(?:open|launch|start) (?:up )?(?:chrome|the browser) (?:and |then )?(?:go to|open|visit|load) (.+)$/i, function (m) { return ["open_url", m[1]]; }],
     [/^(?:go to|visit|browse to|pull up) (.+)$/i, function (m) { return ["open_url", m[1]]; }],
     [/^(?:open|launch|start) (?:up )?(.+)$/i, function (m) {
@@ -674,6 +680,7 @@
   });
   U.read_page = function () { return "Reading a page happens on her real Mac, which fetches it. Here I can open it for you: say \"go to\" and the address."; };
   U.summarize = function () { return "Summarizing happens on her real Mac, which reads the document or page and hands it to the biggest local model there. This stand-in has none of that."; };
+  U.translate = function () { return "Translating happens on her real Mac, offline, through the biggest local model there. This stand-in has no model to do it with."; };
   var NO_PHOTOS = "That one edits a photo on your real Mac in Pixelmator, and this stand-in has no photos on disk. Ask me to draw something instead.";
   ["grayscale_image", "remove_background", "upscale_image", "enhance_image", "rotate_image", "flip_image", "resize_image", "crop_square", "convert_image", "image_info"]
     .forEach(function (name) { U[name] = function () { return NO_PHOTOS; }; U.NEEDS_MAC.push(name); });

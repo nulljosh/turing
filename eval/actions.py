@@ -199,6 +199,10 @@ CASES = [
     ("summarize my unread mail", "summarize", "mail"),
     ("summarize https://example.com/post", "summarize", "https://example.com/post"),
     ("summarize what turing is in one sentence", None, None),
+    ("translate good morning to french", "translate", "good morning\tfrench"),
+    ("translate the page github.com into spanish", "translate", "github.com\tspanish"),
+    ("how do you say thank you in japanese", "translate", "thank you\tjapanese"),
+    ("translate 5 km to miles", None, None),
     ("summarize github.com", "summarize", "github.com"),
     # these look like the new commands and are not
     ("what is the weather system on jupiter", None, None),

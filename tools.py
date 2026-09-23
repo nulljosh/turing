@@ -199,6 +199,27 @@ def summarize(target=""):
     return reply.rsplit("\n(Answered by", 1)[0]
 
 
+LANGUAGES = ("english|french|spanish|german|italian|portuguese|dutch|swedish|norwegian|danish|finnish|polish|czech|"
+             "romanian|hungarian|ukrainian|russian|greek|turkish|arabic|hebrew|hindi|japanese|chinese|mandarin|"
+             "cantonese|korean|vietnamese|thai|indonesian|latin")
+
+
+def translate(request):
+    """Translate text, or a whole page, into a named language with the biggest local model, offline. Takes
+    'text<TAB>language'; text that is a URL or site name is fetched first and its opening is translated."""
+    text, _, language = request.partition("\t")
+    text, language = text.strip().strip("\"'"), language.strip().lower()
+    if not text or not language:
+        return 'Translate what, into what? Say it like "translate good morning to french".'
+    if _url(text):
+        text = read_page(text)[:4000]
+    import tools_llm
+    prompt = (f"Translate the following into {language.capitalize()}. Reply with the translation only, no notes, "
+              f"no quotes, no em dashes.\n\n{text}")
+    reply = tools_llm.ask_llm(prompt)
+    return reply.rsplit("\n(Answered by", 1)[0]
+
+
 def screenshot():
     """Take a screenshot of the screen and return the file path."""
     path = os.path.expanduser("~/Desktop/samantha-shot.png")
@@ -275,7 +296,7 @@ def read_file(path):
 from tools_logo import *  # noqa: E402,F401,F403
 from tools_logo import _logo_layers, _complex_layers, _bloom_layers, _LOGO_SCHEMA, _COMPLEX_SCHEMA, _BLOOM_SCHEMA, _WANTS_SIMPLE, _WANTS_COMPLEX  # noqa: E402,F401
 
-TOOLS = {f.__name__: f for f in (open_app, open_url, web_search, current_tab, read_page, summarize, screenshot,
+TOOLS = {f.__name__: f for f in (open_app, open_url, web_search, current_tab, read_page, summarize, translate, screenshot,
                                      clipboard, set_volume, battery, say, list_dir, read_file, make_logo, paint_image,
                                      music, weather, timer, new_note, new_reminder, calendar_today, unread_mail,
                                      remove_background, upscale_image, enhance_image, grayscale_image, rotate_image, flip_image, resize_image, crop_square, convert_image, image_info)}
@@ -328,6 +349,8 @@ _ROUTES = (
     (re.compile(r"^summari[sz]e (~/\S+|/\S+)$", re.I), lambda m: summarize(m.group(1))),
     (re.compile(r"^summari[sz]e (?:me )?(?:the )?(?:page |site |website )?(?:at )?(https?://\S+|[\w-]+(?:\.[\w-]+)+(?:/\S*)?)$", re.I),
      lambda m: summarize(m.group(1))),
+    (re.compile(rf"^translate (?:the page |the site )?(.+?) (?:to|into) ({LANGUAGES})$|^how do you say (.+?) in ({LANGUAGES})$", re.I),
+     lambda m: translate((m.group(1) or m.group(3)) + "\t" + (m.group(2) or m.group(4)))),
     (re.compile(r"^(?:open|launch|start) (?:up )?(?:chrome|the browser) (?:and |then )?(?:go to|open|visit|load) (.+)$", re.I), lambda m: open_url(m.group(1))),
     (re.compile(r"^(?:go to|visit|browse to|pull up) (.+)$", re.I), lambda m: open_url(m.group(1))),
     (re.compile(r"^(?:open|launch|start) (?:up )?(.+)$", re.I),
