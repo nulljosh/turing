@@ -6,64 +6,45 @@
 [![test](https://github.com/nulljosh/turing/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/nulljosh/turing/actions/workflows/test.yml)
 ![license](https://img.shields.io/badge/license-Apache--2.0-green) [![GitHub](https://img.shields.io/badge/GitHub-nulljosh%2Fturing-black?logo=github)](https://github.com/nulljosh/turing)
 
-Build small language models on one Mac. Samantha is a 0.5B model fine-tuned on your own writing, runs entirely on-device via MLX, and has 80 tools to act on the world.
+A small model, Samantha, that runs entirely on your Mac and gets real work done. 86 tools, 0.5B parameters, nothing leaves the machine.
 
 [turing.heyitsmejosh.com](https://turing.heyitsmejosh.com)
 
-## Features
+## What she does
 
-- **Voice.** `python3 chat.py --voice`: talk, she listens with Whisper on your Mac, answers and says it aloud. Anything that writes still asks first.
-- **Research.** "research the history of the printing press": she reads Wikipedia, her library and your notes, and a bigger local model writes a short brief that cites a source after every sentence. Uncited or unsupported sentences are dropped.
-- **Eyes.** "look at my screen and tell me what's wrong with this chart", "what's in ~/Desktop/cat.png": a local vision model (Qwen2.5-VL 3B) looks and answers, on the Mac. Asks first.
-- **Hands on the screen.** "click Sign in", "type hello", "press return": she reads the screen to find what you named and clicks it, asking before every step. Needs cliclick and Accessibility access.
-- **86 tools.** Her Mac (open apps and sites, search, read a page, screenshot, clipboard, volume, battery, music, timers, notes, reminders, calendar, weather), pictures (paint any photo, make a logo, remove a background, upscale, enhance, rotate, crop, convert), her own offline library (the fieldbook plus Wikipedia's ~10,000 vital articles, `python3 library.py fetch`, answers what-is and who-was questions from the page of that name, and says which), any other LLM on this Mac when a question is beyond her ("ask qwen ...", "ask llama ...", or "ask claude ..." for the biggest one there, found on oMLX or Ollama: only when you name it, she asks first, nothing leaves the Mac, no API key, and the answer names the model that gave it), and 49 small utilities that need no app: math, unit conversion, time in any city, time-zone conversion ("3pm PST in Tokyo"), date math ("100 days from now", "what day was July 4 1976"), dice, passwords, hashes, base64, morse, this Mac's disk, memory and Wi-Fi, any Apple Shortcut you name, and your Chrome tabs (list, switch, close, read the rendered page), she can read your PDFs and documents, find passages and answer questions about them or about your screen (grounded: a made-up number or name is declined), she can read what is on your screen (macOS Vision OCR, asks first), and a memory that survives across sessions ("remember that my dog is called Biscuit")
-- **Draw anything on the landing page.** Type "draw a fox in the snow" and an image model on Cloudflare imagines it while she rebuilds the picture from 30,000 squares in front of you. The hero line above narrates what she is doing
-- **Her own logo.** The icon above was designed by her. Her designer lays the cells on a golden-angle spiral (style flower: 89 ember petals round a dark ring and one lit core, the cell under the tape head), graded at 180, 64, 32 and 16 pixels until it read as a bold mark even as a browser tab, and there is no text in it. Every logo she makes is an icon with no text: a golden spiral by default, or say complex or simple; the spec is in `pixelmator/examples/turing-flower.json`, `tools_logo.icon_svg()` rebuilds it, and the measured construction sheet (grid, keylines, golden angle, proportions, contrast) is [docs/icon-blueprint.svg](docs/icon-blueprint.svg)
-- **A harness.** `chat.py` runs every command through `harness.py`, which keeps the conversation, prints every tool call before it runs, and asks before anything that writes or sends (a note, a reminder, a file, a Shortcut, the clipboard)
-- **MCP both ways.** `mcp_server.py` lets Claude Code or any other assistant use her tools, and she can call other MCP servers from `~/.samantha/mcp.json` (she asks first)
-- **Small enough to train at home** (Qwen2.5-0.5B LoRA on Apple Silicon via MLX, ~3.5GB memory)
-- **No hallucination** (retrieves real facts from brain RAG, FAQ matching, live officeholder lookup)
-- **Voices like you** (trained on your own docs and commit history, not generic web text)
-- **Paint from photos.** Pick an image and it is rebuilt from tens of thousands of colored squares. No model draws it, a quadtree does. ImageMagick draws 40,000 squares in about a second; Pixelmator builds the same plan as real layers you can watch
-- **Menu bar app** (PaintBar picks photos and shows progress without opening Pixelmator)
-- **Tested end-to-end.** `./gate.sh` runs the chat, action, router-parity, Pixelmator and tool checks against a baseline that only moves up. Every function and class is documented, and CI fails below 100 percent
+- **Talks.** `chat.py --voice`: you speak, Whisper transcribes, she answers out loud.
+- **Sees.** Look at your screen or a photo and ask about it; a local vision model answers.
+- **Researches.** "Research X" reads Wikipedia, her library and your notes, and writes a brief that cites every claim.
+- **Uses your apps.** "Click Sign in", "type hello", "log me into X": she reads the screen and acts, step by step, asking first.
+- **Asks a bigger brain when stuck.** "Ask qwen ...", "ask claude ..." hands hard questions to another local model, never the cloud.
+- **Knows things offline.** Her library holds the fieldbook plus ~10,000 Wikipedia articles; she answers only from a real page and says which one.
+- **Does the rest of the Mac.** Apps, tabs, notes, reminders, calendar, files, documents, math, time zones, dice, hashes, Shortcuts, memory across sessions.
+- **Draws.** Type "draw a fox in the snow" on the landing page and she rebuilds it live from 30,000 squares.
+- **Never guesses.** Every answer traces to a real source; unsupported claims are dropped, not printed.
 
 ## Run it
 
 ```bash
-./.venv/bin/python chat.py            # talk to Samantha: she answers and acts, and asks before anything that writes
-./.venv/bin/python ask.py "question"  # retrieve and answer
-./.venv/bin/python harness.py          # a chat that asks before it writes
-python3 mcp_server.py                  # her tools over MCP (claude mcp add samantha -- python3 mcp_server.py)
-./pixelmator/pxm.py paint photo.jpg --out out.png --engine magick --shapes 40000 --detail 1024 --size 2048
-./menubar/build.sh                     # build PaintBar (macOS menu bar app)
-./gate.sh                             # every check, docs coverage first
-./release.sh 0.12.0 "what shipped"     # cut a release
+./.venv/bin/python chat.py                 # talk to her: answers and acts, asks before writing
+./.venv/bin/python chat.py --voice          # same, but spoken
+./.venv/bin/python ask.py "question"        # one-shot retrieve and answer
+python3 mcp_server.py                       # her tools over MCP
+./gate.sh                                   # every check, docs coverage first
+./release.sh 0.12.0 "what shipped"          # cut a release
 ```
 
-## How she is tested
+## Tested
 
-- `eval/hands.py` - her own picker on phrasings it never saw
-- `eval/actions.py` and `eval/web_parity.py` - the router, and its JavaScript twin on the landing page
-- `eval/util_diff.py` - the utility tools, Python against JavaScript, word for word
-- `test_harness.py` and `test_mcp.py` - the harness asks first, the MCP server answers a real client
-- `eval/score.py` - knowledge (retrieval + generation on held-out set)
-- `test_chat.py` - chat logic (history, scaffolds)
-- pixelmator/test_pxm.py - painting (pixel order, orientation, tiling)
+Every push runs the full suite: the router and its JavaScript twin agree word for word, the harness asks before every write, her knowledge is scored against a held-out set, and every function is documented (CI fails under 100%). `./gate.sh` runs it all locally first.
 
 ## Limits
 
-- Her own picker knows the first 30 tools. The other 33 work through the exact router, not a model. Retraining it on all 63 is next
-- On unseen phrasings the picker got 394 of 501, and the guard `_sound()` lets 9 wrong picks past and refuses no right ones
-- The 10 tools that read this Mac (disk, memory, Wi-Fi, Shortcuts...) answer on a Mac only; the landing page's stand-in says so
-- Calling another MCP server is explicit (`call mcp <server> <tool> {json}`) and asks first; her model never chooses it
-- Multi-step asks borrow a 1.7B model via Ollama (training her own picker is the open roadmap)
-- `eval/web_demo.py` needs the live site's /api, so it only fully passes against production
+Her own picker knows a subset of tools; the rest route through exact regex matches, not a model. Multi-step work borrows a small local model (qwen3:1.7b via Ollama). The 10 tools that read this Mac (disk, memory, Wi-Fi...) only work on a Mac; the landing page says so. She never calls another MCP server on her own, only when you name it.
 
 <img src="progress.svg" width="460">
 
 ## More
 
-- [`WHITEPAPER.md`](WHITEPAPER.md) - architecture and voice
-- [`roadmap.md`](roadmap.md) - the honest phase-by-phase plan
-- [`architecture.svg`](architecture.svg) - how the pieces fit together
+- [`WHITEPAPER.md`](WHITEPAPER.md): architecture and voice
+- [`roadmap.md`](roadmap.md): the honest phase-by-phase plan
+- [`architecture.svg`](architecture.svg): how the pieces fit together

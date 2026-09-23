@@ -421,6 +421,10 @@ _ROUTES = _ROUTES + tuple((pat, _util_route(name, arg)) for pat, name, arg in to
 _MULTISTEP = re.compile(r"\b(?:and (?:then )?(?:tell|read|find|summar|poke|look|check|see|click)|poke around|then )", re.I)
 # "look at my screen and tell me what's wrong" is one question about one picture, not two steps
 _EYES = re.compile(r"^(?:look at|describe|see|check out|what(?:'s| is) in) (?:(?:my |the )?screen|\S+\.(?:png|jpe?g|heic|gif|webp|tiff?|bmp))\b", re.I)
+# an explicit multi-step screen JOB, named as such: her own screen agent plans it, click_text/type_text/press_key one
+# step at a time, every step confirmed. Ahead of _MULTISTEP so "log me into X and check my email" does not go to the
+# tool-picking agent(), which has no screen tools at all (they are NOT_FOR_MODELS on purpose).
+_SCREEN_JOB = re.compile(r"^(?:log (?:me )?(?:in|into)|sign (?:me )?(?:in|into)|walk me through|step me through)\b", re.I)
 _ACTION = re.compile(r"^(?:open|launch|start|go to|visit|browse|pull up|search|google|look up|poke around|take a|grab a|screenshot|make|design|draw|paint|repaint|play|pause|skip|remind me|set a)\b", re.I)
 
 
@@ -486,7 +490,7 @@ def _named_page(task):
 # These fire something with a side effect the user did not see coming (a Shortcut can send a
 # message, a clipboard write loses what was there, the screen goes dark). Only a command that
 # names them runs them, never a model's own choice. The real fix is the harness asking first.
-NOT_FOR_MODELS = {"ask_llm", "see_screen", "see_image", "run_shortcut", "copy_to_clipboard", "sleep_display", "call_mcp_tool", "close_tab", "remember", "recall", "forget", "read_screen", "ask_screen"}  # her memory is private: only her own commands and the harness touch it
+NOT_FOR_MODELS = {"ask_llm", "see_screen", "see_image", "click_text", "type_text", "press_key", "run_shortcut", "copy_to_clipboard", "sleep_display", "call_mcp_tool", "close_tab", "remember", "recall", "forget", "read_screen", "ask_screen"}  # her memory is private: only her own commands and the harness touch it
 
 
 def model_tools():
@@ -677,6 +681,9 @@ def do(query, log=None, confirm=None):
     done = act(query)
     if done:
         return done
+    if _SCREEN_JOB.search(_bare(query)):
+        from tools_screen_agent import screen_task
+        return screen_task(query, log=log, confirm=confirm)
     if _MULTISTEP.search(_bare(query)) and not _EYES.search(_bare(query)):
         return agent(query, log=log, confirm=confirm)
     if _faq_knows(query):

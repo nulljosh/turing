@@ -93,6 +93,8 @@
   var MULTISTEP = /\b(?:and (?:then )?(?:tell|read|find|summar|poke|look|check|see|click)|poke around|then )/i;
   // "look at my screen and tell me what's wrong" is one question about one picture, not two steps, same as tools._EYES
   var EYES = /^(?:look at|describe|see|check out|what(?:'s| is) in) (?:(?:my |the )?screen|\S+\.(?:png|jpe?g|heic|gif|webp|tiff?|bmp))\b/i;
+  // an explicit multi-step screen job, same as tools._SCREEN_JOB: her own screen agent plans it on the real Mac
+  var SCREEN_JOB = /^(?:log (?:me )?(?:in|into)|sign (?:me )?(?:in|into)|walk me through|step me through)\b/i;
   var ACTION = /^(?:open|launch|start|go to|visit|browse|pull up|search|google|look up|poke around|take a|grab a|screenshot|make|design|draw|play|pause|skip|remind me|set a)\b/i;
   var LEAD = /^(?:(?:hey|ok|okay|yo|samantha|please|now|just)[, ]+)*(?:(?:can|could|would|will) you (?:please )?|i (?:want|need|would like|'d like) (?:you )?to |let's |go ahead and )?(?:please )?/i;
   var TAIL = /(?:[, ]+(?:please|for me|real quick|now|thanks|thank you))+$/i;
@@ -105,6 +107,7 @@
   // {tool, arg} for one exact command, {agent: true} for multi-step work, null for anything that is not a command
   function route(query) {
     var q = bare(query);
+    if (SCREEN_JOB.test(q)) return { agent: true };
     if (MULTISTEP.test(q) && !EYES.test(q)) return { agent: true };
     for (var i = 0; i < ROUTES.length; i++) {
       var m = ROUTES[i][0].exec(q);

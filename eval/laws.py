@@ -25,7 +25,7 @@ READ_ONLY = {"research", "open_app", "open_url", "web_search", "current_tab", "r
              "tip", "read_document", "find_in_document", "ask_document", "list_mcp_tools", "list_tabs", "switch_tab", "read_tab", "disk_space", "uptime", "memory_usage", "cpu_load", "ip_address", "wifi_name", "system_info", "list_shortcuts",
              "reveal_in_finder"}
 # Tools whose side effect nobody sees coming. They never reach a model or MCP, whatever tools.NOT_FOR_MODELS says today.
-MUST_HIDE = {"ask_llm", "see_screen", "see_image", "run_shortcut", "copy_to_clipboard", "sleep_display", "call_mcp_tool", "close_tab", "remember", "recall", "forget", "read_screen", "ask_screen"}
+MUST_HIDE = {"ask_llm", "see_screen", "see_image", "click_text", "type_text", "press_key", "run_shortcut", "copy_to_clipboard", "sleep_display", "call_mcp_tool", "close_tab", "remember", "recall", "forget", "read_screen", "ask_screen"}
 # A spoken command for each write tool that has a route. The image tools are picked by her model or the agent, never by a route.
 SPOKEN = {"ask_llm": "ask qwen why is the sky blue", "research": "research the printing press", "see_screen": "look at my screen", "see_image": "what's in ~/Desktop/cat.png", "click_text": "click Sign in", "type_text": "type hello", "press_key": "press return", "new_note": "take a note buy milk", "new_reminder": "remind me to call mom", "make_logo": "make me a logo for turing",
           "copy_to_clipboard": "copy hello to my clipboard", "sleep_display": "sleep the screen", "run_shortcut": "run shortcut morning",
