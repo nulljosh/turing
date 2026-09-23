@@ -10,7 +10,6 @@ import os, re, sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from ask import search, try_extract, faq_match, general_knowledge, is_project_question, is_question, current_officeholder, _WHO_PREFIX, _QUESTION_PREFIX, _keywords, project_vocabulary, clock, arithmetic, convert, local_answer, NETWORK_DOWN, OUT_OF_SCOPE, UNREACHABLE, LOOKUP_FAILED, MODEL, ADAPTER, SYSTEM
-import subprocess
 
 HISTORY_TURNS = 3  # how many prior exchanges to keep as short-term memory
 
@@ -144,19 +143,37 @@ def clean(answer, question):
     return answer.strip()
 
 
-def generate(prompt, max_tokens=80):
-    """Call mlx_lm.generate to produce model output given a prompt."""
-    out = subprocess.run(
-        [
-            os.path.join(os.path.dirname(os.path.abspath(__file__)), ".venv/bin/mlx_lm.generate"),
-            "--model", MODEL,
-            "--adapter-path", ADAPTER,
-            "--prompt", prompt,
-            "--max-tokens", str(max_tokens),
-        ],
-        capture_output=True, text=True, timeout=180,
-    )
-    return out.stdout.split("==========")[1].strip() if "==========" in out.stdout else out.stdout.strip()
+_answerer = None  # (model, tokenizer), loaded once per chat: a fresh process per turn spent ~2s reloading her before a word
+STOPS = ("\nUser:", "\nSamantha:", "User:", "Samantha:", "\n##")  # the scaffold clean() cuts at; streaming stops there too
+HOLD = max(map(len, STOPS))  # characters held back while streaming, so a half-written marker is never shown
+
+
+def _model():
+    """Her answer model and tokenizer, loaded on first use and kept. Raises OSError when MLX or the weights are not here."""
+    global _answerer
+    if _answerer is None:
+        try:
+            from mlx_lm import load
+            _answerer = load(MODEL, adapter_path=ADAPTER)
+        except Exception as e:
+            raise OSError(f"answer model unavailable: {e}") from e
+    return _answerer
+
+
+def generate(prompt, max_tokens=80, on_text=None):
+    """Her model's reply to a prompt, streamed: on_text gets each safe piece as it is written. Stops at echoed scaffold."""
+    from mlx_lm import stream_generate
+    model, tok = _model()
+    prompt = tok.apply_chat_template([{"role": "user", "content": prompt}], add_generation_prompt=True, tokenize=False)
+    text, shown = "", 0
+    for r in stream_generate(model, tok, prompt, max_tokens=max_tokens):
+        text += r.text
+        if any(m in text for m in STOPS):
+            break
+        if on_text and len(text) - HOLD > shown:
+            on_text(text[shown:len(text) - HOLD])
+            shown = len(text) - HOLD
+    return text
 
 
 def build_prompt(history, context, question):
@@ -172,7 +189,7 @@ def build_prompt(history, context, question):
     return "\n".join(parts)
 
 
-def answer_turn(question, history, topic_active, last_subject=None):
+def answer_turn(question, history, topic_active, last_subject=None, on_text=None):
     """One turn of the conversation: (question, history, topic_active) in,
     (answer, updated topic_active) out. Shared by the plain CLI and the TUI
     so the two never drift into different answer logic.
@@ -235,8 +252,8 @@ def answer_turn(question, history, topic_active, last_subject=None):
             context = "\n\n---\n\n".join(r["text"][:800] for r in results)
             prompt = build_prompt(history, context, question)
             try:
-                answer = clean(generate(prompt), question) or MODEL_DOWN
-            except (OSError, subprocess.SubprocessError):
+                answer = clean(generate(prompt, on_text=on_text), question) or MODEL_DOWN
+            except (OSError, ImportError):
                 # the weights live in .venv on the Mac; without them, or if the model hangs, say so
                 answer = MODEL_DOWN
 
@@ -276,10 +293,10 @@ def answer_turn(question, history, topic_active, last_subject=None):
     return answer, topic_active, last_subject
 
 
-def safe_turn(question, history, topic_active, last_subject):
+def safe_turn(question, history, topic_active, last_subject, on_text=None):
     """answer_turn, but a failure anywhere in the answer chain is a reply, never the end of the conversation."""
     try:
-        return answer_turn(question, history, topic_active, last_subject)
+        return answer_turn(question, history, topic_active, last_subject, on_text)
     except Exception as e:
         return f"Something broke while I was answering that ({type(e).__name__}: {e}). Ask again, or ask something else.", topic_active, last_subject
 
@@ -306,8 +323,16 @@ def chat():
             print(f"Samantha: {did}\n")
             history.append((question, did))
             continue
-        answer, topic_active, last_subject = safe_turn(question, history, topic_active, last_subject)
-        print(f"Samantha: {answer}\n")
+        shown = []
+
+        def show(piece):
+            """Print her words as she writes them."""
+            piece = piece if shown else "Samantha: " + piece.lstrip()
+            shown.append(piece)
+            print(piece, end="", flush=True)
+        answer, topic_active, last_subject = safe_turn(question, history, topic_active, last_subject, on_text=show)
+        said = "".join(shown).removeprefix("Samantha: ")
+        print(answer[len(said):] + "\n" if shown and answer.startswith(said) else ("\n" if shown else "") + f"Samantha: {answer}\n")
         history.append((question, answer))
 
 

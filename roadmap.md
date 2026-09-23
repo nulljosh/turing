@@ -308,7 +308,7 @@ The loop runs in the cloud and cannot reach Cloudflare or this Mac. Tick a box w
 
 - [x] Deploy the site (done 2026-09-22, by hand; CI still skips until CLOUDFLARE_API_TOKEN is a repo secret): `npx wrangler deploy` in the repo (or add the `CLOUDFLARE_API_TOKEN` repo secret once and it deploys itself on every push)
 - [x] ask_claude: asks the biggest local model (oMLX Qwen3.5-9B, then Ollama qwen3:8b) instead of Claude, no key needed (2026-09-22)
-- [ ] Try streamed replies, voice in and GUI control once the loop builds them: they need her real model and a real screen
+- [ ] Try voice in and GUI control once the loop builds them: they need a real mic and a real screen. Streamed replies shipped and were tried here (v1.5.0)
 
 ### How we compete with trillion-dollar labs (set 2026-09-22)
 We will not out-think Claude or GPT: that is data centres and years. We win where they structurally can't follow:
@@ -322,7 +322,7 @@ Every loop iteration should move one of these five.
 ### Gaps found by the loop
 The loop compares her with other assistants (Siri and Shortcuts, Apple Intelligence, Claude and ChatGPT desktop with MCP, Open Interpreter, Raycast AI, local Ollama agents), adds each real gap here with where it was seen, builds it, then deletes the line once it ships (history lives in git). Newest and biggest first.
 
-- [ ] Streamed replies: frontier chats print words as they come; her model answers arrive all at once after a pause. mlx_lm has stream_generate. Seen in every chat app. Mac-only to test
+- [ ] Stream in the curses TUI too: the plain chat streams since v1.5.0, the TUI still shows the whole answer at the end. Seen in every chat app
 - [ ] Control the GUI with approval: click and type in an app, every step confirmed by the harness first. Seen in Claude computer use, Open Interpreter
 - [ ] Voice in as well as out: she can speak, she cannot listen. A local Whisper on MLX would do it
 

@@ -2,6 +2,8 @@
 
 TLDR per loop round, newest first. The loop adds a line every round it ships something, then the scorecard.
 
+- 2026-09-22: 🎉 v1.5.0: streamed replies. She stays loaded and prints words as she writes them; a warm turn is about 1s (was 2s+ reloading every turn). Output checked identical to the old path.
+  `v1.5.0 · 80 tools · 126 tests · docs coverage 100% · laws all hold · biggest tools.py 820 · actions 110/110 · parity 110/110 · util_diff 195/195`
 - 2026-09-22: v1.4.2: ask_claude tries oMLX's Qwen3.5-9B first (warm answer in about a second), Ollama second. Ollama's loader stalled past 5 minutes off the external drive.
   `v1.4.2 · 80 tools · 125 tests · docs coverage 100% · laws all hold · biggest tools.py 820 · actions 110/110 · parity 110/110 · util_diff 195/195`
 - 2026-09-22: 🎉 v1.4.1: ask_claude runs on the Mac now. It hands hard questions to qwen3:8b through Ollama, no API key, nothing leaves the machine. Site deployed by hand.

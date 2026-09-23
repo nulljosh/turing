@@ -189,11 +189,27 @@ def test_a_missing_model_is_a_reply_not_a_crash():
     import chat
     mock = __import__("unittest.mock").mock
     with mock.patch.object(chat, "search", return_value=[{"text": "ctx"}]), mock.patch.object(chat, "try_extract", return_value=None), \
-         mock.patch.object(chat, "faq_match", return_value=None), mock.patch.object(chat, "subprocess") as sp:
-        sp.run.side_effect = FileNotFoundError(2, "No such file", ".venv/bin/mlx_lm.generate")
-        sp.SubprocessError = __import__("subprocess").SubprocessError
+         mock.patch.object(chat, "faq_match", return_value=None), \
+         mock.patch.object(chat, "_model", side_effect=OSError("answer model unavailable: no weights")):
         answer, _, _ = chat.answer_turn("write a commit message for the turing picker", [], True)
     assert answer == chat.MODEL_DOWN
+
+
+def test_replies_stream_and_stop_at_echoed_scaffold():
+    """Verify generate() hands out words as they come, never shows a half-written User: marker, and stops at the echo."""
+    import sys, types
+    import chat
+    mock = __import__("unittest.mock").mock
+    pieces = ["Train", "ing runs", " on the", " Mac.", "\nUs", "er: and", " more"]
+    fake = types.ModuleType("mlx_lm")
+    fake.stream_generate = lambda model, tok, prompt, max_tokens: (types.SimpleNamespace(text=p) for p in pieces)
+    tok = types.SimpleNamespace(apply_chat_template=lambda msgs, **kw: msgs[0]["content"])
+    got = []
+    with mock.patch.dict(sys.modules, {"mlx_lm": fake}), mock.patch.object(chat, "_model", return_value=(None, tok)):
+        text = chat.generate("p", on_text=got.append)
+    assert "".join(got) and "User" not in "".join(got) and "Us" not in "".join(got)[-3:]
+    assert "Training runs on the Mac.".startswith("".join(got))
+    assert chat.clean(text, "q") == "Training runs on the Mac."
 
 
 def test_a_broken_tool_through_ask_is_a_reply():

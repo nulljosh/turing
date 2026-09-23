@@ -56,7 +56,7 @@ The live site has not been deployed from the cloud (no Cloudflare access), so it
 ## Next, in order
 1. On the Mac: site deployed by hand 2026-09-22; run `./gate.sh --full` to check her real model, Pixelmator and the live page against v1.4.0.
 2. Split tools.py (822, the biggest; tests patch tools._run, _app, installed_apps, pick, read_page, grayscale_image, and plan() swaps tools-module globals, so re-export and patch where the names live), then lower MAX_LINES in eval/laws.py. Then pixelmator/test_pxm.py 806, tools_util.py 651, web/demo.js, web/samantha.js.
-3. Top of roadmap.md "Gaps found by the loop", Mac-first now: streamed replies (mlx_lm stream_generate), voice in (Whisper on MLX), GUI control with approval.
+3. Top of roadmap.md "Gaps found by the loop", Mac-first now: streamed replies SHIPPED v1.5.0 in the plain chat (model loaded once, a warm turn is about 1s, was 2s+ reloading per turn; TUI streaming still open), then voice in (Whisper on MLX), GUI control with approval. 2.0.0 = GUI control + voice in.
 4. ask_claude now asks the biggest local model instead of Claude: oMLX Qwen3.5-9B first (warm answers in about a second), Ollama qwen3:8b as fallback. Ollama loads from the external LaCie drive and its loader stalled past 5 minutes on 2026-09-22, which is why oMLX goes first: the user will not hand out API keys. No anthropic SDK, nothing leaves the Mac.
 
 ## Restart prompt

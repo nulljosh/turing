@@ -38,7 +38,7 @@ def offline():
             mock.patch("subprocess.run", side_effect=FileNotFoundError(2, "No such file", "osascript")),
             mock.patch("subprocess.Popen", side_effect=FileNotFoundError(2, "No such file", "say")),
             mock.patch("urllib.request.urlopen", side_effect=OSError("offline")),
-            mock.patch.dict(sys.modules, {"anthropic": None})]  # never a real, billed Claude call, even on a Mac with a key
+            mock.patch.object(chat, "_model", side_effect=OSError("offline"))]  # her answer model stays unloaded, as on CI
 
 
 class NeverCrash(unittest.TestCase):
