@@ -1,7 +1,7 @@
 {
-  "version": "3.0.1",
+  "version": "3.1.0",
   "docs_coverage": {
-    "percent": 99,
+    "percent": 100,
     "files": {
       "test_voice.py": {
         "total": 10,
@@ -12,8 +12,8 @@
         "documented": 16
       },
       "tools_research.py": {
-        "total": 4,
-        "documented": 4
+        "total": 7,
+        "documented": 7
       },
       "test_library.py": {
         "total": 11,
@@ -104,8 +104,8 @@
         "documented": 18
       },
       "test_research.py": {
-        "total": 7,
-        "documented": 7
+        "total": 15,
+        "documented": 15
       },
       "prep_data.py": {
         "total": 5,
@@ -161,7 +161,7 @@
       },
       "test_screen_agent.py": {
         "total": 18,
-        "documented": 16
+        "documented": 18
       },
       "tools_llm.py": {
         "total": 6,
@@ -280,7 +280,7 @@
   "measured": {
     "tools": {
       "before": 0,
-      "after": 86
+      "after": 87
     },
     "actions_eval": "77/77",
     "knowledge_sweep": {
