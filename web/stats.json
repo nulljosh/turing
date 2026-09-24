@@ -1,107 +1,27 @@
 {
-  "version": "4.2.0",
+  "version": "4.2.1",
   "docs_coverage": {
     "percent": 100,
     "files": {
-      "chat_pipe.py": {
-        "total": 11,
-        "documented": 11
-      },
-      "tools_image.py": {
-        "total": 16,
-        "documented": 16
-      },
-      "tools_research.py": {
-        "total": 7,
-        "documented": 7
-      },
-      "harness.py": {
+      "ask_web.py": {
         "total": 10,
         "documented": 10
       },
-      "library.py": {
-        "total": 8,
-        "documented": 8
-      },
-      "tools_gui.py": {
-        "total": 8,
-        "documented": 8
-      },
-      "tools_screen_agent.py": {
-        "total": 3,
-        "documented": 3
-      },
-      "ask.py": {
-        "total": 7,
-        "documented": 7
-      },
-      "tools_agent.py": {
-        "total": 5,
-        "documented": 5
-      },
-      "ask_local.py": {
-        "total": 9,
-        "documented": 9
-      },
-      "tools.py": {
-        "total": 37,
-        "documented": 37
+      "mcp_server.py": {
+        "total": 4,
+        "documented": 4
       },
       "ask_faq.py": {
         "total": 10,
         "documented": 10
       },
-      "util_dates.py": {
-        "total": 12,
-        "documented": 12
-      },
-      "serve.py": {
-        "total": 8,
-        "documented": 8
-      },
-      "tools_logo.py": {
-        "total": 16,
-        "documented": 16
-      },
-      "voice.py": {
-        "total": 9,
-        "documented": 9
-      },
-      "tools_apps.py": {
-        "total": 14,
-        "documented": 14
-      },
-      "tools_code.py": {
-        "total": 7,
-        "documented": 7
-      },
-      "chat.py": {
-        "total": 18,
-        "documented": 18
-      },
       "stats.py": {
         "total": 7,
         "documented": 7
       },
-      "tools_util.py": {
-        "total": 43,
-        "documented": 43
-      },
-      "ask_web.py": {
-        "total": 10,
-        "documented": 10
-      },
-      "gen_jt_docs.py": {
-        "total": 13,
-        "documented": 13
-      },
-      "tools_llm.py": {
-        "total": 6,
-        "documented": 6
-      },
-      "util_math.py": {
-        "total": 20,
-        "documented": 20
+      "util_dates.py": {
+        "total": 12,
+        "documented": 12
       },
       "tools_write.py": {
         "total": 1,
@@ -111,33 +31,113 @@
         "total": 9,
         "documented": 9
       },
+      "chat.py": {
+        "total": 18,
+        "documented": 18
+      },
+      "harness.py": {
+        "total": 10,
+        "documented": 10
+      },
+      "ask_local.py": {
+        "total": 9,
+        "documented": 9
+      },
+      "tools_research.py": {
+        "total": 7,
+        "documented": 7
+      },
+      "util_math.py": {
+        "total": 20,
+        "documented": 20
+      },
+      "tools_agent.py": {
+        "total": 5,
+        "documented": 5
+      },
+      "library.py": {
+        "total": 8,
+        "documented": 8
+      },
+      "tools_gui.py": {
+        "total": 8,
+        "documented": 8
+      },
+      "tools_image.py": {
+        "total": 17,
+        "documented": 17
+      },
+      "tools_apps.py": {
+        "total": 14,
+        "documented": 14
+      },
+      "voice.py": {
+        "total": 9,
+        "documented": 9
+      },
+      "tools_code.py": {
+        "total": 7,
+        "documented": 7
+      },
+      "tools_screen_agent.py": {
+        "total": 3,
+        "documented": 3
+      },
+      "tools_logo.py": {
+        "total": 28,
+        "documented": 28
+      },
+      "gen_jt_docs.py": {
+        "total": 13,
+        "documented": 13
+      },
+      "tools.py": {
+        "total": 37,
+        "documented": 37
+      },
+      "chat_pipe.py": {
+        "total": 11,
+        "documented": 11
+      },
       "tools_files.py": {
         "total": 14,
         "documented": 14
       },
-      "mcp_server.py": {
-        "total": 4,
-        "documented": 4
+      "tools_util.py": {
+        "total": 43,
+        "documented": 43
       },
-      "pixelmator/pxm_spec.py": {
-        "total": 9,
-        "documented": 9
+      "tools_llm.py": {
+        "total": 6,
+        "documented": 6
       },
-      "pixelmator/test_pxm_run.py": {
-        "total": 48,
-        "documented": 48
+      "serve.py": {
+        "total": 8,
+        "documented": 8
       },
-      "pixelmator/test_pxm.py": {
-        "total": 53,
-        "documented": 53
+      "ask.py": {
+        "total": 7,
+        "documented": 7
       },
       "pixelmator/pxm.py": {
         "total": 24,
         "documented": 24
       },
+      "pixelmator/test_pxm.py": {
+        "total": 53,
+        "documented": 53
+      },
+      "pixelmator/test_pxm_run.py": {
+        "total": 48,
+        "documented": 48
+      },
       "pixelmator/arc_text.py": {
         "total": 3,
         "documented": 3
+      },
+      "pixelmator/pxm_spec.py": {
+        "total": 9,
+        "documented": 9
       },
       "eval/a11y.py": {
         "total": 1,
@@ -212,8 +212,8 @@
         "documented": 12
       },
       "eval/test_edges.py": {
-        "total": 33,
-        "documented": 33
+        "total": 40,
+        "documented": 40
       },
       "eval/test_gguf_parity.py": {
         "total": 1,
@@ -284,8 +284,8 @@
         "documented": 10
       },
       "eval/test_tools_image.py": {
-        "total": 24,
-        "documented": 24
+        "total": 21,
+        "documented": 21
       },
       "eval/test_voice.py": {
         "total": 25,

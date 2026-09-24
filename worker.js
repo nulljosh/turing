@@ -109,7 +109,7 @@ const SMALLTALK = [
   [/^(?:how are you|how's it going|how are things)(?: doing| today)?[!.?]*$/i, "Running fine, and ready. What do you need?"],
   [/^(?:thanks|thank you|thx|cheers|ty)(?: so much| samantha)?[!.?]*$/i, "Any time."],
   [/^(?:tell me a joke|got a joke\??|say something funny|make me laugh)[!.?]*$/i, "Why do programmers prefer dark mode? Because light attracts bugs."],
-  [/^(?:who are you|what are you|what can you do|what do you do|help)[!.?]*$/i, "I'm Samantha, a small model. I answer questions here in Joshua Tree's Chat, and elsewhere I have hands on a Mac."],
+  [/^(?:who are you|what are you|what can you do|what do you do|help)[!.?]*$/i, "I'm Samantha, a small model. Here in Joshua Tree I answer questions and have hands too: say remind me to..., note..., open notes, weather, or what's on today. On a Mac I can do more."],
 ];
 const smallTalk = q => (SMALLTALK.find(([re]) => re.test(q.trim())) || [])[1] || null;
 
