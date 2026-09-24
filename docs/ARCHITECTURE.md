@@ -104,4 +104,5 @@ Once she is trained, `ask.py` and `chat.py` handle questions. Before answering, 
 | `docs/HISTORY.md` | What the loop did, by phase, moved out of roadmap.md on 2026-09-23 so the roadmap holds only the plan and the open gaps. Every entry is the day's own note, word for word. |
 | `docs/PROGRESS.md` | One line per shipped loop round, newest first, each followed by the scorecard line. |
 | `web/index.html` | Landing page. Loss chart, training status, painter demo, project roadmap. |
+| `web/badge.svg` | Footer badge, engraved-style, white on black: Samantha's own drawn scene inside an arched frame with SAMANTHA/TURING banners, side text and a caption strip. Matches Joshua Tree's badge style. |
 | `wrangler.toml` | Cloudflare Worker deployment (landing page assets only). |
