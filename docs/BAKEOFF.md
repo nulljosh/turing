@@ -55,3 +55,16 @@ Round five's 19 blocked right picks were not the guard being generally too stric
 Round six covers meaningfully more unseen phrasings (789 against 675, 966 against 841 overall) and is safer, not just more accurate: fewer wrong picks get past the guard (49 against 123). It does refuse 7 right picks the shipped adapter did not, but all 7 are one pattern: `convert_units` on "how many miles is 5 km"-style questions, where the model answers "5 km to miles" (a correct rewrite, not a copy) and the guard correctly refuses an argument that is not literally in the sentence, plus one `copy_file` case with a tab-joined argument that was never in training data at all (`copy_file` has no templates yet). None of the 7 are wrong or unsafe, and none touch a tool the shipped adapter already handled by wording, so this is not the round-five kind of regression.
 
 **Decision: shipped round six.** `hands-adapter-round6/` becomes the new `hands-adapter/` (adapters are gitignored, swapped on the Mac by hand, not through this PR). Next: teach "how many X is N Y" as a literal copy instead of a rewrite, and write templates for the 16 tools that still have none (`copy_file`, `move_file`, `rename_file`, `trash_file`, `zip_file`, `unzip_file`, `find_file`, `folder_size`, `recent_downloads`, `unread_mail`, `translate`, `summarize`, `transcribe_video`, `write_document`, `research`, `save_research`).
+
+## Constrained tool-name decoding (2026-09-24, round six, constrained names)
+
+Tried an `mlx_lm` logits processor (`eval/constrain.py`, `eval/hands.py --constrain`) that builds a token-level trie from the tokenizer's own encoding of every tool name plus `null`, forces the JSON prefix `{"tool": ` into the prompt, and masks logits to that trie until it hits a leaf, then lets the rest (the arg) generate freely, same as today. Argument stage untouched, no retraining, same round-six adapter, same 1314-case set as a matched unconstrained re-run:
+
+| Run | Unseen | Actions | Questions | Total | Wrong picks past the guard | Right picks refused |
+|---|---|---|---|---|---|---|
+| Round six (matched re-run, unconstrained) | 757 / 1040 | 93 / 180 | 84 / 94 | 934 / 1314 | 56 | 8 |
+| Round six, constrained tool names | 10 / 1040 | 2 / 180 | 20 / 94 | 32 / 1314 | 8 | 0 |
+
+Constraining collapsed accuracy instead of helping it. The trie only guarantees the tool name is real; it does not keep the model near its trained JSON shape once the mask turns off. Forcing the raw prompt suffix `{"tool": ` (concatenated after the chat template's generation prompt, not through the template itself) plus a hard logit mask evidently pushes the tiny adapter off its trained distribution, and once past the tool-name leaf the model often garbles the rest of the line (missing comma, stray tokens, no `"arg"` key at all), so most cases fail to parse as JSON even when the tool name itself was legal.
+
+**Decision: not shipped.** `--constrain` stays off by default. `eval/baseline.json` and roadmap.md's constrained-output line are unchanged since this did not win. Worth another look feeding the prefix through the chat template's own generation-prompt path instead of raw string concatenation, since that is the likely cause of the collapse.
