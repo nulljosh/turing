@@ -314,14 +314,14 @@ def _mark_prompt(seed_text=""):
 
 
 def redraw_mark(seed_text="", root=None):
-    """Redraw Samantha's mark fresh: picks one subject line from the woman-with-a-mind family, asks the hosted
-    /api/draw endpoint (there is no local image model on this Mac) for a picture, traces it with ImageMagick and
-    potrace to one ink colour on one paper colour, and writes the five files that carry her mark: art/mark.svg,
-    icon.svg, web/icon.svg, web/samantha-logo.png and a 256px web/mark-preview.png to grade it by. The ink/paper
-    rule (grayscale, 55% threshold, so potrace only ever has one colour to trace) lives here in code, not in a
-    shell one-liner. Retries a 429 ("a lot of drawing for one minute") twice, 30 seconds apart, then gives up
-    and says why without touching any committed file. root overrides where the five files land (a test's tmp
-    directory); it defaults to this repo."""
+    """Redraw a fresh candidate for Samantha's mark: picks one subject line from the woman-with-a-mind family,
+    asks the hosted /api/draw endpoint (there is no local image model on this Mac) for a picture, traces it with
+    ImageMagick and potrace to one ink colour on one paper colour, and writes art/mark-candidate.svg and a 256px
+    web/mark-preview.png to grade it by. It never touches her shipped mark; promote_mark does that, and only once
+    the candidate passes mark_sanity. The ink/paper rule (grayscale, 55% threshold, so potrace only ever has one
+    colour to trace) lives here in code, not in a shell one-liner. Retries a 429 ("a lot of drawing for one
+    minute") twice, 30 seconds apart, then gives up and says why. root overrides where the files land (a test's
+    tmp directory); it defaults to this repo."""
     if not shutil.which("magick") or not shutil.which("potrace"):
         return "I need ImageMagick and potrace on PATH: brew install imagemagick potrace"
     subject, prompt = _mark_prompt(seed_text)
@@ -371,25 +371,135 @@ def redraw_mark(seed_text="", root=None):
         tmp_icon = os.path.join(tmp, "icon.svg")
         with open(tmp_icon, "w") as f:
             f.write(icon)
-        png, preview = os.path.join(tmp, "samantha-logo.png"), os.path.join(tmp, "mark-preview.png")
-        _run(["magick", "-background", "none", tmp_icon, "-resize", "1024x1024", png], timeout=60)
+        preview = os.path.join(tmp, "mark-preview.png")
         _run(["magick", "-background", "none", tmp_icon, "-resize", "256x256", preview], timeout=60)
-        if not (os.path.exists(png) and os.path.exists(preview)):
-            return "Didn't redraw her mark: magick couldn't render the PNGs."
+        if not os.path.exists(preview):
+            return "Didn't redraw her mark: magick couldn't render the preview PNG."
 
-        # only now, once every output is built and verified, does it touch the committed files
         os.makedirs(os.path.join(here, "art"), exist_ok=True)
         os.makedirs(os.path.join(here, "web"), exist_ok=True)
-        with open(os.path.join(here, "art", "mark.svg"), "w") as f:
+        with open(os.path.join(here, "art", "mark-candidate.svg"), "w") as f:
             f.write(inner)
-        for path in (os.path.join(here, "icon.svg"), os.path.join(here, "web", "icon.svg")):
-            with open(path, "w") as f:
-                f.write(icon)
-        shutil.copy(png, os.path.join(here, "web", "samantha-logo.png"))
         shutil.copy(preview, os.path.join(here, "web", "mark-preview.png"))
-        return f"Redrew her mark: her head {subject}. See web/mark-preview.png."
+        return f"Drew a candidate: her head {subject}. See web/mark-preview.png; promote_mark() decides if it ships."
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
+
+
+def _parse_pbm_ascii(text):
+    """A P1 (ASCII) PBM's pixels as a grid of 0/1 ints, one row per scanline. 1 is ink (black), matching both
+    ImageMagick's and potrace's convention. No dependency needed to read it back."""
+    lines = text.strip().splitlines()
+    if not lines or lines[0].strip() != "P1":
+        raise ValueError("not an ASCII PBM")
+    w, h = (int(n) for n in lines[1].split())
+    bits = [int(b) for line in lines[2:] for b in line.split()]
+    return [bits[y * w:(y + 1) * w] for y in range(h)]
+
+
+def _grid_ink_stats(grid):
+    """Ink fraction, outer 4%-margin paper fraction, and the largest connected ink blob's fraction of the canvas,
+    for a 0/1 grid (1 is ink). Pure Python, no dependency, so mark_sanity's test can hand it a tiny synthetic
+    grid with no magick or potrace involved."""
+    h, w = len(grid), len(grid[0])
+    total = w * h
+    ink = sum(row.count(1) for row in grid)
+    margin = max(1, round(0.04 * min(w, h)))
+    edge_total = edge_ink = 0
+    for y in range(h):
+        for x in range(w):
+            if x < margin or x >= w - margin or y < margin or y >= h - margin:
+                edge_total += 1
+                edge_ink += grid[y][x]
+    margin_paper = 1 - edge_ink / edge_total if edge_total else 1.0
+    seen = [[False] * w for _ in range(h)]
+    best = 0
+    for sy in range(h):
+        for sx in range(w):
+            if grid[sy][sx] and not seen[sy][sx]:
+                seen[sy][sx] = True
+                stack, size = [(sx, sy)], 0
+                while stack:
+                    x, y = stack.pop()
+                    size += 1
+                    for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                        nx, ny = x + dx, y + dy
+                        if 0 <= nx < w and 0 <= ny < h and grid[ny][nx] and not seen[ny][nx]:
+                            seen[ny][nx] = True
+                            stack.append((nx, ny))
+                best = max(best, size)
+    return ink / total, margin_paper, best / total
+
+
+def mark_sanity(grid, candidate_inner, current_inner):
+    """Plain checks before a freshly drawn mark is allowed to replace the shipped one: ink between 6% and 28% of
+    the canvas, the outer margin at least 97% paper (the frame isn't clipped, nothing bleeds off the edge), no
+    single connected ink blob over 12% of the canvas (a stray blot, not her drawing), and the candidate must
+    actually be a different drawing than what's already shipped. Returns (ok, why)."""
+    ink_frac, margin_paper, blob_frac = _grid_ink_stats(grid)
+    if not (0.06 <= ink_frac <= 0.28):
+        return False, f"ink is {ink_frac:.0%} of the canvas, want 6-28%"
+    if margin_paper < 0.97:
+        return False, f"the outer margin is only {margin_paper:.0%} paper, something's clipped at the edge"
+    if blob_frac > 0.12:
+        return False, f"a single ink blob covers {blob_frac:.0%} of the canvas"
+    if candidate_inner == current_inner:
+        return False, "the candidate is identical to the current mark"
+    return True, "passes"
+
+
+def _rasterize_grid(svg_inner, size=128):
+    """Render a traced <g> block's own 1024x1024 drawing down to a small 0/1 grid for mark_sanity, flattened onto
+    white so an unfilled area reads as paper, not transparent. Needs magick on PATH."""
+    tmp = tempfile.mkdtemp(prefix="samantha-mark-check-")
+    try:
+        svg_path = os.path.join(tmp, "candidate.svg")
+        with open(svg_path, "w") as f:
+            f.write(f'<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">\n{svg_inner}\n</svg>\n')
+        pbm = os.path.join(tmp, "check.pbm")
+        _run(["magick", "-background", "white", svg_path, "-flatten", "-resize", f"{size}x{size}!",
+              "-colorspace", "Gray", "-threshold", "50%", "-compress", "none", f"pbm:{pbm}"], timeout=30)
+        with open(pbm) as f:
+            return _parse_pbm_ascii(f.read())
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+
+
+def promote_mark(root=None):
+    """Promote art/mark-candidate.svg to her real, shipped mark, but only when mark_sanity passes on a fresh
+    rasterize of it. When it doesn't, every committed file is left exactly as it was; release.sh reads the reason
+    and keeps going rather than failing the release. Used by `tools_logo.py --promote`. Returns (ok, why)."""
+    here = root or os.path.dirname(os.path.abspath(__file__))
+    cand_path = os.path.join(here, "art", "mark-candidate.svg")
+    if not os.path.exists(cand_path):
+        return False, "no candidate to promote, redraw_mark hasn't run"
+    with open(cand_path) as f:
+        candidate = f.read()
+    mark_path = os.path.join(here, "art", "mark.svg")
+    current = ""
+    if os.path.exists(mark_path):
+        with open(mark_path) as f:
+            current = f.read()
+    if not shutil.which("magick"):
+        return False, "I need ImageMagick on PATH to check the candidate: brew install imagemagick"
+    ok, why = mark_sanity(_rasterize_grid(candidate), candidate, current)
+    if not ok:
+        return False, why
+    icon = _icon_svg_from(candidate)
+    with open(mark_path, "w") as f:
+        f.write(candidate)
+    for path in (os.path.join(here, "icon.svg"), os.path.join(here, "web", "icon.svg")):
+        with open(path, "w") as f:
+            f.write(icon)
+    tmp = tempfile.mkdtemp(prefix="samantha-mark-promote-")
+    try:
+        tmp_icon = os.path.join(tmp, "icon.svg")
+        with open(tmp_icon, "w") as f:
+            f.write(icon)
+        _run(["magick", "-background", "none", tmp_icon, "-resize", "1024x1024", os.path.join(here, "web", "samantha-logo.png")], timeout=60)
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+    return True, "promoted"
 
 
 def _contrast(a, b):
@@ -404,15 +514,20 @@ def _contrast(a, b):
 
 
 def main():
-    """CLI: python3 tools_logo.py --redraw [seed text, usually the release version]. Exits 0 only when the mark
-    actually got redrawn, so release.sh can tell a real redraw from a skipped one (rate limit, no ImageMagick)."""
-    if "--redraw" not in sys.argv:
-        print("usage: python3 tools_logo.py --redraw [seed text]")
-        return 2
-    i = sys.argv.index("--redraw")
-    result = redraw_mark(sys.argv[i + 1] if len(sys.argv) > i + 1 else "")
-    print(result)
-    return 0 if result.startswith("Redrew") else 1
+    """CLI: python3 tools_logo.py --redraw [seed text, usually the release version] draws a candidate; --promote
+    ships it, only if mark_sanity passes. Each exits 0 only on real success, so release.sh can tell a skip (rate
+    limit, no ImageMagick, a failed sanity check) from the real thing."""
+    if "--redraw" in sys.argv:
+        i = sys.argv.index("--redraw")
+        result = redraw_mark(sys.argv[i + 1] if len(sys.argv) > i + 1 else "")
+        print(result)
+        return 0 if result.startswith("Drew a candidate") else 1
+    if "--promote" in sys.argv:
+        ok, why = promote_mark()
+        print(why)
+        return 0 if ok else 1
+    print("usage: python3 tools_logo.py --redraw [seed text] | --promote")
+    return 2
 
 
 if __name__ == "__main__":

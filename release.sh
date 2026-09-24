@@ -10,12 +10,16 @@ echo "$V" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$' || { echo "version must look lik
 git rev-parse "v$V" >/dev/null 2>&1 && { echo "v$V already exists"; exit 1; }
 
 # Her mark redrawn fresh every release, committed on its own before the uncommitted-work check below so a
-# clean redraw never blocks the release. tools_logo.py retries a rate limit itself and gives up silently,
-# keeping tonight's mark, rather than fail the release when the endpoint or ImageMagick/potrace aren't there.
-if python3 tools_logo.py --redraw "$V"; then
+# clean redraw never blocks the release. tools_logo.py retries a rate limit itself, and a candidate only ever
+# ships once --promote's plain sanity check passes (ink fraction, a clean margin, no stray blot, actually new);
+# any failure here just keeps tonight's mark and prints why, it never fails the release.
+if python3 tools_logo.py --redraw "$V" && python3 tools_logo.py --promote; then
 	git add art/mark.svg icon.svg web/icon.svg web/samantha-logo.png web/mark-preview.png
 	git commit -qm "mark: redrawn for v$V"
+else
+	git checkout -q -- web/mark-preview.png 2>/dev/null || rm -f web/mark-preview.png
 fi
+rm -f art/mark-candidate.svg
 
 # scratch/ holds a weights file git always calls changed. Everything else must be committed.
 [ -z "$(git status --porcelain | grep -v ' scratch/')" ] || { echo "commit your work first"; exit 1; }
