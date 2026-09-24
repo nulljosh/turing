@@ -341,8 +341,11 @@ class TestEveryToolScript(unittest.TestCase):
                     script, kwargs = run.call_args[0][0], run.call_args[1]
                     lines = [l.strip() for l in script.splitlines()]
                     self.assertEqual(lines[0], 'tell application "Pixelmator Pro"')
-                    self.assertTrue(lines[1].startswith("set d to open (POSIX file"))
-                    self.assertEqual(lines[2:-3], [step] if step else [])
+                    self.assertTrue(any(l.startswith("open (POSIX file") for l in lines), lines)
+                    self.assertIn("if (exists document 1) then", lines)
+                    self.assertIn("set d to document 1", lines)
+                    open_end = lines.index("set d to document 1") + 1
+                    self.assertEqual(lines[open_end:-3], [step] if step else [])
                     self.assertTrue(lines[-3].startswith("export d to (POSIX file") and lines[-3].endswith(f"samantha-{out}\") as {fmt}"), lines[-3])
                     self.assertEqual(lines[-2:], ["close d saving no", "end tell"])
                     self.assertEqual(kwargs["timeout"], timeout)
@@ -363,6 +366,56 @@ class TestEveryToolScript(unittest.TestCase):
             with patch("tools_image.pxm.PxmError", MockPxmError), patch("tools_image.pxm.build_lock"), patch("tools_image.pxm.hide_app"), \
                  patch("tools_image.pxm.run_applescript", side_effect=MockPxmError("Pixelmator Pro is not installed")):
                 self.assertEqual(tools_image.enhance_image(path), "Pixelmator Pro is not installed")
+        finally:
+            os.remove(path)
+
+    def test_open_step_waits_for_the_document_before_any_layer_or_export_call(self):
+        """The shared open script polls `exists document 1` in a bounded repeat, and the step/export
+        only run after that wait succeeds, not right after `open`."""
+        path = os.path.join(os.path.expanduser("~"), "samantha-test-race.png")
+        with open(path, "wb") as f:
+            f.write(b"fake png")
+        try:
+            with patch("tools_image.pxm.build_lock"), patch("tools_image.pxm.hide_app"), \
+                 patch("tools_image.pxm.run_applescript") as run, patch("os.path.exists", return_value=True):
+                tools_image.enhance_image(path)
+                script = run.call_args[0][0]
+                lines = [l.strip() for l in script.splitlines()]
+
+                # Cold launch: launch, then wait for it to come up, before ever calling open.
+                self.assertIn("if not running then launch", lines)
+                launch_i = lines.index("if not running then launch")
+                open_i = next(i for i, l in enumerate(lines) if l.startswith("open (POSIX file"))
+                self.assertLess(launch_i, open_i)
+
+                # Poll exists document 1, bounded, at 0.2s steps, for about 10 seconds total.
+                poll = [l for l in lines if l.startswith("repeat ") and l.endswith("times")]
+                self.assertEqual(len(poll), 2)  # one for "running", one for the document
+                tries = int(poll[0].split()[1])
+                self.assertEqual(tries * tools_image._OPEN_STEP, tools_image._OPEN_DEADLINE)
+                self.assertIn("if (exists document 1) then", lines)
+                self.assertIn(f"delay {tools_image._OPEN_STEP}", lines)
+
+                # The layer/export step comes strictly after the document is confirmed open.
+                doc_i = lines.index("set d to document 1")
+                step_i = lines.index("enhance layer 1 of d")
+                self.assertLess(open_i, doc_i)
+                self.assertLess(doc_i, step_i)
+        finally:
+            os.remove(path)
+
+    def test_open_step_gives_up_with_a_plain_message_after_the_deadline(self):
+        """When Pixelmator never finishes opening the document, the AppleScript's own repeat gives
+        up and raises a plain message, which the tool hands back instead of a raw AppleScript error."""
+        path = os.path.join(os.path.expanduser("~"), "samantha-test-timeout.png")
+        with open(path, "wb") as f:
+            f.write(b"fake png")
+        try:
+            with patch("tools_image.pxm.PxmError", MockPxmError), patch("tools_image.pxm.build_lock"), patch("tools_image.pxm.hide_app"), \
+                 patch("tools_image.pxm.run_applescript",
+                       side_effect=MockPxmError("Pixelmator Pro did not finish opening the document.")):
+                result = tools_image.enhance_image(path)
+                self.assertEqual(result, "Pixelmator Pro did not finish opening the document.")
         finally:
             os.remove(path)
 

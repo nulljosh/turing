@@ -60,6 +60,13 @@ def _image(path):
     return full if full and os.path.isfile(full) and _is_image(full) else None
 
 
+# ponytail: `open` answers before Pixelmator Pro has actually finished loading the document
+# (worse on a cold launch), so a layer or export call right after can hit "missing value"
+# instead of the document ("Can't make missing value into type document" / "Can't get layer
+# 1 of missing value"). Poll `exists document 1` here, once, so every tool below is race-free.
+_OPEN_DEADLINE, _OPEN_STEP = 10, 0.2
+
+
 def _pixelmator(full, step, out, lock, timeout=120, fmt="PNG"):
     """Open full in Pixelmator Pro, run one AppleScript step on document d, export to out as fmt, close
     without saving. The original is never touched. Returns an error to say, or None when it ran."""
@@ -68,9 +75,27 @@ def _pixelmator(full, step, out, lock, timeout=120, fmt="PNG"):
             os.remove(out)
     except OSError:
         pass
+    tries = int(round(_OPEN_DEADLINE / _OPEN_STEP))
     script = (
         'tell application "Pixelmator Pro"\n'
-        f'\tset d to open (POSIX file {pxm.as_string(full)})\n'
+        '\tif not running then launch\n'
+        f'\trepeat {tries} times\n'
+        '\t\tif running then exit repeat\n'
+        f'\t\tdelay {_OPEN_STEP}\n'
+        '\tend repeat\n'
+        f'\topen (POSIX file {pxm.as_string(full)})\n'
+        '\tset opened to false\n'
+        f'\trepeat {tries} times\n'
+        '\t\tif (exists document 1) then\n'
+        '\t\t\tset opened to true\n'
+        '\t\t\texit repeat\n'
+        '\t\tend if\n'
+        f'\t\tdelay {_OPEN_STEP}\n'
+        '\tend repeat\n'
+        '\tif not opened then\n'
+        '\t\terror "Pixelmator Pro did not finish opening the document."\n'
+        '\tend if\n'
+        '\tset d to document 1\n'
         + (f'\t{step}\n' if step else '')
         + f'\texport d to (POSIX file {pxm.as_string(out)}) as {fmt}\n'
         '\tclose d saving no\n'
