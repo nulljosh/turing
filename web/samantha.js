@@ -688,6 +688,8 @@
   U.NEEDS_MAC.push("save_research");
   U.write_document = function () { return "Drafting and saving a file happens on her real Mac, with the local model, and she asks first."; };
   U.NEEDS_MAC.push("write_document");
+  U.run_code = function () { return "Running code happens on her real Mac: a local model writes a short script from your request and the CSV's header, and it only ever runs in a sandbox there, no network, a time and memory cap. This stand-in has no sandbox."; };
+  U.NEEDS_MAC.push("run_code");
   ["see_screen", "see_image"].forEach(function (name) {
     U[name] = function () { return "Looking at pictures and the screen happens on her real Mac, with a vision model that runs there, and she asks first."; };
     U.NEEDS_MAC.push(name);
@@ -708,6 +710,11 @@
     [/^(?:research|do (?:some )?research (?:on|into)|deep dive (?:into|on)|write (?:me )?a (?:research )?brief (?:on|about)) (.+)$/i, function (m) { return ["research", m[1]]; }],
     [/^save (?:that|it|the brief|this brief)(?: to (.+))?$/i, function (m) { return ["save_research", m[1] || ""]; }],
     [/^(?:draft|write)(?: me)? (?:a |an )?(?:doc(?:ument)?|email|file)(?: about| for| on)? (.+)$/i, function (m) { return ["write_document", m[1]]; }],
+    // a sandboxed Python for CSV stats and charts, same as tools_util.ROUTES
+    [/^(?:run |get |show )?stats (?:on|for) (\S*\.csv)$/i, function (m) { return ["run_code", m[0]]; }],
+    [/^(?:what(?:'s| is)(?: the)? )?average(?: of)? (?:the )?(\w+) column (?:in|of) (\S*\.csv)$/i, function (m) { return ["run_code", m[0]]; }],
+    [/^chart (\S*\.csv)$/i, function (m) { return ["run_code", m[0]]; }],
+    [/^plot column (\w+) (?:of|in) (\S*\.csv)$/i, function (m) { return ["run_code", m[0]]; }],
     // her eyes, same as tools_util.ROUTES
     [/^(?:look at|describe|see|check out) (?:my |the )?screen(?:,? and (.+))?$|^what do you see(?: on (?:my |the )?screen)?$/i, function (m) { return ["see_screen", m[1] || ""]; }],
     [/^(?:what(?:'s| is) in|describe|look at) (\S+\.(?:png|jpe?g|heic|gif|webp|tiff?|bmp))(?:,? and (.+))?$/i, function (m) { return ["see_image", (m[2] || "") + "\t" + m[1]]; }],

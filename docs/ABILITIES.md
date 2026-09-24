@@ -16,6 +16,7 @@ Every ability, in the words you say. Anything that writes, sends or looks at you
 
 - **Answer.** Questions go down a ladder: exact routes, her own picker, the project FAQ and your notes, then Wikipedia and DuckDuckGo, then her offline library (the fieldbook plus ~10,000 Wikipedia leads). If nothing holds the answer she says so.
 - **Research.** "Research the history of the printing press": Wikipedia, her library and your notes, then a brief with a source after every sentence. "Save that" writes it to a file.
+- **Run code.** "Stats on sales.csv", "average of the price column in sales.csv", "chart sales.csv", "plot column price of sales.csv": the biggest local model writes a short Python script from your request and the file's header, and it only ever runs in a sandbox, a fresh temp folder holding a copy of that one file, no network, a time and memory cap. A chart comes back as a real PNG. Asks first.
 - **Summarize.** "Summarize ~/Desktop/report.pdf", "summarize this page", "summarize my unread mail": three to five real sentences from the biggest local model.
 - **Translate.** "Translate good morning to French", "how do you say thank you in Japanese", "translate the page github.com into Spanish". Offline.
 - **Ask a bigger brain.** "Ask qwen why the sky is blue", "ask claude ...": the question goes to a bigger model on your Mac, never the cloud, and the answer names the model.
