@@ -338,6 +338,7 @@ class Logo(unittest.TestCase):
         self.assertFalse(ok)
         self.assertIn("identical", why)
 
+    @unittest.skipUnless(shutil.which("magick"), "the sanity check measures the drawing with ImageMagick")
     def test_promote_mark_ships_only_a_sane_candidate(self):
         """promote_mark writes the real files when mark_sanity passes, and leaves them untouched, printing why,
         when the candidate fails the check (here: identical to the just-promoted mark)."""
