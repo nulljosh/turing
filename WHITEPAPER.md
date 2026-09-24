@@ -2,7 +2,7 @@
 
 **v3.0.0** | September 2026
 
-Turing builds small language models on one Mac. Its first model, Samantha, is a 0.5B model trained on your own writing. She will never out-think a frontier model. She does not try to. She runs on your Mac, costs nothing per question, keeps everything on the machine, and gets real work done with 101 exact tools. When a question is too hard for her, she borrows a bigger brain that also lives on the Mac. You can type to her or talk to her. She can see your screen, click in your apps, and research a topic with sources. She asks before anything that changes something.
+Turing builds small language models on one Mac. Its first model, Samantha, is a 0.5B model trained on your own writing. She will never out-think a frontier model. She does not try to. She runs on your Mac, costs nothing per question, keeps everything on the machine, and gets real work done with 105 exact tools. When a question is too hard for her, she borrows a bigger brain that also lives on the Mac. You can type to her or talk to her. She can see your screen, click in your apps, and research a topic with sources. She asks before anything that changes something.
 
 ## The core idea
 
@@ -29,14 +29,16 @@ Then a teacher. Claude writes practice questions and answers from real passages 
 ## What she can do
 
 - **Talk.** `python3 chat.py --voice`. Whisper on the Mac turns speech into text, she answers, and she says it out loud.
-- **See.** "Look at my screen and tell me what's wrong with this chart." A 3B vision model on the Mac looks and answers.
+- **See.** "Look at my screen and tell me what's wrong with this chart." A 3B vision model on the Mac looks and answers. The same model reads one frame from the Mac's own camera ("what am I holding"), deleted right after.
 - **Act on screen.** "Click Sign in", "type hello", "press return". She reads the screen to find what you named, and asks before every step.
 - **Research.** "Research the history of the printing press." She reads several sources and writes a short brief with a source after every sentence. A sentence she cannot back up is cut.
-- **Everything else.** Her Mac, pictures and painting, math and time, documents, memory across sessions, Chrome tabs, Apple Shortcuts, and MCP in both directions.
+- **Run code.** "Stats on sales.csv", "chart sales.csv". The biggest local model writes a short Python script from your request and the file's header, and it only ever runs in a sandbox with no network, a time cap and a memory cap.
+- **Know what needs you.** "What needs my attention" ranks your unread mail, today's calendar and due reminders into three lines. "Am I free Thursday afternoon" reads your calendar's open gaps. Both read only.
+- **Everything else.** Her Mac, pictures and painting, math and time, documents, memory across sessions, Chrome tabs, Apple Shortcuts, and MCP in both directions. The picker and chat also run on Windows and Linux through Ollama; the Mac tools stay on the Mac.
 
 ## Promises she keeps
 
-Rules live in LAWS.md and are checked against every tool on every push. Anything that writes, sends or looks at your screen asks first. Private tools never reach a model's menu. Her hands stay in your home folder. On the 65-question knowledge check she gets 58 right and 0 confidently wrong; the rest she declines.
+Rules live in LAWS.md and are checked against every tool on every push. Anything that writes, sends or looks at your screen asks first. Private tools never reach a model's menu. Her hands stay in your home folder. On the 65-question knowledge check she gets 62 right and 0 confidently wrong; the rest she declines.
 
 ## Limits, stated plainly
 

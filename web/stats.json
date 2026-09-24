@@ -36,8 +36,8 @@
         "documented": 7
       },
       "tools_agent.py": {
-        "total": 3,
-        "documented": 3
+        "total": 5,
+        "documented": 5
       },
       "ask_local.py": {
         "total": 9,
@@ -215,6 +215,10 @@
         "total": 34,
         "documented": 34
       },
+      "eval/test_gguf_parity.py": {
+        "total": 1,
+        "documented": 1
+      },
       "eval/test_gui.py": {
         "total": 11,
         "documented": 11
@@ -290,6 +294,10 @@
       "eval/distill.py": {
         "total": 11,
         "documented": 11
+      },
+      "eval/export_gguf.py": {
+        "total": 1,
+        "documented": 1
       },
       "eval/gen_hands_data.py": {
         "total": 5,
