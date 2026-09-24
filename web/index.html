@@ -321,7 +321,7 @@
             <span>Iterations: <b id="iters">, </b></span>
             <span>Latest train loss: <b id="loss">, </b></span>
           </div>
-          <p class="graph-explainer">Round six of the picker, the one she runs today. The line is training loss, the dots are validation loss. Lower is better.</p>
+          <p class="graph-explainer">Round six of the picker, the one she runs today. The line is training loss, the dots are validation loss. Lower is better. The first validation point, logged before training started, is left off so the real curve is readable.</p>
         </div>
       </section>
 
@@ -368,23 +368,78 @@ python3 -m venv .venv && ./.venv/bin/pip install mlx-lm
         document.getElementById('loss').textContent = pts.length ? pts[pts.length-1].loss.toFixed(3) : 'n/a';
         if (!pts.length) return;
         // One line, train loss per logged step; dots are the validation loss. Nothing else on the chart.
+        // Validation points logged before the first training step (the untrained model) are dropped
+        // from the plot only, so one huge pre-training loss doesn't flatten the whole curve.
+        const firstTrainIter = pts[0].iter;
+        const valPlot = val.filter(p => p.iter >= firstTrainIter);
         const c = document.getElementById('chart'), ctx = c.getContext('2d');
-        const dpr = window.devicePixelRatio || 1, w = c.clientWidth, h = 220, pad = 16, padL = 44, padB = 30;
+        const dpr = window.devicePixelRatio || 1, w = c.clientWidth, h = 220, pad = 16, padL = 46, padB = 34;
         c.width = w * dpr; c.height = h * dpr; ctx.scale(dpr, dpr);
         const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
         const fg = css('--fg') || '#1a1a1a', line = css('--line') || '#ddd', muted = css('--muted') || '#888';
-        const xs = pts.map(p => p.iter), ys = pts.concat(val).map(p => p.loss);
-        const xMin = xs[0], xMax = xs[xs.length-1], yMin = Math.min(...ys) * 0.95, yMax = Math.max(...ys) * 1.05;
-        const X = i => padL + (i - xMin) / (xMax - xMin || 1) * (w - padL - pad);
+        const bg = css('--bg') || '#fff';
+        const xs = pts.map(p => p.iter), ys = pts.concat(valPlot).map(p => p.loss);
+        const dataXMin = xs[0], dataXMax = xs[xs.length - 1];
+        const dataYMin = Math.min(...ys), dataYMax = Math.max(...ys);
+        const yPad = (dataYMax - dataYMin) * 0.1 || dataYMax * 0.1 || 1;
+        const yMin = dataYMin - yPad, yMax = dataYMax + yPad;
+
+        // "Nice" step picker: smallest step from a rounded-number set that gives
+        // roughly targetCount intervals across range.
+        function niceStep(range, targetCount) {
+          const candidates = [1, 2, 2.5, 3, 4, 5, 6, 7.5, 8, 10];
+          const rough = range / targetCount;
+          const mag = Math.pow(10, Math.floor(Math.log10(rough)));
+          const norm = rough / mag;
+          const step = candidates.find(c => c >= norm) || 10;
+          return step * mag;
+        }
+
+        const X = i => padL + (i - dataXMin) / (dataXMax - dataXMin || 1) * (w - padL - pad);
         const Y = v => h - padB - (v - yMin) / (yMax - yMin || 1) * (h - pad - padB);
+
         ctx.font = '11px -apple-system, Helvetica, sans-serif'; ctx.fillStyle = muted; ctx.strokeStyle = line; ctx.lineWidth = 1;
+
+        // Y ticks: clean values, ~4-5 gridlines, computed from the remaining data range.
         ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
-        for (let k = 0; k <= 3; k++) { const v = yMin + (yMax - yMin) * k / 3, y = Y(v); ctx.fillText(v.toFixed(2), padL - 6, y); ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(w - pad, y); ctx.stroke(); }
+        const yStep = niceStep(yMax - yMin, 4);
+        const yStart = Math.ceil(yMin / yStep) * yStep;
+        for (let v = yStart; v <= yMax; v += yStep) {
+          const y = Y(v);
+          ctx.fillText(v.toFixed(2), padL - 8, y);
+          ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(w - pad, y); ctx.stroke();
+        }
+
+        // X ticks: round numbers from the data range (e.g. 0, 300, 600, 900), not raw iter values.
         ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-        for (let k = 0; k <= 3; k++) { const it = xMin + (xMax - xMin) * k / 3; ctx.fillText(Math.round(it), X(it), h - padB + 6); }
-        ctx.strokeStyle = fg; ctx.lineWidth = 1.5; ctx.beginPath();
+        const xStep = niceStep(dataXMax, 3);
+        for (let it = 0; it <= dataXMax; it += xStep) {
+          ctx.fillText(Math.round(it), X(Math.max(it, dataXMin)), h - padB + 8);
+        }
+
+        // Axis labels.
+        ctx.fillStyle = muted;
+        ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+        ctx.fillText('step', padL + (w - padL - pad) / 2, h - 4);
+        ctx.save();
+        ctx.translate(12, padB + (h - pad - padB) / 2);
+        ctx.rotate(-Math.PI / 2);
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText('loss', 0, 0);
+        ctx.restore();
+
+        // Training loss line.
+        ctx.strokeStyle = fg; ctx.lineWidth = 2; ctx.beginPath();
         pts.forEach((p, i) => i ? ctx.lineTo(X(p.iter), Y(p.loss)) : ctx.moveTo(X(p.iter), Y(p.loss))); ctx.stroke();
-        ctx.fillStyle = fg; val.forEach(p => { ctx.beginPath(); ctx.arc(X(p.iter), Y(p.loss), 3, 0, Math.PI * 2); ctx.fill(); });
+
+        // Validation dots: a page-colour ring so they read clearly against the line.
+        valPlot.forEach(p => {
+          const x = X(p.iter), y = Y(p.loss);
+          ctx.fillStyle = bg;
+          ctx.beginPath(); ctx.arc(x, y, 3.5 + 1, 0, Math.PI * 2); ctx.fill();
+          ctx.fillStyle = fg;
+          ctx.beginPath(); ctx.arc(x, y, 3.5, 0, Math.PI * 2); ctx.fill();
+        });
       }).catch(() => {});
 
       fetch('https://api.github.com/repos/nulljosh/turing/releases/latest').then(r => r.json()).then(rel => {
