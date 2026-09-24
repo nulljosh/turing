@@ -1,4 +1,4 @@
-# Turing loop handoff (2026-09-23, evening)
+# Turing loop handoff (2026-09-23, late night)
 
 ## What the loop is
 
@@ -6,20 +6,18 @@ One ability per minor release, a major when a whole roadmap family completes, un
 
 ## Where things stand
 
-v4.2.0 on main, 105 tools, docs 100%, laws all hold, CI green. Six items landed since last handoff: picker round six (PR #55, 77 of 105 tools matched on unseen); run_code sandboxed Python (PR #57); see_camera for vision (PR #59); GGUF plus llama.cpp backend for Windows/Linux via Modelfile (PR #60); Pixelmator race condition fixed (PR #61); landing refreshed (PR #62); voice barge-in and wake word (PR #63); Samantha drew her own mark, an engraved 1970s portrait (PR #64). All merged main, tagged, released, deployed live. README trimmed to essentials. Picker template bug found: "how many miles is 5 km" stays unfixed, she still writes "5 km to miles".
+v4.3.0 cutting on main, 105 tools, docs 100%, laws hold, CI green. Merged: #69 mark redrawn every release (sanity gate: ink fraction, margin, no blob, must differ); #70 engraving centered above footer (A- by Joshua); #72 loss chart simplified (90 train, 0.316 val), picker from eval/baseline.json 75% unseen; #73 image tools to ImageMagick (10/10 smoke), Pixelmator retired; #74 CI fix (mark test skips without ImageMagick). In flight: constrained decoding. Site deploys, v4.3.0 auto-releases.
 
 ## Next, in order
 
-1. Item 6 research half: pages beyond Wikipedia, follow-up questions, cite the sources.
-2. Item 7 install: a signed, notarized SamanthaGUI.app that fetches models on first run, not on demand in the middle of a chat.
-3. Picker round seven: teach "how many X is N Y" as a literal copy via template fix, retrain, same matched scoring as round six.
-4. Research loop: turn follow-ups into a fresh search, return only new facts (not repeats from the first brief).
-5. Multi-step GUI flows: detect when Samantha plans a flow, ask yes/no per step before acting.
-6. Beyond Wikipedia: arxiv, GitHub, Hacker News, search APIs where they exist.
+1. Constrained decoding: logits processor limits picker to real tool names copied from sentence.
+2. Picker round seven: teach "how many X is N Y" as literal copy (template fix), retrain, score vs round six.
+3. Research beyond Wikipedia: arxiv, GitHub, Hacker News, search APIs.
+4. Multi-step GUI flows: detect agent planning, ask yes or no per step before acting.
 
 ## Restart prompt
 
 ```
-/loop until version 10. ultrathink
-keep close watch on usage. read docs/LOOP-HANDOFF.md first.
+/loop until version 5 or 5.5. ultrathink
+read docs/LOOP-HANDOFF.md first.
 ```
