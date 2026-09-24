@@ -1,30 +1,18 @@
 #!/usr/bin/env python3
-"""Unit tests for image tools. Mocks Pixelmator to run on Linux CI."""
+"""Unit tests for image tools. Mocks _run so the argv shape is pinned without a real ImageMagick call."""
 import os
 import sys
 import tempfile
 import unittest
-from unittest.mock import patch, MagicMock, mock_open
-import re
+from unittest.mock import patch
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import tools_image
 
 
-class MockPxmError(Exception):
-    """Stand-in for pxm.PxmError so the tests need no Pixelmator."""
-    def __init__(self, message):
-        """Keep the message and the exit code."""
-        self.message = message
-
-    def __str__(self):
-        """The message text."""
-        return self.message
-
-
 class TestImageTools(unittest.TestCase):
-    """Unit tests for the image tools with Pixelmator mocked out."""
+    """Unit tests for the image tools with `magick` mocked out."""
     def setUp(self):
         """Point the tools at a temporary home with a sample image."""
         self.temp_dir = tempfile.mkdtemp()
@@ -59,16 +47,10 @@ class TestImageTools(unittest.TestCase):
         result = tools_image.remove_background(temp_txt)
         self.assertIn("No image at", result)
 
-    @patch('tools_image.pxm.build_lock')
-    @patch('tools_image.pxm.run_applescript')
-    @patch('tools_image.pxm.hide_app')
-    def test_remove_background_script_generation(self, mock_hide, mock_run, mock_lock):
-        """Remove background script generation."""
-        mock_lock.return_value.__enter__ = MagicMock()
-        mock_lock.return_value.__exit__ = MagicMock(return_value=False)
-        mock_run.return_value = ""
-
-        # Create a temporary file in home
+    @patch('tools_image._run')
+    @patch('tools_image._get_image_dimensions', return_value=(1000, 500))
+    def test_remove_background_script_generation(self, mock_dims, mock_run):
+        """Remove background builds a floodfill-from-corners magick call."""
         home = os.path.expanduser("~")
         test_file = os.path.join(home, ".claude", "test-remove-bg.jpg")
         os.makedirs(os.path.dirname(test_file), exist_ok=True)
@@ -80,28 +62,23 @@ class TestImageTools(unittest.TestCase):
                 result = tools_image.remove_background(test_file)
                 self.assertIn("Background removed", result)
 
-                # Verify the script was called
                 self.assertTrue(mock_run.called)
-                script = mock_run.call_args[0][0]
-                self.assertIn("remove background", script)
-                self.assertIn("export", script)
-                self.assertIn("saving no", script)
-                self.assertIn(test_file, script)
+                argv = mock_run.call_args[0][0]
+                self.assertEqual(argv[0], "magick")
+                self.assertEqual(argv[1], test_file)
+                self.assertIn("-fuzz", argv)
+                self.assertIn("12%", argv)
+                self.assertIn("alpha 0,0 floodfill", argv)
+                self.assertIn("alpha 999,499 floodfill", argv)
                 # Output path should NOT be input path
                 self.assertNotIn("samantha-nobg.png", test_file)
         finally:
             if os.path.exists(test_file):
                 os.remove(test_file)
 
-    @patch('tools_image.pxm.build_lock')
-    @patch('tools_image.pxm.run_applescript')
-    @patch('tools_image.pxm.hide_app')
-    def test_upscale_image_script(self, mock_hide, mock_run, mock_lock):
-        """Upscale image script."""
-        mock_lock.return_value.__enter__ = MagicMock()
-        mock_lock.return_value.__exit__ = MagicMock(return_value=False)
-        mock_run.return_value = ""
-
+    @patch('tools_image._run')
+    def test_upscale_image_script(self, mock_run):
+        """Upscale image runs the Lanczos 300% resize."""
         home = os.path.expanduser("~")
         test_file = os.path.join(home, ".claude", "test-upscale.png")
         os.makedirs(os.path.dirname(test_file), exist_ok=True)
@@ -113,10 +90,11 @@ class TestImageTools(unittest.TestCase):
                 result = tools_image.upscale_image(test_file)
                 self.assertIn("Upscaled", result)
 
-                script = mock_run.call_args[0][0]
-                self.assertIn("super resolution", script)
-                self.assertIn("export", script)
-                self.assertIn("saving no", script)
+                argv = mock_run.call_args[0][0]
+                self.assertIn("-filter", argv)
+                self.assertIn("Lanczos", argv)
+                self.assertIn("-resize", argv)
+                self.assertIn("300%", argv)
         finally:
             if os.path.exists(test_file):
                 os.remove(test_file)
@@ -130,20 +108,12 @@ class TestImageTools(unittest.TestCase):
             f.write(b"fake jpg")
 
         try:
-            # Test parsing "path by 180"
-            with patch('tools_image.pxm.build_lock'):
-                with patch('tools_image.pxm.run_applescript'):
-                    with patch('tools_image.pxm.hide_app'):
-                        with patch('os.path.exists', return_value=True):
-                            result = tools_image.rotate_image(f"{test_file} by 180")
-                            self.assertIn("Rotated 180", result)
+            with patch('tools_image._run'), patch('os.path.exists', return_value=True):
+                result = tools_image.rotate_image(f"{test_file} by 180")
+                self.assertIn("Rotated 180", result)
 
-            # Test invalid rotation
-            with patch('tools_image.pxm.build_lock'):
-                with patch('tools_image.pxm.run_applescript'):
-                    with patch('tools_image.pxm.hide_app'):
-                        result = tools_image.rotate_image(f"{test_file} by 45")
-                        self.assertIn("must be 90, 180, or 270", result)
+            result = tools_image.rotate_image(f"{test_file} by 45")
+            self.assertIn("must be 90, 180, or 270", result)
         finally:
             if os.path.exists(test_file):
                 os.remove(test_file)
@@ -185,12 +155,9 @@ class TestImageTools(unittest.TestCase):
             self.assertIn("Unsupported format", result)
 
             # Test valid format parsing
-            with patch('tools_image.pxm.build_lock'):
-                with patch('tools_image.pxm.run_applescript'):
-                    with patch('tools_image.pxm.hide_app'):
-                        with patch('os.path.exists', return_value=True):
-                            result = tools_image.convert_image(f"{test_file} to jpg")
-                            self.assertIn("Converted to JPG", result)
+            with patch('tools_image._run'), patch('os.path.exists', return_value=True):
+                result = tools_image.convert_image(f"{test_file} to jpg")
+                self.assertIn("Converted to JPG", result)
         finally:
             if os.path.exists(test_file):
                 os.remove(test_file)
@@ -204,23 +171,22 @@ class TestImageTools(unittest.TestCase):
             f.write(b"fake jpg")
 
         try:
-            with patch('tools_image.pxm.build_lock'):
-                with patch('tools_image.pxm.run_applescript'):
-                    with patch('tools_image.pxm.hide_app'):
-                        with patch('os.path.exists', return_value=True):
-                            # Test default horizontal
-                            result = tools_image.flip_image(test_file)
-                            self.assertIn("Flipped horizontal", result)
+            with patch('tools_image._run') as mock_run, patch('os.path.exists', return_value=True):
+                # Test default horizontal
+                result = tools_image.flip_image(test_file)
+                self.assertIn("Flipped horizontal", result)
+                self.assertIn("-flop", mock_run.call_args[0][0])
 
-                            # Test vertical
-                            result = tools_image.flip_image(f"{test_file} vertical")
-                            self.assertIn("Flipped vertical", result)
+                # Test vertical
+                result = tools_image.flip_image(f"{test_file} vertical")
+                self.assertIn("Flipped vertical", result)
+                self.assertIn("-flip", mock_run.call_args[0][0])
         finally:
             if os.path.exists(test_file):
                 os.remove(test_file)
 
     def test_grayscale_image_script(self):
-        """Grayscale image script."""
+        """Grayscale image runs -colorspace Gray."""
         home = os.path.expanduser("~")
         test_file = os.path.join(home, ".claude", "test-gray.jpg")
         os.makedirs(os.path.dirname(test_file), exist_ok=True)
@@ -228,22 +194,19 @@ class TestImageTools(unittest.TestCase):
             f.write(b"fake jpg")
 
         try:
-            with patch('tools_image.pxm.build_lock'):
-                with patch('tools_image.pxm.run_applescript') as mock_run:
-                    with patch('tools_image.pxm.hide_app'):
-                        with patch('os.path.exists', return_value=True):
-                            result = tools_image.grayscale_image(test_file)
-                            self.assertIn("Converted to grayscale", result)
+            with patch('tools_image._run') as mock_run, patch('os.path.exists', return_value=True):
+                result = tools_image.grayscale_image(test_file)
+                self.assertIn("Converted to grayscale", result)
 
-                            script = mock_run.call_args[0][0]
-                            self.assertIn("black and white", script)
-                            self.assertIn("saving no", script)
+                argv = mock_run.call_args[0][0]
+                self.assertIn("-colorspace", argv)
+                self.assertIn("Gray", argv)
         finally:
             if os.path.exists(test_file):
                 os.remove(test_file)
 
     def test_enhance_image_script(self):
-        """Enhance image script."""
+        """Enhance image runs auto-level, auto-gamma and unsharp."""
         home = os.path.expanduser("~")
         test_file = os.path.join(home, ".claude", "test-enhance.jpg")
         os.makedirs(os.path.dirname(test_file), exist_ok=True)
@@ -251,16 +214,15 @@ class TestImageTools(unittest.TestCase):
             f.write(b"fake jpg")
 
         try:
-            with patch('tools_image.pxm.build_lock'):
-                with patch('tools_image.pxm.run_applescript') as mock_run:
-                    with patch('tools_image.pxm.hide_app'):
-                        with patch('os.path.exists', return_value=True):
-                            result = tools_image.enhance_image(test_file)
-                            self.assertIn("Enhanced", result)
+            with patch('tools_image._run') as mock_run, patch('os.path.exists', return_value=True):
+                result = tools_image.enhance_image(test_file)
+                self.assertIn("Enhanced", result)
 
-                            script = mock_run.call_args[0][0]
-                            self.assertIn("enh", script)
-                            self.assertIn("saving no", script)
+                argv = mock_run.call_args[0][0]
+                self.assertIn("-auto-level", argv)
+                self.assertIn("-auto-gamma", argv)
+                self.assertIn("-unsharp", argv)
+                self.assertIn("0x1", argv)
         finally:
             if os.path.exists(test_file):
                 os.remove(test_file)
@@ -277,16 +239,14 @@ class TestImageTools(unittest.TestCase):
             f.write(b"fake jpg")
 
         try:
-            with patch('tools_image.pxm.build_lock'):
-                with patch('tools_image.pxm.run_applescript') as mock_run:
-                    with patch('tools_image.pxm.hide_app'):
-                        with patch('os.path.exists', return_value=True):
-                            result = tools_image.crop_square(test_file)
-                            self.assertIn("Cropped to 800x800 square", result)
+            with patch('tools_image._run') as mock_run, patch('os.path.exists', return_value=True):
+                result = tools_image.crop_square(test_file)
+                self.assertIn("Cropped to 800x800 square", result)
 
-                            script = mock_run.call_args[0][0]
-                            self.assertIn("crop", script)
-                            self.assertIn("saving no", script)
+                argv = mock_run.call_args[0][0]
+                self.assertIn("-crop", argv)
+                self.assertIn("800x800+100+0", argv)
+                self.assertIn("+repage", argv)
         finally:
             if os.path.exists(test_file):
                 os.remove(test_file)
@@ -312,112 +272,75 @@ class TestImageTools(unittest.TestCase):
 
 
 class TestEveryToolScript(unittest.TestCase):
-    """Pins the exact AppleScript step, export format, timeout and reply of every image tool, so a refactor cannot drift."""
+    """Pins the exact magick argv, output path and reply of every image tool, so a refactor cannot drift."""
 
     CASES = [
-        (tools_image.remove_background, "{p}", "remove background d", "nobg.png", "PNG", 120, "Background removed"),
-        (tools_image.upscale_image, "{p}", "super resolution d", "upscaled.png", "PNG", 300, "Upscaled 3x"),
-        (tools_image.enhance_image, "{p}", "enhance layer 1 of d", "enhanced.png", "PNG", 120, "Enhanced"),
-        (tools_image.grayscale_image, "{p}", "set the black and white of the color adjustments of layer 1 of d to true", "grayscale.png", "PNG", 120, "Converted to grayscale"),
-        (tools_image.rotate_image, "{p} by 180", "rotate 180 d", "rotated.png", "PNG", 120, "Rotated 180 degrees"),
-        (tools_image.rotate_image, "{p}", "rotate left d", "rotated.png", "PNG", 120, "Rotated 90 degrees"),
-        (tools_image.flip_image, "{p} vertical", "flip vertically d", "flipped.png", "PNG", 120, "Flipped vertical"),
-        (tools_image.flip_image, "{p}", "flip horizontally d", "flipped.png", "PNG", 120, "Flipped horizontal"),
-        (tools_image.resize_image, "{p} to 500", "resize image d width 500 height 250", "resized.png", "PNG", 120, "Resized to 500x250"),
-        (tools_image.crop_square, "{p}", "crop d bounds {250, 0, 500, 500} with delete mode", "square.png", "PNG", 120, "Cropped to 500x500 square"),
-        (tools_image.convert_image, "{p} to jpg", None, "converted.jpg", "JPEG", 120, "Converted to JPG"),
+        (tools_image.upscale_image, "{p}", ["-filter", "Lanczos", "-resize", "300%"], "upscaled.png", "Upscaled 3x"),
+        (tools_image.enhance_image, "{p}", ["-auto-level", "-auto-gamma", "-unsharp", "0x1"], "enhanced.png", "Enhanced"),
+        (tools_image.grayscale_image, "{p}", ["-colorspace", "Gray"], "grayscale.png", "Converted to grayscale"),
+        (tools_image.rotate_image, "{p} by 180", ["-rotate", "180"], "rotated.png", "Rotated 180 degrees"),
+        (tools_image.rotate_image, "{p}", ["-rotate", "90"], "rotated.png", "Rotated 90 degrees"),
+        (tools_image.flip_image, "{p} vertical", ["-flip"], "flipped.png", "Flipped vertical"),
+        (tools_image.flip_image, "{p}", ["-flop"], "flipped.png", "Flipped horizontal"),
+        (tools_image.resize_image, "{p} to 500", ["-resize", "500x250!"], "resized.png", "Resized to 500x250"),
+        (tools_image.crop_square, "{p}", ["-crop", "500x500+250+0", "+repage"], "square.png", "Cropped to 500x500 square"),
+        (tools_image.convert_image, "{p} to jpg", [], "converted.jpg", "Converted to JPG"),
     ]
 
     def test_every_tool(self):
-        """Each tool sends one open, its step, one export and a close without saving, and says where the result went."""
+        """Each tool runs `magick <in> <args> <out>` and says where the result went."""
         path = os.path.join(os.path.expanduser("~"), "samantha-test-every.png")
         with open(path, "wb") as f:
             f.write(b"fake png")
         try:
-            for fn, args, step, out, fmt, timeout, said in self.CASES:
-                with self.subTest(fn=fn.__name__, args=args), patch("tools_image.pxm.build_lock"), patch("tools_image.pxm.hide_app"), \
-                     patch("tools_image.pxm.run_applescript") as run, patch("tools_image._get_image_dimensions", return_value=(1000, 500)):
+            for fn, args, middle, out, said in self.CASES:
+                with self.subTest(fn=fn.__name__, args=args), patch("tools_image._run") as run, \
+                     patch("tools_image._get_image_dimensions", return_value=(1000, 500)):
                     result = fn(args.format(p=path))
-                    script, kwargs = run.call_args[0][0], run.call_args[1]
-                    lines = [l.strip() for l in script.splitlines()]
-                    self.assertEqual(lines[0], 'tell application "Pixelmator Pro"')
-                    self.assertTrue(any(l.startswith("open (POSIX file") for l in lines), lines)
-                    self.assertIn("if (exists document 1) then", lines)
-                    self.assertIn("set d to document 1", lines)
-                    open_end = lines.index("set d to document 1") + 1
-                    self.assertEqual(lines[open_end:-3], [step] if step else [])
-                    self.assertTrue(lines[-3].startswith("export d to (POSIX file") and lines[-3].endswith(f"samantha-{out}\") as {fmt}"), lines[-3])
-                    self.assertEqual(lines[-2:], ["close d saving no", "end tell"])
-                    self.assertEqual(kwargs["timeout"], timeout)
+                    argv = run.call_args[0][0]
+                    self.assertEqual(argv[0], "magick")
+                    self.assertEqual(argv[1], path)
+                    self.assertEqual(argv[2:-1], middle, argv)
+                    self.assertTrue(argv[-1].endswith(f"samantha-{out}"), argv[-1])
                     # nothing was really exported, so the reply is the honest failure, never a claimed success
                     self.assertTrue(result.startswith("Failed"), result)
-                with patch("tools_image.pxm.build_lock"), patch("tools_image.pxm.hide_app"), patch("tools_image.pxm.run_applescript"), \
-                     patch("tools_image._get_image_dimensions", return_value=(1000, 500)), patch("os.path.exists", return_value=True), patch("os.remove"):
+                with patch("tools_image._run"), patch("tools_image._get_image_dimensions", return_value=(1000, 500)), \
+                     patch("os.path.exists", return_value=True), patch("os.remove"):
                     self.assertTrue(fn(args.format(p=path)).startswith(said + ", saved to "), fn.__name__)
         finally:
             os.remove(path)
 
-    def test_a_pixelmator_error_is_said_not_raised(self):
-        """A Pixelmator failure comes back as its message."""
-        path = os.path.join(os.path.expanduser("~"), "samantha-test-err.png")
+    def test_remove_background_touches_all_four_corners(self):
+        """remove_background floods from every corner, not just the origin."""
+        path = os.path.join(os.path.expanduser("~"), "samantha-test-nobg.png")
         with open(path, "wb") as f:
             f.write(b"fake png")
         try:
-            with patch("tools_image.pxm.PxmError", MockPxmError), patch("tools_image.pxm.build_lock"), patch("tools_image.pxm.hide_app"), \
-                 patch("tools_image.pxm.run_applescript", side_effect=MockPxmError("Pixelmator Pro is not installed")):
-                self.assertEqual(tools_image.enhance_image(path), "Pixelmator Pro is not installed")
+            with patch("tools_image._run") as run, patch("tools_image._get_image_dimensions", return_value=(1000, 500)), \
+                 patch("os.path.exists", return_value=True), patch("os.remove"):
+                result = tools_image.remove_background(path)
+                self.assertTrue(result.startswith("Background removed, saved to "))
+                argv = run.call_args[0][0]
+                for corner in ("alpha 0,0 floodfill", "alpha 999,0 floodfill", "alpha 0,499 floodfill", "alpha 999,499 floodfill"):
+                    self.assertIn(corner, argv)
+                self.assertIn("-fuzz", argv)
+                self.assertIn("12%", argv)
+                self.assertIn("-fill", argv)
+                self.assertIn("none", argv)
         finally:
             os.remove(path)
 
-    def test_open_step_waits_for_the_document_before_any_layer_or_export_call(self):
-        """The shared open script polls `exists document 1` in a bounded repeat, and the step/export
-        only run after that wait succeeds, not right after `open`."""
-        path = os.path.join(os.path.expanduser("~"), "samantha-test-race.png")
-        with open(path, "wb") as f:
-            f.write(b"fake png")
-        try:
-            with patch("tools_image.pxm.build_lock"), patch("tools_image.pxm.hide_app"), \
-                 patch("tools_image.pxm.run_applescript") as run, patch("os.path.exists", return_value=True):
-                tools_image.enhance_image(path)
-                script = run.call_args[0][0]
-                lines = [l.strip() for l in script.splitlines()]
 
-                # Cold launch: launch, then wait for it to come up, before ever calling open.
-                self.assertIn("if not running then launch", lines)
-                launch_i = lines.index("if not running then launch")
-                open_i = next(i for i, l in enumerate(lines) if l.startswith("open (POSIX file"))
-                self.assertLess(launch_i, open_i)
+class TestNoPixelmator(unittest.TestCase):
+    """tools_image.py is retired from Pixelmator entirely: every tool runs through ImageMagick, no AppleScript."""
 
-                # Poll exists document 1, bounded, at 0.2s steps, for about 10 seconds total.
-                poll = [l for l in lines if l.startswith("repeat ") and l.endswith("times")]
-                self.assertEqual(len(poll), 2)  # one for "running", one for the document
-                tries = int(poll[0].split()[1])
-                self.assertEqual(tries * tools_image._OPEN_STEP, tools_image._OPEN_DEADLINE)
-                self.assertIn("if (exists document 1) then", lines)
-                self.assertIn(f"delay {tools_image._OPEN_STEP}", lines)
-
-                # The layer/export step comes strictly after the document is confirmed open.
-                doc_i = lines.index("set d to document 1")
-                step_i = lines.index("enhance layer 1 of d")
-                self.assertLess(open_i, doc_i)
-                self.assertLess(doc_i, step_i)
-        finally:
-            os.remove(path)
-
-    def test_open_step_gives_up_with_a_plain_message_after_the_deadline(self):
-        """When Pixelmator never finishes opening the document, the AppleScript's own repeat gives
-        up and raises a plain message, which the tool hands back instead of a raw AppleScript error."""
-        path = os.path.join(os.path.expanduser("~"), "samantha-test-timeout.png")
-        with open(path, "wb") as f:
-            f.write(b"fake png")
-        try:
-            with patch("tools_image.pxm.PxmError", MockPxmError), patch("tools_image.pxm.build_lock"), patch("tools_image.pxm.hide_app"), \
-                 patch("tools_image.pxm.run_applescript",
-                       side_effect=MockPxmError("Pixelmator Pro did not finish opening the document.")):
-                result = tools_image.enhance_image(path)
-                self.assertEqual(result, "Pixelmator Pro did not finish opening the document.")
-        finally:
-            os.remove(path)
+    def test_tools_image_mentions_neither_pixelmator_nor_osascript(self):
+        """Pixelmator Pro is not launched by tools_image.py, not even to compare."""
+        path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "tools_image.py")
+        with open(path) as f:
+            src = f.read()
+        self.assertNotIn("Pixelmator Pro", src)
+        self.assertNotIn("osascript", src)
 
 
 if __name__ == "__main__":

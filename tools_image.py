@@ -1,22 +1,29 @@
 #!/usr/bin/env python3
-"""Samantha's image tools: drive Pixelmator Pro for image processing.
+"""Samantha's image tools: drive ImageMagick (`magick`) for image processing.
 
 All tools operate on files inside the home folder and export results to ~/Desktop.
-Original files are never modified.
+Original files are never modified. The old AppleScript-driven engine is retired from
+this path: the pixelmator/ folder still exists as an opt-in alternative for
+tools_logo.paint_image, but nothing here imports or reaches for it.
 """
 import os
 import re
-import sys
 import subprocess
-
-# Add pixelmator module to path the same way tools.py does
-PXM_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pixelmator")
-sys.path.insert(0, PXM_DIR)
-import pxm
 
 HOME = os.path.realpath(os.path.expanduser("~"))
 HEADLESS = os.environ.get("SAMANTHA_HEADLESS") == "1"
 IMAGE_EXTS = {".png", ".jpg", ".jpeg", ".heic", ".webp", ".tiff", ".tif"}
+
+
+def _tools():
+    """The tools module, fetched when a function runs, never at import: tools imports this file."""
+    import tools
+    return tools
+
+
+def _run(argv, timeout=60):
+    """tools._run, looked up when called, so a test that patches tools._run also stubs these calls."""
+    return _tools()._run(argv, timeout=timeout)
 
 
 def _inside_home(path):
@@ -60,99 +67,79 @@ def _image(path):
     return full if full and os.path.isfile(full) and _is_image(full) else None
 
 
-# ponytail: `open` answers before Pixelmator Pro has actually finished loading the document
-# (worse on a cold launch), so a layer or export call right after can hit "missing value"
-# instead of the document ("Can't make missing value into type document" / "Can't get layer
-# 1 of missing value"). Poll `exists document 1` here, once, so every tool below is race-free.
-_OPEN_DEADLINE, _OPEN_STEP = 10, 0.2
-
-
-def _pixelmator(full, step, out, lock, timeout=120, fmt="PNG"):
-    """Open full in Pixelmator Pro, run one AppleScript step on document d, export to out as fmt, close
-    without saving. The original is never touched. Returns an error to say, or None when it ran."""
+def _magick_edit(full, args, filename, done, failed, timeout=60):
+    """Run `magick full <args> out`, exporting to ~/Desktop/samantha-{filename}, and say where the
+    result went. The original file is never touched. A stale file at the destination is removed
+    first so a failed run cannot be mistaken for a fresh success."""
+    out = os.path.expanduser(f"~/Desktop/samantha-{filename}")
     try:
         if os.path.exists(out):
             os.remove(out)
     except OSError:
         pass
-    tries = int(round(_OPEN_DEADLINE / _OPEN_STEP))
-    script = (
-        'tell application "Pixelmator Pro"\n'
-        '\tif not running then launch\n'
-        f'\trepeat {tries} times\n'
-        '\t\tif running then exit repeat\n'
-        f'\t\tdelay {_OPEN_STEP}\n'
-        '\tend repeat\n'
-        f'\topen (POSIX file {pxm.as_string(full)})\n'
-        '\tset opened to false\n'
-        f'\trepeat {tries} times\n'
-        '\t\tif (exists document 1) then\n'
-        '\t\t\tset opened to true\n'
-        '\t\t\texit repeat\n'
-        '\t\tend if\n'
-        f'\t\tdelay {_OPEN_STEP}\n'
-        '\tend repeat\n'
-        '\tif not opened then\n'
-        '\t\terror "Pixelmator Pro did not finish opening the document."\n'
-        '\tend if\n'
-        '\tset d to document 1\n'
-        + (f'\t{step}\n' if step else '')
-        + f'\texport d to (POSIX file {pxm.as_string(out)}) as {fmt}\n'
-        '\tclose d saving no\n'
-        'end tell\n'
-    )
-    try:
-        with pxm.build_lock(lock, wait=True):
-            if HEADLESS:
-                pxm.hide_app()
-            pxm.run_applescript(script, timeout=timeout)
-    except pxm.PxmError as e:
-        return str(e)
-    return None
-
-
-def _edit(path, step, name, lock, done, failed, timeout=120):
-    """The one-step edits: check the image, run the step, say where the result went."""
-    full = _image(path)
-    if not full:
-        return f"No image at {path}."
-    out = os.path.expanduser(f"~/Desktop/samantha-{name}.png")
-    err = _pixelmator(full, step, out, lock, timeout)
-    return err or (f"{done}, saved to {out}." if os.path.exists(out) else failed)
+    _run(["magick", full] + args + [out], timeout=timeout)
+    return f"{done}, saved to {out}." if os.path.exists(out) else failed
 
 
 def remove_background(path):
-    """Remove the background from a photo. Takes the path of an image file."""
-    return _edit(path, "remove background d", "nobg", "remove background", "Background removed", "Failed to remove background.")
+    """Remove the background from a photo. Cuts the border colour to transparent by flood-filling
+    from all four corners with ImageMagick (`-fuzz 12% -fill none -draw "alpha X,Y floodfill"`).
+    This is a corner-colour cut, not a subject mask: it works on a flat or near-flat background and
+    will not separate a subject from a busy one. Takes the path of an image file."""
+    full = _image(path)
+    if not full:
+        return f"No image at {path}."
+    dims = _get_image_dimensions(full)
+    if not dims:
+        return f"Could not read image dimensions from {path}."
+    w, h = dims
+    corners = ((0, 0), (w - 1, 0), (0, h - 1), (w - 1, h - 1))
+    draws = []
+    for x, y in corners:
+        draws += ["-draw", f"alpha {x},{y} floodfill"]
+    args = ["-fuzz", "12%", "-fill", "none"] + draws
+    return _magick_edit(full, args, "nobg.png", "Background removed", "Failed to remove background.")
 
 
 def upscale_image(path):
-    """Increase image resolution by 300% using AI. Takes the path of an image file."""
-    return _edit(path, "super resolution d", "upscaled", "upscale image", "Upscaled 3x", "Failed to upscale image.", timeout=300)
+    """Increase image resolution by 300% with ImageMagick's Lanczos filter. Takes the path of an image file."""
+    full = _image(path)
+    if not full:
+        return f"No image at {path}."
+    args = ["-filter", "Lanczos", "-resize", "300%"]
+    return _magick_edit(full, args, "upscaled.png", "Upscaled 3x", "Failed to upscale image.", timeout=300)
 
 
 def enhance_image(path):
-    """Automatically enhance colors and contrast. Takes the path of an image file."""
-    return _edit(path, "enhance layer 1 of d", "enhanced", "enhance image", "Enhanced", "Failed to enhance image.")
+    """Automatically enhance colors and contrast with ImageMagick (`-auto-level -auto-gamma -unsharp 0x1`).
+    Takes the path of an image file."""
+    full = _image(path)
+    if not full:
+        return f"No image at {path}."
+    args = ["-auto-level", "-auto-gamma", "-unsharp", "0x1"]
+    return _magick_edit(full, args, "enhanced.png", "Enhanced", "Failed to enhance image.")
 
 
 def grayscale_image(path):
-    """Convert image to grayscale. Takes the path of an image file."""
-    return _edit(path, "set the black and white of the color adjustments of layer 1 of d to true", "grayscale",
-                 "grayscale image", "Converted to grayscale", "Failed to convert to grayscale.")
+    """Convert image to grayscale with ImageMagick. Takes the path of an image file."""
+    full = _image(path)
+    if not full:
+        return f"No image at {path}."
+    args = ["-colorspace", "Gray"]
+    return _magick_edit(full, args, "grayscale.png", "Converted to grayscale", "Failed to convert to grayscale.")
 
 
 def rotate_image(args):
     """Rotate image by specified degrees. Takes 'path by 90' (default 90 degrees clockwise)."""
     match = re.match(r'^(.+?)\s+by\s+(\d+)$', args.strip(), re.I)
     path, degrees = (match.group(1), int(match.group(2))) if match else (args.strip().strip("'\""), 90)
-    if not _image(path):
+    full = _image(path)
+    if not full:
         return f"No image at {path}."
     degrees = degrees % 360
     if degrees not in (90, 180, 270):
         return f"Rotation must be 90, 180, or 270 degrees, got {degrees}."
-    step = {90: "rotate left d", 180: "rotate 180 d", 270: "rotate right d"}[degrees]
-    return _edit(path, step, "rotated", "rotate image", f"Rotated {degrees} degrees", "Failed to rotate image.")
+    return _magick_edit(full, ["-rotate", str(degrees)], "rotated.png", f"Rotated {degrees} degrees", "Failed to rotate image.")
 
 
 def flip_image(args):
@@ -162,8 +149,11 @@ def flip_image(args):
         direction, path = parts[-1].lower(), " ".join(parts[:-1])
     else:
         direction, path = "horizontal", args.strip()
-    step = "flip vertically d" if direction.startswith("v") else "flip horizontally d"
-    return _edit(path, step, "flipped", "flip image", f"Flipped {direction}", "Failed to flip image.")
+    full = _image(path)
+    if not full:
+        return f"No image at {path}."
+    flag = "-flip" if direction.startswith("v") else "-flop"
+    return _magick_edit(full, [flag], "flipped.png", f"Flipped {direction}", "Failed to flip image.")
 
 
 def resize_image(args):
@@ -184,7 +174,7 @@ def resize_image(args):
     if max(w, h) == size:
         return f"Image already {size}px on longest side."
     new_w, new_h = (size, max(1, int(h * size / w))) if w > h else (max(1, int(w * size / h)), size)
-    return _edit(path, f"resize image d width {new_w} height {new_h}", "resized", "resize image", f"Resized to {new_w}x{new_h}", "Failed to resize image.")
+    return _magick_edit(full, ["-resize", f"{new_w}x{new_h}!"], "resized.png", f"Resized to {new_w}x{new_h}", "Failed to resize image.")
 
 
 def crop_square(path):
@@ -198,11 +188,11 @@ def crop_square(path):
     w, h = dims
     side = min(w, h)
     x, y = (w - side) // 2, (h - side) // 2
-    return _edit(path, f"crop d bounds {{{x}, {y}, {side}, {side}}} with delete mode", "square", "crop square",
-                 f"Cropped to {side}x{side} square", "Failed to crop image.")
+    return _magick_edit(full, ["-crop", f"{side}x{side}+{x}+{y}", "+repage"], "square.png",
+                         f"Cropped to {side}x{side} square", "Failed to crop image.")
 
 
-_FORMATS = {"png": "PNG", "jpg": "JPEG", "jpeg": "JPEG", "webp": "WebP", "heic": "HEIC", "tiff": "TIFF", "tif": "TIFF", "pdf": "PDF"}
+_FORMATS = {"png", "jpg", "jpeg", "webp", "heic", "tiff", "tif", "pdf"}
 
 
 def convert_image(args):
@@ -216,9 +206,7 @@ def convert_image(args):
     full = _image(path)
     if not full:
         return f"No image at {path}."
-    out = os.path.expanduser(f"~/Desktop/samantha-converted.{fmt}")
-    err = _pixelmator(full, None, out, "convert image", fmt=_FORMATS[fmt])
-    return err or (f"Converted to {fmt.upper()}, saved to {out}." if os.path.exists(out) else "Failed to convert image.")
+    return _magick_edit(full, [], f"converted.{fmt}", f"Converted to {fmt.upper()}", "Failed to convert image.")
 
 
 def image_info(path):

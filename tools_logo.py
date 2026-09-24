@@ -1,6 +1,6 @@
 """Samantha's logo designer and painter: make_logo (golden spiral by default, complex or simple on request, always an
-icon, never text) and paint_image (a photo rebuilt from squares). Her model picks the dials; this code lays out the layers.
-Split out of tools.py, which re-exports every name here.
+icon, never text) and paint_image (a photo rebuilt from squares). Her model picks the dials; this code lays out the layers,
+then draws them with ImageMagick. Split out of tools.py, which re-exports every name here.
 """
 import base64
 import json
@@ -14,7 +14,7 @@ import time
 import urllib.error
 import urllib.request
 
-HEADLESS = os.environ.get("SAMANTHA_HEADLESS") == "1"
+PXM = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pixelmator", "pxm.py")  # paint_image's magick engine only
 
 
 def _tools():
@@ -33,7 +33,6 @@ def _inside_home(path):
     return _tools()._inside_home(path)
 
 
-PXM = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pixelmator", "pxm.py")
 # A 1.7B picks well and composes badly: left to write layers itself it put a
 # pink rectangle over everything and set "TURING" at 360pt, and pxm rejected
 # the spec. So she chooses, the harness lays out. Three choices, all enums.
@@ -177,8 +176,62 @@ def _flower_layers(palette, cells, shape):
     return L
 
 
+def _alpha_hex(color, opacity):
+    """A hex color with a two-digit alpha suffix for a 0-100 opacity, or the plain color at full opacity."""
+    if opacity >= 100:
+        return color
+    a = max(0, min(255, round(255 * opacity / 100)))
+    return f"{color}{a:02X}"
+
+
+def _star_polygon(cx, cy, w, h, points, radius_pct):
+    """Vertices of a star centered at cx,cy: the same construction layers_to_svg uses for its <polygon>,
+    reused here for an ImageMagick `-draw polygon`."""
+    n, R = int(points), w / 2
+    r = R * radius_pct / 100  # pxm's radius is the inner radius, as a percent of the outer one
+    pts = []
+    for k in range(2 * n):
+        rad = R if k % 2 == 0 else r
+        ang = math.pi * k / n - math.pi / 2
+        pts.append((cx + rad * math.cos(ang), cy + rad * h / w * math.sin(ang)))
+    return pts
+
+
+def _mvg(layers):
+    """The layer spec as ImageMagick MVG draw commands: the same rounded tile, ellipses and stars
+    layers_to_svg turns into SVG, drawn instead with `-draw` primitives (roundRectangle, ellipse, polygon)."""
+    lines = []
+    for l in layers:
+        cx, cy, w, h = l.get("cx", 512), l.get("cy", 512), l.get("width", 0), l.get("height", 0)
+        lines.append("push graphic-context")
+        rot = l.get("rotation")
+        if rot:
+            lines.append(f"translate {cx},{cy}")
+            lines.append(f"rotate {rot}")
+            cx, cy = 0, 0
+        op = l.get("opacity", 100)
+        lines.append(f"fill {_alpha_hex(l['fill'], op)}" if l.get("fill") else "fill none")
+        if l.get("stroke"):
+            lines.append(f"stroke {_alpha_hex(l['stroke'], op)}")
+            lines.append(f"stroke-width {l.get('stroke_width', 1)}")
+        else:
+            lines.append("stroke none")
+        if l["type"] == "rounded_rectangle":
+            r = l.get("corner_radius", 0)
+            lines.append(f"roundRectangle {cx - w / 2},{cy - h / 2} {cx + w / 2},{cy + h / 2} {r},{r}")
+        elif l["type"] == "ellipse":
+            lines.append(f"ellipse {cx},{cy} {w / 2},{h / 2} 0,360")
+        elif l["type"] == "star":
+            pts = _star_polygon(cx, cy, w, h, l.get("points", 5), l.get("radius", 50))
+            lines.append("polygon " + " ".join(f"{x:.2f},{y:.2f}" for x, y in pts))
+        else:
+            raise ValueError(f"no MVG for a {l['type']} layer")
+        lines.append("pop graphic-context")
+    return "\n".join(lines)
+
+
 def make_logo(description):
-    """Design a logo icon and build it live in Pixelmator Pro. It always makes an icon with no text. Default is a golden spiral; say 'complex' for an intricate one or 'simple' for a plain shape."""
+    """Design a logo icon and draw it with ImageMagick. It always makes an icon with no text. Default is a golden spiral; say 'complex' for an intricate one or 'simple' for a plain shape."""
     fancy = bool(_WANTS_COMPLEX.search(description))
     simple = not fancy and bool(_WANTS_SIMPLE.search(description))
     pal = ("palette: ember (warm amber on dark), ink (white and gold on near-black), forest (green on dark), signal (red on dark), "
@@ -199,39 +252,34 @@ def make_logo(description):
     try:
         with urllib.request.urlopen(urllib.request.Request(_tools().OLLAMA_CHAT, body, {"Content-Type": "application/json"}), timeout=180) as r:
             pick = json.loads(json.load(r)["message"]["content"])
-        spec = {"layers": _complex_layers(**pick) if fancy else _logo_layers(**pick) if simple else _bloom_layers(**pick)}
+        layers = _complex_layers(**pick) if fancy else _logo_layers(**pick) if simple else _bloom_layers(**pick)
     except Exception as e:
         return f"I couldn't draft the design: {e}"
     out = os.path.expanduser("~/Desktop/samantha-logo.png")
-    spec.update(width=1024, height=1024, export=[out], keep_open=not HEADLESS)
-    path = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".samantha-logo.json")
-    json.dump(spec, open(path, "w"), indent=1)
     if os.path.exists(out):
         os.remove(out)  # a stale file must not read as a fresh success
-    result = _run([sys.executable, PXM, "logo", path, "--timeout", "600"] + (["--headless"] if HEADLESS else []), timeout=620)
+    result = _run(["magick", "-size", "1024x1024", "xc:none", "-draw", _mvg(layers), out], timeout=60)
     chose = ", ".join(f"{k} {v}" for k, v in pick.items())
-    return (f"I went with {chose}. {len(spec['layers'])} layers, built in Pixelmator, saved to {out}."
-            if os.path.exists(out) else f"Pixelmator refused my design: {result[-300:]}")
+    return (f"I went with {chose}. {len(layers)} layers, built with ImageMagick, saved to {out}."
+            if os.path.exists(out) else f"ImageMagick refused my design: {result[-300:]}")
+
 
 def paint_image(path):
-    """Repaint a photo out of tens of thousands of colored squares. Takes the path of an image file."""
+    """Repaint a photo out of tens of thousands of colored squares with ImageMagick. Takes the path of an image file."""
     full = _inside_home(path.strip().strip("'\""))
     if not full or not os.path.isfile(full):
         return f"I can't find an image at {path}."
     out = os.path.expanduser("~/Desktop/samantha-painting.png")
     if os.path.exists(out):
         os.remove(out)  # a stale file must not read as a fresh success
-    # ImageMagick draws the same plan in seconds, so she paints 40000 squares and the result is clear.
-    # Pixelmator (800 layers, about a minute) is the fallback when ImageMagick is not installed.
-    if shutil.which("magick"):
-        result = _run([sys.executable, PXM, "paint", full, "--out", out, "--engine", "magick", "--shapes", "40000",
-                       "--detail", "1024", "--size", "2048"], timeout=120)
-        if os.path.exists(out):
-            return f"Painted it from 40,000 squares, saved to {out}."
-    result = _run([sys.executable, PXM, "paint", full, "--out", out, "--shapes", "800", "--size", "1024"]
-                  + (["--headless"] if HEADLESS else []), timeout=600)
-    return (f"Painted it from 800 layers in Pixelmator, saved to {out}." if os.path.exists(out)
-            else f"Pixelmator refused the painting: {result[-300:]}")
+    if not shutil.which("magick"):
+        return "ImageMagick (`magick`) is not installed, so I can't paint this."
+    # pixelmator/pxm.py's quadtree planner and its ImageMagick engine draw the plan in seconds; this
+    # never touches Pixelmator Pro, only the magick engine.
+    result = _run([sys.executable, PXM, "paint", full, "--out", out, "--engine", "magick", "--shapes", "40000",
+                   "--detail", "1024", "--size", "2048"], timeout=120)
+    return (f"Painted it from 40,000 squares, saved to {out}." if os.path.exists(out)
+            else f"Painting failed: {result[-300:]}")
 
 
 def layers_to_svg(layers, note=""):

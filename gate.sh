@@ -25,9 +25,6 @@ ACTIONS=$(echo "$OUT" | cut -d/ -f1)
 OUT=$(python3 eval/web_parity.py 2>&1 | tail -1)
 PARITY=$(echo "$OUT" | cut -d/ -f1)
 
-OUT=$(cd pixelmator && python3 -m unittest 2>&1 | tail -1)
-PXM_OK=$(echo "$OUT" | grep -c "OK" || true)
-
 OUT=$(SAMANTHA_HEADLESS=1 python3 tools.py 2>&1 | tail -1)
 TOOLS_OK=$([ "$OUT" = "tools ok" ] && echo "1" || echo "0")
 
@@ -64,20 +61,19 @@ if [ "$1" = "--full" ]; then
 fi
 
 # Compare with baselines using Python
-python3 - "$BASELINE" "$CHAT" "$ACTIONS" "$PARITY" "$PXM_OK" "$TOOLS_OK" "$HANDS_PASSED" "$HANDS_PAST" "$HANDS_REFUSED" "$WEB_OK" "$1" <<'PYTHON'
+python3 - "$BASELINE" "$CHAT" "$ACTIONS" "$PARITY" "$TOOLS_OK" "$HANDS_PASSED" "$HANDS_PAST" "$HANDS_REFUSED" "$WEB_OK" "$1" <<'PYTHON'
 import json, sys, os
 
 baseline_file = sys.argv[1]
 chat = int(sys.argv[2]) if sys.argv[2] else 0
 actions = int(sys.argv[3]) if sys.argv[3] else 0
 parity = int(sys.argv[4]) if sys.argv[4] else 0
-pxm_ok = int(sys.argv[5])
-tools_ok = int(sys.argv[6])
-hands_passed = sys.argv[7]
-hands_past = sys.argv[8]
-hands_refused = sys.argv[9]
-web_ok = int(sys.argv[10])
-mode = sys.argv[11]
+tools_ok = int(sys.argv[5])
+hands_passed = sys.argv[6]
+hands_past = sys.argv[7]
+hands_refused = sys.argv[8]
+web_ok = int(sys.argv[9])
+mode = sys.argv[10]
 
 failed = 0
 
@@ -109,13 +105,6 @@ if parity >= base:
 	print(f"PASS parity {parity}/{base}")
 else:
 	print(f"FAIL parity {parity} (baseline {base})")
-	failed = 1
-
-# Check pixelmator
-if pxm_ok:
-	print("PASS pixelmator OK")
-else:
-	print("FAIL pixelmator")
 	failed = 1
 
 # Check tools
