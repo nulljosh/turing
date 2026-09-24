@@ -38,4 +38,4 @@ Every ability, in the words you say. Anything that writes, sends or looks at you
 
 ## Limits, plainly
 
-Her own picker knows the first 51 tools by wording; the rest route through exact matches. Multi-step work borrows a small local model (qwen3:1.7b through Ollama). The tools that read this Mac only work on a Mac; the landing page says so. She never calls another MCP server on her own. She cannot reason like a frontier model and does not try; see `roadmap.md` for what is next and `LAWS.md` for what she will never do.
+Her own picker knows 77 of 103 tools by wording; the rest route through exact matches. Multi-step work borrows a small local model (qwen3:1.7b through Ollama). The tools that read this Mac only work on a Mac; the landing page says so. She never calls another MCP server on her own. She cannot reason like a frontier model and does not try; see `roadmap.md` for what is next and `LAWS.md` for what she will never do.

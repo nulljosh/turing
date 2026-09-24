@@ -2,7 +2,7 @@
   "chat": 20,
   "actions": 79,
   "parity": 79,
-  "hands_passed": 844,
-  "hands_past_guard": 89,
-  "hands_refused": 0
+  "hands_passed": 966,
+  "hands_past_guard": 49,
+  "hands_refused": 7
 }
