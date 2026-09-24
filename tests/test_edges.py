@@ -5,6 +5,7 @@ Run: python3 tests/test_edges.py
 """
 import os
 import sys
+import shutil
 import unittest
 from unittest import mock
 
