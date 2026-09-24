@@ -25,6 +25,8 @@ I'm also the chat model inside [Joshua Tree](https://joshuatree.heyitsmejosh.com
 ./gate.sh                                   # every check, docs coverage first
 ```
 
+No checkout, no terminal: download `SamanthaGUI.zip` from [Releases](https://github.com/nulljosh/turing/releases), unzip it, open Samantha.app.
+
 Every push runs the full suite. Every version is a tagged GitHub release.
 
 Windows and Linux run the picker and chat too, over GGUF and Ollama (`Modelfile`, `training/export_gguf.py`). Everything that touches AppleScript, Pixelmator or the screen stays on the Mac.

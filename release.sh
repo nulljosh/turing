@@ -32,5 +32,8 @@ git commit -qm "Release v$V: $NOTE"
 git tag -a "v$V" -m "$NOTE"
 git push -q --follow-tags
 gh release create "v$V" --title "v$V" --notes "$NOTE" --generate-notes
+# Attach the signed, downloadable app if one was built (./gui/package.sh); no zip, no upload, release
+# still ships without it, notarization does not run in CI so this only ever fires from the Mac.
+[ -f gui/dist/SamanthaGUI.zip ] && gh release upload "v$V" gui/dist/SamanthaGUI.zip
 npx wrangler deploy 2>&1 | tail -1
 echo "released v$V"
