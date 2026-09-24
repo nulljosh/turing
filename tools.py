@@ -301,6 +301,9 @@ TOOLS = {f.__name__: f for f in (open_app, open_url, web_search, current_tab, re
 TOOLS.update({f.__name__: f for f in tools_util.TOOLS})
 globals().update({f.__name__: f for f in tools_util.TOOLS})  # eval/actions.py swaps every TOOLS name on this module for a recorder
 
+from tools_write import edit_last_draft  # noqa: E402  (phrase-routed only, needs its own module state, never a model's tool)
+TOOLS["edit_last_draft"] = edit_last_draft
+
 _UNIT = {"s": 1 / 60, "m": 1, "h": 60}
 
 _ROUTES = (
@@ -385,6 +388,12 @@ _EYES = re.compile(r"^(?:look at|describe|see|check out|what(?:'s| is) in) (?:(?
 # tool-picking agent(), which has no screen tools at all (they are NOT_FOR_MODELS on purpose).
 _SCREEN_JOB = re.compile(r"^(?:log (?:me )?(?:in|into)|sign (?:me )?(?:in|into)|walk me through|step me through)\b", re.I)
 _ACTION = re.compile(r"^(?:open|launch|start|go to|visit|browse|pull up|search|google|look up|poke around|take a|grab a|screenshot|make|design|draw|paint|repaint|play|pause|skip|remind me|set a)\b", re.I)
+# "make it shorter", "make that friendlier", "add a line about Friday", "edit the draft": edit_last_draft rewrites
+# the file write_document last saved. Ahead of _ACTION so "make it..." never falls to make_logo's agent path.
+_EDIT_DRAFT = re.compile(
+    r"^make (?:it|that|the draft)(?: a bit| a little)? (.+)$"
+    r"|^add (?:a |another )?line(?: to (?:it|that|the draft))?(?: that says| saying| about)? (.+)$"
+    r"|^(?:edit|rewrite|revise|shorten|tighten) (?:the |my |that )?(?:last )?draft(?: to)?\s*(.*)$", re.I)
 
 
 # People do not type commands, they ask. "can you open chrome", "hey open
@@ -449,7 +458,8 @@ def _named_page(task):
 # These fire something with a side effect the user did not see coming (a Shortcut can send a
 # message, a clipboard write loses what was there, the screen goes dark). Only a command that
 # names them runs them, never a model's own choice. The real fix is the harness asking first.
-NOT_FOR_MODELS = {"ask_llm", "see_screen", "see_image", "see_camera", "click_text", "type_text", "press_key", "run_shortcut", "copy_to_clipboard", "sleep_display", "call_mcp_tool", "close_tab", "remember", "recall", "forget", "read_screen", "ask_screen"}  # her memory is private: only her own commands and the harness touch it
+NOT_FOR_MODELS = {"ask_llm", "see_screen", "see_image", "see_camera", "click_text", "type_text", "press_key", "run_shortcut", "copy_to_clipboard", "sleep_display", "call_mcp_tool", "close_tab", "remember", "recall", "forget", "read_screen", "ask_screen",
+                   "edit_last_draft"}  # her memory is private: only her own commands and the harness touch it. edit_last_draft needs the in-process path it just wrote, and confirms itself with the diff, so it is phrase-routed only, never a model's own pick or MCP
 
 
 def model_tools():
@@ -640,6 +650,12 @@ def do(query, log=None, confirm=None):
     done = act(query)
     if done:
         return done
+    edit = _EDIT_DRAFT.match(_bare(query))
+    if edit:
+        instruction = next((g for g in edit.groups() if g), "").strip()
+        if log:
+            log(f"  [edit_last_draft({instruction!r})]")
+        return edit_last_draft(instruction, log=log, confirm=confirm)
     if _SCREEN_JOB.search(_bare(query)):
         from tools_screen_agent import screen_task
         return screen_task(query, log=log, confirm=confirm)

@@ -12,8 +12,8 @@
         "documented": 17
       },
       "tools_research.py": {
-        "total": 7,
-        "documented": 7
+        "total": 10,
+        "documented": 10
       },
       "harness.py": {
         "total": 10,
@@ -88,8 +88,8 @@
         "documented": 43
       },
       "ask_web.py": {
-        "total": 10,
-        "documented": 10
+        "total": 11,
+        "documented": 11
       },
       "gen_jt_docs.py": {
         "total": 13,
@@ -104,8 +104,8 @@
         "documented": 20
       },
       "tools_write.py": {
-        "total": 1,
-        "documented": 1
+        "total": 2,
+        "documented": 2
       },
       "tools_see.py": {
         "total": 9,
@@ -264,8 +264,8 @@
         "documented": 13
       },
       "eval/test_research.py": {
-        "total": 15,
-        "documented": 15
+        "total": 30,
+        "documented": 30
       },
       "eval/test_run_code.py": {
         "total": 17,
@@ -296,8 +296,8 @@
         "documented": 25
       },
       "eval/test_write.py": {
-        "total": 7,
-        "documented": 7
+        "total": 15,
+        "documented": 15
       },
       "eval/distill.py": {
         "total": 11,
@@ -340,7 +340,7 @@
   "measured": {
     "tools": {
       "before": 0,
-      "after": 105
+      "after": 107
     },
     "actions_eval": "77/77",
     "knowledge_sweep": {
