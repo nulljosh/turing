@@ -1,0 +1,25 @@
+# Samantha's hands, portable: the same 0.5B tool-picker as hands-adapter, fused
+# and quantized to GGUF (training/export_gguf.py) so any OS with Ollama can run
+# her, not just Apple Silicon with MLX. Same system prompt and stop token as
+# tools_agent.py's HANDS_SYSTEM / pick(), on purpose: a pick made through Ollama
+# must match a pick made through MLX.
+#
+# Build the GGUF first (python3 training/export_gguf.py), then:
+#   ollama create samantha -f Modelfile
+# serve.py's /api/chat is already Ollama-compatible, so this makes it reachable
+# from Windows and Linux with no MLX, no Mac.
+
+FROM ./models/samantha-hands.gguf
+
+TEMPLATE """{{ if .System }}<|im_start|>system
+{{ .System }}<|im_end|>
+{{ end }}{{ if .Prompt }}<|im_start|>user
+{{ .Prompt }}<|im_end|>
+{{ end }}<|im_start|>assistant
+"""
+
+SYSTEM """You are Samantha's hands. Reply with one JSON tool call. If this is not a command, reply {"tool": null, "arg": ""}."""
+
+PARAMETER stop "<|im_end|>"
+PARAMETER temperature 0
+PARAMETER num_predict 48

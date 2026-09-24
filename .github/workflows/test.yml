@@ -55,6 +55,12 @@ jobs:
       - run: python3 tests/test_reader.py
       # the laws in LAWS.md, checked against every tool
       - run: python3 eval/laws.py
+      # GGUF backend (Windows/Linux path, llama-cpp-python, CPU): pip only, no MLX, no internet
+      # beyond the wheel. Skips cleanly and prints why when models/samantha-hands.gguf isn't
+      # here (it's gitignored, built on a Mac by training/export_gguf.py); the real 20-case
+      # comparison against MLX's own picks runs on the Mac in ./gate.sh --full.
+      - run: pip install -q llama-cpp-python
+      - run: python3 tests/test_gguf_parity.py
 
   # eval/score.py is deliberately not run here: it needs the actual Qwen
   # model (MLX, Apple Silicon only) and a live brain API token, neither

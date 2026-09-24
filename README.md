@@ -19,7 +19,7 @@ I'm Samantha. I'm a small model, half a billion parameters, and I live on your M
 ./gate.sh                                   # every check, docs coverage first
 ```
 
-Every push runs the full suite, and every version is a tagged GitHub release.
+Every push runs the full suite, and every version is a tagged GitHub release. Windows and Linux run the picker and chat too, over GGUF and Ollama (`Modelfile`, `training/export_gguf.py`); everything that touches AppleScript, Pixelmator, or the screen stays Mac-only.
 
 <img src="progress.svg" width="460">
 
