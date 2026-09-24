@@ -19,7 +19,7 @@ import tools_apps
 
 # The tools that leave a mark or change the Mac. A new tool that does either must be added to one of tools.WRITES or
 # tools.NOT_FOR_MODELS, and this list says which tools count as read-only. Anything not here and not classified fails law 1.
-READ_ONLY = {"research", "open_app", "open_url", "web_search", "current_tab", "read_page", "screenshot", "clipboard", "set_volume", "battery", "say",
+READ_ONLY = {"research", "research_more", "open_app", "open_url", "web_search", "current_tab", "read_page", "screenshot", "clipboard", "set_volume", "battery", "say",
              "list_dir", "read_file", "music", "weather", "timer", "calendar_today", "image_info", "calculate", "convert_units", "time_in",
              "current_date", "days_until", "date_math", "convert_time", "flip_coin", "roll_dice", "random_number", "make_password", "make_uuid", "hash_text",
              "base64_encode", "base64_decode", "word_count", "reverse_text", "shout", "morse_code", "json_pretty", "is_prime", "roman_numeral",

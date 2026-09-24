@@ -16,7 +16,7 @@ Every ability, in the words you say. Anything that writes, sends or looks at you
 ## Know
 
 - **Answer.** Questions go down a ladder: exact routes, her own picker, the project FAQ and your notes, then Wikipedia and DuckDuckGo, then her offline library (the fieldbook plus ~10,000 Wikipedia leads). If nothing holds the answer she says so.
-- **Research.** "Research the history of the printing press": Wikipedia, her library and your notes, then a brief with a source after every sentence. "Save that" writes it to a file.
+- **Research.** "Research the history of the printing press": Wikipedia, her library and your notes, then a brief with a source after every sentence. Name a page in the question ("research the docs at example.com/api") and she reads it and cites it too, or tells you plainly when it's JS-only or blocked instead of pretending it never came up. "Tell me more about X" tries the sources she already has before going back out for fresh ones. "Save that" writes it to a file.
 - **Run code.** "Stats on sales.csv", "average of the price column in sales.csv", "chart sales.csv", "plot column price of sales.csv": the biggest local model writes a short Python script from your request and the file's header, and it only ever runs in a sandbox, a fresh temp folder holding a copy of that one file, no network, a time and memory cap. A chart comes back as a real PNG. Asks first.
 - **Summarize.** "Summarize ~/Desktop/report.pdf", "summarize this page", "summarize my unread mail": three to five real sentences from the biggest local model.
 - **Translate.** "Translate good morning to French", "how do you say thank you in Japanese", "translate the page github.com into Spanish". Offline.
@@ -40,6 +40,6 @@ Every ability, in the words you say. Anything that writes, sends or looks at you
 
 ## Limits, plainly
 
-Her own picker knows 77 of 105 tools by wording; the rest route through exact matches. Multi-step work borrows a small local model (qwen3:1.7b through Ollama). She never calls another MCP server on her own. She cannot reason like a frontier model and does not try; see `roadmap.md` for what is next and `LAWS.md` for what she will never do.
+Her own picker knows 77 of 106 tools by wording; the rest route through exact matches. Multi-step work borrows a small local model (qwen3:1.7b through Ollama). She never calls another MCP server on her own. She cannot reason like a frontier model and does not try; see `roadmap.md` for what is next and `LAWS.md` for what she will never do.
 
 Windows and Linux now run the picker and chat: `training/export_gguf.py` fuses hands-adapter into the base model and quantizes it to GGUF, `Modelfile` turns that into an Ollama model (`ollama create samantha -f Modelfile`), and `serve.py`'s Ollama-compatible `/api/chat` is reachable from there with no MLX and no Mac. `tools_agent.py`'s `pick()` uses MLX when it's importable and falls back to llama-cpp-python over that same GGUF otherwise, same prompt, same stop token, same decoding. Everything that touches the Mac itself stays Mac-only regardless of backend: AppleScript (Music, Notes, Reminders, Calendar, Mail, Finder), the screen (see_screen, click, type), and the camera. Image tools run on ImageMagick, so they are not on that list. A phone is its own build-out, not covered here; see `roadmap.md`.

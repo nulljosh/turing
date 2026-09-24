@@ -163,16 +163,11 @@ def read_page(target=""):
     url = _url(target) if target else (current_tab().splitlines() or [""])[-1]
     if not url or not url.startswith("http"):
         return "No page to read."
-    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (Macintosh) Samantha"})
-    try:
-        with urllib.request.urlopen(req, timeout=10) as r:
-            raw = r.read(400_000).decode("utf-8", "ignore")
-    except Exception as e:
-        return f"Couldn't fetch {url}: {e}"
-    raw = re.sub(r"(?is)<(script|style|noscript|svg)\b.*?</\1>", " ", raw)
-    text = html.unescape(re.sub(r"<[^>]+>", " ", raw))
-    # ponytail: tag-strip, not a readability parser. JS-rendered pages come back empty; add Chrome JS bridge then.
-    return re.sub(r"\s+", " ", text).strip()[:3000]
+    from ask_web import fetch_text
+    text = fetch_text(url)
+    if text is None:
+        return f"Couldn't read {url}. It may be down, blocking this, or a JS-only page with nothing in the raw HTML."
+    return text
 
 
 def summarize(target=""):

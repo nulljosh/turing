@@ -55,6 +55,106 @@ class Research(unittest.TestCase):
         self.assertEqual(tools.plan("deep dive into kinship"), [("research", ("kinship",))])
 
 
+class FetchText(unittest.TestCase):
+    """ask_web.fetch_text: the shared page fetcher tools.read_page and tools_research.sources both use."""
+
+    def test_strips_tags_to_readable_text(self):
+        """Style, script and tags are stripped; the real text stays."""
+        import ask_web
+        html_page = ("<html><head><style>.x{color:red}</style><script>var x=1;</script></head>"
+                     "<body><h1>Turing</h1><p>A small AI model that learns your voice, " + "and your notes. " * 20 + "</p></body></html>")
+        with mock.patch("urllib.request.urlopen") as u:
+            u.return_value.__enter__.return_value.read.return_value = html_page.encode()
+            text = ask_web.fetch_text("https://example.com/docs")
+        self.assertNotIn("<", text)
+        self.assertIn("Turing", text)
+        self.assertIn("A small AI model", text)
+
+    def test_js_only_page_declines(self):
+        """A JS-only page serves an almost-empty shell server side; fetch_text refuses to call that readable."""
+        import ask_web
+        shell = '<html><body><div id="root"></div><script src="app.js"></script></body></html>'
+        with mock.patch("urllib.request.urlopen") as u:
+            u.return_value.__enter__.return_value.read.return_value = shell.encode()
+            self.assertIsNone(ask_web.fetch_text("https://spa.example.com"))
+
+    def test_network_failure_declines(self):
+        """A request that raises (down, refused) is a decline, not a crash."""
+        import ask_web
+        with mock.patch("urllib.request.urlopen", side_effect=OSError("blocked")):
+            self.assertIsNone(ask_web.fetch_text("https://example.com"))
+
+
+class PagedResearch(unittest.TestCase):
+    """A page named right in the question is fetched and cited, or honestly declined when it won't read back."""
+
+    def test_named_page_is_added_as_a_source(self):
+        """"research https://x.com/docs" reads that page and hands it to sources() alongside Wikipedia."""
+        with mock.patch.object(tools_research, "_wikipedia", return_value=[]), \
+                mock.patch("ask_web.fetch_text", return_value="The docs say the API takes a topic string.") as fetch:
+            found = tools_research.sources("research https://x.com/docs")
+        fetch.assert_called_once_with("https://x.com/docs")
+        self.assertTrue(any(name == "Page: https://x.com/docs" for name, _ in found))
+
+    def test_js_only_page_is_declined_honestly_not_silently(self):
+        """A page that fetches to nothing (JS-only, blocked) is not added as a source, and research() says so
+        instead of pretending the page was never named."""
+        with mock.patch.object(tools_research, "sources", return_value=SOURCES), \
+                mock.patch("tools_llm.ask_llm", return_value="Gutenberg built it around 1440 [1]."):
+            reply = tools_research.research("research example.com/app on the printing press")
+        self.assertIn("couldn't read", reply)
+        self.assertIn("example.com/app", reply)
+
+    def test_a_plain_topic_never_tries_to_fetch_a_page(self):
+        """No URL or domain in the topic: no page fetch attempted."""
+        self.assertIsNone(tools_research._named_page("the printing press"))
+        self.assertEqual(tools_research._named_page("research bbc.com news"), "https://bbc.com")
+
+
+class FollowUp(unittest.TestCase):
+    """"tell me more about X" reuses the last brief's sources before searching again."""
+
+    def setUp(self):
+        """Start clean: no brief remembered from another test."""
+        self.saved = dict(tools_research._last)
+
+    def tearDown(self):
+        """Put any prior state back."""
+        tools_research._last.update(self.saved)
+
+    def test_reuses_last_sources_first(self):
+        """The follow-up hands the SAME sources back to the writer, no fresh sources() call."""
+        tools_research._last["topic"] = "the printing press"
+        tools_research._last["brief"] = "Gutenberg built it around 1440 [1]."
+        tools_research._last["sources"] = SOURCES
+        with mock.patch.object(tools_research, "sources") as fresh_sources, \
+                mock.patch("tools_llm.ask_llm", return_value="It spread across Europe within decades [2]."):
+            reply = tools_research.research_more("how it spread")
+        fresh_sources.assert_not_called()
+        self.assertIn("It spread across Europe within decades [2].", reply)
+
+    def test_searches_again_when_old_sources_do_not_cover_it(self):
+        """When the old sources can't stand behind anything, research_more falls back to a real search."""
+        tools_research._last["topic"] = "the printing press"
+        tools_research._last["brief"] = "Gutenberg built it around 1440 [1]."
+        tools_research._last["sources"] = SOURCES
+        with mock.patch("tools_llm.ask_llm", return_value="It was 1390.  Nothing citable."), \
+                mock.patch.object(tools_research, "sources", return_value=[]) as fresh_sources:
+            reply = tools_research.research_more("something unrelated")
+        fresh_sources.assert_called_once()
+        self.assertIn("could not find sources", reply)
+
+    def test_nothing_researched_yet(self):
+        """A follow-up before any research is an honest sentence."""
+        tools_research._last["topic"] = tools_research._last["brief"] = tools_research._last["sources"] = None
+        self.assertIn("have not researched anything", tools_research.research_more("more"))
+
+    def test_route(self):
+        """The ways people ask a follow-up."""
+        self.assertEqual(tools.plan("tell me more about the silk road"), [("research_more", ("the silk road",))])
+        self.assertEqual(tools.plan("tell me more"), [("research_more", ("",))])
+
+
 class SaveResearch(unittest.TestCase):
     """Saving the last brief to a file: only inside home, only after a real brief exists."""
 
