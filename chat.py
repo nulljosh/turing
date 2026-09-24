@@ -424,7 +424,12 @@ def tui():
 if __name__ == "__main__":
     if "--voice" in sys.argv:
         import voice
-        voice.converse()
+        wake = None
+        if "--wake" in sys.argv:
+            i = sys.argv.index("--wake") + 1
+            nxt = sys.argv[i] if i < len(sys.argv) else None
+            wake = nxt if nxt and not nxt.startswith("--") else voice.WAKE_WORD
+        voice.converse(wake=wake)
     elif "--tui" in sys.argv:
         tui()
     else:
