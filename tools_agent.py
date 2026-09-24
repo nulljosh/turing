@@ -7,9 +7,41 @@ import re
 import urllib.request
 
 HANDS_ADAPTER = os.path.join(os.path.dirname(os.path.abspath(__file__)), "hands-adapter")
+HANDS_GGUF = os.path.join(os.path.dirname(os.path.abspath(__file__)), "models", "samantha-hands.gguf")
 HANDS_SYSTEM = 'You are Samantha\'s hands. Reply with one JSON tool call. If this is not a command, reply {"tool": null, "arg": ""}.'
 _hands = None
+_hands_backend = None  # "mlx" or "llama_cpp", set once _hands loads
 
+
+def _load_hands():
+    """MLX when it's importable (Apple Silicon); otherwise llama-cpp-python
+    over the GGUF export (training/export_gguf.py), same prompt and decoding
+    everywhere. Returns (backend, model, tok_or_none) or None when neither is here."""
+    try:
+        from mlx_lm import load
+        if os.path.isdir(HANDS_ADAPTER):
+            return "mlx", *load("mlx-community/Qwen2.5-0.5B-Instruct-4bit", adapter_path=HANDS_ADAPTER)
+    except Exception:
+        pass
+    try:
+        from llama_cpp import Llama
+        if os.path.isfile(HANDS_GGUF):
+            return "llama_cpp", Llama(model_path=HANDS_GGUF, n_ctx=512, n_gpu_layers=0, verbose=False), None
+    except Exception:
+        pass
+    return None
+
+
+def _generate_hands(backend, model, tok, query):
+    """Same system prompt, temperature 0, max_tokens 48, stop at <|im_end|> on both backends."""
+    if backend == "mlx":
+        from mlx_lm import generate
+        prompt = tok.apply_chat_template([{"role": "system", "content": HANDS_SYSTEM}, {"role": "user", "content": query}],
+                                         add_generation_prompt=True, tokenize=False)
+        return generate(model, tok, prompt=prompt, max_tokens=48, verbose=False)
+    prompt = f"<|im_start|>system\n{HANDS_SYSTEM}<|im_end|>\n<|im_start|>user\n{query}<|im_end|>\n<|im_start|>assistant\n"
+    out = model.create_completion(prompt=prompt, max_tokens=48, temperature=0.0, stop=["<|im_end|>"])
+    return out["choices"][0]["text"]
 
 
 def agent(task, max_steps=6, log=None, confirm=None):
@@ -68,25 +100,24 @@ def agent(task, max_steps=6, log=None, confirm=None):
 
 def pick(query):
     """Her own head for tool picking: the 0.5B with hands-adapter, trained by
-    gen_hands_data.py, scored by eval/hands.py. Returns (tool, arg), ("agent",
-    ""), or None when it is not a command, the pick is unsound, or the adapter
-    or MLX is not here. None always means: carry on as if she had not looked."""
-    global _hands
+    gen_hands_data.py, scored by eval/hands.py. MLX on Apple Silicon, else
+    llama-cpp-python over the GGUF export so Windows and Linux get the same
+    picker (_load_hands). Returns (tool, arg), ("agent", ""), or None when it
+    is not a command, the pick is unsound, or neither backend is here. None
+    always means: carry on as if she had not looked."""
+    global _hands, _hands_backend
     import tools  # here, not at the top: tools.py imports this module as it loads
     if _hands is None:
-        try:
-            from mlx_lm import load
-            _hands = load("mlx-community/Qwen2.5-0.5B-Instruct-4bit", adapter_path=HANDS_ADAPTER) if os.path.isdir(HANDS_ADAPTER) else False
-        except Exception:
-            _hands = False
+        loaded = _load_hands()
+        _hands = loaded or False
+        if loaded:
+            _hands_backend = loaded[0]
     if not _hands:
         return None
-    from mlx_lm import generate
-    model, tok = _hands
-    prompt = tok.apply_chat_template([{"role": "system", "content": HANDS_SYSTEM}, {"role": "user", "content": query}],
-                                     add_generation_prompt=True, tokenize=False)
+    backend, model, tok = _hands
     try:
-        got = json.loads(re.search(r"\{.*?\}", generate(model, tok, prompt=prompt, max_tokens=48, verbose=False), re.S).group(0))
+        raw = _generate_hands(backend, model, tok, query)
+        got = json.loads(re.search(r"\{.*?\}", raw, re.S).group(0))
         tool, arg = got.get("tool"), str(got.get("arg") or "").strip()
     except Exception:
         return None

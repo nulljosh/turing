@@ -1,0 +1,102 @@
+[
+  {
+    "cmd": "open chrome",
+    "tool": "open_app",
+    "arg": "chrome"
+  },
+  {
+    "cmd": "pull up reddit",
+    "tool": "open_url",
+    "arg": "reddit"
+  },
+  {
+    "cmd": "go to youtube and search lofi",
+    "tool": "agent",
+    "arg": ""
+  },
+  {
+    "cmd": "what time is 3pm pst in tokyo",
+    "tool": "convert_time",
+    "arg": "3pm pst in tokyo"
+  },
+  {
+    "cmd": "write a doc about the roadmap",
+    "tool": null,
+    "arg": ""
+  },
+  {
+    "cmd": "what's in ~/Desktop/cat.png",
+    "tool": "image_info",
+    "arg": "~/Desktop/cat.png"
+  },
+  {
+    "cmd": "type hello world",
+    "tool": "say",
+    "arg": "hello world"
+  },
+  {
+    "cmd": "convert 5 km to miles",
+    "tool": "convert_units",
+    "arg": "5 km to miles"
+  },
+  {
+    "cmd": "convert ~/a.png to jpg",
+    "tool": "convert_image",
+    "arg": "~/a.png to jpg"
+  },
+  {
+    "cmd": "volume 30",
+    "tool": "set_volume",
+    "arg": "30"
+  },
+  {
+    "cmd": "show me the folder in ~/Desktop",
+    "tool": "list_dir",
+    "arg": "~/Desktop"
+  },
+  {
+    "cmd": "open chrome and poke around hacker news",
+    "tool": "agent",
+    "arg": ""
+  },
+  {
+    "cmd": "turn it up to 80",
+    "tool": "set_volume",
+    "arg": "80"
+  },
+  {
+    "cmd": "can you tell me who alan turing was",
+    "tool": "list_tools",
+    "arg": ""
+  },
+  {
+    "cmd": "weather",
+    "tool": "weather",
+    "arg": ""
+  },
+  {
+    "cmd": "what do i have today",
+    "tool": "calendar_today",
+    "arg": ""
+  },
+  {
+    "cmd": "when am i free this week",
+    "tool": "current_date",
+    "arg": ""
+  },
+  {
+    "cmd": "translate the page github.com into spanish",
+    "tool": "translate_text",
+    "arg": "the page github.com"
+  },
+  {
+    "cmd": "find sign in on my screen",
+    "tool": "find_in_document",
+    "arg": ""
+  },
+  {
+    "cmd": "delete my account",
+    "tool": "reset_password",
+    "arg": ""
+  }
+]
