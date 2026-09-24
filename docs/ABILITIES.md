@@ -4,7 +4,7 @@ Every ability, in the words you say. Anything that writes, sends or looks at you
 
 ## Talk and listen
 
-- **Talk.** `./.venv/bin/python chat.py --voice`: you speak, Whisper transcribes on the Mac, she answers out loud.
+- **Talk.** `./.venv/bin/python chat.py --voice`: you speak, Whisper transcribes on the Mac, she answers out loud. Talk over her while she's answering and a real run of your voice on the mic cuts her off and she starts listening right away. `--wake samantha` (off unless you pass it) keeps her idle, listening in short chunks, until you say the wake word first; then she drops it and takes the rest as the command.
 - **Transcribe.** "Transcribe the video ~/Desktop/clip.mp4": the words out of any video or audio file in your home folder, same Whisper pipeline.
 
 ## See
