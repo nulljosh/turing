@@ -40,10 +40,10 @@ Samantha could answer. She could not do anything. "Open chrome and go to hacker 
 ### Biggest gaps vs the market (set 2026-09-23)
 Measured against Siri and Apple Intelligence, and the ChatGPT and Claude desktop apps. Ranked; the loop works top down.
 
-1. **Picker coverage.** Her own picker knows 77 of 104 tools by wording (round six, docs/BAKEOFF.md); the rest need exact phrasing. Close the remaining 27 with training templates for the tools that still have none, then two-step picking (family, then tool) and constrained output if aggregate accuracy still lags, scored by `eval/hands.py`, with no regression on the 77.
+1. **Picker coverage.** Her own picker knows 77 of 105 tools by wording (round six, docs/BAKEOFF.md); the rest need exact phrasing. Close the remaining 28 with training templates for the tools that still have none, then two-step picking (family, then tool) and constrained output if aggregate accuracy still lags, scored by `eval/hands.py`, with no regression on the 77.
 2. **Cross-source answers, SHIPPED 2026-09-23.** "What needs my attention" (unread mail, today's calendar and due reminders, ranked, the 9B writing three lines) and "am I free Thursday afternoon" / "when am I free this week" (the calendar's open gaps for a day or the week, not just today's list). Both exact-router tools in `tools_apps.py` (`needs_attention`, `free_when`).
 3. **Voice.** Barge-in and a wake word.
-4. **Eyes and hands.** Vision misnames things, no camera, GUI control is one step at a time.
+4. **Eyes and hands, camera half SHIPPED 2026-09-23.** GUI control is one step at a time. The camera half: `see_camera` ("what am I holding", "read this label", "look at this"), one frame via ffmpeg avfoundation, the same vision model see_image uses. Asks first, `tools_see.py`.
 5. **Research and code, code half SHIPPED 2026-09-23.** Pages beyond Wikipedia still open. The code half: `run_code` ("stats on sales.csv", "average of the price column in sales.csv", "chart sales.csv", "plot column price of sales.csv"). The biggest local model writes a short script from the request and the CSV's own header, and it only runs in a fresh temp folder holding a copy of that one file, no network, a 20 second timeout, a memory cap, output capped at 2000 characters. Asks first, `tools_code.py`.
 6. **Install.** A signed, notarized SamanthaGUI.app a stranger can download and open, with the models fetched on first run. Today it is a venv plus a build script.
 
@@ -84,7 +84,7 @@ Ship in that order. Skipping straight to phone apps without 1 and 2 first would 
 The loop compares her with other assistants (Siri and Shortcuts, Apple Intelligence, Claude and ChatGPT desktop with MCP, Open Interpreter, Raycast AI, local Ollama agents), adds each real gap here with where it was seen, builds it, then deletes the line once it ships (history lives in git). Newest and biggest first.
 
 - [ ] Docs in her voice: the README intro is hand-written to SOUL.md; have the 9B (warm, briefed with SOUL.md) redo the intro, ABILITIES.md and WHITEPAPER.md in first person, then check facts and house rules by hand. Direct request, 2026-09-23
-- [ ] Camera eyes: "what am I holding", "read this label" through the Mac's camera (one frame via ffmpeg avfoundation, then the same vision model see_image uses), asking first. Seen in Gemini Live, ChatGPT voice with video
+- [x] Camera eyes: "what am I holding", "read this label" through the Mac's camera (one frame via ffmpeg avfoundation, then the same vision model see_image uses), asking first. Seen in Gemini Live, ChatGPT voice with video. Shipped 2026-09-23 (see_camera)
 - [ ] Edit the last draft: "make it shorter", "friendlier", "add a line about Friday" rewrites the file write_document just saved, showing the diff and asking first. Seen in ChatGPT canvas, Claude artifacts
 - [ ] Draw on the Mac, not just the page: local image generation (Flux or SD through MLX) is a 6 GB model on a 16 GB Mac, so it only runs with everything else closed; a real ability, honestly scoped. Seen in ChatGPT images, Gemini
 - [ ] Voice, the rest: you can cut in while she speaks, and a wake word. Voice in shipped v1.8.0 (python3 chat.py --voice, Whisper on MLX). Seen in ChatGPT and Gemini voice modes

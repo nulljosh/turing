@@ -1,17 +1,22 @@
-"""Her eyes: a local vision model (Qwen2.5-VL 3B on MLX, about 2GB) looks at a picture or the screen and answers a
-question about it. Reading the screen already worked for text (Vision OCR); this sees what is not text: photos,
-charts, icons, layouts. Nothing leaves the Mac. Both tools are private, so they ask first and are only used by name.
+"""Her eyes: a local vision model (Qwen2.5-VL 3B on MLX, about 2GB) looks at a picture, the screen or the Mac's
+camera and answers a question about it. Reading the screen already worked for text (Vision OCR); this sees what is
+not text: photos, charts, icons, layouts, objects in your hand. Nothing leaves the Mac. All three tools are
+private, so they ask first and are only used by name.
 
     "what's on my screen", "look at my screen and tell me what's wrong with this chart"
     "what's in ~/Desktop/cat.png", "describe ~/Pictures/trip.jpg"
+    "what am I holding", "read this label"
 """
 import os
+import re
 import subprocess
 import tempfile
 
 MODEL = os.environ.get("SAMANTHA_VISION", "mlx-community/Qwen2.5-VL-3B-Instruct-4bit")
 IMAGES = (".png", ".jpg", ".jpeg", ".heic", ".gif", ".webp", ".tiff", ".tif", ".bmp")
 _eyes = None  # (model, processor, config), loaded on first look and kept
+_DEVICE_LINE = re.compile(r"^\[AVFoundation indev @ [^\]]*\]\s*")
+_VIDEO_DEVICE = re.compile(r"^\[(\d+)\]\s*(.+)$")
 
 
 def _headless():
@@ -82,3 +87,62 @@ def see_image(request):
     if _headless():
         return f"Would look at {os.path.basename(full)}."
     return _answer(full, question)
+
+
+def _video_devices(text):
+    """The (index, name) of every avfoundation video device in ffmpeg's -list_devices output, in order."""
+    lines = [_DEVICE_LINE.sub("", ln) for ln in text.splitlines()]
+    block, in_video = [], False
+    for ln in lines:
+        if "AVFoundation video devices:" in ln:
+            in_video = True
+            continue
+        if "AVFoundation audio devices:" in ln:
+            break
+        if in_video:
+            block.append(ln)
+    return [(m.group(1), m.group(2).strip()) for ln in block for m in [_VIDEO_DEVICE.match(ln)] if m]
+
+
+def _camera_device():
+    """The index of the first real camera (never the screen-capture device ffmpeg always lists), or (None, why not)."""
+    try:
+        r = subprocess.run(["ffmpeg", "-f", "avfoundation", "-list_devices", "true", "-i", ""],
+                            capture_output=True, text=True, timeout=10)
+    except FileNotFoundError:
+        return None, "I need ffmpeg for the camera: brew install ffmpeg, then ask again."
+    except subprocess.TimeoutExpired:
+        return None, "Listing cameras took too long."
+    cameras = [d for d in _video_devices(r.stderr or r.stdout or "") if "capture screen" not in d[1].lower()]
+    if not cameras:
+        return None, "I do not see a camera on this Mac."
+    return cameras[0][0], None
+
+
+def see_camera(question=""):
+    """Take one photo with the Mac's camera right now and answer a question about it, or describe what it sees.
+    Nothing is saved after the answer. Asks first; stays on the Mac.
+
+        "what am I holding", "read this label", "look at this"
+    """
+    if _headless():
+        return "Would take one photo with the camera."
+    index, why = _camera_device()
+    if why:
+        return why
+    fd, shot = tempfile.mkstemp(suffix=".jpg")
+    os.close(fd)
+    try:
+        try:
+            subprocess.run(["ffmpeg", "-y", "-f", "avfoundation", "-framerate", "30", "-i", index,
+                             "-frames:v", "1", "-update", "1", shot], capture_output=True, text=True, timeout=15)
+        except FileNotFoundError:
+            return "I need ffmpeg for the camera: brew install ffmpeg, then ask again."
+        except subprocess.TimeoutExpired:
+            return "The camera did not answer in time. macOS may be waiting on a camera permission prompt for this terminal."
+        if os.path.getsize(shot) == 0:
+            return "I could not take a photo. Camera access may need to be allowed for this terminal."
+        return _answer(shot, question)
+    finally:
+        if os.path.exists(shot):
+            os.unlink(shot)
