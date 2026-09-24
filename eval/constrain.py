@@ -33,12 +33,14 @@ class ToolNameConstraint:
     """
 
     def __init__(self, tokenizer, tool_names):
+        """  init  : part of the constrained-name experiment (round six, off by default)."""
         self.trie = build_trie(tokenizer, tool_names)
         self.node = self.trie
         self.done = False
         self._seen = None  # baseline length set on first call: the prompt (incl. forced prefix), not our choice
 
     def __call__(self, tokens, logits):
+        """  call  : part of the constrained-name experiment (round six, off by default)."""
         if self.done:
             return logits
         # tokens is every token seen so far (mlx_lm concatenates prompt + generated on first call).

@@ -3,57 +3,21 @@
   "docs_coverage": {
     "percent": 100,
     "files": {
-      "ask_web.py": {
-        "total": 10,
-        "documented": 10
+      "chat_pipe.py": {
+        "total": 11,
+        "documented": 11
       },
-      "mcp_server.py": {
-        "total": 4,
-        "documented": 4
-      },
-      "ask_faq.py": {
-        "total": 10,
-        "documented": 10
-      },
-      "stats.py": {
-        "total": 7,
-        "documented": 7
-      },
-      "util_dates.py": {
-        "total": 12,
-        "documented": 12
-      },
-      "tools_write.py": {
-        "total": 1,
-        "documented": 1
-      },
-      "tools_see.py": {
-        "total": 9,
-        "documented": 9
-      },
-      "chat.py": {
-        "total": 18,
-        "documented": 18
-      },
-      "harness.py": {
-        "total": 10,
-        "documented": 10
-      },
-      "ask_local.py": {
-        "total": 9,
-        "documented": 9
+      "tools_image.py": {
+        "total": 17,
+        "documented": 17
       },
       "tools_research.py": {
         "total": 7,
         "documented": 7
       },
-      "util_math.py": {
-        "total": 20,
-        "documented": 20
-      },
-      "tools_agent.py": {
-        "total": 5,
-        "documented": 5
+      "harness.py": {
+        "total": 10,
+        "documented": 10
       },
       "library.py": {
         "total": 8,
@@ -63,81 +27,117 @@
         "total": 8,
         "documented": 8
       },
-      "tools_image.py": {
-        "total": 17,
-        "documented": 17
-      },
-      "tools_apps.py": {
-        "total": 14,
-        "documented": 14
-      },
-      "voice.py": {
-        "total": 9,
-        "documented": 9
-      },
-      "tools_code.py": {
-        "total": 7,
-        "documented": 7
-      },
       "tools_screen_agent.py": {
         "total": 3,
         "documented": 3
-      },
-      "tools_logo.py": {
-        "total": 28,
-        "documented": 28
-      },
-      "gen_jt_docs.py": {
-        "total": 13,
-        "documented": 13
-      },
-      "tools.py": {
-        "total": 37,
-        "documented": 37
-      },
-      "chat_pipe.py": {
-        "total": 11,
-        "documented": 11
-      },
-      "tools_files.py": {
-        "total": 14,
-        "documented": 14
-      },
-      "tools_util.py": {
-        "total": 43,
-        "documented": 43
-      },
-      "tools_llm.py": {
-        "total": 6,
-        "documented": 6
-      },
-      "serve.py": {
-        "total": 8,
-        "documented": 8
       },
       "ask.py": {
         "total": 7,
         "documented": 7
       },
-      "pixelmator/pxm.py": {
-        "total": 24,
-        "documented": 24
+      "tools_agent.py": {
+        "total": 5,
+        "documented": 5
       },
-      "pixelmator/test_pxm.py": {
-        "total": 53,
-        "documented": 53
+      "ask_local.py": {
+        "total": 9,
+        "documented": 9
+      },
+      "tools.py": {
+        "total": 37,
+        "documented": 37
+      },
+      "ask_faq.py": {
+        "total": 10,
+        "documented": 10
+      },
+      "util_dates.py": {
+        "total": 12,
+        "documented": 12
+      },
+      "serve.py": {
+        "total": 8,
+        "documented": 8
+      },
+      "tools_logo.py": {
+        "total": 28,
+        "documented": 28
+      },
+      "voice.py": {
+        "total": 9,
+        "documented": 9
+      },
+      "tools_apps.py": {
+        "total": 14,
+        "documented": 14
+      },
+      "tools_code.py": {
+        "total": 7,
+        "documented": 7
+      },
+      "chat.py": {
+        "total": 18,
+        "documented": 18
+      },
+      "stats.py": {
+        "total": 7,
+        "documented": 7
+      },
+      "tools_util.py": {
+        "total": 43,
+        "documented": 43
+      },
+      "ask_web.py": {
+        "total": 10,
+        "documented": 10
+      },
+      "gen_jt_docs.py": {
+        "total": 13,
+        "documented": 13
+      },
+      "tools_llm.py": {
+        "total": 6,
+        "documented": 6
+      },
+      "util_math.py": {
+        "total": 20,
+        "documented": 20
+      },
+      "tools_write.py": {
+        "total": 1,
+        "documented": 1
+      },
+      "tools_see.py": {
+        "total": 9,
+        "documented": 9
+      },
+      "tools_files.py": {
+        "total": 14,
+        "documented": 14
+      },
+      "mcp_server.py": {
+        "total": 4,
+        "documented": 4
+      },
+      "pixelmator/pxm_spec.py": {
+        "total": 9,
+        "documented": 9
       },
       "pixelmator/test_pxm_run.py": {
         "total": 48,
         "documented": 48
       },
+      "pixelmator/test_pxm.py": {
+        "total": 53,
+        "documented": 53
+      },
+      "pixelmator/pxm.py": {
+        "total": 24,
+        "documented": 24
+      },
       "pixelmator/arc_text.py": {
         "total": 3,
         "documented": 3
-      },
-      "pixelmator/pxm_spec.py": {
-        "total": 9,
-        "documented": 9
       },
       "eval/a11y.py": {
         "total": 1,
@@ -150,6 +150,10 @@
       "eval/basic_questions.py": {
         "total": 1,
         "documented": 1
+      },
+      "eval/constrain.py": {
+        "total": 4,
+        "documented": 4
       },
       "eval/faq_paraphrase.py": {
         "total": 1,
