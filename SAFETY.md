@@ -16,7 +16,7 @@ Reading, listing, or writing a file only happens inside your home folder. A hidd
 
 ## What leaves the Mac, and what does not
 
-Nothing leaves this machine by default. Three things reach the network, and only because you asked for them by name or by the shape of the question: looking something up on the web or Wikipedia, asking another LLM (which still only runs on your Mac, through oMLX or Ollama, never a cloud API), and reading a page you told her to open. No telemetry, no analytics, no background sync. `ask_llm` and the tools that read your screen or a photo are private for exactly this reason: they are never a model's own idea, only yours.
+Nothing leaves this machine by default. Three things reach the network, and only because you asked for them by name or by the shape of the question: looking something up on the web or Wikipedia, asking another LLM (which still only runs on your Mac, through oMLX or Ollama, never a cloud API), and reading a page you told her to open. No telemetry, no analytics, no background sync. `ask_llm` and the tools that read your screen, a photo or the camera are private for exactly this reason: they are never a model's own idea, only yours.
 
 ## Never confidently wrong
 

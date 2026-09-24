@@ -3,6 +3,7 @@
 Run: python3 tests/test_see.py
 """
 import os
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -71,15 +72,115 @@ class Looking(unittest.TestCase):
         self.assertFalse(os.path.exists(shots[0]))
 
 
+class Camera(unittest.TestCase):
+    """see_camera: one frame from ffmpeg's avfoundation, handed to the same vision model see_image uses, then
+    deleted. Never the pseudo screen-capture device ffmpeg always lists alongside a real camera."""
+
+    DEVICES = ("[AVFoundation indev @ 0x0] AVFoundation video devices:\n"
+               "[AVFoundation indev @ 0x0] [0] Capture screen 0\n"
+               "[AVFoundation indev @ 0x0] [1] FaceTime HD Camera\n"
+               "[AVFoundation indev @ 0x0] AVFoundation audio devices:\n"
+               "[AVFoundation indev @ 0x0] [0] Yeti Stereo Microphone\n")
+    NO_CAMERA = ("[AVFoundation indev @ 0x0] AVFoundation video devices:\n"
+                 "[AVFoundation indev @ 0x0] [0] Capture screen 0\n"
+                 "[AVFoundation indev @ 0x0] AVFoundation audio devices:\n")
+
+    def setUp(self):
+        """Not headless, so the tool really tries the camera."""
+        self.env = mock.patch.dict(os.environ, {"SAMANTHA_HEADLESS": "0"})
+        self.env.start()
+
+    def tearDown(self):
+        """Put things back."""
+        self.env.stop()
+
+    def _run(self, devices, capture=None):
+        """A subprocess.run stand-in: -list_devices answers with `devices`, any other call runs `capture`."""
+        def run(argv, **kw):
+            """Answer -list_devices with `devices`, or run `capture` for the frame-grab call."""
+            r = mock.Mock()
+            if "-list_devices" in argv:
+                r.stdout, r.stderr = "", devices
+                return r
+            if capture:
+                return capture(argv, **kw)
+            return r
+        return run
+
+    def test_takes_one_photo_and_answers(self):
+        """The real camera (index 1, never the screen at 0) is picked, looked at with the question, then removed."""
+        shots = []
+
+        def capture(argv, **kw):
+            """Stand in for ffmpeg's frame grab: check the real camera was picked, then write a small file."""
+            self.assertEqual(argv[argv.index("-i") + 1], "1")
+            shots.append(argv[-1])
+            with open(argv[-1], "wb") as f:
+                f.write(b"jpg")
+            return mock.Mock()
+        with mock.patch("subprocess.run", side_effect=self._run(self.DEVICES, capture)), \
+                mock.patch.object(tools_see, "look", return_value="A coffee mug.") as look:
+            self.assertEqual(tools_see.see_camera("what am I holding"), "A coffee mug.")
+        look.assert_called_once_with(shots[0], "what am I holding")
+        self.assertFalse(os.path.exists(shots[0]))
+
+    def test_no_ffmpeg(self):
+        """Missing ffmpeg is a plain sentence, never a crash."""
+        with mock.patch("subprocess.run", side_effect=FileNotFoundError()):
+            self.assertIn("ffmpeg", tools_see.see_camera())
+
+    def test_no_camera(self):
+        """Only the screen-capture pseudo-device is not a camera."""
+        with mock.patch("subprocess.run", side_effect=self._run(self.NO_CAMERA)):
+            self.assertIn("do not see a camera", tools_see.see_camera())
+
+    def test_empty_frame_is_a_permission_hint(self):
+        """ffmpeg ran but wrote nothing (a swallowed permission prompt): a sentence, not a crash."""
+        with mock.patch("subprocess.run", side_effect=self._run(self.DEVICES)):
+            self.assertIn("could not take a photo", tools_see.see_camera())
+
+    def test_capture_timeout_is_a_permission_hint(self):
+        """ffmpeg hanging on a permission dialog times out instead of freezing the conversation."""
+        def capture(argv, **kw):
+            """Stand in for a frame grab stuck behind a camera permission dialog: it never returns."""
+            raise subprocess.TimeoutExpired(cmd=argv, timeout=15)
+        with mock.patch("subprocess.run", side_effect=self._run(self.DEVICES, capture)):
+            self.assertIn("permission", tools_see.see_camera())
+
+    def test_frame_removed_even_when_looking_fails(self):
+        """The photo is deleted whether or not the vision model can make sense of it."""
+        shots = []
+
+        def capture(argv, **kw):
+            """Stand in for ffmpeg's frame grab: write a small file, same as a real photo."""
+            shots.append(argv[-1])
+            with open(argv[-1], "wb") as f:
+                f.write(b"jpg")
+            return mock.Mock()
+        with mock.patch("subprocess.run", side_effect=self._run(self.DEVICES, capture)), \
+                mock.patch.object(tools_see, "look", side_effect=RuntimeError("bad frame")):
+            self.assertIn("could not look at that", tools_see.see_camera())
+        self.assertFalse(os.path.exists(shots[0]))
+
+    def test_headless_never_touches_the_camera(self):
+        """Headless answers without ever calling ffmpeg."""
+        with mock.patch.dict(os.environ, {"SAMANTHA_HEADLESS": "1"}), \
+                mock.patch("subprocess.run", side_effect=AssertionError("touched the camera")):
+            self.assertEqual(tools_see.see_camera(), "Would take one photo with the camera.")
+
+
 class OnlyWithAYes(unittest.TestCase):
     """Private: asked first, never on a model's menu, reached by the phrasings people use."""
 
     def test_asked_first_and_hidden(self):
-        """A no looks at nothing; both tools are writes and hidden from models and MCP."""
+        """A no looks at nothing; all three tools are writes and hidden from models and MCP."""
         with mock.patch.object(tools_see, "see_screen", side_effect=AssertionError("looked")):
             no = harness.Session(confirm=lambda n, a: False, log=lambda l: None).ask("look at my screen")
         self.assertEqual(no, "Okay, I will not.")
-        self.assertLessEqual({"see_screen", "see_image"}, tools.WRITES & tools.NOT_FOR_MODELS)
+        with mock.patch.object(tools_see, "see_camera", side_effect=AssertionError("looked")):
+            no = harness.Session(confirm=lambda n, a: False, log=lambda l: None).ask("what am I holding")
+        self.assertEqual(no, "Okay, I will not.")
+        self.assertLessEqual({"see_screen", "see_image", "see_camera"}, tools.WRITES & tools.NOT_FOR_MODELS)
 
     def test_routes(self):
         """Seeing is by name; reading the screen's text stays with read_screen."""
@@ -87,6 +188,13 @@ class OnlyWithAYes(unittest.TestCase):
                          [("see_screen", ("tell me what's wrong with this chart",))])
         self.assertEqual(tools.plan("describe ~/Desktop/cat.png"), [("see_image", ("\t~/Desktop/cat.png",))])
         self.assertEqual(tools.plan("what's on my screen"), [("read_screen", ("",))])
+
+    def test_camera_routes(self):
+        """The three camera phrasings from the roadmap, plus a named-camera catch-all."""
+        self.assertEqual(tools.plan("what am I holding"), [("see_camera", ("what am I holding",))])
+        self.assertEqual(tools.plan("read this label"), [("see_camera", ("read this label",))])
+        self.assertEqual(tools.plan("look at this"), [("see_camera", ("describe what you see",))])
+        self.assertEqual(tools.plan("use the camera"), [("see_camera", ("describe what you see",))])
 
 
 if __name__ == "__main__":

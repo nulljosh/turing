@@ -1,5 +1,5 @@
 {
-  "version": "4.1.0",
+  "version": "4.2.0",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -108,8 +108,8 @@
         "documented": 1
       },
       "tools_see.py": {
-        "total": 6,
-        "documented": 6
+        "total": 9,
+        "documented": 9
       },
       "tools_files.py": {
         "total": 14,
@@ -268,8 +268,8 @@
         "documented": 18
       },
       "eval/test_see.py": {
-        "total": 11,
-        "documented": 11
+        "total": 27,
+        "documented": 27
       },
       "eval/test_tabs.py": {
         "total": 10,

@@ -383,7 +383,8 @@ _ROUTES = _ROUTES + tuple((pat, _util_route(name, arg)) for pat, name, arg in to
 # anything past the first verb phrase means more than one step: that is agent() work
 _MULTISTEP = re.compile(r"\b(?:and (?:then )?(?:tell|read|find|summar|poke|look|check|see|click)|poke around|then )", re.I)
 # "look at my screen and tell me what's wrong" is one question about one picture, not two steps
-_EYES = re.compile(r"^(?:look at|describe|see|check out|what(?:'s| is) in) (?:(?:my |the )?screen|\S+\.(?:png|jpe?g|heic|gif|webp|tiff?|bmp))\b", re.I)
+_EYES = re.compile(r"^(?:look at|describe|see|check out|what(?:'s| is) in) (?:(?:my |the )?screen|\S+\.(?:png|jpe?g|heic|gif|webp|tiff?|bmp)|this)\b"
+                    r"|^what am i holding\b|^(?:read (?:this|that) label|what does (?:this|that) label say)\b|^(?:use|look through) (?:the |your )?camera\b", re.I)
 # an explicit multi-step screen JOB, named as such: her own screen agent plans it, click_text/type_text/press_key one
 # step at a time, every step confirmed. Ahead of _MULTISTEP so "log me into X and check my email" does not go to the
 # tool-picking agent(), which has no screen tools at all (they are NOT_FOR_MODELS on purpose).
@@ -453,7 +454,7 @@ def _named_page(task):
 # These fire something with a side effect the user did not see coming (a Shortcut can send a
 # message, a clipboard write loses what was there, the screen goes dark). Only a command that
 # names them runs them, never a model's own choice. The real fix is the harness asking first.
-NOT_FOR_MODELS = {"ask_llm", "see_screen", "see_image", "click_text", "type_text", "press_key", "run_shortcut", "copy_to_clipboard", "sleep_display", "call_mcp_tool", "close_tab", "remember", "recall", "forget", "read_screen", "ask_screen"}  # her memory is private: only her own commands and the harness touch it
+NOT_FOR_MODELS = {"ask_llm", "see_screen", "see_image", "see_camera", "click_text", "type_text", "press_key", "run_shortcut", "copy_to_clipboard", "sleep_display", "call_mcp_tool", "close_tab", "remember", "recall", "forget", "read_screen", "ask_screen"}  # her memory is private: only her own commands and the harness touch it
 
 
 def model_tools():
@@ -542,7 +543,7 @@ def _sound(tool, arg, query):
 
 # Tools that leave something behind or send something out: a note, a reminder, a file on the
 # Desktop, a Shortcut, the clipboard, a dark screen. The harness asks before any of these run.
-WRITES = {"ask_llm", "see_screen", "see_image", "click_text", "type_text", "press_key", "ask_screen", "read_screen", "remember", "forget", "close_tab", "call_mcp_tool", "new_note", "new_reminder", "make_logo", "paint_image", "run_shortcut", "copy_to_clipboard", "sleep_display", "save_research", "write_document", "run_code",
+WRITES = {"ask_llm", "see_screen", "see_image", "see_camera", "click_text", "type_text", "press_key", "ask_screen", "read_screen", "remember", "forget", "close_tab", "call_mcp_tool", "new_note", "new_reminder", "make_logo", "paint_image", "run_shortcut", "copy_to_clipboard", "sleep_display", "save_research", "write_document", "run_code",
           "remove_background", "upscale_image", "enhance_image", "grayscale_image", "rotate_image", "flip_image",
           "resize_image", "crop_square", "convert_image", "move_file", "copy_file", "rename_file", "zip_file", "unzip_file", "trash_file"}
 

@@ -47,7 +47,7 @@ from util_dates import *  # noqa: F401,F403
 from tools_research import research, save_research  # noqa: E402  (deep research, in its own file)
 from tools_write import write_document  # noqa: E402  (drafts and saves a file, in its own file)
 from tools_code import run_code  # noqa: E402  (a sandboxed Python for CSV stats and charts, in its own file)
-from tools_see import see_screen, see_image  # noqa: E402  (her eyes, in their own file)
+from tools_see import see_screen, see_image, see_camera  # noqa: E402  (her eyes, in their own file)
 from tools_gui import click_text, type_text, press_key  # noqa: E402  (her hands on the screen, in their own file)
 from tools_llm import ask_llm, NAMES as _LLM_NAMES  # noqa: E402  (hands a hard question to another LLM on this Mac, in its own file)
 from util_dates import _ZONES, _HOLIDAYS, _MONTHS, _COUNT, _day, _shift, _long, _say, _MONTH_NAMES, _DAY_NAMES  # noqa: F401
@@ -551,7 +551,7 @@ def call_mcp_tool(request):
 TOOLS = (ask_llm, calculate, convert_units, time_in, convert_time, current_date, days_until, date_math, flip_coin, roll_dice, random_number, make_password,
          make_uuid, hash_text, base64_encode, base64_decode, word_count, reverse_text, shout, morse_code, json_pretty,
          is_prime, roman_numeral, tip, disk_space, uptime, memory_usage, cpu_load, ip_address, wifi_name, system_info,
-         copy_to_clipboard, sleep_display, reveal_in_finder, list_shortcuts, run_shortcut, list_mcp_tools, call_mcp_tool, list_tabs, switch_tab, close_tab, read_tab, remember, recall, forget, read_screen, read_document, find_in_document, ask_document, ask_screen, click_text, type_text, press_key, see_screen, see_image, research, save_research, write_document, transcribe_video, run_code)
+         copy_to_clipboard, sleep_display, reveal_in_finder, list_shortcuts, run_shortcut, list_mcp_tools, call_mcp_tool, list_tabs, switch_tab, close_tab, read_tab, remember, recall, forget, read_screen, read_document, find_in_document, ask_document, ask_screen, click_text, type_text, press_key, see_screen, see_image, see_camera, research, save_research, write_document, transcribe_video, run_code)
 
 _I = re.I
 # (pattern, tool name, what to hand it). Names, not functions: tools.py looks each one up at call time.
@@ -573,6 +573,11 @@ ROUTES = (
     # her eyes, by name only: a picture looked at, not read (reading text stays with read_screen)
     (re.compile(r"^(?:look at|describe|see|check out) (?:my |the )?screen(?:,? and (.+))?$|^what do you see(?: on (?:my |the )?screen)?$", _I), "see_screen", lambda m: m.group(1) or ""),
     (re.compile(r"^(?:what(?:'s| is) in|describe|look at) (\S+\.(?:png|jpe?g|heic|gif|webp|tiff?|bmp))(?:,? and (.+))?$", _I), "see_image", lambda m: (m.group(2) or "") + "\t" + m.group(1)),
+    # her camera eyes, by name only: one frame from the Mac's own camera, never a picture or the screen
+    (re.compile(r"^what am i holding(?:,? and (.+))?$", _I), "see_camera", lambda m: m.group(1) or "what am I holding"),
+    (re.compile(r"^(?:read (?:this|that) label|what does (?:this|that) label say)(?:,? and (.+))?$", _I), "see_camera", lambda m: m.group(1) or "read this label"),
+    (re.compile(r"^(?:look at this|check out this)(?: through (?:the |my )?camera)?(?:,? and (.+))?$|^(?:use|look through) (?:the |your )?camera(?:,? and (.+))?$", _I),
+     "see_camera", lambda m: m.group(1) or m.group(2) or "describe what you see"),
     # her hands on the screen, each step asked first: a named key before a click, so "press tab" is a key, not the word
     (re.compile(r"^(?:press|hit|push)(?: the)? (return|enter|tab|escape|esc|space|delete|backspace|up|down|left|right|page up|page down|home|end)(?: key| button)?$", _I), "press_key", lambda m: m.group(1)),
     (re.compile(r"^(?:click|tap|press)(?: on)?(?: the)? [\"']?(.+?)[\"']?(?: button| link| tab)?$", _I), "click_text", lambda m: m.group(1)),
