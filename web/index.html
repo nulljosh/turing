@@ -284,6 +284,9 @@
           <p><b>Research.</b> On a Mac, say "research the history of the printing press". She reads several sources, and a bigger model on the same Mac writes a short brief with a source after every sentence. A sentence she cannot back up is cut.</p>
           <p><b>Eyes.</b> On a Mac, say "look at my screen and tell me what's wrong with this chart" or "what's in ~/Desktop/cat.png". A small vision model on the Mac looks and answers. It asks first.</p>
           <p><b>Hands on your screen.</b> On a Mac, say "click Sign in", "type hello" or "press return". She reads the screen to find the words you named and clicks them, and she shows you each step and asks before it happens.</p>
+          <p><b>Camera.</b> On a Mac, say "what am I holding" or "read this label". One frame from the Mac's own camera goes to the same vision model, and the frame is deleted right after the answer. It asks first.</p>
+          <p><b>Run code.</b> On a Mac, say "stats on sales.csv" or "chart sales.csv". The biggest local model writes a short Python script from your request and the file's header, and it only runs in a sandbox: a fresh folder holding a copy of that one file, no network, a time and memory cap. A chart comes back as a real PNG. It asks first.</p>
+          <p><b>What needs you.</b> On a Mac, say "what needs my attention" for one ranked answer built from your unread mail, today's calendar and due reminders, or "am I free Thursday afternoon" for your calendar's open gaps that day or across the week. Both read only, and both say plainly when there is nothing.</p>
           <p><b>Talk to her.</b> On a Mac, <code>python3 chat.py --voice</code> and just speak. Whisper turns your voice into text on the Mac itself, she answers, and she says it out loud. Anything that writes still asks first.</p>
           <p><b>Her own library.</b> On a Mac she keeps the lead of every one of Wikipedia's ~10,000 vital articles, anthropology to astronomy, plus a plain-words fieldbook of every science. When the web has nothing or is down she answers "what is" and "who was" questions from the page of that name, says which page, and declines the rest instead of guessing.</p>
           <p><b>Ask any LLM, still local.</b> Say "ask qwen", "ask llama" or "ask gemma" and a question too hard for her goes to that model on your Mac, found through oMLX or Ollama. Say "ask claude" or "ask gpt" and she uses the biggest one there. If you name one you do not have, she lists what you do. It asks first, needs no account or key, and the answer names the model that gave it.</p>
@@ -528,7 +531,7 @@ python3 -m venv .venv && ./.venv/bin/pip install mlx-lm
           '<p>Her own 0.5B picker chooses tools, 394 of 501 on wording it never saw, 9 wrong picks still slip past the guard, down from 21, and it refuses no right ones. Multi-step jobs and logo choices borrow a 1.7B head. ' +
           'Knowledge bar is 60 of 65 with zero confidently wrong and she is at 57 with 4 wrong. ' +
           'Logos are dial choices from a fixed set, not free-hand design. ' +
-          'She runs on one Mac only.</p></div>';
+          'The picker and chat now run on Windows and Linux too, through Ollama. The Mac tools stay on the Mac.</p></div>';
 
         placeholder.parentNode.innerHTML = '<h2>Results</h2>' + html + tableHtml + '<details class="more"><summary>Docs and limits</summary>' + docsHtml + limitHtml + '</details>';
       }).catch(() => {
