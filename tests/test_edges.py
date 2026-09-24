@@ -5,6 +5,7 @@ Run: python3 tests/test_edges.py
 """
 import os
 import sys
+import shutil
 import unittest
 from unittest import mock
 
@@ -259,6 +260,123 @@ class Logo(unittest.TestCase):
         self.assertTrue(all(math.hypot(p["cx"] - 512, p["cy"] - 512) > 0.4 * 335 for p in petals))
         self.assertFalse(any(l["type"] == "text" for l in layers))
         self.assertIn("flower", tools_logo._BLOOM_SCHEMA["properties"]["style"]["enum"])
+
+    def test_redraw_mark_writes_the_candidate(self):
+        """redraw_mark, with the draw endpoint and every subprocess mocked, writes only the candidate and its
+        preview under root, never touching the five real files (that's promote_mark's job)."""
+        import base64
+        import io
+        import json as jsonlib
+        import shutil
+        import tempfile
+        import tools_logo
+
+        tmp = tempfile.mkdtemp()
+        image = "data:image/jpeg;base64," + base64.b64encode(b"not really a jpeg").decode()
+        resp_bytes = jsonlib.dumps({"image": image}).encode()
+
+        class FakeResponse(io.BytesIO):
+            """Stands in for urlopen's return value: a context manager over the fake JSON bytes."""
+
+            def __enter__(self):
+                """Return the bytes, same as a real urlopen response used as a context manager."""
+                return self
+
+            def __exit__(self, *a):
+                """Nothing to close on a BytesIO."""
+                return False
+
+        def fake_run(argv, timeout=10):
+            """Stand in for magick/potrace: drop the file each real call would have produced."""
+            if argv[0] == "magick" and "-threshold" in argv:
+                open(argv[-1], "w").close()
+            elif argv[0] == "potrace":
+                with open(argv[argv.index("-o") + 1], "w") as f:
+                    f.write('<svg><g fill="#000000">\n<path d="M0 0"/>\n</g></svg>\n')
+            elif argv[0] == "magick" and "-resize" in argv:
+                open(argv[-1], "w").close()
+            return ""
+
+        try:
+            with mock.patch.object(shutil, "which", return_value="/usr/local/bin/x"), \
+                 mock.patch("urllib.request.urlopen", return_value=FakeResponse(resp_bytes)), \
+                 mock.patch.object(tools_logo, "_run", side_effect=fake_run):
+                result = tools_logo.redraw_mark("4.3.0", root=tmp)
+
+            self.assertNotIn("Didn't redraw", result, result)
+            for path in ("art/mark-candidate.svg", "web/mark-preview.png"):
+                self.assertTrue(os.path.exists(os.path.join(tmp, path)), path)
+            for path in ("art/mark.svg", "icon.svg", "web/icon.svg", "web/samantha-logo.png"):
+                self.assertFalse(os.path.exists(os.path.join(tmp, path)), path)
+        finally:
+            shutil.rmtree(tmp, ignore_errors=True)
+
+    def test_mark_sanity_good_and_bad_grid(self):
+        """mark_sanity on synthetic pbm-style grids (no magick, no network): scattered ink well inside the
+        margin passes; a giant edge-touching blob, and an unchanged candidate, both fail with a plain reason."""
+        import tools_logo
+
+        n = 60
+        good = [[0] * n for _ in range(n)]
+        for y in range(6, n - 6, 3):
+            for x in range(6, n - 6, 3):
+                good[y][x] = 1  # isolated dots: real ink, no single big blob, nothing near the edge
+        ok, why = tools_logo.mark_sanity(good, "<g>new</g>", "<g>old</g>")
+        self.assertTrue(ok, why)
+
+        margin = max(1, round(0.04 * n))
+        ring = [[1 if (x < margin or x >= n - margin or y < margin or y >= n - margin) else 0
+                 for x in range(n)] for y in range(n)]  # ink painted right along the edge: the frame is clipped
+        ok, why = tools_logo.mark_sanity(ring, "<g>new</g>", "<g>old</g>")
+        self.assertFalse(ok)
+        self.assertIn("margin", why)
+
+        blob = [[1] * n for _ in range(n)]  # solid black square: every check should fail on it
+        ok, why = tools_logo.mark_sanity(blob, "<g>new</g>", "<g>old</g>")
+        self.assertFalse(ok)
+
+        ok, why = tools_logo.mark_sanity(good, "<g>same</g>", "<g>same</g>")
+        self.assertFalse(ok)
+        self.assertIn("identical", why)
+
+    @unittest.skipUnless(shutil.which("magick"), "the sanity check measures the drawing with ImageMagick")
+    def test_promote_mark_ships_only_a_sane_candidate(self):
+        """promote_mark writes the real files when mark_sanity passes, and leaves them untouched, printing why,
+        when the candidate fails the check (here: identical to the just-promoted mark)."""
+        import shutil
+        import tempfile
+        import tools_logo
+
+        tmp = tempfile.mkdtemp()
+        try:
+            os.makedirs(os.path.join(tmp, "art"))
+            os.makedirs(os.path.join(tmp, "web"))
+            with open(os.path.join(tmp, "art", "mark-candidate.svg"), "w") as f:
+                f.write("<g><path d='M0 0'/></g>")
+
+            good = [[0] * 60 for _ in range(60)]
+            for y in range(6, 54, 3):
+                for x in range(6, 54, 3):
+                    good[y][x] = 1
+            with mock.patch.object(tools_logo, "_rasterize_grid", return_value=good), \
+                 mock.patch("shutil.which", return_value="/usr/local/bin/magick"), \
+                 mock.patch.object(tools_logo, "_run", return_value=""):
+                ok, why = tools_logo.promote_mark(root=tmp)
+            self.assertTrue(ok, why)
+            for path in ("art/mark.svg", "icon.svg", "web/icon.svg"):
+                self.assertTrue(os.path.exists(os.path.join(tmp, path)), path)
+
+            # a second promote of the same, now-shipped candidate is identical: it must refuse and change nothing
+            with open(os.path.join(tmp, "icon.svg")) as f:
+                before = f.read()
+            with mock.patch.object(tools_logo, "_rasterize_grid", return_value=good):
+                ok2, why2 = tools_logo.promote_mark(root=tmp)
+            self.assertFalse(ok2)
+            self.assertIn("identical", why2)
+            with open(os.path.join(tmp, "icon.svg")) as f:
+                self.assertEqual(f.read(), before)
+        finally:
+            shutil.rmtree(tmp, ignore_errors=True)
 
     def test_every_layer_type_renders(self):
         """Tiles, ellipses (filled and stroked), rotated squares and stars all become SVG, and an unknown layer is refused."""
