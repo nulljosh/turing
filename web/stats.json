@@ -60,12 +60,12 @@
         "documented": 8
       },
       "tools_logo.py": {
-        "total": 18,
-        "documented": 18
+        "total": 16,
+        "documented": 16
       },
       "voice.py": {
-        "total": 5,
-        "documented": 5
+        "total": 9,
+        "documented": 9
       },
       "tools_apps.py": {
         "total": 14,
@@ -212,8 +212,8 @@
         "documented": 12
       },
       "eval/test_edges.py": {
-        "total": 34,
-        "documented": 34
+        "total": 33,
+        "documented": 33
       },
       "eval/test_gguf_parity.py": {
         "total": 1,
@@ -226,6 +226,10 @@
       "eval/test_harness.py": {
         "total": 24,
         "documented": 24
+      },
+      "eval/test_launcher.py": {
+        "total": 6,
+        "documented": 6
       },
       "eval/test_library.py": {
         "total": 11,
@@ -280,12 +284,12 @@
         "documented": 10
       },
       "eval/test_tools_image.py": {
-        "total": 22,
-        "documented": 22
+        "total": 24,
+        "documented": 24
       },
       "eval/test_voice.py": {
-        "total": 10,
-        "documented": 10
+        "total": 25,
+        "documented": 25
       },
       "eval/test_write.py": {
         "total": 7,
@@ -345,7 +349,7 @@
     },
     "picker_unseen_percent": {
       "before": 6,
-      "after": 83
+      "after": 75
     },
     "project_eval": "29/29",
     "chat_tests": "18/18",
