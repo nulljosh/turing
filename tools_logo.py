@@ -2,12 +2,16 @@
 icon, never text) and paint_image (a photo rebuilt from squares). Her model picks the dials; this code lays out the layers.
 Split out of tools.py, which re-exports every name here.
 """
+import base64
 import json
 import math
 import os
 import re
 import shutil
 import sys
+import tempfile
+import time
+import urllib.error
 import urllib.request
 
 HEADLESS = os.environ.get("SAMANTHA_HEADLESS") == "1"
@@ -277,15 +281,225 @@ MARK_NOTE = ("Samantha's mark. She drew it herself through her own draw path (th
              "in a 1970s engraved oval, on the rounded square of the little computer she lives in. The drawing is art/mark.svg.")
 
 
-def icon_svg():
-    """Turing's own icon: the exact bytes of web/icon.svg and icon.svg, her traced drawing on the paper tile."""
-    with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "art", "mark.svg")) as f:
-        inner = f.read()
+def _icon_svg_from(inner):
+    """The icon tile wrapped around one traced drawing (art/mark.svg's <g> block), so redraw_mark can build and
+    check a fresh one before it ever touches the committed file."""
     return ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">\n'
             f"  <!-- {MARK_NOTE} -->\n"
             '  <rect width="200" height="200" rx="44" fill="#ece8df"/>\n'
             '  <g transform="translate(12,12) scale(0.171875)">\n'  # the 1024 drawing on the 200 tile with a 12 unit margin
             f"{inner}\n  </g>\n</svg>\n")
+
+
+def icon_svg():
+    """Turing's own icon: the exact bytes of web/icon.svg and icon.svg, her traced drawing on the paper tile."""
+    with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "art", "mark.svg")) as f:
+        return _icon_svg_from(f.read())
+
+
+DRAW_ENDPOINT = "https://turing.heyitsmejosh.com/api/draw"
+# The woman-with-a-mind family: same 1970s copperplate engraving, oval frame and ribbon every time (the rules of
+# the mark), only the shape of her mind changes. Never the word apple: the model draws a literal apple for it.
+MARK_SUBJECTS = ["a constellation of stars", "a burst of rays of thought", "a lattice of connected nodes", "an open book of stars"]
+
+
+def _mark_prompt(seed_text=""):
+    """One (subject, prompt) pair from the fixed list, keyed off seed_text (typically the release version) so the
+    same release never redraws twice by accident but a new one reliably picks a new subject. The prompt is always
+    under 120 characters, the endpoint's own cap, so nothing gets silently truncated mid-sentence."""
+    subject = MARK_SUBJECTS[sum(seed_text.encode()) % len(MARK_SUBJECTS) if seed_text else 0]
+    prompt = f"1970s copperplate engraving, oval frame, ribbon: woman in profile, her head {subject}, black ink"
+    assert len(prompt) < 120, prompt
+    return subject, prompt
+
+
+def redraw_mark(seed_text="", root=None):
+    """Redraw a fresh candidate for Samantha's mark: picks one subject line from the woman-with-a-mind family,
+    asks the hosted /api/draw endpoint (there is no local image model on this Mac) for a picture, traces it with
+    ImageMagick and potrace to one ink colour on one paper colour, and writes art/mark-candidate.svg and a 256px
+    web/mark-preview.png to grade it by. It never touches her shipped mark; promote_mark does that, and only once
+    the candidate passes mark_sanity. The ink/paper rule (grayscale, 55% threshold, so potrace only ever has one
+    colour to trace) lives here in code, not in a shell one-liner. Retries a 429 ("a lot of drawing for one
+    minute") twice, 30 seconds apart, then gives up and says why. root overrides where the files land (a test's
+    tmp directory); it defaults to this repo."""
+    if not shutil.which("magick") or not shutil.which("potrace"):
+        return "I need ImageMagick and potrace on PATH: brew install imagemagick potrace"
+    subject, prompt = _mark_prompt(seed_text)
+    body = json.dumps({"q": prompt}).encode()
+    data, err = None, None
+    for attempt in range(3):
+        try:
+            # a bare Python-urllib user agent trips the site's bot fight mode (403, error code 1010); she asks
+            # for her own drawing the way a browser would, same header tools.py's read_page already uses
+            req = urllib.request.Request(DRAW_ENDPOINT, body, {"Content-Type": "application/json",
+                                                                "User-Agent": "Mozilla/5.0 (Macintosh) Samantha"})
+            with urllib.request.urlopen(req, timeout=60) as r:
+                data = json.load(r)
+            break
+        except urllib.error.HTTPError as e:
+            err = f"her draw endpoint said {e.code}: {e.read().decode(errors='replace')[:200]}"
+            if e.code != 429 or attempt == 2:
+                break
+            time.sleep(30)
+        except Exception as e:
+            err = f"couldn't reach her draw endpoint: {e}"
+            break
+    if data is None:
+        return f"Didn't redraw her mark: {err}"
+    image = data.get("image", "")
+    if not image.startswith("data:image/jpeg;base64,"):
+        return f"Didn't redraw her mark: no picture came back ({str(data)[:200]})"
+
+    here = root or os.path.dirname(os.path.abspath(__file__))
+    tmp = tempfile.mkdtemp(prefix="samantha-mark-")
+    try:
+        jpg, pbm, svg = (os.path.join(tmp, n) for n in ("in.jpg", "in.pbm", "in.svg"))
+        with open(jpg, "wb") as f:
+            f.write(base64.b64decode(image.split(",", 1)[1]))
+        r1 = _run(["magick", jpg, "-colorspace", "Gray", "-resize", "1024x1024", "-threshold", "55%", pbm], timeout=60)
+        if not os.path.exists(pbm):
+            return f"Didn't redraw her mark: magick couldn't threshold the drawing: {r1[-300:]}"
+        r2 = _run(["potrace", pbm, "-s", "-o", svg], timeout=60)
+        if not os.path.exists(svg):
+            return f"Didn't redraw her mark: potrace couldn't trace it: {r2[-300:]}"
+        with open(svg) as f:
+            m = re.search(r"<g .*?</g>", f.read(), re.S)
+        if not m:
+            return "Didn't redraw her mark: potrace's SVG had no <g> layer to keep."
+        inner = m.group(0)
+        icon = _icon_svg_from(inner)
+        tmp_icon = os.path.join(tmp, "icon.svg")
+        with open(tmp_icon, "w") as f:
+            f.write(icon)
+        preview = os.path.join(tmp, "mark-preview.png")
+        _run(["magick", "-background", "none", tmp_icon, "-resize", "256x256", preview], timeout=60)
+        if not os.path.exists(preview):
+            return "Didn't redraw her mark: magick couldn't render the preview PNG."
+
+        os.makedirs(os.path.join(here, "art"), exist_ok=True)
+        os.makedirs(os.path.join(here, "web"), exist_ok=True)
+        with open(os.path.join(here, "art", "mark-candidate.svg"), "w") as f:
+            f.write(inner)
+        shutil.copy(preview, os.path.join(here, "web", "mark-preview.png"))
+        return f"Drew a candidate: her head {subject}. See web/mark-preview.png; promote_mark() decides if it ships."
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+
+
+def _parse_pbm_ascii(text):
+    """A P1 (ASCII) PBM's pixels as a grid of 0/1 ints, one row per scanline. 1 is ink (black), matching both
+    ImageMagick's and potrace's convention. No dependency needed to read it back."""
+    lines = text.strip().splitlines()
+    if not lines or lines[0].strip() != "P1":
+        raise ValueError("not an ASCII PBM")
+    w, h = (int(n) for n in lines[1].split())
+    bits = [int(b) for line in lines[2:] for b in line.split()]
+    return [bits[y * w:(y + 1) * w] for y in range(h)]
+
+
+def _grid_ink_stats(grid):
+    """Ink fraction, outer 4%-margin paper fraction, and the largest connected ink blob's fraction of the canvas,
+    for a 0/1 grid (1 is ink). Pure Python, no dependency, so mark_sanity's test can hand it a tiny synthetic
+    grid with no magick or potrace involved."""
+    h, w = len(grid), len(grid[0])
+    total = w * h
+    ink = sum(row.count(1) for row in grid)
+    margin = max(1, round(0.04 * min(w, h)))
+    edge_total = edge_ink = 0
+    for y in range(h):
+        for x in range(w):
+            if x < margin or x >= w - margin or y < margin or y >= h - margin:
+                edge_total += 1
+                edge_ink += grid[y][x]
+    margin_paper = 1 - edge_ink / edge_total if edge_total else 1.0
+    seen = [[False] * w for _ in range(h)]
+    best = 0
+    for sy in range(h):
+        for sx in range(w):
+            if grid[sy][sx] and not seen[sy][sx]:
+                seen[sy][sx] = True
+                stack, size = [(sx, sy)], 0
+                while stack:
+                    x, y = stack.pop()
+                    size += 1
+                    for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                        nx, ny = x + dx, y + dy
+                        if 0 <= nx < w and 0 <= ny < h and grid[ny][nx] and not seen[ny][nx]:
+                            seen[ny][nx] = True
+                            stack.append((nx, ny))
+                best = max(best, size)
+    return ink / total, margin_paper, best / total
+
+
+def mark_sanity(grid, candidate_inner, current_inner):
+    """Plain checks before a freshly drawn mark is allowed to replace the shipped one: ink between 6% and 28% of
+    the canvas, the outer margin at least 97% paper (the frame isn't clipped, nothing bleeds off the edge), no
+    single connected ink blob over 12% of the canvas (a stray blot, not her drawing), and the candidate must
+    actually be a different drawing than what's already shipped. Returns (ok, why)."""
+    ink_frac, margin_paper, blob_frac = _grid_ink_stats(grid)
+    if not (0.06 <= ink_frac <= 0.28):
+        return False, f"ink is {ink_frac:.0%} of the canvas, want 6-28%"
+    if margin_paper < 0.97:
+        return False, f"the outer margin is only {margin_paper:.0%} paper, something's clipped at the edge"
+    if blob_frac > 0.12:
+        return False, f"a single ink blob covers {blob_frac:.0%} of the canvas"
+    if candidate_inner == current_inner:
+        return False, "the candidate is identical to the current mark"
+    return True, "passes"
+
+
+def _rasterize_grid(svg_inner, size=128):
+    """Render a traced <g> block's own 1024x1024 drawing down to a small 0/1 grid for mark_sanity, flattened onto
+    white so an unfilled area reads as paper, not transparent. Needs magick on PATH."""
+    tmp = tempfile.mkdtemp(prefix="samantha-mark-check-")
+    try:
+        svg_path = os.path.join(tmp, "candidate.svg")
+        with open(svg_path, "w") as f:
+            f.write(f'<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">\n{svg_inner}\n</svg>\n')
+        pbm = os.path.join(tmp, "check.pbm")
+        _run(["magick", "-background", "white", svg_path, "-flatten", "-resize", f"{size}x{size}!",
+              "-colorspace", "Gray", "-threshold", "50%", "-compress", "none", f"pbm:{pbm}"], timeout=30)
+        with open(pbm) as f:
+            return _parse_pbm_ascii(f.read())
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+
+
+def promote_mark(root=None):
+    """Promote art/mark-candidate.svg to her real, shipped mark, but only when mark_sanity passes on a fresh
+    rasterize of it. When it doesn't, every committed file is left exactly as it was; release.sh reads the reason
+    and keeps going rather than failing the release. Used by `tools_logo.py --promote`. Returns (ok, why)."""
+    here = root or os.path.dirname(os.path.abspath(__file__))
+    cand_path = os.path.join(here, "art", "mark-candidate.svg")
+    if not os.path.exists(cand_path):
+        return False, "no candidate to promote, redraw_mark hasn't run"
+    with open(cand_path) as f:
+        candidate = f.read()
+    mark_path = os.path.join(here, "art", "mark.svg")
+    current = ""
+    if os.path.exists(mark_path):
+        with open(mark_path) as f:
+            current = f.read()
+    if not shutil.which("magick"):
+        return False, "I need ImageMagick on PATH to check the candidate: brew install imagemagick"
+    ok, why = mark_sanity(_rasterize_grid(candidate), candidate, current)
+    if not ok:
+        return False, why
+    icon = _icon_svg_from(candidate)
+    with open(mark_path, "w") as f:
+        f.write(candidate)
+    for path in (os.path.join(here, "icon.svg"), os.path.join(here, "web", "icon.svg")):
+        with open(path, "w") as f:
+            f.write(icon)
+    tmp = tempfile.mkdtemp(prefix="samantha-mark-promote-")
+    try:
+        tmp_icon = os.path.join(tmp, "icon.svg")
+        with open(tmp_icon, "w") as f:
+            f.write(icon)
+        _run(["magick", "-background", "none", tmp_icon, "-resize", "1024x1024", os.path.join(here, "web", "samantha-logo.png")], timeout=60)
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+    return True, "promoted"
 
 
 def _contrast(a, b):
@@ -297,3 +511,24 @@ def _contrast(a, b):
         return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]
     hi, lo = sorted((lum(a), lum(b)), reverse=True)
     return (hi + 0.05) / (lo + 0.05)
+
+
+def main():
+    """CLI: python3 tools_logo.py --redraw [seed text, usually the release version] draws a candidate; --promote
+    ships it, only if mark_sanity passes. Each exits 0 only on real success, so release.sh can tell a skip (rate
+    limit, no ImageMagick, a failed sanity check) from the real thing."""
+    if "--redraw" in sys.argv:
+        i = sys.argv.index("--redraw")
+        result = redraw_mark(sys.argv[i + 1] if len(sys.argv) > i + 1 else "")
+        print(result)
+        return 0 if result.startswith("Drew a candidate") else 1
+    if "--promote" in sys.argv:
+        ok, why = promote_mark()
+        print(why)
+        return 0 if ok else 1
+    print("usage: python3 tools_logo.py --redraw [seed text] | --promote")
+    return 2
+
+
+if __name__ == "__main__":
+    sys.exit(main())
