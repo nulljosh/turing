@@ -1,5 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
   <!-- Samantha's drawing on its own, no tile: the landing masks it with the page ink colour. Source: art/mark.svg -->
+<g transform="translate(512,512) rotate(0.4) scale(1.017607) translate(-513,-509.5)">
 <g transform="translate(0.000000,1024.000000) scale(0.100000,-0.100000)"
 fill="#000000" stroke="none">
 <path d="M5110 9918 c-11 -18 -20 -39 -20 -45 0 -7 -11 -15 -25 -19 -27 -7
@@ -2697,4 +2698,5 @@ c-3 -5 -12 -10 -18 -10 -7 0 -6 4 3 10 19 12 23 12 15 0z"/>
 -20 8 -28 8 -11 -1 -10 -3 3 -6z"/>
 </g>
 
+</g>
 </svg>
