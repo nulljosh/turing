@@ -40,7 +40,7 @@ Samantha could answer. She could not do anything. "Open chrome and go to hacker 
 ### Biggest gaps vs the market (set 2026-09-23)
 Measured against Siri and Apple Intelligence, and the ChatGPT and Claude desktop apps. Ranked; the loop works top down.
 
-1. **Picker coverage.** Her own picker knows 77 of 104 tools by wording (round six, docs/BAKEOFF.md); the rest need exact phrasing. Close the remaining 27 with training templates for the tools that still have none, then two-step picking (family, then tool) and constrained output if aggregate accuracy still lags, scored by `eval/hands.py`, with no regression on the 77.
+1. **Picker coverage.** Her own picker knows 77 of 105 tools by wording (round six, docs/BAKEOFF.md); the rest need exact phrasing. Close the remaining 28 with training templates for the tools that still have none, then two-step picking (family, then tool) and constrained output if aggregate accuracy still lags, scored by `eval/hands.py`, with no regression on the 77.
 2. **Cross-source answers, SHIPPED 2026-09-23.** "What needs my attention" (unread mail, today's calendar and due reminders, ranked, the 9B writing three lines) and "am I free Thursday afternoon" / "when am I free this week" (the calendar's open gaps for a day or the week, not just today's list). Both exact-router tools in `tools_apps.py` (`needs_attention`, `free_when`).
 3. **Voice.** Barge-in and a wake word.
 4. **Eyes and hands, camera half SHIPPED 2026-09-23.** GUI control is one step at a time. The camera half: `see_camera` ("what am I holding", "read this label", "look at this"), one frame via ffmpeg avfoundation, the same vision model see_image uses. Asks first, `tools_see.py`.

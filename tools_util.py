@@ -675,7 +675,7 @@ def demo():
     assert copy_to_clipboard("x") == "Copied." and sleep_display() == "Screen off." and reveal_in_finder("~").startswith("Showing")
     assert reveal_in_finder("~/.ssh").startswith("No file") and reveal_in_finder("/etc/passwd").startswith("No file")
     assert run_shortcut("zzz-not-real").startswith("I do not see") and (list_shortcuts().startswith("No Shortcuts") or "Shortcuts:" in list_shortcuts())
-    assert len(TOOLS) == 60 and all(f.__doc__ for f in TOOLS)
+    assert len(TOOLS) == 61 and all(f.__doc__ for f in TOOLS)
     call = lambda name, a: globals()[name](a) if globals()[name].__code__.co_argcount else globals()[name]()
     hit = lambda q: next((call(name, arg(m)) for pat, name, arg in ROUTES if (m := pat.match(q))), None)
     assert hit("calculate 17 * 23") == "391" and hit("convert 5 km to miles") == "5 km is 3.1069 mi."
