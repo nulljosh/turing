@@ -8,6 +8,15 @@ V="$1"; NOTE="$2"
 [ -n "$V" ] && [ -n "$NOTE" ] || { echo 'usage: ./release.sh X.Y.Z "what shipped"'; exit 2; }
 echo "$V" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$' || { echo "version must look like 1.2.3"; exit 2; }
 git rev-parse "v$V" >/dev/null 2>&1 && { echo "v$V already exists"; exit 1; }
+
+# Her mark redrawn fresh every release, committed on its own before the uncommitted-work check below so a
+# clean redraw never blocks the release. tools_logo.py retries a rate limit itself and gives up silently,
+# keeping tonight's mark, rather than fail the release when the endpoint or ImageMagick/potrace aren't there.
+if python3 tools_logo.py --redraw "$V"; then
+	git add art/mark.svg icon.svg web/icon.svg web/samantha-logo.png web/mark-preview.png
+	git commit -qm "mark: redrawn for v$V"
+fi
+
 # scratch/ holds a weights file git always calls changed. Everything else must be committed.
 [ -z "$(git status --porcelain | grep -v ' scratch/')" ] || { echo "commit your work first"; exit 1; }
 

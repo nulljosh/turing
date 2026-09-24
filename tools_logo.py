@@ -2,12 +2,16 @@
 icon, never text) and paint_image (a photo rebuilt from squares). Her model picks the dials; this code lays out the layers.
 Split out of tools.py, which re-exports every name here.
 """
+import base64
 import json
 import math
 import os
 import re
 import shutil
 import sys
+import tempfile
+import time
+import urllib.error
 import urllib.request
 
 HEADLESS = os.environ.get("SAMANTHA_HEADLESS") == "1"
@@ -277,15 +281,115 @@ MARK_NOTE = ("Samantha's mark. She drew it herself through her own draw path (th
              "in a 1970s engraved oval, on the rounded square of the little computer she lives in. The drawing is art/mark.svg.")
 
 
-def icon_svg():
-    """Turing's own icon: the exact bytes of web/icon.svg and icon.svg, her traced drawing on the paper tile."""
-    with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "art", "mark.svg")) as f:
-        inner = f.read()
+def _icon_svg_from(inner):
+    """The icon tile wrapped around one traced drawing (art/mark.svg's <g> block), so redraw_mark can build and
+    check a fresh one before it ever touches the committed file."""
     return ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">\n'
             f"  <!-- {MARK_NOTE} -->\n"
             '  <rect width="200" height="200" rx="44" fill="#ece8df"/>\n'
             '  <g transform="translate(12,12) scale(0.171875)">\n'  # the 1024 drawing on the 200 tile with a 12 unit margin
             f"{inner}\n  </g>\n</svg>\n")
+
+
+def icon_svg():
+    """Turing's own icon: the exact bytes of web/icon.svg and icon.svg, her traced drawing on the paper tile."""
+    with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "art", "mark.svg")) as f:
+        return _icon_svg_from(f.read())
+
+
+DRAW_ENDPOINT = "https://turing.heyitsmejosh.com/api/draw"
+# The woman-with-a-mind family: same 1970s copperplate engraving, oval frame and ribbon every time (the rules of
+# the mark), only the shape of her mind changes. Never the word apple: the model draws a literal apple for it.
+MARK_SUBJECTS = ["a constellation of stars", "a burst of rays of thought", "a lattice of connected nodes", "an open book of stars"]
+
+
+def _mark_prompt(seed_text=""):
+    """One (subject, prompt) pair from the fixed list, keyed off seed_text (typically the release version) so the
+    same release never redraws twice by accident but a new one reliably picks a new subject. The prompt is always
+    under 120 characters, the endpoint's own cap, so nothing gets silently truncated mid-sentence."""
+    subject = MARK_SUBJECTS[sum(seed_text.encode()) % len(MARK_SUBJECTS) if seed_text else 0]
+    prompt = f"1970s copperplate engraving, oval frame, ribbon: woman in profile, her head {subject}, black ink"
+    assert len(prompt) < 120, prompt
+    return subject, prompt
+
+
+def redraw_mark(seed_text="", root=None):
+    """Redraw Samantha's mark fresh: picks one subject line from the woman-with-a-mind family, asks the hosted
+    /api/draw endpoint (there is no local image model on this Mac) for a picture, traces it with ImageMagick and
+    potrace to one ink colour on one paper colour, and writes the five files that carry her mark: art/mark.svg,
+    icon.svg, web/icon.svg, web/samantha-logo.png and a 256px web/mark-preview.png to grade it by. The ink/paper
+    rule (grayscale, 55% threshold, so potrace only ever has one colour to trace) lives here in code, not in a
+    shell one-liner. Retries a 429 ("a lot of drawing for one minute") twice, 30 seconds apart, then gives up
+    and says why without touching any committed file. root overrides where the five files land (a test's tmp
+    directory); it defaults to this repo."""
+    if not shutil.which("magick") or not shutil.which("potrace"):
+        return "I need ImageMagick and potrace on PATH: brew install imagemagick potrace"
+    subject, prompt = _mark_prompt(seed_text)
+    body = json.dumps({"q": prompt}).encode()
+    data, err = None, None
+    for attempt in range(3):
+        try:
+            # a bare Python-urllib user agent trips the site's bot fight mode (403, error code 1010); she asks
+            # for her own drawing the way a browser would, same header tools.py's read_page already uses
+            req = urllib.request.Request(DRAW_ENDPOINT, body, {"Content-Type": "application/json",
+                                                                "User-Agent": "Mozilla/5.0 (Macintosh) Samantha"})
+            with urllib.request.urlopen(req, timeout=60) as r:
+                data = json.load(r)
+            break
+        except urllib.error.HTTPError as e:
+            err = f"her draw endpoint said {e.code}: {e.read().decode(errors='replace')[:200]}"
+            if e.code != 429 or attempt == 2:
+                break
+            time.sleep(30)
+        except Exception as e:
+            err = f"couldn't reach her draw endpoint: {e}"
+            break
+    if data is None:
+        return f"Didn't redraw her mark: {err}"
+    image = data.get("image", "")
+    if not image.startswith("data:image/jpeg;base64,"):
+        return f"Didn't redraw her mark: no picture came back ({str(data)[:200]})"
+
+    here = root or os.path.dirname(os.path.abspath(__file__))
+    tmp = tempfile.mkdtemp(prefix="samantha-mark-")
+    try:
+        jpg, pbm, svg = (os.path.join(tmp, n) for n in ("in.jpg", "in.pbm", "in.svg"))
+        with open(jpg, "wb") as f:
+            f.write(base64.b64decode(image.split(",", 1)[1]))
+        r1 = _run(["magick", jpg, "-colorspace", "Gray", "-resize", "1024x1024", "-threshold", "55%", pbm], timeout=60)
+        if not os.path.exists(pbm):
+            return f"Didn't redraw her mark: magick couldn't threshold the drawing: {r1[-300:]}"
+        r2 = _run(["potrace", pbm, "-s", "-o", svg], timeout=60)
+        if not os.path.exists(svg):
+            return f"Didn't redraw her mark: potrace couldn't trace it: {r2[-300:]}"
+        with open(svg) as f:
+            m = re.search(r"<g .*?</g>", f.read(), re.S)
+        if not m:
+            return "Didn't redraw her mark: potrace's SVG had no <g> layer to keep."
+        inner = m.group(0)
+        icon = _icon_svg_from(inner)
+        tmp_icon = os.path.join(tmp, "icon.svg")
+        with open(tmp_icon, "w") as f:
+            f.write(icon)
+        png, preview = os.path.join(tmp, "samantha-logo.png"), os.path.join(tmp, "mark-preview.png")
+        _run(["magick", "-background", "none", tmp_icon, "-resize", "1024x1024", png], timeout=60)
+        _run(["magick", "-background", "none", tmp_icon, "-resize", "256x256", preview], timeout=60)
+        if not (os.path.exists(png) and os.path.exists(preview)):
+            return "Didn't redraw her mark: magick couldn't render the PNGs."
+
+        # only now, once every output is built and verified, does it touch the committed files
+        os.makedirs(os.path.join(here, "art"), exist_ok=True)
+        os.makedirs(os.path.join(here, "web"), exist_ok=True)
+        with open(os.path.join(here, "art", "mark.svg"), "w") as f:
+            f.write(inner)
+        for path in (os.path.join(here, "icon.svg"), os.path.join(here, "web", "icon.svg")):
+            with open(path, "w") as f:
+                f.write(icon)
+        shutil.copy(png, os.path.join(here, "web", "samantha-logo.png"))
+        shutil.copy(preview, os.path.join(here, "web", "mark-preview.png"))
+        return f"Redrew her mark: her head {subject}. See web/mark-preview.png."
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
 
 
 def _contrast(a, b):
@@ -297,3 +401,19 @@ def _contrast(a, b):
         return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]
     hi, lo = sorted((lum(a), lum(b)), reverse=True)
     return (hi + 0.05) / (lo + 0.05)
+
+
+def main():
+    """CLI: python3 tools_logo.py --redraw [seed text, usually the release version]. Exits 0 only when the mark
+    actually got redrawn, so release.sh can tell a real redraw from a skipped one (rate limit, no ImageMagick)."""
+    if "--redraw" not in sys.argv:
+        print("usage: python3 tools_logo.py --redraw [seed text]")
+        return 2
+    i = sys.argv.index("--redraw")
+    result = redraw_mark(sys.argv[i + 1] if len(sys.argv) > i + 1 else "")
+    print(result)
+    return 0 if result.startswith("Redrew") else 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())

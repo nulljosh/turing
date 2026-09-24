@@ -260,6 +260,58 @@ class Logo(unittest.TestCase):
         self.assertFalse(any(l["type"] == "text" for l in layers))
         self.assertIn("flower", tools_logo._BLOOM_SCHEMA["properties"]["style"]["enum"])
 
+    def test_redraw_mark_writes_the_five_files(self):
+        """redraw_mark, with the draw endpoint and every subprocess mocked, writes all five files under root, and
+        the icon.svg it writes is byte for byte tools_logo._icon_svg_from's own build of the traced drawing."""
+        import base64
+        import io
+        import json as jsonlib
+        import shutil
+        import tempfile
+        import tools_logo
+
+        tmp = tempfile.mkdtemp()
+        image = "data:image/jpeg;base64," + base64.b64encode(b"not really a jpeg").decode()
+        resp_bytes = jsonlib.dumps({"image": image}).encode()
+
+        class FakeResponse(io.BytesIO):
+            """Stands in for urlopen's return value: a context manager over the fake JSON bytes."""
+
+            def __enter__(self):
+                """Return the bytes, same as a real urlopen response used as a context manager."""
+                return self
+
+            def __exit__(self, *a):
+                """Nothing to close on a BytesIO."""
+                return False
+
+        def fake_run(argv, timeout=10):
+            """Stand in for magick/potrace: drop the file each real call would have produced."""
+            if argv[0] == "magick" and "-threshold" in argv:
+                open(argv[-1], "w").close()
+            elif argv[0] == "potrace":
+                with open(argv[argv.index("-o") + 1], "w") as f:
+                    f.write('<svg><g fill="#000000">\n<path d="M0 0"/>\n</g></svg>\n')
+            elif argv[0] == "magick" and "-resize" in argv:
+                open(argv[-1], "w").close()
+            return ""
+
+        try:
+            with mock.patch.object(shutil, "which", return_value="/usr/local/bin/x"), \
+                 mock.patch("urllib.request.urlopen", return_value=FakeResponse(resp_bytes)), \
+                 mock.patch.object(tools_logo, "_run", side_effect=fake_run):
+                result = tools_logo.redraw_mark("4.3.0", root=tmp)
+
+            self.assertNotIn("Didn't redraw", result, result)
+            for path in ("art/mark.svg", "icon.svg", "web/icon.svg", "web/samantha-logo.png", "web/mark-preview.png"):
+                self.assertTrue(os.path.exists(os.path.join(tmp, path)), path)
+            with open(os.path.join(tmp, "art", "mark.svg")) as f:
+                inner = f.read()
+            with open(os.path.join(tmp, "icon.svg")) as f:
+                self.assertEqual(f.read(), tools_logo._icon_svg_from(inner))
+        finally:
+            shutil.rmtree(tmp, ignore_errors=True)
+
     def test_every_layer_type_renders(self):
         """Tiles, ellipses (filled and stroked), rotated squares and stars all become SVG, and an unknown layer is refused."""
         import tools_logo
