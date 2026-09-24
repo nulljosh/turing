@@ -211,3 +211,132 @@ def unread_mail(query=""):
     lines = [l for l in out.splitlines() if l.strip()]
     shown = "\n".join(lines[:10])
     return shown + (f"\n...and {len(lines) - 10} more." if len(lines) > 10 else "")
+
+
+# ---------- what needs me: unread mail, today's calendar and due reminders, ranked into three lines ----------
+
+_DUE_REMINDERS = '''set d0 to current date
+set time of d0 to 0
+set d1 to d0 + 1 * days
+set out to ""
+tell application "Reminders"
+repeat with r in (reminders whose completed is false)
+set dd to due date of r
+if dd is not missing value and dd < d1 then
+if dd < d0 then
+set tag to "overdue"
+else
+set tag to "today"
+end if
+set out to out & (name of r) & " (" & tag & ")" & linefeed
+end if
+end repeat
+end tell
+return out'''
+
+
+def _due_reminders():
+    """Reminders due today or overdue, read only, across every list."""
+    out = _app(_DUE_REMINDERS)
+    return out.strip() or "Nothing due."
+
+
+def needs_attention():
+    """"What needs my attention": one answer built from unread mail, today's calendar and due reminders, ranked,
+    with the biggest local model on this Mac (the same path summarize uses) writing three short lines. Says
+    plainly when a source is empty; nothing here is invented."""
+    mail, cal, due = unread_mail(""), calendar_today(), _due_reminders()
+    if mail == "No unread mail." and cal == "Nothing on the calendar today." and due == "Nothing due.":
+        return "Nothing needs your attention: no unread mail, nothing on the calendar today, and no reminders due."
+    import tools_llm
+    prompt = ("Below are three real sources for one person, right now: unread mail, today's calendar and due "
+              "reminders. Write exactly three short lines, one per source, ranked with whatever needs attention "
+              "first at the top. If a source below says it is empty, say so plainly in its line, and invent "
+              "nothing that is not in the source text. No headings, no lists, no em dashes.\n\n"
+              f"Unread mail:\n{mail}\n\nToday's calendar:\n{cal}\n\nReminders due:\n{due}")
+    reply = tools_llm.ask_llm(prompt)
+    return reply.rsplit("\n(Answered by", 1)[0]
+
+
+# ---------- am I free: the calendar's open gaps for a day or the week, not just today's list ----------
+
+_RANGE = '''on run argv
+set d0 to current date
+set time of d0 to 0
+set d0 to d0 + (item 1 of argv as integer) * days
+set d1 to d0 + (item 2 of argv as integer) * days
+set out to ""
+tell application "Calendar"
+repeat with c in calendars
+repeat with e in (every event of c whose start date is less than d1 and end date is greater than d0)
+set s0 to (start date of e) - d0
+set e0 to (end date of e) - d0
+if s0 < 0 then set s0 to 0
+if e0 > (d1 - d0) then set e0 to (d1 - d0)
+set out to out & s0 & " " & e0 & linefeed
+end repeat
+end repeat
+end tell
+return out
+end run'''
+
+
+def _busy_blocks(today, days_ahead):
+    """[(start datetime, end datetime)] for every calendar event between today and days_ahead days out, clipped
+    to that range. Empty when Calendar has nothing there, or cannot be reached."""
+    from datetime import datetime, timedelta
+    base = datetime.combine(today, datetime.min.time())
+    blocks = []
+    for line in _app(_RANGE, "0", str(days_ahead)).splitlines():
+        parts = line.split()
+        if len(parts) != 2:
+            continue
+        try:
+            s, e = float(parts[0]), float(parts[1])
+        except ValueError:
+            continue
+        blocks.append((base + timedelta(seconds=s), base + timedelta(seconds=e)))
+    return blocks
+
+
+_DAYPART = {"morning": (9, 12), "afternoon": (12, 18), "evening": (18, 22)}
+_WORKDAY = (9, 18)
+
+
+def free_when(request):
+    """"Am I free Thursday afternoon", "when am I free this week": the calendar's open gaps for a day or the
+    week, business hours (9am to 6pm, or the named morning/afternoon/evening), not just today's list. Says
+    plainly when the calendar has nothing there for that window; it never invents a meeting."""
+    from datetime import datetime, timedelta
+    from util_dates import _hm
+    q = request.strip().lower()
+    today = datetime.now().date()
+    if "week" in q:
+        days = [today + timedelta(days=n) for n in range(7 - today.weekday()) if (today + timedelta(days=n)).weekday() < 5]
+        if not days:  # asked over a weekend with no workday left in it: the coming Monday to Friday
+            days = [today + timedelta(days=n) for n in range(7 - today.weekday(), 14 - today.weekday()) if (today + timedelta(days=n)).weekday() < 5]
+    else:
+        d = today + timedelta(days=1) if "tomorrow" in q else next(
+            (today + timedelta(days=(_WEEKDAYS.index(w) - today.weekday()) % 7) for w in _WEEKDAYS if w in q), today)
+        days = [d]
+    part = next((p for p in _DAYPART if p in q), None)
+    window = _DAYPART[part] if part else _WORKDAY
+    blocks = _busy_blocks(today, (days[-1] - today).days + 1)
+    lines = []
+    for d in days:
+        day_start = datetime.combine(d, datetime.min.time()) + timedelta(hours=window[0])
+        day_end = datetime.combine(d, datetime.min.time()) + timedelta(hours=window[1])
+        busy = sorted((max(s, day_start), min(e, day_end)) for s, e in blocks if s < day_end and e > day_start)
+        cursor, gaps = day_start, []
+        for s, e in busy:
+            if s > cursor:
+                gaps.append((cursor, s))
+            cursor = max(cursor, e)
+        if cursor < day_end:
+            gaps.append((cursor, day_end))
+        name = "Today" if d == today else "Tomorrow" if d == today + timedelta(days=1) else _WEEKDAYS[d.weekday()].capitalize()
+        if not gaps:
+            lines.append(f"{name}: booked solid" + (f" this {part}." if part else "."))
+        else:
+            lines.append(f"{name}: free " + ", ".join(f"{_hm(s)} to {_hm(e)}" for s, e in gaps) + ".")
+    return " ".join(lines)

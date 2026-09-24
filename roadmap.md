@@ -40,8 +40,8 @@ Samantha could answer. She could not do anything. "Open chrome and go to hacker 
 ### Biggest gaps vs the market (set 2026-09-23)
 Measured against Siri and Apple Intelligence, and the ChatGPT and Claude desktop apps. Ranked; the loop works top down.
 
-1. **Picker coverage.** Her own picker knows 51 of 101 tools by wording; the rest need exact phrasing. Close it with two-step picking (family, then tool) and constrained output, scored by `eval/hands.py`, with no regression on the first 51.
-2. **Cross-source answers.** "What needs my attention" and "am I free Thursday" (both under Gaps found by the loop). Apple Intelligence and Gemini do this out of the box.
+1. **Picker coverage.** Her own picker knows 51 of 103 tools by wording; the rest need exact phrasing. Close it with two-step picking (family, then tool) and constrained output, scored by `eval/hands.py`, with no regression on the first 51.
+2. **Cross-source answers, SHIPPED 2026-09-23.** "What needs my attention" (unread mail, today's calendar and due reminders, ranked, the 9B writing three lines) and "am I free Thursday afternoon" / "when am I free this week" (the calendar's open gaps for a day or the week, not just today's list). Both exact-router tools in `tools_apps.py` (`needs_attention`, `free_when`).
 3. **Voice.** Barge-in and a wake word.
 4. **Eyes and hands.** Vision misnames things, no camera, GUI control is one step at a time.
 5. **Research and code.** Pages beyond Wikipedia; a sandboxed Python for CSV stats and charts.
@@ -86,8 +86,6 @@ The loop compares her with other assistants (Siri and Shortcuts, Apple Intellige
 - [ ] Docs in her voice: the README intro is hand-written to SOUL.md; have the 9B (warm, briefed with SOUL.md) redo the intro, ABILITIES.md and WHITEPAPER.md in first person, then check facts and house rules by hand. Direct request, 2026-09-23
 - [ ] Camera eyes: "what am I holding", "read this label" through the Mac's camera (one frame via ffmpeg avfoundation, then the same vision model see_image uses), asking first. Seen in Gemini Live, ChatGPT voice with video
 - [ ] Edit the last draft: "make it shorter", "friendlier", "add a line about Friday" rewrites the file write_document just saved, showing the diff and asking first. Seen in ChatGPT canvas, Claude artifacts
-- [ ] What needs me: "what needs my attention" is one answer built from unread mail, today's calendar and due reminders, ranked, with the 9B writing the three lines. Seen in Apple Intelligence priority notifications, Gemini in Gmail
-- [ ] Am I free: "do I have time Thursday afternoon", "when am I free this week" read the calendar's gaps, not just today's list. Seen in Siri, Gemini with Calendar
 - [ ] Draw on the Mac, not just the page: local image generation (Flux or SD through MLX) is a 6 GB model on a 16 GB Mac, so it only runs with everything else closed; a real ability, honestly scoped. Seen in ChatGPT images, Gemini
 - [ ] Voice, the rest: you can cut in while she speaks, and a wake word. Voice in shipped v1.8.0 (python3 chat.py --voice, Whisper on MLX). Seen in ChatGPT and Gemini voice modes
 - [ ] See better: the 3B vision model gets the gist but misnames details (called the Dock a taskbar); try a 7B when memory allows, and let click_text use her eyes for icons with no text. Seeing shipped v2.1.0 (see_screen, see_image)
