@@ -81,3 +81,7 @@ Page order is demo, what she can do, results, chart. Long text sits inside `deta
 
 ## The loop
 `docs/LOOP-HANDOFF.md` holds the live `/loop`: what it is, where things stand, what is next, and the restart prompt. Checkpoint rewrites it. Read it before resuming.
+
+## Before you push
+
+Run `git config core.hooksPath .githooks` once per clone. The pre-push hook runs the same steps CI does, so a red build never reaches GitHub. Every worktree inherits it.
