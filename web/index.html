@@ -315,15 +315,13 @@
         <div class="card">
           <div id="chart-wrap">
             <canvas id="chart" width="600" height="220"></canvas>
-            <div id="tooltip"></div>
           </div>
-          <p class="chart-hint">Hover or tap the line to see where each roadmap phase landed.</p>
           <div class="meta">
             <span>Base: <b id="base">, </b></span>
             <span>Iterations: <b id="iters">, </b></span>
             <span>Latest train loss: <b id="loss">, </b></span>
           </div>
-          <p class="graph-explainer">Lower is better. A falling line means she is learning.</p>
+          <p class="graph-explainer">Round six of the picker, the one she runs today. The line is training loss, the dots are validation loss. Lower is better.</p>
         </div>
       </section>
 
@@ -365,110 +363,29 @@ python3 -m venv .venv && ./.venv/bin/pip install mlx-lm
     <script>
       fetch('status.json').then(r => r.json()).then(s => {
         document.getElementById('base').textContent = s.base;
-        document.getElementById('iters').textContent = s.train_loss.length ? s.train_loss[s.train_loss.length-1].iter : 0;
-        document.getElementById('loss').textContent = s.train_loss.length ? s.train_loss[s.train_loss.length-1].loss.toFixed(3) : 'n/a';
-
-        const c = document.getElementById('chart'), ctx = c.getContext('2d');
-        const dpr = window.devicePixelRatio || 1;
-        const cssW = c.clientWidth;
-        c.width = cssW * dpr; c.height = 220 * dpr;
-        ctx.scale(dpr, dpr);
-        const w = cssW, h = 220, pad = 24, padL = 44, padB = 34;  // room for axis numbers and titles
-        const pts = s.train_loss;
+        const pts = s.train_loss, val = s.val_loss || [];
+        document.getElementById('iters').textContent = pts.length ? pts[pts.length-1].iter : 0;
+        document.getElementById('loss').textContent = pts.length ? pts[pts.length-1].loss.toFixed(3) : 'n/a';
         if (!pts.length) return;
-        const xs = pts.map(p => p.iter), ys = pts.map(p => p.loss);
-        const xMin = Math.min(...xs), xMax = Math.max(...xs, 1);
-        const yMin = Math.min(...ys) * 0.95, yMax = Math.max(...ys) * 1.05;
+        // One line, train loss per logged step; dots are the validation loss. Nothing else on the chart.
+        const c = document.getElementById('chart'), ctx = c.getContext('2d');
+        const dpr = window.devicePixelRatio || 1, w = c.clientWidth, h = 220, pad = 16, padL = 44, padB = 30;
+        c.width = w * dpr; c.height = h * dpr; ctx.scale(dpr, dpr);
+        const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+        const fg = css('--fg') || '#1a1a1a', line = css('--line') || '#ddd', muted = css('--muted') || '#888';
+        const xs = pts.map(p => p.iter), ys = pts.concat(val).map(p => p.loss);
+        const xMin = xs[0], xMax = xs[xs.length-1], yMin = Math.min(...ys) * 0.95, yMax = Math.max(...ys) * 1.05;
         const X = i => padL + (i - xMin) / (xMax - xMin || 1) * (w - padL - pad);
         const Y = v => h - padB - (v - yMin) / (yMax - yMin || 1) * (h - pad - padB);
-        const fg = getComputedStyle(document.documentElement).getPropertyValue('--fg').trim() || '#1a1a1a';
-        const line = getComputedStyle(document.documentElement).getPropertyValue('--line').trim() || '#ddd';
-        const accent = getComputedStyle(document.documentElement).getPropertyValue('--muted').trim() || '#888';
-
-        // roadmap phases placed proportionally along the current run's iter range,
-        // done phases pinned earlier, the current phase at the latest point, rest spread after
-        const phases = s.roadmap || [];
-        const doneCount = phases.filter(p => p.done).length;
-        const markers = phases.map((p, i) => {
-          let frac;
-          if (i < doneCount) frac = (i + 1) / (doneCount + 1) * 0.55;
-          else frac = 0.55 + (i - doneCount + 1) / (phases.length - doneCount + 1) * 0.45;
-          return { iter: xMin + frac * (xMax - xMin), phase: p };
-        });
-
-        function draw() {
-          ctx.clearRect(0, 0, w, h);
-          ctx.strokeStyle = line; ctx.lineWidth = 1;
-          ctx.beginPath(); ctx.moveTo(padL, h-padB); ctx.lineTo(w-pad, h-padB); ctx.moveTo(padL, pad); ctx.lineTo(padL, h-padB); ctx.stroke();
-          // Axes: four loss ticks with faint gridlines, iteration ticks along the bottom.
-          ctx.fillStyle = accent; ctx.font = '11px -apple-system, Helvetica, sans-serif';
-          ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
-          for (let k = 0; k <= 3; k++) {
-            const v = yMin + (yMax - yMin) * k / 3, y = Y(v);
-            ctx.fillText(v.toFixed(2), padL - 6, y);
-            if (k) { ctx.strokeStyle = line; ctx.globalAlpha = .5; ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(w-pad, y); ctx.stroke(); ctx.globalAlpha = 1; }
-          }
-          ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-          for (let k = 0; k <= 4; k++) {
-            const it = xMin + (xMax - xMin) * k / 4;
-            ctx.fillText(Math.round(it), X(it), h - padB + 6);
-          }
-          ctx.fillText('iteration', padL + (w - padL - pad) / 2, h - 14);
-          ctx.save(); ctx.translate(11, pad + (h - pad - padB) / 2); ctx.rotate(-Math.PI / 2);
-          ctx.textBaseline = 'middle'; ctx.fillText('train loss', 0, 0); ctx.restore();
-          ctx.strokeStyle = line;
-          ctx.beginPath();
-          pts.forEach((p, i) => i === 0 ? ctx.moveTo(X(p.iter), Y(p.loss)) : ctx.lineTo(X(p.iter), Y(p.loss)));
-          ctx.strokeStyle = fg; ctx.lineWidth = 2; ctx.stroke();
-          markers.forEach(m => {
-            const mx = X(m.iter);
-            ctx.beginPath();
-            ctx.moveTo(mx, pad); ctx.lineTo(mx, h - padB);
-            ctx.strokeStyle = accent; ctx.lineWidth = 1; ctx.setLineDash([2, 3]);
-            ctx.stroke(); ctx.setLineDash([]);
-            ctx.beginPath();
-            ctx.arc(mx, h - padB, m.phase.done ? 4 : 3, 0, Math.PI * 2);
-            ctx.fillStyle = m.phase.done ? '#2e9e4a' : accent;
-            ctx.fill();
-          });
-        }
-        draw();
-        window.addEventListener('resize', () => { /* static after load, cheap to skip re-measuring */ });
-
-        const tip = document.getElementById('tooltip');
-        function nearestMarker(px) {
-          let best = null, bestDist = Infinity;
-          markers.forEach(m => {
-            const d = Math.abs(X(m.iter) - px);
-            if (d < bestDist) { bestDist = d; best = m; }
-          });
-          return bestDist < 18 ? best : null;
-        }
-        function showTip(clientX, clientY, rect) {
-          const px = clientX - rect.left;
-          const m = nearestMarker(px);
-          if (!m) { tip.classList.remove('show'); return; }
-          tip.innerHTML = `<b>Phase ${m.phase.phase}: ${m.phase.name}</b>${m.phase.done ? 'done' : 'not yet'} · ~iter ${Math.round(m.iter)}`;
-          tip.style.left = (clientX - rect.left) + 'px';
-          tip.style.top = (clientY - rect.top - 10) + 'px';
-          tip.classList.add('show');
-        }
-        c.addEventListener('mousemove', e => {
-          const rect = c.getBoundingClientRect();
-          showTip(e.clientX, e.clientY, rect);
-        });
-        c.addEventListener('mouseleave', () => tip.classList.remove('show'));
-        c.addEventListener('touchstart', e => {
-          const rect = c.getBoundingClientRect();
-          const t = e.touches[0];
-          showTip(t.clientX, t.clientY, rect);
-        }, { passive: true });
-        document.addEventListener('touchstart', e => {
-          if (!c.contains(e.target)) tip.classList.remove('show');
-        }, { passive: true });
-      }).catch(() => {
-        document.getElementById('status-text').textContent = 'no data yet';
-      });
+        ctx.font = '11px -apple-system, Helvetica, sans-serif'; ctx.fillStyle = muted; ctx.strokeStyle = line; ctx.lineWidth = 1;
+        ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+        for (let k = 0; k <= 3; k++) { const v = yMin + (yMax - yMin) * k / 3, y = Y(v); ctx.fillText(v.toFixed(2), padL - 6, y); ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(w - pad, y); ctx.stroke(); }
+        ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+        for (let k = 0; k <= 3; k++) { const it = xMin + (xMax - xMin) * k / 3; ctx.fillText(Math.round(it), X(it), h - padB + 6); }
+        ctx.strokeStyle = fg; ctx.lineWidth = 1.5; ctx.beginPath();
+        pts.forEach((p, i) => i ? ctx.lineTo(X(p.iter), Y(p.loss)) : ctx.moveTo(X(p.iter), Y(p.loss))); ctx.stroke();
+        ctx.fillStyle = fg; val.forEach(p => { ctx.beginPath(); ctx.arc(X(p.iter), Y(p.loss), 3, 0, Math.PI * 2); ctx.fill(); });
+      }).catch(() => {});
 
       fetch('https://api.github.com/repos/nulljosh/turing/releases/latest').then(r => r.json()).then(rel => {
         if (!rel.tag_name) return;
@@ -531,9 +448,9 @@ python3 -m venv .venv && ./.venv/bin/pip install mlx-lm
         docsHtml += '</div></div>';
 
         var limitHtml = '<div class="limitations"><p class="limitations-title">Limitations</p>' +
-          '<p>Her own 0.5B picker chooses tools, 394 of 501 on wording it never saw, 9 wrong picks still slip past the guard, down from 21, and it refuses no right ones. Multi-step jobs and logo choices borrow a 1.7B head. ' +
-          'Knowledge bar is 60 of 65 with zero confidently wrong and she is at 57 with 4 wrong. ' +
-          'Logos are dial choices from a fixed set, not free-hand design. ' +
+          '<p>Her own 0.5B picker chooses tools: 77 of 105 by wording, 789 of 1055 on sentences it never saw, 49 wrong picks still get past the guard, down from 123, and it refuses 7 right ones. Multi-step work borrows a 1.7B. ' +
+          'Knowledge is 62 of 65 with zero confidently wrong. ' +
+          'Logos are dial choices from a fixed set; her mark she drew herself. ' +
           'The picker and chat now run on Windows and Linux too, through Ollama. The Mac tools stay on the Mac.</p></div>';
 
         placeholder.parentNode.innerHTML = '<h2>Results</h2>' + html + tableHtml + '<details class="more"><summary>Docs and limits</summary>' + docsHtml + limitHtml + '</details>';
