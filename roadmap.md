@@ -40,7 +40,7 @@ Samantha could answer. She could not do anything. "Open chrome and go to hacker 
 ### Biggest gaps vs the market (set 2026-09-23)
 Measured against Siri and Apple Intelligence, and the ChatGPT and Claude desktop apps. Ranked; the loop works top down.
 
-1. **Picker coverage.** Her own picker knows 51 of 103 tools by wording; the rest need exact phrasing. Close it with two-step picking (family, then tool) and constrained output, scored by `eval/hands.py`, with no regression on the first 51.
+1. **Picker coverage.** Her own picker knows 77 of 103 tools by wording (round six, docs/BAKEOFF.md); the rest need exact phrasing. Close the remaining 26 with training templates for the tools that still have none, then two-step picking (family, then tool) and constrained output if aggregate accuracy still lags, scored by `eval/hands.py`, with no regression on the 77.
 2. **Cross-source answers, SHIPPED 2026-09-23.** "What needs my attention" (unread mail, today's calendar and due reminders, ranked, the 9B writing three lines) and "am I free Thursday afternoon" / "when am I free this week" (the calendar's open gaps for a day or the week, not just today's list). Both exact-router tools in `tools_apps.py` (`needs_attention`, `free_when`).
 3. **Voice.** Barge-in and a wake word.
 4. **Eyes and hands.** Vision misnames things, no camera, GUI control is one step at a time.
@@ -51,11 +51,11 @@ Measured against Siri and Apple Intelligence, and the ChatGPT and Claude desktop
 
 1.0.0 means you can sit down, talk to her, and she answers and acts without a rewrite. Each box ships as its own tagged release. No box gets ticked without a check that fails when it breaks.
 
-Shipped and off the list: a 1.7B head that answers in 5 seconds; music and personal tools; know things (62/65, 0 confidently wrong, `eval/basic_questions.py`); browser tabs (list, switch, close, read the rendered page); a real harness (`harness.py`, wired into `chat.py`, asks before writes); her own head for the first 51 tools (`hands-adapter`, `eval/hands.py`); the ten image tools smoke tested for real (`eval/smoke_images.py`).
+Shipped and off the list: a 1.7B head that answers in 5 seconds; music and personal tools; know things (62/65, 0 confidently wrong, `eval/basic_questions.py`); browser tabs (list, switch, close, read the rendered page); a real harness (`harness.py`, wired into `chat.py`, asks before writes); her own head for 77 of 103 tools (`hands-adapter`, `eval/hands.py`); the ten image tools smoke tested for real (`eval/smoke_images.py`).
 
 Gaps, in order:
 
-- [ ] **Her own head, the rest.** Attempted 2026-09-21 (docs/BAKEOFF.md "round five"): training data now exists for all 77 tools, but the retrain refused 19 right picks it used to allow, so the shipped picker still covers the first 51. Not blocking 1.0.0: the other 26 tools work through the exact router.
+- [ ] **Her own head, the rest.** Shipped 2026-09-23 (docs/BAKEOFF.md "round six"): the round-five regression was a training/guard mismatch on `ask_document`, not the guard being too strict; fixing it and retraining raised the shipped picker to 77 of 103 tools with no regression on the tools round four already handled. 26 tools still have no training templates and route through the exact router only. Not blocking 1.0.0.
 
 ### Joshua's Mac to-do (only these need the keyboard)
 The loop runs in the cloud and cannot reach Cloudflare or this Mac. Tick a box when done, the loop picks it up.
