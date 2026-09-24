@@ -1,0 +1,6 @@
+# What chat_pipe.py's answer chain needs to run standalone: the base model and Whisper are not
+# listed here, they are HuggingFace repo ids that mlx-lm and mlx-whisper fetch and cache on first
+# use, the same way the terminal chat.py already gets them. This file is only the Python packages.
+mlx-lm
+mlx-whisper
+mlx-vlm

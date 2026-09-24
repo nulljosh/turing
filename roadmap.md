@@ -51,7 +51,7 @@ Measured against Siri and Apple Intelligence, and the ChatGPT and Claude desktop
 3. **Voice, SHIPPED 2026-09-23.** Barge-in (a real run of loud mic energy while she's speaking kills `say` and drops straight back into listening, `should_barge_in` in `voice.py`, no new model) and a wake word (`--wake samantha`, off by default: idles in short chunks until a transcript starts with the word, `wake_match`).
 4. **Eyes and hands, camera half SHIPPED 2026-09-23.** GUI control is one step at a time. The camera half: `see_camera` ("what am I holding", "read this label", "look at this"), one frame via ffmpeg avfoundation, the same vision model see_image uses. Asks first, `tools_see.py`.
 5. **Research and code, code half SHIPPED 2026-09-23.** Pages beyond Wikipedia still open. The code half: `run_code` ("stats on sales.csv", "average of the price column in sales.csv", "chart sales.csv", "plot column price of sales.csv"). The biggest local model writes a short script from the request and the CSV's own header, and it only runs in a fresh temp folder holding a copy of that one file, no network, a 20 second timeout, a memory cap, output capped at 2000 characters. Asks first, `tools_code.py`.
-6. **Install.** A signed, notarized SamanthaGUI.app a stranger can download and open, with the models fetched on first run. Today it is a venv plus a build script.
+6. **Install, mostly SHIPPED 2026-09-23.** `gui/package.sh` builds a self-contained SamanthaGUI.app: `gui/launcher.sh` creates her own Python env in Application Support and installs `requirements.txt` on first open, showing a plain "setting up, about two minutes" state instead of crashing (its shell logic is unit tested with a mocked HOME, `tests/test_launcher.py`, no Xcode needed); the base model and Whisper still fetch lazily through mlx-lm/mlx-whisper on first use, exactly the way chat.py already gets them, nothing extra to pull. Not fully shipped: this Mac has no Developer ID Application certificate, so the built zip is signed with Apple Development only, and no notarytool keychain profile exists to notarize headless. See Joshua's Mac to-do.
 
 ### Road to 1.0.0 (set 2026-09-20)
 
@@ -67,6 +67,8 @@ Gaps, in order:
 The loop runs in the cloud and cannot reach Cloudflare or this Mac. Tick a box when done, the loop picks it up.
 
 - [ ] Try voice and on-screen control on the Mac: `python3 chat.py --voice` needs the microphone once, "click ..." needs cliclick (installed) plus Screen Recording and Accessibility for the terminal (macOS asks)
+- [ ] Get a Developer ID Application certificate (this Mac only has Apple Development, 3rd Party Mac Developer Application and iPhone Distribution; none of those pass Gatekeeper for a stranger). Apple Developer site, Certificates, new Developer ID Application cert.
+- [ ] Store a notarytool keychain profile once: `xcrun notarytool store-credentials samantha-notary --apple-id <your Apple ID email> --team-id <your Team ID> --password <an app-specific password from appleid.apple.com>`. After both, `./gui/package.sh` signs with the real identity and notarizes headless on its own.
 
 ### How we compete with trillion-dollar labs (set 2026-09-22)
 We will not out-think Claude or GPT: that is data centres and years. We win where they structurally can't follow:

@@ -46,14 +46,24 @@ final class Samantha: ObservableObject {
 
     private let pythonPath = (Bundle.main.object(forInfoDictionaryKey: "PythonPath") as? String) ?? "/usr/bin/python3"
     private let pipePath = (Bundle.main.object(forInfoDictionaryKey: "ChatPipePath") as? String) ?? ""
+    // Set only in the packaged, distributed build (gui/package.sh): a bundled script, resolved at
+    // launch time relative to Resources/, that finds or creates her env in Application Support and
+    // installs requirements.txt on first run. The dev build (gui/build.sh) leaves this unset and
+    // execs PythonPath/ChatPipePath directly against this checkout's own .venv, as before.
+    private let launcherScript = (Bundle.main.object(forInfoDictionaryKey: "LauncherScript") as? String)
 
     /// Launch chat_pipe.py once and keep it running for the whole session: her model stays loaded, same as the
-    /// terminal's own streaming chat, never reloaded per message.
+    /// terminal's own streaming chat, never reloaded per message. A packaged build's first run has no venv yet,
+    /// so the launcher shows a plain "setting up" line (a normal .working message) before she is ready.
     func start() {
         guard job == nil else { return }
         let p = Process()
-        p.executableURL = URL(fileURLWithPath: pythonPath)
-        p.arguments = ["-u", pipePath]
+        if let launcherScript, let resources = Bundle.main.resourceURL {
+            p.executableURL = resources.appendingPathComponent(launcherScript)
+        } else {
+            p.executableURL = URL(fileURLWithPath: pythonPath)
+            p.arguments = ["-u", pipePath]
+        }
         let out = Pipe(), inp = Pipe()
         p.standardOutput = out
         p.standardInput = inp
@@ -88,7 +98,9 @@ final class Samantha: ObservableObject {
 
     private func apply(_ msg: PipeMessage) {
         switch msg {
-        case .working(let text): transcript.append("  [\(text)]")
+        case .working(let text):
+            transcript.append("  [\(text)]")
+            status = text  // first-run setup ("Setting up Samantha, about two minutes...") reads here, plainly
         case .confirm(let name, let args): pending = (name, args)
         case .answer(let text):
             transcript.append("Samantha: \(text)")
