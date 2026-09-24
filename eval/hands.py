@@ -65,17 +65,28 @@ def cases():
     return out
 
 
+PREFILL = '{"tool": '
+
+
 def main():
     """Evaluate the model's tool-picking accuracy against test cases."""
     from mlx_lm import load, generate
     adapter, model_id = _flag("--adapter"), _flag("--model", BASE)
     model, tok = load(model_id, adapter_path=os.path.join(REPO, adapter) if adapter else None)
     system = SYSTEM if adapter else untrained_system()
+    constrain = "--constrain" in sys.argv
+    tool_names = list(tools.TOOLS.keys()) if constrain else None
     verbose, score, wrong_tool, fired, blocked, t0 = "--verbose" in sys.argv, {}, 0, 0, 0, time.time()
     for group, text, tool, arg, exact in cases():
         prompt = tok.apply_chat_template([{"role": "system", "content": system}, {"role": "user", "content": text}],
                                          add_generation_prompt=True, tokenize=False, enable_thinking=False)
-        raw = generate(model, tok, prompt=prompt, max_tokens=48, verbose=False)
+        if constrain:
+            from constrain import ToolNameConstraint
+            proc = ToolNameConstraint(tok, tool_names)
+            raw = PREFILL + generate(model, tok, prompt=prompt + PREFILL, max_tokens=48, verbose=False,
+                                      logits_processors=[proc])
+        else:
+            raw = generate(model, tok, prompt=prompt, max_tokens=48, verbose=False)
         found = re.search(r"\{.*?\}", re.sub(r"(?s)<think>.*?</think>", "", raw), re.S)
         try:
             got = json.loads(found.group(0)) if found else {}
@@ -102,7 +113,8 @@ def main():
     total = sum(n[0] for n in score.values())
     for group, (p, n) in score.items():
         print(f"{group}: {p}/{n}")
-    print(f"{total}/{sum(n[1] for n in score.values())} passed, {wrong_tool} picked the wrong tool, {fired} of those get past the guard in tools.do(), {blocked} right picks refused by the guard, {time.time() - t0:.0f}s, {adapter or model_id}")
+    tag = (adapter or model_id) + (" constrained" if constrain else "")
+    print(f"{total}/{sum(n[1] for n in score.values())} passed, {wrong_tool} picked the wrong tool, {fired} of those get past the guard in tools.do(), {blocked} right picks refused by the guard, {time.time() - t0:.0f}s, {tag}")
     minimum = _flag("--min")
     if minimum and total < int(minimum):
         sys.exit(1)
