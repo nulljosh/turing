@@ -25,7 +25,7 @@ rm -f art/mark-candidate.svg
 [ -z "$(git status --porcelain | grep -v ' scratch/')" ] || { echo "commit your work first"; exit 1; }
 
 # Never release on top of a red build. v0.9.0 shipped over five failing runs because nothing looked.
-CI=$(gh run list --branch main -L 1 --json status,conclusion -q '.[0] | .status + " " + (.conclusion // "")')
+CI=$(gh run list --workflow test.yml --branch main -L 1 --json status,conclusion -q '.[0] | .status + " " + (.conclusion // "")')
 case "$CI" in
   "completed success") ;;
   completed*) echo "CI is red on main ($CI). Fix it first."; exit 1 ;;
