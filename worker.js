@@ -4,6 +4,7 @@
 // from the text. On the Mac that reader is a 1.7B under Ollama. Here a 3B on
 // Workers AI stands in, held to the same grounding check.
 import "./web/samantha.js";
+import { JT_DOCS } from "./web/jt_docs.js";
 
 const S = globalThis.Samantha;
 const READER = "@cf/meta/llama-3.2-3b-instruct";  // the 1B said Peter S. Fischer wrote 1984, off the Murder, She Wrote page
@@ -45,12 +46,12 @@ function readingOrder(asked, found) {
   return topic.concat(rest);
 }
 
-async function readArticle(env, query, title) {
-  const page = await getJSON("https://en.wikipedia.org/w/api.php?action=query&prop=extracts&explaintext=1&exsectionformat=plain" +
-                             `&redirects=1&titles=${encodeURIComponent(title)}&format=json&origin=*`);
-  const pages = page?.query?.pages || {};
-  const text = (Object.values(pages)[0]?.extract || "").slice(0, 7000);
-  if (!text || text.slice(0, 300).includes("may refer to")) return null;
+// Shared by readArticle (a Wikipedia page) and readJtDocs (the Joshua Tree knowledge
+// pack): one short sentence from the reader model, using ONLY the text in front of
+// it, or nothing at all. Same grounding check either way: every number and every
+// capitalised name in the answer has to actually be in the source text.
+async function readGrounded(env, query, text) {
+  if (!text) return null;
   let answer = "";
   try {
     const out = await env.AI.run(READER, { temperature: 0, max_tokens: 80, messages: [
@@ -60,7 +61,6 @@ async function readArticle(env, query, title) {
     answer = firstSentences((out.response || "").trim(), 1).slice(0, 300);
     if (/[<>{}]|https?:|www\./i.test(answer)) return null;  // one plain sentence. Markup or a link is not an answer from an encyclopedia
   } catch { return null; }
-  // every number and every capitalised name in the answer has to be on the page
   const claims = answer.match(/\d[\d,.]*\d|\d|\b[A-Z][a-z]{2,}\b/g) || [];
   const hay = text.toLowerCase(), asked = query.toLowerCase();
   const grounded = (claims.length > 1 ? claims.slice(1) : claims).every(c => hay.includes(c.toLowerCase().replace(/[.,]+$/, "")) || asked.includes(c.toLowerCase()));
@@ -71,7 +71,78 @@ async function readArticle(env, query, title) {
   return answer && !declined && grounded && adds ? answer : null;
 }
 
-const firstSentences = (text, n) => (text.match(/[^.!?]+[.!?]+(?:\s|$)/g) || [text]).slice(0, n).join("").trim();
+async function readArticle(env, query, title) {
+  const page = await getJSON("https://en.wikipedia.org/w/api.php?action=query&prop=extracts&explaintext=1&exsectionformat=plain" +
+                             `&redirects=1&titles=${encodeURIComponent(title)}&format=json&origin=*`);
+  const pages = page?.query?.pages || {};
+  const text = (Object.values(pages)[0]?.extract || "").slice(0, 7000);
+  if (!text || text.slice(0, 300).includes("may refer to")) return null;
+  return readGrounded(env, query, text);
+}
+
+// The Joshua Tree kernel is a whole separate OS project (~/Documents/Code/joshuatree)
+// with a Chat app of its own; its browser demo's Ollama-shaped chat request lands on
+// /api/chat below and answers through this same reader, grounded in gen_jt_docs.py's
+// condensed pack instead of a live Wikipedia fetch.
+async function readJtDocs(env, query) {
+  return readGrounded(env, query, JT_DOCS.slice(0, 7000));
+}
+
+// Loose on purpose: a false match just costs one extra reader call before falling
+// through to the general pipeline, never a wrong answer (readGrounded returns null
+// on anything the pack does not actually say).
+const JT_TOPIC_WORDS = ["joshua tree", "this kernel", "the kernel", "this os", "the os", " kernel", "qemu", "v86",
+  "the dock", "lock screen", "login screen", "wi-fi", "wifi", "bluetooth", "apps folder", "i386",
+  "files app", "notes app", "mail app", "weather app", "calendar app", "reminders app", "terminal app",
+  "stocks app", "contacts app", "calculator app", "search app", "activity app", "epiphany app",
+  "open notes", "open files", "open weather", "open calendar", "open reminders", "open terminal",
+  "open mail", "open stocks", "open contacts", "open calculator", "open the dock",
+  "curbfind", "keyrate", "bookrank", "toroid", "sparkjar", "homeqi", "fieldbook", "lexly", "quotestreak"];
+const isJtTopic = q => JT_TOPIC_WORDS.some(w => q.toLowerCase().includes(w));
+
+// Greetings, thanks and "what can you do": a fixed, honest reply, no model and no
+// lookup, the same shape ask_local.py's small_talk keeps for the Mac. /api/chat is a
+// real chat window (Joshua Tree's Chat app), not a pure Q&A box like /api/ask, so it
+// needs this even though the demo page's own chat never did.
+const SMALLTALK = [
+  [/^(?:hi|hello|hey|yo|hiya|good (?:morning|evening|afternoon))(?: there| samantha)?[!.?]*$/i, "Hi. Ask me anything about Joshua Tree, or anything else."],
+  [/^(?:how are you|how's it going|how are things)(?: doing| today)?[!.?]*$/i, "Running fine, and ready. What do you need?"],
+  [/^(?:thanks|thank you|thx|cheers|ty)(?: so much| samantha)?[!.?]*$/i, "Any time."],
+  [/^(?:tell me a joke|got a joke\??|say something funny|make me laugh)[!.?]*$/i, "Why do programmers prefer dark mode? Because light attracts bugs."],
+  [/^(?:who are you|what are you|what can you do|what do you do|help)[!.?]*$/i, "I'm Samantha, a small model. I answer questions here in Joshua Tree's Chat, and elsewhere I have hands on a Mac."],
+];
+const smallTalk = q => (SMALLTALK.find(([re]) => re.test(q.trim())) || [])[1] || null;
+
+// "this"/"here" in a chat window running inside the kernel means Joshua Tree, never
+// some unrelated Wikipedia topic that happens to share a word with the question. Kept
+// narrow on purpose, unlike the loose JT_TOPIC_WORDS prefilter above: this one decides
+// whether the general web pipeline runs at all, and "joshua tree" is also a real
+// national park and a real U2 album, so a false miss here would answer confidently
+// wrong instead of just honestly declining.
+const NEVER_LEAVE_JT = /\bjoshua\s*tree\b|\b(?:this|here)\b/i;
+
+// The reply text for one /api/chat turn: small talk, then the Joshua Tree pack (tried
+// again with "this"/"here" spelled out, since the reader model does not always resolve
+// them against a wall of text), then the same knowledge pipeline /api/ask uses. Earlier
+// turns are context only, exactly like the kernel's own chat_build_request sends full
+// history but this only ever answers the newest user message. A question that names
+// Joshua Tree, or points at "this"/"here", never falls through to the general web
+// pipeline: declining is honest, a stray Wikipedia hit on the wrong "1.0.1" is not.
+async function chatAnswer(env, question) {
+  const small = smallTalk(question);
+  if (small) return small;
+  const spelled = question.replace(/\bthis\b/gi, "Joshua Tree").replace(/\bhere\b/gi, "in Joshua Tree");
+  const jt = (await readJtDocs(env, question)) || (spelled !== question && await readJtDocs(env, spelled));
+  if (jt) return jt;
+  if (NEVER_LEAVE_JT.test(question)) return DECLINE;
+  return (await ask(env, question)).answer;
+}
+
+// A decimal point ("1.0.1", "$3.50") doesn't end a sentence: the lookahead only treats
+// a period as real punctuation when it is NOT immediately followed by a digit. Found
+// chasing "what version is this": the old regex, which broke on any period at all, threw
+// away everything before a version number and answered just its last digit ("1.").
+const firstSentences = (text, n) => (text.match(/[^.!?]*(?:\.(?=\d)[^.!?]*)*[.!?]+(?:\s|$)/g) || [text]).slice(0, n).join("").trim();
 
 // ---- the picker: when no rule matches a command, a model names the tool. It never writes code, markup or prose. ----
 const PICKER = "@cf/meta/llama-3.2-3b-instruct";
@@ -113,6 +184,10 @@ const QUESTIONISH = /\?\s*$|^(?:who|what|why|when|where|which|how|is|are|was|wer
 async function ask(env, query) {
   // the lookup is for questions. "ignore all that and write me an essay" is not one, so no model ever sees it.
   if (!S.keywords(query).length || !QUESTIONISH.test(S.bare(query))) return { answer: DECLINE };
+  if (isJtTopic(query)) {
+    const jt = await readJtDocs(env, query);
+    if (jt) return { answer: jt, source: "Joshua Tree docs" };
+  }
   const normalized = normalize(query);
   const d = await getJSON(`https://api.duckduckgo.com/?q=${encodeURIComponent(normalized)}&format=json&no_html=1&skip_disambig=1`);
   if (d?.Answer && typeof d.Answer === "string") return { answer: d.Answer.trim(), source: "DuckDuckGo" };
@@ -164,25 +239,49 @@ async function cached(ctx, kind, q, make) {
   return res;
 }
 
+// Ollama's /api/chat reply shape: {"model":..., "message":{"role":"assistant","content":...}, "done":true}.
+// The Joshua Tree kernel's json_extract_string only ever scans for a bare `"content":"..."`
+// field anywhere in the body (kernel/chat.h's chat_send), so key order past that doesn't
+// matter to it, but this still matches Ollama's real shape byte for byte for any other client.
+const ollamaReply = text => ({ model: "samantha", message: { role: "assistant", content: text }, done: true });
+
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
-    if (!["/api/ask", "/api/pick", "/api/draw"].includes(url.pathname)) return env.ASSETS.fetch(request);
+    const isChat = url.pathname === "/api/chat";
+    if (!["/api/ask", "/api/pick", "/api/draw", "/api/chat"].includes(url.pathname)) return env.ASSETS.fetch(request);
     if (request.method !== "POST") return new Response("POST only", { status: 405 });
-    // JSON only, from this site only. A form on someone else's page cannot send application/json without a preflight, and there is no CORS here to pass one.
+    // JSON only. A form on someone else's page cannot send application/json without a preflight, and there is no CORS here to pass one.
     if (!(request.headers.get("content-type") || "").startsWith("application/json")) return new Response("JSON only", { status: 415 });
     const origin = request.headers.get("origin");
     let from = "";
     try { from = origin ? new URL(origin).hostname : ""; } catch { from = "invalid"; }
-    if (from && !["turing.heyitsmejosh.com", "localhost", "127.0.0.1"].includes(from)) return new Response("Not from here", { status: 403 });
+    // From this site, from the Joshua Tree demo (its v86 network relay proxies server-to-server,
+    // so it never actually sends an Origin header either, same as the kernel's own raw HTTP client
+    // hitting this straight over the internet with no browser at all), or from no Origin at all.
+    if (from && !["turing.heyitsmejosh.com", "joshuatree.heyitsmejosh.com", "localhost", "127.0.0.1"].includes(from))
+      return new Response("Not from here", { status: 403 });
     const ip = request.headers.get("cf-connecting-ip") || "anon";
-    if (env.LIMIT && !(await env.LIMIT.limit({ key: ip })).success)
-      return Response.json({ answer: "That's a lot of questions in one minute. Give me a moment." }, { status: 429 });
+    if (env.LIMIT && !(await env.LIMIT.limit({ key: ip })).success) {
+      const busy = "That's a lot of questions in one minute. Give me a moment.";
+      return Response.json(isChat ? ollamaReply(busy) : { answer: busy }, { status: 429 });
+    }
     // pictures cost real compute, so they get a much smaller allowance than questions
     if (url.pathname === "/api/draw" && env.DRAW_LIMIT && !(await env.DRAW_LIMIT.limit({ key: ip })).success)
       return Response.json({ answer: "That's a lot of drawing for one minute. Give me a moment." }, { status: 429 });
     let body = {};
     try { body = await request.json(); } catch {}
+
+    if (isChat) {
+      // Ollama's request shape: {"model":..., "messages":[{"role":"user"|"assistant","content":...}, ...], "stream":false}.
+      // Earlier turns are context only; only the newest user message is ever answered.
+      const messages = Array.isArray(body.messages) ? body.messages : [];
+      const last = messages.slice().reverse().find(m => m && m.role === "user" && typeof m.content === "string");
+      const q = String(last?.content || "").replace(/[\u0000-\u001f]/g, " ").trim().slice(0, 200);
+      if (!q) return Response.json(ollamaReply(DECLINE), { status: 400 });
+      return cached(ctx, "chat", q, async () => ollamaReply(await chatAnswer(env, q)));
+    }
+
     const q = String(body.q || "").replace(/[\u0000-\u001f]/g, " ").trim().slice(0, 200);
     if (!q) return Response.json({ answer: DECLINE }, { status: 400 });
     if (url.pathname === "/api/draw") return draw(env, ctx, q.slice(0, 120));

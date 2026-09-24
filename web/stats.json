@@ -1,5 +1,5 @@
 {
-  "version": "4.0.1",
+  "version": "4.1.0",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -87,6 +87,10 @@
         "total": 10,
         "documented": 10
       },
+      "gen_jt_docs.py": {
+        "total": 13,
+        "documented": 13
+      },
       "tools_llm.py": {
         "total": 6,
         "documented": 6
@@ -148,6 +152,10 @@
         "documented": 1
       },
       "eval/hands.py": {
+        "total": 4,
+        "documented": 4
+      },
+      "eval/jt_chat.py": {
         "total": 4,
         "documented": 4
       },
