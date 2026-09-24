@@ -34,6 +34,15 @@ Samantha could answer. She could not do anything. "Open chrome and go to hacker 
 - One real bug caught before commit: the action detector matched "summarize", which hijacked the eval prompt "Summarize what Turing is in one sentence" into the agent. Narrowed the verb list, added it to `tools.py`'s self-check.
 - Not yet done: `read_page` is a tag-strip over a plain fetch, so JS-rendered pages come back empty. Clicking and typing in Chrome needs a real bridge. And the goal that matters: a small model that calls these tools itself, so the borrowed 8B head can go.
 
+### Majors, each one a leap with one check (set 2026-09-23)
+A major ships when a whole family is done and one check proves it. In order:
+
+- **5.0, her own head.** Every tool picked by her own 0.5B, none through the exact router: two-step picking (family, then tool, so no choice is bigger than twelve), constrained decoding (she can only emit a real tool name and words copied from the sentence), and abstaining instead of guessing. Check: `eval/hands.py` at 105 of 105 tools by wording, zero right picks blocked, wrong picks past the guard under ten, on a matched test set.
+- **6.0, everywhere.** A stranger installs her: the signed, notarized app that fetches its models on first run; Windows and Linux get a browser window from `serve.py` on the llama.cpp backend, so no second GUI; MCP both ways, so Claude, Cursor and Shortcuts can borrow her hands and she can be handed a server, asked first. Check: a fresh Mac user account and a Linux container each go from download to a first answered command with no terminal.
+- **7.0, she remembers and she comes to you.** "Remember I take the 8:10 bus" lands in a plain file she reads back into every answer; a morning brief (what needs me, am I free, weather, the one thing due) she pushes as a notification before you ask; Shortcuts automations she writes herself for the repeats Reminders will not take. Check: a week of briefs with no wrong fact, memory recalled in `eval/basic_questions.py`.
+- **8.0, she learns from the big ones.** Phase 6 distillation: frontier models as teachers write varied phrasings and hard cases, she trains on them, the picker and the answer chain both rise. Check: the same hands and knowledge evals, both up, nothing confidently wrong.
+- **9.0 and 10.0** are decided when 8.0 ships, from the gaps the loop finds then. Candidates: inside Joshua Tree with no libc (joshuatree issue #156), her own voice model, a phone as a thin client to your Mac.
+
 ### Biggest gaps vs the market (set 2026-09-23)
 Measured against Siri and Apple Intelligence, and the ChatGPT and Claude desktop apps. Ranked; the loop works top down.
 
