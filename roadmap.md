@@ -25,9 +25,6 @@ Full phase-by-phase history lives in `docs/HISTORY.md` and the picker's model co
 ### What needs Joshua's keyboard
 
 - [ ] Try voice and on-screen control on the Mac: `python3 chat.py --voice` needs the microphone once, and "click ..." needs Screen Recording and Accessibility permission for the terminal.
-- [x] Branch protection on main so a red merge is impossible: `gh api -X PUT repos/nulljosh/turing/branches/main/protection -H "Accept: application/vnd.github+json" -f required_status_checks[strict]=false -f required_status_checks[contexts][]=docs -f required_status_checks[contexts][]=test_chat -F enforce_admins=false -F required_pull_request_reviews=null -F restrictions=null`
-- [x] Developer ID Application certificate from developer.apple.com into the login keychain, so gui/package.sh signs for strangers (today it uses the Apple Development identity).
-- [x] Notary profile once: `xcrun notarytool store-credentials samantha-notary --apple-id <email> --team-id <team> --password <app-specific password>`, then `./gui/package.sh` notarizes on its own.
 
 ### How we compete with trillion-dollar labs
 
