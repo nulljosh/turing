@@ -209,11 +209,15 @@
   // so an argument that is not in the sentence is a guess, and a guess does not get to touch anything.
   var FIXED = { music: ["play", "pause", "next", "previous", "playing"], theme: ["dark", "light"], text_size: ["bigger", "smaller"] };
   var NO_ARG = ["current_tab", "screenshot", "clipboard", "battery", "calendar_today", "reset_page", "barrel_roll"];
+  var NO_ARG_CUE = { current_tab: /\btab\b|page|site|browser|chrome|safari|article|reading|looking at/, screenshot: /screen ?shot|screen ?grab|capture|snap/,
+                     clipboard: /clipboard|copied|paste/, battery: /battery|charg|power|plugged/, calendar_today: /calendar|schedule|agenda|meeting|today|busy/,
+                     reset_page: /reset|restore|undo|put .*back/, barrel_roll: /barrel|roll|spin|flip/ };
   var SPAN = ["open_app", "open_url", "web_search", "say", "make_logo", "new_note", "new_reminder", "set_heading", "set_tagline", "weather", "list_dir", "read_file"];
   function sound(tool, arg, query, names) {
     var q = query.toLowerCase(), a = String(arg || "").toLowerCase().trim();
     if (FIXED[tool]) return FIXED[tool].indexOf(a) >= 0;
-    if (NO_ARG.indexOf(tool) >= 0) return true;
+    // a tool with no argument has nothing to copy, so the sentence has to name it. "it isnt working lol" is not battery.
+    if (NO_ARG.indexOf(tool) >= 0) return !!NO_ARG_CUE[tool] && NO_ARG_CUE[tool].test(q);
     if (tool === "set_volume") return a === "up" || a === "down" || (/^\d{1,3}$/.test(a) && q.indexOf(a) >= 0);
     if (tool === "timer") return duration(a) !== null && q.indexOf(a) >= 0;
     if (tool === "set_color") return !!COLORS[a] && q.indexOf(a) >= 0;

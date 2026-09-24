@@ -280,7 +280,7 @@
       return 'Volume at ' + desk.volume + '.';
     },
     battery: function () {
-      if (!navigator.getBattery) return "Now drawing from 'AC Power'.";
+      if (!navigator.getBattery) return 'The stand-in Mac is plugged in. Your own battery is hidden by this browser.';
       return navigator.getBattery().then(function (b) {
         return 'Your battery: ' + Math.round(b.level * 100) + '%, ' + (b.charging ? 'charging' : 'on battery') + '. Read from your own device, not the stand-in.';
       });
