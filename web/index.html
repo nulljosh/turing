@@ -53,8 +53,8 @@
       .meta{display:flex;flex-wrap:wrap;gap:24px;font-size:13px;color:var(--muted);margin-top:12px}
       .meta b{color:var(--fg);font-weight:600}
       p{font-size:15px}
-      .mark-foot{margin-top:40px;margin-bottom:40px;text-align:center}
-      .mark-foot .ink{display:inline-block;width:220px;height:220px;background:var(--fg);-webkit-mask:url(mark.svg) center/contain no-repeat;mask:url(mark.svg) center/contain no-repeat}
+      .mark-foot{margin:40px auto;text-align:center}
+      .mark-foot img{display:block;width:min(80vw,520px);margin:0 auto}
       footer{margin-top:56px;font-size:13px;color:var(--muted)}
       p,li{max-width:66ch}
       b,strong{font-weight:650}
@@ -355,7 +355,7 @@ python3 -m venv .venv && ./.venv/bin/pip install mlx-lm
 
       </main>
       <footer>
-      <div class="mark-foot"><span class="ink" role="img" aria-label="Samantha's mark, drawn by her"></span></div>
+      <div class="mark-foot"><img src="badge.svg" alt="Samantha's mark, drawn by her" width="800" height="1000" loading="lazy"></div>
         <a href="privacy.html">Privacy</a> &middot; <a href="https://github.com/nulljosh/turing">Source</a> &middot; <a href="https://heyitsmejosh.com/docs.html#turing">Docs</a> · README has the full write-up.
       </footer>
     </div>
