@@ -6,7 +6,7 @@ Full phase-by-phase history lives in `docs/HISTORY.md` and the picker's model co
 
 ### Next few minors
 
-- **4.5, edit the last draft.** In flight. "Make it shorter", "friendlier", "add a line about Friday" rewrites the file `write_document` just saved, shows the diff, and asks before saving.
+- **4.5, edit the last draft. Shipped 2026-09-24.** "Make it shorter", "friendlier", "add a line about Friday" rewrites the file `write_document` just saved, shows the diff, and asks before saving.
 - **4.6, edit any file, write code to disk.** Given an instruction, she edits an existing file or writes new code, always showing a diff and asking first.
 - Docs in her own voice: have the local 9B redo the README intro, ABILITIES.md and WHITEPAPER.md in first person, then check facts and house rules by hand.
 - Draw on the Mac, not just the page: local image generation (Flux or SD through MLX) is a 6 GB model on a 16 GB Mac, so it only runs with everything else closed.
