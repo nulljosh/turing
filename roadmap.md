@@ -37,6 +37,16 @@ Samantha could answer. She could not do anything. "Open chrome and go to hacker 
 - One real bug caught before commit: the action detector matched "summarize", which hijacked the eval prompt "Summarize what Turing is in one sentence" into the agent. Narrowed the verb list, added it to `tools.py`'s self-check.
 - Not yet done: `read_page` is a tag-strip over a plain fetch, so JS-rendered pages come back empty. Clicking and typing in Chrome needs a real bridge. And the goal that matters: a small model that calls these tools itself, so the borrowed 8B head can go.
 
+### Biggest gaps vs the market (set 2026-09-23)
+Measured against Siri and Apple Intelligence, and the ChatGPT and Claude desktop apps. Ranked; the loop works top down.
+
+1. **Picker coverage.** Her own picker knows 51 of 101 tools by wording; the rest need exact phrasing. Close it with two-step picking (family, then tool) and constrained output, scored by `eval/hands.py`, with no regression on the first 51.
+2. **Cross-source answers.** "What needs my attention" and "am I free Thursday" (both under Gaps found by the loop). Apple Intelligence and Gemini do this out of the box.
+3. **Voice.** Barge-in and a wake word.
+4. **Eyes and hands.** Vision misnames things, no camera, GUI control is one step at a time.
+5. **Research and code.** Pages beyond Wikipedia; a sandboxed Python for CSV stats and charts.
+6. **Install.** A signed, notarized SamanthaGUI.app a stranger can download and open, with the models fetched on first run. Today it is a venv plus a build script.
+
 ### Road to 1.0.0 (set 2026-09-20)
 
 1.0.0 means you can sit down, talk to her, and she answers and acts without a rewrite. Each box ships as its own tagged release. No box gets ticked without a check that fails when it breaks.
