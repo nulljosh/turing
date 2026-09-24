@@ -44,7 +44,7 @@ def _sh(argv, timeout=5):
 from util_math import *  # noqa: F401,F403
 from util_math import _num, _eval, _OPS, _FUNCS, _CONSTS, _LENGTH, _MASS, _VOLUME, _TIME, _UNIT_ALIASES, _TEMPS, _MORSE  # noqa: F401
 from util_dates import *  # noqa: F401,F403
-from tools_research import research, save_research  # noqa: E402  (deep research, in its own file)
+from tools_research import research, research_more, save_research  # noqa: E402  (deep research, in its own file)
 from tools_write import write_document  # noqa: E402  (drafts and saves a file, in its own file)
 from tools_code import run_code  # noqa: E402  (a sandboxed Python for CSV stats and charts, in its own file)
 from tools_see import see_screen, see_image, see_camera  # noqa: E402  (her eyes, in their own file)
@@ -551,7 +551,7 @@ def call_mcp_tool(request):
 TOOLS = (ask_llm, calculate, convert_units, time_in, convert_time, current_date, days_until, date_math, flip_coin, roll_dice, random_number, make_password,
          make_uuid, hash_text, base64_encode, base64_decode, word_count, reverse_text, shout, morse_code, json_pretty,
          is_prime, roman_numeral, tip, disk_space, uptime, memory_usage, cpu_load, ip_address, wifi_name, system_info,
-         copy_to_clipboard, sleep_display, reveal_in_finder, list_shortcuts, run_shortcut, list_mcp_tools, call_mcp_tool, list_tabs, switch_tab, close_tab, read_tab, remember, recall, forget, read_screen, read_document, find_in_document, ask_document, ask_screen, click_text, type_text, press_key, see_screen, see_image, see_camera, research, save_research, write_document, transcribe_video, run_code)
+         copy_to_clipboard, sleep_display, reveal_in_finder, list_shortcuts, run_shortcut, list_mcp_tools, call_mcp_tool, list_tabs, switch_tab, close_tab, read_tab, remember, recall, forget, read_screen, read_document, find_in_document, ask_document, ask_screen, click_text, type_text, press_key, see_screen, see_image, see_camera, research, research_more, save_research, write_document, transcribe_video, run_code)
 
 _I = re.I
 # (pattern, tool name, what to hand it). Names, not functions: tools.py looks each one up at call time.
@@ -561,6 +561,7 @@ ROUTES = (
      "ask_llm", lambda m: (m.group(1) or m.group(3)) + "\t" + (m.group(2) or m.group(4))),
     # deep research: reads several sources, writes a cited brief
     (re.compile(r"^(?:research|do (?:some )?research (?:on|into)|deep dive (?:into|on)|write (?:me )?a (?:research )?brief (?:on|about)) (.+)$", _I), "research", lambda m: m.group(1)),
+    (re.compile(r"^(?:tell me more(?: about (.+))?|go deeper(?: on (.+))?|say more(?: about (.+))?)$", _I), "research_more", lambda m: m.group(1) or m.group(2) or m.group(3) or ""),
     (re.compile(r"^save (?:that|it|the brief|this brief)(?: to (.+))?$", _I), "save_research", lambda m: m.group(1) or ""),
     # "note" stays with new_note (a literal one-line Notes.app entry); doc/email/file are drafted, longer content
     (re.compile(r"^(?:draft|write)(?: me)? (?:a |an )?(?:doc(?:ument)?|email|file)(?: about| for| on)? (.+)$", _I), "write_document", lambda m: m.group(1)),
@@ -675,7 +676,7 @@ def demo():
     assert copy_to_clipboard("x") == "Copied." and sleep_display() == "Screen off." and reveal_in_finder("~").startswith("Showing")
     assert reveal_in_finder("~/.ssh").startswith("No file") and reveal_in_finder("/etc/passwd").startswith("No file")
     assert run_shortcut("zzz-not-real").startswith("I do not see") and (list_shortcuts().startswith("No Shortcuts") or "Shortcuts:" in list_shortcuts())
-    assert len(TOOLS) == 61 and all(f.__doc__ for f in TOOLS)
+    assert len(TOOLS) == 62 and all(f.__doc__ for f in TOOLS)
     call = lambda name, a: globals()[name](a) if globals()[name].__code__.co_argcount else globals()[name]()
     hit = lambda q: next((call(name, arg(m)) for pat, name, arg in ROUTES if (m := pat.match(q))), None)
     assert hit("calculate 17 * 23") == "391" and hit("convert 5 km to miles") == "5 km is 3.1069 mi."

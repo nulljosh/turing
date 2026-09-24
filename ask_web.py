@@ -197,6 +197,25 @@ def current_officeholder(query):
 
 
 
+def fetch_text(url, limit=3000):
+    """Fetch any http(s) page and strip it down to readable text, or None if it could not be read (network
+    error, blocked, or a JS-only page that renders nothing server-side). Shared by tools.read_page and
+    tools_research.sources, so both read a page the same honest way: tags stripped, nothing beyond what
+    was actually served."""
+    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (Macintosh) Samantha"})
+    try:
+        with urllib.request.urlopen(req, timeout=10) as r:
+            raw = r.read(400_000).decode("utf-8", "ignore")
+    except Exception:
+        return None
+    raw = re.sub(r"(?is)<(script|style|noscript|svg)\b.*?</\1>", " ", raw)
+    text = html.unescape(re.sub(r"<[^>]+>", " ", raw))
+    # tag-strip, not a readability parser. JS-rendered pages come back near-empty; that is the honest signal
+    # that this page cannot be read this way, not a bug to paper over.
+    text = re.sub(r"\s+", " ", text).strip()
+    return text[:limit] if len(text) > 200 else None
+
+
 READER_MODEL = "qwen3:1.7b"
 READER_URL = "http://localhost:11434/api/chat"
 
