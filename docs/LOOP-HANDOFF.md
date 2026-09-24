@@ -1,4 +1,4 @@
-# Turing loop handoff (2026-09-23, late night)
+# Turing loop handoff (2026-09-23, evening)
 
 ## What the loop is
 
@@ -6,25 +6,16 @@ One ability per minor release, a major when a whole roadmap family completes, un
 
 ## Where things stand
 
-v4.1.0 on main, 103 tools, docs 100%, laws all hold, CI green. Tonight: roadmap.md got a ranked "Biggest gaps vs the market" section at the top (PR #36) and the loop works it top down. Item 1 shipped: picker round six (PR #55), 77 of 103 tools by wording, 966 vs 841 on a matched 1319-case test, wrong picks past the guard 49 down from 123; the round six adapter is installed on this Mac, the old one is at hands-adapter-round4-backup. Item 2 shipped: needs_attention and free_when (PR #54). The landing demo guard was fixed (PR #37, a no-argument pick now needs a cue word) and the worker was redeployed, so /api/chat for Joshua Tree is live at turing.heyitsmejosh.com. Item 5's code half, run_code (sandboxed Python for CSV stats and charts), is in flight on branch claude/run-code.
-
-## Found tonight, worth knowing
-
-- The round five regression was a training bug, not a model limit: ask_document templates taught a paraphrased argument that _sound() then refused. Templates must copy literal substrings.
-- hands-data/test.jsonl on disk was not the set the shipped adapter was scored on; always rescore the old adapter on the same file before comparing rounds.
-- The seven right picks round six still blocks are one phrasing, "how many miles is 5 km", where she writes "5 km to miles". Next template fix.
-- gen_hands_data.py's null-ratio assert (0.15) fails on main at 0.1495; loosen locally to regenerate, not shipped.
-- Subagents in worktrees cannot write into the main checkout (sandbox); adapter swaps are a main-session job.
-- CodeRabbit is not a required check; merge on docs and test_chat green.
+v4.2.0 on main, 105 tools, docs 100%, laws all hold, CI green. Six items landed since last handoff: picker round six (PR #55, 77 of 105 tools matched on unseen); run_code sandboxed Python (PR #57); see_camera for vision (PR #59); GGUF plus llama.cpp backend for Windows/Linux via Modelfile (PR #60); Pixelmator race condition fixed (PR #61); landing refreshed (PR #62); voice barge-in and wake word (PR #63); Samantha drew her own mark, an engraved 1970s portrait (PR #64). All merged main, tagged, released, deployed live. README trimmed to essentials. Picker template bug found: "how many miles is 5 km" stays unfixed, she still writes "5 km to miles".
 
 ## Next, in order
 
-1. run_code lands (branch claude/run-code), then release.
-2. Item 3, voice: barge-in while she speaks, then a wake word. Needs the microphone once on this Mac.
-3. Item 4, eyes and hands: camera frame through ffmpeg avfoundation into see_image; click_text on icons with no text; multi-step GUI flows with a yes per step.
-4. Item 5's research half: pages beyond Wikipedia, follow-up questions on a brief.
-5. Item 6, install: a signed, notarized SamanthaGUI.app that fetches models on first run.
-6. Picker: teach "how many X is N Y" as a literal copy, retrain as round seven, same matched scoring.
+1. Item 6 research half: pages beyond Wikipedia, follow-up questions, cite the sources.
+2. Item 7 install: a signed, notarized SamanthaGUI.app that fetches models on first run, not on demand in the middle of a chat.
+3. Picker round seven: teach "how many X is N Y" as a literal copy via template fix, retrain, same matched scoring as round six.
+4. Research loop: turn follow-ups into a fresh search, return only new facts (not repeats from the first brief).
+5. Multi-step GUI flows: detect when Samantha plans a flow, ask yes/no per step before acting.
+6. Beyond Wikipedia: arxiv, GitHub, Hacker News, search APIs where they exist.
 
 ## Restart prompt
 

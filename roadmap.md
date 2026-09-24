@@ -24,9 +24,6 @@ Once retrieval works, point it at concrete, boring, checkable tasks:
 - **Local autocomplete**, a tiny always-available model that doesn't hit the network, for quick text expansion
 - **A judge/filter model**, small models are cheap enough to run on every commit or PR as a first-pass linter before anything hits a bigger model
 
-### Phase 8: Large-scale training data (2026-09-14 evening)
-### Phase 7: Answer a basic question (started 2026-09-14)
-### Phase 8: Train the voice, not the facts (started 2026-09-14)
 ### Phase 9: Hands (started 2026-09-20)
 
 Samantha could answer. She could not do anything. "Open chrome and go to hacker news" got "that's outside what I know about this project." Now it opens Hacker News.
@@ -60,8 +57,6 @@ Gaps, in order:
 ### Joshua's Mac to-do (only these need the keyboard)
 The loop runs in the cloud and cannot reach Cloudflare or this Mac. Tick a box when done, the loop picks it up.
 
-- [x] Deploy the site (done 2026-09-22, by hand; CI still skips until CLOUDFLARE_API_TOKEN is a repo secret): `npx wrangler deploy` in the repo (or add the `CLOUDFLARE_API_TOKEN` repo secret once and it deploys itself on every push)
-- [x] ask_llm (was ask_claude): ask any LLM on this Mac by name, or the biggest (oMLX Qwen3.5-9B, then Ollama qwen3:8b), no key needed (2026-09-22)
 - [ ] Try voice and on-screen control on the Mac: `python3 chat.py --voice` needs the microphone once, "click ..." needs cliclick (installed) plus Screen Recording and Accessibility for the terminal (macOS asks)
 
 ### How we compete with trillion-dollar labs (set 2026-09-22)
@@ -85,13 +80,10 @@ Ship in that order. Skipping straight to phone apps without 1 and 2 first would 
 The loop compares her with other assistants (Siri and Shortcuts, Apple Intelligence, Claude and ChatGPT desktop with MCP, Open Interpreter, Raycast AI, local Ollama agents), adds each real gap here with where it was seen, builds it, then deletes the line once it ships (history lives in git). Newest and biggest first.
 
 - [ ] Docs in her voice: the README intro is hand-written to SOUL.md; have the 9B (warm, briefed with SOUL.md) redo the intro, ABILITIES.md and WHITEPAPER.md in first person, then check facts and house rules by hand. Direct request, 2026-09-23
-- [x] Camera eyes: "what am I holding", "read this label" through the Mac's camera (one frame via ffmpeg avfoundation, then the same vision model see_image uses), asking first. Seen in Gemini Live, ChatGPT voice with video. Shipped 2026-09-23 (see_camera)
 - [ ] Edit the last draft: "make it shorter", "friendlier", "add a line about Friday" rewrites the file write_document just saved, showing the diff and asking first. Seen in ChatGPT canvas, Claude artifacts
 - [ ] Draw on the Mac, not just the page: local image generation (Flux or SD through MLX) is a 6 GB model on a 16 GB Mac, so it only runs with everything else closed; a real ability, honestly scoped. Seen in ChatGPT images, Gemini
-- [x] Voice, the rest: you can cut in while she speaks, and a wake word. Voice in shipped v1.8.0 (python3 chat.py --voice, Whisper on MLX). Seen in ChatGPT and Gemini voice modes. Shipped 2026-09-23: barge-in (`should_barge_in`) and `--wake samantha` (`wake_match`), both in `voice.py`
 - [ ] See better: the 3B vision model gets the gist but misnames details (called the Dock a taskbar); try a 7B when memory allows, and let click_text use her eyes for icons with no text. Seeing shipped v2.1.0 (see_screen, see_image)
 - [ ] Research, the rest: pages beyond Wikipedia (news, docs), follow-up questions on a brief, and saving a brief to a file. Research shipped v3.0.0
-- [x] Run code for answers: stats on a CSV, a chart, a unit-heavy calculation, in a sandboxed Python that asks first. Shipped 2026-09-23, `run_code` in `tools_code.py` (item 5's code half above). Seen in ChatGPT data analysis, Claude analysis tool
 - [ ] Repeating reminders: one-off timed ones shipped ("remind me tomorrow at 9am", "in 20 minutes", "on friday at 5pm" set a real due date); "every morning" is declined because Reminders takes repeats only from its own window, so the honest path is a Shortcuts automation she sets up, asking first. Seen in ChatGPT tasks, Gemini scheduled actions
 - [ ] GUI control, the rest: multi-step flows ("log in to X") planned by the agent with a yes per step, clicking icons that have no text, and a picture of where she will click. Click, type and press shipped in v2.0.0. Seen in Claude computer use, Open Interpreter
 
