@@ -542,7 +542,7 @@ def _sound(tool, arg, query):
 
 # Tools that leave something behind or send something out: a note, a reminder, a file on the
 # Desktop, a Shortcut, the clipboard, a dark screen. The harness asks before any of these run.
-WRITES = {"ask_llm", "see_screen", "see_image", "click_text", "type_text", "press_key", "ask_screen", "read_screen", "remember", "forget", "close_tab", "call_mcp_tool", "new_note", "new_reminder", "make_logo", "paint_image", "run_shortcut", "copy_to_clipboard", "sleep_display", "save_research", "write_document",
+WRITES = {"ask_llm", "see_screen", "see_image", "click_text", "type_text", "press_key", "ask_screen", "read_screen", "remember", "forget", "close_tab", "call_mcp_tool", "new_note", "new_reminder", "make_logo", "paint_image", "run_shortcut", "copy_to_clipboard", "sleep_display", "save_research", "write_document", "run_code",
           "remove_background", "upscale_image", "enhance_image", "grayscale_image", "rotate_image", "flip_image",
           "resize_image", "crop_square", "convert_image", "move_file", "copy_file", "rename_file", "zip_file", "unzip_file", "trash_file"}
 

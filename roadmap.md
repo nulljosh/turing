@@ -40,11 +40,11 @@ Samantha could answer. She could not do anything. "Open chrome and go to hacker 
 ### Biggest gaps vs the market (set 2026-09-23)
 Measured against Siri and Apple Intelligence, and the ChatGPT and Claude desktop apps. Ranked; the loop works top down.
 
-1. **Picker coverage.** Her own picker knows 77 of 103 tools by wording (round six, docs/BAKEOFF.md); the rest need exact phrasing. Close the remaining 26 with training templates for the tools that still have none, then two-step picking (family, then tool) and constrained output if aggregate accuracy still lags, scored by `eval/hands.py`, with no regression on the 77.
+1. **Picker coverage.** Her own picker knows 77 of 104 tools by wording (round six, docs/BAKEOFF.md); the rest need exact phrasing. Close the remaining 27 with training templates for the tools that still have none, then two-step picking (family, then tool) and constrained output if aggregate accuracy still lags, scored by `eval/hands.py`, with no regression on the 77.
 2. **Cross-source answers, SHIPPED 2026-09-23.** "What needs my attention" (unread mail, today's calendar and due reminders, ranked, the 9B writing three lines) and "am I free Thursday afternoon" / "when am I free this week" (the calendar's open gaps for a day or the week, not just today's list). Both exact-router tools in `tools_apps.py` (`needs_attention`, `free_when`).
 3. **Voice.** Barge-in and a wake word.
 4. **Eyes and hands.** Vision misnames things, no camera, GUI control is one step at a time.
-5. **Research and code.** Pages beyond Wikipedia; a sandboxed Python for CSV stats and charts.
+5. **Research and code, code half SHIPPED 2026-09-23.** Pages beyond Wikipedia still open. The code half: `run_code` ("stats on sales.csv", "average of the price column in sales.csv", "chart sales.csv", "plot column price of sales.csv"). The biggest local model writes a short script from the request and the CSV's own header, and it only runs in a fresh temp folder holding a copy of that one file, no network, a 20 second timeout, a memory cap, output capped at 2000 characters. Asks first, `tools_code.py`.
 6. **Install.** A signed, notarized SamanthaGUI.app a stranger can download and open, with the models fetched on first run. Today it is a venv plus a build script.
 
 ### Road to 1.0.0 (set 2026-09-20)
@@ -90,7 +90,7 @@ The loop compares her with other assistants (Siri and Shortcuts, Apple Intellige
 - [ ] Voice, the rest: you can cut in while she speaks, and a wake word. Voice in shipped v1.8.0 (python3 chat.py --voice, Whisper on MLX). Seen in ChatGPT and Gemini voice modes
 - [ ] See better: the 3B vision model gets the gist but misnames details (called the Dock a taskbar); try a 7B when memory allows, and let click_text use her eyes for icons with no text. Seeing shipped v2.1.0 (see_screen, see_image)
 - [ ] Research, the rest: pages beyond Wikipedia (news, docs), follow-up questions on a brief, and saving a brief to a file. Research shipped v3.0.0
-- [ ] Run code for answers: stats on a CSV, a chart, a unit-heavy calculation, in a sandboxed Python that asks first. Seen in ChatGPT data analysis, Claude analysis tool
+- [x] Run code for answers: stats on a CSV, a chart, a unit-heavy calculation, in a sandboxed Python that asks first. Shipped 2026-09-23, `run_code` in `tools_code.py` (item 5's code half above). Seen in ChatGPT data analysis, Claude analysis tool
 - [ ] Repeating reminders: one-off timed ones shipped ("remind me tomorrow at 9am", "in 20 minutes", "on friday at 5pm" set a real due date); "every morning" is declined because Reminders takes repeats only from its own window, so the honest path is a Shortcuts automation she sets up, asking first. Seen in ChatGPT tasks, Gemini scheduled actions
 - [ ] GUI control, the rest: multi-step flows ("log in to X") planned by the agent with a yes per step, clicking icons that have no text, and a picture of where she will click. Click, type and press shipped in v2.0.0. Seen in Claude computer use, Open Interpreter
 

@@ -68,8 +68,12 @@
         "documented": 5
       },
       "tools_apps.py": {
-        "total": 10,
-        "documented": 10
+        "total": 14,
+        "documented": 14
+      },
+      "tools_code.py": {
+        "total": 7,
+        "documented": 7
       },
       "chat.py": {
         "total": 18,
@@ -235,6 +239,10 @@
         "total": 11,
         "documented": 11
       },
+      "eval/test_needs_me.py": {
+        "total": 16,
+        "documented": 16
+      },
       "eval/test_nimble.py": {
         "total": 4,
         "documented": 4
@@ -246,6 +254,10 @@
       "eval/test_research.py": {
         "total": 15,
         "documented": 15
+      },
+      "eval/test_run_code.py": {
+        "total": 17,
+        "documented": 17
       },
       "eval/test_screen.py": {
         "total": 9,
@@ -312,7 +324,7 @@
   "measured": {
     "tools": {
       "before": 0,
-      "after": 101
+      "after": 104
     },
     "actions_eval": "77/77",
     "knowledge_sweep": {

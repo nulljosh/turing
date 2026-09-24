@@ -24,7 +24,7 @@ A wrong answer given plainly is a bug worth fixing. A wrong answer given with co
 
 ## No shell, ever
 
-Every tool that touches your Mac is a fixed, hardcoded command. Nothing a model writes, hers or a bigger one, is ever handed to a shell to interpret. A prompt cannot become a command it was not already built to be.
+Every tool that touches your Mac is a fixed, hardcoded command. Nothing a model writes, hers or a bigger one, is ever handed to a shell to interpret. A prompt cannot become a command it was not already built to be. One tool, `run_code`, hands a model-written Python script to a real Python interpreter, never a shell, and never against your real files: a fresh temp folder holding only a copy of the one CSV you named, no network, a time limit and a memory cap. The script is data she never trusts; the sandbox is what actually stops it, not a promise in the prompt. Asks first, same as everything else that writes.
 
 ## If something goes wrong
 

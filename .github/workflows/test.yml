@@ -45,6 +45,8 @@ jobs:
       - run: python3 tests/test_see.py
       - run: python3 tests/test_research.py
       - run: python3 tests/test_write.py
+      # a sandboxed Python for CSV stats and charts: ask_llm is mocked, the sandbox itself runs for real
+      - run: python3 tests/test_run_code.py
       - run: python3 tests/test_needs_me.py
       - run: python3 tests/test_tabs.py
       - run: python3 tests/test_memory.py

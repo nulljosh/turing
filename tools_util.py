@@ -46,6 +46,7 @@ from util_math import _num, _eval, _OPS, _FUNCS, _CONSTS, _LENGTH, _MASS, _VOLUM
 from util_dates import *  # noqa: F401,F403
 from tools_research import research, save_research  # noqa: E402  (deep research, in its own file)
 from tools_write import write_document  # noqa: E402  (drafts and saves a file, in its own file)
+from tools_code import run_code  # noqa: E402  (a sandboxed Python for CSV stats and charts, in its own file)
 from tools_see import see_screen, see_image  # noqa: E402  (her eyes, in their own file)
 from tools_gui import click_text, type_text, press_key  # noqa: E402  (her hands on the screen, in their own file)
 from tools_llm import ask_llm, NAMES as _LLM_NAMES  # noqa: E402  (hands a hard question to another LLM on this Mac, in its own file)
@@ -550,7 +551,7 @@ def call_mcp_tool(request):
 TOOLS = (ask_llm, calculate, convert_units, time_in, convert_time, current_date, days_until, date_math, flip_coin, roll_dice, random_number, make_password,
          make_uuid, hash_text, base64_encode, base64_decode, word_count, reverse_text, shout, morse_code, json_pretty,
          is_prime, roman_numeral, tip, disk_space, uptime, memory_usage, cpu_load, ip_address, wifi_name, system_info,
-         copy_to_clipboard, sleep_display, reveal_in_finder, list_shortcuts, run_shortcut, list_mcp_tools, call_mcp_tool, list_tabs, switch_tab, close_tab, read_tab, remember, recall, forget, read_screen, read_document, find_in_document, ask_document, ask_screen, click_text, type_text, press_key, see_screen, see_image, research, save_research, write_document, transcribe_video)
+         copy_to_clipboard, sleep_display, reveal_in_finder, list_shortcuts, run_shortcut, list_mcp_tools, call_mcp_tool, list_tabs, switch_tab, close_tab, read_tab, remember, recall, forget, read_screen, read_document, find_in_document, ask_document, ask_screen, click_text, type_text, press_key, see_screen, see_image, research, save_research, write_document, transcribe_video, run_code)
 
 _I = re.I
 # (pattern, tool name, what to hand it). Names, not functions: tools.py looks each one up at call time.
@@ -563,6 +564,12 @@ ROUTES = (
     (re.compile(r"^save (?:that|it|the brief|this brief)(?: to (.+))?$", _I), "save_research", lambda m: m.group(1) or ""),
     # "note" stays with new_note (a literal one-line Notes.app entry); doc/email/file are drafted, longer content
     (re.compile(r"^(?:draft|write)(?: me)? (?:a |an )?(?:doc(?:ument)?|email|file)(?: about| for| on)? (.+)$", _I), "write_document", lambda m: m.group(1)),
+    # a sandboxed Python for CSV stats and charts: the whole sentence rides through as the request, so the model
+    # sees exactly what was asked plus the CSV's own header, never a guess
+    (re.compile(r"^(?:run |get |show )?stats (?:on|for) (\S*\.csv)$", _I), "run_code", lambda m: m.group(0)),
+    (re.compile(r"^(?:what(?:'s| is)(?: the)? )?average(?: of)? (?:the )?(\w+) column (?:in|of) (\S*\.csv)$", _I), "run_code", lambda m: m.group(0)),
+    (re.compile(r"^chart (\S*\.csv)$", _I), "run_code", lambda m: m.group(0)),
+    (re.compile(r"^plot column (\w+) (?:of|in) (\S*\.csv)$", _I), "run_code", lambda m: m.group(0)),
     # her eyes, by name only: a picture looked at, not read (reading text stays with read_screen)
     (re.compile(r"^(?:look at|describe|see|check out) (?:my |the )?screen(?:,? and (.+))?$|^what do you see(?: on (?:my |the )?screen)?$", _I), "see_screen", lambda m: m.group(1) or ""),
     (re.compile(r"^(?:what(?:'s| is) in|describe|look at) (\S+\.(?:png|jpe?g|heic|gif|webp|tiff?|bmp))(?:,? and (.+))?$", _I), "see_image", lambda m: (m.group(2) or "") + "\t" + m.group(1)),
@@ -663,7 +670,7 @@ def demo():
     assert copy_to_clipboard("x") == "Copied." and sleep_display() == "Screen off." and reveal_in_finder("~").startswith("Showing")
     assert reveal_in_finder("~/.ssh").startswith("No file") and reveal_in_finder("/etc/passwd").startswith("No file")
     assert run_shortcut("zzz-not-real").startswith("I do not see") and (list_shortcuts().startswith("No Shortcuts") or "Shortcuts:" in list_shortcuts())
-    assert len(TOOLS) == 59 and all(f.__doc__ for f in TOOLS)
+    assert len(TOOLS) == 60 and all(f.__doc__ for f in TOOLS)
     call = lambda name, a: globals()[name](a) if globals()[name].__code__.co_argcount else globals()[name]()
     hit = lambda q: next((call(name, arg(m)) for pat, name, arg in ROUTES if (m := pat.match(q))), None)
     assert hit("calculate 17 * 23") == "391" and hit("convert 5 km to miles") == "5 km is 3.1069 mi."
@@ -675,6 +682,8 @@ def demo():
     assert hit("what is my ip") is not None and hit("how much disk space do i have").endswith("GB.")
     assert hit("copy hello world to my clipboard") == "Copied." and hit("what is turing") is None and hit("open chrome") is None
     assert hit("run shortcut zzz-not-real").startswith("I do not see") and hit("run tests") is None and hit("run the build") is None
+    assert hit("stats on nope.csv").startswith("Name a CSV") and hit("chart nope.csv").startswith("Name a CSV")
+    assert hit("average of the price column in nope.csv").startswith("Name a CSV") and hit("plot column price of nope.csv").startswith("Name a CSV")
     assert hit("convert 2026 to roman numerals") == "MMXXVI" and hit("1999 in roman numerals") == "MCMXCIX"
     assert hit("read this tab") is not None and hit("read the github tab") is not None
     assert hit("hash browns are good") is None and hit("reverse psychology") is None and hit("reverse the text abc") == "cba" and hit("hash: hello").startswith("2cf2")
