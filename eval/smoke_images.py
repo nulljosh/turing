@@ -1,8 +1,7 @@
-"""Live smoke run of the ten image tools through a real, hidden Pixelmator Pro, checking what comes out.
+"""Live smoke run of the ten image tools through real ImageMagick, checking what comes out.
 
-Not part of CI (it needs a Mac with Pixelmator Pro and ImageMagick). ./gate.sh --full runs it. The tools write to
-~/Desktop/samantha-*.png, never over the original. This found two broken tools the mocked tests could not: grayscale and
-enhance were sending AppleScript that Pixelmator rejects.
+Not part of CI (it needs a Mac with ImageMagick installed). ./gate.sh --full runs it, headless and in seconds:
+no app to open, no window to poll. The tools write to ~/Desktop/samantha-*.png, never over the original.
 
 Run: python3 eval/smoke_images.py
 """
@@ -38,8 +37,8 @@ def size(name):
 
 def main():
     """Run every tool on a 603x900 photo and check each output. Exit 1 on any failure."""
-    if not (shutil.which("magick") and os.path.exists("/Applications/Pixelmator Pro.app")):
-        print("skipped: needs ImageMagick and Pixelmator Pro")
+    if not shutil.which("magick"):
+        print("skipped: needs ImageMagick")
         return
     os.makedirs(os.path.dirname(SAMPLE), exist_ok=True)
     shutil.copy(os.path.join(REPO, "web", "mona.jpg"), SAMPLE)
