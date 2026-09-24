@@ -260,7 +260,7 @@ def say(text):
     return f"Saying: {text[:80]}"
 
 
-from tools_apps import music, weather, timer, duration, new_note, new_reminder, calendar_today, unread_mail, _MUSIC  # noqa: E402,F401
+from tools_apps import music, weather, timer, duration, new_note, new_reminder, calendar_today, unread_mail, needs_attention, free_when, _MUSIC  # noqa: E402,F401
 
 
 HOME = os.path.realpath(os.path.expanduser("~"))
@@ -300,7 +300,7 @@ from tools_logo import _logo_layers, _complex_layers, _bloom_layers, _LOGO_SCHEM
 
 TOOLS = {f.__name__: f for f in (open_app, open_url, web_search, current_tab, read_page, summarize, translate, screenshot,
                                      clipboard, set_volume, battery, say, list_dir, read_file, make_logo, paint_image,
-                                     music, weather, timer, new_note, new_reminder, calendar_today, unread_mail,
+                                     music, weather, timer, new_note, new_reminder, calendar_today, unread_mail, needs_attention, free_when,
                                      remove_background, upscale_image, enhance_image, grayscale_image, rotate_image, flip_image, resize_image, crop_square, convert_image, image_info,
                                      find_file, recent_downloads, folder_size, move_file, copy_file, rename_file, zip_file, unzip_file, trash_file)}
 TOOLS.update({f.__name__: f for f in tools_util.TOOLS})
@@ -326,6 +326,8 @@ _ROUTES = (
     (re.compile(r"^(?:check (?:my )?|do i have |is there )?(?:any )?(?:new |unread )?(?:mail|email)\??$", re.I), lambda m: unread_mail("")),
     (re.compile(r"^(?:is there |do i have )?anything from (.+?) in my (?:mail|email|inbox)(?: today)?\??$|^(?:mail|email) from (.+?)(?: today)?\??$", re.I),
      lambda m: unread_mail(m.group(1) or m.group(2))),
+    (re.compile(r"^what needs (?:my attention|me)$", re.I), lambda m: needs_attention()),
+    (re.compile(r"^(?:am i free|when am i free|how free am i|do i have (?:any )?time)(?:\s+(.+))?$", re.I), lambda m: free_when(m.group(1) or "")),
     (re.compile(r"^(?:make|design|draw|create|build)(?: me)? (?:a |an )?((?:(?:complex|intricate|detailed|elaborate|ornate|fancy|crazy|insane|original|wordless|abstract|textless) )*)(?:logo|icon)(?: for| of)? (.+)$", re.I), lambda m: make_logo((m.group(1) or "") + m.group(2))),
     (re.compile(r"^(?:paint|repaint)(?: me)? (?:a picture of |a painting of |the (?:image|photo|picture) (?:at )?)?(\S+\.(?:jpe?g|png|heic|webp|tiff?))$", re.I), lambda m: paint_image(m.group(1))),
     (re.compile(r"^(?:(?:show me |tell me )?what(?:'s| is) (?:on|in) (?:my |the )?clipboard|(?:read|show)(?: me)? (?:my |the )?clipboard)\b", re.I), lambda m: clipboard()),
@@ -712,6 +714,8 @@ def demo():
         assert tools_apps._when("water the plants every morning")[2].startswith("I can set a reminder once")
         assert act("remind me tomorrow at 9am to call mom").startswith("I'll remind you: call mom, ")
         assert act("what's on my calendar today") == "Nothing on the calendar today."
+        assert act("what needs my attention") == "Nothing needs your attention: no unread mail, nothing on the calendar today, and no reminders due."
+        assert act("am i free") and "free" in act("am i free this week")  # weekday-independent: no exact day names asserted here
         assert act("what is the weather system") is None and act("play chess with me") is None  # questions, not commands
         if not HEADLESS:  # headless never reaches osascript at all
             note = [a for a in calls if a[-1] == "buy milk"][0]
