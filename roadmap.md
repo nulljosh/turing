@@ -1,6 +1,6 @@
 # Roadmap
 
-Samantha is a small local model (Qwen, fine-tuned) with hands: she can open apps, browse, read your files, answer from your notes, and act on your Mac, entirely offline, no account, nothing sent out. v4.4.0 is about to cut. She has 106 tools. Her own picker (not the exact-match router) gets 958 of 1352 test phrasings right, with 61 wrong picks that slip past the safety guard. She knows 62 of 65 held-out facts with nothing confidently wrong. She runs natively on the Mac, and the picker and chat both run on Windows and Linux too. The installer is signed but not yet notarized, so a stranger's Mac still needs a manual "open anyway."
+Samantha is a small local model (Qwen, fine-tuned) with hands: she can open apps, browse, read your files, answer from your notes, and act on your Mac, entirely offline, no account, nothing sent out. v4.4.0 is about to cut. She has 106 tools. Her own picker (not the exact-match router) gets 958 of 1352 test phrasings right, with 61 wrong picks that slip past the safety guard. She knows 62 of 65 held-out facts with nothing confidently wrong. She runs natively on the Mac, and the picker and chat both run on Windows and Linux too. The installer is signed with Developer ID and notarized, so it opens on a stranger's Mac with no warning.
 
 Full phase-by-phase history lives in `docs/HISTORY.md` and the picker's model comparisons in `docs/BAKEOFF.md`.
 
@@ -25,9 +25,9 @@ Full phase-by-phase history lives in `docs/HISTORY.md` and the picker's model co
 ### What needs Joshua's keyboard
 
 - [ ] Try voice and on-screen control on the Mac: `python3 chat.py --voice` needs the microphone once, and "click ..." needs Screen Recording and Accessibility permission for the terminal.
-- [ ] Branch protection on main so a red merge is impossible: `gh api -X PUT repos/nulljosh/turing/branches/main/protection -H "Accept: application/vnd.github+json" -f required_status_checks[strict]=false -f required_status_checks[contexts][]=docs -f required_status_checks[contexts][]=test_chat -F enforce_admins=false -F required_pull_request_reviews=null -F restrictions=null`
-- [ ] Developer ID Application certificate from developer.apple.com into the login keychain, so gui/package.sh signs for strangers (today it uses the Apple Development identity).
-- [ ] Notary profile once: `xcrun notarytool store-credentials samantha-notary --apple-id <email> --team-id <team> --password <app-specific password>`, then `./gui/package.sh` notarizes on its own.
+- [x] Branch protection on main so a red merge is impossible: `gh api -X PUT repos/nulljosh/turing/branches/main/protection -H "Accept: application/vnd.github+json" -f required_status_checks[strict]=false -f required_status_checks[contexts][]=docs -f required_status_checks[contexts][]=test_chat -F enforce_admins=false -F required_pull_request_reviews=null -F restrictions=null`
+- [x] Developer ID Application certificate from developer.apple.com into the login keychain, so gui/package.sh signs for strangers (today it uses the Apple Development identity).
+- [x] Notary profile once: `xcrun notarytool store-credentials samantha-notary --apple-id <email> --team-id <team> --password <app-specific password>`, then `./gui/package.sh` notarizes on its own.
 
 ### How we compete with trillion-dollar labs
 
