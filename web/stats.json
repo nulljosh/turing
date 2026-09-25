@@ -1,5 +1,5 @@
 {
-  "version": "4.5.0",
+  "version": "4.6.0",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -104,8 +104,8 @@
         "documented": 20
       },
       "tools_write.py": {
-        "total": 2,
-        "documented": 2
+        "total": 8,
+        "documented": 8
       },
       "tools_see.py": {
         "total": 9,
@@ -296,8 +296,8 @@
         "documented": 25
       },
       "eval/test_write.py": {
-        "total": 15,
-        "documented": 15
+        "total": 23,
+        "documented": 23
       },
       "eval/distill.py": {
         "total": 11,
@@ -340,7 +340,7 @@
   "measured": {
     "tools": {
       "before": 0,
-      "after": 107
+      "after": 109
     },
     "actions_eval": "77/77",
     "knowledge_sweep": {

@@ -1,13 +1,13 @@
 # Roadmap
 
-Samantha is a small local model (Qwen, fine-tuned) with hands: she can open apps, browse, read your files, answer from your notes, and act on your Mac, entirely offline, no account, nothing sent out. v4.4.0 is about to cut. She has 106 tools. Her own picker (not the exact-match router) gets 958 of 1352 test phrasings right, with 61 wrong picks that slip past the safety guard. She knows 62 of 65 held-out facts with nothing confidently wrong. She runs natively on the Mac, and the picker and chat both run on Windows and Linux too. The installer is signed with Developer ID and notarized, so it opens on a stranger's Mac with no warning.
+Samantha is a small local model (Qwen, fine-tuned) with hands: she can open apps, browse, read your files, answer from your notes, and act on your Mac, entirely offline, no account, nothing sent out. v4.6.0 is about to cut. She has 109 tools. Her own picker (not the exact-match router) gets 958 of 1352 test phrasings right, with 61 wrong picks that slip past the safety guard. She knows 62 of 65 held-out facts with nothing confidently wrong. She runs natively on the Mac, and the picker and chat both run on Windows and Linux too. The installer is signed with Developer ID and notarized, so it opens on a stranger's Mac with no warning.
 
 Full phase-by-phase history lives in `docs/HISTORY.md` and the picker's model comparisons in `docs/BAKEOFF.md`.
 
 ### Next few minors
 
 - **4.5, edit the last draft. Shipped 2026-09-24.** "Make it shorter", "friendlier", "add a line about Friday" rewrites the file `write_document` just saved, shows the diff, and asks before saving.
-- **4.6, edit any file, write code to disk.** Given an instruction, she edits an existing file or writes new code, always showing a diff and asking first.
+- **4.6, edit any file, write code to disk. Shipped 2026-09-24.** "Edit notes.md: make it shorter", "write a python script that prints the date to today.py": she edits any text file in your home folder or writes new code, always showing a diff and asking first.
 - Docs in her own voice: have the local 9B redo the README intro, ABILITIES.md and WHITEPAPER.md in first person, then check facts and house rules by hand.
 - Draw on the Mac, not just the page: local image generation (Flux or SD through MLX) is a 6 GB model on a 16 GB Mac, so it only runs with everything else closed.
 - See better: try a 7B vision model when memory allows, and let `click_text` use her eyes for icons with no text.
