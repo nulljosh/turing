@@ -196,3 +196,15 @@ Wrong-past-guard (29), grouped by (wanted tool → tool that actually fired): `N
 Right-picks-refused (24), grouped by tool: `calculate` (3), `copy_file` (3), `rename_file` (2), `convert_image` (2), `running_apps` (2), one each: `add_event`, `complete_reminder`, `convert_time`, `do_not_disturb`, `image_info`, `list_dir`, `move_file`, `new_reminder`, `open_app`, `read_file`, `resize_image`, `unread_mail`. These are all real, ordinary phrasings the model got right that the guard's `_EVIDENCE`/`_AGAINST` vocabulary, tuned against the training and prior-eval phrasing pool, does not yet recognize (e.g. "cp the invoice pdf over to Downloads" for `copy_file`, "kill do not disturb" for `do_not_disturb`, "list active applications" for `running_apps`).
 
 This does not clear the 5.0 bar (under 10 wrong-past-guard and 0 refused): 29 wrong-past-guard and 24 refused, both well over. It reads as expected for a first honest look at unseen phrasing rather than a regression: every prior bake-off round tuned the guard and, some rounds, the adapter against its own wrong-past-guard cases pulled from `hands-data/test.jsonl`, which despite being "unseen" during training shares its phrasing generator and wrapper templates (`training/gen_hands_data.py`) with the train set. `eval/heldout.jsonl` shares no generator, no wrapper templates and no author intent with any of that; it is closer to what a stranger would actually type. No guard, training data or adapter was touched to produce or chase this number, per this round's rules — it is a baseline reading, not a ship.
+
+## Round twelve (2026-09-25): blind training data rejected, guard kept
+
+New training phrasings were written for every tool plus about 35 abstain rows, and round twelve trained with the shipped recipe. The builder read the held-out breakdown section of this file before the no-read rule landed, so round twelve's held-out numbers are contaminated and do not count toward 5.0.
+
+| | standard set | held-out (512) |
+|---|---|---|
+| shipped adapter, round eleven guard | 1300 / 9 past guard / 0 refused | 361 / 29 / 24 |
+| shipped adapter, round twelve guard | 1300 / 9 / 0 | 361 / 29 / 19 |
+| round twelve adapter, round twelve guard | 1360 / 78 / 14 (its own regenerated set) | not scored |
+
+Verdict: the round twelve adapter picks more right answers and is much less safe, so it is not shipped (kept on disk as hands-adapter-round12/). Its training-data changes were reverted. The guard change ships alone: a basename fallback for the file and image tools, and "application" as evidence for running_apps. Five fewer right picks refused on held-out, nothing worse on either set. Before 5.0 is declared, a second fresh held-out set has to be written by a writer that never saw this file.

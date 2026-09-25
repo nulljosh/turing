@@ -50,7 +50,7 @@ _EVIDENCE = {
     # Round eight covered 36 tools with zero picker training data; their evidence predates them (round-eight
     # gap). Words come from each tool's own docstring/templates, never copied out of eval/actions.py verbatim.
     "bluetooth_status": r"bluetooth", "calendar_tomorrow": r"tomorrow",
-    "running_apps": r"running|open apps|apps open|what's open|apps are open",
+    "running_apps": r"running|open apps|apps open|what's open|apps are open|application",
     "recent_downloads": r"download", "unread_mail": r"mail|email|inbox",
     "git_status": r"status|changed|dirty|\bdiff\b|\bbranch\b", "recent_commits": r"commit",
     "run_tests": r"\btest", "open_prs": r"\bprs?\b|pull request",
@@ -185,7 +185,20 @@ def _sound(tool, arg, query):
     # "words<TAB>path": both halves have to be real, and the path has to be one she was actually given.
     # Same shape for the round-eight file/note/translate tools, which also copy two pieces out of the
     # sentence joined by a tab: source<TAB>destination, content<TAB>note name, text<TAB>language.
-    if tool in ("find_in_document", "ask_document", "copy_file", "move_file", "rename_file", "translate"):
+    # Round twelve: copy_file/move_file/rename_file's own training is mostly full literal paths
+    # ("~/desktop/a.txt"), but a natural sentence often names the file in plain words ("the invoice
+    # pdf", "my notes file") instead. Accept the path's own basename (no extension either) as evidence
+    # too, same shape as the zip_file/folder_size fix below.
+    if tool in ("copy_file", "move_file", "rename_file"):
+        a, _, b = arg.partition("\t")
+        if not (a and b):
+            return False
+        a_base = a.rstrip("/").rsplit("/", 1)[-1].lower()
+        a_stem = a_base.rsplit(".", 1)[0]
+        a_ok = a.lower() in q_lower or a_base in q_lower or (len(a_stem) > 2 and a_stem in q_lower)
+        return a_ok and b.lower() in q_lower
+
+    if tool in ("find_in_document", "ask_document", "translate"):
         a, _, b = arg.partition("\t")
         return bool(a) and bool(b) and a.lower() in q_lower and b.lower() in q_lower
 
@@ -234,6 +247,17 @@ def _sound(tool, arg, query):
     if tool == "add_event":
         words = [w for w in re.findall(r"[a-z0-9]+", arg.lower()) if w not in ("at", "on", "to", "the", "a", "an", "my", "calendar")]
         return bool(words) and all(w in q_lower for w in words)
+
+    # Round twelve: image tools train mostly on full literal paths ("~/downloads/mona.jpg"), but a
+    # natural sentence sometimes just names the file ("mona.jpg", or "mona" with no extension). Accept
+    # the path's own basename or stem, same fallback shape as copy_file/move_file/rename_file above.
+    if tool in ("convert_image", "rotate_image", "resize_image", "upscale_image", "grayscale_image",
+                "flip_image", "crop_square", "remove_background", "enhance_image", "image_info") and arg:
+        if arg.lower() in q_lower:
+            return True
+        base = arg.split()[0].rstrip("/").rsplit("/", 1)[-1].lower()
+        stem = base.rsplit(".", 1)[0]
+        return base in q_lower or (len(stem) > 2 and stem in q_lower)
 
     # An app or a site with no name is never a real command.
     if not arg and tool in ("open_app", "open_url"):
