@@ -65,12 +65,28 @@ _EVIDENCE = {
     "research": r"research|deep dive|look into|dig into|investigate", "research_more": r"\bmore\b|deeper|expand|further|continue|again",
     "summarize": r"summar", "transcribe_video": r"transcribe|said in|captions|subtitles",
     "translate": r"translat|how do you say", "write_document": r"draft|write (?:a |an )?(?:doc|document|email|memo|file)|compose",
+    # Round ten: resize_image and read_file had no evidence at all, so any wrong pick with its
+    # argument copied verbatim (list_dir/read_file's own guard, or resize_image's default check,
+    # never required a word about the tool itself) passed the guard automatically. "make it bigger"
+    # with no number is upscale_image, not resize_image; "crunch the numbers in X" is run_code,
+    # not read_file's own words.
+    "resize_image": r"resize|resolution|\bsize\b|\d",
+    "read_file": r"\bread\b|\bcat\b|\bshow\b|\bprint\b|display|\bsay\b|contents|written",
 }
 # ...and words that say the sentence is about a different tool. "say help in morse code" is morse_code, not say.
-_AGAINST = {"say": r"morse|clock say", "wifi_name": r"address|\bip\b", "open_app": r"shortcut", "weather": r"\bapp\b", "web_search": r"\.(?:com|org|net|io|ca)\b",
+_AGAINST = {"say": r"morse|clock say", "wifi_name": r"address|\bip\b", "weather": r"\bapp\b", "web_search": r"\.(?:com|org|net|io|ca)\b",
             # "close the github tab" is close_tab, not quit_app. "extract the zip" is unzip_file, not zip_file.
             # "summarize my unread mail" is summarize, not unread_mail.
-            "quit_app": r"\btab\b", "zip_file": r"\bextract\b|\bunzip\b", "unread_mail": r"\bsummar"}
+            "quit_app": r"\btab\b", "zip_file": r"\bextract\b|\bunzip\b", "unread_mail": r"\bsummar",
+            # Round ten: open_app had zero _AGAINST, so any single shared word ("tests", the arg
+            # itself, "finder") let it fire on a sentence that is really about a different tool.
+            # These are phrases, not bare words, so "open mail"/"open finder"/"open tests" (real
+            # app opens, if such an app existed) still pass; only the multi-word context that marks
+            # the sentence as being about mail, Finder-reveal, a browser tab or the test suite blocks it.
+            "open_app": r"\bnew email\b|\bunread mail\b|\bmail from\b|\bemail from\b|\bin (?:the )?finder\b|\btab\b|\btests?\b|test suite",
+            # "write a brief on X" / "do my notes mention X" are research/search_notes, not new_note:
+            # new_note's own evidence regex matches bare "write" or "note", which both leak into these.
+            "new_note": r"\bbrief\b|\bresearch\b|\bmention\b|\bsearch\b.{0,20}\bnotes?\b|\bfind\b.{0,20}\bnotes?\b|\blook for\b.{0,20}\bnotes?\b"}
 
 
 def _sound(tool, arg, query):

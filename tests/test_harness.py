@@ -220,6 +220,24 @@ class AgentGrounding(unittest.TestCase):
         self.assertTrue(tools._sound("append_note", "buy milk to the note shopping", "please append buy milk to the note shopping"))
         self.assertFalse(tools._sound("append_note", "buy milk to nowhere", "please append buy milk to the note shopping"))
 
+    def test_round_ten_thin_tools_need_their_own_word(self):
+        """Round ten's guard gaps: resize_image and read_file had no evidence at all, so a wrong
+        pick with its argument copied verbatim always passed; open_app and new_note had matching
+        words leak in from mail, Finder, tab, test-suite and note/research phrasings that are
+        really about a different tool. Canonical phrasings for the real tool still pass."""
+        self.assertTrue(tools._sound("resize_image", "~/a.png to 500", "resize ~/a.png to 500"))
+        self.assertFalse(tools._sound("resize_image", "~/Desktop/dog.jpeg", "make ~/Desktop/dog.jpeg bigger"))
+        self.assertTrue(tools._sound("read_file", "~/notes.txt", "read the file ~/notes.txt"))
+        self.assertFalse(tools._sound("read_file", "sales.csv", "crunch the numbers in sales.csv"))
+        self.assertTrue(tools._sound("open_app", "chrome", "open chrome"))
+        self.assertFalse(tools._sound("open_app", "the bank", "new email from the bank"))
+        self.assertFalse(tools._sound("open_app", "nimble", "open nimble in the finder"))
+        self.assertFalse(tools._sound("open_app", "reddit", "go to the reddit tab"))
+        self.assertFalse(tools._sound("open_app", "tests", "kick off the tests"))
+        self.assertTrue(tools._sound("new_note", "about the meeting", "write a note about the meeting"))
+        self.assertFalse(tools._sound("new_note", "qwen3 benchmarks", "write a brief on qwen3 benchmarks"))
+        self.assertFalse(tools._sound("new_note", "car insurance", "do my notes mention car insurance"))
+
 
 if __name__ == "__main__":
     unittest.main()

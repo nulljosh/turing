@@ -2,6 +2,9 @@
 
 TLDR per loop round, newest first. The loop adds a line every round it ships something, then the scorecard.
 
+- 2026-09-25 v4.15.1: picker round ten, guard only. The guard learned resize_image and read_file and stopped letting open_app and new_note win on a shared word: wrong picks past the guard 83 to 50, right picks refused still 0. The round ten retrain picked more right (1329) but was less safe (88 past guard), so it stays on disk unshipped.
+  `v4.15.1 · 126 tools · 556 tests · docs coverage 100% · laws all hold · biggest tools_util.py 700 · actions 221/221 · parity 221/221 · util_diff 261/261`
+
 - 2026-09-25 🎉 v4.15.0: picker round nine. Trained on her own mistakes (thin-template tools that lost to a heavily trained neighbor): 1300 of 1895 phrasings right (was 1197), 83 wrong picks past the guard (was 141), 0 right picks refused after the guard learned five more tools' words. Badge step 8: the Pleiades.
   `v4.15.0 · 126 tools · 555 tests · docs coverage 100% · laws all hold · biggest tools_util.py 700 · actions 221/221 · parity 221/221 · util_diff 261/261`
 
