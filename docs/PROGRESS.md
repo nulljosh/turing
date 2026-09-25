@@ -2,6 +2,9 @@
 
 TLDR per loop round, newest first. The loop adds a line every round it ships something, then the scorecard.
 
+- 2026-09-25 🎉 v4.7.0: the organizer family. "What are my reminders", "check off call mom", "add lunch with sam to my calendar tomorrow at noon", "what's on my calendar tomorrow", "search my notes for passport", "add eggs to my shopping note". Read-only dogfooded on this Mac (real reminders and notes came back); the three writers ask first. Built by a Sonnet subagent, checked and shipped by the loop. Roadmap: 9.0 is her on your phone, 10.0 is her inside Joshua Tree.
+  `v4.7.0 · 115 tools · 372 tests · docs coverage 100% · laws all hold · biggest tools.py 751 · actions 192/192 · parity 192/192 · util_diff 235/235`
+
 - 2026-09-24 v4.6.0: edit any file, write code to disk. "Edit notes.md: make it shorter", "in plan.md, fix the typo", "write a python script that prints the date to today.py": the biggest local model edits or writes, the whole change is a diff, lands only on a yes, home folder only. The three writing routes moved out of tools.py into tools_write.route (tools.py 753 to 744). Loop back on the Mac; jt-chat branch and two stale worktrees retired, PR #94 closed as already on main.
   `v4.6.0 · 109 tools · 347 tests · docs coverage 100% · laws all hold · biggest tools.py 744 · actions 180/180 · parity 180/180 · util_diff 223/223`
 

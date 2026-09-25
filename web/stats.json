@@ -1,5 +1,5 @@
 {
-  "version": "4.6.0",
+  "version": "4.7.0",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -98,6 +98,10 @@
       "tools_llm.py": {
         "total": 6,
         "documented": 6
+      },
+      "tools_organizer.py": {
+        "total": 7,
+        "documented": 7
       },
       "util_math.py": {
         "total": 20,
@@ -259,6 +263,10 @@
         "total": 4,
         "documented": 4
       },
+      "eval/test_organizer.py": {
+        "total": 32,
+        "documented": 32
+      },
       "eval/test_reader.py": {
         "total": 13,
         "documented": 13
@@ -340,7 +348,7 @@
   "measured": {
     "tools": {
       "before": 0,
-      "after": 109
+      "after": 115
     },
     "actions_eval": "77/77",
     "knowledge_sweep": {

@@ -44,7 +44,9 @@ SHAPES = {"flip a coin": r"(Heads|Tails)\.", "roll 2d6": r"\d+ \+ \d+ = \d+", "r
           "days until christmas": r"\d+ days? until December 25, \d{4}\.|That is today\.", "roll 500d6": r"Up to 100 dice.*"}
 MAC_ONLY = ["disk space", "uptime", "how much memory do i have", "cpu load", "what is my ip", "what wifi am i on", "system info",
             "copy hello to my clipboard", "lock the screen", "reveal ~/Documents in finder", "list my shortcuts", "run shortcut morning routine", "list my mcp tools", "call mcp samantha calculate {}", "read my screen", "what does document ~/a.pdf say about milk", "in document ~/a.pdf what is the total", "on my screen, what is the total", "read document ~/notes.pdf", "find milk in document ~/notes.pdf", "find milk on my screen", "list my tabs", "switch to the github tab", "close the github tab", "read tab 2", "read this tab", "transcribe the video ~/Desktop/clip.mp4", "what does the audio ~/Desktop/memo.m4a say", "unread mail", "anything from the bank in my mail today", "find report.pdf", "what's in my downloads", "how big is ~/Documents", "move ~/Desktop/a.txt to ~/Documents", "zip ~/Desktop/photos", "trash ~/Desktop/a.txt",
-            "stats on sales.csv", "chart sales.csv", "average of the price column in sales.csv", "plot column price of sales.csv"]
+            "stats on sales.csv", "chart sales.csv", "average of the price column in sales.csv", "plot column price of sales.csv",
+            "what are my reminders", "complete the reminder to buy milk", "add lunch with sam to my calendar tomorrow at noon",
+            "what's on my calendar tomorrow", "search notes for eggs", "add eggs to my shopping note"]
 
 JS = """
 require(process.argv[1]);

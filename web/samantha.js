@@ -795,6 +795,26 @@
     [/^run (?:the |my )?shortcut (.+)$|^run (.+) shortcut$/i, function (m) { return ["run_shortcut", ((m[1] || m[2]))]; }]
   ]);
 
+  // the organizer family, same tools as tools_organizer.py: Reminders, Calendar and Notes beyond what
+  // tools_apps.py already covers. The stand-in Mac has none of those apps to read or write.
+  ["list_reminders", "complete_reminder", "add_event", "calendar_tomorrow", "search_notes", "append_note"]
+    .forEach(function (name) { U[name] = function () { return REAL_MAC; }; U.NEEDS_MAC.push(name); });
+  // organizer's own phrasings go in FRONT of every route above: "search notes for X" would otherwise be
+  // swallowed by the "search ... for" web_search catch-all near the top of ROUTES.
+  ROUTES = [
+    [/^(?:what are |list |show(?: me)? )?(?:my )?reminders(?: (?:about|for|named|called) (.+))?$/i, function (m) { return ["list_reminders", m[1] || ""]; }],
+    [/^(?:complete|finish) (?:the )?reminder(?: to| for)? (.+)$/i, function (m) { return ["complete_reminder", m[1]]; }],
+    [/^mark (.+?) as (?:done|complete|completed)$/i, function (m) { return ["complete_reminder", m[1]]; }],
+    [/^check off (.+)$/i, function (m) { return ["complete_reminder", m[1]]; }],
+    [/^what(?:'s| is) on (?:my |the )?(?:calendar|schedule|agenda) tomorrow\b|^(?:my )?(?:calendar|schedule|agenda) (?:for )?tomorrow$|^what do i have tomorrow/i,
+     function () { return ["calendar_tomorrow", ""]; }],
+    [/^search (?:my |the )?notes for (.+)$|^find (.+) in (?:my |the )?notes$/i, function (m) { return ["search_notes", m[1] || m[2]]; }],
+    [/^add (.+) to (?:my |the )?(.+?) note$/i, function (m) { return ["append_note", m[1] + "\t" + m[2]]; }],
+    [/^append (.+) to (?:the )?note (.+)$/i, function (m) { return ["append_note", m[1] + "\t" + m[2]]; }],
+    [/^(?:add|put|schedule|create|new) (?:the event |an event |a )?(.+?)\s+(?:to|on)(?: my)? calendar\b(.*)$/i,
+     function (m) { return ["add_event", (m[1].trim() + " " + m[2].trim()).trim()]; }]
+  ].concat(ROUTES);
+
   root.Samantha = { route: route, chain: chain, exact: exact, bare: bare, urlOf: urlOf, appMatch: appMatch, APPS: APPS, SITES: SITES,
                     stem: stem, keywords: keywords, isProject: isProject,
                     pageRoute: pageRoute, section: section, sound: sound, duration: duration, COLORS: COLORS, util: U };

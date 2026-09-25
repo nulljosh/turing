@@ -229,6 +229,20 @@ CASES = [
     ("delete the file ~/Desktop/a.txt", "trash_file", "~/Desktop/a.txt"),
     ("move on to the next song", None, None),
     ("delete my account", None, None),
+
+    # the organizer family: reminders, calendar and notes past what tools_apps.py already covers
+    ("what are my reminders", "list_reminders", ""),
+    ("list my reminders", "list_reminders", ""),
+    ("complete the reminder to buy milk", "complete_reminder", "buy milk"),
+    ("mark buy milk as done", "complete_reminder", "buy milk"),
+    ("add lunch with sam to my calendar tomorrow at noon", "add_event", "lunch with sam"),
+    ("put dentist on friday at 3pm on my calendar", "add_event", "dentist"),
+    ("what's on my calendar tomorrow", "calendar_tomorrow", None),
+    ("my calendar for tomorrow", "calendar_tomorrow", None),
+    ("search notes for eggs", "search_notes", "eggs"),
+    ("find eggs in my notes", "search_notes", "eggs"),
+    ("add eggs to my shopping note", "append_note", "eggs"),
+    ("append call bob to the note todo", "append_note", "call bob"),
     ("summarize github.com", "summarize", "github.com"),
     # these look like the new commands and are not
     ("what is the weather system on jupiter", None, None),

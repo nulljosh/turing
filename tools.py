@@ -25,6 +25,8 @@ import tools_image
 from tools_image import remove_background, upscale_image, enhance_image, grayscale_image, rotate_image, flip_image, resize_image, crop_square, convert_image, image_info
 import tools_files
 from tools_files import find_file, recent_downloads, folder_size, move_file, copy_file, rename_file, zip_file, unzip_file, trash_file
+import tools_organizer
+from tools_organizer import list_reminders, complete_reminder, add_event, calendar_tomorrow, search_notes, append_note
 
 AGENT_MODEL = "qwen3:1.7b"  # 8B was right but 7.6GB and minutes per run; 1.7B is right in 5s once the harness prefetches
 OLLAMA_CHAT = "http://localhost:11434/api/chat"
@@ -297,7 +299,8 @@ TOOLS = {f.__name__: f for f in (open_app, open_url, web_search, current_tab, re
                                      clipboard, set_volume, battery, say, list_dir, read_file, make_logo, paint_image,
                                      music, weather, timer, new_note, new_reminder, calendar_today, unread_mail, needs_attention, free_when,
                                      remove_background, upscale_image, enhance_image, grayscale_image, rotate_image, flip_image, resize_image, crop_square, convert_image, image_info,
-                                     find_file, recent_downloads, folder_size, move_file, copy_file, rename_file, zip_file, unzip_file, trash_file)}
+                                     find_file, recent_downloads, folder_size, move_file, copy_file, rename_file, zip_file, unzip_file, trash_file,
+                                     list_reminders, complete_reminder, add_event, calendar_tomorrow, search_notes, append_note)}
 TOOLS.update({f.__name__: f for f in tools_util.TOOLS})
 globals().update({f.__name__: f for f in tools_util.TOOLS})  # eval/actions.py swaps every TOOLS name on this module for a recorder
 
@@ -379,6 +382,9 @@ _GREEDY = {_ROUTES[-2][0], _ROUTES[-1][0]}
 _ROUTES = _ROUTES + tuple((pat, _util_route(name, arg)) for pat, name, arg in tools_image.ROUTES)
 _ROUTES = _ROUTES + tuple((pat, _util_route(name, arg)) for pat, name, arg in tools_files.ROUTES)  # find a file, downloads, folder size
 _ROUTES = _ROUTES + tuple((pat, _util_route(name, arg)) for pat, name, arg in tools_util.ROUTES)  # 31 utility tools: math, text, dice, this Mac's vitals
+# organizer's own phrasings go in FRONT of everything above: "search notes for X" would otherwise be swallowed by
+# the "search ... for" catch-all, and "add X to my calendar" by nothing today but is not worth the risk either
+_ROUTES = tuple((pat, _util_route(name, arg)) for pat, name, arg in tools_organizer.ROUTES) + _ROUTES
 
 # anything past the first verb phrase means more than one step: that is agent() work
 _MULTISTEP = re.compile(r"\b(?:and (?:then )?(?:tell|read|find|summar|poke|look|check|see|click)|poke around|then )", re.I)
@@ -544,7 +550,8 @@ def _sound(tool, arg, query):
 # Desktop, a Shortcut, the clipboard, a dark screen. The harness asks before any of these run.
 WRITES = {"ask_llm", "see_screen", "see_image", "see_camera", "click_text", "type_text", "press_key", "ask_screen", "read_screen", "remember", "forget", "close_tab", "call_mcp_tool", "new_note", "new_reminder", "make_logo", "paint_image", "run_shortcut", "copy_to_clipboard", "sleep_display", "save_research", "write_document", "run_code",
           "remove_background", "upscale_image", "enhance_image", "grayscale_image", "rotate_image", "flip_image",
-          "resize_image", "crop_square", "convert_image", "move_file", "copy_file", "rename_file", "zip_file", "unzip_file", "trash_file"}
+          "resize_image", "crop_square", "convert_image", "move_file", "copy_file", "rename_file", "zip_file", "unzip_file", "trash_file",
+          "complete_reminder", "add_event", "append_note"}
 
 
 def plan(query):

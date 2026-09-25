@@ -1,6 +1,6 @@
 # Roadmap
 
-Samantha is a small local model (Qwen, fine-tuned) with hands: she can open apps, browse, read your files, answer from your notes, and act on your Mac, entirely offline, no account, nothing sent out. v4.6.0 is about to cut. She has 109 tools. Her own picker (not the exact-match router) gets 958 of 1352 test phrasings right, with 61 wrong picks that slip past the safety guard. She knows 62 of 65 held-out facts with nothing confidently wrong. She runs natively on the Mac, and the picker and chat both run on Windows and Linux too. The installer is signed with Developer ID and notarized, so it opens on a stranger's Mac with no warning.
+Samantha is a small local model (Qwen, fine-tuned) with hands: she can open apps, browse, read your files, answer from your notes, and act on your Mac, entirely offline, no account, nothing sent out. v4.7.0 is about to cut. She has 115 tools. Her own picker (not the exact-match router) gets 958 of 1352 test phrasings right, with 61 wrong picks that slip past the safety guard. She knows 62 of 65 held-out facts with nothing confidently wrong. She runs natively on the Mac, and the picker and chat both run on Windows and Linux too. The installer is signed with Developer ID and notarized, so it opens on a stranger's Mac with no warning.
 
 Full phase-by-phase history lives in `docs/HISTORY.md` and the picker's model comparisons in `docs/BAKEOFF.md`.
 
@@ -20,7 +20,8 @@ Full phase-by-phase history lives in `docs/HISTORY.md` and the picker's model co
 - **6.0, everywhere.** Notarized installer for a stranger's Mac. Windows and Linux get a real browser window, not just an API. MCP works both ways: other apps can borrow her hands, and she can be handed a server to use.
 - **7.0, remembers and comes to you.** A memory file she reads back into every answer. A morning brief pushed before you ask. Shortcuts automations she writes herself.
 - **8.0, learns from the big ones.** Frontier models teach her: distillation raises the picker and the answers together.
-- **9.0 and 10.0** get decided once 8.0 ships, based on the gaps the loop finds by then. Candidates: living inside Joshua Tree with no libc, her own voice, a phone as a thin client to your Mac.
+- **9.0, in your pocket.** Talk to her from anywhere: an iPhone app that is a thin client to your own Mac over your own network, so her hands, files and memory come with you and nothing touches a cloud. Voice first: a wake word, cutting in while she speaks, and her own voice instead of `say`. Check: from the phone, "what needs me" and "remind me at 5" run on the Mac and answer out loud in under two seconds warm.
+- **10.0, her own home.** She runs inside Joshua Tree, the kernel built here from nothing, with no libc and no borrowed runtime: her picker's inference written in freestanding C, the chat app asking her directly instead of calling out to /api. Kernel and model, both ours, top to bottom. Check: boot Joshua Tree in QEMU with the network off, type "remind me to call mom", and her own picker, running on that kernel, picks new_reminder.
 
 ### What needs Joshua's keyboard
 
@@ -61,7 +62,6 @@ Ask her to draft something in our voice, or answer a question about one of our o
 - [ ] PaintBar: share its background setting with Samantha's own paint tool, add launch at login
 - [ ] Two-step picking: pick a family first, then a tool inside it, so no single choice is bigger than about twelve
 - [ ] System family, the rest: dark mode, bluetooth, do not disturb, brightness, running apps, quit an app
-- [ ] Organizer family: list reminders, complete a reminder, add a calendar event, tomorrow's calendar, search notes, append to a note
 - [ ] Browser family, the rest: download a file
 - [ ] Dev family: git status, recent commits, run a repo's tests, open PRs, open a repo in the editor
 - [ ] Knowledge family, the rest: define a word

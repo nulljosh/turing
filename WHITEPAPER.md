@@ -1,6 +1,6 @@
 # Turing Technical Whitepaper
 
-**v4.6.0** | September 2026
+**v4.7.0** | September 2026
 
 Turing builds small language models on one Mac. Its first model, Samantha, is a 0.5B model trained on your own writing. She will never out-think a frontier model. She does not try to. She runs on your Mac, costs nothing per question, keeps everything on the machine, and gets real work done with 106 exact tools. When a question is too hard for her, she borrows a bigger brain that also lives on the Mac. You can type to her or talk to her. She can see your screen, click in your apps, and research a topic with sources. She asks before anything that changes something.
 
@@ -35,6 +35,7 @@ Then a teacher. Claude writes practice questions and answers from real passages 
 - **Run code.** "Stats on sales.csv", "chart sales.csv". The biggest local model writes a short Python script from your request and the file's header, and it only ever runs in a sandbox with no network, a time cap and a memory cap.
 - **Know what needs you.** "What needs my attention" ranks your unread mail, today's calendar and due reminders into three lines. "Am I free Thursday afternoon" reads your calendar's open gaps. Both read only.
 - **Write and edit files.** "Draft an email about the release", "edit notes.md: make it shorter", "write a python script that prints the date to today.py". The biggest local model drafts, rewrites or writes the code; the whole change is shown as a diff and nothing lands without a yes. Only inside your home folder, never a hidden or binary file.
+- **Organize.** "What are my reminders", "check off call mom", "add lunch with sam to my calendar tomorrow at noon", "what's on my calendar tomorrow", "search my notes for passport", "add eggs to my shopping note". Reading is free; completing, adding and appending ask first.
 - **Everything else.** Her Mac, pictures and painting, math and time, documents, memory across sessions, Chrome tabs, Apple Shortcuts, and MCP in both directions. The picker and chat also run on Windows and Linux through Ollama; the Mac tools stay on the Mac.
 
 ## Promises she keeps
