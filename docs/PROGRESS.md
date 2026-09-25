@@ -2,6 +2,9 @@
 
 TLDR per loop round, newest first. The loop adds a line every round it ships something, then the scorecard.
 
+- 2026-09-25: loop rules from Joshua written into CLAUDE.md and LOOP-HANDOFF: TLDR report at start and every round, every change logged here, PRs merged into main once CI is green. Handoff's tripled status line fixed. Loop paused: Claude usage at the weekly warning.
+  `v4.5.0 · 107 tools · 341 tests · docs coverage 100% · laws all hold · biggest tools.py 753 · actions 180/180 · parity 180/180 · util_diff 223/223`
+
 - 2026-09-24: v4.2.1: she has hands in Joshua Tree now. The kernel's Chat app (joshuatree 1.1.0) asks /api/pick before /api/chat and runs the pick itself: remind me to..., note..., open notes, weather, what's on today. The "what can you do" reply said her hands were only on a Mac, which was true until today; it now says what to ask for in Joshua Tree. Proven live from a GitHub runner: the real picker answered new_reminder and the kernel added the reminder.
 
 - 2026-09-23: v4.0.1, the tidy. Direct request: no loose files, simpler README, cleaner docs. Twenty test files moved to tests/, the training scripts and their two docs to training/, the Swift helpers to swift/; every path reference, CI step and self-check updated, full suite green from the new folders. roadmap.md went from 94 KB of mixed plan and diary to 15 KB of plan; the diary is docs/HISTORY.md, word for word. The README is short and points at docs/ABILITIES.md for the full list. The intro is in her own voice, first person. The 9B was asked to write it (briefed with SOUL.md) and timed out cold twice, so this one is hand-written to SOUL.md; the next round retries with a warm model, logged under Gaps.
