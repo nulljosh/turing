@@ -6,7 +6,7 @@ One ability per minor release, a major when a whole roadmap family completes, un
 
 ## Where things stand
 
-v4.7.0 cutting (the organizer family: list and complete reminders, add a calendar event, tomorrow's calendar, search notes, append to a note), 115 tools, docs 100 percent, laws hold. The loop runs on Joshua's Mac. main takes direct pushes (the "2 of 2 required status checks" line on push is a notice, the push lands); the pre-push hook in .githooks runs the CI steps first, so run `git config core.hooksPath .githooks` once per clone. Rounds: the main session briefs one Sonnet subagent to build, then checks, commits, pushes and watches CI itself (Joshua's cap: 3 Haiku/Sonnet or 2 Opus at once). Pace slowly while weekly usage is in deficit: it was 80 percent used, reset Saturday 22:00. oMLX (the 9B) is a brew service: `omlx start` if ask_llm answers error 500.
+v4.8.0 cutting (the system family: dark mode, running apps, quit an app, bluetooth status, Do Not Disturb through a Shortcut; the footer badge now modernizes one notch per minor via tools_badge.py), 120 tools, docs 100 percent, laws hold. The loop runs on Joshua's Mac. main takes direct pushes (the "2 of 2 required status checks" line on push is a notice, the push lands); the pre-push hook in .githooks runs the CI steps first, so run `git config core.hooksPath .githooks` once per clone. Rounds: the main session briefs one Sonnet subagent to build, then checks, commits, pushes and watches CI itself (Joshua's cap: 3 Haiku/Sonnet or 2 Opus at once). Pace slowly while weekly usage is in deficit: it was 80 percent used, reset Saturday 22:00. oMLX (the 9B) is a brew service: `omlx start` if ask_llm answers error 500.
 
 ## Next, in order
 

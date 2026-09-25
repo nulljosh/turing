@@ -52,6 +52,7 @@ jobs:
       - run: python3 tests/test_run_code.py
       - run: python3 tests/test_needs_me.py
       - run: python3 tests/test_organizer.py
+      - run: python3 tests/test_system.py
       - run: python3 tests/test_tabs.py
       - run: python3 tests/test_memory.py
       - run: python3 tests/test_screen.py

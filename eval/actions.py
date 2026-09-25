@@ -243,6 +243,25 @@ CASES = [
     ("find eggs in my notes", "search_notes", "eggs"),
     ("add eggs to my shopping note", "append_note", "eggs"),
     ("append call bob to the note todo", "append_note", "call bob"),
+
+    # the system family: dark mode, running apps, quit, do not disturb, bluetooth
+    ("turn on dark mode", "dark_mode", "on"),
+    ("dark mode off", "dark_mode", "off"),
+    ("toggle dark mode", "dark_mode", "toggle"),
+    ("switch to light mode", "dark_mode", "off"),
+    ("what apps are running", "running_apps", ""),
+    ("list open apps", "running_apps", ""),
+    ("quit spotify", "quit_app", "spotify"),
+    ("close the app slack", "quit_app", "slack"),
+    ("turn on do not disturb", "do_not_disturb", "on"),
+    ("turn off focus", "do_not_disturb", "off"),
+    ("bluetooth status", "bluetooth_status", ""),
+    ("is bluetooth on", "bluetooth_status", ""),
+    # these must still route where they always did, not get stolen by the new system family
+    ("close the github tab", "close_tab", "github"),
+    ("open spotify", "open_app", "spotify"),
+    ("set the volume to 30", "set_volume", "30"),
+
     ("summarize github.com", "summarize", "github.com"),
     # these look like the new commands and are not
     ("what is the weather system on jupiter", None, None),

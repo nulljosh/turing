@@ -1,6 +1,6 @@
 # Roadmap
 
-Samantha is a small local model (Qwen, fine-tuned) with hands: she can open apps, browse, read your files, answer from your notes, and act on your Mac, entirely offline, no account, nothing sent out. v4.7.0 is about to cut. She has 115 tools. Her own picker (not the exact-match router) gets 958 of 1352 test phrasings right, with 61 wrong picks that slip past the safety guard. She knows 62 of 65 held-out facts with nothing confidently wrong. She runs natively on the Mac, and the picker and chat both run on Windows and Linux too. The installer is signed with Developer ID and notarized, so it opens on a stranger's Mac with no warning.
+Samantha is a small local model (Qwen, fine-tuned) with hands: she can open apps, browse, read your files, answer from your notes, and act on your Mac, entirely offline, no account, nothing sent out. v4.8.0 is about to cut. She has 120 tools. Her own picker (not the exact-match router) gets 958 of 1352 test phrasings right, with 61 wrong picks that slip past the safety guard. She knows 62 of 65 held-out facts with nothing confidently wrong. She runs natively on the Mac, and the picker and chat both run on Windows and Linux too. The installer is signed with Developer ID and notarized, so it opens on a stranger's Mac with no warning.
 
 Full phase-by-phase history lives in `docs/HISTORY.md` and the picker's model comparisons in `docs/BAKEOFF.md`.
 
@@ -61,7 +61,7 @@ Ask her to draft something in our voice, or answer a question about one of our o
 - [ ] Picker trick: more "not a command" and "not sure" examples so she abstains instead of guessing
 - [ ] PaintBar: share its background setting with Samantha's own paint tool, add launch at login
 - [ ] Two-step picking: pick a family first, then a tool inside it, so no single choice is bigger than about twelve
-- [ ] System family, the rest: dark mode, bluetooth, do not disturb, brightness, running apps, quit an app
+- [ ] System family, the rest: brightness and turning bluetooth on or off (this Mac has no CLI for either and nothing gets installed; dark mode, running apps, quit an app, bluetooth status and Do Not Disturb via a Shortcut shipped in 4.8)
 - [ ] Browser family, the rest: download a file
 - [ ] Dev family: git status, recent commits, run a repo's tests, open PRs, open a repo in the editor
 - [ ] Knowledge family, the rest: define a word

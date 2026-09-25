@@ -1,5 +1,5 @@
 {
-  "version": "4.7.0",
+  "version": "4.8.0",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -71,9 +71,17 @@
         "total": 14,
         "documented": 14
       },
+      "tools_system.py": {
+        "total": 7,
+        "documented": 7
+      },
       "tools_code.py": {
         "total": 7,
         "documented": 7
+      },
+      "tools_badge.py": {
+        "total": 19,
+        "documented": 19
       },
       "chat.py": {
         "total": 18,
@@ -203,6 +211,10 @@
         "total": 1,
         "documented": 1
       },
+      "eval/test_badge.py": {
+        "total": 11,
+        "documented": 11
+      },
       "eval/test_chat.py": {
         "total": 26,
         "documented": 26
@@ -291,6 +303,10 @@
         "total": 27,
         "documented": 27
       },
+      "eval/test_system.py": {
+        "total": 37,
+        "documented": 37
+      },
       "eval/test_tabs.py": {
         "total": 10,
         "documented": 10
@@ -348,7 +364,7 @@
   "measured": {
     "tools": {
       "before": 0,
-      "after": 115
+      "after": 120
     },
     "actions_eval": "77/77",
     "knowledge_sweep": {

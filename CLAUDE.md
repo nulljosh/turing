@@ -55,6 +55,7 @@ Releases cut themselves. Bump `VERSION` (patch for a fix, minor for a new abilit
 
 ## After every ship
 Update together, in the same pass: the landing page (abilities text and the demo), README, WHITEPAPER.md (at every minor or major release: version line, what she can do, the measured numbers, limits, in plain words anyone can read), this file, `docs/ARCHITECTURE.md` (a row for every new file, checked by `eval/laws.py`), `architecture.svg` (the `architecture-svg` skill) and `progress.svg` (`python3 ~/Documents/Code/scripts/progress-svg.py .`, which reports files ARCHITECTURE.md does not name, and must say 100 percent documented). Docs coverage stays at 100 in the gate.
+Every minor or major release also refreshes the footer badge (`web/badge.svg`, her engraved SAMANTHA / TURING medallion): `python3 tools_badge.py --version X.Y.Z` re-traces the original (`art/badge-source.svg`, never edited) one notch more modern per minor since 4.7, same woman, same frame, same words. Joshua loves this logo: each step is a small modernization, never a redesign, and it only ships when both words still read.
 
 ## The gate
 `./gate.sh` runs the docs-coverage rule, then four fast checks (chat, actions, parity, tools) and compares against eval/baseline.json. `./gate.sh --full` also runs hands.py and the live web demo. Release.sh runs the full gate, so a release cannot ship on a worse number. Use `./gate.sh --update-baseline` to set new baselines only when all checks pass.

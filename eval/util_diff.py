@@ -46,7 +46,9 @@ MAC_ONLY = ["disk space", "uptime", "how much memory do i have", "cpu load", "wh
             "copy hello to my clipboard", "lock the screen", "reveal ~/Documents in finder", "list my shortcuts", "run shortcut morning routine", "list my mcp tools", "call mcp samantha calculate {}", "read my screen", "what does document ~/a.pdf say about milk", "in document ~/a.pdf what is the total", "on my screen, what is the total", "read document ~/notes.pdf", "find milk in document ~/notes.pdf", "find milk on my screen", "list my tabs", "switch to the github tab", "close the github tab", "read tab 2", "read this tab", "transcribe the video ~/Desktop/clip.mp4", "what does the audio ~/Desktop/memo.m4a say", "unread mail", "anything from the bank in my mail today", "find report.pdf", "what's in my downloads", "how big is ~/Documents", "move ~/Desktop/a.txt to ~/Documents", "zip ~/Desktop/photos", "trash ~/Desktop/a.txt",
             "stats on sales.csv", "chart sales.csv", "average of the price column in sales.csv", "plot column price of sales.csv",
             "what are my reminders", "complete the reminder to buy milk", "add lunch with sam to my calendar tomorrow at noon",
-            "what's on my calendar tomorrow", "search notes for eggs", "add eggs to my shopping note"]
+            "what's on my calendar tomorrow", "search notes for eggs", "add eggs to my shopping note",
+            "turn on dark mode", "dark mode off", "what apps are running", "quit spotify", "close the app slack",
+            "turn on do not disturb", "bluetooth status"]
 
 JS = """
 require(process.argv[1]);
