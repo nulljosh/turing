@@ -23,6 +23,8 @@ jobs:
       - run: cd pixelmator && python3 -m unittest
       # her image tools: unit tests for the image processing tools, mocked
       - run: python3 tests/test_tools_image.py
+      # her badge modernizer: step_for and modernize, skips clean on ubuntu (no potrace/swift)
+      - run: python3 tests/test_badge.py
       # the regex router, and the landing page's JavaScript port of it, must agree on every case
       - run: python3 eval/actions.py
       - run: python3 eval/web_parity.py

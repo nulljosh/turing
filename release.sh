@@ -39,8 +39,9 @@ sleep 35
 ./gate.sh --full
 
 echo "$V" > VERSION
+python3 tools_badge.py --version "$V"
 python3 stats.py >/dev/null
-git add VERSION web/stats.json
+git add VERSION web/stats.json web/badge.svg web/badge-preview.png
 git commit -qm "Release v$V: $NOTE"
 git tag -a "v$V" -m "$NOTE"
 git push -q --follow-tags

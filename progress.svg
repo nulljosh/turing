@@ -4,8 +4,8 @@
   text { font-family: -apple-system, Helvetica, Arial, sans-serif; fill: var(--ink); }
   line, polyline { stroke: var(--ink); fill: none; }
   .g { stroke-dasharray: 1 4; }
-</style><text x="50" y="11" font-size="10">Lines of real code</text><line x1="50" y1="26" x2="470" y2="26" class="g"/><text x="46" y="29" font-size="9" text-anchor="end">19597</text><line x1="50" y1="97" x2="470" y2="97" class="g"/><text x="46" y="100" font-size="9" text-anchor="end">9798</text>
+</style><text x="50" y="11" font-size="10">Lines of real code</text><line x1="50" y1="26" x2="470" y2="26" class="g"/><text x="46" y="29" font-size="9" text-anchor="end">20089</text><line x1="50" y1="97" x2="470" y2="97" class="g"/><text x="46" y="100" font-size="9" text-anchor="end">10044</text>
 <line x1="50" y1="26" x2="50" y2="166"/><line x1="50" y1="166" x2="470" y2="166"/>
-<polyline points="50,166 60,162 70,161 80,158 90,156 101,152 111,148 121,141 131,127 142,124 152,113 162,111 172,108 183,102 193,96 203,94 213,91 224,89 234,87 244,85 254,82 265,80 275,77 285,75 295,75 306,72 316,68 326,69 336,64 347,59 357,57 367,54 377,50 388,49 398,47 408,46 418,46 429,41 439,35 449,30 459,29 470,26" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="50,166 60,162 70,161 80,158 90,157 100,152 110,148 120,141 130,128 140,125 150,114 160,112 170,110 180,104 190,98 200,96 210,93 220,91 230,89 240,87 250,84 260,82 270,79 280,77 290,78 300,74 310,71 320,71 330,66 340,62 350,59 360,57 370,53 380,52 390,50 400,49 410,49 420,44 430,38 440,33 450,32 460,28 470,26" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
 <text x="50" y="182" font-size="10">Sep 13</text><text x="470" y="182" font-size="10" text-anchor="end">Sep 24</text>
-<text x="50" y="196" font-size="10" font-weight="600">19,597 lines &#183; 100% documented &#183; 386 commits since Sep 13 2026</text></svg>
+<text x="50" y="196" font-size="10" font-weight="600">20,089 lines &#183; 100% documented &#183; 387 commits since Sep 13 2026</text></svg>
