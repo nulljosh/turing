@@ -1,5 +1,5 @@
 {
-  "version": "4.15.2",
+  "version": "4.15.3",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -204,8 +204,8 @@
         "documented": 1
       },
       "eval/hands.py": {
-        "total": 4,
-        "documented": 4
+        "total": 5,
+        "documented": 5
       },
       "eval/jt_chat.py": {
         "total": 4,

@@ -8,6 +8,10 @@ kind of wrong, so it is counted apart from a command that was declined.
 
 Run: ./.venv/bin/python eval/hands.py [--adapter hands-adapter] [--model ID] [--verbose] [--min N]
      --model takes any MLX model. Without an adapter the tool list rides in the prompt.
+     --test PATH scores a held-out jsonl of {"text", "tool", "arg_hint"} rows instead of the
+     usual hands-data/actions/questions mix, as a single "heldout" group. Matching is loose
+     (arg_hint just has to appear in what the model said), since these phrasings were written
+     by hand and were never fitted to any tool's exact argument format.
 """
 import json
 import os
@@ -65,6 +69,15 @@ def cases():
     return out
 
 
+def test_file_cases(path):
+    """Gather test cases from an external held-out jsonl of {text, tool, arg_hint} rows."""
+    out = []
+    for line in open(path):
+        row = json.loads(line)
+        out.append(("heldout", row["text"], row.get("tool"), row.get("arg_hint", ""), False))
+    return out
+
+
 PREFILL = '{"tool": '
 
 
@@ -77,7 +90,9 @@ def main():
     constrain = "--constrain" in sys.argv
     tool_names = list(tools.TOOLS.keys()) if constrain else None
     verbose, score, wrong_tool, fired, blocked, t0 = "--verbose" in sys.argv, {}, 0, 0, 0, time.time()
-    for group, text, tool, arg, exact in cases():
+    test_path = _flag("--test")
+    case_list = test_file_cases(os.path.join(REPO, test_path)) if test_path else cases()
+    for group, text, tool, arg, exact in case_list:
         prompt = tok.apply_chat_template([{"role": "system", "content": system}, {"role": "user", "content": text}],
                                          add_generation_prompt=True, tokenize=False, enable_thinking=False)
         if constrain:

@@ -2,6 +2,9 @@
 
 TLDR per loop round, newest first. The loop adds a line every round it ships something, then the scorecard.
 
+- 2026-09-25 v4.15.3: the honest 5.0 check. 512 held-out phrasings written blind (eval/heldout.jsonl, filtered against every training and test row): 361 right, 29 wrong past the guard, 24 right picks refused. Round eleven's 9 was flattered by tuning on its own test set; this set is the judge now.
+  `v4.15.3 · 126 tools · 557 tests · docs coverage 100% · laws all hold · biggest tools_util.py 700 · actions 221/221 · parity 221/221 · util_diff 261/261`
+
 - 2026-09-25 v4.15.2: picker round eleven, guard only. Wrong picks past the guard 50 to 9, right picks refused still 0, 1300 of 1895 right. Under the 5.0 bar on paper, but the rules were tuned on this same test set (fresh phrasings: 3 of 5 wrong picks caught), so 5.0 waits for a held-out set.
   `v4.15.2 · 126 tools · 557 tests · docs coverage 100% · laws all hold · biggest tools_util.py 700 · actions 221/221 · parity 221/221 · util_diff 261/261`
 
