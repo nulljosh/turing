@@ -117,5 +117,76 @@ class OnlyByName(unittest.TestCase):
         self.assertIn("write_document", tools.WRITES)
 
 
+class EditFile(unittest.TestCase):
+    """Rewriting any text file inside home: found by name, diff shown, only lands on a yes, never outside home."""
+
+    def test_edits_a_named_file_on_a_yes(self):
+        """A file on the Desktop, named bare, is found, rewritten and its diff shown."""
+        with tempfile.TemporaryDirectory() as tmp:
+            home = os.path.realpath(tmp)
+            os.makedirs(f"{home}/Desktop")
+            path = f"{home}/Desktop/notes.md"
+            open(path, "w").write("A long note.\n")
+            shown = []
+            with mock.patch("os.path.expanduser", side_effect=lambda p: p.replace("~", home)), \
+                    mock.patch("tools_llm.ask_llm", return_value="A note.\n(Answered by Qwen on this Mac, not by me.)"):
+                result = tools_write.edit_file("notes.md", "make it shorter", log=shown.append, confirm=lambda n, a: n == "edit_file")
+            self.assertEqual(result, f"Rewrote {path}.")
+            self.assertEqual(open(path).read(), "A note.\n")
+            self.assertTrue(any("-A long note." in line for line in shown))
+
+    def test_missing_outside_or_binary_refused(self):
+        """No such file, a file outside home, or a binary one: declined, the model never called."""
+        with tempfile.TemporaryDirectory() as home, mock.patch("tools_llm.ask_llm", side_effect=AssertionError("called")), \
+                mock.patch("os.path.expanduser", side_effect=lambda p: p.replace("~", home)):
+            self.assertIn("can't find", tools_write.edit_file("nope.md", "shorter"))
+            self.assertIn("can't find", tools_write.edit_file("/etc/hosts", "shorter"))
+            open(f"{home}/pic.png", "wb").write(b"\x89PNG\xff\xfe\x00")
+            self.assertIn("not a text file", tools_write.edit_file("pic.png", "shorter"))
+
+    def test_routes_end_to_end(self):
+        """"edit notes.md: make it shorter" and "in notes.md, fix the typo" both reach edit_file through tools.do."""
+        with mock.patch("tools_write.edit_file", return_value="Rewrote x.") as ef:
+            self.assertEqual(tools.do("edit notes.md: make it shorter", confirm=lambda n, a: True), "Rewrote x.")
+            self.assertEqual(ef.call_args.args[:2], ("notes.md", "make it shorter"))
+            tools.do("in ~/Desktop/notes.md, fix the typo", confirm=lambda n, a: True)
+            self.assertEqual(ef.call_args.args[:2], ("~/Desktop/notes.md", "fix the typo"))
+
+
+class WriteCode(unittest.TestCase):
+    """New code to disk: the fence stripped, the whole file shown, only lands on a yes."""
+
+    def test_writes_code_on_a_yes_and_not_on_a_no(self):
+        """The model's fenced reply lands as bare code on a yes; a no leaves nothing behind."""
+        with tempfile.TemporaryDirectory() as tmp, \
+                mock.patch("os.path.expanduser", side_effect=lambda p: p.replace("~", os.path.realpath(tmp))), \
+                mock.patch("tools_llm.ask_llm", return_value="```python\nprint('hi')\n```\n(Answered by Qwen on this Mac, not by me.)"):
+            self.assertEqual(tools_write.write_code("print hi", "hi.py", confirm=lambda n, a: False), "Okay, I will not.")
+            self.assertFalse(os.path.exists(f"{tmp}/Desktop/hi.py"))
+            shown = []
+            result = tools_write.write_code("print hi", "hi.py", log=shown.append, confirm=lambda n, a: n == "write_code")
+            home = os.path.realpath(tmp)
+            self.assertEqual(result, f"Wrote {home}/Desktop/hi.py.")
+            self.assertEqual(open(f"{home}/Desktop/hi.py").read(), "print('hi')\n")
+            self.assertTrue(any("+print('hi')" in line for line in shown))
+
+    def test_outside_home_refused(self):
+        """A path outside home is refused before the model is called."""
+        with mock.patch("tools_llm.ask_llm", side_effect=AssertionError("called")):
+            self.assertIn("only write inside", tools_write.write_code("print hi", "/tmp/hi.py"))
+
+    def test_routes_end_to_end(self):
+        """Both phrasings reach write_code through tools.do, and "write a doc about x" still does not."""
+        with mock.patch("tools_write.write_code", return_value="Wrote x.") as wc:
+            self.assertEqual(tools.do("write a python script that prints the date to today.py", confirm=lambda n, a: True), "Wrote x.")
+            self.assertEqual(wc.call_args.args[:2], ("python script that prints the date", "today.py"))
+            tools.do("write hello.sh that echoes hi", confirm=lambda n, a: True)
+            self.assertEqual(wc.call_args.args[:2], ("echoes hi", "hello.sh"))
+            wc.reset_mock()
+            with mock.patch("tools_llm.ask_llm", return_value="A doc."), mock.patch("builtins.open", mock.mock_open()):
+                tools.do("write a doc about the roadmap", confirm=lambda n, a: True)
+            self.assertFalse(wc.called)
+
+
 if __name__ == "__main__":
     unittest.main()
