@@ -13,6 +13,7 @@ import re
 import subprocess
 import sys
 
+import feedback
 import tools
 import tools_util
 import untrusted
@@ -39,9 +40,17 @@ class Session:
         q = query.strip()
         if not q:
             return None if or_none else "Say something, or tell me what to do."
-        if _RECALL.match(tools._bare(q)):
+        bare = tools._bare(q)
+        # a rating verdict is caught here, before anything below ever sees the sentence, so "good" or "wrong"
+        # never route to a tool, and answering a real command never eats the last one's rating
+        if feedback.is_summary(bare):
+            return feedback.feedback_summary()
+        verdict = feedback.match(bare)
+        if verdict:
+            return self.rate(*verdict)
+        if _RECALL.match(bare):
             return self.recall()
-        pointer = self.point_back(tools._bare(q))
+        pointer = self.point_back(bare)
         if pointer:
             q = pointer
         elif _AGAIN.match(tools._bare(q)):
@@ -70,6 +79,20 @@ class Session:
         result = result or "That is not a command I know. Ask me a question, or tell me to do something."
         self.history.append({"q": q, "calls": calls, "result": result})
         return result
+
+    def rate(self, rating, correction):
+        """Log a rating for the last turn, whatever kind it was: a tool call or a generated answer (chat.py's
+        record() below fills that half in). Nothing to rate yet is an honest answer, not a crash."""
+        if not self.history:
+            return "Nothing to rate yet."
+        last = self.history[-1]
+        tool, args = feedback.parse_calls(last["calls"])
+        return feedback.record(last["q"], tool, args, last["result"], rating, correction)
+
+    def record(self, q, result):
+        """Note a turn that happened outside tools.do (a generated answer from chat.py's own head), so a rating
+        right after it still has something to rate."""
+        self.history.append({"q": q, "calls": [], "result": result})
 
     def last_page(self):
         """The address of the page she last opened, searched or read in this conversation, or None."""

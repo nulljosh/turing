@@ -71,6 +71,14 @@ def _crescent(cx, cy, r, bite=0.85, n=24):
     return [(round(x, 1), round(y, 1)) for x, y in outer + inner]
 
 
+def _ring(cx, cy, rx, ry, tilt_deg, n=28):
+    """A tilted ellipse as a closed list of points, for a planet's ring drawn as thin strokes."""
+    import math
+    t = math.radians(tilt_deg)
+    pts = [(rx * math.cos(2 * math.pi * i / n), ry * math.sin(2 * math.pi * i / n)) for i in range(n + 1)]
+    return [(round(cx + x * math.cos(t) - y * math.sin(t), 1), round(cy + x * math.sin(t) + y * math.cos(t), 1)) for x, y in pts]
+
+
 _LINES = lambda pts: [f"line {a[0]},{a[1]} {b[0]},{b[1]}" for a, b in zip(pts, pts[1:])]
 MOTIFS = {
     # 4.8: three constellations and loose stars. A dipper in front of her gaze, Lyra behind her neck, a small
@@ -89,6 +97,8 @@ MOTIFS = {
         "stars": [(738, 440, 5), (230, 560, 2), (290, 690, 2), (770, 462, 2), (360, 640, 2), (238, 500, 2)]},
     # 4.10: a crescent moon rising at the left edge of her sky.
     3: {"polys": [_crescent(258, 420, 17)], "stars": [(282, 400, 2), (246, 452, 2)]},
+    # 4.11: a small ringed planet low in the right of her sky.
+    4: {"lines": _LINES(_ring(772, 662, 23, 6, -28)), "stars": [(772, 662, 9), (742, 700, 2), (796, 692, 2)]},
 }
 
 

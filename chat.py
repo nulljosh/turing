@@ -342,6 +342,7 @@ def chat():
         said = "".join(shown).removeprefix("Samantha: ")
         print(answer[len(said):] + "\n" if shown and answer.startswith(said) else ("\n" if shown else "") + f"Samantha: {answer}\n")
         history.append((question, answer))
+        session.record(question, answer)  # so "good"/"wrong" right after a generated answer has something to rate
 
 
 def tui():
@@ -415,6 +416,7 @@ def tui():
             answer, topic_active, last_subject = safe_turn(question, history, topic_active, last_subject, on_text=show)
             del lines[live:]
             history.append((question, answer))
+            session.record(question, answer)  # so "good"/"wrong" right after a generated answer has something to rate
             for l in (f"Samantha: {answer}", ""):
                 lines.extend(l.split("\n"))
 

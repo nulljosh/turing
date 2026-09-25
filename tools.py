@@ -756,3 +756,4 @@ if __name__ == "__main__":
 
 
 from tools_agent import agent, pick, _faq_knows, HANDS_ADAPTER, HANDS_SYSTEM  # noqa: E402,F401  (her hands' choices, split out for size; re-exported)
+import feedback  # noqa: E402,F401  (splices feedback_summary into TOOLS/_ROUTES/NOT_FOR_MODELS; private, never a model's pick or MCP)

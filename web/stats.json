@@ -1,5 +1,5 @@
 {
-  "version": "4.10.0",
+  "version": "4.11.0",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -16,8 +16,8 @@
         "documented": 10
       },
       "harness.py": {
-        "total": 10,
-        "documented": 10
+        "total": 12,
+        "documented": 12
       },
       "library.py": {
         "total": 8,
@@ -38,6 +38,10 @@
       "ask.py": {
         "total": 7,
         "documented": 7
+      },
+      "feedback.py": {
+        "total": 8,
+        "documented": 8
       },
       "tools_agent.py": {
         "total": 5,
@@ -88,8 +92,8 @@
         "documented": 7
       },
       "tools_badge.py": {
-        "total": 21,
-        "documented": 21
+        "total": 22,
+        "documented": 22
       },
       "chat.py": {
         "total": 18,
@@ -247,6 +251,10 @@
         "total": 40,
         "documented": 40
       },
+      "eval/test_feedback.py": {
+        "total": 31,
+        "documented": 31
+      },
       "eval/test_gguf_parity.py": {
         "total": 1,
         "documented": 1
@@ -347,6 +355,10 @@
         "total": 1,
         "documented": 1
       },
+      "eval/feedback_to_data.py": {
+        "total": 7,
+        "documented": 7
+      },
       "eval/gen_hands_data.py": {
         "total": 5,
         "documented": 5
@@ -380,7 +392,7 @@
   "measured": {
     "tools": {
       "before": 0,
-      "after": 125
+      "after": 126
     },
     "actions_eval": "77/77",
     "knowledge_sweep": {

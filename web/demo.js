@@ -571,7 +571,17 @@
     }, Promise.resolve()).then(function () { return { calls: calls, text: last }; });
   }
 
+  // Real feedback (feedback.py) writes to a file only the real Mac has; the landing page has nowhere private to put
+  // it, so it says so instead of pretending, same words either way. Caught here first, before any route or tool.
+  var FEEDBACK_UP = /^(?:good|thanks,? that'?s right|👍|\+1)[.!]*$/i;
+  var FEEDBACK_DOWN = /^(?:bad|wrong|that'?s not what i meant|👎|-1)[.!]*$/i;
+  var FEEDBACK_CORRECTION = /^wrong,?\s*i meant\s+.+$/i;
+  var FEEDBACK_SUMMARY = /^(?:how am i rating you|show my feedback)\??$/i;
+
   function answer(q) {
+    var bareQ = S.bare(q);
+    if (FEEDBACK_UP.test(bareQ) || FEEDBACK_DOWN.test(bareQ) || FEEDBACK_CORRECTION.test(bareQ) || FEEDBACK_SUMMARY.test(bareQ))
+      return Promise.resolve({ text: "On her real Mac that rating is saved locally so she learns from it." });
     var exact = S.exact(q);
     if (exact) return Promise.resolve({ text: exact });
     // bare() strips "can you", "please" and the rest, the same as every other command

@@ -15,11 +15,18 @@ Protocol, one JSON object per line, unbuffered stdin/stdout:
 import json
 import sys
 
+import feedback
+
 
 def run(read_line, write, ask_fn):
     """The protocol loop: one {"ask": ...} in, {"working"}*, an optional {"confirm"}/{"yes"} round trip, then
     exactly one {"answer": ...}. read_line() returns the next input line or None at EOF; write(obj) sends one
-    reply. ask_fn(question, log, confirm) answers one turn, same signature as harness.Session.ask."""
+    reply. ask_fn(question, log, confirm) answers one turn, same signature as harness.Session.ask.
+
+    A fresh harness.Session is made per turn (see _real_ask), so there is no Session history to rate against.
+    `last` tracks the one turn this process just answered instead, updated after every real turn, so "good"/
+    "wrong" here is caught the same way as harness.Session.ask: before ask_fn, before any tool runs."""
+    last = {"q": None, "tool": "answer", "args": (), "reply": None}
     while True:
         line = read_line()
         if line is None:
@@ -34,8 +41,23 @@ def run(read_line, write, ask_fn):
             write({"answer": "That did not look like a question."})
             continue
 
+        bare = question.strip()
+        if feedback.is_summary(bare):
+            write({"answer": feedback.feedback_summary()})
+            continue
+        verdict = feedback.match(bare)
+        if verdict:
+            if last["q"] is None:
+                write({"answer": "Nothing to rate yet."})
+            else:
+                write({"answer": feedback.record(last["q"], last["tool"], last["args"], last["reply"], *verdict)})
+            continue
+
+        calls = []
+
         def log(text):
             """Every tool call, as it is found."""
+            calls.append(text.strip())
             write({"working": text.strip()})
 
         def confirm(name, args):
@@ -48,6 +70,8 @@ def run(read_line, write, ask_fn):
                 return False
 
         answer = ask_fn(question, log=log, confirm=confirm)
+        tool, args = feedback.parse_calls(calls)
+        last.update(q=question, tool=tool, args=args, reply=answer or "")
         write({"answer": answer if answer is not None else "That is not a command I know."})
 
 
