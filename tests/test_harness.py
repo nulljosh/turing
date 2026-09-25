@@ -267,6 +267,31 @@ class AgentGrounding(unittest.TestCase):
         self.assertFalse(tools._sound("read_document", "the docs tab", "what does the docs tab say"))
         self.assertFalse(tools._sound("web_search", "the weather in vancouver", "look up the weather in vancouver"))
 
+    def test_round_thirteen_no_evidence_tools_and_general_knowledge_abstain(self):
+        """Round thirteen's guard gaps: a set of no-argument tools (screenshot, clipboard, battery,
+        weather, calendar_today, current_date, feedback_summary, list_mcp_tools) and thin-argument
+        text tools (base64, reverse_text, shout, json_pretty) had zero _EVIDENCE, so any pick passed
+        trivially on an empty or coincidental argument. Also: a question shaped like trivia or
+        opinion ("what's a good song to play", "is it cold in Paris usually") must not fire a
+        knowledge-sensitive utility tool just because it shares a bare word, while the same tool's
+        own real, personal-context phrasing still passes."""
+        self.assertTrue(tools._sound("screenshot", "", "take a screenshot"))
+        self.assertTrue(tools._sound("screenshot", "", "get a picture of my screen"))
+        self.assertFalse(tools._sound("screenshot", "", "what's a good picture to use as a wallpaper"))
+        self.assertTrue(tools._sound("clipboard", "", "what's on my clipboard"))
+        self.assertTrue(tools._sound("clipboard", "", "what did i just copy"))
+        self.assertTrue(tools._sound("battery", "", "how much juice is left"))
+        self.assertFalse(tools._sound("battery", "", "why is a battery measured in volts"))
+        self.assertTrue(tools._sound("weather", "", "what's the weather"))
+        self.assertTrue(tools._sound("weather", "vancouver", "how cold is it in vancouver"))
+        self.assertFalse(tools._sound("weather", "", "is it cold in paris usually"))
+        self.assertTrue(tools._sound("calendar_today", "", "what's on my calendar today"))
+        self.assertTrue(tools._sound("music", "playing", "who is this artist"))
+        self.assertFalse(tools._sound("flip_coin", "", "which coin is usually worth more, a penny or a nickel"))
+        self.assertTrue(tools._sound("flip_coin", "", "flip a coin"))
+        self.assertFalse(tools._sound("json_pretty", "{}", "why does json even exist"))
+        self.assertTrue(tools._sound("json_pretty", '{"a": 1}', 'pretty print {"a": 1}'))
+
 
 if __name__ == "__main__":
     unittest.main()

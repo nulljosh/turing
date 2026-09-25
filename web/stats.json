@@ -1,5 +1,5 @@
 {
-  "version": "4.15.5",
+  "version": "4.15.6",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -80,8 +80,8 @@
         "documented": 8
       },
       "tools_registry.py": {
-        "total": 2,
-        "documented": 2
+        "total": 3,
+        "documented": 3
       },
       "tools_logo.py": {
         "total": 28,
@@ -296,8 +296,8 @@
         "documented": 11
       },
       "eval/test_harness.py": {
-        "total": 28,
-        "documented": 28
+        "total": 29,
+        "documented": 29
       },
       "eval/test_intent.py": {
         "total": 38,

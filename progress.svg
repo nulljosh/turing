@@ -4,8 +4,8 @@
   text { font-family: -apple-system, Helvetica, Arial, sans-serif; fill: var(--ink); }
   line, polyline { stroke: var(--ink); fill: none; }
   .g { stroke-dasharray: 1 4; }
-</style><text x="50" y="11" font-size="10">Lines of real code</text><line x1="50" y1="26" x2="470" y2="26" class="g"/><text x="46" y="29" font-size="9" text-anchor="end">24299</text><line x1="50" y1="97" x2="470" y2="97" class="g"/><text x="46" y="100" font-size="9" text-anchor="end">12149</text>
+</style><text x="50" y="11" font-size="10">Lines of real code</text><line x1="50" y1="26" x2="470" y2="26" class="g"/><text x="46" y="29" font-size="9" text-anchor="end">25237</text><line x1="50" y1="97" x2="470" y2="97" class="g"/><text x="46" y="100" font-size="9" text-anchor="end">12618</text>
 <line x1="50" y1="26" x2="50" y2="166"/><line x1="50" y1="166" x2="470" y2="166"/>
-<polyline points="50,166 60,163 70,162 80,159 90,157 100,153 110,150 120,140 130,132 140,124 150,122 160,119 170,115 180,109 190,106 200,105 210,103 220,102 230,99 240,97 250,94 260,94 270,91 280,89 290,87 300,84 310,82 320,79 330,76 340,73 350,72 360,69 370,69 380,67 390,62 400,59 410,56 420,53 430,46 440,38 450,32 460,27 470,26" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="50,166 60,163 70,162 80,160 90,158 100,154 110,150 120,141 130,134 140,125 150,123 160,121 170,117 180,111 190,109 200,107 210,105 220,105 230,101 240,99 250,97 260,97 270,94 280,92 290,90 300,87 310,85 320,82 330,79 340,76 350,75 360,73 370,73 380,71 390,66 400,63 410,60 420,58 430,50 440,43 450,37 460,32 470,26" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
 <text x="50" y="182" font-size="10">Sep 13</text><text x="470" y="182" font-size="10" text-anchor="end">Sep 25</text>
-<text x="50" y="196" font-size="10" font-weight="600">24,299 lines &#183; 100% documented &#183; 404 commits since Sep 13 2026</text></svg>
+<text x="50" y="196" font-size="10" font-weight="600">25,237 lines &#183; 100% documented &#183; 406 commits since Sep 13 2026</text></svg>

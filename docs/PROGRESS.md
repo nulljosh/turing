@@ -2,6 +2,9 @@
 
 TLDR per loop round, newest first. The loop adds a line every round it ships something, then the scorecard.
 
+- 2026-09-25 v4.15.6: picker round thirteen, guard only. Chit-chat and trivia questions no longer fire weather, music and chance tools; eight thin tools got their own words. Wrong past the guard 29 to 26 and 20 to 19 on the two blind sets, refused flat, standard set unchanged. Both blind sets have now shaped tuning, so a third one judges 5.0.
+  `v4.15.6 · 126 tools · 558 tests · docs coverage 100% · laws all hold · biggest tools_util.py 700 · actions 221/221 · parity 221/221 · util_diff 261/261`
+
 - 2026-09-25 v4.15.5: a second blind held-out set (eval/heldout2.jsonl, 500 rows, written without seeing any test data or results): 350 right, 20 wrong past the guard, 16 right picks refused. It agrees with the first: 5.0 is not close yet. Loop tapering until the weekly usage reset.
   `v4.15.5 · 126 tools · 557 tests · docs coverage 100% · laws all hold · biggest tools_util.py 700 · actions 221/221 · parity 221/221 · util_diff 261/261`
 

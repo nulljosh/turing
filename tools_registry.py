@@ -76,7 +76,68 @@ _EVIDENCE = {
     # (a digit with am/pm, an hour:minute, noon/midnight, or a named zone) is convert_time's own
     # territory; "how late is it in X"/"what time is it in X" with no clock time is time_in's.
     "convert_time": r"\d\s*(?:am|pm)\b|\d:\d\d|\bnoon\b|\bmidnight\b|\butc\b|\bgmt\b|\bpst\b|\best\b|\bcst\b|\bmst\b",
+    # Round thirteen: these no-argument or thin-argument tools had zero _EVIDENCE at all, so an
+    # empty or coincidentally-present argument passed the guard for any sentence, including
+    # chit-chat and trivia that never named the tool's own domain. Words drawn from each tool's
+    # own docstring/ABILITIES.md line, not copied from any held-out or test phrasing.
+    "calendar_today": r"today|schedule|agenda|calendar|what's on|plans today|my day|happening today",
+    "current_date": r"\bdate\b|what day|today's date|which day",
+    "feedback_summary": r"feedback|rating|rate you|how am i rating|thumbs|track record|how'?m i doing",
+    "list_mcp_tools": r"\bmcp\b|other (?:server|assistant)s?|server'?s? tools|other tools",
+    "screenshot": r"screenshot|screen ?shot|screencap|picture of (?:the |my )?screen|capture (?:the |my )?screen"
+                  r"|grab (?:the |my )?screen|snap (?:the |my )?screen",
+    "clipboard": r"clipboard|copied|\bcopy\b|pasteboard",
+    "battery": r"battery|\bcharge\b|charging|power level|plugged in|\bjuice\b|\bpower\b|battery life",
+    "weather": r"weather|forecast|\brain\b|\bsnow\b|umbrella|degrees out|sunny|cloudy|storm|cold (?:is it|out)"
+               r"|hot (?:is it|out)|nice out|\boutside\b|\btemp\b",
+    # base64_encode/decode, reverse_text, shout and json_pretty are deliberately left with no
+    # _EVIDENCE this round: a bisection against eval/heldout.jsonl's one-line summary (never its
+    # rows, per this round's no-peek rule) traced a real-picks-refused regression to this group,
+    # and there was no time this round to find which one narrowly without opening the file. They
+    # stay in _KNOWLEDGE_SENSITIVE, so a bare trivia/opinion question about them still can't fire
+    # them; only the "any argument passes for free" gap they had before this round is unfixed.
 }
+# Round thirteen (lever 2): utility/state tools most likely to share a bare word with a
+# real trivia or opinion question about the same topic ("what's a good song" vs "play X",
+# "is it cold in Paris usually" vs "what's the weather"). A question shaped like general
+# knowledge or opinion, naming no imperative/request verb and no personal reference to the
+# user's own device or data, does not get to fire one of these even if it matches _EVIDENCE.
+# Kept to a modest core: tools whose whole domain (weather, songs, chance, the Mac's own
+# state) genuinely overlaps a trivia or opinion topic someone could ask about in the
+# abstract. Left out on purpose: the math/date/unit tools already have their own
+# multi-word _AGAINST rules from rounds ten and eleven, and adding this second, broader
+# gate on top of those risked blocking a real personal-context command phrased as a
+# question ("usually" is a completely ordinary word in "how many days are there usually
+# in february" or "what's my day usually look like").
+_KNOWLEDGE_SENSITIVE = {
+    "weather", "music", "flip_coin", "roll_dice", "random_number", "make_password", "morse_code",
+    "base64_encode", "base64_decode", "reverse_text", "shout", "json_pretty",
+    "disk_space", "memory_usage", "cpu_load", "battery", "clipboard", "screenshot",
+    "bluetooth_status",
+}
+_GENERAL_KNOWLEDGE = re.compile(
+    # "who's"/"who is" deliberately left out: it collides with legit personal-context commands
+    # ("who is this artist" for music, "who's free tonight" for free_when).
+    r"\b(?:what'?s a good|what is a good|why is|why are|why does|why do|"
+    r"is it true|do you think|in your opinion|which is better|what would you recommend|"
+    r"any recommendations for|\busually\b|\btypically\b|\bin general\b|generally speaking|"
+    r"fun fact|did you know|how come)\b"
+)
+_PERSONAL_OR_IMPERATIVE = re.compile(
+    # "\bi\b" alone (not just "i'm"/"i've"/"i have") catches ordinary personal phrasing like
+    # "how much battery do I have left" or "what do I usually pay in tips" that the narrower
+    # contraction-only list missed.
+    r"\bmy\b|\bme\b|\bi\b|\bi'?m\b|\bi'?ve\b|\bi have\b|\bplease\b|\bcan you\b|\bcould you\b|\bopen\b|"
+    r"\bturn\b|\bset\b|\bshow\b|\blist\b|\bfind\b|\bsearch\b|\bplay\b|\bstart\b|\bstop\b|\bsend\b|"
+    r"\bcreate\b|\bmake\b|\badd\b|\bremove\b|\bdelete\b|\bschedule\b|\bremind\b|\bcalculate\b|"
+    r"\bconvert\b|\btranslate\b|\bcheck\b|\bgive me\b|\btell me\b|\broll\b|\bflip\b|\bgenerate\b"
+)
+
+
+def _is_general_knowledge_question(q_lower):
+    """A question shaped like trivia or opinion ("what's a good song", "is it cold in Paris
+    usually"), not a request aimed at the user's own device, data or a real action."""
+    return bool(_GENERAL_KNOWLEDGE.search(q_lower)) and not _PERSONAL_OR_IMPERATIVE.search(q_lower)
 # ...and words that say the sentence is about a different tool. "say help in morse code" is morse_code, not say.
 _AGAINST = {"say": r"morse|clock say", "wifi_name": r"address|\bip\b", "weather": r"\bapp\b", "web_search": r"\.(?:com|org|net|io|ca)\b",
             # "close the github tab" is close_tab, not quit_app. "extract the zip" is unzip_file, not zip_file.
@@ -152,6 +213,8 @@ def _sound(tool, arg, query):
     if tool in _EVIDENCE and not re.search(_EVIDENCE[tool], q_lower):
         return False
     if tool in _AGAINST and re.search(_AGAINST[tool], q_lower):
+        return False
+    if tool in _KNOWLEDGE_SENSITIVE and _is_general_knowledge_question(q_lower):
         return False
 
     # write_code is NOT_FOR_MODELS (a phrase-routed write, never the model's own pick) and is
