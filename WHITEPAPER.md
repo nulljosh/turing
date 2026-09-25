@@ -1,6 +1,6 @@
 # Turing Technical Whitepaper
 
-**v4.13.0** | September 2026
+**v4.14.0** | September 2026
 
 Turing builds small language models on one Mac. Its first model, Samantha, is a 0.5B model trained on your own writing. She will never out-think a frontier model. She does not try to. She runs on your Mac, costs nothing per question, keeps everything on the machine, and gets real work done with 106 exact tools. When a question is too hard for her, she borrows a bigger brain that also lives on the Mac. You can type to her or talk to her. She can see your screen, click in your apps, and research a topic with sources. She asks before anything that changes something.
 
@@ -45,7 +45,7 @@ Then a teacher. Claude writes practice questions and answers from real passages 
 
 ## Promises she keeps
 
-She believes what she reads, never what it tells her to do. Text from a page, an email, a file or the screen is fenced as data before any model sees it and can never pick a tool; law 9 tries three injection attacks through every reading tool on every push.
+She believes what she reads, never what it tells her to do. Text from a page, an email, a file or the screen is fenced as data before any model sees it and can never pick a tool; law 9 tries three injection attacks through every reading tool on every push. When a model proposes a write, it is checked against your own words before it can even ask you: a recipient, path or link that only came from something she read is stopped.
 
 
 Rules live in LAWS.md and are checked against every tool on every push. Anything that writes, sends or looks at your screen asks first. Private tools never reach a model's menu. Her hands stay in your home folder. On the 65-question knowledge check she gets 62 right and 0 confidently wrong; the rest she declines.

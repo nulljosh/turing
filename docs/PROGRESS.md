@@ -2,6 +2,9 @@
 
 TLDR per loop round, newest first. The loop adds a line every round it ships something, then the scorecard.
 
+- 2026-09-25 🎉 v4.14.0: her own head got bigger and her hands got safer. Picker round eight: 36 tools had never been trained, now all are; 1194 of 1878 phrasings right (was 973), 134 wrong picks past the guard (was 222), only 2 right picks refused after the guard learned the new tools' words. And every write a model proposes is checked against your own words before it can ask you (law 12, zero false blocks). Badge step 7: Scutum, the shield.
+  `v4.14.0 · 126 tools · 554 tests · docs coverage 100% · laws all hold · biggest tools_util.py 700 · actions 221/221 · parity 221/221 · util_diff 261/261`
+
 - 2026-09-25 🎉 v4.13.0: she plans. A multi-step job becomes a step list from her real tools, shown to you before it runs, each result checked, a stop on the first failure, a yes before every write. Law 11: nothing she reads mid-plan can add or change a step. Badge step 6: a compass rose and a dotted route.
   `v4.13.0 · 126 tools · 528 tests · docs coverage 100% · laws all hold · biggest tools_util.py 700 · actions 221/221 · parity 221/221 · util_diff 261/261`
 

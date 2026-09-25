@@ -456,7 +456,7 @@ def do(query, log=None, confirm=None):
         import planner
         steps = planner.plan(query)
         if steps:
-            return planner.run(steps, log=log, confirm=confirm)
+            return planner.run(steps, query, log=log, confirm=confirm)
         return agent(query, log=log, confirm=confirm)
     if _faq_knows(query):
         return None  # a question her own FAQ answers is about her, not a job for her hands

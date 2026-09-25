@@ -6,6 +6,7 @@ import os
 import re
 import urllib.request
 
+import intent
 import untrusted
 
 HANDS_ADAPTER = os.path.join(os.path.dirname(os.path.abspath(__file__)), "hands-adapter")
@@ -83,9 +84,15 @@ def agent(task, max_steps=6, log=None, confirm=None):
         for c in calls:
             name, args = c["function"]["name"], c["function"].get("arguments") or {}
             fn = tools.model_tools().get(name)
+            # law 12: before confirm ever runs, an automatic check that a proposed WRITE traces to what the
+            # user asked, not to something a reading tool's result talked her into proposing. A failed check
+            # never reaches confirm at all.
+            ok, why = (True, "") if name not in tools.WRITES else intent.check(task, name, tuple(map(str, args.values())))
             try:
                 if not fn:
                     result = f"No tool named {name}."
+                elif not ok:
+                    result = f"I stopped: that step would {why}, which you didn't ask for."
                 elif confirm and name in tools.WRITES and not confirm(name, tuple(map(str, args.values()))):
                     result = "The user said no."
                 else:

@@ -84,6 +84,15 @@ NUMBERS = (["17", "91", "97", "221", "1009", "84", "600851475143", "2", "49", "7
 YEARS = (["2026", "1999", "44", "9", "2024", "300", "1984", "14", "3999"], ["2027", "88", "1066"])
 MORSE = (["sos", "hello", "help", "turing", "ok", "samantha", "mayday"], ["ship", "morse", "hi"])
 NONE = ([""], [""])
+REPOS = (["turing", "nimble", "cadence", "sidewise", "tripwire", "windgate", "curbfind", "costanza", "madobe", "bookrank"],
+         ["wordroot", "numen", "roost", "swing"])
+SENDERS = (["amazon", "the bank", "github", "my boss", "apple"], ["netflix", "the landlord"])
+TIMES = (["thursday afternoon", "this week", "tomorrow morning", "friday", "next monday"], ["this weekend", "tuesday evening"])
+FILENAMES = (["report.pdf", "resume.docx", "budget.xlsx", "notes.txt", "photo.png"], ["invoice.pdf", "draft.docx"])
+CSVS = (["sales.csv", "budget.csv", "data.csv"], ["expenses.csv"])
+VIDEOS = (["~/desktop/clip.mp4", "~/downloads/meeting.mov", "~/desktop/interview.mp4"], ["~/downloads/lecture.mp4"])
+SEARCHWORDS = (["eggs", "the budget", "recipe", "passwords", "project ideas"], ["car insurance", "flight info"])
+ZIPS = (["~/downloads/photos.zip", "~/desktop/archive.zip", "~/downloads/backup.zip"], ["~/downloads/project.zip"])
 
 # tool: (train templates, held-out templates, fillers, arg). arg None copies the filler, a string is fixed.
 # A filler that is a (spoken, arg) pair carries its own arg.
@@ -274,6 +283,98 @@ SPEC = [
     ("convert_image", ['convert ~/downloads/mona.jpg to png'], ['convert ~/downloads/mona.jpg to png'], NONE, '~/downloads/mona.jpg to png'),
     ("convert_image", ['convert ~/pictures/beach.png to webp'], ['convert ~/pictures/beach.png to webp'], NONE, '~/pictures/beach.png to webp'),
 
+    # round eight: the 36 tools that had zero picker data (system, dev, knowledge, files, writing families).
+    # Two-blank tools (a source and a destination, or text and a language) can't use the single-{} template
+    # shape, so they get a few fixed full sentences instead, same pattern as convert_units/rotate_image above.
+    ("bluetooth_status", ["bluetooth status", "is bluetooth on", "check bluetooth", "what's my bluetooth doing", "bluetooth check"],
+     ["how's bluetooth doing", "is my bluetooth turned on"], NONE, ""),
+    ("calendar_tomorrow", ["what's on my calendar tomorrow", "my schedule tomorrow", "what do i have tomorrow", "tomorrow's calendar"],
+     ["show me tomorrow's events", "what's happening on my calendar tomorrow"], NONE, ""),
+    ("running_apps", ["what apps are running", "list open apps", "what's open right now", "which apps are running"],
+     ["what programs are open", "what's currently running"], NONE, ""),
+    ("recent_downloads", ["what's in my downloads", "recent downloads", "what did i just download", "show my recent downloads"],
+     ["what did i download recently", "show me what's in my downloads folder"], NONE, ""),
+    ("unread_mail", ["unread mail", "do i have any new email", "check my unread mail", "any new mail"],
+     ["do i have unread email", "what's new in my inbox"], NONE, ""),
+    ("unread_mail", ["anything from {} in my mail", "email from {}", "mail from {}"],
+     ["any mail from {}", "new email from {}"], SENDERS, None),
+    ("free_when", ["am i free", "when am i free", "do i have any free time"], ["what's my availability", "am i busy"], NONE, ""),
+    ("free_when", ["am i free {}", "when am i free {}", "do i have time {}"],
+     ["what's my schedule looking like {}", "any openings {}"], TIMES, None),
+    ("git_status", ["git status", "what's my git status", "check git status"], ["what's changed in git", "git status check"], NONE, ""),
+    ("git_status", ["git status of {}", "git status for {}", "what changed in {}", "check the git status of {}"],
+     ["what's the git status on {}", "any changes in {}"], REPOS, None),
+    ("recent_commits", ["recent commits", "show recent commits", "what are the last commits", "list recent commits"],
+     ["what's the commit history", "show me the last few commits"], NONE, ""),
+    ("recent_commits", ["recent commits in {}", "last commits in {}", "show commits for {}", "commit history for {}"],
+     ["what are the last commits in {}", "recent commits on {}"], REPOS, None),
+    ("run_tests", ["run the tests", "run tests", "test the code"], ["kick off the tests", "let's run tests"], NONE, ""),
+    ("run_tests", ["run {}'s tests", "run the tests for {}", "test {}"], ["run tests on {}", "kick off tests for {}"], REPOS, None),
+    ("open_prs", ["open prs", "any open pull requests", "show open prs", "list pull requests"],
+     ["what pull requests are open", "any prs waiting"], NONE, ""),
+    ("open_prs", ["open prs on {}", "open pull requests for {}", "any prs on {}"],
+     ["pull requests for {}", "show prs on {}"], REPOS, None),
+    ("open_in_editor", ["open {} in the editor", "open {} in vs code", "open the {} repo in code", "edit {} in vscode"],
+     ["pull up {} in the editor", "open up {} in vs code"], REPOS, None),
+    ("quit_app", ["quit {}", "close the app {}", "quit the app {}", "close {}"], ["shut down {}", "kill {}"], APPS, None),
+    ("do_not_disturb", ["turn on do not disturb", "enable do not disturb", "turn on focus", "dnd on"],
+     ["switch do not disturb on", "put me in do not disturb"], NONE, "on"),
+    ("do_not_disturb", ["turn off do not disturb", "disable do not disturb", "turn off focus", "dnd off"],
+     ["switch do not disturb off", "take me out of do not disturb"], NONE, "off"),
+    ("dark_mode", ["turn on dark mode", "enable dark mode", "dark mode on", "switch to dark mode"],
+     ["put on dark mode", "go dark"], NONE, "on"),
+    ("dark_mode", ["turn off dark mode", "disable dark mode", "dark mode off", "switch to light mode", "turn on light mode"],
+     ["go light", "switch off dark mode"], NONE, "off"),
+    ("dark_mode", ["toggle dark mode", "switch dark mode"], ["flip dark mode"], NONE, "toggle"),
+    ("zip_file", ["zip {}", "zip the folder {}", "compress {}"], ["zip up {}", "compress the folder {}"], DIRS, None),
+    ("unzip_file", ["unzip {}", "unzip the file {}", "extract {}"], ["unzip that {}", "extract the zip {}"], ZIPS, None),
+    ("trash_file", ["trash {}", "delete the file {}", "move {} to the trash"], ["throw away {}", "get rid of {}"], FILES, None),
+    ("copy_file", ["copy ~/desktop/a.txt to ~/documents"], ["copy ~/desktop/a.txt to ~/documents"], NONE, "~/desktop/a.txt\t~/documents"),
+    ("copy_file", ["copy the file ~/downloads/receipt.txt into ~/documents"], ["copy the file ~/downloads/receipt.txt into ~/documents"],
+     NONE, "~/downloads/receipt.txt\t~/documents"),
+    ("move_file", ["move ~/desktop/a.txt to ~/documents"], ["move ~/desktop/a.txt to ~/documents"], NONE, "~/desktop/a.txt\t~/documents"),
+    ("move_file", ["move the folder ~/downloads/old-project to ~/documents/code"], ["move the folder ~/downloads/old-project to ~/documents/code"],
+     NONE, "~/downloads/old-project\t~/documents/code"),
+    ("rename_file", ["rename ~/desktop/a.txt to b.txt"], ["rename ~/desktop/a.txt to b.txt"], NONE, "~/desktop/a.txt\tb.txt"),
+    ("rename_file", ["rename ~/downloads/draft.md to final.md"], ["rename ~/downloads/draft.md to final.md"],
+     NONE, "~/downloads/draft.md\tfinal.md"),
+    ("append_note", ["append buy milk to the todo note"], ["append buy milk to the todo note"], NONE, "buy milk\ttodo"),
+    ("append_note", ["add pick up dry cleaning to my errands note"], ["add pick up dry cleaning to my errands note"],
+     NONE, "pick up dry cleaning\terrands"),
+    ("add_event", ["add lunch with sam to my calendar tomorrow at noon"], ["add lunch with sam to my calendar tomorrow at noon"],
+     NONE, "lunch with sam"),
+    ("add_event", ["put dentist on my calendar friday at 3pm"], ["put dentist on my calendar friday at 3pm"], NONE, "dentist"),
+    ("complete_reminder", ["complete the reminder to {}", "mark {} as done", "finish the reminder {}"],
+     ["check off the reminder to {}", "mark my reminder to {} complete"], TODOS, None),
+    ("list_reminders", ["what are my reminders", "list my reminders", "show my reminders", "what's on my reminders list"],
+     ["what reminders do i have", "pull up my reminders"], NONE, ""),
+    ("search_notes", ["search notes for {}", "find {} in my notes", "look for {} in notes"],
+     ["search my notes for {}", "do my notes mention {}"], SEARCHWORDS, None),
+    ("needs_attention", ["what needs my attention", "what needs me", "what should i focus on"],
+     ["what's urgent right now", "what do i need to deal with"], NONE, ""),
+    ("find_file", ["find {}", "where is my {}", "find the file {}", "locate {}"],
+     ["where's my {} file", "track down {}"], FILENAMES, None),
+    ("folder_size", ["how big is {}", "folder size of {}", "what's the size of {}"],
+     ["how much space does {} take up", "size of the folder {}"], DIRS, None),
+    ("research", ["research {}", "do some research on {}", "deep dive into {}", "look into {}"],
+     ["dig into {}", "write a brief on {}"], TOPICS, None),
+    ("research_more", ["tell me more about {}", "go deeper on {}", "expand on {}"],
+     ["say more about {}", "dig deeper into {}"], TOPICS, None),
+    ("save_research", ["save that", "save the research", "save this brief"], ["save it", "keep that research"], NONE, ""),
+    ("save_research", ["save it to {}", "save the research to {}"], ["save that brief to {}"], FILES, None),
+    ("run_code", ["stats on {}", "chart {}", "average of the price column in {}"],
+     ["plot {}", "crunch the numbers in {}"], CSVS, None),
+    ("summarize", ["summarize this page", "summarize the current page"], ["give me a summary of this page"], NONE, ""),
+    ("summarize", ["summarize {}", "give me a summary of {}"], ["summarize the document {}"], FILES, None),
+    ("summarize", ["summarize {}", "what's happening on {}"], ["give me the gist of {}"], SITES, None),
+    ("summarize", ["summarize my unread mail"], ["summarize my unread mail"], NONE, "mail"),
+    ("transcribe_video", ["transcribe {}", "transcribe the video {}", "what is said in {}"],
+     ["what's said in {}", "transcribe the audio {}"], VIDEOS, None),
+    ("translate", ["translate good morning to french"], ["translate good morning to french"], NONE, "good morning\tfrench"),
+    ("translate", ["how do you say thank you in japanese"], ["how do you say thank you in japanese"], NONE, "thank you\tjapanese"),
+    ("translate", ["translate the page github.com into spanish"], ["translate the page github.com into spanish"],
+     NONE, "github.com\tspanish"),
+
     # more than one step, or reading a page and saying what it says: that is agent() work
     ("agent", ["poke around {} and tell me what's up", "go to {} and summarize it", "open {} and tell me the top story",
                "read {} and tell me what's new", "check {} and tell me if anything is interesting",
@@ -296,10 +397,19 @@ PLAIN = (["what is the capital of japan", "who was marie curie", "how many legs 
           "what is the boiling point of water", "who wrote hamlet", "what language do they speak in brazil", "is a tomato a fruit",
           "how old is the universe", "what is the square root of 144", "what is 15 percent of 80", "convert 10 miles to km",
           "what time is it", "what day is it", "why did arthur fail", "what does the eval measure", "how big is the model",
-          "who invented the telephone", "what is the longest river", "how many continents are there", "what do bees make"],
+          "who invented the telephone", "what is the longest river", "how many continents are there", "what do bees make",
+          "where is the eiffel tower", "where is mount everest", "where is machu picchu", "where is the great wall of china",
+          "where is stonehenge", "what is the freezing point of water in fahrenheit", "what license is this project under",
+          "what tool runs the training on this machine", "how long does it take to get an answer", "what changed with arthur",
+          "where is the colosseum", "where is petra", "what is the melting point of ice", "how many meters in a kilometer",
+          "who runs this project", "what programming language is samantha written in", "what is a lora adapter",
+          "how many tools does samantha have", "what happens if the mac runs out of memory", "why is the from-scratch model tiny",
+          "what does grad checkpoint mean", "what's the difference between a fact and a guess", "how does the guard work",
+          "why does she ask before writing files"],
          ["who discovered penicillin", "what is the capital of canada", "how many bones are in the body", "yo", "what is 9 times 8",
           "cheers", "what is the tallest building", "when did the titanic sink", "how do planes fly", "what is a neural network",
-          "what model are you", "is samantha open source"])
+          "what model are you", "is samantha open source", "where is the grand canyon", "where is easter island",
+          "what temperature does water boil at", "what's blocked or paused in this project right now"])
 TRICKY = (["what is music theory", "who plays the next james bond", "what is the weather system on jupiter", "how does a timer work",
            "what is a screenshot", "why does my battery drain fast", "what does open source mean", "is chrome better than safari",
            "who invented the calendar", "what is a reminder app", "how loud is a jet engine", "what is the volume of a sphere",
@@ -314,12 +424,17 @@ TRICKY = (["what is music theory", "who plays the next james bond", "what is the
            "what is a start codon", "what are the open questions in physics", "say, what is the capital of peru",
            "what is a uuid", "how does a hash function work", "what is a coin worth", "how many days are in a year", "what is a prime number",
            "who invented roman numerals", "how do dice work", "what is ram", "what is morse code", "what is a shortcut key", "who invented the tip",
-           "what is uptime in networking", "how many words are in the bible", "what is a wifi router", "what is an ip address", "what is a disk drive"],
+           "what is uptime in networking", "how many words are in the bible", "what is a wifi router", "what is an ip address", "what is a disk drive",
+           "what is git", "how does git work", "what is a pull request", "what is dark mode", "what does do not disturb mean",
+           "how does translation software work", "what is bluetooth", "how do you research a topic well", "what is a unit test",
+           "what is a commit message", "what does zipping a file do", "why do computers need memory", "what is a csv file",
+           "how does spotlight search work on a mac"],
           ["what is the speed of sound", "who wrote the song yesterday", "how do noise cancelling headphones work",
            "what is a battery made of", "why do we have leap years on the calendar", "is it bad to skip breakfast",
            "what is a volume in a book series", "who opened the first mcdonalds", "what does google do with my data",
            "how long is a marathon", "what does remind mean", "what is a timer in electronics", "who plays batman",
-           "what is the weather like on mars", "how do you design a good logo", "what is a web browser"])
+           "what is the weather like on mars", "how do you design a good logo", "what is a web browser",
+           "what is a git repository", "who invented bluetooth"])
 
 # Round two scored 82% on unseen phrasings and most misses were the wrapper, not the command: eight tails in training
 # taught her that anything after the command is content. Many wrappers teach that a wrapper is a wrapper.

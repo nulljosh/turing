@@ -19,6 +19,7 @@ import re
 import urllib.error
 import urllib.request
 
+import intent
 import untrusted
 
 MODEL = "qwen3:1.7b"  # same model tools_agent.agent and tools_screen_agent use for multi-step work
@@ -116,7 +117,12 @@ def _validate(raw_steps, tool_names):
             idx = int(m.group(1))
             if idx < 1 or idx >= i or steps[idx - 1]["tool"] not in _SAFE_PRODUCERS:
                 return []
-        steps.append({"tool": tool, "arg": arg, "if": cond})
+        # "_model": True marks this step as the local model's own pick, never the user's literal words,
+        # so run() knows to hold a WRITE step here to intent.check (law 12) before confirm; a step
+        # _fallback_split built instead came from the exact regex router on the user's own words and is
+        # never double-checked (CLAUDE.md: "Direct user commands routed by the regex router are the
+        # user's own words: don't double-check those.").
+        steps.append({"tool": tool, "arg": arg, "if": cond, "_model": True})
     return steps
 
 
@@ -194,15 +200,19 @@ def _fill(arg, steps, results):
     return _PLACEHOLDER.sub(repl, arg)
 
 
-def run(steps, log=None, confirm=None):
+def run(steps, request=None, log=None, confirm=None):
     """Execute a validated plan (from plan()) step by step, in order. With 2 or more steps, shows the whole
     plan and asks once, through confirm, before anything runs; a no there stops before a single step runs.
     A step whose "if" guard does not hold against the step before it is skipped, not run. After every step
     that does run, its result is checked (_looks_failed): a bad result stops the whole run right there with
     a plain explanation instead of continuing into the next step. A later step's "{stepN.field}" is filled
     only from an earlier SAFE-producer step's own result (_fill), never from a reading tool's text, and any
-    step whose tool is in tools.WRITES still asks for its own yes, exactly like tools.do(). Returns the
-    final reply, or where and why the run stopped."""
+    step whose tool is in tools.WRITES still asks for its own yes, exactly like tools.do(). Law 12: a step
+    the model itself picked (marked "_model" by _validate) is checked by intent.check(request, tool, arg)
+    first, and a failed check stops the run before confirm is even asked; request is the original text
+    plan() was called with, and is only required for that check, so a caller (or a hand-built test step
+    list with no "_model" flag) that leaves it out just skips the check, same as before this law existed.
+    Returns the final reply, or where and why the run stopped."""
     if not steps:
         return None
     import tools
@@ -222,6 +232,10 @@ def run(steps, log=None, confirm=None):
         fn = tools.TOOLS.get(name)
         if not fn:
             return f"Step {i} names a tool I don't have: {name}."
+        if step.get("_model") and request is not None and name in tools.WRITES:
+            ok, why = intent.check(request, name, (arg,))
+            if not ok:
+                return f"I stopped: that step would {why}, which you didn't ask for."
         if confirm and name in tools.WRITES and not confirm(name, (arg,)):
             return f"Okay, I will not run step {i} ({name})."
         if log:

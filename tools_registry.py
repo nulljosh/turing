@@ -46,9 +46,31 @@ _EVIDENCE = {
     "roll_dice": r"roll|dice|\bdie\b|\bd\d|throw|toss", "random_number": r"random|number", "make_password": r"password",
     "hash_text": r"hash|sha|checksum", "word_count": r"word", "tip": r"\btip", "is_prime": r"prime|factor|divid", "roman_numeral": r"roman",
     "morse_code": r"morse", "new_note": r"note|jot|write|remember|save|down", "say": r"\bsay|speak|announce|voice|aloud|out loud|words",
+    # Round eight covered 36 tools with zero picker training data; their evidence predates them (round-eight
+    # gap). Words come from each tool's own docstring/templates, never copied out of eval/actions.py verbatim.
+    "bluetooth_status": r"bluetooth", "calendar_tomorrow": r"tomorrow",
+    "running_apps": r"running|open apps|apps open|what's open|apps are open",
+    "recent_downloads": r"download", "unread_mail": r"mail|email|inbox",
+    "free_when": r"\bfree\b|\bbusy\b|availab|do i have time|when am i",
+    "git_status": r"status|changed|dirty|\bdiff\b|\bbranch\b", "recent_commits": r"commit",
+    "run_tests": r"\btest", "open_prs": r"\bprs?\b|pull request",
+    "open_in_editor": r"editor|vscode|vs code|in code", "quit_app": r"quit|close|shut down|\bkill\b",
+    "dark_mode": r"dark|\blight\b|appearance|theme", "do_not_disturb": r"disturb|\bdnd\b|focus|silence|quiet",
+    "zip_file": r"\bzip\b|compress", "unzip_file": r"unzip|extract", "trash_file": r"trash|delete|throw away|get rid of",
+    "copy_file": r"\bcopy\b|duplicate", "move_file": r"\bmove\b|relocate", "rename_file": r"rename|new name|call it",
+    "append_note": r"\bnote\b", "add_event": r"calendar|event|schedule",
+    "complete_reminder": r"remind|done|finish|complete|check off|\bmark\b", "list_reminders": r"reminder",
+    "search_notes": r"\bnotes?\b", "needs_attention": r"attention|needs me|focus on|deal with|need to handle",
+    "find_file": r"find|locate|where(?:'s| is)", "folder_size": r"\bbig\b|\bsize\b",
+    "research": r"research|deep dive|look into|dig into|investigate", "research_more": r"\bmore\b|deeper|expand|further|continue|again",
+    "summarize": r"summar", "transcribe_video": r"transcribe|said in|captions|subtitles",
+    "translate": r"translat|how do you say", "write_document": r"draft|write (?:a |an )?(?:doc|document|email|memo|file)|compose",
 }
 # ...and words that say the sentence is about a different tool. "say help in morse code" is morse_code, not say.
-_AGAINST = {"say": r"morse|clock say", "wifi_name": r"address|\bip\b", "open_app": r"shortcut", "weather": r"\bapp\b", "web_search": r"\.(?:com|org|net|io|ca)\b"}
+_AGAINST = {"say": r"morse|clock say", "wifi_name": r"address|\bip\b", "open_app": r"shortcut", "weather": r"\bapp\b", "web_search": r"\.(?:com|org|net|io|ca)\b",
+            # "close the github tab" is close_tab, not quit_app. "extract the zip" is unzip_file, not zip_file.
+            # "summarize my unread mail" is summarize, not unread_mail.
+            "quit_app": r"\btab\b", "zip_file": r"\bextract\b|\bunzip\b", "unread_mail": r"\bsummar"}
 
 
 def _sound(tool, arg, query):
@@ -75,10 +97,38 @@ def _sound(tool, arg, query):
     if tool in ("list_dir", "read_file"):
         return bool(arg)
 
-    # "words<TAB>path": both halves have to be real, and the path has to be one she was actually given
-    if tool in ("find_in_document", "ask_document"):
-        words, _, path = arg.partition("\t")
-        return bool(words) and bool(path) and path.lower() in q_lower and words.lower() in q_lower
+    # "words<TAB>path": both halves have to be real, and the path has to be one she was actually given.
+    # Same shape for the round-eight file/note/translate tools, which also copy two pieces out of the
+    # sentence joined by a tab: source<TAB>destination, content<TAB>note name, text<TAB>language.
+    if tool in ("find_in_document", "ask_document", "copy_file", "move_file", "rename_file", "append_note", "translate"):
+        a, _, b = arg.partition("\t")
+        return bool(a) and bool(b) and a.lower() in q_lower and b.lower() in q_lower
+
+    # dark_mode/do_not_disturb take "on", "off" or (dark_mode only) "toggle": a guess at direction is not
+    # a copy, so the sentence has to say which way, not just that the tool is on topic.
+    if tool == "dark_mode":
+        a = arg.lower()
+        if a == "toggle":
+            return bool(re.search(r"toggle|flip|switch\b", q_lower))
+        if a == "off":
+            return bool(re.search(r"\boff\b|\blight\b|disable|turn down", q_lower))
+        if a == "on":
+            return bool(re.search(r"\bon\b|\bdark\b|enable", q_lower))
+        return False
+    if tool == "do_not_disturb":
+        a = arg.lower()
+        if a == "off":
+            return bool(re.search(r"\boff\b|out of|disable|turn off|end focus|\bstop\b", q_lower))
+        if a == "on":
+            return bool(re.search(r"\bon\b|enable|turn on|start focus|\benter\b", q_lower))
+        return False
+
+    # add_event's argument is the event title, which the model sometimes pads with the time phrase
+    # ("dentist at 3pm"), so it is not always a contiguous substring of the sentence. Every real word in
+    # it still has to show up somewhere in the sentence, just not necessarily next to each other.
+    if tool == "add_event":
+        words = [w for w in re.findall(r"[a-z0-9]+", arg.lower()) if w not in ("at", "on", "to", "the", "a", "an", "my", "calendar")]
+        return bool(words) and all(w in q_lower for w in words)
 
     # An app or a site with no name is never a real command.
     if not arg and tool in ("open_app", "open_url"):

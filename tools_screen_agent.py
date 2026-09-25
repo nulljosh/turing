@@ -10,6 +10,7 @@ import re
 import urllib.error
 import urllib.request
 
+import intent
 import untrusted
 
 MODEL = "qwen3:1.7b"  # same as tools.agent: fast enough to plan a few clicks, no need for the 8B here
@@ -43,6 +44,7 @@ def screen_task(task, max_steps=MAX_STEPS, log=None, confirm=None):
     """Plan and run a multi-step screen job ("log me into X") with a local model. Every step, even a look at the
     screen, is confirmed before it runs: confirm(name, args) -> bool. A no ends the job at once. Returns what
     happened, in plain words, or why it stopped early."""
+    import tools  # here, not at the top: tools.py never imports this module at load time either
     tools_by_name = _tools()
     messages = [{"role": "system", "content": SYSTEM}, {"role": "user", "content": task}]
     for _ in range(max_steps):
@@ -61,8 +63,13 @@ def screen_task(task, max_steps=MAX_STEPS, log=None, confirm=None):
         for c in calls:
             name, args = c["function"]["name"], c["function"].get("arguments") or {}
             fn = tools_by_name.get(name)
+            # law 12: same automatic check as tools_agent.agent, right before confirm, on every WRITE this
+            # loop can propose (click_text/type_text/press_key/see_screen are all in tools.WRITES).
+            ok, why = (True, "") if name not in tools.WRITES else intent.check(task, name, tuple(map(str, args.values())))
             if not fn:
                 result = f"No tool named {name}."
+            elif not ok:
+                return f"I stopped: that step would {why}, which you didn't ask for."
             elif confirm and not confirm(name, tuple(map(str, args.values()))):
                 return "Okay, I stopped there."  # a no ends the whole job, not just that step
             else:

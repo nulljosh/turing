@@ -190,6 +190,20 @@ class AgentGrounding(unittest.TestCase):
         self.assertFalse(tools._sound("current_tab", "", "What's blocked or paused in this project right now?"))
         self.assertTrue(tools._sound("current_tab", "", "what page am i on"))
 
+    def test_round_eight_tools_need_their_own_word(self):
+        """The 36 tools round eight covered had no evidence words yet: a canonical phrasing for each still
+        passes, and a sentence with no word for that tool still gets refused, same bar as the older tools."""
+        self.assertTrue(tools._sound("dark_mode", "off", "switch to light mode"))
+        self.assertFalse(tools._sound("dark_mode", "off", "what should i focus on today"))
+        self.assertTrue(tools._sound("do_not_disturb", "off", "turn off do not disturb"))
+        self.assertFalse(tools._sound("do_not_disturb", "off", "what's my git status"))
+        self.assertTrue(tools._sound("copy_file", "~/desktop/a.txt\t~/documents", "copy ~/desktop/a.txt to ~/documents"))
+        self.assertFalse(tools._sound("copy_file", "~/desktop/a.txt\t~/documents", "what's on my calendar tomorrow"))
+        self.assertTrue(tools._sound("git_status", "", "what's my git status"))
+        self.assertFalse(tools._sound("git_status", "", "what's the commit history"))
+        self.assertTrue(tools._sound("open_prs", "", "any open pull requests"))
+        self.assertFalse(tools._sound("open_prs", "", "kick off the tests"))
+
 
 if __name__ == "__main__":
     unittest.main()

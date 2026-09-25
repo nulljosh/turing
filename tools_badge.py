@@ -115,6 +115,9 @@ MOTIFS = {
     # 4.13: she plans, so a compass rose low on the left and a dotted route joining two of her constellations.
     6: {"lines": ["line 300,672 300,708", "line 282,690 318,690", "line 293,683 307,697", "line 293,697 307,683"],
         "stars": [(300, 690, 3)] + [(round(296 + 44 * t / 6, 1), round(494 + 40 * t / 6, 1), 1.3) for t in range(1, 6)]},
+    # 4.14: every write is checked against your own words, so Scutum, the shield, high on the left.
+    7: {"lines": _LINES([(268, 360), (284, 334), (300, 346), (292, 368), (268, 360)]),
+        "stars": [(268, 360, 2.5), (284, 334, 3), (300, 346, 2), (292, 368, 2.5)]},
 }
 
 
