@@ -238,6 +238,35 @@ class AgentGrounding(unittest.TestCase):
         self.assertFalse(tools._sound("new_note", "qwen3 benchmarks", "write a brief on qwen3 benchmarks"))
         self.assertFalse(tools._sound("new_note", "car insurance", "do my notes mention car insurance"))
 
+    def test_round_eleven_tools_need_their_own_word(self):
+        """Round eleven's guard gaps: bare arithmetic questions ("what is 2+2") firing calculate
+        even though calculate() itself can't parse a word operator like "times"; open_app catching
+        any phrasal go-to/pull-up/click verb, a uuid/guid, "prs" or her own name; recent_downloads'
+        own "downloads folder" phrasing; a question word marking ask_document, not find_in_document;
+        days_until's own "until"/"sleeps"; folder_size's own "take up"; a browser tab or URL marking
+        read_tab/read_page, not read_document; weather's own topic leaking into web_search; date_math
+        needing a real argument. Canonical phrasings for the real tool still pass."""
+        self.assertTrue(tools._sound("calculate", "8*9", "calculate 8*9"))
+        self.assertFalse(tools._sound("calculate", "2+2", "what is 2+2"))
+        self.assertFalse(tools._sound("calculate", "10 times 7", "what is 10 times 7"))
+        self.assertFalse(tools._sound("calculate", "100 fahrenheit", "how many celsius is 100 fahrenheit"))
+        self.assertTrue(tools._sound("open_app", "chrome", "open chrome"))
+        self.assertFalse(tools._sound("open_app", "reddit", "pull up reddit"))
+        self.assertFalse(tools._sound("open_app", "youtube", "i want to go to youtube"))
+        self.assertFalse(tools._sound("open_app", "sign in", "click Sign in"))
+        self.assertFalse(tools._sound("open_app", "samantha", "samantha could you please any openings this week asap"))
+        self.assertTrue(tools._sound("list_dir", "~/Desktop", "list the files on my desktop"))
+        self.assertFalse(tools._sound("list_dir", "~/Downloads", "show me what's in my downloads folder"))
+        self.assertTrue(tools._sound("ask_document", "the deadline\t~/plan.pdf", "in the document ~/plan.pdf, what is the deadline"))
+        self.assertFalse(tools._sound("find_in_document", "the deadline\t~/plan.pdf", "in the document ~/plan.pdf, what is the deadline"))
+        self.assertTrue(tools._sound("days_until", "2027-03-14", "how many days until 2027-03-14"))
+        self.assertFalse(tools._sound("date_math", "2027-03-14", "how many sleeps until 2027-03-14"))
+        self.assertFalse(tools._sound("date_math", "", "what's today's date"))
+        self.assertTrue(tools._sound("folder_size", "~/Desktop", "how big is ~/Desktop"))
+        self.assertFalse(tools._sound("disk_space", "", "how much space does ~/Desktop take up"))
+        self.assertFalse(tools._sound("read_document", "the docs tab", "what does the docs tab say"))
+        self.assertFalse(tools._sound("web_search", "the weather in vancouver", "look up the weather in vancouver"))
+
 
 if __name__ == "__main__":
     unittest.main()

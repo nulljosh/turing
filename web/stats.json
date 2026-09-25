@@ -1,5 +1,5 @@
 {
-  "version": "4.15.1",
+  "version": "4.15.2",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -288,8 +288,8 @@
         "documented": 11
       },
       "eval/test_harness.py": {
-        "total": 27,
-        "documented": 27
+        "total": 28,
+        "documented": 28
       },
       "eval/test_intent.py": {
         "total": 38,

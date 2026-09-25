@@ -2,6 +2,9 @@
 
 TLDR per loop round, newest first. The loop adds a line every round it ships something, then the scorecard.
 
+- 2026-09-25 v4.15.2: picker round eleven, guard only. Wrong picks past the guard 50 to 9, right picks refused still 0, 1300 of 1895 right. Under the 5.0 bar on paper, but the rules were tuned on this same test set (fresh phrasings: 3 of 5 wrong picks caught), so 5.0 waits for a held-out set.
+  `v4.15.2 · 126 tools · 557 tests · docs coverage 100% · laws all hold · biggest tools_util.py 700 · actions 221/221 · parity 221/221 · util_diff 261/261`
+
 - 2026-09-25 v4.15.1: picker round ten, guard only. The guard learned resize_image and read_file and stopped letting open_app and new_note win on a shared word: wrong picks past the guard 83 to 50, right picks refused still 0. The round ten retrain picked more right (1329) but was less safe (88 past guard), so it stays on disk unshipped.
   `v4.15.1 · 126 tools · 556 tests · docs coverage 100% · laws all hold · biggest tools_util.py 700 · actions 221/221 · parity 221/221 · util_diff 261/261`
 

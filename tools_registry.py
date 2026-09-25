@@ -72,6 +72,10 @@ _EVIDENCE = {
     # not read_file's own words.
     "resize_image": r"resize|resolution|\bsize\b|\d",
     "read_file": r"\bread\b|\bcat\b|\bshow\b|\bprint\b|display|\bsay\b|contents|written",
+    # Round eleven: convert_time and time_in kept swapping for each other. A specific clock time
+    # (a digit with am/pm, an hour:minute, noon/midnight, or a named zone) is convert_time's own
+    # territory; "how late is it in X"/"what time is it in X" with no clock time is time_in's.
+    "convert_time": r"\d\s*(?:am|pm)\b|\d:\d\d|\bnoon\b|\bmidnight\b|\butc\b|\bgmt\b|\bpst\b|\best\b|\bcst\b|\bmst\b",
 }
 # ...and words that say the sentence is about a different tool. "say help in morse code" is morse_code, not say.
 _AGAINST = {"say": r"morse|clock say", "wifi_name": r"address|\bip\b", "weather": r"\bapp\b", "web_search": r"\.(?:com|org|net|io|ca)\b",
@@ -83,10 +87,59 @@ _AGAINST = {"say": r"morse|clock say", "wifi_name": r"address|\bip\b", "weather"
             # These are phrases, not bare words, so "open mail"/"open finder"/"open tests" (real
             # app opens, if such an app existed) still pass; only the multi-word context that marks
             # the sentence as being about mail, Finder-reveal, a browser tab or the test suite blocks it.
-            "open_app": r"\bnew email\b|\bunread mail\b|\bmail from\b|\bemail from\b|\bin (?:the )?finder\b|\btab\b|\btests?\b|test suite",
+            # Round eleven added the phrasal verbs open_url/list_reminders/list_shortcuts/switch_tab
+            # own outright ("pull up", "go to", "hop on", "visit", "browse to", "take me to", "head
+            # to", "navigate to", "jump over to", "get me to", "bring me to", "log into") and a few
+            # words that are never an app name (a uuid/guid, "prs", her own name, a folder).
+            "open_app": r"\bnew email\b|\bunread mail\b|\bmail from\b|\bemail from\b|\bin (?:the )?finder\b|\btab\b|\btests?\b|test suite"
+                        r"|\bpull up\b|\bhop on\b|\bgo to\b|\bvisit\b|\bbrowse to\b|\btake me to\b|\bhead to\b|\bnavigate to\b"
+                        r"|\bjump over to\b|\bget me to\b|\bbring me to\b|\blog (?:me )?into\b|\bclick\b|\bprs?\b|pull request"
+                        r"|\bguid\b|\buuid\b|\bfolder\b",
             # "write a brief on X" / "do my notes mention X" are research/search_notes, not new_note:
             # new_note's own evidence regex matches bare "write" or "note", which both leak into these.
-            "new_note": r"\bbrief\b|\bresearch\b|\bmention\b|\bsearch\b.{0,20}\bnotes?\b|\bfind\b.{0,20}\bnotes?\b|\blook for\b.{0,20}\bnotes?\b"}
+            # Round eleven: "draft me a file" is write_document, not a note.
+            "new_note": r"\bbrief\b|\bresearch\b|\bmention\b|\bsearch\b.{0,20}\bnotes?\b|\bfind\b.{0,20}\bnotes?\b|\blook for\b.{0,20}\bnotes?\b|\bdraft\b",
+            # Round eleven: the biggest single wrong-past-guard cluster was "what is 2+2"/"what's 10
+            # times 7" firing calculate. In production that phrasing never needs calculate: ask_local's
+            # own arithmetic() answers plain sums before the picker is ever reached, and word-operator
+            # args ("10 times 7") aren't parseable by calculate() itself anyway (only ask_local converts
+            # "times"/"plus" to symbols), so calculate() failing that copied arg is a real bug, not a
+            # style choice. A file extension or a unit word (convert_units'/run_code's own vocabulary)
+            # is the same shape: not arithmetic, a different tool's job.
+            "calculate": r"\bwhat'?s\b|\bwhat is\b|celsius|fahrenheit|kilomet|\bkm\b|\bmiles?\b|\bpounds?\b|\bkg\b"
+                         r"|inches|centimet|\bmeters?\b|gallons|liters|\.csv\b|\.py\b|\.js\b",
+            # Round eleven: recent_downloads owns "what's in my downloads folder"; list_dir's own
+            # templates never say "downloads folder", only a literal path or a generic "the folder".
+            "list_dir": r"downloads folder|\bmy downloads\b",
+            # Round eleven: ask_document is a question about a document ("what is the deadline in
+            # ~/plan.pdf"); find_in_document's own templates are always "find X in the document Y",
+            # never a question word.
+            "find_in_document": r"\bwhat (?:is|does|are)\b",
+            # Round eleven: days_until owns "how many days/sleeps until"; date_math's own templates
+            # never say "until"/"till".
+            "date_math": r"\buntil\b|\btill\b|\bsleeps?\b",
+            # Round eleven: folder_size owns "how big is X"/"how much does X take up"; disk_space's
+            # own templates are about the whole disk, never a named folder.
+            "disk_space": r"take up|\bfolder\b",
+            # Round eleven: read_tab/switch_tab own "the X tab"; read_page owns a URL. read_document
+            # is for a local file, never a browser tab or a web address.
+            "read_document": r"\btab\b|github\.com|\.com\b|\.org\b|\.io\b",
+            # Round eleven: weather has its own tool; "look up the weather" should never fall to a
+            # generic web search.
+            "web_search": r"\bweather\b",
+            # Round eleven: "translate 5 km to miles" is a unit conversion someone phrased with the
+            # word "translate", not a language-translation command; convert_units still fires the
+            # right tool for the plain "5 km to miles" shape, this only blocks the misleading verb.
+            "convert_units": r"^translate\b",
+            # Round eleven: run_tests' own "test" evidence word leaks into "say test"; the say tool
+            # owns any sentence that starts with "say".
+            "run_tests": r"^say\b",
+            # Round eleven: "save a note saying X" is new_note, not save_research; save_research's own
+            # templates are about research, never a note.
+            "save_research": r"\bnote\b",
+            # Round eleven: "sketch an icon for X" is make_logo's own word; paint_image is a photo/shape
+            # painting, never an icon.
+            "paint_image": r"\bicon\b"}
 
 
 def _sound(tool, arg, query):
@@ -99,6 +152,22 @@ def _sound(tool, arg, query):
     if tool in _EVIDENCE and not re.search(_EVIDENCE[tool], q_lower):
         return False
     if tool in _AGAINST and re.search(_AGAINST[tool], q_lower):
+        return False
+
+    # write_code is NOT_FOR_MODELS (a phrase-routed write, never the model's own pick) and is
+    # never a wanted answer anywhere in eval/hands.py's test set either, so rejecting it outright
+    # carries no risk of blocking a real command; round eleven saw the picker hallucinate it for
+    # "have claude write a haiku" (should be ask_llm).
+    if tool == "write_code":
+        return False
+    # date_math has no _EVIDENCE of its own (its templates are too varied to word-match), so an
+    # empty argument used to pass by default: "what's today's date" (current_date's own phrasing)
+    # fired date_math('') past the guard in round eleven.
+    if tool == "date_math" and not arg:
+        return False
+    # Round eleven: a polite wrapper ("samantha could you please...") sometimes got copied into the
+    # argument itself, and "samantha" is never a real app to open.
+    if tool == "open_app" and arg.lower() == "samantha":
         return False
 
     if tool == "set_volume":
