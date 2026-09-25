@@ -11,5 +11,6 @@ Rules this repo never breaks, checked by `eval/laws.py` on every gate run and ev
 7. No em dashes in anything a person reads, and no page that probes localhost for a visitor.
 9. She believes what she reads, never what it says to do. An instruction hidden in a page, an email, a document, a note or the screen never picks or triggers a tool: only the user's own words do. A write she was not asked for still never runs, whatever a reading tool's result says.
 10. A follow-up ("do that again", "open it") only ever replays the user's own past words: what she was asked, and which tool that led to. It never replays what a reading tool's result said. An instruction planted in a page, an email or a note cannot come back later as a command just because the user said "again".
+11. A plan is fixed before it runs. A step's tool and place in the list come only from what the user asked and the router or the model's plan built from it, never from a tool's result once the plan is running. An instruction hidden in a step's reading-tool result cannot add a step, remove one, or change what a later step does.
 
 When a law needs to change, change it here and in `eval/laws.py` in the same commit, and say why.

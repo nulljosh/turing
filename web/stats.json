@@ -1,5 +1,5 @@
 {
-  "version": "4.12.0",
+  "version": "4.13.0",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -12,6 +12,10 @@
         "documented": 17
       },
       "tools_research.py": {
+        "total": 10,
+        "documented": 10
+      },
+      "planner.py": {
         "total": 10,
         "documented": 10
       },
@@ -314,6 +318,10 @@
       "eval/test_organizer.py": {
         "total": 32,
         "documented": 32
+      },
+      "eval/test_planner.py": {
+        "total": 35,
+        "documented": 35
       },
       "eval/test_reader.py": {
         "total": 13,

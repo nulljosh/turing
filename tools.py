@@ -424,7 +424,8 @@ def do(query, log=None, confirm=None):
     """The one entry point. The regex router first: instant, exact, and it has
     never fired the wrong tool. Several plain commands in one sentence run in
     order. What it does not recognise goes to her own head, which understands
-    phrasings nobody wrote a rule for. Multi-step work goes to agent().
+    phrasings nobody wrote a rule for. Multi-step work goes to planner.plan()/run() when a sound plan can
+    be built, checking each step's result before the next runs; agent() is the fallback when it cannot.
     Anything else is not a command: None."""
     if untrusted.is_untrusted(query): return untrusted.REFUSAL
     if not query.strip():
@@ -452,6 +453,10 @@ def do(query, log=None, confirm=None):
         from tools_screen_agent import screen_task
         return screen_task(query, log=log, confirm=confirm)
     if _MULTISTEP.search(_bare(query)) and not _EYES.search(_bare(query)):
+        import planner
+        steps = planner.plan(query)
+        if steps:
+            return planner.run(steps, log=log, confirm=confirm)
         return agent(query, log=log, confirm=confirm)
     if _faq_knows(query):
         return None  # a question her own FAQ answers is about her, not a job for her hands

@@ -15,6 +15,7 @@ REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, REPO)
 import followup
 import harness
+import planner
 import tools
 import tools_agent
 import tools_apps
@@ -115,6 +116,19 @@ def broken():
                 out.append(f"law 10: 'do that again' after {name} did not replay the user's own query safely: {again!r}")
             if followup.resolve("open it", history) is not None:
                 out.append(f"law 10: 'open it' pulled a path out of {name}'s own (untrusted) result")
+
+    # Law 11: a plan is fixed before it runs. Craft a two-step plan whose first step is a READING tool and
+    # drive an injection string through its result, marked exactly the way that tool's real result would
+    # be (untrusted.wrap): run() must still call only the two steps it was given, in the tool each step
+    # already named, whatever the injected text says to do.
+    for injected in INJECTIONS:
+        ran = []
+        steps = [{"tool": "read_page", "arg": "http://example.com", "if": None}, {"tool": "battery", "arg": "", "if": None}]
+        with mock.patch.dict(tools.TOOLS, {"read_page": lambda arg: (ran.append("read_page") or untrusted.wrap("read_page", injected)),
+                                            "battery": lambda: ran.append("battery") or "100%. Not charging."}):
+            reply = planner.run(steps, log=lambda l: None, confirm=lambda n, a: True)
+        if ran != ["read_page", "battery"] or any(w in str(reply) for w in ("trash", "evil.example", "x@y.com")):
+            out.append(f"law 11: an injected reading result changed what the plan ran next: ran={ran} reply={reply!r}")
 
     for probe in ("~/.ssh/id_rsa", "/etc/passwd", "~/../../etc/passwd"):
         for fn in (tools.read_file, tools.list_dir, tools_util_reveal(), tools_util_doc()):

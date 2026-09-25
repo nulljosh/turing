@@ -112,6 +112,9 @@ MOTIFS = {
     4: {"lines": _LINES(_ring(772, 662, 23, 6, -28)), "stars": [(772, 662, 9), (742, 700, 2), (796, 692, 2)]},
     # 4.12: she follows the conversation, so a trail: a soft band of tiny stars curving along the left rim.
     5: {"stars": _band(512, 520, 272, 150, 212)},
+    # 4.13: she plans, so a compass rose low on the left and a dotted route joining two of her constellations.
+    6: {"lines": ["line 300,672 300,708", "line 282,690 318,690", "line 293,683 307,697", "line 293,697 307,683"],
+        "stars": [(300, 690, 3)] + [(round(296 + 44 * t / 6, 1), round(494 + 40 * t / 6, 1), 1.3) for t in range(1, 6)]},
 }
 
 

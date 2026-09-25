@@ -2,6 +2,9 @@
 
 TLDR per loop round, newest first. The loop adds a line every round it ships something, then the scorecard.
 
+- 2026-09-25 🎉 v4.13.0: she plans. A multi-step job becomes a step list from her real tools, shown to you before it runs, each result checked, a stop on the first failure, a yes before every write. Law 11: nothing she reads mid-plan can add or change a step. Badge step 6: a compass rose and a dotted route.
+  `v4.13.0 · 126 tools · 528 tests · docs coverage 100% · laws all hold · biggest tools_util.py 700 · actions 221/221 · parity 221/221 · util_diff 261/261`
+
 - 2026-09-25 🎉 v4.12.0: she follows the conversation. "Do that again", "same but for nimble", "what about tomorrow", "open it" work for every tool from a ten-turn history, not per-tool wiring. Law 10: a past result can never be replayed as a command. Badge step 5: a Milky Way band along her rim. Live QA green: 0 a11y problems in four views, every demo command passes.
   `v4.12.0 · 126 tools · 503 tests · docs coverage 100% · laws all hold · biggest tools_util.py 700 · actions 221/221 · parity 221/221 · util_diff 261/261`
 
