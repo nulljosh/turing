@@ -2,6 +2,9 @@
 
 TLDR per loop round, newest first. The loop adds a line every round it ships something, then the scorecard.
 
+- 2026-09-25 v4.8.1: the badge gets stars. Joshua asked for a real idea, not smoothing: each minor now adds a little of her mind to the sky around her. Step 1 is a dipper in front of her gaze, Lyra behind her neck, a small dipper below her chin, and loose stars, all thin strokes in her own ink. tools_badge.py dropped its blur dial (blur melts the brush strokes, per the logo-refresh skill) for a MOTIFS table that grows each minor.
+  `v4.8.1 · 120 tools · 407 tests · docs coverage 100% · laws all hold · biggest tools.py 753 · actions 207/207 · parity 207/207 · util_diff 249/249`
+
 - 2026-09-25 🎉 v4.8.0: the system family. "Turn on dark mode", "what apps are running", "quit spotify", "is bluetooth on", "turn on do not disturb" (through a Shortcut you make once). quit_app never touches Finder or her own terminal, checked on the app it actually matched, so "quit find" is refused too. The footer badge now modernizes one notch per minor (tools_badge.py re-traces the frozen original, cleaner hatching, same woman and words, OCR-gated); this is step 1. Brightness and bluetooth on/off wait: no CLI on this Mac and nothing gets installed.
   `v4.8.0 · 120 tools · 407 tests · docs coverage 100% · laws all hold · biggest tools.py 753 · actions 207/207 · parity 207/207 · util_diff 249/249`
 

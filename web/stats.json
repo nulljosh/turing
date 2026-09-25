@@ -1,5 +1,5 @@
 {
-  "version": "4.8.0",
+  "version": "4.8.1",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -80,8 +80,8 @@
         "documented": 7
       },
       "tools_badge.py": {
-        "total": 19,
-        "documented": 19
+        "total": 20,
+        "documented": 20
       },
       "chat.py": {
         "total": 18,

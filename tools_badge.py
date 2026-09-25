@@ -1,9 +1,9 @@
 """Modernizes web/badge.svg a little at every minor version, without ever redrawing her: same woman, same oval
-frame, same SAMANTHA/TURING ribbons, one notch cleaner each time. art/badge-source.svg is the frozen original
+frame, same SAMANTHA/TURING ribbons, one small motif richer each time. art/badge-source.svg is the frozen original
 (an AI-drawn copperplate engraving, hand-traced to one potrace path); modernize(step) always rebuilds from that
 source, never the previous output, so nothing compounds. It rasterizes the source high-resolution, applies a
-step-scaled treatment (blur-then-threshold, calming cross-hatching, plus potrace turdsize/alphamax/opttolerance
-nudged up for fewer nodes and rounder corners), and re-traces. A gate (words_read + an ink-share sanity check)
+draws every motif up to the step (MOTIFS: each minor adds a little more sky around her, constellations and
+stars in her own ink), and re-traces with settings that keep the brush strokes. No blur, ever. A gate (words_read + an ink-share sanity check)
 has to pass before web/badge.svg and web/badge-preview.png are kept; a failing gate restores what was there, and
 the CLI always exits 0 so a release never fails over the badge.
 """
@@ -20,7 +20,7 @@ OUTPUT_SVG = os.path.join(HERE, "web", "badge.svg")
 OUTPUT_PNG = os.path.join(HERE, "web", "badge-preview.png")
 OCR_SCRIPT = os.path.join(HERE, "swift", "ocr.swift")
 ARIA_LABEL = "Samantha’s mark, drawn by her"  # matches the original file byte for byte, curly apostrophe
-RES = 2048  # rasterize-and-retrace resolution, plenty of headroom over the 1024pt original
+RES = 2048  # rasterize-and-retrace resolution; at 1024 Vision OCR misses SAMANTHA and the gate fails
 PREVIEW_SIZE = 512
 MAX_STEP = 12  # step_for never returns more than this, and the dial stops moving past it too
 
@@ -56,36 +56,65 @@ def step_for(version):
     return max(0, min(step, MAX_STEP))
 
 
+# Each minor adds a little more of her mind to the sky around her: thin strokes and small stars in her own ink,
+# in the open field, never over her or the words. Coordinates are on a 1024 canvas and scale to RES. Lessons from
+# the logo-refresh skill (Joshua Tree 1.3): no blur before tracing (it melts the brush strokes into blobs), and
+# potrace -t 6 -a 1.1 -O 0.4 keeps the detail he loves. A new step appends its own motif list here, looked at
+# at 2x before it ships.
+_STAR = lambda x, y, r: f"circle {x},{y} {x + r},{y}"
+_LINES = lambda pts: [f"line {a[0]},{a[1]} {b[0]},{b[1]}" for a, b in zip(pts, pts[1:])]
+MOTIFS = {
+    # 4.8: three constellations and loose stars. A dipper in front of her gaze, Lyra behind her neck, a small
+    # dipper below her chin.
+    1: {"lines": _LINES([(292, 486), (318, 436), (304, 390), (338, 356)]) + _LINES([(318, 436), (340, 468)])
+                 + _LINES([(752, 532), (724, 522), (744, 552), (752, 532)]) + _LINES([(744, 552), (764, 582), (752, 624), (730, 598), (744, 552)])
+                 + _LINES([(262, 642), (292, 652), (300, 622), (268, 612), (262, 642)]) + _LINES([(300, 622), (312, 592), (318, 560), (344, 540)]),
+        "sparkles": [(338, 356, 14), (724, 522, 14)],
+        "stars": [(292, 486, 4), (318, 436, 5), (304, 390, 3), (338, 356, 5), (340, 468, 3),
+                  (724, 522, 5), (752, 532, 3), (744, 552, 3), (764, 582, 3), (752, 624, 3), (730, 598, 3),
+                  (262, 642, 3), (292, 652, 3), (300, 622, 3), (268, 612, 3), (312, 592, 2), (318, 560, 2), (344, 540, 4),
+                  (272, 540, 2), (250, 470, 2), (752, 480, 2), (790, 650, 2), (786, 540, 2), (360, 590, 2), (262, 410, 2)]},
+}
+
+
 def _dial(step):
-    """The modernize dial for a step, clipped to [0, MAX_STEP]. Step 0 is potrace's own defaults and no raster
-    treatment, so it reproduces the source faithfully. Every step past that nudges turdsize (drop fine speckle
-    and hatching), alphamax (rounder corners) and opttolerance (fewer nodes) up a little, plus a light
-    blur-then-threshold before tracing for cleaner, more confident strokes. Linear in step, capped at MAX_STEP."""
-    s = max(0, min(step, MAX_STEP))
-    return {
-        "turdsize": 2 + s,
-        "alphamax": round(min(1.0 + 0.05 * s, 1.3), 2),
-        "opttolerance": round(min(0.2 + 0.05 * s, 0.8), 2),
-        "blur": round(min(0.2 * s, 1.6), 2),
-        "threshold": 50,
-    }
+    """Trace settings for a step. Step 0 is potrace's own defaults, so it reproduces the source faithfully; every
+    step past it uses the logo-refresh skill's defaults (-t 6 -a 1.1 -O 0.4), which keep the brush strokes."""
+    if step <= 0:
+        return {"turdsize": 2, "alphamax": 1.0, "opttolerance": 0.2}
+    return {"turdsize": 6, "alphamax": 1.1, "opttolerance": 0.4}
 
 
-def _prepare(svg_path, size, dial):
-    """Flatten an svg onto white, rasterize it to a grayscale PGM at size x size (the format potrace reads), and
-    apply the step's raster treatment (blur then re-threshold). blur=0 (step 0) skips the treatment, so step 0
-    traces the untouched raster. Returns a temp file path; the caller removes it."""
+def _motif_draws(step, scale):
+    """The ImageMagick -draw arguments for every motif from step 1 up to step, scaled from the 1024 canvas.
+    Lines first (stroke), then stars (filled), so a star always sits clean on its line."""
+    k = scale
+    strokes, fills = [], []
+    for n in range(1, min(step, MAX_STEP) + 1):
+        m = MOTIFS.get(n, {})
+        for ln in m.get("lines", []):
+            x1, y1, x2, y2 = map(float, re.findall(r"[\d.]+", ln))
+            strokes.append(f"line {x1 * k},{y1 * k} {x2 * k},{y2 * k}")
+        for x, y, r in m.get("sparkles", []):
+            strokes += [f"line {x * k},{(y - r) * k} {x * k},{(y + r) * k}", f"line {(x - r) * k},{y * k} {(x + r) * k},{y * k}"]
+        fills += [_STAR(x * k, y * k, r * k) for x, y, r in m.get("stars", [])]
+    return strokes, fills
+
+
+def _prepare(svg_path, size, step):
+    """Flatten an svg, rasterize it to a grayscale PGM at size x size (the format potrace reads), draw every motif
+    up to step in her ink (white on this raster), and threshold. No blur, ever. Returns a temp path; the caller
+    removes it."""
     fd, pgm = tempfile.mkstemp(suffix=".pgm")
     os.close(fd)
-    _run(["magick", svg_path, "-background", "white", "-alpha", "remove", "-alpha", "off",
-          "-resize", f"{size}x{size}", pgm])
-    if dial["blur"] <= 0:
-        return pgm
-    fd, out = tempfile.mkstemp(suffix=".pgm")
-    os.close(fd)
-    _run(["magick", pgm, "-blur", f"0x{dial['blur']}", "-threshold", f"{dial['threshold']}%", out])
-    os.unlink(pgm)
-    return out
+    strokes, fills = _motif_draws(step, size / 1024)
+    cmd = ["magick", svg_path, "-background", "white", "-alpha", "remove", "-alpha", "off", "-resize", f"{size}x{size}",
+           "-colorspace", "gray"]
+    if strokes or fills:
+        cmd += ["-fill", "none", "-stroke", "white", "-strokewidth", str(2.4 * size / 1024)] + sum([["-draw", d] for d in strokes], [])
+        cmd += ["-fill", "white", "-stroke", "none"] + sum([["-draw", d] for d in fills], [])
+    _run(cmd + ["-threshold", "50%", pgm])
+    return pgm
 
 
 def _trace(pgm_path, dial):
@@ -191,7 +220,7 @@ def modernize(step):
         return False, "magick or potrace not on PATH"
 
     dial = _dial(step)
-    prepared = _prepare(SOURCE_SVG, RES, dial)
+    prepared = _prepare(SOURCE_SVG, RES, step)
     try:
         svg_text = _trace(prepared, dial)
     finally:
