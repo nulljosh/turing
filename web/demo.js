@@ -641,7 +641,7 @@
   // more phrasings for the input's autocomplete only. The reel stays short.
   var MORE = ['take a note pick up milk', 'set a timer for 1 minute', 'open chrome and go to github.com', 'change the title to Hello there', 'draw a robot reading a book', 'draw a sailboat on a calm lake', 'imagine a city on the moon', 'do a barrel roll', 'tip on 45', 'roman numerals for 2026', 'sha256 of turing', 'base64 encode hello', 'morse sos', 'flip a coin', 'generate a strong password',
               'make a uuid', 'random number between 1 and 100', 'count words in the quick brown fox', 'reverse the text hello', 'what day is it',
-              'convert 5 km to miles', 'calculate 15% of 80', 'factor 84', 'time in london', 'days until halloween', 'how much disk space do i have'];
+              'convert 5 km to miles', 'calculate 15% of 80', 'factor 84', 'time in london', 'days until halloween', 'how much disk space do i have', 'edit notes.md: make it shorter', 'write a python script that prints the date to today.py'];
   var reelAt = 0;
   function stopReel() { reel = false; clearTimeout(reelTimer); clearTimeout(idleTimer); }
   function nextReel() {

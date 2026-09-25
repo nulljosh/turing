@@ -688,6 +688,10 @@
   U.NEEDS_MAC.push("save_research");
   U.write_document = function () { return "Drafting and saving a file happens on her real Mac, with the local model, and she asks first."; };
   U.NEEDS_MAC.push("write_document");
+  U.edit_file = function () { return "Editing a file happens on her real Mac: the local model rewrites it, she shows you the diff, and nothing saves without your yes."; };
+  U.write_code = function () { return "Writing code to disk happens on her real Mac: the local model writes it, she shows you the whole file as a diff, and it lands only on your yes."; };
+  U.edit_last_draft = function () { return "Editing a draft happens on her real Mac, on the file she just wrote there. Here there is no draft to edit."; };
+  U.NEEDS_MAC.push("edit_file", "write_code", "edit_last_draft");
   U.run_code = function () { return "Running code happens on her real Mac: a local model writes a short script from your request and the CSV's header, and it only ever runs in a sandbox there, no network, a time and memory cap. This stand-in has no sandbox."; };
   U.NEEDS_MAC.push("run_code");
   ["see_screen", "see_image"].forEach(function (name) {
@@ -709,6 +713,10 @@
     // deep research, same as tools_util.ROUTES
     [/^(?:research|do (?:some )?research (?:on|into)|deep dive (?:into|on)|write (?:me )?a (?:research )?brief (?:on|about)) (.+)$/i, function (m) { return ["research", m[1]]; }],
     [/^save (?:that|it|the brief|this brief)(?: to (.+))?$/i, function (m) { return ["save_research", m[1] || ""]; }],
+    // edit any file, write code, edit the last draft: same phrasings as tools_write.route
+    [/^(?:edit|rewrite|revise|change|update) (?:the file )?([~\/\w.-]+\.[A-Za-z0-9]+)(?: to|:|,)? (.+)$/i, function (m) { return ["edit_file", m[1] + "\t" + m[2]]; }],
+    [/^write (?:me )?(?:a |some )?((?:\w+ )?(?:script|code|program|function|module|class)\b.*?) (?:to|as|into|in|at) ([~\/\w.-]+\.[A-Za-z0-9]+)$/i, function (m) { return ["write_code", m[1] + "\t" + m[2]]; }],
+    [/^make (?:it|that|the draft)(?: a bit| a little)? (.+)$/i, function (m) { return ["edit_last_draft", m[1]]; }],
     [/^(?:draft|write)(?: me)? (?:a |an )?(?:doc(?:ument)?|email|file)(?: about| for| on)? (.+)$/i, function (m) { return ["write_document", m[1]]; }],
     // a sandboxed Python for CSV stats and charts, same as tools_util.ROUTES
     [/^(?:run |get |show )?stats (?:on|for) (\S*\.csv)$/i, function (m) { return ["run_code", m[0]]; }],
