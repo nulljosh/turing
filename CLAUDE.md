@@ -28,10 +28,7 @@ ever ships as its own real model, gets a name of its own too, not a
 - `training/parse_log.py` regenerates `web/status.json` from `train.log` after every
   run, landing page reads it live (loss chart + roadmap tracker share the
   same file on purpose).
-- Landing page deploys itself: `.github/workflows/deploy.yml` runs `wrangler deploy`
-  (Workers assets, not Pages, matches weather/keyrate) after CI passes on main, then
-  checks the live page serves the new VERSION. `web/` is the asset root. Needs the
-  CLOUDFLARE_API_TOKEN repo secret; `npx wrangler deploy` from the Mac still works.
+- Landing page: the loop deploys it from this Mac after every release, no asking, no token hunting: `git worktree add --detach /tmp/turing-clean HEAD && (cd /tmp/turing-clean && npx wrangler deploy); git worktree remove --force /tmp/turing-clean`, then check the live `/stats.json` version. Always from a clean HEAD, never the working tree (a builder may have half-done edits there). wrangler's OAuth login on the Mac does the auth. `.github/workflows/deploy.yml` stays as a green no-op until a Workers-scoped CLOUDFLARE_API_TOKEN repo secret exists (the Pages deploy token in secrets.fish cannot deploy Workers; tried 2026-09-25).
 - No daemon, no cron, training is invoked by hand every time.
 - Layout: her code at the root (ask_*, tools_*, chat, harness, serve, mcp_server, library, voice), `tests/` (every test_*.py, run from the root: `python3 tests/test_x.py`), `training/` (prep_data, distill, gen_hands_data, harvest_voice, run_lora_capped, train_resilient, parse_log, TRAINING_EXAMPLES, TROUBLESHOOTING), `swift/` (ocr, pdf), `eval/`, `pixelmator/`, `gui/`, `menubar/`, `web/`, `docs/` (ARCHITECTURE, ABILITIES, HISTORY, PROGRESS, LOOP-HANDOFF). No loose files at the root: a new script goes in the folder that owns it.
 
