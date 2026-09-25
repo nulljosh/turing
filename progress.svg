@@ -4,8 +4,8 @@
   text { font-family: -apple-system, Helvetica, Arial, sans-serif; fill: var(--ink); }
   line, polyline { stroke: var(--ink); fill: none; }
   .g { stroke-dasharray: 1 4; }
-</style><text x="50" y="11" font-size="10">Lines of real code</text><line x1="50" y1="26" x2="470" y2="26" class="g"/><text x="46" y="29" font-size="9" text-anchor="end">24275</text><line x1="50" y1="97" x2="470" y2="97" class="g"/><text x="46" y="100" font-size="9" text-anchor="end">12137</text>
+</style><text x="50" y="11" font-size="10">Lines of real code</text><line x1="50" y1="26" x2="470" y2="26" class="g"/><text x="46" y="29" font-size="9" text-anchor="end">24299</text><line x1="50" y1="97" x2="470" y2="97" class="g"/><text x="46" y="100" font-size="9" text-anchor="end">12149</text>
 <line x1="50" y1="26" x2="50" y2="166"/><line x1="50" y1="166" x2="470" y2="166"/>
-<polyline points="50,166 60,163 70,162 80,159 90,157 101,153 111,150 121,140 131,132 142,124 152,122 162,119 172,115 183,109 193,106 203,105 213,103 224,102 234,99 244,96 254,94 265,94 275,91 285,89 295,87 306,83 316,81 326,79 336,76 347,72 357,72 367,69 377,69 388,67 398,62 408,58 418,56 429,53 439,46 449,38 459,32 470,26" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="50,166 60,163 70,162 80,159 90,157 100,153 110,150 120,140 130,132 140,124 150,122 160,119 170,115 180,109 190,106 200,105 210,103 220,102 230,99 240,97 250,94 260,94 270,91 280,89 290,87 300,84 310,82 320,79 330,76 340,73 350,72 360,69 370,69 380,67 390,62 400,59 410,56 420,53 430,46 440,38 450,32 460,27 470,26" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
 <text x="50" y="182" font-size="10">Sep 13</text><text x="470" y="182" font-size="10" text-anchor="end">Sep 25</text>
-<text x="50" y="196" font-size="10" font-weight="600">24,275 lines &#183; 100% documented &#183; 403 commits since Sep 13 2026</text></svg>
+<text x="50" y="196" font-size="10" font-weight="600">24,299 lines &#183; 100% documented &#183; 404 commits since Sep 13 2026</text></svg>

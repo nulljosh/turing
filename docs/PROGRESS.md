@@ -2,6 +2,9 @@
 
 TLDR per loop round, newest first. The loop adds a line every round it ships something, then the scorecard.
 
+- 2026-09-25 v4.15.5: a second blind held-out set (eval/heldout2.jsonl, 500 rows, written without seeing any test data or results): 350 right, 20 wrong past the guard, 16 right picks refused. It agrees with the first: 5.0 is not close yet. Loop tapering until the weekly usage reset.
+  `v4.15.5 · 126 tools · 557 tests · docs coverage 100% · laws all hold · biggest tools_util.py 700 · actions 221/221 · parity 221/221 · util_diff 261/261`
+
 - 2026-09-25 v4.15.4: picker round twelve. The retrain on blind new phrasings picked more right (1360) but was much less safe (78 past the guard), so it is not shipped and its data was reverted. The guard change ships alone: held-out right picks refused 24 to 19, standard set unchanged at 1300/9/0. The round saw the held-out breakdown, so a second fresh held-out set comes before any 5.0 claim.
   `v4.15.4 · 126 tools · 557 tests · docs coverage 100% · laws all hold · biggest tools_util.py 700 · actions 221/221 · parity 221/221 · util_diff 261/261`
 

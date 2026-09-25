@@ -1,5 +1,5 @@
 {
-  "version": "4.15.4",
+  "version": "4.15.5",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -200,6 +200,14 @@
         "documented": 4
       },
       "eval/faq_paraphrase.py": {
+        "total": 1,
+        "documented": 1
+      },
+      "eval/filter_heldout2.py": {
+        "total": 1,
+        "documented": 1
+      },
+      "eval/gen_heldout2.py": {
         "total": 1,
         "documented": 1
       },
