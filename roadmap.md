@@ -1,6 +1,6 @@
 # Roadmap
 
-Samantha is a small local model (Qwen, fine-tuned) with hands: she can open apps, browse, read your files, answer from your notes, and act on your Mac, entirely offline, no account, nothing sent out. v4.14.0 is about to cut. She has 125 tools. Her own picker (not the exact-match router) gets 958 of 1352 test phrasings right, with 61 wrong picks that slip past the safety guard. She knows 62 of 65 held-out facts with nothing confidently wrong. She runs natively on the Mac, and the picker and chat both run on Windows and Linux too. The installer is signed with Developer ID and notarized, so it opens on a stranger's Mac with no warning.
+Samantha is a small local model (Qwen, fine-tuned) with hands: she can open apps, browse, read your files, answer from your notes, and act on your Mac, entirely offline, no account, nothing sent out. v4.15.0 is about to cut. She has 125 tools. Her own picker (not the exact-match router) gets 958 of 1352 test phrasings right, with 61 wrong picks that slip past the safety guard. She knows 62 of 65 held-out facts with nothing confidently wrong. She runs natively on the Mac, and the picker and chat both run on Windows and Linux too. The installer is signed with Developer ID and notarized, so it opens on a stranger's Mac with no warning.
 
 Full phase-by-phase history lives in `docs/HISTORY.md` and the picker's model comparisons in `docs/BAKEOFF.md`.
 
@@ -17,7 +17,7 @@ Full phase-by-phase history lives in `docs/HISTORY.md` and the picker's model co
 ### Gaps with frontier models (set 2026-09-25, the loop re-checks every round)
 Not data centres or training data: the gaps we can actually close. Each round picks work that shrinks one, and updates its line here when it moves.
 
-- [ ] **Understands wording, not patterns.** Round eight (4.14): her picker was retrained on every tool (36 had no training at all), 1194 of 1878 test phrasings right (was 973), 134 wrong picks past the guard (was 222), 2 right picks refused. Closes with 5.0: every tool by her own model, fewer than ten wrong past the guard.
+- [ ] **Understands wording, not patterns.** Round nine (4.15): her picker gets 1300 of 1895 test phrasings right (round eight 1197), 83 wrong picks past the guard (was 141), 0 right picks refused. Every tool is trained. Closes with 5.0: fewer than ten wrong past the guard.
 - [ ] **Plans.** Started in 4.13: planner.py makes a step list from her real tools (the local model, or a split on "and"/"then" with no model), shows it before running, checks each result and stops on a failure, takes a value from an earlier step only through a declared placeholder from a safe producer, and asks before every write; law 11 keeps what she reads from adding or changing a step. Not closed: she stops on a mistake but does not yet recover or re-plan.
 - [ ] **Remembers the conversation.** Started in 4.12: "do that again", "same but for nimble", "what about tomorrow", "open it" work for every tool from a ten-turn history; a past result never supplies a command (law 10). Closes at 7.0 with memory across sessions.
 - [ ] **Thinks for herself.** Real answers come from the borrowed 9B; eyes and voice are small models that miss details. Target: 8.0, distillation from frontier teachers.

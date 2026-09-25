@@ -118,6 +118,8 @@ MOTIFS = {
     # 4.14: every write is checked against your own words, so Scutum, the shield, high on the left.
     7: {"lines": _LINES([(268, 360), (284, 334), (300, 346), (292, 368), (268, 360)]),
         "stars": [(268, 360, 2.5), (284, 334, 3), (300, 346, 2), (292, 368, 2.5)]},
+    # 4.15: her own picker got much sharper, so the Pleiades, a tight bright cluster behind her head.
+    8: {"stars": [(708, 478, 2.5), (719, 471, 3), (729, 480, 2.5), (715, 489, 2), (726, 493, 2.5), (737, 486, 2)]},
 }
 
 

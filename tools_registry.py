@@ -46,12 +46,12 @@ _EVIDENCE = {
     "roll_dice": r"roll|dice|\bdie\b|\bd\d|throw|toss", "random_number": r"random|number", "make_password": r"password",
     "hash_text": r"hash|sha|checksum", "word_count": r"word", "tip": r"\btip", "is_prime": r"prime|factor|divid", "roman_numeral": r"roman",
     "morse_code": r"morse", "new_note": r"note|jot|write|remember|save|down", "say": r"\bsay|speak|announce|voice|aloud|out loud|words",
+    "free_when": r"\bfree\b|\bbusy\b|availab|do i have time|when am i|\bschedule\b",
     # Round eight covered 36 tools with zero picker training data; their evidence predates them (round-eight
     # gap). Words come from each tool's own docstring/templates, never copied out of eval/actions.py verbatim.
     "bluetooth_status": r"bluetooth", "calendar_tomorrow": r"tomorrow",
     "running_apps": r"running|open apps|apps open|what's open|apps are open",
     "recent_downloads": r"download", "unread_mail": r"mail|email|inbox",
-    "free_when": r"\bfree\b|\bbusy\b|availab|do i have time|when am i",
     "git_status": r"status|changed|dirty|\bdiff\b|\bbranch\b", "recent_commits": r"commit",
     "run_tests": r"\btest", "open_prs": r"\bprs?\b|pull request",
     "open_in_editor": r"editor|vscode|vs code|in code", "quit_app": r"quit|close|shut down|\bkill\b",
@@ -60,8 +60,8 @@ _EVIDENCE = {
     "copy_file": r"\bcopy\b|duplicate", "move_file": r"\bmove\b|relocate", "rename_file": r"rename|new name|call it",
     "append_note": r"\bnote\b", "add_event": r"calendar|event|schedule",
     "complete_reminder": r"remind|done|finish|complete|check off|\bmark\b", "list_reminders": r"reminder",
-    "search_notes": r"\bnotes?\b", "needs_attention": r"attention|needs me|focus on|deal with|need to handle",
-    "find_file": r"find|locate|where(?:'s| is)", "folder_size": r"\bbig\b|\bsize\b",
+    "search_notes": r"\bnotes?\b", "needs_attention": r"attention|needs me|focus on|deal with|need to handle|urgent",
+    "find_file": r"find|locate|where(?:'s| is)", "folder_size": r"\bbig\b|\bsize\b|\bspace\b|take up",
     "research": r"research|deep dive|look into|dig into|investigate", "research_more": r"\bmore\b|deeper|expand|further|continue|again",
     "summarize": r"summar", "transcribe_video": r"transcribe|said in|captions|subtitles",
     "translate": r"translat|how do you say", "write_document": r"draft|write (?:a |an )?(?:doc|document|email|memo|file)|compose",
@@ -100,9 +100,29 @@ def _sound(tool, arg, query):
     # "words<TAB>path": both halves have to be real, and the path has to be one she was actually given.
     # Same shape for the round-eight file/note/translate tools, which also copy two pieces out of the
     # sentence joined by a tab: source<TAB>destination, content<TAB>note name, text<TAB>language.
-    if tool in ("find_in_document", "ask_document", "copy_file", "move_file", "rename_file", "append_note", "translate"):
+    if tool in ("find_in_document", "ask_document", "copy_file", "move_file", "rename_file", "translate"):
         a, _, b = arg.partition("\t")
         return bool(a) and bool(b) and a.lower() in q_lower and b.lower() in q_lower
+
+    # append_note is the same content<TAB>note-name shape, but round nine showed a wrapper phrasing
+    # ("append call bob to the note todo") where the model folds the note name into the copied text
+    # instead of splitting on tab. Recover the trailing "note <name>" / "to the <name> note" phrasing
+    # from the sentence itself rather than trusting an unsplit argument.
+    if tool == "append_note":
+        a, _, b = arg.partition("\t")
+        if not b:
+            m = re.search(r"\bnote (\w[\w ]*)$", q_lower) or re.search(r"to (?:the |my )?(\w[\w ]*?) note\b", q_lower)
+            b = m.group(1).strip() if m else ""
+        return bool(a) and bool(b) and a.lower() in q_lower and b.lower() in q_lower
+
+    # zip_file/folder_size copy a path she resolves against the home folder ("~/Documents"), but the
+    # sentence usually names the folder in plain words ("the documents folder", "my music folder"), not
+    # the resolved path itself. Real evidence is the path's own last component showing up in the words.
+    if tool in ("zip_file", "folder_size"):
+        if not arg:
+            return False
+        base = arg.rstrip("/").rsplit("/", 1)[-1].lower()
+        return bool(base) and (arg.lower() in q_lower or base in q_lower)
 
     # dark_mode/do_not_disturb take "on", "off" or (dark_mode only) "toggle": a guess at direction is not
     # a copy, so the sentence has to say which way, not just that the tool is on topic.

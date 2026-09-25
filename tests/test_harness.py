@@ -204,6 +204,22 @@ class AgentGrounding(unittest.TestCase):
         self.assertTrue(tools._sound("open_prs", "", "any open pull requests"))
         self.assertFalse(tools._sound("open_prs", "", "kick off the tests"))
 
+    def test_round_nine_tools_need_their_own_word(self):
+        """Round nine's guard gaps: a day/week window is evidence for free_when, "urgent" for
+        needs_attention, "space"/"take up" for folder_size, a resolved path's own folder name
+        counts as evidence for zip_file/folder_size, and append_note recovers its note name even
+        when the model folds it into the copied text instead of splitting on tab."""
+        self.assertTrue(tools._sound("free_when", "next tuesday", "how does my schedule look next tuesday"))
+        self.assertFalse(tools._sound("free_when", "next tuesday", "what's the weather like today"))
+        self.assertTrue(tools._sound("needs_attention", "", "what's urgent for me right now"))
+        self.assertFalse(tools._sound("needs_attention", "", "what time is it in tokyo"))
+        self.assertTrue(tools._sound("folder_size", "~/Pictures", "how much space is my pictures folder taking up"))
+        self.assertFalse(tools._sound("folder_size", "~/Pictures", "what's on my calendar tomorrow"))
+        self.assertTrue(tools._sound("zip_file", "~/Desktop", "zip the desktop folder for me"))
+        self.assertFalse(tools._sound("zip_file", "~/Desktop", "what's my wifi network called"))
+        self.assertTrue(tools._sound("append_note", "buy milk to the note shopping", "please append buy milk to the note shopping"))
+        self.assertFalse(tools._sound("append_note", "buy milk to nowhere", "please append buy milk to the note shopping"))
+
 
 if __name__ == "__main__":
     unittest.main()
