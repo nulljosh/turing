@@ -1,4 +1,4 @@
-# Turing loop handoff (2026-09-24, night, back on the Mac)
+# Turing loop handoff (2026-09-25, early morning)
 
 ## What the loop is
 
@@ -14,15 +14,18 @@ roadmap.md "Gaps with frontier models" lists the six gaps Joshua cares about bey
 
 ## Next, in order
 
+Re-read this file, README.md and roadmap.md at the start of every round and fix anything stale in the same pass (Joshua, 2026-09-25).
 
-1. Constrained decoding: logits processor limits picker to real tool names copied from sentence.
-2. Picker round seven: teach "how many X is N Y" as literal copy (template fix), retrain, score vs round six.
-3. Research beyond Wikipedia: arxiv, GitHub, Hacker News, search APIs.
-4. Multi-step GUI flows: detect agent planning, ask yes or no per step before acting.
+1. tools.py split (running 2026-09-25): under 500 lines, lower MAX_LINES after.
+2. 5.0 prep, her own head: retrain the picker on the templates plus training/feedback_to_data.py rows, score with eval/hands.py against round six. Check free memory first, never two mlx_lm.lora jobs at once.
+3. Planning (frontier gap): a planner over her tools that checks each step's result, a yes per write.
+4. Conversation memory (frontier gap): a turn history every tool can read, so follow-ups work without hand wiring.
+5. A second model that checks each planned write against the user's own words (the rest of the safe-reading gap).
+6. Every minor: a new badge motif in tools_badge.MOTIFS (Joshua loves these), look at it at 2x before shipping.
 
 ## Restart prompt
 
 ```
-/loop until version 5 or 5.5. ultrathink
-read docs/LOOP-HANDOFF.md first.
+/loop until version 10. ultrathink
+keep close watch on usage. read docs/LOOP-HANDOFF.md first.
 ```

@@ -2,6 +2,9 @@
 
 TLDR per loop round, newest first. The loop adds a line every round it ships something, then the scorecard.
 
+- 2026-09-25 v4.11.1: tools.py split, 759 to 546 lines (the router's regex tables into tools_routes.py, the family registry and WRITES/NOT_FOR_MODELS into tools_registry.py, every name still on tools); law 8's ceiling down from 760 to 700. Handoff and README refreshed: they re-read every round now.
+  `v4.11.1 · 126 tools · 484 tests · docs coverage 100% · laws all hold · biggest tools_util.py 700 · actions 221/221 · parity 221/221 · util_diff 261/261`
+
 - 2026-09-25 🎉 v4.11.0: she learns from you. Say "good", "wrong" or "wrong, I meant X" after any answer; it is caught before routing and saved on the Mac, and training/feedback_to_data.py turns corrections into picker training rows (never test phrasings). "How am I rating you" shows the tally. Badge step 4: a ringed planet.
   `v4.11.0 · 126 tools · 484 tests · docs coverage 100% · laws all hold · biggest tools.py 759 · actions 221/221 · parity 221/221 · util_diff 261/261`
 

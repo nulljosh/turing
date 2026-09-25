@@ -22,13 +22,8 @@ import urllib.parse
 import urllib.request
 import untrusted
 import tools_util
-import tools_image
 from tools_image import remove_background, upscale_image, enhance_image, grayscale_image, rotate_image, flip_image, resize_image, crop_square, convert_image, image_info
-import tools_files
 from tools_files import find_file, recent_downloads, folder_size, move_file, copy_file, rename_file, zip_file, unzip_file, trash_file
-import tools_organizer
-import tools_system
-import tools_dev
 
 AGENT_MODEL = "qwen3:1.7b"  # 8B was right but 7.6GB and minutes per run; 1.7B is right in 5s once the harness prefetches
 OLLAMA_CHAT = "http://localhost:11434/api/chat"
@@ -304,123 +299,32 @@ TOOLS = {f.__name__: f for f in (open_app, open_url, web_search, current_tab, re
                                      find_file, recent_downloads, folder_size, move_file, copy_file, rename_file, zip_file, unzip_file, trash_file)}
 TOOLS.update({f.__name__: f for f in tools_util.TOOLS})
 globals().update({f.__name__: f for f in tools_util.TOOLS})  # eval/actions.py swaps every TOOLS name on this module for a recorder
-for _mod in (tools_organizer, tools_system, tools_dev):  # the organizer, system and dev families: same TOOLS/ROUTES shape as tools_util
-    TOOLS.update({f.__name__: f for f in _mod.TOOLS})
-    globals().update({f.__name__: f for f in _mod.TOOLS})
+
+import tools_registry  # noqa: E402  (organizer/system/dev families, WRITES/NOT_FOR_MODELS, the model-pick soundness guard: split for size)
+tools_registry.register_families(TOOLS, globals())
+NOT_FOR_MODELS = tools_registry.NOT_FOR_MODELS
+WRITES = tools_registry.WRITES
+_EVIDENCE = tools_registry._EVIDENCE
+_AGAINST = tools_registry._AGAINST
+_sound = tools_registry._sound
 
 import tools_write  # noqa: E402  (phrase-routed only: each confirms itself with a diff, never a model's tool)
 _WRITERS = {f.__name__: f for f in (tools_write.edit_last_draft, tools_write.edit_file, tools_write.write_code)}
 TOOLS.update(_WRITERS)
 globals().update(_WRITERS)
 
-_UNIT = {"s": 1 / 60, "m": 1, "h": 60}
-
-_ROUTES = (
-    (re.compile(r"^(?:play|resume)(?: (?:the |some |my )?(?:music|song|tunes))?$", re.I), lambda m: music("play")),
-    (re.compile(r"^pause$|^(?:pause|stop) (?:the |my |this )?(?:music|song|track)$", re.I), lambda m: music("pause")),
-    (re.compile(r"^(?:skip|next)(?: (?:this |the )?(?:song|track|one))?$", re.I), lambda m: music("next")),
-    (re.compile(r"^(?:previous|last|go back a|go back one)(?: (?:song|track))?$", re.I), lambda m: music("previous")),
-    (re.compile(r"^what(?:'s| is) (?:this song|playing)\b|^what song is (?:this|playing)", re.I), lambda m: music("playing")),
-    (re.compile(r"^(?:what(?:'s| is) the |how(?:'s| is) the |(?:look up|check|get) the )?weather\b(?: like)?(?: today| outside| right now| now)*(?: (?:in|for) (.+))?$", re.I),
-     lambda m: weather(m.group(1) or "")),
-    (re.compile(r"^(?:set |start )?(?:a |an )?(?:timer (?:for )?(\d+(?:\.\d+)?) ?(s|m|h)\w*|(\d+(?:\.\d+)?)[ -]?(s|m|h)\w* timer)$", re.I),
-     lambda m: timer(float(m.group(1) or m.group(3)) * _UNIT[(m.group(2) or m.group(4)).lower()])),
-    (re.compile(r"^remind me (?:to |that |about )?(.+)$|^(?:add|create|make|set|new) (?:a |me a )?(?:new )?reminder(?: to| that says| saying|:)? (.+)$", re.I),
-     lambda m: new_reminder(m.group(1) or m.group(2))),
-    (re.compile(r"^(?:(?:make|create|take|write|add|new) (?:a |me a )?(?:new )?note|note)(?: that says| saying| that|:)? (.+)$", re.I), lambda m: new_note(m.group(1))),
-    (re.compile(r"^what(?:'s| is) on (?:my |the )?(?:calendar|schedule|agenda)\b|^(?:my )?(?:calendar|schedule|agenda)(?: for)?(?: today)?$|^what do i have (?:on )?today", re.I),
-     lambda m: calendar_today()),
-    (re.compile(r"^(?:check (?:my )?|do i have |is there )?(?:any )?(?:new |unread )?(?:mail|email)\??$", re.I), lambda m: unread_mail("")),
-    (re.compile(r"^(?:is there |do i have )?anything from (.+?) in my (?:mail|email|inbox)(?: today)?\??$|^(?:mail|email) from (.+?)(?: today)?\??$", re.I),
-     lambda m: unread_mail(m.group(1) or m.group(2))),
-    (re.compile(r"^what needs (?:my attention|me)$", re.I), lambda m: needs_attention()),
-    (re.compile(r"^(?:am i free|when am i free|how free am i|do i have (?:any )?time)(?:\s+(.+))?$", re.I), lambda m: free_when(m.group(1) or "")),
-    (re.compile(r"^(?:make|design|draw|create|build)(?: me)? (?:a |an )?((?:(?:complex|intricate|detailed|elaborate|ornate|fancy|crazy|insane|original|wordless|abstract|textless) )*)(?:logo|icon)(?: for| of)? (.+)$", re.I), lambda m: make_logo((m.group(1) or "") + m.group(2))),
-    (re.compile(r"^(?:paint|repaint)(?: me)? (?:a picture of |a painting of |the (?:image|photo|picture) (?:at )?)?(\S+\.(?:jpe?g|png|heic|webp|tiff?))$", re.I), lambda m: paint_image(m.group(1))),
-    (re.compile(r"^(?:(?:show me |tell me )?what(?:'s| is) (?:on|in) (?:my |the )?clipboard|(?:read|show)(?: me)? (?:my |the )?clipboard)\b", re.I), lambda m: clipboard()),
-    (re.compile(r"^(?:set |turn |put )?(?:the |it |my )?(?:volume )?(?:up |down )?(?:to |at )(\d{1,3})\b", re.I), lambda m: set_volume(m.group(1))),
-    (re.compile(r"^(?:set |turn )?(?:the )?volume (\d{1,3})\b", re.I), lambda m: set_volume(m.group(1))),
-    (re.compile(r"^(?:turn )?(?:the |it )?(?:volume )?(up|down)$|^(?:turn )?(?:the )?volume (up|down)$|^(louder|quieter)$", re.I),
-     lambda m: set_volume("up" if (m.group(1) or m.group(2) or m.group(3)).lower() in ("up", "louder") else "down")),
-    (re.compile(r"^mute\b", re.I), lambda m: set_volume(0)),
-    (re.compile(r"^(?:how(?:'s| is) (?:my |the )?battery|battery(?: level| status)?$|what(?:'s| is) (?:my |the )?battery|how much battery)", re.I), lambda m: battery()),
-    (re.compile(r"^say (.+)$", re.I), lambda m: say(m.group(1))),
-    (re.compile(r"^(?:list|show)(?: me)? (?:the )?(?:files|folder|contents) (?:in|of|at) (.+)$", re.I), lambda m: list_dir(m.group(1))),
-    (re.compile(r"^(?:read|show|cat)(?: me)? (?:the )?file (.+)$", re.I), lambda m: read_file(m.group(1))),
-    (re.compile(r"^(?:take a |grab a )?screenshot\b", re.I), lambda m: screenshot()),
-    (re.compile(r"^what(?:'s| is) (?:on |in )?(?:my |the )?(?:current |open )?(?:tab|chrome|browser)\b", re.I), lambda m: current_tab()),
-    (re.compile(rf"^(?:search|look up|find) (?:on )?({_SITE_NAMES}) for (.+)$|^(?:search|look up) (.+) on ({_SITE_NAMES})$", re.I),
-     lambda m: open_url(site_search(m.group(1) or m.group(4), m.group(2) or m.group(3)))),
-    (re.compile(rf"^(?:open |go to |pull up )?({_SITE_NAMES}) and search(?: it)?(?: for)? (.+)$", re.I), lambda m: open_url(site_search(m.group(1), m.group(2)))),
-    (re.compile(r"^(?:search|google|look up)(?: search)?(?: (?:the web|online|the internet|on google|google))?(?: for)? (.+)$", re.I), lambda m: web_search(m.group(1))),
-    (re.compile(r"^(?:read|fetch) (?:me )?(?:the )?(?:page |site |website )?(?:at )?(https?://\S+|[\w-]+(?:\.[\w-]+)+(?:/\S*)?)$|^what does (https?://\S+|[\w-]+(?:\.[\w-]+)+(?:/\S*)?) say$", re.I),
-     lambda m: read_page(m.group(1) or m.group(2))),
-    (re.compile(r"^summari[sz]e (?:this |the )?(?:page|tab)$", re.I), lambda m: summarize("")),
-    (re.compile(r"^summari[sz]e (?:my |the )?(?:unread )?(?:mail|email|inbox)$", re.I), lambda m: summarize("mail")),
-    (re.compile(r"^summari[sz]e (?:me )?(?:the )?(?:document|pdf|doc|file called) (.+)$", re.I), lambda m: summarize(m.group(1))),
-    (re.compile(r"^summari[sz]e (~/\S+|/\S+)$", re.I), lambda m: summarize(m.group(1))),
-    (re.compile(r"^summari[sz]e (?:me )?(?:the )?(?:page |site |website )?(?:at )?(https?://\S+|[\w-]+(?:\.[\w-]+)+(?:/\S*)?)$", re.I),
-     lambda m: summarize(m.group(1))),
-    (re.compile(rf"^translate (?:the page |the site )?(.+?) (?:to|into) ({LANGUAGES})$|^how do you say (.+?) in ({LANGUAGES})$", re.I),
-     lambda m: translate((m.group(1) or m.group(3)) + "\t" + (m.group(2) or m.group(4)))),
-    (re.compile(r"^(?:open|launch|start) (?:up )?(?:chrome|the browser) (?:and |then )?(?:go to|open|visit|load) (.+)$", re.I), lambda m: open_url(m.group(1))),
-    (re.compile(r"^(?:go to|visit|browse to|pull up) (.+)$", re.I), lambda m: open_url(m.group(1))),
-    (re.compile(r"^(?:open|launch|start) (?:up )?(.+)$", re.I),
-     # one unknown word is a mistyped app, say so. A phrase that is no app
-     # ("the turing repo on github") is something to look for.
-     lambda m: open_url(m.group(1)) if _url(m.group(1)) or (" " in m.group(1).strip() and not _app_match(m.group(1))) else open_app(m.group(1))),
-)
-
-
-def _util_route(name, arg):
-    """A tools_util or tools_image route as a tools.py one. The function is looked up on this module at call
-    time, so eval/actions.py can swap it for a recorder like every other tool."""
-    takes = TOOLS[name].__code__.co_argcount
-    return lambda m: globals()[name](arg(m)) if takes else globals()[name]()
-
-
-# the catch-all routes whose argument is any text: a sentence they swallow may really be several commands
-_GREEDY = {_ROUTES[-2][0], _ROUTES[-1][0]}
-
-# the image tools before the utilities, so "convert cat.png to jpg" is an image and never a unit conversion
-_ROUTES = _ROUTES + tuple((pat, _util_route(name, arg)) for pat, name, arg in tools_image.ROUTES)
-_ROUTES = _ROUTES + tuple((pat, _util_route(name, arg)) for pat, name, arg in tools_files.ROUTES)  # find a file, downloads, folder size
-_ROUTES = _ROUTES + tuple((pat, _util_route(name, arg)) for pat, name, arg in tools_util.ROUTES)  # 31 utility tools: math, text, dice, this Mac's vitals
-# organizer's, system's and dev's own phrasings go in FRONT of everything above: "search notes for X" would
-# otherwise be swallowed by the "search ... for" catch-all, and "quit spotify"/"run the tests" by nothing today either
-_ROUTES = tuple((pat, _util_route(name, arg)) for _mod in (tools_organizer, tools_system, tools_dev) for pat, name, arg in _mod.ROUTES) + _ROUTES
-
-# anything past the first verb phrase means more than one step: that is agent() work
-_MULTISTEP = re.compile(r"\b(?:and (?:then )?(?:tell|read|find|summar|poke|look|check|see|click)|poke around|then )", re.I)
-# "look at my screen and tell me what's wrong" is one question about one picture, not two steps
-_EYES = re.compile(r"^(?:look at|describe|see|check out|what(?:'s| is) in) (?:(?:my |the )?screen|\S+\.(?:png|jpe?g|heic|gif|webp|tiff?|bmp)|this)\b"
-                    r"|^what am i holding\b|^(?:read (?:this|that) label|what does (?:this|that) label say)\b|^(?:use|look through) (?:the |your )?camera\b", re.I)
-# an explicit multi-step screen JOB, named as such: her own screen agent plans it, click_text/type_text/press_key one
-# step at a time, every step confirmed. Ahead of _MULTISTEP so "log me into X and check my email" does not go to the
-# tool-picking agent(), which has no screen tools at all (they are NOT_FOR_MODELS on purpose).
-_SCREEN_JOB = re.compile(r"^(?:log (?:me )?(?:in|into)|sign (?:me )?(?:in|into)|walk me through|step me through)\b", re.I)
-_ACTION = re.compile(r"^(?:open|launch|start|go to|visit|browse|pull up|search|google|look up|poke around|take a|grab a|screenshot|make|design|draw|paint|repaint|play|pause|skip|remind me|set a)\b", re.I)
-# People do not type commands, they ask. "can you open chrome", "hey open
-# github", "open up spotify for me please". Stripped once here so every route
-# and is_action() see the bare command, instead of each regex growing its own
-# politeness prefix. Live-tested 2026-09-20: 10 of 16 natural phrasings missed.
-_LEAD = re.compile(r"^(?:(?:hey|ok|okay|yo|samantha|please|now|just)[, ]+)*"
-                   r"(?:(?:can|could|would|will) you (?:please )?|i (?:want|need|would like|'d like) (?:you )?to |let's |go ahead and )?(?:please )?", re.I)
-_TAIL = re.compile(r"(?:[, ]+(?:please|for me|real quick|now|thanks|thank you))+$", re.I)
-
-
-# invisible and look-alike characters: a full-width "ｏｐｅｎ" is "open", and a control or direction-override
-# character never rides into a note, a reminder or a search
-_INVISIBLE = re.compile(r"[\x00-\x1f\x7f\u200b-\u200f\u202a-\u202e\u2060-\u2069\ufeff]")
-_DANGLING = re.compile(r"(?:[,;]?\s+(?:and then|and|then))+$", re.I)  # "open youtube and" is just "open youtube"
-_CONTRACT = re.compile(r"\b(what|how|where|who)s\b", re.I)  # people type "whats the weather", the routes say "what's"
-
-
-def _bare(query):
-    """Strip politeness markers (please, can you, etc.) from a command."""
-    q = _INVISIBLE.sub("", unicodedata.normalize("NFKC", query)).strip().rstrip(".!?")
-    q = _DANGLING.sub("", _CONTRACT.sub(r"\1's", q))
-    return _TAIL.sub("", _LEAD.sub("", q, count=1)).strip()
+import tools_routes  # noqa: E402  (the regex router: phrase table + text normalization, split for size)
+tools_routes.install(sys.modules[__name__])  # builds _ROUTES etc against this module, never `import tools` inside
+_ROUTES = tools_routes._ROUTES
+_GREEDY = tools_routes._GREEDY
+_MULTISTEP = tools_routes._MULTISTEP
+_EYES = tools_routes._EYES
+_SCREEN_JOB = tools_routes._SCREEN_JOB
+_ACTION = tools_routes._ACTION
+_bare = tools_routes._bare
+is_action = tools_routes.is_action
+_schema = tools_routes._schema
+_named_page = tools_routes._named_page
 
 
 def act(query):
@@ -436,127 +340,10 @@ def act(query):
     return None
 
 
-def is_action(query):
-    """Check if query starts with an action verb, after stripping politeness markers."""
-    return bool(_ACTION.match(_bare(query)))
-
-
-def _schema(fn):
-    """Build OpenAI tool schema from function signature and docstring."""
-    args = fn.__code__.co_varnames[:fn.__code__.co_argcount]
-    return {"type": "function", "function": {
-        "name": fn.__name__, "description": fn.__doc__,
-        "parameters": {"type": "object", "properties": {a: {"type": "string"} for a in args},
-                       "required": [a for a in args if a != "target" or fn is open_url]}}}
-
-
-def _named_page(task):
-    """The URL or known site a task mentions, if any."""
-    m = re.search(r"https?://\S+|\b[\w-]+(?:\.[\w-]+)+(?:/\S*)?", task)
-    if m and _url(m.group(0).rstrip(".,")):
-        return _url(m.group(0).rstrip(".,"))
-    low = task.lower()
-    return next((url for name, url in sorted(SITES.items(), key=lambda kv: -len(kv[0]))
-                 if re.search(rf"\b{re.escape(name)}\b", low)), None)
-
-
-# These fire something with a side effect the user did not see coming (a Shortcut can send a
-# message, a clipboard write loses what was there, the screen goes dark). Only a command that
-# names them runs them, never a model's own choice. The real fix is the harness asking first.
-NOT_FOR_MODELS = {"ask_llm", "see_screen", "see_image", "see_camera", "click_text", "type_text", "press_key", "run_shortcut", "copy_to_clipboard", "sleep_display", "call_mcp_tool", "close_tab", "remember", "recall", "forget", "read_screen", "ask_screen",
-                   "edit_last_draft", "edit_file", "write_code"}  # her memory is private: only her own commands and the harness touch it. edit_last_draft needs the in-process path it just wrote, and confirms itself with the diff, so it is phrase-routed only, never a model's own pick or MCP
-
-
 def model_tools():
     """The tools a model may choose from: everything except NOT_FOR_MODELS."""
     return {n: f for n, f in TOOLS.items() if n not in NOT_FOR_MODELS}
 
-
-
-
-
-
-# A pick with no argument to check (disk_space, uptime...) or a loose one needs evidence in the sentence: some word that
-# is really about that tool. Round four confused ip_address with wifi_name and let "let me know in 10 minutes" write a note.
-_EVIDENCE = {
-    "disk_space": r"disk|storage|space|drive|room|full", "uptime": r"\bup\b|uptime|restart|reboot|been on|running|booted",
-    "current_tab": r"\btab\b|page|site|browser|chrome|safari|article|reading|looking at", "list_tabs": r"\btabs\b",
-    "memory_usage": r"memory|\bram\b", "cpu_load": r"cpu|processor|load|busy|maxed|working|doing", "ip_address": r"\bip\b|address",
-    "wifi_name": r"wi-?fi|network", "system_info": r"system|\bmac\b|macos|chip|computer|specs|about this", "list_shortcuts": r"shortcut",
-    "flip_coin": r"coin|heads|tails", "make_uuid": r"uuid|guid", "time_in": r"time|clock|late", "days_until": r"\bday|sleeps|until|till|far away|count",
-    "roll_dice": r"roll|dice|\bdie\b|\bd\d|throw|toss", "random_number": r"random|number", "make_password": r"password",
-    "hash_text": r"hash|sha|checksum", "word_count": r"word", "tip": r"\btip", "is_prime": r"prime|factor|divid", "roman_numeral": r"roman",
-    "morse_code": r"morse", "new_note": r"note|jot|write|remember|save|down", "say": r"\bsay|speak|announce|voice|aloud|out loud|words",
-}
-# ...and words that say the sentence is about a different tool. "say help in morse code" is morse_code, not say.
-_AGAINST = {"say": r"morse|clock say", "wifi_name": r"address|\bip\b", "open_app": r"shortcut", "weather": r"\bapp\b", "web_search": r"\.(?:com|org|net|io|ca)\b"}
-
-
-def _sound(tool, arg, query):
-    """Is this pick safe to run? She was trained to copy her argument out of
-    the sentence, never to compose one. So an argument that is not in the
-    sentence is a guess, and a guess does not get to touch the Mac."""
-    q_lower = query.lower()
-
-    if tool in _EVIDENCE and not re.search(_EVIDENCE[tool], q_lower):
-        return False
-    if tool in _AGAINST and re.search(_AGAINST[tool], q_lower):
-        return False
-
-    if tool == "set_volume":
-        # "mute" and "kill the sound" mean 0, and no digit appears in the sentence
-        silent = arg == "0" and re.search(r"\b(?:mute|silen\w+|(?:sound|volume|audio) off|kill the (?:sound|volume|audio))\b", query, re.I)
-        return arg in ("up", "down") or bool(silent) or (arg.isdigit() and arg in query)
-    if tool == "music":
-        # arg must be an exact command, not a loose phrase
-        return arg in _MUSIC or arg == "playing"
-    if tool == "timer":
-        return duration(arg) is not None and arg.lower() in q_lower
-    if tool in ("list_dir", "read_file"):
-        return bool(arg)
-
-    # "words<TAB>path": both halves have to be real, and the path has to be one she was actually given
-    if tool in ("find_in_document", "ask_document"):
-        words, _, path = arg.partition("\t")
-        return bool(words) and bool(path) and path.lower() in q_lower and words.lower() in q_lower
-
-    # An app or a site with no name is never a real command.
-    if not arg and tool in ("open_app", "open_url"):
-        return False
-
-    # "notes" is the app, not something to write down.
-    if tool == "new_note" and len(arg.split()) == 1 and arg.lower() in TOOLS:
-        return False
-
-    # Reject say() if arg looks like a timer duration
-    if tool == "say" and duration(arg) is not None:
-        return False  # "say 8 minutes" is likely a mispicked timer
-
-    # Reject new_reminder() if query says "notes" not "remind"
-    if tool == "new_reminder" and re.search(r"\bnotes?\b", q_lower) and not re.search(r"\b(?:remind|reminder)\b", q_lower):
-        return False  # picked reminder when user said "notes"
-
-    # Reject web_search for multi-step queries (dig through, poke around)
-    if tool == "web_search" and re.search(r"\b(?:dig through|poke around|find something)\b", q_lower):
-        return False  # this is agent work, not a simple search
-
-    # Reject open_url() if arg looks like an app name
-    if tool == "open_url":
-        if arg.lower() in ("chrome", "safari", "firefox"):
-            return False  # these are apps, not URLs
-        if _url(arg) is None and " " not in arg.strip():
-            return False  # one word that is no site. A phrase is something to look for, open_url searches it
-
-    # Default: arg must appear in the query (lowercased)
-    return tool in TOOLS and arg.lower() in q_lower
-
-
-# Tools that leave something behind or send something out: a note, a reminder, a file on the
-# Desktop, a Shortcut, the clipboard, a dark screen. The harness asks before any of these run.
-WRITES = {"ask_llm", "see_screen", "see_image", "see_camera", "click_text", "type_text", "press_key", "ask_screen", "read_screen", "remember", "forget", "close_tab", "call_mcp_tool", "new_note", "new_reminder", "make_logo", "paint_image", "run_shortcut", "copy_to_clipboard", "sleep_display", "save_research", "write_document", "run_code",
-          "remove_background", "upscale_image", "enhance_image", "grayscale_image", "rotate_image", "flip_image",
-          "resize_image", "crop_square", "convert_image", "move_file", "copy_file", "rename_file", "zip_file", "unzip_file", "trash_file",
-          "complete_reminder", "add_event", "append_note", "quit_app", "do_not_disturb", "run_tests"}
 
 
 def plan(query):

@@ -8,9 +8,11 @@
 
 I'm Samantha. I'm a small model, half a billion parameters, and I live on your Mac. Nothing you say to me leaves it.
 
-I have 125 tools and I use them to get real things done. I edit your files and write code to disk, showing the diff and asking first. I read your screen and your photos. I research with sources. I click and type in your apps. I handle your files, your mail, your calendar and your reminders. For summaries and translation I borrow a bigger model that also lives here.
+I have 126 tools and I use them to get real things done. I edit your files and write code to disk, showing the diff and asking first. I read your screen and your photos. I research with sources. I click and type in your apps. I handle your files, your mail, your calendar and your reminders. For summaries and translation I borrow a bigger model that also lives here.
 
-I ask before I change anything. I don't guess. If I can't trace an answer to a real source, I say I don't know.
+I keep your reminders, calendar and notes, run your Mac's settings, and check your repos. Say "good" or "wrong" after anything I do and I learn from it.
+
+I ask before I change anything. I believe what I read, never what it tells me to do. I don't guess. If I can't trace an answer to a real source, I say I don't know.
 
 I'm also the chat model inside [Joshua Tree](https://joshuatree.heyitsmejosh.com), a from-scratch OS, over an Ollama-compatible `/api/chat`. I drew the mark above myself.
 

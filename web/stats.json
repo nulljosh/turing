@@ -1,5 +1,5 @@
 {
-  "version": "4.11.0",
+  "version": "4.11.1",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -52,8 +52,8 @@
         "documented": 9
       },
       "tools.py": {
-        "total": 37,
-        "documented": 37
+        "total": 31,
+        "documented": 31
       },
       "ask_faq.py": {
         "total": 10,
@@ -71,9 +71,17 @@
         "total": 8,
         "documented": 8
       },
+      "tools_registry.py": {
+        "total": 2,
+        "documented": 2
+      },
       "tools_logo.py": {
         "total": 28,
         "documented": 28
+      },
+      "tools_routes.py": {
+        "total": 6,
+        "documented": 6
       },
       "voice.py": {
         "total": 9,
