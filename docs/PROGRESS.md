@@ -2,6 +2,9 @@
 
 TLDR per loop round, newest first. The loop adds a line every round it ships something, then the scorecard.
 
+- 2026-09-25 🎉 v4.12.0: she follows the conversation. "Do that again", "same but for nimble", "what about tomorrow", "open it" work for every tool from a ten-turn history, not per-tool wiring. Law 10: a past result can never be replayed as a command. Badge step 5: a Milky Way band along her rim. Live QA green: 0 a11y problems in four views, every demo command passes.
+  `v4.12.0 · 126 tools · 503 tests · docs coverage 100% · laws all hold · biggest tools_util.py 700 · actions 221/221 · parity 221/221 · util_diff 261/261`
+
 - 2026-09-25 v4.11.1: tools.py split, 759 to 546 lines (the router's regex tables into tools_routes.py, the family registry and WRITES/NOT_FOR_MODELS into tools_registry.py, every name still on tools); law 8's ceiling down from 760 to 700. Handoff and README refreshed: they re-read every round now.
   `v4.11.1 · 126 tools · 484 tests · docs coverage 100% · laws all hold · biggest tools_util.py 700 · actions 221/221 · parity 221/221 · util_diff 261/261`
 

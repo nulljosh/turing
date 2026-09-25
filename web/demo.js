@@ -8,7 +8,7 @@
   var transcript = $('chat-transcript'), input = $('chat-input'), space = $('desk-space'), statusEl = $('chat-status');
   var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var typing = reduceMotion ? 0 : 14;
-  var isLive = false, busy = false, reel = false, idleTimer = 0, reelTimer = 0, lastUser = 0, pending = null;
+  var isLive = false, busy = false, reel = false, idleTimer = 0, reelTimer = 0, lastUser = 0, pending = null, lastCommand = null;
   var LOCAL = 'http://localhost:8127/v1/chat/completions';
 
   function el(tag, cls, text) {
@@ -577,11 +577,17 @@
   var FEEDBACK_DOWN = /^(?:bad|wrong|that'?s not what i meant|👎|-1)[.!]*$/i;
   var FEEDBACK_CORRECTION = /^wrong,?\s*i meant\s+.+$/i;
   var FEEDBACK_SUMMARY = /^(?:how am i rating you|show my feedback)\??$/i;
+  // "again" here is the same follow-up as followup.py, kept simple on purpose: the page has no server-side
+  // history to rebuild "again for X" from, so it only repeats the last real demo command outright.
+  var AGAIN = /^(?:again|do (?:that|it) again|one more time|repeat that|same again|once more)$/i;
 
   function answer(q) {
     var bareQ = S.bare(q);
+    if (AGAIN.test(bareQ))
+      return lastCommand ? answer(lastCommand) : Promise.resolve({ text: 'Nothing to do again yet.' });
     if (FEEDBACK_UP.test(bareQ) || FEEDBACK_DOWN.test(bareQ) || FEEDBACK_CORRECTION.test(bareQ) || FEEDBACK_SUMMARY.test(bareQ))
       return Promise.resolve({ text: "On her real Mac that rating is saved locally so she learns from it." });
+    lastCommand = q;
     var exact = S.exact(q);
     if (exact) return Promise.resolve({ text: exact });
     // bare() strips "can you", "please" and the rest, the same as every other command

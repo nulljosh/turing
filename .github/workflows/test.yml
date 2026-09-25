@@ -57,6 +57,7 @@ jobs:
       - run: python3 tests/test_tabs.py
       - run: python3 tests/test_memory.py
       - run: python3 tests/test_feedback.py
+      - run: python3 tests/test_followup.py
       - run: python3 tests/test_screen.py
       - run: python3 tests/test_documents.py
       - run: python3 tests/test_reader.py

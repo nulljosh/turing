@@ -79,6 +79,17 @@ def _ring(cx, cy, rx, ry, tilt_deg, n=28):
     return [(round(cx + x * math.cos(t) - y * math.sin(t), 1), round(cy + x * math.sin(t) + y * math.cos(t), 1)) for x, y in pts]
 
 
+def _band(cx, cy, r, a0, a1, n=18):
+    """A soft band of tiny stars along an arc (degrees, image coords), jittered deterministically, for a Milky Way."""
+    import math
+    out = []
+    for i in range(n):
+        a = math.radians(a0 + (a1 - a0) * i / (n - 1))
+        j = ((i * 37) % 11 - 5) * 1.6
+        out.append((round(cx + (r + j) * math.cos(a), 1), round(cy + (r + j) * math.sin(a), 1), 1.4 + (i * 7 % 3) * 0.5))
+    return out
+
+
 _LINES = lambda pts: [f"line {a[0]},{a[1]} {b[0]},{b[1]}" for a, b in zip(pts, pts[1:])]
 MOTIFS = {
     # 4.8: three constellations and loose stars. A dipper in front of her gaze, Lyra behind her neck, a small
@@ -99,6 +110,8 @@ MOTIFS = {
     3: {"polys": [_crescent(258, 420, 17)], "stars": [(282, 400, 2), (246, 452, 2)]},
     # 4.11: a small ringed planet low in the right of her sky.
     4: {"lines": _LINES(_ring(772, 662, 23, 6, -28)), "stars": [(772, 662, 9), (742, 700, 2), (796, 692, 2)]},
+    # 4.12: she follows the conversation, so a trail: a soft band of tiny stars curving along the left rim.
+    5: {"stars": _band(512, 520, 272, 150, 212)},
 }
 
 

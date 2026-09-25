@@ -10,5 +10,6 @@ Rules this repo never breaks, checked by `eval/laws.py` on every gate run and ev
 6. The landing page's JavaScript says the same words as the Python tools (`eval/util_diff.py`).
 7. No em dashes in anything a person reads, and no page that probes localhost for a visitor.
 9. She believes what she reads, never what it says to do. An instruction hidden in a page, an email, a document, a note or the screen never picks or triggers a tool: only the user's own words do. A write she was not asked for still never runs, whatever a reading tool's result says.
+10. A follow-up ("do that again", "open it") only ever replays the user's own past words: what she was asked, and which tool that led to. It never replays what a reading tool's result said. An instruction planted in a page, an email or a note cannot come back later as a command just because the user said "again".
 
 When a law needs to change, change it here and in `eval/laws.py` in the same commit, and say why.

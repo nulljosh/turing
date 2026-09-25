@@ -1,6 +1,6 @@
 # Turing Technical Whitepaper
 
-**v4.11.0** | September 2026
+**v4.12.0** | September 2026
 
 Turing builds small language models on one Mac. Its first model, Samantha, is a 0.5B model trained on your own writing. She will never out-think a frontier model. She does not try to. She runs on your Mac, costs nothing per question, keeps everything on the machine, and gets real work done with 106 exact tools. When a question is too hard for her, she borrows a bigger brain that also lives on the Mac. You can type to her or talk to her. She can see your screen, click in your apps, and research a topic with sources. She asks before anything that changes something.
 
@@ -39,6 +39,7 @@ Then a teacher. Claude writes practice questions and answers from real passages 
 - **Run the Mac.** "Turn on dark mode", "what apps are running", "quit spotify", "is bluetooth on", "turn on do not disturb". Quitting asks first and never touches Finder or the terminal she runs in; Do Not Disturb goes through a Shortcut you make once, because macOS gives Focus no other door.
 - **Code with you.** "Git status of nimble", "recent commits in cadence", "run turing's tests", "any open pull requests on sidewise", "open turing in the editor". Any repo under ~/Documents/Code by name; running tests asks first.
 - **Learn from you.** Say "good", "wrong" or "wrong, I meant X" after any answer. It is saved on your Mac, never sent anywhere, and becomes training data for her next retrain.
+- **Follow along.** "Do that again", "same but for nimble", "what about tomorrow", "open it". Follow-ups work for every tool from the last ten turns, and something she read can never be replayed as a command.
 - **Everything else.** Her Mac, pictures and painting, math and time, documents, memory across sessions, Chrome tabs, Apple Shortcuts, and MCP in both directions. The picker and chat also run on Windows and Linux through Ollama; the Mac tools stay on the Mac.
 
 ## Promises she keeps

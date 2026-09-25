@@ -16,6 +16,9 @@ import json
 import sys
 
 import feedback
+import followup
+
+HISTORY_TURNS = 10  # how many past turns a follow-up ("again", "again for X", "open it") can see
 
 
 def run(read_line, write, ask_fn):
@@ -25,8 +28,13 @@ def run(read_line, write, ask_fn):
 
     A fresh harness.Session is made per turn (see _real_ask), so there is no Session history to rate against.
     `last` tracks the one turn this process just answered instead, updated after every real turn, so "good"/
-    "wrong" here is caught the same way as harness.Session.ask: before ask_fn, before any tool runs."""
+    "wrong" here is caught the same way as harness.Session.ask: before ask_fn, before any tool runs.
+
+    `history` is this process's own per-turn record, the same shape as harness.Session.history ({"q", "calls",
+    "result"}), kept to the last HISTORY_TURNS so a follow-up ("again", "again for X", "open it") works here
+    exactly like it does through harness.Session, even though a fresh Session is made every turn."""
     last = {"q": None, "tool": "answer", "args": (), "reply": None}
+    history = []
     while True:
         line = read_line()
         if line is None:
@@ -53,6 +61,13 @@ def run(read_line, write, ask_fn):
                 write({"answer": feedback.record(last["q"], last["tool"], last["args"], last["reply"], *verdict)})
             continue
 
+        if followup.is_again(bare) and not history:
+            write({"answer": "Nothing to do again yet."})
+            continue
+        resolved = followup.resolve(bare, history)
+        if resolved:
+            question = resolved
+
         calls = []
 
         def log(text):
@@ -72,6 +87,8 @@ def run(read_line, write, ask_fn):
         answer = ask_fn(question, log=log, confirm=confirm)
         tool, args = feedback.parse_calls(calls)
         last.update(q=question, tool=tool, args=args, reply=answer or "")
+        history.append({"q": question, "calls": list(calls), "result": answer or ""})
+        del history[:-HISTORY_TURNS]
         write({"answer": answer if answer is not None else "That is not a command I know."})
 
 

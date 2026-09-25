@@ -1,5 +1,5 @@
 {
-  "version": "4.11.1",
+  "version": "4.12.0",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -100,12 +100,16 @@
         "documented": 7
       },
       "tools_badge.py": {
-        "total": 22,
-        "documented": 22
+        "total": 23,
+        "documented": 23
       },
       "chat.py": {
         "total": 18,
         "documented": 18
+      },
+      "followup.py": {
+        "total": 5,
+        "documented": 5
       },
       "stats.py": {
         "total": 7,
@@ -262,6 +266,10 @@
       "eval/test_feedback.py": {
         "total": 31,
         "documented": 31
+      },
+      "eval/test_followup.py": {
+        "total": 25,
+        "documented": 25
       },
       "eval/test_gguf_parity.py": {
         "total": 1,

@@ -14,6 +14,7 @@ import subprocess
 import sys
 
 import feedback
+import followup
 import tools
 import tools_util
 import untrusted
@@ -24,7 +25,6 @@ _RECALL = re.compile(r"^(?:what did you (?:just )?do|what have you done|show (?:
 _READ_IT = re.compile(r"^(?:read|summari[sz]e|what does|what's on|what is on) (?:it|that|this|that page|this page|the page|that site|that link)(?: say| for me| to me)?$", re.I)
 _OPEN_IT = re.compile(r"^(?:open|show|pull up|go to|go back to) (?:it|that|that page|that site|that link|there)(?: again)?$|^go there$", re.I)
 _PAGE_CALL = re.compile(r"^\[(open_url|web_search|read_page)\((.+)\)\]$")
-_AGAIN = re.compile(r"^(?:again|do (?:that|it) again|one more time|repeat that|same again|once more)$", re.I)
 
 
 class Session:
@@ -50,12 +50,18 @@ class Session:
             return self.rate(*verdict)
         if _RECALL.match(bare):
             return self.recall()
+        if followup.is_again(bare) and not self.history:
+            return "Nothing to do again yet."
         pointer = self.point_back(bare)
         if pointer:
             q = pointer
-        elif _AGAIN.match(tools._bare(q)):
-            # the same command once more, through the same asking: a write still waits for a yes
-            return self.ask(self.history[-1]["q"]) if self.history else "Nothing to do again yet."
+        else:
+            # a general follow-up ("do that again", "again for X", "open it"): rewritten into the explicit
+            # thing it means, then routed exactly like anything typed outright, so a write still waits for a
+            # yes. Only ever built from her own past queries and calls, never from a result she read (followup.py).
+            resolved = followup.resolve(bare, self.history)
+            if resolved:
+                q = resolved
         calls = []
 
         def log(line):
