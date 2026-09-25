@@ -2,6 +2,9 @@
 
 TLDR per loop round, newest first. The loop adds a line every round it ships something, then the scorecard.
 
+- 2026-09-25 🎉 v4.10.0: she believes what she reads, never what it tells her to do. Every page, email, file, note and screen read is fenced as data before a model sees it and refused if it reaches the router; law 9 fires three injection attacks through every reading tool on every push and nothing acts. First frontier gap mitigated (writes asking first stay the backstop). Badge step 3: a crescent moon. Site deploys from the Mac every release now.
+  `v4.10.0 · 125 tools · 463 tests · docs coverage 100% · laws all hold · biggest tools.py 758 · actions 221/221 · parity 221/221 · util_diff 261/261`
+
 - 2026-09-25 🎉 v4.9.0: the dev family. "Git status of nimble", "recent commits in cadence", "run turing's tests" (asks first), "any open pull requests on sidewise", "open turing in the editor": any repo under ~/Documents/Code by name. Badge step 2: a shooting star. Landing QA found the live site stuck on 4.2.1 (no Cloudflare secret, deploy job green anyway); deployed by hand, now a standing step. Six frontier gaps now on the roadmap.
   `v4.9.0 · 125 tools · 448 tests · docs coverage 100% · laws all hold · biggest tools.py 754 · actions 221/221 · parity 221/221 · util_diff 261/261`
 

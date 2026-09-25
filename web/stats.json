@@ -1,5 +1,5 @@
 {
-  "version": "4.9.0",
+  "version": "4.10.0",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -26,6 +26,10 @@
       "tools_gui.py": {
         "total": 8,
         "documented": 8
+      },
+      "untrusted.py": {
+        "total": 4,
+        "documented": 4
       },
       "tools_screen_agent.py": {
         "total": 3,
@@ -84,8 +88,8 @@
         "documented": 7
       },
       "tools_badge.py": {
-        "total": 20,
-        "documented": 20
+        "total": 21,
+        "documented": 21
       },
       "chat.py": {
         "total": 18,
@@ -322,6 +326,10 @@
       "eval/test_tools_image.py": {
         "total": 21,
         "documented": 21
+      },
+      "eval/test_untrusted.py": {
+        "total": 25,
+        "documented": 25
       },
       "eval/test_voice.py": {
         "total": 25,

@@ -4,8 +4,8 @@
   text { font-family: -apple-system, Helvetica, Arial, sans-serif; fill: var(--ink); }
   line, polyline { stroke: var(--ink); fill: none; }
   .g { stroke-dasharray: 1 4; }
-</style><text x="50" y="11" font-size="10">Lines of real code</text><line x1="50" y1="26" x2="470" y2="26" class="g"/><text x="46" y="29" font-size="9" text-anchor="end">20950</text><line x1="50" y1="96" x2="470" y2="96" class="g"/><text x="46" y="99" font-size="9" text-anchor="end">10475</text>
+</style><text x="50" y="11" font-size="10">Lines of real code</text><line x1="50" y1="26" x2="470" y2="26" class="g"/><text x="46" y="29" font-size="9" text-anchor="end">21576</text><line x1="50" y1="96" x2="470" y2="96" class="g"/><text x="46" y="99" font-size="9" text-anchor="end">10788</text>
 <line x1="50" y1="26" x2="50" y2="166"/><line x1="50" y1="166" x2="470" y2="166"/>
-<polyline points="50,166 60,163 70,161 80,158 90,157 100,153 110,149 120,142 130,130 140,127 150,116 160,115 170,112 180,106 190,101 200,99 210,96 220,94 230,93 240,90 250,88 260,85 270,83 280,81 290,81 300,78 310,75 320,75 330,70 340,66 350,64 360,61 370,58 380,57 390,55 400,54 410,54 420,49 430,43 440,39 450,38 460,34 470,26" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="50,166 60,163 70,161 80,158 90,157 101,152 111,149 121,141 131,130 142,118 152,117 162,114 172,113 183,108 193,101 203,98 213,97 224,95 234,94 244,90 254,88 265,85 275,85 285,82 295,79 306,77 316,77 326,72 336,68 347,66 357,64 367,60 377,59 388,57 398,57 408,52 418,48 429,43 439,42 449,36 459,28 470,26" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
 <text x="50" y="182" font-size="10">Sep 13</text><text x="470" y="182" font-size="10" text-anchor="end">Sep 24</text>
-<text x="50" y="196" font-size="10" font-weight="600">20,950 lines &#183; 100% documented &#183; 390 commits since Sep 13 2026</text></svg>
+<text x="50" y="196" font-size="10" font-weight="600">21,576 lines &#183; 100% documented &#183; 392 commits since Sep 13 2026</text></svg>

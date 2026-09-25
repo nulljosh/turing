@@ -1,6 +1,6 @@
 # Roadmap
 
-Samantha is a small local model (Qwen, fine-tuned) with hands: she can open apps, browse, read your files, answer from your notes, and act on your Mac, entirely offline, no account, nothing sent out. v4.9.0 is about to cut. She has 125 tools. Her own picker (not the exact-match router) gets 958 of 1352 test phrasings right, with 61 wrong picks that slip past the safety guard. She knows 62 of 65 held-out facts with nothing confidently wrong. She runs natively on the Mac, and the picker and chat both run on Windows and Linux too. The installer is signed with Developer ID and notarized, so it opens on a stranger's Mac with no warning.
+Samantha is a small local model (Qwen, fine-tuned) with hands: she can open apps, browse, read your files, answer from your notes, and act on your Mac, entirely offline, no account, nothing sent out. v4.10.0 is about to cut. She has 125 tools. Her own picker (not the exact-match router) gets 958 of 1352 test phrasings right, with 61 wrong picks that slip past the safety guard. She knows 62 of 65 held-out facts with nothing confidently wrong. She runs natively on the Mac, and the picker and chat both run on Windows and Linux too. The installer is signed with Developer ID and notarized, so it opens on a stranger's Mac with no warning.
 
 Full phase-by-phase history lives in `docs/HISTORY.md` and the picker's model comparisons in `docs/BAKEOFF.md`.
 
@@ -22,7 +22,7 @@ Not data centres or training data: the gaps we can actually close. Each round pi
 - [ ] **Remembers the conversation.** Follow-ups ("make it shorter", "do that again for nimble") only work where they were wired by hand. Target: 7.0, a turn history every tool can read.
 - [ ] **Thinks for herself.** Real answers come from the borrowed 9B; eyes and voice are small models that miss details. Target: 8.0, distillation from frontier teachers.
 - [ ] **Learns from use.** Nobody rates her answers, so tests prove routing, not helpfulness. Target: a thumbs up or down in chat, logged locally, fed into the next retrain.
-- [ ] **Doesn't believe everything she reads.** A web page or email could tell her to act. Target: text from pages, mail and files never picks a tool; only your own words do, checked by a law in eval/laws.py.
+- [ ] **Doesn't believe everything she reads.** Mitigated in 4.10: text from pages, mail, files, notes and the screen is fenced as data before any model sees it, is refused if it ever reaches the router, and law 9 fires three injections through every reading tool and checks nothing acts. Not closed: a model can still be fooled by fenced text into a wrong step; every write still asking you first is the backstop. Next: a second model that checks each planned write against your original words.
 
 ### Majors
 

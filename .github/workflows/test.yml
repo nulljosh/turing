@@ -59,6 +59,8 @@ jobs:
       - run: python3 tests/test_screen.py
       - run: python3 tests/test_documents.py
       - run: python3 tests/test_reader.py
+      # law 9: what she reads can never pick or trigger a tool
+      - run: python3 tests/test_untrusted.py
       # the laws in LAWS.md, checked against every tool
       - run: python3 eval/laws.py
       # GGUF backend (Windows/Linux path, llama-cpp-python, CPU): pip only, no MLX, no internet

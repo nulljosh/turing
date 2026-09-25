@@ -42,6 +42,7 @@ Every ability, in the words you say. Anything that writes, sends or looks at you
 - **Pictures.** "Draw a fox in the snow" (on the landing page), "paint ~/Desktop/mona.jpg" from 30,000 squares, "make me a logo for turing" (always an icon, never text), and remove a background, upscale, enhance, grayscale, rotate, flip, resize, crop, convert. All of it runs through ImageMagick, no Pixelmator.
 - **Math, time, chance, text.** Calculate, convert units, tips, primes and factors, roman numerals, the time in any city, dates and days between, dice, coins, random numbers, passwords, UUIDs, SHA-256, base64, word counts, morse, tidy JSON.
 - **Plug in.** She speaks MCP both ways: any assistant can use her tools, and she can call another server's tools when you name it.
+- **Safe with what she reads.** A page, an email, a document, a note, the screen, another server's tool: none of it can pick or trigger a tool on its own. Only your own words do that, law 9.
 
 ## Limits, plainly
 

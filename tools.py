@@ -20,6 +20,7 @@ import sys
 import unicodedata
 import urllib.parse
 import urllib.request
+import untrusted
 import tools_util
 import tools_image
 from tools_image import remove_background, upscale_image, enhance_image, grayscale_image, rotate_image, flip_image, resize_image, crop_square, convert_image, image_info
@@ -424,6 +425,7 @@ def _bare(query):
 
 def act(query):
     """Do a recognisable single command, exactly. Returns the result or None."""
+    if untrusted.is_untrusted(query): return untrusted.REFUSAL
     q = _bare(query)
     if _MULTISTEP.search(q) and not _EYES.search(q):
         return None
@@ -560,6 +562,7 @@ WRITES = {"ask_llm", "see_screen", "see_image", "see_camera", "click_text", "typ
 def plan(query):
     """Which tools would act() fire for this command, and with what? Nothing runs: every tool is
     swapped for a recorder while the router looks at the sentence, the way eval/actions.py does."""
+    if untrusted.is_untrusted(query): return []
     calls, names = [], [n for n in TOOLS if n in globals()]
     saved = {n: globals()[n] for n in names}
     try:
@@ -636,6 +639,7 @@ def do(query, log=None, confirm=None):
     order. What it does not recognise goes to her own head, which understands
     phrasings nobody wrote a rule for. Multi-step work goes to agent().
     Anything else is not a command: None."""
+    if untrusted.is_untrusted(query): return untrusted.REFUSAL
     if not query.strip():
         return None
     ask_back = missing(query)

@@ -62,6 +62,15 @@ def step_for(version):
 # potrace -t 6 -a 1.1 -O 0.4 keeps the detail he loves. A new step appends its own motif list here, looked at
 # at 2x before it ships.
 _STAR = lambda x, y, r: f"circle {x},{y} {x + r},{y}"
+def _crescent(cx, cy, r, bite=0.85, n=24):
+    """A crescent moon as one polygon: the outer circle's lit edge, back along a smaller offset circle."""
+    import math
+    outer = [(cx + r * math.cos(a), cy + r * math.sin(a)) for a in [math.pi / 2 + math.pi * i / n for i in range(n + 1)]]
+    ri, ox = r * bite, r * 0.45
+    inner = [(cx + ox + ri * math.cos(a), cy + ri * math.sin(a)) for a in [3 * math.pi / 2 - math.pi * i / n for i in range(n + 1)]]
+    return [(round(x, 1), round(y, 1)) for x, y in outer + inner]
+
+
 _LINES = lambda pts: [f"line {a[0]},{a[1]} {b[0]},{b[1]}" for a, b in zip(pts, pts[1:])]
 MOTIFS = {
     # 4.8: three constellations and loose stars. A dipper in front of her gaze, Lyra behind her neck, a small
@@ -78,6 +87,8 @@ MOTIFS = {
     2: {"lines": ["line 738,440 778,398", "line 741,443 784,410", "line 735,437 772,392"],
         "sparkles": [(738, 440, 12)],
         "stars": [(738, 440, 5), (230, 560, 2), (290, 690, 2), (770, 462, 2), (360, 640, 2), (238, 500, 2)]},
+    # 4.10: a crescent moon rising at the left edge of her sky.
+    3: {"polys": [_crescent(258, 420, 17)], "stars": [(282, 400, 2), (246, 452, 2)]},
 }
 
 
@@ -102,6 +113,7 @@ def _motif_draws(step, scale):
         for x, y, r in m.get("sparkles", []):
             strokes += [f"line {x * k},{(y - r) * k} {x * k},{(y + r) * k}", f"line {(x - r) * k},{y * k} {(x + r) * k},{y * k}"]
         fills += [_STAR(x * k, y * k, r * k) for x, y, r in m.get("stars", [])]
+        fills += ["polygon " + " ".join(f"{x * k},{y * k}" for x, y in pts) for pts in m.get("polys", [])]
     return strokes, fills
 
 

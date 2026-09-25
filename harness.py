@@ -15,6 +15,7 @@ import sys
 
 import tools
 import tools_util
+import untrusted
 
 _RECALL = re.compile(r"^(?:what did you (?:just )?do|what have you done|show (?:me )?(?:the )?(?:tool )?(?:log|history)|history)$", re.I)
 
@@ -53,8 +54,10 @@ class Session:
             calls.append(line.strip())
             self.log(line)
 
-        # a multi-step ask starts knowing what was just done
-        context = "".join(f"Earlier: {h['q']} -> {h['result'][:120]}\n" for h in self.history[-3:])
+        # a multi-step ask starts knowing what was just done. Past results can carry text from something she
+        # read, not the user, so they ride along fenced as data, never as new instructions to act on.
+        earlier = "".join(f"Earlier: {h['q']} -> {h['result'][:120]}\n" for h in self.history[-3:])
+        context = untrusted.fence(earlier) if earlier else ""
         # what she was told to remember about this ask rides along with a multi-step task, never over MCP
         context += "".join(f"Remembered: {f}\n" for f in tools_util.recall_lines(q))
         try:
