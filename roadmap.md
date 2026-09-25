@@ -1,6 +1,6 @@
 # Roadmap
 
-Samantha is a small local model (Qwen, fine-tuned) with hands: she can open apps, browse, read your files, answer from your notes, and act on your Mac, entirely offline, no account, nothing sent out. v4.8.0 is about to cut. She has 120 tools. Her own picker (not the exact-match router) gets 958 of 1352 test phrasings right, with 61 wrong picks that slip past the safety guard. She knows 62 of 65 held-out facts with nothing confidently wrong. She runs natively on the Mac, and the picker and chat both run on Windows and Linux too. The installer is signed with Developer ID and notarized, so it opens on a stranger's Mac with no warning.
+Samantha is a small local model (Qwen, fine-tuned) with hands: she can open apps, browse, read your files, answer from your notes, and act on your Mac, entirely offline, no account, nothing sent out. v4.9.0 is about to cut. She has 125 tools. Her own picker (not the exact-match router) gets 958 of 1352 test phrasings right, with 61 wrong picks that slip past the safety guard. She knows 62 of 65 held-out facts with nothing confidently wrong. She runs natively on the Mac, and the picker and chat both run on Windows and Linux too. The installer is signed with Developer ID and notarized, so it opens on a stranger's Mac with no warning.
 
 Full phase-by-phase history lives in `docs/HISTORY.md` and the picker's model comparisons in `docs/BAKEOFF.md`.
 
@@ -14,6 +14,16 @@ Full phase-by-phase history lives in `docs/HISTORY.md` and the picker's model co
 - Repeating reminders: one-off timed reminders already work; "every morning" needs a Shortcuts automation she sets up herself, asking first, since Reminders only takes repeats from its own window.
 - GUI control, the rest: multi-step flows ("log in to X") planned one step at a time with a yes per step, clicking icons that have no text, and a picture of where she'll click.
 
+### Gaps with frontier models (set 2026-09-25, the loop re-checks every round)
+Not data centres or training data: the gaps we can actually close. Each round picks work that shrinks one, and updates its line here when it moves.
+
+- [ ] **Understands wording, not patterns.** Her own picker gets about 7 in 10 phrasings right; most abilities still run on hand-written routes. Closes with 5.0.
+- [ ] **Plans.** Breaks a job into steps, checks each result, recovers from a mistake. Today she does one tool or a short fixed chain. Target: 5.x, a planner over her tools with a yes per write.
+- [ ] **Remembers the conversation.** Follow-ups ("make it shorter", "do that again for nimble") only work where they were wired by hand. Target: 7.0, a turn history every tool can read.
+- [ ] **Thinks for herself.** Real answers come from the borrowed 9B; eyes and voice are small models that miss details. Target: 8.0, distillation from frontier teachers.
+- [ ] **Learns from use.** Nobody rates her answers, so tests prove routing, not helpfulness. Target: a thumbs up or down in chat, logged locally, fed into the next retrain.
+- [ ] **Doesn't believe everything she reads.** A web page or email could tell her to act. Target: text from pages, mail and files never picks a tool; only your own words do, checked by a law in eval/laws.py.
+
 ### Majors
 
 - **5.0, her own head.** Every tool picked by her own model, nothing through the exact router. Check: `eval/hands.py` scores 106 of 106 tools by wording, zero right picks blocked, and fewer than ten wrong picks slip past the guard, on a matched test set.
@@ -25,6 +35,7 @@ Full phase-by-phase history lives in `docs/HISTORY.md` and the picker's model co
 
 ### What needs Joshua's keyboard
 
+- [ ] Add the CLOUDFLARE_API_TOKEN repo secret (Settings, Secrets, Actions). Without it the deploy job only prints an error and shows green, so the live site sat on 4.2.1 until 2026-09-25, when the loop found it in landing QA and deployed by hand. Until then every release is deployed by hand from the Mac.
 - [ ] Try voice and on-screen control on the Mac: `python3 chat.py --voice` needs the microphone once, and "click ..." needs Screen Recording and Accessibility permission for the terminal.
 
 ### How we compete with trillion-dollar labs
@@ -63,7 +74,6 @@ Ask her to draft something in our voice, or answer a question about one of our o
 - [ ] Two-step picking: pick a family first, then a tool inside it, so no single choice is bigger than about twelve
 - [ ] System family, the rest: brightness and turning bluetooth on or off (this Mac has no CLI for either and nothing gets installed; dark mode, running apps, quit an app, bluetooth status and Do Not Disturb via a Shortcut shipped in 4.8)
 - [ ] Browser family, the rest: download a file
-- [ ] Dev family: git status, recent commits, run a repo's tests, open PRs, open a repo in the editor
 - [ ] Knowledge family, the rest: define a word
 - [ ] Blender family (Blender 5.2 LTS installed, headless): render a scene, make a simple 3D object, turn a logo into 3D text, convert between 3D formats, report what's in a file
 - [ ] Sharp paintings: merge same-color neighbor cells so each layer buys more picture

@@ -2,6 +2,9 @@
 
 TLDR per loop round, newest first. The loop adds a line every round it ships something, then the scorecard.
 
+- 2026-09-25 🎉 v4.9.0: the dev family. "Git status of nimble", "recent commits in cadence", "run turing's tests" (asks first), "any open pull requests on sidewise", "open turing in the editor": any repo under ~/Documents/Code by name. Badge step 2: a shooting star. Landing QA found the live site stuck on 4.2.1 (no Cloudflare secret, deploy job green anyway); deployed by hand, now a standing step. Six frontier gaps now on the roadmap.
+  `v4.9.0 · 125 tools · 448 tests · docs coverage 100% · laws all hold · biggest tools.py 754 · actions 221/221 · parity 221/221 · util_diff 261/261`
+
 - 2026-09-25 v4.8.1: the badge gets stars. Joshua asked for a real idea, not smoothing: each minor now adds a little of her mind to the sky around her. Step 1 is a dipper in front of her gaze, Lyra behind her neck, a small dipper below her chin, and loose stars, all thin strokes in her own ink. tools_badge.py dropped its blur dial (blur melts the brush strokes, per the logo-refresh skill) for a MOTIFS table that grows each minor.
   `v4.8.1 · 120 tools · 407 tests · docs coverage 100% · laws all hold · biggest tools.py 753 · actions 207/207 · parity 207/207 · util_diff 249/249`
 

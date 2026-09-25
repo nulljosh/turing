@@ -1,5 +1,5 @@
 {
-  "version": "4.8.1",
+  "version": "4.9.0",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -50,6 +50,10 @@
       "ask_faq.py": {
         "total": 10,
         "documented": 10
+      },
+      "tools_dev.py": {
+        "total": 11,
+        "documented": 11
       },
       "util_dates.py": {
         "total": 12,
@@ -223,6 +227,10 @@
         "total": 15,
         "documented": 15
       },
+      "eval/test_dev.py": {
+        "total": 55,
+        "documented": 55
+      },
       "eval/test_distill.py": {
         "total": 10,
         "documented": 10
@@ -364,7 +372,7 @@
   "measured": {
     "tools": {
       "before": 0,
-      "after": 120
+      "after": 125
     },
     "actions_eval": "77/77",
     "knowledge_sweep": {

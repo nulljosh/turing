@@ -262,6 +262,23 @@ CASES = [
     ("open spotify", "open_app", "spotify"),
     ("set the volume to 30", "set_volume", "30"),
 
+    # the dev family: git status, recent commits, run tests, open prs, open in the editor
+    ("git status", "git_status", ""),
+    ("git status of nimble", "git_status", "nimble"),
+    ("what changed in turing", "git_status", "turing"),
+    ("recent commits", "recent_commits", ""),
+    ("last commits in cadence", "recent_commits", "cadence"),
+    ("run the tests", "run_tests", ""),
+    ("run turing's tests", "run_tests", "turing"),
+    ("open prs", "open_prs", ""),
+    ("any open pull requests on sidewise", "open_prs", "sidewise"),
+    ("open turing in the editor", "open_in_editor", "turing"),
+    ("open the nimble repo in vs code", "open_in_editor", "nimble"),
+    # these must still route where they always did, not get stolen by the new dev family
+    ("open chrome", "open_app", "chrome"),
+    ("run shortcut morning", "run_shortcut", "morning"),
+    ("what apps are running", "running_apps", ""),
+
     ("summarize github.com", "summarize", "github.com"),
     # these look like the new commands and are not
     ("what is the weather system on jupiter", None, None),

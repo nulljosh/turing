@@ -836,6 +836,28 @@
      function () { return ["bluetooth_status", ""]; }]
   ].concat(ROUTES);
 
+  // the dev family, same tools as tools_dev.py: git status, recent commits, run tests, open prs, open in the
+  // editor. The stand-in Mac has no repos on disk, no git, no gh and no editor to open.
+  ["git_status", "recent_commits", "run_tests", "open_prs", "open_in_editor"]
+    .forEach(function (name) { U[name] = function () { return REAL_MAC; }; U.NEEDS_MAC.push(name); });
+  // dev's own phrasings go in FRONT of every route above, same reason as organizer's and system's: "run the
+  // tests" and "open prs" would otherwise fall through to nothing, or agent().
+  ROUTES = [
+    [/^git status$/i, function () { return ["git_status", ""]; }],
+    [/^git status (?:of|for) (.+)$/i, function (m) { return ["git_status", m[1]]; }],
+    [/^what(?:'s| is) changed in (.+?)\??$|^what changed in (.+?)\??$/i,
+     function (m) { return ["git_status", m[1] || m[2]]; }],
+    [/^recent commits$|^last commits$/i, function () { return ["recent_commits", ""]; }],
+    [/^recent commits (?:in|for|of) (.+)$|^last commits (?:in|for|of) (.+)$/i,
+     function (m) { return ["recent_commits", m[1] || m[2]]; }],
+    [/^run (?:the )?tests$/i, function () { return ["run_tests", ""]; }],
+    [/^run (.+?)'s tests$/i, function (m) { return ["run_tests", m[1]]; }],
+    [/^run (.+?) tests$/i, function (m) { return ["run_tests", m[1]]; }],
+    [/^open prs$|^open pull requests$/i, function () { return ["open_prs", ""]; }],
+    [/^(?:any )?open (?:pull requests|prs) (?:on|for|in) (.+?)\??$/i, function (m) { return ["open_prs", m[1]]; }],
+    [/^open (?:the )?(.+?)(?: repo)? in (?:the editor|vs ?code)$/i, function (m) { return ["open_in_editor", m[1]]; }]
+  ].concat(ROUTES);
+
   root.Samantha = { route: route, chain: chain, exact: exact, bare: bare, urlOf: urlOf, appMatch: appMatch, APPS: APPS, SITES: SITES,
                     stem: stem, keywords: keywords, isProject: isProject,
                     pageRoute: pageRoute, section: section, sound: sound, duration: duration, COLORS: COLORS, util: U };

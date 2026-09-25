@@ -48,7 +48,8 @@ MAC_ONLY = ["disk space", "uptime", "how much memory do i have", "cpu load", "wh
             "what are my reminders", "complete the reminder to buy milk", "add lunch with sam to my calendar tomorrow at noon",
             "what's on my calendar tomorrow", "search notes for eggs", "add eggs to my shopping note",
             "turn on dark mode", "dark mode off", "what apps are running", "quit spotify", "close the app slack",
-            "turn on do not disturb", "bluetooth status"]
+            "turn on do not disturb", "bluetooth status",
+            "git status", "git status of nimble", "recent commits", "run the tests", "open prs", "open turing in the editor"]
 
 JS = """
 require(process.argv[1]);

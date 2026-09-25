@@ -27,6 +27,7 @@ import tools_files
 from tools_files import find_file, recent_downloads, folder_size, move_file, copy_file, rename_file, zip_file, unzip_file, trash_file
 import tools_organizer
 import tools_system
+import tools_dev
 
 AGENT_MODEL = "qwen3:1.7b"  # 8B was right but 7.6GB and minutes per run; 1.7B is right in 5s once the harness prefetches
 OLLAMA_CHAT = "http://localhost:11434/api/chat"
@@ -302,7 +303,7 @@ TOOLS = {f.__name__: f for f in (open_app, open_url, web_search, current_tab, re
                                      find_file, recent_downloads, folder_size, move_file, copy_file, rename_file, zip_file, unzip_file, trash_file)}
 TOOLS.update({f.__name__: f for f in tools_util.TOOLS})
 globals().update({f.__name__: f for f in tools_util.TOOLS})  # eval/actions.py swaps every TOOLS name on this module for a recorder
-for _mod in (tools_organizer, tools_system):  # the organizer and system families: same TOOLS/ROUTES shape as tools_util
+for _mod in (tools_organizer, tools_system, tools_dev):  # the organizer, system and dev families: same TOOLS/ROUTES shape as tools_util
     TOOLS.update({f.__name__: f for f in _mod.TOOLS})
     globals().update({f.__name__: f for f in _mod.TOOLS})
 
@@ -384,9 +385,9 @@ _GREEDY = {_ROUTES[-2][0], _ROUTES[-1][0]}
 _ROUTES = _ROUTES + tuple((pat, _util_route(name, arg)) for pat, name, arg in tools_image.ROUTES)
 _ROUTES = _ROUTES + tuple((pat, _util_route(name, arg)) for pat, name, arg in tools_files.ROUTES)  # find a file, downloads, folder size
 _ROUTES = _ROUTES + tuple((pat, _util_route(name, arg)) for pat, name, arg in tools_util.ROUTES)  # 31 utility tools: math, text, dice, this Mac's vitals
-# organizer's and system's own phrasings go in FRONT of everything above: "search notes for X" would otherwise be
-# swallowed by the "search ... for" catch-all, and "quit spotify"/"what apps are running" by nothing today either
-_ROUTES = tuple((pat, _util_route(name, arg)) for _mod in (tools_organizer, tools_system) for pat, name, arg in _mod.ROUTES) + _ROUTES
+# organizer's, system's and dev's own phrasings go in FRONT of everything above: "search notes for X" would
+# otherwise be swallowed by the "search ... for" catch-all, and "quit spotify"/"run the tests" by nothing today either
+_ROUTES = tuple((pat, _util_route(name, arg)) for _mod in (tools_organizer, tools_system, tools_dev) for pat, name, arg in _mod.ROUTES) + _ROUTES
 
 # anything past the first verb phrase means more than one step: that is agent() work
 _MULTISTEP = re.compile(r"\b(?:and (?:then )?(?:tell|read|find|summar|poke|look|check|see|click)|poke around|then )", re.I)
@@ -553,7 +554,7 @@ def _sound(tool, arg, query):
 WRITES = {"ask_llm", "see_screen", "see_image", "see_camera", "click_text", "type_text", "press_key", "ask_screen", "read_screen", "remember", "forget", "close_tab", "call_mcp_tool", "new_note", "new_reminder", "make_logo", "paint_image", "run_shortcut", "copy_to_clipboard", "sleep_display", "save_research", "write_document", "run_code",
           "remove_background", "upscale_image", "enhance_image", "grayscale_image", "rotate_image", "flip_image",
           "resize_image", "crop_square", "convert_image", "move_file", "copy_file", "rename_file", "zip_file", "unzip_file", "trash_file",
-          "complete_reminder", "add_event", "append_note", "quit_app", "do_not_disturb"}
+          "complete_reminder", "add_event", "append_note", "quit_app", "do_not_disturb", "run_tests"}
 
 
 def plan(query):
