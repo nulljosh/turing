@@ -6,7 +6,7 @@ One ability per minor release, a major when a whole roadmap family completes, un
 
 v4.5.0 live on main, 107 tools, docs 100 percent, badge by Samantha live (CSS mask fixed for dark page). Loop to v5.0: next is 4.6 (edit any file, write code), then 5.0 her own head.
 
-Rules from Joshua (2026-09-25): a TLDR progress report when the loop starts and after every round; log every change in docs/PROGRESS.md; each round goes up as a PR and the loop merges it into main once CI is green; stop when Claude usage nears its limit.
+Rules from Joshua (2026-09-25): a TLDR progress report when the loop starts and after every round; log every change in docs/PROGRESS.md; each round goes up as a PR and the loop merges it into main once CI is green; stop new work when Claude usage nears its limit (`rate_limit_info.status` anything but `allowed`, e.g. `allowed_warning`): CI checks, red fixes and merging open PRs only, as CLAUDE.md's Usage section says.
 
 ## Next, in order
 
