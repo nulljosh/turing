@@ -24,3 +24,4 @@ hands-adapter-*/
 *.npz
 models/
 art/mark-candidate.svg
+.DS_Store
