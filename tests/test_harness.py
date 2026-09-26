@@ -293,5 +293,26 @@ class AgentGrounding(unittest.TestCase):
         self.assertTrue(tools._sound("json_pretty", '{"a": 1}', 'pretty print {"a": 1}'))
 
 
+class SpawnTests(unittest.TestCase):
+    """Subagents: every task gets its own, the answers come back in order, and the turn is recorded."""
+
+    def test_spawn_splits_and_keeps_order(self):
+        """Each task runs once, the reply lists them in the order asked."""
+        shown = []
+        s = harness.Session(log=shown.append)
+        real = harness.spawn
+        with mock.patch.object(harness, "spawn", lambda tasks, log: real(tasks, log, run=str.upper)):
+            reply = s.ask("spawn agents: check the weather; what's on my calendar")
+        self.assertEqual(reply, "check the weather:\nCHECK THE WEATHER\n\nwhat's on my calendar:\nWHAT'S ON MY CALENDAR")
+        self.assertEqual(sorted(shown), ["  [subagent(check the weather)]", "  [subagent(what's on my calendar)]"])
+        self.assertEqual(s.recall(), "spawn agents: check the weather; what's on my calendar: [subagent(check the weather)], [subagent(what's on my calendar)]")
+
+    def test_other_phrasings(self):
+        """ "in parallel:" and "fan out subagents to" both spawn; a plain command does not."""
+        for q in ("in parallel: a; b", "fan out subagents to a; b", "send out two agents: a; b"):
+            self.assertEqual(harness._SPAWN.match(q).group(1), "a; b")
+        self.assertIsNone(harness._SPAWN.match("open safari"))
+
+
 if __name__ == "__main__":
     unittest.main()

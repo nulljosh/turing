@@ -7,11 +7,16 @@ ask starts with what already happened. It shows its work: every tool call prints
 found, before anything runs. And it asks first: anything in tools.WRITES (a note, a
 reminder, a file on the Desktop, a Shortcut, the clipboard) waits for a yes.
 
-Run: python3 harness.py        (a chat in the terminal)
+Subagents: "spawn agents: check the weather; what's on my calendar" hands each task to its own fresh harness
+process with no history. They look things up and read, never write (every confirm is a no), up to three at once,
+and the answers come back in the order asked.
+
+Run: python3 harness.py        (a chat in the terminal: commands through her hands, questions through chat.py)
 """
 import re
 import subprocess
 import sys
+from concurrent.futures import ThreadPoolExecutor
 
 import feedback
 import followup
@@ -24,6 +29,8 @@ _RECALL = re.compile(r"^(?:what did you (?:just )?do|what have you done|show (?:
 # "read it", "what does that page say", "open it": the page she last opened or searched
 _READ_IT = re.compile(r"^(?:read|summari[sz]e|what does|what's on|what is on) (?:it|that|this|that page|this page|the page|that site|that link)(?: say| for me| to me)?$", re.I)
 _OPEN_IT = re.compile(r"^(?:open|show|pull up|go to|go back to) (?:it|that|that page|that site|that link|there)(?: again)?$|^go there$", re.I)
+# "spawn agents: A; B", "fan out subagents to A; B", "in parallel: A; B"
+_SPAWN = re.compile(r"^(?:(?:spawn|send out|fan out|split into)(?: \w+)? (?:sub)?agents?(?: to)?|in parallel)[:,]?\s+(.+)$", re.I | re.S)
 _PAGE_CALL = re.compile(r"^\[(open_url|web_search|read_page)\((.+)\)\]$")
 
 
@@ -50,6 +57,12 @@ class Session:
             return self.rate(*verdict)
         if _RECALL.match(bare):
             return self.recall()
+        spawned = _SPAWN.match(q)
+        if spawned:
+            tasks = [t.strip() for t in re.split(r";|\n", spawned.group(1)) if t.strip()]
+            result = spawn(tasks, log=self.log)
+            self.history.append({"q": q, "calls": [f"[subagent({t})]" for t in tasks], "result": result})
+            return result
         if followup.is_again(bare) and not self.history:
             return "Nothing to do again yet."
         pointer = self.point_back(bare)
@@ -137,22 +150,43 @@ def failed(calls, e):
     return f"I tried {what}, but it did not work: {why}."
 
 
+def spawn(tasks, log=print, run=None):
+    """Each task to its own subagent and the answers back in order. A subagent is a fresh process (python3 harness.py
+    --sub), so no history, no shared state and a crash stays its own. run(task) -> answer replaces the process in tests."""
+    def one(task):
+        """One subagent, start to finish."""
+        log(f"  [subagent({task})]")
+        if run:
+            return run(task)
+        try:
+            r = subprocess.run([sys.executable, __file__, "--sub"], input=task, capture_output=True, text=True, timeout=600)
+        except subprocess.TimeoutExpired:
+            return "It took longer than ten minutes, so I stopped it."
+        return r.stdout.strip() or f"It broke: {r.stderr.strip()[-300:] or 'no answer'}"
+    # ponytail: three at once, each loads her models on its own; a shared worker pool if startup cost starts to hurt
+    with ThreadPoolExecutor(3) as pool:
+        return "\n\n".join(f"{t}:\n{a}" for t, a in zip(tasks, pool.map(one, tasks)))
+
+
+def _sub():
+    """Subagent mode: one task on stdin, the answer on stdout, the tool log on stderr. It never writes."""
+    import chat_pipe
+    print(chat_pipe._real_ask(sys.stdin.read().strip(), lambda line: print(line, file=sys.stderr), lambda n, a: False))
+
+
 def _ask_yes(name, args):
     """Ask on the terminal whether to run a tool that writes or sends."""
     return input(f"  Run {name}({', '.join(args)})? [y/N] ").strip().lower() in ("y", "yes")
 
 
 def main():
-    """A chat in the terminal."""
-    s = Session(confirm=_ask_yes)
-    print("Samantha. Say what to do. Ctrl-D to leave.")
-    for line in sys.stdin if not sys.stdin.isatty() else iter(lambda: input("> "), None):
-        if line.strip():
-            print(s.ask(line))
+    """A chat in the terminal: chat.py's loop, which runs commands through this harness and answers the rest."""
+    import chat
+    chat.chat()
 
 
 if __name__ == "__main__":
     try:
-        main()
+        _sub() if "--sub" in sys.argv else main()
     except (EOFError, KeyboardInterrupt):
         print()
