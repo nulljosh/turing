@@ -1,0 +1,30 @@
+"""ElevenLabs voice: key set and call works -> afplay the mp3; no key or a failed call -> macOS say."""
+import os
+import sys
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "app"))
+import voice
+
+
+def test_speaker():
+    """No key says it with say; a key and a good call plays the mp3; a failed call falls back to say."""
+    os.environ.pop("ELEVENLABS_API_KEY", None)
+    assert voice.speaker("hi") == ["say", "hi"]
+    os.environ["ELEVENLABS_API_KEY"] = "k"
+    seen = {}
+    def ok(req):
+        """A fake ElevenLabs that answers with mp3 bytes and records the key header."""
+        seen["key"] = req.get_header("Xi-api-key")
+        return b"ID3fake"
+    cmd = voice.speaker("hi", fetch=ok)
+    assert cmd[0] == "afplay" and open(cmd[1], "rb").read() == b"ID3fake" and seen["key"] == "k"
+    os.remove(cmd[1])
+    def boom(req):
+        """A fake ElevenLabs that is down."""
+        raise OSError("down")
+    assert voice.speaker("hi", fetch=boom) == ["say", "hi"]
+    os.environ.pop("ELEVENLABS_API_KEY")
+
+
+if __name__ == "__main__":
+    test_speaker()
+    print("PASS: ElevenLabs voice with say fallback")
