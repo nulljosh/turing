@@ -44,7 +44,8 @@ class Hands(unittest.TestCase):
 
     def test_click_finds_and_clicks_the_center(self):
         """click_text clicks the center of the matching line, and says what it clicked."""
-        with mock.patch.object(tools_gui, "screen_boxes", return_value=tools_gui.parse_boxes(OCR)):
+        with mock.patch.object(tools_gui, "screen_boxes", return_value=tools_gui.parse_boxes(OCR)), \
+                mock.patch.object(tools_gui, "ax_boxes", return_value=[]):
             patches = self.live()
             for p in patches:
                 p.start()
@@ -55,6 +56,24 @@ class Hands(unittest.TestCase):
                 for p in patches:
                     p.stop()
         self.assertEqual(self.ran, [["cliclick", "c:288,227"]])
+
+    def test_accessibility_tree_before_ocr(self):
+        """A button the accessibility tree names is clicked straight away, without reading the screen's pixels."""
+        ax = tools_gui.parse_ax("AX\n40\t12\tAXButton\tClose\n40\t12\tAXButton\tClose\nbad line\n")
+        self.assertEqual(ax, [("Close", 40, 12)])
+        self.assertEqual(tools_gui.parse_ax(""), [])
+        ocr = mock.Mock(return_value=[])
+        with mock.patch.object(tools_gui, "ax_boxes", return_value=ax), mock.patch.object(tools_gui, "screen_boxes", ocr):
+            patches = self.live()
+            for p in patches:
+                p.start()
+            try:
+                self.assertEqual(tools_gui.click_text("close"), "Clicked Close.")
+            finally:
+                for p in patches:
+                    p.stop()
+        ocr.assert_not_called()
+        self.assertEqual(self.ran, [["cliclick", "c:40,12"]])
 
     def test_screen_change_says_what_appeared(self):
         """After an action she reports only the new lines, or plainly that nothing moved."""

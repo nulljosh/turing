@@ -64,6 +64,32 @@ def parse_boxes(out):
     return boxes
 
 
+def ax_boxes():
+    """Every labeled element in the frontmost app from the accessibility tree, as (label, x, y) centers in points.
+    Finds buttons that show an icon and no words. [] when Accessibility is not allowed or nothing is labeled."""
+    return parse_ax(_run(["swift", os.path.join(HERE, "swift", "ax.swift")], timeout=60))
+
+
+def parse_ax(out):
+    """ax.swift output into [(label, x, y)], first of each label and spot only. Lines that do not parse are skipped."""
+    lines = out.splitlines()
+    if not lines or lines[0] != "AX":
+        return []
+    boxes, seen = [], set()
+    for line in lines[1:]:
+        parts = line.split("\t", 3)
+        if len(parts) < 4 or not parts[3].strip():
+            continue
+        try:
+            box = (parts[3].strip(), int(parts[0]), int(parts[1]))
+        except ValueError:
+            continue
+        if box not in seen:
+            seen.add(box)
+            boxes.append(box)
+    return boxes
+
+
 def find(target, boxes):
     """The best line for a target: an exact match first, then the shortest line that contains it. None if absent."""
     want = target.strip().lower()
@@ -99,10 +125,14 @@ def click_text(target):
         return f"Would click {target}."
     if not shutil.which("cliclick"):
         return "To click for you I need cliclick: brew install cliclick, then ask again."
-    boxes = screen_boxes()
-    if not boxes:
-        return "I could not read the screen. Screen Recording may need to be allowed for this terminal."
-    hit = find(target, boxes)
+    # The accessibility tree first: it names buttons that show only an icon, and it is quicker than OCR.
+    # Reading the screen's pixels is the fallback for apps that label nothing (games, some web pages).
+    hit = find(target, ax_boxes())
+    if not hit:
+        boxes = screen_boxes()
+        if not boxes:
+            return "I could not read the screen. Screen Recording may need to be allowed for this terminal."
+        hit = find(target, boxes)
     if not hit:
         return f"I do not see {target} on the screen."
     _run(["cliclick", f"c:{hit[1]},{hit[2]}"], timeout=10)

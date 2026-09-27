@@ -66,9 +66,9 @@ Ask her to draft something in our voice, or answer a question about one of our o
 ### Open backlog
 
 - [ ] **This week: computer use.** Give her a task ("book the 3pm slot on this page", "fill in this form from my notes") and she drives the Mac to finish it, like ChatGPT's agent. She already has see_screen, click_text, type_text, press_key and a six-step agent. Missing, in build order:
-  - [ ] Look after every action: screenshot, act, screenshot again, and check the screen changed the way she expected before the next step
-  - [ ] Find things by the accessibility tree first, OCR text second, so she clicks buttons with no visible label
-  - [ ] A real step budget (about 25) with a clear stop: done, stuck, or needs you
+  - [x] Look after every action: screenshot, act, screenshot again, and check the screen changed the way she expected before the next step
+  - [x] Find things by the accessibility tree first, OCR text second, so she clicks buttons with no visible label
+  - [x] A real step budget (about 25) with a clear stop: done, stuck, or needs you
   - [ ] Every click and keystroke shown before it runs, one yes covers one task, Escape stops her at once
   - [ ] A test bench of ten local tasks (TextEdit, Finder, Safari on a local page, System Settings read-only) scored headless, so each round is measured
   - [ ] Close the weak spot in law 12: screen clicks go through the same own-words check as every other write
