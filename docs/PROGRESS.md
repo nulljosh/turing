@@ -2,6 +2,8 @@
 
 TLDR per loop round, newest first. The loop adds a line every round it ships something, then the scorecard.
 
+- 2026-09-26 v4.16.2: the third blind held-out set (eval/heldout3.jsonl, 465 rows, writer saw only the tool list): 343 right, 17 wrong past the guard, 36 right picks refused. Same story as the first two, 5.0 needs under ten and zero. Untouched by any tuning so far; it is the judge now.
+  v4.16.2 · 126 tools · 560 tests · docs coverage 100% · laws 2 broken · biggest gen_heldout3.py 793 · actions 221/221 · parity 221/221 · util_diff 261/261
 - 2026-09-26 v4.16.1: benchmarks. eval/bench.py times the router (10 µs a command), the picker (194 ms a query on MLX) and her answers (111 tokens a second) on this Mac; eval/bench.json keeps the numbers, CI runs the router row.
   v4.16.1 · 126 tools · 560 tests · docs coverage 100% · laws all hold · biggest tools_util.py 700 · actions 221/221 · parity 221/221 · util_diff 261/261
 - 2026-09-25 v4.15.6: picker round thirteen, guard only. Chit-chat and trivia questions no longer fire weather, music and chance tools; eight thin tools got their own words. Wrong past the guard 29 to 26 and 20 to 19 on the two blind sets, refused flat, standard set unchanged. Both blind sets have now shaped tuning, so a third one judges 5.0.

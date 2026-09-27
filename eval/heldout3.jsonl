@@ -1,0 +1,465 @@
+{"text": "Can you show me my unread email messages", "tool": "unread_mail", "arg_hint": ""}
+{"text": "check off 'buy groceries' as completed", "tool": "complete_reminder", "arg_hint": ""}
+{"text": "show whats in ~/documents", "tool": "list_dir", "arg_hint": ""}
+{"text": "convert 15:30 london to new york", "tool": "convert_time", "arg_hint": ""}
+{"text": "whats todays date", "tool": "current_date", "arg_hint": ""}
+{"text": "Can you run the test suite for the current project", "tool": "run_tests", "arg_hint": ""}
+{"text": "new note for project ideas", "tool": "new_note", "arg_hint": ""}
+{"text": "give me todays date and day of week", "tool": "current_date", "arg_hint": ""}
+{"text": "find notes with xyz", "tool": "search_notes", "arg_hint": ""}
+{"text": "I need to search the web for information about Python async", "tool": "web_search", "arg_hint": ""}
+{"text": "I need you to draft a professional email about the project update", "tool": "write_document", "arg_hint": ""}
+{"text": "how much disk space do i have left", "tool": "disk_space", "arg_hint": ""}
+{"text": "I need to create a reminder for the doctor's appointment on October 15th", "tool": "new_reminder", "arg_hint": ""}
+{"text": "should i try meditation", "tool": null, "arg_hint": ""}
+{"text": "I need to know: 75 Fahrenheit converted to Celsius", "tool": "convert_units", "arg_hint": ""}
+{"text": "what does the video say", "tool": "transcribe_video", "arg_hint": ""}
+{"text": "I want to see what tools are available through my MCP servers", "tool": "list_mcp_tools", "arg_hint": ""}
+{"text": "make a note about this meeting", "tool": "new_note", "arg_hint": ""}
+{"text": "I need to see what's inside the configuration file", "tool": "read_file", "arg_hint": ""}
+{"text": "should i invest in crypto", "tool": null, "arg_hint": ""}
+{"text": "open ~/documents in finder", "tool": "reveal_in_finder", "arg_hint": ""}
+{"text": "upscale image.jpg", "tool": "upscale_image", "arg_hint": ""}
+{"text": "I want to append a line to my journal note about today's progress", "tool": "append_note", "arg_hint": ""}
+{"text": "how do i find my passion", "tool": null, "arg_hint": ""}
+{"text": "show contents of readme.md", "tool": "read_file", "arg_hint": ""}
+{"text": "open google.com", "tool": "open_url", "arg_hint": ""}
+{"text": "whats in ~/documents/proposal.pdf", "tool": "read_document", "arg_hint": ""}
+{"text": "I want to create a new note to store my thoughts", "tool": "new_note", "arg_hint": ""}
+{"text": "whats changed in the repo", "tool": "git_status", "arg_hint": ""}
+{"text": "whats in my tool list", "tool": "list_mcp_tools", "arg_hint": ""}
+{"text": "I want to open the epiphany repository in my code editor", "tool": "open_in_editor", "arg_hint": ""}
+{"text": "wat did i just copy", "tool": "clipboard", "arg_hint": ""}
+{"text": "research topic: climate change", "tool": "research", "arg_hint": ""}
+{"text": "whats the battery status", "tool": "battery", "arg_hint": ""}
+{"text": "do you believe in aliens", "tool": null, "arg_hint": ""}
+{"text": "crop this photo to a square", "tool": "crop_square", "arg_hint": ""}
+{"text": "I need to see the open pull requests for the brain project", "tool": "open_prs", "arg_hint": ""}
+{"text": "I need to know if 1000000007 is a prime number", "tool": "is_prime", "arg_hint": ""}
+{"text": "transcribe ~/downloads/meeting.mov", "tool": "transcribe_video", "arg_hint": ""}
+{"text": "launch chrome", "tool": "open_app", "arg_hint": ""}
+{"text": "make the json readable", "tool": "json_pretty", "arg_hint": ""}
+{"text": "create an icon with a rocket", "tool": "make_logo", "arg_hint": ""}
+{"text": "weather in seattle", "tool": "weather", "arg_hint": ""}
+{"text": "Can you calculate the SHA-256 hash of this text string", "tool": "hash_text", "arg_hint": ""}
+{"text": "what resolution is photo.jpg", "tool": "image_info", "arg_hint": ""}
+{"text": "text to speech the message", "tool": "say", "arg_hint": ""}
+{"text": "Can you show me all the Chrome tabs I currently have open", "tool": "list_tabs", "arg_hint": ""}
+{"text": "how many days til halloween", "tool": "days_until", "arg_hint": ""}
+{"text": "why do people procrastinate", "tool": null, "arg_hint": ""}
+{"text": "Can you convert the year 2026 to Roman numerals", "tool": "roman_numeral", "arg_hint": ""}
+{"text": "convert that screenshot to webp", "tool": "convert_image", "arg_hint": ""}
+{"text": "I want to move my project folder to a different location", "tool": "move_file", "arg_hint": ""}
+{"text": "I need to see what files have been modified in the joshua-tree project", "tool": "git_status", "arg_hint": ""}
+{"text": "how big is my downloads folder", "tool": "folder_size", "arg_hint": ""}
+{"text": "generate a 16 character password", "tool": "make_password", "arg_hint": ""}
+{"text": "audio to text ~/audio.mp3", "tool": "transcribe_video", "arg_hint": ""}
+{"text": "any meetings tmrw", "tool": "calendar_tomorrow", "arg_hint": ""}
+{"text": "what tools do i have available", "tool": "list_mcp_tools", "arg_hint": ""}
+{"text": "add 'buy milk and eggs' to shopping list", "tool": "append_note", "arg_hint": ""}
+{"text": "is my drive almost full", "tool": "disk_space", "arg_hint": ""}
+{"text": "rotate photo.jpg 90 degrees", "tool": "rotate_image", "arg_hint": ""}
+{"text": "how much memory does the mac have", "tool": "memory_usage", "arg_hint": ""}
+{"text": "french translation of document", "tool": "translate", "arg_hint": ""}
+{"text": "what makes someone charismatic", "tool": null, "arg_hint": ""}
+{"text": "check free disk space", "tool": "disk_space", "arg_hint": ""}
+{"text": "should i start a blog", "tool": null, "arg_hint": ""}
+{"text": "SHOUT 'hello'", "tool": "shout", "arg_hint": ""}
+{"text": "Can you tell me the name of the Wi-Fi network I'm connected to", "tool": "wifi_name", "arg_hint": ""}
+{"text": "count words in this text", "tool": "word_count", "arg_hint": ""}
+{"text": "I need a random UUID generated", "tool": "make_uuid", "arg_hint": ""}
+{"text": "search notes 'meeting'", "tool": "search_notes", "arg_hint": ""}
+{"text": "new reminder: buy groceries on saturday", "tool": "new_reminder", "arg_hint": ""}
+{"text": "When do I have free time available in the next few days", "tool": "free_when", "arg_hint": ""}
+{"text": "Could you tell me what the lease document says regarding renewal options", "tool": "ask_document", "arg_hint": ""}
+{"text": "can i jot down 'fix the navbar bug' in my dev notes", "tool": "append_note", "arg_hint": ""}
+{"text": "what's a good startup idea", "tool": null, "arg_hint": ""}
+{"text": "show me the word doc", "tool": "read_document", "arg_hint": ""}
+{"text": "am i good at programming", "tool": null, "arg_hint": ""}
+{"text": "give me a summary", "tool": "summarize", "arg_hint": ""}
+{"text": "days until new year", "tool": "days_until", "arg_hint": ""}
+{"text": "which airpods am i connected to", "tool": "bluetooth_status", "arg_hint": ""}
+{"text": "show current browser tab", "tool": "current_tab", "arg_hint": ""}
+{"text": "recent git history for epiphany", "tool": "recent_commits", "arg_hint": ""}
+{"text": "Can you show me what needs my immediate attention", "tool": "needs_attention", "arg_hint": ""}
+{"text": "create secure password 24 chars", "tool": "make_password", "arg_hint": ""}
+{"text": "I need to know how much free storage is available on this Mac", "tool": "disk_space", "arg_hint": ""}
+{"text": "fix the colors in photo.jpg", "tool": "enhance_image", "arg_hint": ""}
+{"text": "I want to zip up this folder into a single archive", "tool": "zip_file", "arg_hint": ""}
+{"text": "uptime check", "tool": "uptime", "arg_hint": ""}
+{"text": "I have some messy JSON that I need formatted nicely", "tool": "json_pretty", "arg_hint": ""}
+{"text": "open heyitsmejosh.com", "tool": "open_url", "arg_hint": ""}
+{"text": "start timer half hour", "tool": "timer", "arg_hint": ""}
+{"text": "quit vscode", "tool": "quit_app", "arg_hint": ""}
+{"text": "system info", "tool": "system_info", "arg_hint": ""}
+{"text": "what date is 3 weeks from now", "tool": "date_math", "arg_hint": ""}
+{"text": "I want to save the research findings to a file", "tool": "save_research", "arg_hint": ""}
+{"text": "I need to see what Shortcuts I've created on this Mac", "tool": "list_shortcuts", "arg_hint": ""}
+{"text": "how long since restart", "tool": "uptime", "arg_hint": ""}
+{"text": "tidy up that json string", "tool": "json_pretty", "arg_hint": ""}
+{"text": "show tomorrow's calendar", "tool": "calendar_tomorrow", "arg_hint": ""}
+{"text": "how long has mac been on", "tool": "uptime", "arg_hint": ""}
+{"text": "make that image into a square crop", "tool": "crop_square", "arg_hint": ""}
+{"text": "search for *.txt files", "tool": "find_file", "arg_hint": ""}
+{"text": "switch to tab 1", "tool": "switch_tab", "arg_hint": ""}
+{"text": "should i try a startup", "tool": null, "arg_hint": ""}
+{"text": "what's the meaning of life", "tool": null, "arg_hint": ""}
+{"text": "dir ~/code", "tool": "list_dir", "arg_hint": ""}
+{"text": "I need to work out: 2 to the power of 8 plus 50 minus pi", "tool": "calculate", "arg_hint": ""}
+{"text": "read the pdf on desktop", "tool": "read_document", "arg_hint": ""}
+{"text": "what does the contract say about termination clauses", "tool": "ask_document", "arg_hint": ""}
+{"text": "Can you show me the files I've recently downloaded", "tool": "recent_downloads", "arg_hint": ""}
+{"text": "should i invest in index funds", "tool": null, "arg_hint": ""}
+{"text": "turn this photo into a painting", "tool": "paint_image", "arg_hint": ""}
+{"text": "last 5 commits", "tool": "recent_commits", "arg_hint": ""}
+{"text": "google how tall is everest", "tool": "web_search", "arg_hint": ""}
+{"text": "Can you show me where this file is located in Finder", "tool": "reveal_in_finder", "arg_hint": ""}
+{"text": "move that file to desktop", "tool": "move_file", "arg_hint": ""}
+{"text": "convert to black and white ~/photo.jpg", "tool": "grayscale_image", "arg_hint": ""}
+{"text": "say hello", "tool": "say", "arg_hint": ""}
+{"text": "save research to desktop", "tool": "save_research", "arg_hint": ""}
+{"text": "plz add 'client call' to calendar tmrw 3:30", "tool": "add_event", "arg_hint": ""}
+{"text": "encode to b64: secret message here", "tool": "base64_encode", "arg_hint": ""}
+{"text": "whats your opinion on cryptocurrency", "tool": null, "arg_hint": ""}
+{"text": "Can you show me the recent commit history for the joshua-tree repo", "tool": "recent_commits", "arg_hint": ""}
+{"text": "what tab am i on in chrome", "tool": "current_tab", "arg_hint": ""}
+{"text": "what does that website say", "tool": "read_page", "arg_hint": ""}
+{"text": "npm test", "tool": "run_tests", "arg_hint": ""}
+{"text": "Can you bring the GitHub tab to the front", "tool": "switch_tab", "arg_hint": ""}
+{"text": "is artificial intelligence ethical", "tool": null, "arg_hint": ""}
+{"text": "I need to know the dimensions and layer count of my design file", "tool": "image_info", "arg_hint": ""}
+{"text": "what's your opinion on remote work", "tool": null, "arg_hint": ""}
+{"text": "show cpu usage", "tool": "cpu_load", "arg_hint": ""}
+{"text": "I need you to design a logo icon for my new project", "tool": "make_logo", "arg_hint": ""}
+{"text": "make that image grayscale", "tool": "grayscale_image", "arg_hint": ""}
+{"text": "whats my ip address", "tool": "ip_address", "arg_hint": ""}
+{"text": "show wifi name", "tool": "wifi_name", "arg_hint": ""}
+{"text": "tell me more about ai", "tool": "research_more", "arg_hint": ""}
+{"text": "cut out the background", "tool": "remove_background", "arg_hint": ""}
+{"text": "how do i stop being anxious", "tool": null, "arg_hint": ""}
+{"text": "create a note called ideas", "tool": "new_note", "arg_hint": ""}
+{"text": "show my local ip", "tool": "ip_address", "arg_hint": ""}
+{"text": "is climate change real", "tool": null, "arg_hint": ""}
+{"text": "tell me about neural networks", "tool": "research", "arg_hint": ""}
+{"text": "make it loud: hello world", "tool": "shout", "arg_hint": ""}
+{"text": "what's the secret to happiness", "tool": null, "arg_hint": ""}
+{"text": "show running apps", "tool": "running_apps", "arg_hint": ""}
+{"text": "gimme the base64 of my password", "tool": "base64_encode", "arg_hint": ""}
+{"text": "do you ever get bored", "tool": null, "arg_hint": ""}
+{"text": "git check epiphany", "tool": "git_status", "arg_hint": ""}
+{"text": "close that app", "tool": "quit_app", "arg_hint": ""}
+{"text": "shrink the pic to 800", "tool": "resize_image", "arg_hint": ""}
+{"text": "set volume to 50", "tool": "set_volume", "arg_hint": ""}
+{"text": "convert 42 to roman", "tool": "roman_numeral", "arg_hint": ""}
+{"text": "is 100 a prime number", "tool": "is_prime", "arg_hint": ""}
+{"text": "I'd like to pause the current song playing in Music", "tool": "music", "arg_hint": ""}
+{"text": "I need to unzip this compressed file", "tool": "unzip_file", "arg_hint": ""}
+{"text": "how's it outside", "tool": "weather", "arg_hint": ""}
+{"text": "is memory running low", "tool": "memory_usage", "arg_hint": ""}
+{"text": "pause the song", "tool": "music", "arg_hint": ""}
+{"text": "compress files into zip", "tool": "zip_file", "arg_hint": ""}
+{"text": "base64 decode ZmlsZXN0YXJ0", "tool": "base64_decode", "arg_hint": ""}
+{"text": "If it's 2 PM in Los Angeles, what time is it in London", "tool": "convert_time", "arg_hint": ""}
+{"text": "Can you tell me today's date and what day of the week it is", "tool": "current_date", "arg_hint": ""}
+{"text": "resize photo to 1024 pixels", "tool": "resize_image", "arg_hint": ""}
+{"text": "What do I have coming up tomorrow on my calendar", "tool": "calendar_tomorrow", "arg_hint": ""}
+{"text": "I want to increase the resolution of my image by 300 percent", "tool": "upscale_image", "arg_hint": ""}
+{"text": "do you think social media is good", "tool": null, "arg_hint": ""}
+{"text": "read this page", "tool": "read_tab", "arg_hint": ""}
+{"text": "make a professional logo", "tool": "make_logo", "arg_hint": ""}
+{"text": "remind me to call mom tomorrow", "tool": "new_reminder", "arg_hint": ""}
+{"text": "what's your favorite video game", "tool": null, "arg_hint": ""}
+{"text": "what's your favorite color", "tool": null, "arg_hint": ""}
+{"text": "Can you tell me how busy my processor is right now", "tool": "cpu_load", "arg_hint": ""}
+{"text": "I need to activate Do Not Disturb for the next couple hours", "tool": "do_not_disturb", "arg_hint": ""}
+{"text": "what makes a company successful", "tool": null, "arg_hint": ""}
+{"text": "move budget.xlsx to finances folder", "tool": "move_file", "arg_hint": ""}
+{"text": "I want to set the system volume to 75 percent", "tool": "set_volume", "arg_hint": ""}
+{"text": "show project folder in finder", "tool": "reveal_in_finder", "arg_hint": ""}
+{"text": "which programs r running", "tool": "running_apps", "arg_hint": ""}
+{"text": "whats the meaning of success", "tool": null, "arg_hint": ""}
+{"text": "pick a random num 50 to 150", "tool": "random_number", "arg_hint": ""}
+{"text": "show clipboard", "tool": "clipboard", "arg_hint": ""}
+{"text": "copy resume.pdf to desktop", "tool": "copy_file", "arg_hint": ""}
+{"text": "write hello in morse code", "tool": "morse_code", "arg_hint": ""}
+{"text": "how's the weather today", "tool": null, "arg_hint": ""}
+{"text": "list newest files downloaded", "tool": "recent_downloads", "arg_hint": ""}
+{"text": "fetch example.com and read it", "tool": "read_page", "arg_hint": ""}
+{"text": "unzip archive.zip", "tool": "unzip_file", "arg_hint": ""}
+{"text": "what's the most interesting field of science", "tool": null, "arg_hint": ""}
+{"text": "check prs open", "tool": "open_prs", "arg_hint": ""}
+{"text": "how do i make meaningful connections", "tool": null, "arg_hint": ""}
+{"text": "should i get pizza or chinese", "tool": "flip_coin", "arg_hint": ""}
+{"text": "I need to encode this text as base64 for an API call", "tool": "base64_encode", "arg_hint": ""}
+{"text": "open calculator app", "tool": "open_app", "arg_hint": ""}
+{"text": "flip vertically ~/pics/portrait.png", "tool": "flip_image", "arg_hint": ""}
+{"text": "calculate tip on 50 dollar bill", "tool": "tip", "arg_hint": ""}
+{"text": "extract the zip file", "tool": "unzip_file", "arg_hint": ""}
+{"text": "how do i learn machine learning", "tool": null, "arg_hint": ""}
+{"text": "backwards this: xyz", "tool": "reverse_text", "arg_hint": ""}
+{"text": "do you have dreams", "tool": null, "arg_hint": ""}
+{"text": "remove unwanted.doc", "tool": "trash_file", "arg_hint": ""}
+{"text": "random between 1 and 100", "tool": "random_number", "arg_hint": ""}
+{"text": "how can i improve my writing", "tool": null, "arg_hint": ""}
+{"text": "what's the capital of france", "tool": null, "arg_hint": ""}
+{"text": "Could you check what Bluetooth devices are currently paired with this Mac", "tool": "bluetooth_status", "arg_hint": ""}
+{"text": "open plank in editor", "tool": "open_in_editor", "arg_hint": ""}
+{"text": "what's the hardest programming problem", "tool": null, "arg_hint": ""}
+{"text": "when is 100 days from today", "tool": "date_math", "arg_hint": ""}
+{"text": "I want to improve the colors and contrast of my vacation photo", "tool": "enhance_image", "arg_hint": ""}
+{"text": "how do i overcome imposter syndrome", "tool": null, "arg_hint": ""}
+{"text": "is bluetooth on or off", "tool": "bluetooth_status", "arg_hint": ""}
+{"text": "I need to rotate my image 90 degrees clockwise", "tool": "rotate_image", "arg_hint": ""}
+{"text": "Can you list all my incomplete reminders", "tool": "list_reminders", "arg_hint": ""}
+{"text": "how long does it take to learn python", "tool": null, "arg_hint": ""}
+{"text": "should i buy a house now", "tool": null, "arg_hint": ""}
+{"text": "word count of 'hello world test'", "tool": "word_count", "arg_hint": ""}
+{"text": "edit turing", "tool": "open_in_editor", "arg_hint": ""}
+{"text": "zip the photos folder", "tool": "zip_file", "arg_hint": ""}
+{"text": "where is budget.xlsx", "tool": "find_file", "arg_hint": ""}
+{"text": "Can you transcribe what's being said in this video file", "tool": "transcribe_video", "arg_hint": ""}
+{"text": "how long til 2026-12-25", "tool": "days_until", "arg_hint": ""}
+{"text": "is coffee bad for you", "tool": null, "arg_hint": ""}
+{"text": "search web best practices", "tool": "web_search", "arg_hint": ""}
+{"text": "convert image.png to jpg", "tool": "convert_image", "arg_hint": ""}
+{"text": "find resume.pdf", "tool": "find_file", "arg_hint": ""}
+{"text": "show urgent items", "tool": "needs_attention", "arg_hint": ""}
+{"text": "Can you read the contents of the contract file in my Downloads folder", "tool": "read_document", "arg_hint": ""}
+{"text": "cp ~/downloads/invoice to ~/finances", "tool": "copy_file", "arg_hint": ""}
+{"text": "how do i network effectively", "tool": null, "arg_hint": ""}
+{"text": "Can you tell me what IP address this Mac has on the network", "tool": "ip_address", "arg_hint": ""}
+{"text": "what's the network ip", "tool": "ip_address", "arg_hint": ""}
+{"text": "list pull requests in curvely", "tool": "open_prs", "arg_hint": ""}
+{"text": "do you think ai will take over the world", "tool": null, "arg_hint": ""}
+{"text": "what's a good way to learn design", "tool": null, "arg_hint": ""}
+{"text": "how can i improve my public speaking", "tool": null, "arg_hint": ""}
+{"text": "what's a good healthy diet", "tool": null, "arg_hint": ""}
+{"text": "find all mentions of deadline in the proposal doc", "tool": "find_in_document", "arg_hint": ""}
+{"text": "reverse string 'password'", "tool": "reverse_text", "arg_hint": ""}
+{"text": "what's the best time to exercise", "tool": null, "arg_hint": ""}
+{"text": "what's the size of ~/documents", "tool": "folder_size", "arg_hint": ""}
+{"text": "whats in my downloads", "tool": "recent_downloads", "arg_hint": ""}
+{"text": "show apple shortcuts", "tool": "list_shortcuts", "arg_hint": ""}
+{"text": "how many unread messages", "tool": "unread_mail", "arg_hint": ""}
+{"text": "do i have anything planned for today", "tool": "calendar_today", "arg_hint": ""}
+{"text": "remove background from photo.png", "tool": "remove_background", "arg_hint": ""}
+{"text": "how much is sqrt(144)", "tool": "calculate", "arg_hint": ""}
+{"text": "search for how to bake bread", "tool": "web_search", "arg_hint": ""}
+{"text": "what's your take on work life balance", "tool": null, "arg_hint": ""}
+{"text": "how much ram and chip", "tool": "system_info", "arg_hint": ""}
+{"text": "unread from john", "tool": "unread_mail", "arg_hint": ""}
+{"text": "ask about payment terms in the agreement doc", "tool": "ask_document", "arg_hint": ""}
+{"text": "show all chrome tabs", "tool": "list_tabs", "arg_hint": ""}
+{"text": "all caps this: important", "tool": "shout", "arg_hint": ""}
+{"text": "I need to flip a coin to make a decision", "tool": "flip_coin", "arg_hint": ""}
+{"text": "I need to set a timer for 45 minutes", "tool": "timer", "arg_hint": ""}
+{"text": "duplicate the project folder to documents", "tool": "copy_file", "arg_hint": ""}
+{"text": "I want to visit the Vercel dashboard in my browser", "tool": "open_url", "arg_hint": ""}
+{"text": "show recent downloads", "tool": "recent_downloads", "arg_hint": ""}
+{"text": "show prs for turing", "tool": "open_prs", "arg_hint": ""}
+{"text": "Can you list the contents of my Desktop folder", "tool": "list_dir", "arg_hint": ""}
+{"text": "auto-enhance ~/pictures/family.png", "tool": "enhance_image", "arg_hint": ""}
+{"text": "run stats on ~/data.csv", "tool": "run_code", "arg_hint": ""}
+{"text": "translate hello to spanish", "tool": "translate", "arg_hint": ""}
+{"text": "summarize the article", "tool": "summarize", "arg_hint": ""}
+{"text": "volume up", "tool": "set_volume", "arg_hint": ""}
+{"text": "15% tip for $123.45", "tool": "tip", "arg_hint": ""}
+{"text": "more details on that topic", "tool": "research_more", "arg_hint": ""}
+{"text": "Generate a random number between 10 and 20 for me", "tool": "random_number", "arg_hint": ""}
+{"text": "is the processor maxed out", "tool": "cpu_load", "arg_hint": ""}
+{"text": "how much cpu am i using", "tool": "cpu_load", "arg_hint": ""}
+{"text": "rename old.txt to new.txt", "tool": "rename_file", "arg_hint": ""}
+{"text": "read ~/.config/settings.txt", "tool": "read_file", "arg_hint": ""}
+{"text": "Can you read what I have copied to the clipboard right now", "tool": "clipboard", "arg_hint": ""}
+{"text": "create archive ~/documents", "tool": "zip_file", "arg_hint": ""}
+{"text": "I need to translate this text into German", "tool": "translate", "arg_hint": ""}
+{"text": "Can you tell me the total size of my Pictures directory", "tool": "folder_size", "arg_hint": ""}
+{"text": "calculate 356 * 22 / 4", "tool": "calculate", "arg_hint": ""}
+{"text": "how much space does the movies folder take", "tool": "folder_size", "arg_hint": ""}
+{"text": "list files in downloads", "tool": "list_dir", "arg_hint": ""}
+{"text": "Can you tell me the macOS version and specs of this Mac", "tool": "system_info", "arg_hint": ""}
+{"text": "capture screen", "tool": "screenshot", "arg_hint": ""}
+{"text": "whats in the invoice - how much do we owe", "tool": "ask_document", "arg_hint": ""}
+{"text": "whats in that file", "tool": "read_file", "arg_hint": ""}
+{"text": "whats on my todo list", "tool": "list_reminders", "arg_hint": ""}
+{"text": "rotate by 180", "tool": "rotate_image", "arg_hint": ""}
+{"text": "add calendar event tomorrow at 2pm for dentist", "tool": "add_event", "arg_hint": ""}
+{"text": "I need to remove the background from my portrait photo", "tool": "remove_background", "arg_hint": ""}
+{"text": "research machine learning", "tool": "research", "arg_hint": ""}
+{"text": "switch to light theme", "tool": "dark_mode", "arg_hint": ""}
+{"text": "Can you tell me how much memory is available on this Mac", "tool": "memory_usage", "arg_hint": ""}
+{"text": "I need a summary of the contents of this document", "tool": "summarize", "arg_hint": ""}
+{"text": "how do i stay motivated", "tool": null, "arg_hint": ""}
+{"text": "Can you tell me the current weather for my location", "tool": "weather", "arg_hint": ""}
+{"text": "Can you tell me which applications are currently open", "tool": "running_apps", "arg_hint": ""}
+{"text": "prettify this json: {\"a\":1,\"b\":2}", "tool": "json_pretty", "arg_hint": ""}
+{"text": "9am sydney in my timezone", "tool": "convert_time", "arg_hint": ""}
+{"text": "Can you read and summarize what's currently displayed in my Chrome tab", "tool": "read_tab", "arg_hint": ""}
+{"text": "How many days remain until Thanksgiving", "tool": "days_until", "arg_hint": ""}
+{"text": "whats on the current tab", "tool": "read_tab", "arg_hint": ""}
+{"text": "how fast does light travel", "tool": null, "arg_hint": ""}
+{"text": "can u put team standup on my cal for friday morning", "tool": "add_event", "arg_hint": ""}
+{"text": "what's a skill everyone should have", "tool": null, "arg_hint": ""}
+{"text": "open the joshuatree project", "tool": "open_in_editor", "arg_hint": ""}
+{"text": "whats your favorite book", "tool": null, "arg_hint": ""}
+{"text": "how do i manage stress better", "tool": null, "arg_hint": ""}
+{"text": "what's the best way to learn languages", "tool": null, "arg_hint": ""}
+{"text": "whats my wifi network", "tool": "wifi_name", "arg_hint": ""}
+{"text": "should i get a cat or dog", "tool": null, "arg_hint": ""}
+{"text": "whats 2 gallons in liters", "tool": "convert_units", "arg_hint": ""}
+{"text": "append this: remember to call mom - notes named personal", "tool": "append_note", "arg_hint": ""}
+{"text": "Can you provide more details about what we just discussed", "tool": "research_more", "arg_hint": ""}
+{"text": "show git status for turing", "tool": "git_status", "arg_hint": ""}
+{"text": "transparent bg ~/pictures/person.jpg", "tool": "remove_background", "arg_hint": ""}
+{"text": "I need to quit the Music application", "tool": "quit_app", "arg_hint": ""}
+{"text": "which wifi am i on", "tool": "wifi_name", "arg_hint": ""}
+{"text": "I need to encode the word 'HELP' in Morse code", "tool": "morse_code", "arg_hint": ""}
+{"text": "mv ~/documents/old to ~/archive", "tool": "move_file", "arg_hint": ""}
+{"text": "whats on my calendar today", "tool": "calendar_today", "arg_hint": ""}
+{"text": "turn this image 45 degrees", "tool": "rotate_image", "arg_hint": ""}
+{"text": "how do i boost my confidence", "tool": null, "arg_hint": ""}
+{"text": "how can i be more creative", "tool": null, "arg_hint": ""}
+{"text": "when will ai be smarter than humans", "tool": null, "arg_hint": ""}
+{"text": "whats the url of the page im looking at", "tool": "current_tab", "arg_hint": ""}
+{"text": "what bluetooth devices do i have connected", "tool": "bluetooth_status", "arg_hint": ""}
+{"text": "i finished the project task, mark it complete", "tool": "complete_reminder", "arg_hint": ""}
+{"text": "read https://github.com", "tool": "read_page", "arg_hint": ""}
+{"text": "show recent commits in turing", "tool": "recent_commits", "arg_hint": ""}
+{"text": "crop square ~/pictures/sunset.jpg", "tool": "crop_square", "arg_hint": ""}
+{"text": "unzip ~/downloads/data.zip", "tool": "unzip_file", "arg_hint": ""}
+{"text": "do you like coffee", "tool": null, "arg_hint": ""}
+{"text": "dice: 3d8", "tool": "roll_dice", "arg_hint": ""}
+{"text": "Can you open Safari for me", "tool": "open_app", "arg_hint": ""}
+{"text": "I need to roll 4 six-sided dice for the game", "tool": "roll_dice", "arg_hint": ""}
+{"text": "grayscale this pic", "tool": "grayscale_image", "arg_hint": ""}
+{"text": "I want to rename my file to something more descriptive", "tool": "rename_file", "arg_hint": ""}
+{"text": "what's the best travel destination", "tool": null, "arg_hint": ""}
+{"text": "do i have any gaps tomorrow", "tool": "free_when", "arg_hint": ""}
+{"text": "what's the future of work", "tool": null, "arg_hint": ""}
+{"text": "how do i cook steak perfectly", "tool": null, "arg_hint": ""}
+{"text": "wat day is it", "tool": "current_date", "arg_hint": ""}
+{"text": "pixelate ~/pictures/sunset.png", "tool": "paint_image", "arg_hint": ""}
+{"text": "screenshot please", "tool": "screenshot", "arg_hint": ""}
+{"text": "Can you fetch and read the content of that webpage for me", "tool": "read_page", "arg_hint": ""}
+{"text": "I need to search my notes for mentions of 'deadline'", "tool": "search_notes", "arg_hint": ""}
+{"text": "delete ~/oldfile.txt", "tool": "trash_file", "arg_hint": ""}
+{"text": "show unread emails", "tool": "unread_mail", "arg_hint": ""}
+{"text": "I need to calculate the tip for a $87.50 restaurant bill", "tool": "tip", "arg_hint": ""}
+{"text": "reveal the file", "tool": "reveal_in_finder", "arg_hint": ""}
+{"text": "search for payment terms in the contract", "tool": "find_in_document", "arg_hint": ""}
+{"text": "show me todays schedule", "tool": "calendar_today", "arg_hint": ""}
+{"text": "hash this: secret message", "tool": "hash_text", "arg_hint": ""}
+{"text": "whats important right now", "tool": "needs_attention", "arg_hint": ""}
+{"text": "show mcp tools", "tool": "list_mcp_tools", "arg_hint": ""}
+{"text": "what kind of music do you like", "tool": null, "arg_hint": ""}
+{"text": "mirror that photo vertically", "tool": "flip_image", "arg_hint": ""}
+{"text": "incomplete reminders", "tool": "list_reminders", "arg_hint": ""}
+{"text": "switch tabs github", "tool": "switch_tab", "arg_hint": ""}
+{"text": "make this image smaller 512", "tool": "resize_image", "arg_hint": ""}
+{"text": "whats my mac specs", "tool": "system_info", "arg_hint": ""}
+{"text": "whats your take on free speech", "tool": null, "arg_hint": ""}
+{"text": "give me the hash of my api key", "tool": "hash_text", "arg_hint": ""}
+{"text": "what makes a good friend", "tool": null, "arg_hint": ""}
+{"text": "close chrome", "tool": "quit_app", "arg_hint": ""}
+{"text": "how many chars in message", "tool": "word_count", "arg_hint": ""}
+{"text": "what's your biggest fear", "tool": null, "arg_hint": ""}
+{"text": "what makes a good leader", "tool": null, "arg_hint": ""}
+{"text": "rename the file to better name", "tool": "rename_file", "arg_hint": ""}
+{"text": "Can you calculate what date it will be 2 months after January 31st", "tool": "date_math", "arg_hint": ""}
+{"text": "I need to know the word and character count of this passage", "tool": "word_count", "arg_hint": ""}
+{"text": "I need to run analysis code on my spreadsheet data", "tool": "run_code", "arg_hint": ""}
+{"text": "whats tomorrow look like", "tool": "calendar_tomorrow", "arg_hint": ""}
+{"text": "Can you take a screenshot of my screen right now", "tool": "screenshot", "arg_hint": ""}
+{"text": "go to tab 3", "tool": "switch_tab", "arg_hint": ""}
+{"text": "how do i make more money", "tool": null, "arg_hint": ""}
+{"text": "what's the sha256 of 'password'", "tool": "hash_text", "arg_hint": ""}
+{"text": "Convert this text to all capital letters", "tool": "shout", "arg_hint": ""}
+{"text": "Can you help me locate the presentation file from last week", "tool": "find_file", "arg_hint": ""}
+{"text": "make a random pwd", "tool": "make_password", "arg_hint": ""}
+{"text": "whats my ram status", "tool": "memory_usage", "arg_hint": ""}
+{"text": "I'd like to enable dark mode for the system", "tool": "dark_mode", "arg_hint": ""}
+{"text": "generate uuid", "tool": "make_uuid", "arg_hint": ""}
+{"text": "speak out loud: welcome back", "tool": "say", "arg_hint": ""}
+{"text": "repaint photo.jpg", "tool": "paint_image", "arg_hint": ""}
+{"text": "how do i get over a breakup", "tool": null, "arg_hint": ""}
+{"text": "what's the best framework for web dev", "tool": null, "arg_hint": ""}
+{"text": "I need to convert my vacation photo from HEIC to JPEG format", "tool": "convert_image", "arg_hint": ""}
+{"text": "whats the future of technology", "tool": null, "arg_hint": ""}
+{"text": "what's the best productivity tool", "tool": null, "arg_hint": ""}
+{"text": "is 17 prime", "tool": "is_prime", "arg_hint": ""}
+{"text": "Can you tell me how long it's been since this Mac was last restarted", "tool": "uptime", "arg_hint": ""}
+{"text": "flip image.jpg horizontally", "tool": "flip_image", "arg_hint": ""}
+{"text": "mute the mac", "tool": "set_volume", "arg_hint": ""}
+{"text": "Can you tell me about my Mac's power and charging status", "tool": "battery", "arg_hint": ""}
+{"text": "Can you tell me what events I have scheduled for today", "tool": "calendar_today", "arg_hint": ""}
+{"text": "set timer for 5 minutes", "tool": "timer", "arg_hint": ""}
+{"text": "enable quiet mode", "tool": "do_not_disturb", "arg_hint": ""}
+{"text": "I need to reverse the text of this message", "tool": "reverse_text", "arg_hint": ""}
+{"text": "gimme a random uuid", "tool": "make_uuid", "arg_hint": ""}
+{"text": "what apps are open", "tool": "running_apps", "arg_hint": ""}
+{"text": "save brief to file", "tool": "save_research", "arg_hint": ""}
+{"text": "what's 2+2", "tool": null, "arg_hint": ""}
+{"text": "check if 42 is prime", "tool": "is_prime", "arg_hint": ""}
+{"text": "go deeper on machine learning", "tool": "research_more", "arg_hint": ""}
+{"text": "whats on my clipboard", "tool": "clipboard", "arg_hint": ""}
+{"text": "I want to copy my important files folder to an external location", "tool": "copy_file", "arg_hint": ""}
+{"text": "mv config to settings", "tool": "rename_file", "arg_hint": ""}
+{"text": "I want to repaint my photo with colored squares", "tool": "paint_image", "arg_hint": ""}
+{"text": "translate 'buenos dias' to english", "tool": "translate", "arg_hint": ""}
+{"text": "is my mac plugged in", "tool": "battery", "arg_hint": ""}
+{"text": "draft a doc about X", "tool": "write_document", "arg_hint": ""}
+{"text": "I want to convert my color photo to grayscale", "tool": "grayscale_image", "arg_hint": ""}
+{"text": "execute the script", "tool": "run_code", "arg_hint": ""}
+{"text": "design a logo for my startup", "tool": "make_logo", "arg_hint": ""}
+{"text": "what programming language is best", "tool": null, "arg_hint": ""}
+{"text": "Can you generate a random password that is 32 characters long", "tool": "make_password", "arg_hint": ""}
+{"text": "change this heic photo to png format", "tool": "convert_image", "arg_hint": ""}
+{"text": "convert ABC to morse", "tool": "morse_code", "arg_hint": ""}
+{"text": "what's the most important skill in tech", "tool": null, "arg_hint": ""}
+{"text": "what's the best productivity hack", "tool": null, "arg_hint": ""}
+{"text": "make the image bigger", "tool": "upscale_image", "arg_hint": ""}
+{"text": "look for xyz in ~/documents/report.pdf", "tool": "find_in_document", "arg_hint": ""}
+{"text": "What is the title and URL of the Chrome tab I'm currently viewing", "tool": "current_tab", "arg_hint": ""}
+{"text": "is it too late to change careers", "tool": null, "arg_hint": ""}
+{"text": "list browser tabs", "tool": "list_tabs", "arg_hint": ""}
+{"text": "is remote learning as good as in person", "tool": null, "arg_hint": ""}
+{"text": "current time london", "tool": "time_in", "arg_hint": ""}
+{"text": "write an email to the team about release", "tool": "write_document", "arg_hint": ""}
+{"text": "enlarge photo 3x", "tool": "upscale_image", "arg_hint": ""}
+{"text": "I need to schedule a one-hour meeting for next Tuesday at 10 AM about Q4 planning", "tool": "add_event", "arg_hint": ""}
+{"text": "why do i feel tired all the time", "tool": null, "arg_hint": ""}
+{"text": "compose: letter of recommendation", "tool": "write_document", "arg_hint": ""}
+{"text": "check image size ~/pictures/wallpaper.png", "tool": "image_info", "arg_hint": ""}
+{"text": "whats 1999 in roman", "tool": "roman_numeral", "arg_hint": ""}
+{"text": "go to github", "tool": "open_url", "arg_hint": ""}
+{"text": "add reminder call dentist 3pm friday", "tool": "new_reminder", "arg_hint": ""}
+{"text": "what makes a good podcast", "tool": null, "arg_hint": ""}
+{"text": "What is the current time in Sydney", "tool": "time_in", "arg_hint": ""}
+{"text": "search notes for project", "tool": "search_notes", "arg_hint": ""}
+{"text": "tip calculator 200", "tool": "tip", "arg_hint": ""}
+{"text": "enhance this dark picture", "tool": "enhance_image", "arg_hint": ""}
+{"text": "I need to resize my image to a maximum width of 2000 pixels", "tool": "resize_image", "arg_hint": ""}
+{"text": "what's this in plain text SGVsbG8gY2FuY2Vy", "tool": "base64_decode", "arg_hint": ""}
+{"text": "run python on ~/script.py", "tool": "run_code", "arg_hint": ""}
+{"text": "show tab content", "tool": "read_tab", "arg_hint": ""}
+{"text": "I need to flip this image to create a mirrored version", "tool": "flip_image", "arg_hint": ""}
+{"text": "I need to locate all references to 'John Smith' in the company handbook", "tool": "find_in_document", "arg_hint": ""}
+{"text": "I need to mark my 3 PM standup reminder as finished", "tool": "complete_reminder", "arg_hint": ""}
+{"text": "I have a base64 string, can you show me what it says", "tool": "base64_decode", "arg_hint": ""}
+{"text": "encode 'hello world' in base64", "tool": "base64_encode", "arg_hint": ""}
+{"text": "open vs code", "tool": "open_app", "arg_hint": ""}
+{"text": "roman numeral for 27", "tool": "roman_numeral", "arg_hint": ""}
+{"text": "mark the dentist reminder done", "tool": "complete_reminder", "arg_hint": ""}
+{"text": "I need information about the history of the internet", "tool": "research", "arg_hint": ""}
+{"text": "should i go back to school", "tool": null, "arg_hint": ""}
+{"text": "should i learn to code", "tool": null, "arg_hint": ""}
+{"text": "summarize ~/documents/report.pdf", "tool": "summarize", "arg_hint": ""}
+{"text": "what's 3pm PST in tokyo time", "tool": "convert_time", "arg_hint": ""}
+{"text": "move to trash the folder", "tool": "trash_file", "arg_hint": ""}
+{"text": "I need to crop my profile picture to a centered square", "tool": "crop_square", "arg_hint": ""}
+{"text": "coin flip heads or tails", "tool": "flip_coin", "arg_hint": ""}
+{"text": "how big is this image dimensions", "tool": "image_info", "arg_hint": ""}
+{"text": "I want to move this old file to the Trash", "tool": "trash_file", "arg_hint": ""}
+{"text": "decode this for me: aGVsbG8gd29ybGQ=", "tool": "base64_decode", "arg_hint": ""}
+{"text": "convert 150 pounds to kg", "tool": "convert_units", "arg_hint": ""}
+{"text": "I need you to read this text aloud for me", "tool": "say", "arg_hint": ""}
