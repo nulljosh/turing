@@ -31,6 +31,9 @@ def test_face():
             assert code == 200 and b'["idle.mp4"]' in page and b"<video" in page
             face.set_state("talk")
             assert get(base + "/state") == (200, b"talk")
+            face.set_state("hold")  # a gap between her words
+            assert get(base + "/state") == (200, b"hold")
+            face.set_state("talk")
             face.set_state("dance")  # not a state: ignored
             assert get(base + "/state") == (200, b"talk")
             face.set_state("idle")

@@ -66,7 +66,17 @@ def test_key_from_secrets():
     os.environ.pop("ELEVENLABS_API_KEY")
 
 
+def test_mouth_steps():
+    """Her mouth follows her audio: loud steps talk, silent steps hold, and silence alone never talks."""
+    rate = 1000
+    loud, quiet = [8000, -8000] * 50, [0] * 100  # 0.1 s each at 1000 Hz
+    steps = voice.speaking_steps(loud + quiet + loud + quiet, rate, 0.1)
+    assert steps == [True, False, True, False]
+    assert voice.speaking_steps([0] * 300, rate, 0.1) == [False, False, False]
+
+
 if __name__ == "__main__":
+    test_mouth_steps()
     test_key_from_secrets()
     test_current_voice()
     test_speaker()

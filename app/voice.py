@@ -159,6 +159,48 @@ def speaker(text, fetch=None):
     return ["afplay", mp3] if mp3 else ["say", text]
 
 
+MOUTH_STEP = 0.1  # seconds per talking-or-silent step of her audio
+
+
+def speaking_steps(samples, rate, step=MOUTH_STEP, floor=0.12):
+    """For each step of 16-bit samples, True when she is making sound (louder than floor times the loudest step)."""
+    n = max(1, int(rate * step))
+    levels = []
+    for i in range(0, len(samples), n):
+        chunk = samples[i:i + n]
+        levels.append((sum(x * x for x in chunk) / len(chunk)) ** 0.5 if len(chunk) else 0.0)
+    peak = max(levels, default=0.0) or 1.0
+    return [level > floor * peak for level in levels]
+
+
+def envelope(path, step=MOUTH_STEP):
+    """speaking_steps for an audio file on disk, decoded with macOS afconvert; None when it can't be read."""
+    import array
+    import wave
+    wav = path + ".mouth.wav"
+    try:
+        subprocess.run(["afconvert", "-f", "WAVE", "-d", "LEI16@16000", "-c", "1", path, wav], check=True, capture_output=True, timeout=20)
+        with wave.open(wav) as w:
+            data = array.array("h", w.readframes(w.getnframes()))
+            rate = w.getframerate()
+        return speaking_steps(data, rate, step)
+    except Exception:
+        return None
+    finally:
+        if os.path.exists(wav):
+            os.remove(wav)
+
+
+def _mouth(proc, steps, face, step=MOUTH_STEP):
+    """While her audio plays, freeze the talking video in the gaps between words and run it while she speaks."""
+    import time
+    start = time.monotonic()
+    while proc.poll() is None:
+        i = int((time.monotonic() - start) / step)
+        face.set_state("talk" if i >= len(steps) or steps[i] else "hold")
+        time.sleep(step / 2)
+
+
 def speak(text):
     """Speak text aloud with `say`; while it's talking, watch the mic in small chunks and kill `say` the moment
     a real run of loud sound shows up, so a real interruption drops straight back into listening. Returns True
@@ -169,7 +211,12 @@ def speak(text):
         return False
     import face
     face.set_state("talk")
-    proc = subprocess.Popen(speaker(text[:500]))
+    cmd = speaker(text[:500])
+    proc = subprocess.Popen(cmd)
+    steps = envelope(cmd[1]) if cmd[0] == "afplay" else None
+    if steps:
+        import threading
+        threading.Thread(target=_mouth, args=(proc, steps, face), daemon=True).start()
     rec = shutil.which("rec")
     if not rec:
         proc.wait()

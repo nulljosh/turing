@@ -16,7 +16,7 @@ import webbrowser
 CHARACTER = os.path.expanduser(os.environ.get("SAMANTHA_CHARACTER", "~/.samantha/characters/samantha"))
 PORT = int(os.environ.get("SAMANTHA_FACE_PORT", "8766"))
 MEDIA = {"idle.mp4", "listen.mp4", "talk.mp4", "portrait.png"}  # the only files the page may fetch
-STATES = {"idle", "listen", "talk"}
+STATES = {"idle", "listen", "talk", "hold"}  # hold: a pause between her words, talking video frozen mid-face
 _state = "idle"
 
 PAGE = """<!doctype html><meta charset="utf-8"><title>Samantha</title>
@@ -32,8 +32,12 @@ function pick(s) { if (s === "listen" && !have.has("listen.mp4")) s = "idle"; re
 async function tick() {
   try {
     const s = (await (await fetch("/state", {cache: "no-store"})).text()).trim();
-    const f = pick(s);
-    if (f && f !== shown) { shown = f; v.src = "/media/" + f; v.play().catch(() => {}); }
+    if (s === "hold") { if (shown === "talk.mp4") v.pause(); }
+    else {
+      const f = pick(s);
+      if (f && f !== shown) { shown = f; v.src = "/media/" + f; v.play().catch(() => {}); }
+      else if (f && v.paused) v.play().catch(() => {});
+    }
   } catch (e) {}
   setTimeout(tick, 120);
 }
@@ -42,7 +46,7 @@ tick();
 
 
 def set_state(state):
-    """What her face shows now: idle, listen or talk. Anything else is ignored."""
+    """What her face shows now: idle, listen, talk, or hold (a gap between her words). Anything else is ignored."""
     global _state
     if state in STATES:
         _state = state
