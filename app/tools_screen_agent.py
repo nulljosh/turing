@@ -6,7 +6,9 @@ agent, EVERY step is confirmed before it runs, even a read (see_screen), not jus
 show you first is not a plan you can trust. Her eyes (see_screen) let her find icons that have no text to click.
 """
 import json
+import os
 import re
+import time
 import urllib.error
 import urllib.request
 
@@ -15,7 +17,8 @@ import untrusted
 
 MODEL = "qwen3:1.7b"  # same as tools.agent: fast enough to plan a few clicks, no need for the 8B here
 OLLAMA_CHAT = "http://localhost:11434/api/chat"
-MAX_STEPS = 10
+MAX_STEPS = 25  # a form is a dozen clicks; the stuck check below ends a loop long before this
+ACTIONS = {"click_text", "type_text", "press_key"}  # the steps that change the screen, so she looks again after each
 SYSTEM = ("You control the screen for one job the user asked for by name, step by step. Use see_screen first if you "
           "are not sure what is on screen. Use click_text to click words you can read, type_text to type, press_key "
           "for return/tab/escape/arrows. One tool call at a time. Stop and answer in plain words once the job is "
@@ -40,6 +43,14 @@ def _schema(fn):
             "parameters": {"type": "object", "properties": {a: {"type": "string"} for a in args}, "required": list(args)}}}
 
 
+def _look():
+    """Every line of text on the screen now, or None when nothing visible may happen (evals, tests)."""
+    if os.environ.get("SAMANTHA_HEADLESS") == "1":
+        return None
+    import tools_gui
+    return tools_gui.screen_boxes()
+
+
 def screen_task(task, max_steps=MAX_STEPS, log=None, confirm=None):
     """Plan and run a multi-step screen job ("log me into X") with a local model. Every step, even a look at the
     screen, is confirmed before it runs: confirm(name, args) -> bool. A no ends the job at once. Returns what
@@ -47,6 +58,7 @@ def screen_task(task, max_steps=MAX_STEPS, log=None, confirm=None):
     import tools  # here, not at the top: tools.py never imports this module at load time either
     tools_by_name = _tools()
     messages = [{"role": "system", "content": SYSTEM}, {"role": "user", "content": task}]
+    last = None  # the previous step, when it changed nothing on the screen
     for _ in range(max_steps):
         body = json.dumps({"model": MODEL, "messages": messages, "stream": False, "think": False,
                            "tools": [_schema(f) for f in tools_by_name.values()]}).encode()
@@ -74,10 +86,22 @@ def screen_task(task, max_steps=MAX_STEPS, log=None, confirm=None):
                 return "Okay, I stopped there."  # a no ends the whole job, not just that step
             else:
                 takes = fn.__code__.co_varnames[:fn.__code__.co_argcount]
+                # Look before and after every action, so the next step starts from what really happened.
+                # ponytail: two full-screen OCRs per action; diff one window if it gets slow
+                before = _look() if name in ACTIONS else None
                 try:
                     result = fn(**{k: v for k, v in args.items() if k in takes})
                 except Exception as e:
                     result = f"{name} failed: {e}"
+                if before is not None:
+                    import tools_gui
+                    time.sleep(0.6)  # let the click land and the window redraw
+                    seen = tools_gui.screen_change(before, _look() or [])
+                    result = str(result) + untrusted.fence(seen)
+                    still = (name, str(args)) if seen.startswith("Nothing") else None
+                    if still and still == last:
+                        return f"I got stuck: {name} did nothing twice in a row, so I stopped. Take a look at the screen."
+                    last = still
             if log:
                 log(f"  [{name}({', '.join(map(str, args.values()))})]")
             content = untrusted.fence(result) if name in untrusted.READING else str(result)

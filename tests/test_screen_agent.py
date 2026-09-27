@@ -131,5 +131,22 @@ class OnlyByName(unittest.TestCase):
         self.assertEqual(names, {"click_text", "type_text", "press_key", "see_screen"})
 
 
+class LooksAfterActing(unittest.TestCase):
+    """After every click, keystroke or key she reads the screen again; the same action changing nothing twice ends the job."""
+
+    def test_reports_change_and_stops_when_stuck(self):
+        """A Next that changes nothing, clicked twice, stops the job; the look comes back fenced."""
+        fake_llm = FakeOllama(call("click_text", target="Next"), call("click_text", target="Next"), say("never reached"))
+        same = [("Page one", 0, 0)]
+        with mock.patch("urllib.request.urlopen", fake_llm), \
+                mock.patch.object(tools_screen_agent, "_look", return_value=same), \
+                mock.patch.object(tools_screen_agent.time, "sleep"), \
+                mock.patch.object(tools_screen_agent, "_tools", return_value={"click_text": lambda target: f"Clicked {target}."}):
+            result = tools_screen_agent.screen_task("click next")
+        self.assertIn("stuck", result)
+        self.assertIn("Nothing on the screen changed.", fake_llm.calls[1]["messages"][-1]["content"])
+        self.assertIn("BEGIN DATA SHE READ", fake_llm.calls[1]["messages"][-1]["content"])
+
+
 if __name__ == "__main__":
     unittest.main()
