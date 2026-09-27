@@ -4,9 +4,11 @@ size); tools.py re-exports all of it, so nothing that imports it changes."""
 import json
 import os
 import re
+import time
 import urllib.request
 
 import intent
+import tools_gui
 import untrusted
 
 HANDS_ADAPTER = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "hands-adapter")
@@ -45,6 +47,9 @@ def _generate_hands(backend, model, tok, query):
     prompt = f"<|im_start|>system\n{HANDS_SYSTEM}<|im_end|>\n<|im_start|>user\n{query}<|im_end|>\n<|im_start|>assistant\n"
     out = model.create_completion(prompt=prompt, max_tokens=48, temperature=0.0, stop=["<|im_end|>"])
     return out["choices"][0]["text"]
+
+
+SCREEN_ACTIONS = {"click_text", "type_text", "press_key"}
 
 
 def agent(task, max_steps=6, log=None, confirm=None):
@@ -98,7 +103,15 @@ def agent(task, max_steps=6, log=None, confirm=None):
                 else:
                     takes = fn.__code__.co_varnames[:fn.__code__.co_argcount]
                     args = {k: v for k, v in args.items() if k in takes}
+                    # Computer use: look before and after every click, keystroke and key, so the next step
+                    # starts from what really happened, not from what she hoped happened.
+                    # ponytail: two full-screen OCRs per action; diff one window if it gets slow
+                    looks = name in SCREEN_ACTIONS and os.environ.get("SAMANTHA_HEADLESS") != "1"
+                    before = tools_gui.screen_boxes() if looks else None
                     result = fn(**args)
+                    if looks:
+                        time.sleep(0.6)  # let the click land and the window redraw
+                        result = str(result) + untrusted.fence(tools_gui.screen_change(before, tools_gui.screen_boxes()))
             except Exception as e:
                 result = f"{name} failed: {e}"
             if log:

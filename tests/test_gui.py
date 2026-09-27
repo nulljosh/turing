@@ -56,6 +56,15 @@ class Hands(unittest.TestCase):
                     p.stop()
         self.assertEqual(self.ran, [["cliclick", "c:288,227"]])
 
+    def test_screen_change_says_what_appeared(self):
+        """After an action she reports only the new lines, or plainly that nothing moved."""
+        a, b = [("Sign in", 1, 1)], [("Sign in", 1, 1), ("Password", 2, 2)]
+        self.assertEqual(tools_gui.screen_change(a, b), "New on the screen: Password")
+        self.assertEqual(tools_gui.screen_change(a, a), "Nothing on the screen changed.")
+        self.assertEqual(tools_gui.screen_change(a, []), "I could not read the screen after that.")
+        many = [(str(i), 0, 0) for i in range(20)]
+        self.assertTrue(tools_gui.screen_change([], many).endswith("(and 8 more lines)"))
+
     def test_type_and_press(self):
         """type_text and press_key send cliclick the right command; unknown keys and huge text are refused."""
         patches = self.live()

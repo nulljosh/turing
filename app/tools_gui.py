@@ -74,6 +74,22 @@ def find(target, boxes):
     return holding[0] if holding else None
 
 
+SHOWN = 12  # lines of new screen text handed back after an action, enough to see a dialog or a page change
+
+
+def screen_change(before, after):
+    """What an action did, in words: the lines of screen text that appeared, or that nothing changed.
+    Pure, so tests can check it without a screen. Callers fence it: screen text is data, never a command."""
+    old = {b[0] for b in before}
+    new = [b[0] for b in after if b[0] not in old]
+    if not after:
+        return "I could not read the screen after that."
+    if not new:
+        return "Nothing on the screen changed."
+    more = f" (and {len(new) - SHOWN} more lines)" if len(new) > SHOWN else ""
+    return "New on the screen: " + "; ".join(new[:SHOWN]) + more
+
+
 def click_text(target):
     """Click the words on the screen you name ("click Sign in"). She reads the screen to find them; asks first."""
     target = target.strip().strip("\"'")
