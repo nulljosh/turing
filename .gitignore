@@ -25,3 +25,11 @@ hands-adapter-*/
 models/
 art/mark-candidate.svg
 .DS_Store
+# worktree symlinks
+.venv
+data
+models
+ada-1-adapter
+ada-1b-adapter
+hands-adapter
+voice-adapter
