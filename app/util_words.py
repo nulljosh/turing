@@ -6,6 +6,7 @@ import os
 import re
 import shutil
 import subprocess
+import sys
 
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -15,7 +16,7 @@ def define_word(word):
     word = " ".join(re.sub(r"[^\w' -]", " ", word).split())[:60]
     if not word:
         return 'Define what? Say it like "define serendipity".'
-    if not shutil.which("swift"):
+    if sys.platform != "darwin" or not shutil.which("swift"):
         return "Definitions come from the Mac's dictionary, and this machine has none."
     try:
         out = subprocess.run(["swift", os.path.join(HERE, "swift", "define.swift"), word],

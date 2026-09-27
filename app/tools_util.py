@@ -589,7 +589,7 @@ def demo():
     global HEADLESS
     HEADLESS = True  # a self-check never touches the clipboard, the screen or Finder
     assert define_word("").startswith("Define what?")
-    assert "chance" in define_word("serendipity") if shutil.which("swift") else True
+    assert any(w in define_word("serendipity") for w in ("chance", "has none"))  # the Mac dictionary, or plainly none on Linux
     assert calculate("17*23") == "391" and calculate("2^10") == "1024" and calculate("15% of 80") == "12"
     assert calculate("sqrt(144) + 1") == "13" and calculate("1/0") == "You cannot divide by zero."
     assert calculate("__import__('os')").startswith("Cannot") and calculate("9**9999").startswith("Cannot")
