@@ -88,6 +88,38 @@ def should_barge_in(levels, threshold=BARGE_THRESHOLD, run=BARGE_RUN):
     return False
 
 
+ELEVEN_URL = "https://api.elevenlabs.io/v1/text-to-speech/{voice}?output_format=mp3_44100_128"
+ELEVEN_VOICE = os.environ.get("ELEVENLABS_VOICE", "21m00Tcm4TlvDq8ikWAM")  # a stock ElevenLabs voice; set your own id
+
+
+def eleven_mp3(text, key, fetch=None):
+    """Her words as an ElevenLabs mp3 on disk, or None on any failure. Opt-in: only runs when ELEVENLABS_API_KEY
+    is set, and it is the one path where her reply leaves the Mac (the text goes to ElevenLabs to be voiced)."""
+    import json
+    import urllib.request
+    try:
+        req = urllib.request.Request(ELEVEN_URL.format(voice=ELEVEN_VOICE), method="POST",
+                                     data=json.dumps({"text": text, "model_id": "eleven_flash_v2_5"}).encode(),
+                                     headers={"xi-api-key": key, "Content-Type": "application/json", "Accept": "audio/mpeg"})
+        audio = (fetch or (lambda r: urllib.request.urlopen(r, timeout=15).read()))(req)
+    except Exception:
+        return None
+    if not audio:
+        return None
+    fd, path = tempfile.mkstemp(suffix=".mp3")
+    with os.fdopen(fd, "wb") as f:
+        f.write(audio)
+    return path
+
+
+def speaker(text, fetch=None):
+    """The command that says text aloud: ElevenLabs through afplay when a key is set and the call works,
+    macOS `say` otherwise. Either way it's one killable process, so barging in works the same."""
+    key = os.environ.get("ELEVENLABS_API_KEY")
+    mp3 = eleven_mp3(text, key, fetch) if key else None
+    return ["afplay", mp3] if mp3 else ["say", text]
+
+
 def speak(text):
     """Speak text aloud with `say`; while it's talking, watch the mic in small chunks and kill `say` the moment
     a real run of loud sound shows up, so a real interruption drops straight back into listening. Returns True
@@ -96,7 +128,7 @@ def speak(text):
     import tools
     if tools.HEADLESS:
         return False
-    proc = subprocess.Popen(["say", text[:500]])
+    proc = subprocess.Popen(speaker(text[:500]))
     rec = shutil.which("rec")
     if not rec:
         proc.wait()
