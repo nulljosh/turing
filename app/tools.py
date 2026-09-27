@@ -22,6 +22,7 @@ import urllib.parse
 import urllib.request
 import untrusted
 import tools_util
+import tools_image  # noqa: E402
 from tools_image import remove_background, upscale_image, enhance_image, grayscale_image, rotate_image, flip_image, resize_image, crop_square, convert_image, image_info
 from tools_files import find_file, recent_downloads, folder_size, move_file, copy_file, rename_file, zip_file, unzip_file, trash_file
 
@@ -218,7 +219,7 @@ def translate(request):
 
 def screenshot():
     """Take a screenshot of the screen and return the file path."""
-    path = os.path.expanduser("~/Desktop/samantha-shot.png")
+    path = tools_image.output("samantha-shot.png")
     _run(["screencapture", "-x", path])
     return f"Saved {path}."
 

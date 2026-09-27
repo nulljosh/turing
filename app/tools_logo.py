@@ -14,6 +14,8 @@ import time
 import urllib.error
 import urllib.request
 
+import tools_image
+
 PXM = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "pixelmator", "pxm.py")  # paint_image's magick engine only
 
 
@@ -255,7 +257,7 @@ def make_logo(description):
         layers = _complex_layers(**pick) if fancy else _logo_layers(**pick) if simple else _bloom_layers(**pick)
     except Exception as e:
         return f"I couldn't draft the design: {e}"
-    out = os.path.expanduser("~/Desktop/samantha-logo.png")
+    out = tools_image.output("samantha-logo.png")
     if os.path.exists(out):
         os.remove(out)  # a stale file must not read as a fresh success
     result = _run(["magick", "-size", "1024x1024", "xc:none", "-draw", _mvg(layers), out], timeout=60)
@@ -269,7 +271,7 @@ def paint_image(path):
     full = _inside_home(path.strip().strip("'\""))
     if not full or not os.path.isfile(full):
         return f"I can't find an image at {path}."
-    out = os.path.expanduser("~/Desktop/samantha-painting.png")
+    out = tools_image.output("samantha-painting.png")
     if os.path.exists(out):
         os.remove(out)  # a stale file must not read as a fresh success
     if not shutil.which("magick"):

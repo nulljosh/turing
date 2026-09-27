@@ -147,6 +147,25 @@ class LooksAfterActing(unittest.TestCase):
         self.assertIn("Nothing on the screen changed.", fake_llm.calls[1]["messages"][-1]["content"])
         self.assertIn("BEGIN DATA SHE READ", fake_llm.calls[1]["messages"][-1]["content"])
 
+    def test_narrated_step_gets_nudged_into_a_call(self):
+        """"Let me click Sign in" with no tool call is a plan, not an answer: she is told to act, then acts."""
+        fake_llm = FakeOllama(say("Let me click Sign in first."), call("click_text", target="Sign in"), say("Signed in."))
+        with mock.patch("urllib.request.urlopen", fake_llm), \
+                mock.patch.object(tools_screen_agent, "_tools", return_value={"click_text": lambda target: f"Clicked {target}."}):
+            result = tools_screen_agent.screen_task("sign me in")
+        self.assertEqual(result, "Signed in.")
+        self.assertIn("make that tool call now", fake_llm.calls[1]["messages"][-1]["content"])
+
+    def test_written_call_and_misnamed_argument_still_run(self):
+        """A call written as JSON text runs like a real one, and a misnamed single argument reaches the tool."""
+        written = say('{"name": "click_text", "arguments": {"text": "Downloads"}}')
+        fake_llm = FakeOllama(written, say("Opened Downloads."))
+        clicked = []
+        with mock.patch("urllib.request.urlopen", fake_llm), \
+                mock.patch.object(tools_screen_agent, "_tools", return_value={"click_text": lambda target: clicked.append(target) or "Clicked."}):
+            self.assertEqual(tools_screen_agent.screen_task("open downloads"), "Opened Downloads.")
+        self.assertEqual(clicked, ["Downloads"])
+
 
 if __name__ == "__main__":
     unittest.main()

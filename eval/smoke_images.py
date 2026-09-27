@@ -1,7 +1,7 @@
 """Live smoke run of the ten image tools through real ImageMagick, checking what comes out.
 
 Not part of CI (it needs a Mac with ImageMagick installed). ./gate.sh --full runs it, headless and in seconds:
-no app to open, no window to poll. The tools write to ~/Desktop/samantha-*.png, never over the original.
+no app to open, no window to poll. Headless, the tools write to a scratch folder (tools_image.output), never the Desktop or the original.
 
 Run: python3 eval/smoke_images.py
 """
@@ -16,7 +16,8 @@ sys.path.insert(0, os.path.join(REPO, "app"))
 import tools
 
 SAMPLE = os.path.expanduser("~/samantha-smoke/mona.jpg")
-DESK = os.path.expanduser("~/Desktop")
+import tools_image  # noqa: E402
+DESK = os.path.dirname(tools_image.output("x"))  # headless, so a scratch folder, never the real Desktop
 
 
 def magick(*argv):

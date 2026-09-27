@@ -9,6 +9,7 @@ tools_logo.paint_image, but nothing here imports or reaches for it.
 import os
 import re
 import subprocess
+import tempfile
 
 HOME = os.path.realpath(os.path.expanduser("~"))
 HEADLESS = os.environ.get("SAMANTHA_HEADLESS") == "1"
@@ -67,11 +68,21 @@ def _image(path):
     return full if full and os.path.isfile(full) and _is_image(full) else None
 
 
+def output(name):
+    """Where a file she makes lands: ~/Desktop, or a scratch folder when SAMANTHA_HEADLESS=1 (SAMANTHA_OUT when set),
+    so tests, evals and release gates never litter the Desktop. The gate's smoke run left Mona Lisas there."""
+    if os.environ.get("SAMANTHA_HEADLESS") == "1":
+        folder = os.environ.get("SAMANTHA_OUT") or os.path.join(tempfile.gettempdir(), "samantha-out")
+        os.makedirs(folder, exist_ok=True)
+        return os.path.join(folder, name)
+    return os.path.join(os.path.expanduser("~/Desktop"), name)
+
+
 def _magick_edit(full, args, filename, done, failed, timeout=60):
     """Run `magick full <args> out`, exporting to ~/Desktop/samantha-{filename}, and say where the
     result went. The original file is never touched. A stale file at the destination is removed
     first so a failed run cannot be mistaken for a fresh success."""
-    out = os.path.expanduser(f"~/Desktop/samantha-{filename}")
+    out = output(f"samantha-{filename}")
     try:
         if os.path.exists(out):
             os.remove(out)

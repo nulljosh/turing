@@ -43,6 +43,21 @@ def _schema(fn):
             "parameters": {"type": "object", "properties": {a: {"type": "string"} for a in args}, "required": list(args)}}}
 
 
+_ANNOUNCES = re.compile(r"\b(?:let me|let's|i'll|i will|i need to|i should|next,? i|first,? i)\b", re.I)
+
+
+def _written_call(content, tools_by_name):
+    """A tool call the model wrote out as JSON text instead of making it ({"name": "click_text", "arguments": ...}),
+    shaped like a real tool_calls list; [] when the text holds no call to one of this agent's own tools."""
+    found = re.search(r"\{.*\}", re.sub(r"(?s)<think>.*?</think>", "", content or ""), re.S)
+    try:
+        got = json.loads(found.group(0)) if found else {}
+    except ValueError:
+        return []
+    name, args = got.get("name"), got.get("arguments")
+    return [{"function": {"name": name, "arguments": args}}] if name in tools_by_name and isinstance(args, dict) else []
+
+
 def _look():
     """What the frontmost app shows now, or None when nothing visible may happen (evals, tests). The accessibility
     tree first: it covers only the app she is driving, so a ticking clock or a busy terminal elsewhere on the screen
@@ -60,7 +75,7 @@ def screen_task(task, max_steps=MAX_STEPS, log=None, confirm=None):
     import tools  # here, not at the top: tools.py never imports this module at load time either
     tools_by_name = _tools()
     messages = [{"role": "system", "content": SYSTEM}, {"role": "user", "content": task}]
-    last = None  # the previous step, when it changed nothing on the screen
+    last, nudges = None, 0  # the previous step when it changed nothing; times she was told to act, not narrate
     for _ in range(max_steps):
         body = json.dumps({"model": MODEL, "messages": messages, "stream": False, "think": False,
                            "tools": [_schema(f) for f in tools_by_name.values()]}).encode()
@@ -71,9 +86,17 @@ def screen_task(task, max_steps=MAX_STEPS, log=None, confirm=None):
         except (urllib.error.URLError, OSError) as e:
             return f"My hands need Ollama running with {MODEL}, and it didn't answer: {e}"
         messages.append(msg)
-        calls = msg.get("tool_calls") or []
+        calls = msg.get("tool_calls") or _written_call(msg.get("content", ""), tools_by_name)
         if not calls:
-            return re.sub(r"(?s)<think>.*?</think>", "", msg.get("content", "")).strip() or "I stopped there."
+            said = re.sub(r"(?s)<think>.*?</think>", "", msg.get("content", "")).strip()
+            # A small model often narrates the step ("Let me click Sign in first") instead of calling the tool.
+            # That is a plan, not an answer: eval/screen_bench.py caught the login job ending right there.
+            if _ANNOUNCES.search(said) and nudges < 2:
+                nudges += 1
+                messages.append({"role": "user", "content": "Go ahead and make that tool call now. Answer in words "
+                                                            "only once the job is done or blocked."})
+                continue
+            return said or "I stopped there."
         for c in calls:
             name, args = c["function"]["name"], c["function"].get("arguments") or {}
             fn = tools_by_name.get(name)
@@ -88,6 +111,9 @@ def screen_task(task, max_steps=MAX_STEPS, log=None, confirm=None):
                 return "Okay, I stopped there."  # a no ends the whole job, not just that step
             else:
                 takes = fn.__code__.co_varnames[:fn.__code__.co_argcount]
+                # Every screen tool takes one argument; a small model often names it wrong ("text" for target).
+                if len(takes) == 1 and len(args) == 1 and takes[0] not in args:
+                    args = {takes[0]: next(iter(args.values()))}
                 # Look before and after every action, so the next step starts from what really happened.
                 # ponytail: two full-screen OCRs per action; diff one window if it gets slow
                 before = _look() if name in ACTIONS else None
