@@ -72,7 +72,7 @@ def install(t):
         (re.compile(rf"^(?:search|look up|find) (?:on )?({t._SITE_NAMES}) for (.+)$|^(?:search|look up) (.+) on ({t._SITE_NAMES})$", re.I),
          lambda m: t.open_url(t.site_search(m.group(1) or m.group(4), m.group(2) or m.group(3)))),
         (re.compile(rf"^(?:open |go to |pull up )?({t._SITE_NAMES}) and search(?: it)?(?: for)? (.+)$", re.I), lambda m: t.open_url(t.site_search(m.group(1), m.group(2)))),
-        (re.compile(r"^(?:search|google|look up)(?: search)?(?: (?:the web|online|the internet|on google|google))?(?: for)? (.+)$", re.I), lambda m: t.web_search(m.group(1))),
+        (re.compile(r"^(?!look up .+ in the dictionary$)(?:search|google|look up)(?: search)?(?: (?:the web|online|the internet|on google|google))?(?: for)? (.+)$", re.I), lambda m: t.web_search(m.group(1))),
         (re.compile(r"^(?:read|fetch) (?:me )?(?:the )?(?:page |site |website )?(?:at )?(https?://\S+|[\w-]+(?:\.[\w-]+)+(?:/\S*)?)$|^what does (https?://\S+|[\w-]+(?:\.[\w-]+)+(?:/\S*)?) say$", re.I),
          lambda m: t.read_page(m.group(1) or m.group(2))),
         (re.compile(r"^summari[sz]e (?:this |the )?(?:page|tab)$", re.I), lambda m: t.summarize("")),

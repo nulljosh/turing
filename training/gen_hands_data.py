@@ -173,6 +173,10 @@ SPEC = [
      ["what's my day look like", "anything on the books today", "show me today's events"], NONE, ""),
     # the utility tools. Only the ones a model should choose: calculate, convert, dates, base64 and the rest have exact
     # routes and overlap questions ask.py answers, and the ones with side effects (run_shortcut, clipboard, sleep) are named, never picked.
+    ("define_word", ["define {}", "definition of {}", "what's the definition of {}", "look up {} in the dictionary",
+                     "dictionary definition of {}", "define the word {}"],
+     ["give me the definition of {}", "can you define {}"], ["serendipity", "ephemeral", "ubiquitous", "gregarious", "laconic",
+                                                             "quixotic", "sonder", "petrichor", "defenestrate", "obfuscate"], None),
     ("time_in", ["what time is it in {}", "time in {}", "what's the time in {}", "current time in {}", "what time is it over in {}",
                  "tell me the time in {}", "what's the local time in {}", "time now in {}"],
      ["how late is it in {}", "what's the clock say in {}", "what time is it right now in {}"], PLACES, None),

@@ -44,6 +44,8 @@ def _sh(argv, timeout=5):
 from util_math import *  # noqa: F401,F403
 from util_math import _num, _eval, _OPS, _FUNCS, _CONSTS, _LENGTH, _MASS, _VOLUME, _TIME, _UNIT_ALIASES, _TEMPS, _MORSE  # noqa: F401
 from util_dates import *  # noqa: F401,F403
+from util_words import *  # noqa: F401,F403
+from util_words import _memory_path, _facts, _save, _words  # noqa: F401
 from tools_research import research, research_more, save_research  # noqa: E402  (deep research, in its own file)
 from tools_write import write_document  # noqa: E402  (drafts and saves a file, in its own file)
 from tools_code import run_code  # noqa: E402  (a sandboxed Python for CSV stats and charts, in its own file)
@@ -407,72 +409,6 @@ def read_screen(query=""):
     return " | ".join(lines)[:1500]
 
 
-def _memory_path():
-    """Where her memory lives: ~/.samantha/memory.json, or SAMANTHA_MEMORY (the tests use it)."""
-    return os.path.expanduser(os.environ.get("SAMANTHA_MEMORY", "~/.samantha/memory.json"))
-
-
-def _facts():
-    """Everything she has been told to remember, oldest first."""
-    try:
-        got = json.load(open(_memory_path()))
-    except (OSError, ValueError):
-        return []
-    return [f for f in got if isinstance(f, str)] if isinstance(got, list) else []
-
-
-def _save(facts):
-    """Write the memory file, creating its folder. Only ever the last 500 facts."""
-    path = _memory_path()
-    os.makedirs(os.path.dirname(path), exist_ok=True)
-    json.dump(facts[-500:], open(path, "w"), indent=1)
-
-
-def _words(text):
-    """The words worth matching on: lowercase, longer than two letters."""
-    return {w for w in re.findall(r"[a-z0-9']+", text.lower()) if len(w) > 2}
-
-
-def recall_lines(query):
-    """The remembered facts that share the most words with a query, best first, at most three."""
-    want = _words(query)
-    scored = sorted(((len(want & _words(f)), i, f) for i, f in enumerate(_facts())), key=lambda t: (-t[0], -t[1]))
-    return [f for n, _, f in scored if n][:3]
-
-
-def remember(text):
-    """Remember a fact across sessions, in a file on this Mac. Asks first, and only when told to, never chosen by a model."""
-    fact = " ".join(text.split())[:300]
-    if not fact:
-        return "Tell me what to remember."
-    facts = _facts()
-    if fact.lower() in (f.lower() for f in facts):
-        return "I already know that."
-    _save(facts + [fact])
-    return f"Remembered: {fact}"
-
-
-def recall(query):
-    """Say what she remembers about a subject. Private, so only asked for by name."""
-    found = recall_lines(query)
-    return "\n".join(found) if found else f"I do not remember anything about {query.strip() or 'that'}."
-
-
-def forget(query):
-    """Forget the facts that mention every word of a phrase. Asks first, never chosen by a model."""
-    want = _words(query)
-    if not want:
-        return "Say what to forget."
-    facts = _facts()
-    hit = [f for f in facts if want <= _words(f)]
-    if not hit:
-        return f"I do not remember anything about {query.strip()}."
-    if len(hit) > 5:
-        return f"That matches {len(hit)} things. Be more specific."
-    _save([f for f in facts if f not in hit])
-    return f"Forgot {len(hit)} thing{'s' * (len(hit) != 1)}."
-
-
 def _mcp_config():
     """The MCP servers she may call: name to argv, from ~/.samantha/mcp.json (or SAMANTHA_MCP_CONFIG). Argv only, never a shell string."""
     path = os.path.expanduser(os.environ.get("SAMANTHA_MCP_CONFIG", "~/.samantha/mcp.json"))
@@ -548,7 +484,7 @@ def call_mcp_tool(request):
     return ("Error from " + server + ": " if res.get("isError") else "") + (text[:2000] or "Done, with no text back.")
 
 
-TOOLS = (ask_llm, calculate, convert_units, time_in, convert_time, current_date, days_until, date_math, flip_coin, roll_dice, random_number, make_password,
+TOOLS = (ask_llm, calculate, convert_units, define_word, time_in, convert_time, current_date, days_until, date_math, flip_coin, roll_dice, random_number, make_password,
          make_uuid, hash_text, base64_encode, base64_decode, word_count, reverse_text, shout, morse_code, json_pretty,
          is_prime, roman_numeral, tip, disk_space, uptime, memory_usage, cpu_load, ip_address, wifi_name, system_info,
          copy_to_clipboard, sleep_display, reveal_in_finder, list_shortcuts, run_shortcut, list_mcp_tools, call_mcp_tool, list_tabs, switch_tab, close_tab, read_tab, remember, recall, forget, read_screen, read_document, find_in_document, ask_document, ask_screen, click_text, type_text, press_key, see_screen, see_image, see_camera, research, research_more, save_research, write_document, transcribe_video, run_code)
@@ -589,6 +525,7 @@ ROUTES = (
     (re.compile(r"^(?:calc(?:ulate)?|compute|work out|math)[: ]+(.+)$", _I), "calculate", lambda m: m.group(1)),
     (re.compile(r"^(?:convert )?(-?\d+) (?:to|in|into) roman(?: numerals?)?$", _I), "roman_numeral", lambda m: m.group(1)),
     (re.compile(r"^convert (.+)$", _I), "convert_units", lambda m: m.group(1)),
+    (re.compile(r"^(?:define|look up|dictionary)[: ]+(?:the word )?[\"']?([\w' -]+?)[\"']?(?: in the dictionary)?$|^(?:what(?:'s| is) )?the (?:definition|dictionary meaning) of [\"']?([\w' -]+?)[\"']?$", _I), "define_word", lambda m: m.group(1) or m.group(2)),
     (re.compile(r"^what time is it in (.+)$|^(?:what(?:'s| is) )?(?:the )?time in (.+)$", _I), "time_in", lambda m: m.group(1) or m.group(2)),
     (re.compile(r"^what(?:'s| is)(?: the)? date(?: today)?$|^what day is it(?: today)?$|^today'?s date$", _I), "current_date", lambda m: ""),
     (re.compile(r"^(?:how many )?days? between (.+?) and (.+)$", _I), "date_math", lambda m: f"between {m.group(1)} and {m.group(2)}"),
@@ -651,6 +588,8 @@ def demo():
     """Self-check: the pure tools exactly, the system readers for shape, the Mac-touching ones silent."""
     global HEADLESS
     HEADLESS = True  # a self-check never touches the clipboard, the screen or Finder
+    assert define_word("").startswith("Define what?")
+    assert "chance" in define_word("serendipity") if shutil.which("swift") else True
     assert calculate("17*23") == "391" and calculate("2^10") == "1024" and calculate("15% of 80") == "12"
     assert calculate("sqrt(144) + 1") == "13" and calculate("1/0") == "You cannot divide by zero."
     assert calculate("__import__('os')").startswith("Cannot") and calculate("9**9999").startswith("Cannot")
@@ -676,7 +615,7 @@ def demo():
     assert copy_to_clipboard("x") == "Copied." and sleep_display() == "Screen off." and reveal_in_finder("~").startswith("Showing")
     assert reveal_in_finder("~/.ssh").startswith("No file") and reveal_in_finder("/etc/passwd").startswith("No file")
     assert run_shortcut("zzz-not-real").startswith("I do not see") and (list_shortcuts().startswith("No Shortcuts") or "Shortcuts:" in list_shortcuts())
-    assert len(TOOLS) == 62 and all(f.__doc__ for f in TOOLS)
+    assert len(TOOLS) == 63 and all(f.__doc__ for f in TOOLS)
     call = lambda name, a: globals()[name](a) if globals()[name].__code__.co_argcount else globals()[name]()
     hit = lambda q: next((call(name, arg(m)) for pat, name, arg in ROUTES if (m := pat.match(q))), None)
     assert hit("calculate 17 * 23") == "391" and hit("convert 5 km to miles") == "5 km is 3.1069 mi."
