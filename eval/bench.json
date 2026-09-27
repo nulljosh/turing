@@ -1,0 +1,11 @@
+{
+  "machine": "arm64",
+  "python": "3.14.7",
+  "router_us": 9.8,
+  "router_cases": 221,
+  "pick_ms": 193.9,
+  "pick_backend": "mlx",
+  "pick_queries": 20,
+  "answer_tok_s": 110.8,
+  "answer_prompts": 3
+}

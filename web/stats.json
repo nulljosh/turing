@@ -1,5 +1,5 @@
 {
-  "version": "4.16.0",
+  "version": "4.16.1",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -194,6 +194,10 @@
       "eval/basic_questions.py": {
         "total": 1,
         "documented": 1
+      },
+      "eval/bench.py": {
+        "total": 5,
+        "documented": 5
       },
       "eval/constrain.py": {
         "total": 4,

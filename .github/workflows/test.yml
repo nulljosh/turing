@@ -33,6 +33,8 @@ jobs:
       # the router and every tool's self-check, all subprocesses and /Applications mocked
       - run: SAMANTHA_HEADLESS=1 python3 tools.py
       - run: python3 eval/util_diff.py
+      # speed: the router row runs anywhere, the two model rows skip clean without MLX
+      - run: python3 eval/bench.py
       # her hands over MCP: a real client conversation against the stdio server
       - run: python3 tests/test_mcp.py
       - run: python3 tests/test_harness.py
