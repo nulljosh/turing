@@ -240,7 +240,7 @@ async function draw(env, ctx, q) {
 
 async function cached(ctx, kind, q, make) {
   // the same question a day later is the same answer: no second trip to Wikipedia, no second model run
-  const key = new Request(`${HOME}/__${kind}/${encodeURIComponent(q.toLowerCase())}`);
+  const key = new Request(`${HOME}/__${kind}.v2/${encodeURIComponent(q.toLowerCase())}`); // bump .vN when answers change so a day-old cached answer never outlives a fix
   const hit = await caches.default.match(key);
   if (hit) return hit;
   const res = Response.json(await make(), { headers: { "Cache-Control": "public, max-age=86400", "X-Content-Type-Options": "nosniff" } });
