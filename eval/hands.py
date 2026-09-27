@@ -25,6 +25,7 @@ sys.path.insert(0, os.path.join(REPO, "eval"))
 sys.path.insert(0, os.path.join(REPO, "training"))
 os.environ["SAMANTHA_HEADLESS"] = "1"
 import tools
+from tools_agent import snap
 from gen_hands_data import SYSTEM
 
 BASE = "mlx-community/Qwen2.5-0.5B-Instruct-4bit"
@@ -107,6 +108,8 @@ def main():
             got = json.loads(found.group(0)) if found else {}
         except ValueError:
             got = {}
+        if got.get("tool"):
+            got["tool"] = snap(got["tool"])  # same snap pick() does in production
         got_arg = str(got.get("arg") or "").lower().strip()
         if tool == "timer" and got.get("tool") == "timer":
             got_arg, arg = str(tools.duration(got_arg)), str(tools.duration(arg))

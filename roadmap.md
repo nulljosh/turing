@@ -65,6 +65,20 @@ Ask her to draft something in our voice, or answer a question about one of our o
 
 ### Open backlog
 
+- [ ] **This week: computer use.** Give her a task ("book the 3pm slot on this page", "fill in this form from my notes") and she drives the Mac to finish it, like ChatGPT's agent. She already has see_screen, click_text, type_text, press_key and a six-step agent. Missing, in build order:
+  - [ ] Look after every action: screenshot, act, screenshot again, and check the screen changed the way she expected before the next step
+  - [ ] Find things by the accessibility tree first, OCR text second, so she clicks buttons with no visible label
+  - [ ] A real step budget (about 25) with a clear stop: done, stuck, or needs you
+  - [ ] Every click and keystroke shown before it runs, one yes covers one task, Escape stops her at once
+  - [ ] A test bench of ten local tasks (TextEdit, Finder, Safari on a local page, System Settings read-only) scored headless, so each round is measured
+  - [ ] Close the weak spot in law 12: screen clicks go through the same own-words check as every other write
+- [ ] **Frontier gaps.** Where she trails the big models, cheapest fix first:
+  - [ ] Invented tool names: snap near-miss names to the real tool (shipping 4.16.5); the rest ("free_space", "date_today") need the family-first picker below
+  - [ ] Argument shape: tools read loose wording themselves ("between 1 and 100", "dec 25 2026", "150 lbs to kg") instead of the picker learning every format
+  - [ ] Gives up to "agent" on one-step asks: more single-step training templates for tools she hands off
+  - [ ] Multi-step planning: the agent loop above is the fix
+  - [ ] Writing quality: route drafts and long answers to the local 8B, keep the 0.5B for picking
+  - [ ] Long documents and images: chunked reading for documents, see_screen's vision model for images
 - [ ] Painting hands (pixelmator/): paint the Last Supper at 4000 layers, polish the Mona Lisa, rebuild the bcgd logo as a text-layer spec, speed probes (group layers, fill inside make)
 - [ ] Picker trick: constrained output. Tried once (round six, tool-name logits trie) and it collapsed accuracy instead of helping; worth another look feeding the prefix through the chat template's own generation-prompt path
 - [ ] Picker trick: train on her mistakes. Write new templates for the kinds of wording she misses, never copy test cases into training
