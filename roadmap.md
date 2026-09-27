@@ -73,7 +73,7 @@ Ask her to draft something in our voice, or answer a question about one of our o
   - [ ] A test bench of ten local tasks (TextEdit, Finder, Safari on a local page, System Settings read-only) scored headless, so each round is measured
   - [ ] Close the weak spot in law 12: screen clicks go through the same own-words check as every other write
 - [ ] **Frontier gaps.** Where she trails the big models, cheapest fix first:
-  - [ ] Invented tool names: snap near-miss names to the real tool (shipping 4.16.5); the rest ("free_space", "date_today") need the family-first picker below
+  - [ ] Invented tool names ("free_space", "date_today"): snapping to the closest name was tried and dropped (one good snap in 1895 picks, six wrong ones, "remove_file" became move_file); the family-first picker below is the real fix
   - [ ] Argument shape: tools read loose wording themselves ("between 1 and 100", "dec 25 2026", "150 lbs to kg") instead of the picker learning every format
   - [ ] Gives up to "agent" on one-step asks: more single-step training templates for tools she hands off
   - [ ] Multi-step planning: the agent loop above is the fix

@@ -133,22 +133,9 @@ def pick(query):
         tool, arg = got.get("tool"), str(got.get("arg") or "").strip()
     except Exception:
         return None
-    tool = snap(tool)
     if tool == "agent":
         return "agent", ""
     return (tool, arg) if tool and tools._sound(tool, arg, query) else None
-
-
-def snap(tool):
-    """A 0.5B invents near-miss names ("b64_encode", "make_id"). Snap one to the closest real tool;
-    the guard still has to pass the result, so a bad snap is refused, never run."""
-    import difflib
-    import tools
-    if not tool or tool == "agent" or tool in tools.TOOLS:
-        return tool
-    # ponytail: plain string similarity; a synonym table if "free_space"-style misses matter
-    close = difflib.get_close_matches(tool, list(tools.TOOLS), n=1, cutoff=0.85)
-    return close[0] if close else None
 
 
 def _faq_knows(query):

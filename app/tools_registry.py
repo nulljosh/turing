@@ -356,7 +356,10 @@ def _sound(tool, arg, query):
         return False
     if arg.lower() in q_lower:
         return True
-    if tool in WRITES:
+    # Not for writes, not for anything that opens something you would see, and not for a two-part
+    # "a<TAB>b" argument: 4.16.4's gate caught "any openings tomorrow" opening an app and
+    # "freezing point of water in fahrenheit" converting units, both from scattered words.
+    if tool in WRITES or tool in ("open_app", "open_url") or "\t" in arg:
         return False
     words = re.findall(r"[a-z0-9]+", arg.lower())
     return bool(words) and all(w in q_lower for w in words)
