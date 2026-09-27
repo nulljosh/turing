@@ -65,6 +65,9 @@ Ask her to draft something in our voice, or answer a question about one of our o
 
 ### Open backlog
 
+- [x] **Her voice.** ElevenLabs when a key is set, `say` otherwise, barge-in unchanged (2026-09-27).
+- [x] **Her face.** `--face` window: idle, listening and talking loops, rendered once per character (2026-09-27).
+- [ ] **Voice and face, next:** `--character <name>` to switch faces and voices by name; her idle loop on the landing page; Secretary's phone calls in her voice (waiting on Twilio support ticket 29739232 to restore account access).
 - [ ] **This week: computer use.** Give her a task ("book the 3pm slot on this page", "fill in this form from my notes") and she drives the Mac to finish it, like ChatGPT's agent. She already has see_screen, click_text, type_text, press_key and a six-step agent. Missing, in build order:
   - [x] Look after every action: screenshot, act, screenshot again, and check the screen changed the way she expected before the next step
   - [x] Find things by the accessibility tree first, OCR text second, so she clicks buttons with no visible label
