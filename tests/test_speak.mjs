@@ -12,3 +12,26 @@ for (const q of ["hi Samantha, introduce yourself", "introduce yourself", "Hey, 
 }
 if (smallTalk("introduce me to rust")) { console.log("FAIL: a real question became small talk"); process.exit(1); }
 console.log("PASS: introductions");
+
+// /api/speak end to end against a fake Worker environment: no network, no real key, no real cache.
+const store = new Map();
+globalThis.caches = { default: { match: async k => store.get(k.url), put: async (k, r) => { store.set(k.url, r); } } };
+const worker = (await import("../worker.js")).default;
+const ctx = { waitUntil: p => p };
+const env = key => ({ ASSETS: { fetch: () => new Response("asset") }, ELEVENLABS_API_KEY: key });
+const post = (body, headers = {}) => new Request("https://turing.heyitsmejosh.com/api/speak", {
+  method: "POST", headers: { "content-type": "application/json", ...headers }, body: JSON.stringify(body) });
+const expect = (what, got, want) => { if (got !== want) { console.log("FAIL", what, got, "!=", want); process.exit(1); } };
+expect("empty text", (await worker.fetch(post({ text: "  " }), env("k"), ctx)).status, 400);
+expect("other site", (await worker.fetch(post({ text: "hi" }, { origin: "https://evil.example" }), env("k"), ctx)).status, 403);
+expect("no key", (await worker.fetch(post({ text: "hi" }), env(undefined), ctx)).status, 503);
+let calls = 0;
+const realFetch = globalThis.fetch;
+globalThis.fetch = async () => { calls++; const b = new ArrayBuffer(4); new DataView(b).setInt16(0, 32767, true); return new Response(b); };
+const first = await worker.fetch(post({ text: "hello there", format: "pcm8" }), env("k"), ctx);
+expect("pcm8 status", first.status, 200);
+expect("pcm8 bytes", (await first.arrayBuffer()).byteLength, 2);
+await worker.fetch(post({ text: "hello there", format: "pcm8" }), env("k"), ctx);
+expect("second identical line served from cache", calls, 1);
+globalThis.fetch = realFetch;
+console.log("PASS: /api/speak rejects empty text, other sites and a missing key, and caches repeats");
