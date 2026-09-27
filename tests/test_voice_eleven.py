@@ -4,6 +4,7 @@ import sys
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "app"))
 import tempfile
 import voice
+voice.SECRETS = "/nonexistent/secrets.fish"  # tests never read the real key
 voice.CACHE_DIR = tempfile.mkdtemp()  # never touch the real cache
 os.environ["SAMANTHA_CHARACTER"] = tempfile.mkdtemp()  # never read the real character either
 
@@ -50,7 +51,23 @@ def test_speaker():
     os.environ.pop("ELEVENLABS_API_KEY")
 
 
+def test_key_from_secrets():
+    """No key in the environment: the fish secrets line is read instead; a missing file or line means no key."""
+    os.environ.pop("ELEVENLABS_API_KEY", None)
+    d = tempfile.mkdtemp()
+    f = os.path.join(d, "secrets.fish")
+    open(f, "w").write("set -gx OTHER 'x'\nset -gx ELEVENLABS_API_KEY 'sk_test123'\n")
+    assert voice.eleven_key(f) == "sk_test123"
+    open(f, "w").write("set -gx OTHER 'x'\n")
+    assert voice.eleven_key(f) is None
+    assert voice.eleven_key(os.path.join(d, "missing")) is None
+    os.environ["ELEVENLABS_API_KEY"] = "env"
+    assert voice.eleven_key(f) == "env"
+    os.environ.pop("ELEVENLABS_API_KEY")
+
+
 if __name__ == "__main__":
+    test_key_from_secrets()
     test_current_voice()
     test_speaker()
     print("PASS: ElevenLabs voice with say fallback")

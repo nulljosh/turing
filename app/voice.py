@@ -107,6 +107,24 @@ def current_voice():
         return ELEVEN_VOICE
 
 
+SECRETS = os.path.expanduser("~/.config/fish/secrets.fish")
+
+
+def eleven_key(secrets=None):
+    """The ElevenLabs key: the environment first, else the line in the fish secrets file, so the Mac app and any
+    shell that never loaded fish still get her real voice instead of falling back to say. None when neither has one."""
+    import re
+    key = os.environ.get("ELEVENLABS_API_KEY")
+    if key:
+        return key
+    try:
+        with open(secrets or SECRETS) as f:
+            m = re.search(r"^\s*set\s+-gx\s+ELEVENLABS_API_KEY\s+['\"]?([^'\"\s]+)", f.read(), re.M)
+        return m.group(1) if m else None
+    except OSError:
+        return None
+
+
 def eleven_mp3(text, key, fetch=None):
     """Her words as an ElevenLabs mp3 on disk, or None on any failure. Opt-in: only runs when ELEVENLABS_API_KEY
     is set, and it is the one path where her reply leaves the Mac (the text goes to ElevenLabs to be voiced).
@@ -136,7 +154,7 @@ def eleven_mp3(text, key, fetch=None):
 def speaker(text, fetch=None):
     """The command that says text aloud: ElevenLabs through afplay when a key is set and the call works,
     macOS `say` otherwise. Either way it's one killable process, so barging in works the same."""
-    key = os.environ.get("ELEVENLABS_API_KEY")
+    key = eleven_key()
     mp3 = eleven_mp3(text, key, fetch) if key else None
     return ["afplay", mp3] if mp3 else ["say", text]
 
