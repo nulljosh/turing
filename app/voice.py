@@ -89,7 +89,7 @@ def should_barge_in(levels, threshold=BARGE_THRESHOLD, run=BARGE_RUN):
 
 
 ELEVEN_URL = "https://api.elevenlabs.io/v1/text-to-speech/{voice}?output_format=mp3_44100_128"
-ELEVEN_VOICE = os.environ.get("ELEVENLABS_VOICE", "21m00Tcm4TlvDq8ikWAM")  # a stock ElevenLabs voice; set your own id
+ELEVEN_VOICE = os.environ.get("ELEVENLABS_VOICE", "EXAVITQu4vr4xnSDxMaL")  # Sarah, a premade voice the free plan can use; set your own id
 
 
 def eleven_mp3(text, key, fetch=None):
