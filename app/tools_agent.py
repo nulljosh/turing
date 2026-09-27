@@ -9,8 +9,8 @@ import urllib.request
 import intent
 import untrusted
 
-HANDS_ADAPTER = os.path.join(os.path.dirname(os.path.abspath(__file__)), "hands-adapter")
-HANDS_GGUF = os.path.join(os.path.dirname(os.path.abspath(__file__)), "models", "samantha-hands.gguf")
+HANDS_ADAPTER = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "hands-adapter")
+HANDS_GGUF = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "models", "samantha-hands.gguf")
 HANDS_SYSTEM = 'You are Samantha\'s hands. Reply with one JSON tool call. If this is not a command, reply {"tool": null, "arg": ""}.'
 _hands = None
 _hands_backend = None  # "mlx" or "llama_cpp", set once _hands loads

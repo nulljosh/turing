@@ -10,10 +10,10 @@ echo "$V" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$' || { echo "version must look lik
 git rev-parse "v$V" >/dev/null 2>&1 && { echo "v$V already exists"; exit 1; }
 
 # Her mark redrawn fresh every release, committed on its own before the uncommitted-work check below so a
-# clean redraw never blocks the release. tools_logo.py retries a rate limit itself, and a candidate only ever
+# clean redraw never blocks the release. app/tools_logo.py retries a rate limit itself, and a candidate only ever
 # ships once --promote's plain sanity check passes (ink fraction, a clean margin, no stray blot, actually new);
 # any failure here just keeps tonight's mark and prints why, it never fails the release.
-if python3 tools_logo.py --redraw "$V" && python3 tools_logo.py --promote; then
+if python3 app/tools_logo.py --redraw "$V" && python3 app/tools_logo.py --promote; then
 	git add art/mark.svg icon.svg web/icon.svg web/samantha-logo.png web/mark-preview.png
 	git commit -qm "mark: redrawn for v$V"
 else
@@ -39,8 +39,8 @@ sleep 35
 ./gate.sh --full
 
 echo "$V" > VERSION
-python3 tools_badge.py --version "$V"
-python3 stats.py >/dev/null
+python3 app/tools_badge.py --version "$V"
+python3 scripts/stats.py >/dev/null
 git add VERSION web/stats.json web/badge.svg web/badge-preview.png
 git commit -qm "Release v$V: $NOTE"
 git tag -a "v$V" -m "$NOTE"

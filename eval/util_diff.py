@@ -17,7 +17,7 @@ import sys
 os.environ["SAMANTHA_HEADLESS"] = "1"
 os.environ["SAMANTHA_MEMORY"] = "/nonexistent/samantha-memory.json"  # the diff must not read anyone's real memory
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.insert(0, REPO)
+sys.path.insert(0, os.path.join(REPO, "app"))
 import tools
 
 FIXED = [

@@ -1,7 +1,7 @@
 # Training examples
 
 Real instruction/response pairs, not FAQ facts. `prep_data.py` reads this
-file separately from FAQ.md so Samantha sees actual examples of task-style
+file separately from docs/FAQ.md so Samantha sees actual examples of task-style
 output (a commit message, a changelog line) instead of only ever seeing
 "tell me about X" -> FAQ-doc-voice pairs. Added 2026-09-13 after a retrain
 regressed on "write a one-line commit message", the model blended FAQ-doc
@@ -15,7 +15,7 @@ Fix a real hang in prep_data.py, own-doc chunks 28 -> 55
 
 ## Write a one-line commit message for adding a new FAQ entry.
 
-FAQ.md: fill two real content gaps the eval exposed
+docs/FAQ.md: fill two real content gaps the eval exposed
 
 ## Write a one-line commit message for fixing a bug in the retrieval fallback.
 
@@ -35,7 +35,7 @@ Fix faq_match false positive the officeholder fix exposed
 
 ## Write a one-line commit message for wiring a feature into a second file that was missing it.
 
-Wire general_knowledge into chat.py, it never had it
+Wire general_knowledge into app/chat.py, it never had it
 
 ## Write a one-line commit message for adding version tracking to a project that never had one.
 

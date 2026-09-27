@@ -8,7 +8,7 @@ Exit code is nonzero if any prompt fails, so it can gate a commit/CI step.
 """
 import json, os, sys
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "app"))
 from ask import ask
 
 D = os.path.dirname(__file__)

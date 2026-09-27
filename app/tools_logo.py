@@ -14,7 +14,7 @@ import time
 import urllib.error
 import urllib.request
 
-PXM = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pixelmator", "pxm.py")  # paint_image's magick engine only
+PXM = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "pixelmator", "pxm.py")  # paint_image's magick engine only
 
 
 def _tools():
@@ -341,7 +341,7 @@ def _icon_svg_from(inner):
 
 def icon_svg():
     """Turing's own icon: the exact bytes of web/icon.svg and icon.svg, her traced drawing on the paper tile."""
-    with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "art", "mark.svg")) as f:
+    with open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "art", "mark.svg")) as f:
         return _icon_svg_from(f.read())
 
 
@@ -398,7 +398,7 @@ def redraw_mark(seed_text="", root=None):
     if not image.startswith("data:image/jpeg;base64,"):
         return f"Didn't redraw her mark: no picture came back ({str(data)[:200]})"
 
-    here = root or os.path.dirname(os.path.abspath(__file__))
+    here = root or os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     tmp = tempfile.mkdtemp(prefix="samantha-mark-")
     try:
         jpg, pbm, svg = (os.path.join(tmp, n) for n in ("in.jpg", "in.pbm", "in.svg"))
@@ -517,7 +517,7 @@ def promote_mark(root=None):
     """Promote art/mark-candidate.svg to her real, shipped mark, but only when mark_sanity passes on a fresh
     rasterize of it. When it doesn't, every committed file is left exactly as it was; release.sh reads the reason
     and keeps going rather than failing the release. Used by `tools_logo.py --promote`. Returns (ok, why)."""
-    here = root or os.path.dirname(os.path.abspath(__file__))
+    here = root or os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     cand_path = os.path.join(here, "art", "mark-candidate.svg")
     if not os.path.exists(cand_path):
         return False, "no candidate to promote, redraw_mark hasn't run"
@@ -562,7 +562,7 @@ def _contrast(a, b):
 
 
 def main():
-    """CLI: python3 tools_logo.py --redraw [seed text, usually the release version] draws a candidate; --promote
+    """CLI: python3 app/tools_logo.py --redraw [seed text, usually the release version] draws a candidate; --promote
     ships it, only if mark_sanity passes. Each exits 0 only on real success, so release.sh can tell a skip (rate
     limit, no ImageMagick, a failed sanity check) from the real thing."""
     if "--redraw" in sys.argv:
@@ -574,7 +574,7 @@ def main():
         ok, why = promote_mark()
         print(why)
         return 0 if ok else 1
-    print("usage: python3 tools_logo.py --redraw [seed text] | --promote")
+    print("usage: python3 app/tools_logo.py --redraw [seed text] | --promote")
     return 2
 
 

@@ -5,7 +5,7 @@
 # point tonight was "catch this stuff before it ships".
 
 changed=$(git diff --cached --name-only)
-if echo "$changed" | grep -qE '^(ask\.py|chat\.py|FAQ\.md|eval/prompts\.jsonl)$'; then
+if echo "$changed" | grep -qE '^(app/ask\.py|app/chat\.py|docs/FAQ\.md|eval/prompts\.jsonl)$'; then
   echo "eval-relevant file changed, running eval/score.py..."
   if ! ./.venv/bin/python eval/score.py; then
     echo ""
@@ -15,7 +15,7 @@ if echo "$changed" | grep -qE '^(ask\.py|chat\.py|FAQ\.md|eval/prompts\.jsonl)$'
   fi
 fi
 
-if echo "$changed" | grep -qE '^(ask\.py|FAQ\.md)$'; then
+if echo "$changed" | grep -qE '^(app/ask\.py|docs/FAQ\.md)$'; then
   echo "matcher-relevant file changed, running eval/faq_paraphrase.py..."
   # Guards recall against natural rephrasings, which prompts.jsonl cannot
   # see (its prompts are worded the way the FAQ words things). Recall was
@@ -31,12 +31,12 @@ if echo "$changed" | grep -qE '^(ask\.py|FAQ\.md)$'; then
   fi
 fi
 
-if echo "$changed" | grep -qE '^(serve\.py|ask\.py)$'; then
-  echo "serve.py/ask.py changed, running test_nimble.py..."
+if echo "$changed" | grep -qE '^(app/serve\.py|app/ask\.py)$'; then
+  echo "app/serve.py/ask.py changed, running test_nimble.py..."
   # proves Samantha is still callable as a pluggable engine by other apps.
-  # ask.py counts because serve.py is a thin wrapper over ask(), so an
-  # ask.py change can break the integration without touching serve.py.
-  if ! ./.venv/bin/python test_nimble.py; then
+  # app/ask.py counts because app/serve.py is a thin wrapper over ask(), so an
+  # app/ask.py change can break the integration without touching app/serve.py.
+  if ! ./.venv/bin/python tests/test_nimble.py; then
     echo ""
     echo "test_nimble.py failed, the Nimble integration is broken. Commit blocked."
     echo "If this is expected, commit with --no-verify."
@@ -44,9 +44,9 @@ if echo "$changed" | grep -qE '^(serve\.py|ask\.py)$'; then
   fi
 fi
 
-if echo "$changed" | grep -qE '^chat\.py$'; then
-  echo "chat.py changed, running test_chat.py..."
-  if ! ./.venv/bin/python test_chat.py > /dev/null; then
+if echo "$changed" | grep -qE '^app/chat\.py$'; then
+  echo "app/chat.py changed, running test_chat.py..."
+  if ! ./.venv/bin/python tests/test_chat.py > /dev/null; then
     echo ""
     echo "test_chat.py failed. Commit blocked."
     echo "If this is expected, commit with --no-verify."

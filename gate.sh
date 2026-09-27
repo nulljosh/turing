@@ -25,14 +25,14 @@ ACTIONS=$(echo "$OUT" | cut -d/ -f1)
 OUT=$(python3 eval/web_parity.py 2>&1 | tail -1)
 PARITY=$(echo "$OUT" | cut -d/ -f1)
 
-OUT=$(SAMANTHA_HEADLESS=1 python3 tools.py 2>&1 | tail -1)
+OUT=$(SAMANTHA_HEADLESS=1 python3 app/tools.py 2>&1 | tail -1)
 TOOLS_OK=$([ "$OUT" = "tools ok" ] && echo "1" || echo "0")
 
 # The docs rule: 100 percent of functions and classes documented, or nothing ships.
-python3 stats.py --check || { echo "FAIL docs coverage below 100 percent"; exit 1; }
+python3 scripts/stats.py --check || { echo "FAIL docs coverage below 100 percent"; exit 1; }
 
-# The laws in LAWS.md, checked against every tool.
-python3 eval/laws.py || { echo "FAIL a law in LAWS.md is broken"; exit 1; }
+# The laws in docs/LAWS.md, checked against every tool.
+python3 eval/laws.py || { echo "FAIL a law in docs/LAWS.md is broken"; exit 1; }
 
 HANDS_PASSED=""
 HANDS_PAST=""

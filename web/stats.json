@@ -1,187 +1,187 @@
 {
-  "version": "4.16.2",
+  "version": "4.16.3",
   "docs_coverage": {
     "percent": 100,
     "files": {
-      "intent.py": {
+      "app/ask.py": {
         "total": 7,
         "documented": 7
       },
-      "chat_pipe.py": {
-        "total": 11,
-        "documented": 11
-      },
-      "tools_image.py": {
-        "total": 17,
-        "documented": 17
-      },
-      "tools_research.py": {
+      "app/ask_faq.py": {
         "total": 10,
         "documented": 10
       },
-      "planner.py": {
-        "total": 10,
-        "documented": 10
-      },
-      "harness.py": {
-        "total": 15,
-        "documented": 15
-      },
-      "library.py": {
-        "total": 8,
-        "documented": 8
-      },
-      "tools_gui.py": {
-        "total": 8,
-        "documented": 8
-      },
-      "untrusted.py": {
-        "total": 4,
-        "documented": 4
-      },
-      "tools_screen_agent.py": {
-        "total": 3,
-        "documented": 3
-      },
-      "ask.py": {
-        "total": 7,
-        "documented": 7
-      },
-      "feedback.py": {
-        "total": 8,
-        "documented": 8
-      },
-      "tools_agent.py": {
-        "total": 5,
-        "documented": 5
-      },
-      "ask_local.py": {
+      "app/ask_local.py": {
         "total": 9,
         "documented": 9
       },
-      "tools.py": {
-        "total": 31,
-        "documented": 31
-      },
-      "ask_faq.py": {
-        "total": 10,
-        "documented": 10
-      },
-      "tools_dev.py": {
+      "app/ask_web.py": {
         "total": 11,
         "documented": 11
       },
-      "util_dates.py": {
-        "total": 12,
-        "documented": 12
-      },
-      "serve.py": {
-        "total": 8,
-        "documented": 8
-      },
-      "tools_registry.py": {
-        "total": 3,
-        "documented": 3
-      },
-      "tools_logo.py": {
-        "total": 28,
-        "documented": 28
-      },
-      "tools_routes.py": {
-        "total": 6,
-        "documented": 6
-      },
-      "voice.py": {
-        "total": 9,
-        "documented": 9
-      },
-      "tools_apps.py": {
-        "total": 14,
-        "documented": 14
-      },
-      "tools_system.py": {
-        "total": 7,
-        "documented": 7
-      },
-      "tools_code.py": {
-        "total": 7,
-        "documented": 7
-      },
-      "tools_badge.py": {
-        "total": 23,
-        "documented": 23
-      },
-      "chat.py": {
+      "app/chat.py": {
         "total": 18,
         "documented": 18
       },
-      "followup.py": {
-        "total": 5,
-        "documented": 5
-      },
-      "stats.py": {
-        "total": 7,
-        "documented": 7
-      },
-      "tools_util.py": {
-        "total": 43,
-        "documented": 43
-      },
-      "ask_web.py": {
+      "app/chat_pipe.py": {
         "total": 11,
         "documented": 11
       },
-      "gen_jt_docs.py": {
-        "total": 13,
-        "documented": 13
-      },
-      "tools_llm.py": {
-        "total": 6,
-        "documented": 6
-      },
-      "tools_organizer.py": {
-        "total": 7,
-        "documented": 7
-      },
-      "util_math.py": {
-        "total": 20,
-        "documented": 20
-      },
-      "tools_write.py": {
+      "app/feedback.py": {
         "total": 8,
         "documented": 8
       },
-      "tools_see.py": {
-        "total": 9,
-        "documented": 9
+      "app/followup.py": {
+        "total": 5,
+        "documented": 5
       },
-      "tools_files.py": {
-        "total": 14,
-        "documented": 14
+      "app/harness.py": {
+        "total": 15,
+        "documented": 15
       },
-      "mcp_server.py": {
+      "app/intent.py": {
+        "total": 7,
+        "documented": 7
+      },
+      "app/library.py": {
+        "total": 8,
+        "documented": 8
+      },
+      "app/mcp_server.py": {
         "total": 4,
         "documented": 4
       },
-      "pixelmator/pxm_spec.py": {
+      "app/planner.py": {
+        "total": 10,
+        "documented": 10
+      },
+      "app/serve.py": {
+        "total": 8,
+        "documented": 8
+      },
+      "app/tools.py": {
+        "total": 31,
+        "documented": 31
+      },
+      "app/tools_agent.py": {
+        "total": 5,
+        "documented": 5
+      },
+      "app/tools_apps.py": {
+        "total": 14,
+        "documented": 14
+      },
+      "app/tools_badge.py": {
+        "total": 23,
+        "documented": 23
+      },
+      "app/tools_code.py": {
+        "total": 7,
+        "documented": 7
+      },
+      "app/tools_dev.py": {
+        "total": 11,
+        "documented": 11
+      },
+      "app/tools_files.py": {
+        "total": 14,
+        "documented": 14
+      },
+      "app/tools_gui.py": {
+        "total": 8,
+        "documented": 8
+      },
+      "app/tools_image.py": {
+        "total": 17,
+        "documented": 17
+      },
+      "app/tools_llm.py": {
+        "total": 6,
+        "documented": 6
+      },
+      "app/tools_logo.py": {
+        "total": 28,
+        "documented": 28
+      },
+      "app/tools_organizer.py": {
+        "total": 7,
+        "documented": 7
+      },
+      "app/tools_registry.py": {
+        "total": 3,
+        "documented": 3
+      },
+      "app/tools_research.py": {
+        "total": 10,
+        "documented": 10
+      },
+      "app/tools_routes.py": {
+        "total": 6,
+        "documented": 6
+      },
+      "app/tools_screen_agent.py": {
+        "total": 3,
+        "documented": 3
+      },
+      "app/tools_see.py": {
         "total": 9,
         "documented": 9
       },
-      "pixelmator/test_pxm_run.py": {
-        "total": 48,
-        "documented": 48
+      "app/tools_system.py": {
+        "total": 7,
+        "documented": 7
       },
-      "pixelmator/test_pxm.py": {
-        "total": 53,
-        "documented": 53
+      "app/tools_util.py": {
+        "total": 43,
+        "documented": 43
+      },
+      "app/tools_write.py": {
+        "total": 8,
+        "documented": 8
+      },
+      "app/untrusted.py": {
+        "total": 4,
+        "documented": 4
+      },
+      "app/util_dates.py": {
+        "total": 12,
+        "documented": 12
+      },
+      "app/util_math.py": {
+        "total": 20,
+        "documented": 20
+      },
+      "app/voice.py": {
+        "total": 9,
+        "documented": 9
+      },
+      "scripts/gen_jt_docs.py": {
+        "total": 13,
+        "documented": 13
+      },
+      "scripts/stats.py": {
+        "total": 7,
+        "documented": 7
+      },
+      "pixelmator/arc_text.py": {
+        "total": 3,
+        "documented": 3
       },
       "pixelmator/pxm.py": {
         "total": 24,
         "documented": 24
       },
-      "pixelmator/arc_text.py": {
-        "total": 3,
-        "documented": 3
+      "pixelmator/pxm_spec.py": {
+        "total": 9,
+        "documented": 9
+      },
+      "pixelmator/test_pxm.py": {
+        "total": 53,
+        "documented": 53
+      },
+      "pixelmator/test_pxm_run.py": {
+        "total": 48,
+        "documented": 48
       },
       "eval/a11y.py": {
         "total": 1,
@@ -255,167 +255,171 @@
         "total": 1,
         "documented": 1
       },
-      "eval/test_badge.py": {
+      "tests/test_badge.py": {
         "total": 11,
         "documented": 11
       },
-      "eval/test_chat.py": {
+      "tests/test_chat.py": {
         "total": 26,
         "documented": 26
       },
-      "eval/test_chat_pipe.py": {
+      "tests/test_chat_pipe.py": {
         "total": 15,
         "documented": 15
       },
-      "eval/test_dev.py": {
+      "tests/test_dev.py": {
         "total": 55,
         "documented": 55
       },
-      "eval/test_distill.py": {
+      "tests/test_distill.py": {
         "total": 10,
         "documented": 10
       },
-      "eval/test_documents.py": {
+      "tests/test_documents.py": {
         "total": 12,
         "documented": 12
       },
-      "eval/test_edges.py": {
+      "tests/test_edges.py": {
         "total": 40,
         "documented": 40
       },
-      "eval/test_feedback.py": {
+      "tests/test_feedback.py": {
         "total": 31,
         "documented": 31
       },
-      "eval/test_followup.py": {
+      "tests/test_followup.py": {
         "total": 25,
         "documented": 25
       },
-      "eval/test_gguf_parity.py": {
+      "tests/test_gguf_parity.py": {
         "total": 1,
         "documented": 1
       },
-      "eval/test_gui.py": {
+      "tests/test_gui.py": {
         "total": 11,
         "documented": 11
       },
-      "eval/test_harness.py": {
+      "tests/test_harness.py": {
         "total": 32,
         "documented": 32
       },
-      "eval/test_intent.py": {
+      "tests/test_intent.py": {
         "total": 38,
         "documented": 38
       },
-      "eval/test_launcher.py": {
+      "tests/test_launcher.py": {
         "total": 6,
         "documented": 6
       },
-      "eval/test_library.py": {
+      "tests/test_layout.py": {
+        "total": 2,
+        "documented": 2
+      },
+      "tests/test_library.py": {
         "total": 11,
         "documented": 11
       },
-      "eval/test_llm.py": {
+      "tests/test_llm.py": {
         "total": 21,
         "documented": 21
       },
-      "eval/test_mcp.py": {
+      "tests/test_mcp.py": {
         "total": 12,
         "documented": 12
       },
-      "eval/test_memory.py": {
+      "tests/test_memory.py": {
         "total": 11,
         "documented": 11
       },
-      "eval/test_needs_me.py": {
+      "tests/test_needs_me.py": {
         "total": 16,
         "documented": 16
       },
-      "eval/test_nimble.py": {
+      "tests/test_nimble.py": {
         "total": 4,
         "documented": 4
       },
-      "eval/test_organizer.py": {
+      "tests/test_organizer.py": {
         "total": 32,
         "documented": 32
       },
-      "eval/test_planner.py": {
+      "tests/test_planner.py": {
         "total": 35,
         "documented": 35
       },
-      "eval/test_reader.py": {
+      "tests/test_reader.py": {
         "total": 13,
         "documented": 13
       },
-      "eval/test_research.py": {
+      "tests/test_research.py": {
         "total": 30,
         "documented": 30
       },
-      "eval/test_run_code.py": {
+      "tests/test_run_code.py": {
         "total": 17,
         "documented": 17
       },
-      "eval/test_screen.py": {
+      "tests/test_screen.py": {
         "total": 9,
         "documented": 9
       },
-      "eval/test_screen_agent.py": {
+      "tests/test_screen_agent.py": {
         "total": 18,
         "documented": 18
       },
-      "eval/test_see.py": {
+      "tests/test_see.py": {
         "total": 27,
         "documented": 27
       },
-      "eval/test_system.py": {
+      "tests/test_system.py": {
         "total": 37,
         "documented": 37
       },
-      "eval/test_tabs.py": {
+      "tests/test_tabs.py": {
         "total": 10,
         "documented": 10
       },
-      "eval/test_tools_image.py": {
+      "tests/test_tools_image.py": {
         "total": 21,
         "documented": 21
       },
-      "eval/test_untrusted.py": {
+      "tests/test_untrusted.py": {
         "total": 25,
         "documented": 25
       },
-      "eval/test_voice.py": {
+      "tests/test_voice.py": {
         "total": 25,
         "documented": 25
       },
-      "eval/test_write.py": {
+      "tests/test_write.py": {
         "total": 23,
         "documented": 23
       },
-      "eval/distill.py": {
+      "training/distill.py": {
         "total": 11,
         "documented": 11
       },
-      "eval/export_gguf.py": {
+      "training/export_gguf.py": {
         "total": 1,
         "documented": 1
       },
-      "eval/feedback_to_data.py": {
+      "training/feedback_to_data.py": {
         "total": 7,
         "documented": 7
       },
-      "eval/gen_hands_data.py": {
+      "training/gen_hands_data.py": {
         "total": 5,
         "documented": 5
       },
-      "eval/harvest_voice.py": {
+      "training/harvest_voice.py": {
         "total": 3,
         "documented": 3
       },
-      "eval/parse_log.py": {
+      "training/parse_log.py": {
         "total": 1,
         "documented": 1
       },
-      "eval/prep_data.py": {
+      "training/prep_data.py": {
         "total": 5,
         "documented": 5
       }

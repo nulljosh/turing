@@ -4,7 +4,7 @@ name here and keeps general_knowledge, the chain that uses them.
 """
 import difflib, hashlib, html, json, math, os, re, subprocess, sys, time, urllib.parse, urllib.request
 
-REPO = os.path.dirname(os.path.abspath(__file__))
+REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 from ask_faq import _keywords  # noqa: E402
 from ask_local import _QUESTION_PREFIX  # noqa: E402

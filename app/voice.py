@@ -2,9 +2,9 @@
 text on this Mac, sox records until you stop talking, and every turn goes through the same harness as typing, so
 anything that writes still asks first (answer y or n out loud or on the keyboard). Nothing leaves the Mac.
 
-    python3 chat.py --voice                  # talk; say "goodbye" or press Ctrl+C to stop
-    python3 chat.py --voice --wake samantha  # idle until you say the wake word, then listen (off unless passed)
-    python3 voice.py file.wav                # transcribe one recording
+    python3 app/chat.py --voice                  # talk; say "goodbye" or press Ctrl+C to stop
+    python3 app/chat.py --voice --wake samantha  # idle until you say the wake word, then listen (off unless passed)
+    python3 app/voice.py file.wav                # transcribe one recording
 
 While she's speaking, a real run of loud sound on the mic (not one click) kills `say` and drops straight back
 into listening, same as talking over a person. No new model, just an energy check on the raw mic stream.

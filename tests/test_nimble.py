@@ -70,7 +70,7 @@ def wait_for_server(proc, timeout=30):
 def main():
     """Start the server, run the checks, stop the server."""
     proc = subprocess.Popen(
-        [os.path.join(HERE, ".venv/bin/python"), os.path.join(HERE, "serve.py"), "--port", str(PORT)],
+        [os.path.join(HERE, ".venv/bin/python"), os.path.join(HERE, "app", "serve.py"), "--port", str(PORT)],
         stdout=subprocess.PIPE, stderr=subprocess.PIPE,
     )
     failures = []

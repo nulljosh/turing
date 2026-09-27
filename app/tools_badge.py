@@ -14,7 +14,7 @@ import subprocess
 import sys
 import tempfile
 
-HERE = os.path.dirname(os.path.abspath(__file__))
+HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SOURCE_SVG = os.path.join(HERE, "art", "badge-source.svg")
 OUTPUT_SVG = os.path.join(HERE, "web", "badge.svg")
 OUTPUT_PNG = os.path.join(HERE, "web", "badge-preview.png")
@@ -316,7 +316,7 @@ def gate(source_share=None):
 
 
 def build_and_gate(version):
-    """python3 tools_badge.py --version X.Y.Z: modernize(step_for(version)), gate it, and only keep the new
+    """python3 app/tools_badge.py --version X.Y.Z: modernize(step_for(version)), gate it, and only keep the new
     files if the gate passes; otherwise restore what was there before and say why. Always exit 0 so a release
     never fails over the badge."""
     freeze_source()
@@ -361,7 +361,7 @@ def demo():
 
 
 def main():
-    """CLI: python3 tools_badge.py --version X.Y.Z runs the real build+gate; no args runs demo()."""
+    """CLI: python3 app/tools_badge.py --version X.Y.Z runs the real build+gate; no args runs demo()."""
     if "--version" in sys.argv:
         i = sys.argv.index("--version")
         version = sys.argv[i + 1] if len(sys.argv) > i + 1 else ""

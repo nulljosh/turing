@@ -10,7 +10,7 @@ import shutil
 import subprocess
 import tempfile
 
-HERE = os.path.dirname(os.path.abspath(__file__))
+HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 KEYS = {"return": "return", "enter": "enter", "tab": "tab", "escape": "esc", "esc": "esc", "space": "space",
         "delete": "delete", "backspace": "delete", "up": "arrow-up", "down": "arrow-down", "left": "arrow-left",
         "right": "arrow-right", "page up": "page-up", "page down": "page-down", "home": "home", "end": "end"}

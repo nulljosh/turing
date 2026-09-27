@@ -1,5 +1,5 @@
 #!/bin/sh
-# Builds build/SamanthaGUI.app. PythonPath and ChatPipePath point at this repo's own venv and chat_pipe.py,
+# Builds build/SamanthaGUI.app. PythonPath and ChatPipePath point at this repo's own venv and app/chat_pipe.py,
 # so the app drives the exact same answer chain as the terminal, one process, kept warm for the whole session.
 set -e
 cd "$(dirname "$0")"
@@ -17,7 +17,7 @@ cat > "$APP/Contents/Info.plist" <<PLIST
 <key>CFBundleShortVersionString</key><string>1.0</string>
 <key>LSMinimumSystemVersion</key><string>13.0</string>
 <key>PythonPath</key><string>$(cd .. && pwd)/.venv/bin/python</string>
-<key>ChatPipePath</key><string>$(cd .. && pwd)/chat_pipe.py</string>
+<key>ChatPipePath</key><string>$(cd .. && pwd)/app/chat_pipe.py</string>
 </dict></plist>
 PLIST
 codesign --force --sign - "$APP" >/dev/null 2>&1 || true

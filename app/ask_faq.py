@@ -3,7 +3,7 @@ false positives, an optional embedding matcher, and the exact-fact extractors. S
 re-exports every name here."""
 import difflib, hashlib, html, json, math, os, re, subprocess, sys, time, urllib.parse, urllib.request
 
-REPO = os.path.dirname(os.path.abspath(__file__))
+REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # words that mark a question as about this project; project_vocabulary() adds the FAQ's own words
 PROJECT_KEYWORDS = {
@@ -83,7 +83,7 @@ FIXED_FACTS = [
 ]
 
 
-FAQ_PATH = os.path.join(REPO, "FAQ.md")
+FAQ_PATH = os.path.join(REPO, "docs", "FAQ.md")
 FAQ_MATCH_THRESHOLD = 0.55  # below this, a "match" is more likely coincidence than intent
 
 

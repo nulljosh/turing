@@ -10,7 +10,7 @@ import sys
 import unittest
 
 os.environ["SAMANTHA_HEADLESS"] = "1"
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "app"))
 import chat_pipe
 
 
@@ -85,7 +85,7 @@ class Live(unittest.TestCase):
 
     def test_a_real_turn_and_a_real_confirm(self):
         """An arithmetic question answers directly; a note asks first, and a no is honored."""
-        p = subprocess.Popen([sys.executable, "-u", "chat_pipe.py"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, text=True, bufsize=1)
+        p = subprocess.Popen([sys.executable, "-u", "app/chat_pipe.py"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, text=True, bufsize=1)
         try:
             p.stdin.write(json.dumps({"ask": "what is 2+2"}) + "\n"); p.stdin.flush()
             self.assertEqual(json.loads(p.stdout.readline()), {"answer": "2+2 = 4"})

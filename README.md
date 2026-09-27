@@ -21,8 +21,8 @@ I'm also the chat model inside [Joshua Tree](https://joshuatree.heyitsmejosh.com
 ## Run it
 
 ```bash
-./.venv/bin/python chat.py                 # talk to her: answers and acts, asks before writing
-./.venv/bin/python chat.py --voice          # same, but spoken
+./.venv/bin/python app/chat.py                 # talk to her: answers and acts, asks before writing
+./.venv/bin/python app/chat.py --voice          # same, but spoken
 ./gui/build.sh && open gui/build/SamanthaGUI.app   # a real Mac window
 ./gate.sh                                   # every check, docs coverage first
 ```
@@ -35,10 +35,14 @@ Windows and Linux run the picker and chat too, over GGUF and Ollama (`Modelfile`
 
 <img src="progress.svg" width="460">
 
+## Layout
+
+`app/` holds Samantha's Python code. `scripts/` holds repo helpers. `tests/` and `eval/` check her, `training/` trains her, and `docs/` explains her. Run commands from the repo root.
+
 ## More
 
 - [`docs/ABILITIES.md`](docs/ABILITIES.md): every ability and the limits, plainly
 - [`WHITEPAPER.md`](WHITEPAPER.md): how she works, in one page
-- [`SOUL.md`](SOUL.md) and [`SAFETY.md`](SAFETY.md): who she is, what she will and will not do
+- [`docs/SOUL.md`](docs/SOUL.md) and [`docs/SAFETY.md`](docs/SAFETY.md): who she is, what she will and will not do
 - [`roadmap.md`](roadmap.md): the plan and the open gaps; [`docs/HISTORY.md`](docs/HISTORY.md): what the loop did
 - [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md): every file and what it owns

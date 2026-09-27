@@ -26,13 +26,12 @@ mkdir -p "$DIST"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources/app"
 cp "$DEV_APP/Contents/MacOS/SamanthaGUI" "$APP/Contents/MacOS/SamanthaGUI"
 
-# Only her root-level code (CLAUDE.md's Layout: ask_*, tools_*, chat, harness, serve, mcp_server,
-# library, voice) plus requirements.txt. No training/, web/, docs/, tests/, gui/, menubar/, swift/,
-# pixelmator/, .git, or the gitignored data/ and ada-1-adapter/ (private, never published; chat_pipe.py's
-# answer chain already degrades to her ungrounded voice when the adapter is missing, it never crashes).
-for f in "$ROOT"/*.py "$ROOT/requirements.txt"; do
-    [ -f "$f" ] && cp "$f" "$APP/Contents/Resources/app/"
-done
+# Bundle app code and its public resources in the same layout as the checkout.
+# Private data, adapters, and caches are never included.
+mkdir -p "$APP/Contents/Resources/app/app" "$APP/Contents/Resources/app/docs"
+cp "$ROOT"/app/*.py "$APP/Contents/Resources/app/app/"
+cp "$ROOT/requirements.txt" "$ROOT/VERSION" "$APP/Contents/Resources/app/"
+cp "$ROOT/docs/FAQ.md" "$APP/Contents/Resources/app/docs/"
 cp launcher.sh "$APP/Contents/Resources/launcher.sh"
 chmod +x "$APP/Contents/Resources/launcher.sh"
 

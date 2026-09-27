@@ -14,8 +14,8 @@ import difflib, hashlib, html, json, math, os, re, subprocess, sys, time, urllib
 # silently loaded an empty FAQ: CI failed on a topic-scope test for exactly
 # that reason, because project_vocabulary() came back with no FAQ words in
 # it and every question looked like a change of subject.
-REPO = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, REPO)
+REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.join(REPO, "app"))
 import library  # noqa: E402  (her offline library, the last stop in general_knowledge)
 
 BRAIN_ENV = os.path.expanduser("~/Documents/Code/brain/.env.local")

@@ -9,8 +9,8 @@ Protocol, one JSON object per line, unbuffered stdin/stdout:
     host -> her:  {"yes": true}                        or {"yes": false}
     her -> host:  {"answer": "the final reply"}         exactly one per turn, always last
 
-    python3 chat_pipe.py            # runs the protocol over real stdin/stdout
-    python3 chat_pipe.py --check    # a fake terminal drives one full turn and one confirm, no model needed
+    python3 app/chat_pipe.py            # runs the protocol over real stdin/stdout
+    python3 app/chat_pipe.py --check    # a fake terminal drives one full turn and one confirm, no model needed
 """
 import json
 import sys

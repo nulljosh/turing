@@ -11,7 +11,7 @@ Subagents: "spawn agents: check the weather; what's on my calendar" hands each t
 process with no history. They look things up and read, never write (every confirm is a no), up to three at once,
 and the answers come back in the order asked.
 
-Run: python3 harness.py        (a chat in the terminal: commands through her hands, questions through chat.py)
+Run: python3 app/harness.py        (a chat in the terminal: commands through her hands, questions through chat.py)
 """
 import re
 import subprocess
@@ -151,7 +151,7 @@ def failed(calls, e):
 
 
 def spawn(tasks, log=print, run=None):
-    """Each task to its own subagent and the answers back in order. A subagent is a fresh process (python3 harness.py
+    """Each task to its own subagent and the answers back in order. A subagent is a fresh process (python3 app/harness.py
     --sub), so no history, no shared state and a crash stays its own. run(task) -> answer replaces the process in tests."""
     def one(task):
         """One subagent, start to finish."""

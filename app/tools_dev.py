@@ -14,7 +14,7 @@ from tools_apps import HEADLESS
 
 _I = re.I
 CODE_DIR = os.path.realpath(os.path.expanduser("~/Documents/Code"))
-_THIS_REPO = os.path.realpath(os.path.dirname(os.path.abspath(__file__)))
+_THIS_REPO = os.path.realpath(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
 def _repo(name=""):

@@ -12,7 +12,7 @@ from unittest import mock
 
 os.environ["SAMANTHA_HEADLESS"] = "1"
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.insert(0, REPO)
+sys.path.insert(0, os.path.join(REPO, "app"))
 import actions  # eval/actions.py, sibling: CASES, the router's own canonical phrasings, reused by law 12
 import followup
 import harness
@@ -78,7 +78,7 @@ INTENT_ATTACKS = {
 }
 # Law 8: no god files. A ratchet: it only ever moves down, lowered after each split lands (CLAUDE.md, File size).
 MAX_LINES = 700
-PEOPLE_READ = ["README.md", "CLAUDE.md", "WHITEPAPER.md", "FAQ.md", "roadmap.md", "LAWS.md", "SAFETY.md", "SOUL.md", "docs/ARCHITECTURE.md", "docs/ABILITIES.md", "docs/HISTORY.md", "web/index.html",
+PEOPLE_READ = ["README.md", "CLAUDE.md", "WHITEPAPER.md", "docs/FAQ.md", "roadmap.md", "docs/LAWS.md", "docs/SAFETY.md", "docs/SOUL.md", "docs/ARCHITECTURE.md", "docs/ABILITIES.md", "docs/HISTORY.md", "web/index.html",
                "web/demo.js", "web/samantha.js", "web/faq.json"]
 
 
@@ -197,10 +197,10 @@ def broken():
 
     bare = [n for n, f in tools.TOOLS.items() if not f.__doc__]
     out += [f"law 5: tool {n} has no docstring" for n in bare]
-    if subprocess.run([sys.executable, "stats.py", "--check"], cwd=REPO, capture_output=True).returncode:
-        out.append("law 5: docs coverage is below 100 percent (python3 stats.py --check names the gaps)")
+    if subprocess.run([sys.executable, "scripts/stats.py", "--check"], cwd=REPO, capture_output=True).returncode:
+        out.append("law 5: docs coverage is below 100 percent (python3 scripts/stats.py --check names the gaps)")
     arch = open(os.path.join(REPO, "docs", "ARCHITECTURE.md")).read()
-    out += [f"law 5: {os.path.basename(p)} has no row in docs/ARCHITECTURE.md" for p in sorted(glob.glob(os.path.join(REPO, "*.py")))
+    out += [f"law 5: {os.path.basename(p)} has no row in docs/ARCHITECTURE.md" for p in sorted(glob.glob(os.path.join(REPO, "app", "*.py")) + glob.glob(os.path.join(REPO, "scripts", "*.py")))
             if os.path.basename(p) not in arch]
 
     if subprocess.run([sys.executable, "eval/util_diff.py"], cwd=REPO, capture_output=True).returncode:
@@ -210,7 +210,7 @@ def broken():
         text = open(os.path.join(REPO, path)).read()
         if "—" in text:
             out.append(f"law 7: em dash in {path}")
-    for path in sorted(glob.glob(os.path.join(REPO, "*.py")) + glob.glob(os.path.join(REPO, "tests", "*.py")) + glob.glob(os.path.join(REPO, "training", "*.py")) + glob.glob(os.path.join(REPO, "eval", "*.py")) + glob.glob(os.path.join(REPO, "pixelmator", "*.py"))):
+    for path in sorted(glob.glob(os.path.join(REPO, "app", "*.py")) + glob.glob(os.path.join(REPO, "scripts", "*.py")) + glob.glob(os.path.join(REPO, "tests", "*.py")) + glob.glob(os.path.join(REPO, "training", "*.py")) + glob.glob(os.path.join(REPO, "eval", "*.py")) + glob.glob(os.path.join(REPO, "pixelmator", "*.py"))):
         with open(path) as f:
             n = sum(1 for _ in f)
         if n > MAX_LINES:

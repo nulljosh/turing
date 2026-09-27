@@ -6,7 +6,7 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "app"))
 
 import tools_image
 
@@ -336,7 +336,7 @@ class TestNoPixelmator(unittest.TestCase):
 
     def test_tools_image_mentions_neither_pixelmator_nor_osascript(self):
         """Pixelmator Pro is not launched by tools_image.py, not even to compare."""
-        path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "tools_image.py")
+        path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "app", "tools_image.py")
         with open(path) as f:
             src = f.read()
         self.assertNotIn("Pixelmator Pro", src)

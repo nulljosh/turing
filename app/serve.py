@@ -12,7 +12,7 @@ Stdlib http.server on purpose. This is a personal single-user endpoint on
 localhost, not a production server; a framework would be a dependency for
 nothing.
 
-Run: ./.venv/bin/python serve.py [--port 8127]
+Run: ./.venv/bin/python app/serve.py [--port 8127]
 Then in Nimble, choose the Ollama engine and set its base URL to
 http://localhost:8127
 

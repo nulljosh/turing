@@ -11,7 +11,7 @@ import tempfile
 import unittest
 
 os.environ["SAMANTHA_HEADLESS"] = "1"
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "app"))
 import tools_badge
 
 HAS_TOOLS = bool(shutil.which("magick") and shutil.which("potrace"))

@@ -7,7 +7,7 @@ nobody asked to see (NOT_FOR_MODELS: running a Shortcut, writing the clipboard,
 blanking the screen). Those stay behind her own command line until the harness can
 ask first. Point a client at it, for example in Claude Code:
 
-    claude mcp add samantha -- python3 /path/to/turing/mcp_server.py
+    claude mcp add samantha -- python3 /path/to/turing/app/mcp_server.py
 """
 import json
 import sys
@@ -48,7 +48,7 @@ def handle(msg):
         return None
     if method == "initialize":
         result = {"protocolVersion": (msg.get("params") or {}).get("protocolVersion", PROTOCOL), "capabilities": {"tools": {}},
-                  "serverInfo": {"name": "samantha", "version": open(tools.os.path.join(tools.os.path.dirname(tools.os.path.abspath(__file__)), "VERSION")).read().strip()}}
+                  "serverInfo": {"name": "samantha", "version": open(tools.os.path.join(tools.os.path.dirname(tools.os.path.dirname(tools.os.path.abspath(__file__))), "VERSION")).read().strip()}}
     elif method == "tools/list":
         result = {"tools": _tools()}
     elif method == "tools/call":

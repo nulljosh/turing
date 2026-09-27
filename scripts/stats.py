@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
 """Generate web/stats.json with docstring coverage, house docs status, and measured benchmarks.
 
-Run: python3 stats.py
+Run: python3 scripts/stats.py
 """
 import ast
 import json
 import sys
 import os
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "app"))
 
 # Fixed measured results from eval runs (tools and actions re-measured 2026-09-21, the rest 2026-09-20). Update these when re-running evals.
 MEASURED = {
@@ -50,34 +52,19 @@ def count_docstrings(file_path):
     return total, documented
 
 def collect_coverage():
-    """Collect docstring coverage for all top-level .py and eval/*.py files."""
+    """Collect docstring coverage for application, scripts, training, and test files."""
     repo_root = Path(".")
     files_coverage = {}
     total_items = 0
     total_documented = 0
 
-    # Top-level .py files
-    for py_file in repo_root.glob("*.py"):
-        total, documented = count_docstrings(py_file)
-        if total > 0:
-            files_coverage[py_file.name] = {"total": total, "documented": documented}
-            total_items += total
-            total_documented += documented
-
-    # eval/*.py files
-    for py_file in repo_root.glob("pixelmator/*.py"):
-        total, documented = count_docstrings(py_file)
-        if total > 0:
-            files_coverage[f"pixelmator/{py_file.name}"] = {"total": total, "documented": documented}
-            total_items += total
-            total_documented += documented
-
-    for py_file in sorted(repo_root.glob("eval/*.py")) + sorted(repo_root.glob("tests/*.py")) + sorted(repo_root.glob("training/*.py")):
-        total, documented = count_docstrings(py_file)
-        if total > 0:
-            files_coverage[f"eval/{py_file.name}"] = {"total": total, "documented": documented}
-            total_items += total
-            total_documented += documented
+    for folder in ("app", "scripts", "pixelmator", "eval", "tests", "training"):
+        for py_file in sorted((repo_root / folder).glob("*.py")):
+            total, documented = count_docstrings(py_file)
+            if total > 0:
+                files_coverage[str(py_file)] = {"total": total, "documented": documented}
+                total_items += total
+                total_documented += documented
 
     coverage_percent = (total_documented * 100 // total_items) if total_items > 0 else 0
     assert 0 <= coverage_percent <= 100, f"Coverage percent out of range: {coverage_percent}"
@@ -89,7 +76,7 @@ def check_house_docs():
     docs = {
         "README.md": Path("README.md").exists(),
         "WHITEPAPER.md": Path("WHITEPAPER.md").exists(),
-        "FAQ.md": Path("FAQ.md").exists(),
+        "FAQ.md": Path("docs/FAQ.md").exists(),
         "TROUBLESHOOTING.md": Path("training/TROUBLESHOOTING.md").exists(),
         "CLAUDE.md": Path("CLAUDE.md").exists(),
         "roadmap.md": Path("roadmap.md").exists(),

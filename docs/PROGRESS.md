@@ -1,5 +1,8 @@
 # Progress log
 
+- 2026-09-26 🎉 v4.16.3: tidied the repo root from 64 files to 20. Code in app/, helpers in scripts/, supporting docs in docs/; launchers, resource paths and all checks updated.
+  `v4.16.3 · 126 tools · 561 tests · docs coverage 100% · laws all hold · biggest app/tools_util.py 700 · actions 221/221 · parity 221/221 · util_diff 261/261`
+
 TLDR per loop round, newest first. The loop adds a line every round it ships something, then the scorecard.
 
 - 2026-09-26 v4.16.2: the third blind held-out set (eval/heldout3.jsonl, 465 rows, writer saw only the tool list): 343 right, 17 wrong past the guard, 36 right picks refused. Same story as the first two, 5.0 needs under ten and zero. Untouched by any tuning so far; it is the judge now.

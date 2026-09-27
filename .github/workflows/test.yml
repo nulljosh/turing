@@ -18,6 +18,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - run: python3 tests/test_layout.py
       - run: python3 tests/test_chat.py
       # her hands: the Pixelmator driver's own unit tests, no app needed
       - run: cd pixelmator && python3 -m unittest
@@ -29,9 +30,9 @@ jobs:
       - run: python3 eval/actions.py
       - run: python3 eval/web_parity.py
       # her utility tools: the Python side, and the JavaScript twin on the landing page, must say the same words
-      - run: python3 tools_util.py
+      - run: python3 app/tools_util.py
       # the router and every tool's self-check, all subprocesses and /Applications mocked
-      - run: SAMANTHA_HEADLESS=1 python3 tools.py
+      - run: SAMANTHA_HEADLESS=1 python3 app/tools.py
       - run: python3 eval/util_diff.py
       # speed: the router row runs anywhere, the two model rows skip clean without MLX
       - run: python3 eval/bench.py
@@ -68,7 +69,7 @@ jobs:
       - run: python3 tests/test_untrusted.py
       # law 12: a model-driven loop's own WRITE proposal still has to trace to what the user asked
       - run: python3 tests/test_intent.py
-      # the laws in LAWS.md, checked against every tool
+      # the laws in docs/LAWS.md, checked against every tool
       - run: python3 eval/laws.py
       # GGUF backend (Windows/Linux path, llama-cpp-python, CPU): pip only, no MLX, no internet
       # beyond the wheel. Skips cleanly and prints why when models/samantha-hands.gguf isn't
@@ -80,7 +81,7 @@ jobs:
   # eval/score.py is deliberately not run here: it needs the actual Qwen
   # model (MLX, Apple Silicon only) and a live brain API token, neither
   # of which a standard runner has. Run it locally, the pre-commit hook
-  # already gates every ask.py/chat.py/FAQ.md/prompts.jsonl change.
+  # already gates every app/ask.py, app/chat.py, docs/FAQ.md, and eval/prompts.jsonl change.
 
   docs:
     runs-on: ubuntu-latest
@@ -88,7 +89,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       # every function and class documented, no exceptions
-      - run: python3 stats.py --check
+      - run: python3 scripts/stats.py --check
       - name: README file references aren't stale
         run: |
           python3 - <<'PY'

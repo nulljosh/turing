@@ -20,7 +20,7 @@ import sys
 import time
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.insert(0, REPO)
+sys.path.insert(0, os.path.join(REPO, "app"))
 sys.path.insert(0, os.path.join(REPO, "eval"))
 sys.path.insert(0, os.path.join(REPO, "training"))
 os.environ["SAMANTHA_HEADLESS"] = "1"

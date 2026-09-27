@@ -18,7 +18,7 @@ Run: ./.venv/bin/python eval/basic_questions.py [--verbose] [--min N]
 """
 import os, sys, time
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "app"))
 from ask import ask
 
 # (question, any one of these substrings counts as correct)

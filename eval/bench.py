@@ -14,7 +14,7 @@ import time
 
 os.environ["SAMANTHA_HEADLESS"] = "1"
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.insert(0, REPO)
+sys.path.insert(0, os.path.join(REPO, "app"))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from actions import CASES  # the same commands the accuracy check uses, so the two numbers describe the same work

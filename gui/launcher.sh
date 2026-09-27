@@ -1,10 +1,10 @@
 #!/bin/sh
 # The app's first-run setup: finds or creates Samantha's own Python env in Application Support
 # (never inside the .app bundle, so Gatekeeper's read-only mount is never a problem), installs
-# requirements.txt into it once, then hands off to chat_pipe.py over stdin/stdout.
+# requirements.txt into it once, then hands off to app/chat_pipe.py over stdin/stdout.
 #
 # Model weights (the Qwen base model and Whisper) are not fetched here: mlx-lm and mlx-whisper
-# pull and cache them from HuggingFace the same way the terminal's chat.py already does, lazily,
+# pull and cache them from HuggingFace the same way the terminal's app/chat.py already does, lazily,
 # the first time a question or a recording actually needs one.
 #
 # --check creates/verifies the env and exits without installing requirements or starting her, so
@@ -32,4 +32,4 @@ if [ "$CHECK" -eq 1 ]; then
     exit 0
 fi
 
-exec "$VENV/bin/python3" -u "$RESOURCES/app/chat_pipe.py"
+exec "$VENV/bin/python3" -u "$RESOURCES/app/app/chat_pipe.py"

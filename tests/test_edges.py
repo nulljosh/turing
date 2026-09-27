@@ -11,7 +11,7 @@ from unittest import mock
 
 os.environ["SAMANTHA_HEADLESS"] = "1"
 os.environ["SAMANTHA_MEMORY"] = "/nonexistent/samantha-memory.json"  # never read or write anyone's real memory
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "app"))
 import ask
 import chat
 import harness

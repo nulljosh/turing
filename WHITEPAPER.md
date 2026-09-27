@@ -28,7 +28,7 @@ Then a teacher. Claude writes practice questions and answers from real passages 
 
 ## What she can do
 
-- **Talk.** `python3 chat.py --voice`. Whisper on the Mac turns speech into text, she answers, and she says it out loud.
+- **Talk.** `python3 app/chat.py --voice`. Whisper on the Mac turns speech into text, she answers, and she says it out loud.
 - **See.** "Look at my screen and tell me what's wrong with this chart." A 3B vision model on the Mac looks and answers. The same model reads one frame from the Mac's own camera ("what am I holding"), deleted right after.
 - **Act on screen.** "Click Sign in", "type hello", "press return". She reads the screen to find what you named, and asks before every step.
 - **Research.** "Research the history of the printing press." She reads several sources and writes a short brief with a source after every sentence. A sentence she cannot back up is cut.
@@ -48,7 +48,7 @@ Then a teacher. Claude writes practice questions and answers from real passages 
 She believes what she reads, never what it tells her to do. Text from a page, an email, a file or the screen is fenced as data before any model sees it and can never pick a tool; law 9 tries three injection attacks through every reading tool on every push. When a model proposes a write, it is checked against your own words before it can even ask you: a recipient, path or link that only came from something she read is stopped.
 
 
-Rules live in LAWS.md and are checked against every tool on every push. Anything that writes, sends or looks at your screen asks first. Private tools never reach a model's menu. Her hands stay in your home folder. On the 65-question knowledge check she gets 62 right and 0 confidently wrong; the rest she declines.
+Rules live in docs/LAWS.md and are checked against every tool on every push. Anything that writes, sends or looks at your screen asks first. Private tools never reach a model's menu. Her hands stay in your home folder. On the 65-question knowledge check she gets 62 right and 0 confidently wrong; the rest she declines.
 
 ## Limits, stated plainly
 

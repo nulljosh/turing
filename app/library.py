@@ -3,8 +3,8 @@ lead section of every one of Wikipedia's ~11,000 vital articles (the list Wikipe
 encyclopedia must cover), saved in ~/.samantha/library (or SAMANTHA_LIBRARY) and indexed with SQLite full-text search.
 A small model cannot hold facts in its weights without inventing them, so she reads instead.
 
-    python3 library.py fetch      # the fieldbook and the vital articles, about 10 minutes, polite to Wikipedia
-    python3 library.py ask "what is kinship"
+    python3 app/library.py fetch      # the fieldbook and the vital articles, about 10 minutes, polite to Wikipedia
+    python3 app/library.py ask "what is kinship"
 
 ask.general_knowledge falls back to look_up() when the web had no answer or could not be reached. Every answer
 names the page it came from. It answers what-is and who-was questions from the page of that name, and declines the rest.

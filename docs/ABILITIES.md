@@ -4,7 +4,7 @@ Every ability, in the words you say. Anything that writes, sends or looks at you
 
 ## Talk and listen
 
-- **Talk.** `./.venv/bin/python chat.py --voice`: you speak, Whisper transcribes on the Mac, she answers out loud. Talk over her while she's answering and a real run of your voice on the mic cuts her off and she starts listening right away. `--wake samantha` (off unless you pass it) keeps her idle, listening in short chunks, until you say the wake word first; then she drops it and takes the rest as the command.
+- **Talk.** `./.venv/bin/python app/chat.py --voice`: you speak, Whisper transcribes on the Mac, she answers out loud. Talk over her while she's answering and a real run of your voice on the mic cuts her off and she starts listening right away. `--wake samantha` (off unless you pass it) keeps her idle, listening in short chunks, until you say the wake word first; then she drops it and takes the rest as the command.
 - **Transcribe.** "Transcribe the video ~/Desktop/clip.mp4": the words out of any video or audio file in your home folder, same Whisper pipeline.
 
 ## See
@@ -49,6 +49,6 @@ Every ability, in the words you say. Anything that writes, sends or looks at you
 
 ## Limits, plainly
 
-Her own picker knows 77 of 106 tools by wording; the rest route through exact matches. Multi-step work borrows a small local model (qwen3:1.7b through Ollama). She never calls another MCP server on her own. She cannot reason like a frontier model and does not try; see `roadmap.md` for what is next and `LAWS.md` for what she will never do.
+Her own picker knows 77 of 106 tools by wording; the rest route through exact matches. Multi-step work borrows a small local model (qwen3:1.7b through Ollama). She never calls another MCP server on her own. She cannot reason like a frontier model and does not try; see `roadmap.md` for what is next and `docs/LAWS.md` for what she will never do.
 
-Windows and Linux now run the picker and chat: `training/export_gguf.py` fuses hands-adapter into the base model and quantizes it to GGUF, `Modelfile` turns that into an Ollama model (`ollama create samantha -f Modelfile`), and `serve.py`'s Ollama-compatible `/api/chat` is reachable from there with no MLX and no Mac. `tools_agent.py`'s `pick()` uses MLX when it's importable and falls back to llama-cpp-python over that same GGUF otherwise, same prompt, same stop token, same decoding. Everything that touches the Mac itself stays Mac-only regardless of backend: AppleScript (Music, Notes, Reminders, Calendar, Mail, Finder), the screen (see_screen, click, type), and the camera. Image tools run on ImageMagick, so they are not on that list. A phone is its own build-out, not covered here; see `roadmap.md`.
+Windows and Linux now run the picker and chat: `training/export_gguf.py` fuses hands-adapter into the base model and quantizes it to GGUF, `Modelfile` turns that into an Ollama model (`ollama create samantha -f Modelfile`), and `app/serve.py`'s Ollama-compatible `/api/chat` is reachable from there with no MLX and no Mac. `app/tools_agent.py`'s `pick()` uses MLX when it's importable and falls back to llama-cpp-python over that same GGUF otherwise, same prompt, same stop token, same decoding. Everything that touches the Mac itself stays Mac-only regardless of backend: AppleScript (Music, Notes, Reminders, Calendar, Mail, Finder), the screen (see_screen, click, type), and the camera. Image tools run on ImageMagick, so they are not on that list. A phone is its own build-out, not covered here; see `roadmap.md`.

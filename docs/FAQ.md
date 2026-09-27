@@ -102,15 +102,15 @@ No. Training runs entirely on-device via Apple's MLX framework, no cloud GPU, no
 
 ## Can I add my own FAQ entries?
 
-Yes. `FAQ.md` is a plain markdown file, `faq_match()` in `ask.py` re-parses it fresh on every question, no rebuild step. Add a new `## Your question here` header followed by a paragraph answer, in the same style as every existing entry, and it's immediately queryable.
+Yes. `docs/FAQ.md` is a plain markdown file, `faq_match()` in `app/ask.py` re-parses it fresh on every question, no rebuild step. Add a new `## Your question here` header followed by a paragraph answer, in the same style as every existing entry, and it's immediately queryable.
 
-## What happens if a question isn't in FAQ.md and isn't covered by the project docs either?
+## What happens if a question isn't in docs/FAQ.md and isn't covered by the project docs either?
 
 It falls through to retrieval plus generation, brain's index is searched for the closest real passages it has, then the base model generates an answer from that context. Quality varies at that point, that's the honest ceiling this whole project has been documenting, not a special error case.
 
 ## Can Samantha answer general-knowledge questions, not just project facts?
 
-Yes, for clean factual/definitional queries ("what's the capital of France"), via a DuckDuckGo-instant-answer-then-Wikipedia-summary fallback (`general_knowledge()` in ask.py, reusing nimble's existing pattern). It's genuinely unreliable for ambiguous subjects (picked Tchaikovsky's overture over Shakespeare's play for "who wrote Romeo and Juliet" on one search, a different wrong answer on the next, Wikipedia's own search ranking is what varies here, not this code). It never fires on project questions, an explicit keyword gate keeps "Turing" (also Alan Turing's name) from getting hijacked by unrelated Wikipedia articles. It also never fires on a task instruction ("write a commit message for X"), only on something actually shaped like a question, `is_question()` gates it after a task prompt once got hijacked into Wikipedia's Git article.
+Yes, for clean factual/definitional queries ("what's the capital of France"), via a DuckDuckGo-instant-answer-then-Wikipedia-summary fallback (`general_knowledge()` in app/ask.py, reusing nimble's existing pattern). It's genuinely unreliable for ambiguous subjects (picked Tchaikovsky's overture over Shakespeare's play for "who wrote Romeo and Juliet" on one search, a different wrong answer on the next, Wikipedia's own search ranking is what varies here, not this code). It never fires on project questions, an explicit keyword gate keeps "Turing" (also Alan Turing's name) from getting hijacked by unrelated Wikipedia articles. It also never fires on a task instruction ("write a commit message for X"), only on something actually shaped like a question, `is_question()` gates it after a task prompt once got hijacked into Wikipedia's Git article.
 
 ## Can it answer "who's the president" or "who's the prime minister of X" correctly?
 
@@ -124,21 +124,21 @@ In-voice drafting (journal entries, commit messages, README sections in house st
 
 Eventually: in-voice drafting, project Q&A from real data via retrieval, local autocomplete, or acting as a cheap first-pass judge/filter model, not competing with frontier models. Never, on this Mac Mini: pretrain a foundation model from raw text at frontier scale, that needs data-center-scale compute and a research team's budget, not a personal project's. Beating Claude or GPT was never the goal.
 
-## What is chat.py?
+## What is app/chat.py?
 
-A multi-turn conversation loop on top of ask.py's retrieval. Same underlying model and same FAQ-matching/general-knowledge/retrieval/generation chain, but it carries the last few exchanges as short-term memory, so a follow-up question like "what's its first model called" correctly resolves "its" to whatever was discussed a turn earlier, instead of needing every question spelled out standalone. Until 2026-09-13 it only had FAQ-matching and retrieval, not general-knowledge, so it couldn't answer "who's the president" even though ask.py could, that gap is now closed.
+A multi-turn conversation loop on top of app/ask.py's retrieval. Same underlying model and same FAQ-matching/general-knowledge/retrieval/generation chain, but it carries the last few exchanges as short-term memory, so a follow-up question like "what's its first model called" correctly resolves "its" to whatever was discussed a turn earlier, instead of needing every question spelled out standalone. Until 2026-09-13 it only had FAQ-matching and retrieval, not general-knowledge, so it couldn't answer "who's the president" even though app/ask.py could, that gap is now closed.
 
-## What's the actual difference between ask.py and chat.py?
+## What's the actual difference between app/ask.py and app/chat.py?
 
-ask.py is the one-shot core: a single question in, one grounded answer out, no memory of anything before it. chat.py wraps ask.py's exact same answer logic (FAQ-match, officeholder lookup, retrieval, generation) in a loop that also remembers recent turns, so it handles follow-ups and feels like a real conversation instead of restarting from zero every question. Neither is a separate model, both call the same Samantha.
+app/ask.py is the one-shot core: a single question in, one grounded answer out, no memory of anything before it. app/chat.py wraps app/ask.py's exact same answer logic (FAQ-match, officeholder lookup, retrieval, generation) in a loop that also remembers recent turns, so it handles follow-ups and feels like a real conversation instead of restarting from zero every question. Neither is a separate model, both call the same Samantha.
 
 ## What is the FAQ-matcher?
 
-`faq_match()` in ask.py: parses this file's own `## Question` headers and answer paragraphs, fuzzy-matches an incoming question against them, and returns the real answer verbatim when confident, skipping retrieval and generation entirely. Added 2026-09-13 after hand-writing one-off fixes for failing eval questions turned into whack-a-mole. Jumped the eval score from about 10 out of 28 correct to about 24 out of 28 in one change, the single biggest win of that session. The lesson: a well-maintained FAQ beats fancier retrieval or training tricks for the questions people actually ask most.
+`faq_match()` in app/ask.py: parses this file's own `## Question` headers and answer paragraphs, fuzzy-matches an incoming question against them, and returns the real answer verbatim when confident, skipping retrieval and generation entirely. Added 2026-09-13 after hand-writing one-off fixes for failing eval questions turned into whack-a-mole. Jumped the eval score from about 10 out of 28 correct to about 24 out of 28 in one change, the single biggest win of that session. The lesson: a well-maintained FAQ beats fancier retrieval or training tricks for the questions people actually ask most.
 
 ## Why is there no live chat demo on the landing page?
 
-The model runs locally via MLX on this Mac Mini, it isn't servable from a static Cloudflare Worker page without real hosting infrastructure (a running inference server, not just static files). Building that is real, separate infrastructure work, not attempted yet. Run `chat.py` locally instead for a real session.
+The model runs locally via MLX on this Mac Mini, it isn't servable from a static Cloudflare Worker page without real hosting infrastructure (a running inference server, not just static files). Building that is real, separate infrastructure work, not attempted yet. Run `app/chat.py` locally instead for a real session.
 
 ## What's the current eval score?
 
@@ -146,24 +146,24 @@ As of 2026-09-14 there are four separate harnesses, because one number was hidin
 
 ## How long does a question actually take to answer, and how much memory does it use?
 
-Measured directly on this Mac Mini: an FAQ-matched question (no model load at all) answers in about 0.04 seconds using about 26MB. A question that falls through to retrieval plus generation takes about 2 seconds and peaks around 570MB, mostly the base model loading into memory. Neither is slow enough to need a persistent server process, that's why `ask.py` is invoked fresh each time instead of running as a daemon.
+Measured directly on this Mac Mini: an FAQ-matched question (no model load at all) answers in about 0.04 seconds using about 26MB. A question that falls through to retrieval plus generation takes about 2 seconds and peaks around 570MB, mostly the base model loading into memory. Neither is slow enough to need a persistent server process, that's why `app/ask.py` is invoked fresh each time instead of running as a daemon.
 
-## How does ask.py decide when to trust a FAQ match versus generate an answer?
+## How does app/ask.py decide when to trust a FAQ match versus generate an answer?
 
 A similarity score (Python's difflib, comparing the question to every FAQ question) has to clear a threshold (0.55) before the FAQ answer is used. Below that, it falls through to retrieval plus generation instead, so a genuinely novel question doesn't get force-matched to an unrelated FAQ entry.
 
 ## How do I boot into Samantha and chat with her?
 
-Run `./samantha` from the turing repo root. It activates the venv and launches `chat.py`'s plain text loop, type a question, get an answer, `exit` or Ctrl+C to quit.
+Run `./samantha` from the turing repo root. It activates the venv and launches `app/chat.py`'s plain text loop, type a question, get an answer, `exit` or Ctrl+C to quit.
 
 ## Is there a TUI, not just a plain CLI?
 
-Yes. `./samantha --tui` launches a full-screen curses interface (`chat.py`'s `tui()` function, stdlib `curses`, no new dependency), same conversation logic as the plain CLI, just a scrolling full-screen view instead of line-by-line prints. `./samantha` with no flag stays plain-text.
+Yes. `./samantha --tui` launches a full-screen curses interface (`app/chat.py`'s `tui()` function, stdlib `curses`, no new dependency), same conversation logic as the plain CLI, just a scrolling full-screen view instead of line-by-line prints. `./samantha` with no flag stays plain-text.
 
 ## What happens if I run ./samantha with no flags at all?
 
-Plain-text mode, the default. No flag means the ordinary line-by-line CLI (`chat.py`'s `chat()` function), not the TUI. Only `--tui` changes that.
+Plain-text mode, the default. No flag means the ordinary line-by-line CLI (`app/chat.py`'s `chat()` function), not the TUI. Only `--tui` changes that.
 
 ## Can Samantha be used from other apps, not just the terminal?
 
-Yes. `./.venv/bin/python serve.py` serves her over the OpenAI chat API shape on port 8127 (`POST /v1/chat/completions`, `GET /v1/models`), which is the one wire format most local-LLM tooling already speaks. Nimble needs no code changes at all: pick its Ollama engine and set the base URL to `http://localhost:8127`. A question Samantha declines comes back as the literal string `UNKNOWN`, which is Nimble's own signal to fall through to another engine rather than showing a refusal as if it were an answer. Run `./.venv/bin/python test_nimble.py` to check the pipe still works; it starts the server itself, sends the exact request Nimble builds, and parses the reply the way Nimble does.
+Yes. `./.venv/bin/python app/serve.py` serves her over the OpenAI chat API shape on port 8127 (`POST /v1/chat/completions`, `GET /v1/models`), which is the one wire format most local-LLM tooling already speaks. Nimble needs no code changes at all: pick its Ollama engine and set the base URL to `http://localhost:8127`. A question Samantha declines comes back as the literal string `UNKNOWN`, which is Nimble's own signal to fall through to another engine rather than showing a refusal as if it were an answer. Run `./.venv/bin/python tests/test_nimble.py` to check the pipe still works; it starts the server itself, sends the exact request Nimble builds, and parses the reply the way Nimble does.

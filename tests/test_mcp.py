@@ -10,7 +10,7 @@ HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 def talk(*messages):
     """Send messages to a fresh server process and return its replies."""
-    p = subprocess.run([sys.executable, os.path.join(HERE, "mcp_server.py")], input="\n".join(json.dumps(m) for m in messages) + "\n",
+    p = subprocess.run([sys.executable, os.path.join(HERE, "app", "mcp_server.py")], input="\n".join(json.dumps(m) for m in messages) + "\n",
                        capture_output=True, text=True, timeout=60, env={**os.environ, "SAMANTHA_HEADLESS": "1"})
     return [json.loads(line) for line in p.stdout.splitlines()]
 
@@ -42,7 +42,7 @@ class McpTests(unittest.TestCase):
 
     def test_garbage_does_not_kill_the_server(self):
         """Garbage does not kill the server."""
-        p = subprocess.run([sys.executable, os.path.join(HERE, "mcp_server.py")], input='not json\n{"jsonrpc":"2.0","id":1,"method":"ping"}\n',
+        p = subprocess.run([sys.executable, os.path.join(HERE, "app", "mcp_server.py")], input='not json\n{"jsonrpc":"2.0","id":1,"method":"ping"}\n',
                            capture_output=True, text=True, timeout=60)
         replies = [json.loads(line) for line in p.stdout.splitlines()]
         self.assertEqual(replies[0]["error"]["code"], -32700)
@@ -57,10 +57,10 @@ class ClientTests(unittest.TestCase):
         import tempfile
         self.dir = tempfile.mkdtemp()
         self.cfg = os.path.join(self.dir, "mcp.json")
-        json.dump({"servers": {"samantha": [sys.executable, os.path.join(HERE, "mcp_server.py")], "broken": ["/nonexistent/server"]}}, open(self.cfg, "w"))
+        json.dump({"servers": {"samantha": [sys.executable, os.path.join(HERE, "app", "mcp_server.py")], "broken": ["/nonexistent/server"]}}, open(self.cfg, "w"))
         os.environ["SAMANTHA_MCP_CONFIG"] = self.cfg
         os.environ["SAMANTHA_HEADLESS"] = "1"
-        sys.path.insert(0, HERE)
+        sys.path.insert(0, os.path.join(HERE, "app"))
         import tools_util
         self.u = tools_util
 

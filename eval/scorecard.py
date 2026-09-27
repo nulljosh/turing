@@ -11,7 +11,7 @@ import sys
 
 os.environ["SAMANTHA_HEADLESS"] = "1"
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.insert(0, REPO)
+sys.path.insert(0, os.path.join(REPO, "app"))
 
 
 def run(*argv):
@@ -24,7 +24,7 @@ def run(*argv):
 def biggest():
     """The largest Python file and its line count."""
     sizes = []
-    for path in glob.glob(os.path.join(REPO, "*.py")) + glob.glob(os.path.join(REPO, "tests", "*.py")) + glob.glob(os.path.join(REPO, "training", "*.py")) + glob.glob(os.path.join(REPO, "eval", "*.py")) + glob.glob(os.path.join(REPO, "pixelmator", "*.py")):
+    for path in glob.glob(os.path.join(REPO, "app", "*.py")) + glob.glob(os.path.join(REPO, "scripts", "*.py")) + glob.glob(os.path.join(REPO, "tests", "*.py")) + glob.glob(os.path.join(REPO, "training", "*.py")) + glob.glob(os.path.join(REPO, "eval", "*.py")) + glob.glob(os.path.join(REPO, "pixelmator", "*.py")):
         with open(path) as f:
             sizes.append((sum(1 for _ in f), os.path.relpath(path, REPO)))
     return max(sizes)
@@ -37,7 +37,7 @@ def card():
     with open(os.path.join(REPO, "VERSION")) as f:
         version = f.read().strip()
     lines, name = biggest()
-    return " · ".join([f"v{version}", f"{len(tools.TOOLS)} tools", f"{tests} tests", run("stats.py", "--check"),
+    return " · ".join([f"v{version}", f"{len(tools.TOOLS)} tools", f"{tests} tests", run("scripts/stats.py", "--check"),
                        run("eval/laws.py").replace("laws: ", "laws "), f"biggest {name} {lines}",
                        "actions " + run("eval/actions.py").split()[0], "parity " + run("eval/web_parity.py").split()[0],
                        "util_diff " + run("eval/util_diff.py").split()[0]])
