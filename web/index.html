@@ -193,7 +193,7 @@
       .chat-source{font-size:12px;color:var(--muted);margin-top:4px}
       .chat-logo svg{width:160px;height:160px}
       @media (max-width: 500px) {
-        .stat-tiles{grid-template-columns:repeat(2,1fr)}
+        .stat-tiles{grid-template-columns:repeat(3,1fr);gap:8px}
         .hero{padding:40px 16px 48px}
         section{margin-top:56px}
         .pull-quote{margin:48px auto}
@@ -485,7 +485,6 @@ python3 -m venv .venv && ./.venv/bin/pip install mlx-lm
         var docsCov = s.docs_coverage.percent;
         var html = '<div class="stat-tiles">' +
           '<div class="stat-tile"><div class="stat-value">' + m.tools.after + '</div><div class="stat-label">Tools</div></div>' +
-          '<div class="stat-tile"><div class="stat-value">' + m.actions_eval + '</div><div class="stat-label">Actions eval</div></div>' +
           '<div class="stat-tile"><div class="stat-value">' + m.knowledge_sweep.after + '</div><div class="stat-label">Knowledge</div></div>' +
           '<div class="stat-tile"><div class="stat-value">' + docsCov + '%</div><div class="stat-label">Docs coverage</div></div>' +
           '</div>';
