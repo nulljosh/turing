@@ -46,19 +46,19 @@ _EVIDENCE = {
     "roll_dice": r"roll|dice|\bdie\b|\bd\d|throw|toss", "random_number": r"random|number", "make_password": r"password",
     "hash_text": r"hash|sha|checksum", "word_count": r"word", "tip": r"\btip", "is_prime": r"prime|factor|divid", "roman_numeral": r"roman",
     "morse_code": r"morse", "new_note": r"note|jot|write|remember|save|down", "say": r"\bsay|speak|announce|voice|aloud|out loud|words",
-    "free_when": r"\bfree\b|\bbusy\b|availab|do i have time|when am i|\bschedule\b",
+    "free_when": r"\bfree\b|\bbusy\b|availab|do i have time|when am i|\bschedule\b|open slot|\bgap\b",
     # Round eight covered 36 tools with zero picker training data; their evidence predates them (round-eight
     # gap). Words come from each tool's own docstring/templates, never copied out of eval/actions.py verbatim.
     "bluetooth_status": r"bluetooth", "calendar_tomorrow": r"tomorrow",
     "running_apps": r"running|open apps|apps open|what's open|apps are open|application",
     "recent_downloads": r"download", "unread_mail": r"mail|email|inbox",
-    "git_status": r"status|changed|dirty|\bdiff\b|\bbranch\b", "recent_commits": r"commit",
+    "git_status": r"status|changed|dirty|\bdiff\b|\bbranch\b|ahead|behind", "recent_commits": r"commit",
     "run_tests": r"\btest", "open_prs": r"\bprs?\b|pull request",
     "open_in_editor": r"editor|vscode|vs code|in code", "quit_app": r"quit|close|shut down|\bkill\b",
     "dark_mode": r"dark|\blight\b|appearance|theme", "do_not_disturb": r"disturb|\bdnd\b|focus|silence|quiet",
-    "zip_file": r"\bzip\b|compress", "unzip_file": r"unzip|extract", "trash_file": r"trash|delete|throw away|get rid of",
+    "zip_file": r"\bzip\b|compress", "unzip_file": r"unzip|extract|unpack", "trash_file": r"trash|delete|throw away|get rid of",
     "copy_file": r"\bcopy\b|duplicate", "move_file": r"\bmove\b|relocate", "rename_file": r"rename|new name|call it",
-    "append_note": r"\bnote\b", "add_event": r"calendar|event|schedule",
+    "append_note": r"\bnote\b", "add_event": r"calend[ae]r|event|schedule|appt|appointment",
     "complete_reminder": r"remind|done|finish|complete|check off|\bmark\b", "list_reminders": r"reminder",
     "search_notes": r"\bnotes?\b", "needs_attention": r"attention|needs me|focus on|deal with|need to handle|urgent",
     "find_file": r"find|locate|where(?:'s| is)", "folder_size": r"\bbig\b|\bsize\b|\bspace\b|take up",
@@ -71,7 +71,7 @@ _EVIDENCE = {
     # with no number is upscale_image, not resize_image; "crunch the numbers in X" is run_code,
     # not read_file's own words.
     "resize_image": r"resize|resolution|\bsize\b|\d",
-    "read_file": r"\bread\b|\bcat\b|\bshow\b|\bprint\b|display|\bsay\b|contents|written",
+    "read_file": r"\bread\b|\bcat\b|\bshow\b|\bprint\b|display|\bsay\b|contents|written|inside",
     # Round eleven: convert_time and time_in kept swapping for each other. A specific clock time
     # (a digit with am/pm, an hour:minute, noon/midnight, or a named zone) is convert_time's own
     # territory; "how late is it in X"/"what time is it in X" with no clock time is time_in's.
@@ -349,5 +349,14 @@ def _sound(tool, arg, query):
         if tools._url(arg) is None and " " not in arg.strip():
             return False  # one word that is no site. A phrase is something to look for, open_url searches it
 
-    # Default: arg must appear in the query (lowercased)
-    return tool in tools.TOOLS and arg.lower() in q_lower
+    # Default: arg must appear in the query (lowercased). A tool that only reads may reorder or
+    # reshape the words ("sqrt of 144" -> "sqrt(144)", "history of jazz" -> "jazz history"): every
+    # token of the argument still has to come from the sentence, just not in that order.
+    if tool not in tools.TOOLS:
+        return False
+    if arg.lower() in q_lower:
+        return True
+    if tool in WRITES:
+        return False
+    words = re.findall(r"[a-z0-9]+", arg.lower())
+    return bool(words) and all(w in q_lower for w in words)
