@@ -15,6 +15,10 @@ URL = next((a for a in sys.argv[1:] if a.startswith("http")), "http://localhost:
 SHOTS = sys.argv[sys.argv.index("--shots") + 1] if "--shots" in sys.argv else None
 
 # (what a visitor types, text her reply must contain, optional check on the desk)
+# the landing page's own title, read from the file so a redesign never breaks the reset check
+import html as _html, os as _os, re as _re
+H1 = _html.unescape(_re.sub(r"<[^>]+>", "", _re.search(r"<h1[^>]*>(.*?)</h1>", open(_os.path.join(_os.path.dirname(__file__), "..", "web", "index.html")).read(), _re.S).group(1))).strip()
+
 STEPS = [
     ("set the volume to 30", "Volume at 30.", lambda p: p.inner_text("#desk-vol") == "Vol 30"),
     ("can you open chrome and go to github.com", "Opened https://github.com in", lambda p: "github.com" in p.inner_text("#desk-space")),
@@ -57,7 +61,7 @@ STEPS = [
     ("change the title to <img src=x onerror=alert(1)><script>alert(2)</script>", "", lambda p: p.locator("h1 img, h1 script").count() == 0 and "<img" in p.inner_text("h1")),
     ("take a note <svg onload=alert(3)>", "Noted", lambda p: p.locator("#desk-space svg[onload]").count() == 0),
     ("go to javascript:alert(4)", "", lambda p: p.locator("a[href^='javascript']").count() == 0),
-    ("reset the page", "back to how Joshua left it", lambda p: p.inner_text("h1") == "Turing" and not p.evaluate("document.documentElement.dataset.theme")),
+    ("reset the page", "back to how Joshua left it", lambda p: p.inner_text("h1") == H1 and not p.evaluate("document.documentElement.dataset.theme")),
     ("<img src=x onerror=alert(1)>", "", lambda p: p.locator("#chat-transcript img").count() == 0),
 ]
 
