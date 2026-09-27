@@ -33,3 +33,11 @@ namespace_id = "2110"
 
 [observability]
 enabled = true
+
+[[ratelimits]]
+name = "SPEAK_LIMIT"
+namespace_id = "2111"
+
+  [ratelimits.simple]
+  limit = 4
+  period = 60

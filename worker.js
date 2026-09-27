@@ -245,11 +245,40 @@ async function cached(ctx, kind, q, make) {
 // matter to it, but this still matches Ollama's real shape byte for byte for any other client.
 const ollamaReply = text => ({ model: "samantha", message: { role: "assistant", content: text }, done: true });
 
+// Her voice over HTTP. {"text": "..."} in, audio out: format "pcm8" is raw 8-bit unsigned mono at 16kHz,
+// what Joshua Tree's Sound Blaster driver plays with no decoder, anything else is an mp3 for browsers.
+// ElevenLabs does the voicing (the key is a Worker secret, never in the kernel); the same words come
+// back from cache for a day, so a repeated phrase never spends a second credit.
+const SPEAK_VOICE = "EXAVITQu4vr4xnSDxMaL"; // Sarah, same voice as app/voice.py
+export function pcm16ToPcm8(buf) {
+  const src = new DataView(buf), out = new Uint8Array(buf.byteLength >> 1);
+  for (let i = 0; i < out.length; i++) out[i] = (src.getInt16(i * 2, true) >> 8) + 128;
+  return out;
+}
+async function speak(env, ctx, text, format) {
+  const pcm = format === "pcm8";
+  const key = new Request(`${HOME}/__speak/${pcm ? "pcm8" : "mp3"}/${encodeURIComponent(text)}`);
+  const hit = await caches.default.match(key);
+  if (hit) return hit;
+  if (!env.ELEVENLABS_API_KEY) return new Response("No voice configured", { status: 503 });
+  const r = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${SPEAK_VOICE}?output_format=${pcm ? "pcm_16000" : "mp3_44100_128"}`, {
+    method: "POST",
+    headers: { "xi-api-key": env.ELEVENLABS_API_KEY, "Content-Type": "application/json" },
+    body: JSON.stringify({ text, model_id: "eleven_flash_v2_5" }),
+  });
+  if (!r.ok) return new Response("Voice unavailable", { status: 502 });
+  const audio = pcm ? pcm16ToPcm8(await r.arrayBuffer()) : await r.arrayBuffer();
+  const res = new Response(audio, { headers: { "Content-Type": pcm ? "application/octet-stream" : "audio/mpeg",
+    "Cache-Control": "public, max-age=86400", "X-Content-Type-Options": "nosniff" } });
+  ctx.waitUntil(caches.default.put(key, res.clone()));
+  return res;
+}
+
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
     const isChat = url.pathname === "/api/chat";
-    if (!["/api/ask", "/api/pick", "/api/draw", "/api/chat"].includes(url.pathname)) return env.ASSETS.fetch(request);
+    if (!["/api/ask", "/api/pick", "/api/draw", "/api/chat", "/api/speak"].includes(url.pathname)) return env.ASSETS.fetch(request);
     if (request.method !== "POST") return new Response("POST only", { status: 405 });
     // JSON only. A form on someone else's page cannot send application/json without a preflight, and there is no CORS here to pass one.
     if (!(request.headers.get("content-type") || "").startsWith("application/json")) return new Response("JSON only", { status: 415 });
@@ -271,6 +300,14 @@ export default {
       return Response.json({ answer: "That's a lot of drawing for one minute. Give me a moment." }, { status: 429 });
     let body = {};
     try { body = await request.json(); } catch {}
+
+    if (url.pathname === "/api/speak") {
+      // every word costs real ElevenLabs credits: a tight per-visitor allowance and a hard length cap
+      if (env.SPEAK_LIMIT && !(await env.SPEAK_LIMIT.limit({ key: ip })).success) return new Response("Too much talking for one minute", { status: 429 });
+      const text = String(body.text || "").replace(/[\u0000-\u001f]/g, " ").trim().slice(0, 300);
+      if (!text) return new Response("Nothing to say", { status: 400 });
+      return speak(env, ctx, text, body.format);
+    }
 
     if (isChat) {
       // Ollama's request shape: {"model":..., "messages":[{"role":"user"|"assistant","content":...}, ...], "stream":false}.
