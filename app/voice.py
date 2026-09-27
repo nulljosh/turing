@@ -128,10 +128,13 @@ def speak(text):
     import tools
     if tools.HEADLESS:
         return False
+    import face
+    face.set_state("talk")
     proc = subprocess.Popen(speaker(text[:500]))
     rec = shutil.which("rec")
     if not rec:
         proc.wait()
+        face.set_state("idle")
         return False
     mic = subprocess.Popen([rec, "-q", "-t", "raw", "-r", "16000", "-e", "signed", "-b", "16", "-c", "1", "-"],
                             stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
@@ -150,6 +153,7 @@ def speak(text):
     finally:
         mic.kill()
         proc.wait()
+        face.set_state("idle")
     return barged
 
 
@@ -179,7 +183,10 @@ def converse(listen=None, say=None, show=print, turns=None, wake=None):
     while turns is None or turns > 0:
         if turns is not None:
             turns -= 1
+        import face
+        face.set_state("listen")
         text = listen()
+        face.set_state("idle")
         if text is None:
             show("I can't hear the microphone: install sox (brew install sox) and allow microphone access for this terminal.")
             return answered

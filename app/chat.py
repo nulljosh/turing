@@ -431,6 +431,9 @@ if __name__ == "__main__":
             i = sys.argv.index("--wake") + 1
             nxt = sys.argv[i] if i < len(sys.argv) else None
             wake = nxt if nxt and not nxt.startswith("--") else voice.WAKE_WORD
+        if "--face" in sys.argv:
+            import face
+            face.start()
         voice.converse(wake=wake)
     elif "--tui" in sys.argv:
         tui()
