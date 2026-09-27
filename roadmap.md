@@ -1,6 +1,6 @@
 # Roadmap
 
-Samantha is a small local model (Qwen, fine-tuned) with hands: she can open apps, browse, read your files, answer from your notes, and act on your Mac, entirely offline, no account, nothing sent out. v4.15.0 is about to cut. She has 125 tools. Her own picker (not the exact-match router) gets 958 of 1352 test phrasings right, with 61 wrong picks that slip past the safety guard. She knows 62 of 65 held-out facts with nothing confidently wrong. She runs natively on the Mac, and the picker and chat both run on Windows and Linux too. The installer is signed with Developer ID and notarized, so it opens on a stranger's Mac with no warning.
+Samantha is a small local model (Qwen, fine-tuned) with hands: she can open apps, browse, read your files, answer from your notes, and act on your Mac, entirely offline, no account, nothing sent out. v4.16.3 is live, with code in app/, helpers in scripts/, and supporting documents in docs/. She has 126 tools. Her own picker gets 343 of 465 blind test phrasings right, with 17 wrong picks past the safety guard and 36 right picks refused. She knows 62 of 65 held-out facts with nothing confidently wrong. She runs natively on the Mac, and the picker and chat both run on Windows and Linux too. The installer is signed with Developer ID and notarized, so it opens on a stranger's Mac with no warning.
 
 Full phase-by-phase history lives in `docs/HISTORY.md` and the picker's model comparisons in `docs/BAKEOFF.md`.
 
@@ -70,7 +70,9 @@ Ask her to draft something in our voice, or answer a question about one of our o
 - [ ] Picker trick: train on her mistakes. Write new templates for the kinds of wording she misses, never copy test cases into training
 - [ ] Picker trick: teacher and student. Have the local 8B write varied phrasings per tool with labels, train on those alongside the templates
 - [ ] Picker trick: more "not a command" and "not sure" examples so she abstains instead of guessing
-- [ ] PaintBar: share its background setting with Samantha's own paint tool, add launch at login
+- [ ] PaintBar (moved to nulljosh/paintbar): share its background setting with Samantha's own paint tool, add launch at login
+- [ ] Landing demo logo is too basic: real design pass, the SVG bloom rules look thin next to the real tool
+- [ ] Landing demo graphics are slow: profile paint.js and drawLogo, cap cells, batch with requestAnimationFrame
 - [ ] Two-step picking: pick a family first, then a tool inside it, so no single choice is bigger than about twelve
 - [ ] System family, the rest: brightness and turning bluetooth on or off (this Mac has no CLI for either and nothing gets installed; dark mode, running apps, quit an app, bluetooth status and Do Not Disturb via a Shortcut shipped in 4.8)
 - [ ] Browser family, the rest: download a file
