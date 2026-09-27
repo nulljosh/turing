@@ -87,7 +87,7 @@
     [new RegExp("^(?:search|look up|find) (?:on )?(" + SITE_NAMES + ") for (.+)$|^(?:search|look up) (.+) on (" + SITE_NAMES + ")$", "i"),
      function (m) { return ["open_url", siteSearch(m[1] || m[4], m[2] || m[3])]; }],
     [new RegExp("^(?:open |go to |pull up )?(" + SITE_NAMES + ") and search(?: it)?(?: for)? (.+)$", "i"), function (m) { return ["open_url", siteSearch(m[1], m[2])]; }],
-    [/^(?:search|google|look up)(?: search)?(?: (?:the web|online|the internet|on google|google))?(?: for)? (.+)$/i, function (m) { return ["web_search", m[1]]; }],
+    [/^(?!look up .+ in the dictionary$)(?:search|google|look up)(?: search)?(?: (?:the web|online|the internet|on google|google))?(?: for)? (.+)$/i, function (m) { return ["web_search", m[1]]; }],
     [/^(?:read|fetch) (?:me )?(?:the )?(?:page |site |website )?(?:at )?(https?:\/\/\S+|[\w-]+(?:\.[\w-]+)+(?:\/\S*)?)$|^what does (https?:\/\/\S+|[\w-]+(?:\.[\w-]+)+(?:\/\S*)?) say$/i,
      function (m) { return ["read_page", m[1] || m[2]]; }],
     [/^summari[sz]e (?:this |the )?(?:page|tab)$/i, function () { return ["summarize", ""]; }],
@@ -400,6 +400,18 @@
     var o = zone ? { timeZone: zone } : {};
     return new Date().toLocaleTimeString("en-US", Object.assign({ hour: "numeric", minute: "2-digit" }, o)).replace(/ /g, " ");
   }
+  // define_word: on the Mac she reads the built-in dictionary (util_words.define_word). The page has no dictionary,
+  // so it knows the words her training uses and says so for the rest.
+  var WORDS = { serendipity: "noun: finding something good by chance.", ephemeral: "adjective: lasting a very short time.",
+    ubiquitous: "adjective: found everywhere.", gregarious: "adjective: fond of company, sociable.",
+    laconic: "adjective: using very few words.", quixotic: "adjective: idealistic in an unrealistic way.",
+    petrichor: "noun: the smell of rain on dry ground.", defenestrate: "verb: to throw out of a window.",
+    obfuscate: "verb: to make something unclear on purpose." };
+  U.define_word = function (word) {
+    var w = (word || "").toLowerCase().trim();
+    if (!w) return 'Define what? Say it like "define serendipity".';
+    return WORDS[w] ? w + ", " + WORDS[w] : "On your Mac I read its own dictionary. This page only knows a few words, like serendipity or laconic.";
+  };
   U.time_in = function (place) {
     var key = (place || "").toLowerCase().trim();
     if (!key) return "It is " + clock() + ".";
@@ -738,6 +750,7 @@
     [/^(?:calc(?:ulate)?|compute|work out|math)[: ]+(.+)$/i, function (m) { return ["calculate", m[1]]; }],
     [/^(?:convert )?(-?\d+) (?:to|in|into) roman(?: numerals?)?$/i, function (m) { return ["roman_numeral", m[1]]; }],
     [/^convert (.+)$/i, function (m) { return ["convert_units", m[1]]; }],
+    [/^(?:define|look up|dictionary)[: ]+(?:the word )?["']?([\w' -]+?)["']?(?: in the dictionary)?$|^(?:what(?:'s| is) )?the (?:definition|dictionary meaning) of ["']?([\w' -]+?)["']?$/i, function (m) { return ["define_word", (m[1] || m[2])]; }],
     [/^what time is it in (.+)$|^(?:what(?:'s| is) )?(?:the )?time in (.+)$/i, function (m) { return ["time_in", (m[1] || m[2])]; }],
     [/^what(?:'s| is)(?: the)? date(?: today)?$|^what day is it(?: today)?$|^today'?s date$/i, function (m) { return ["current_date", ""]; }],
     [/^(?:how many )?days? between (.+?) and (.+)$/i, function (m) { return ["date_math", "between " + m[1] + " and " + m[2]]; }],

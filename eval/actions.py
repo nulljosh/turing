@@ -20,6 +20,9 @@ import tools
 
 # (command, expected_tool_or_None, expected_arg_substring_or_None)
 CASES = [
+    ("define serendipity", "define_word", "serendipity"),
+    ("look up laconic in the dictionary", "define_word", "laconic"),
+    ("what is the definition of ephemeral", "define_word", "ephemeral"),
     # opening apps
     ("open chrome", "open_app", "chrome"),
     ("launch safari", "open_app", "safari"),
