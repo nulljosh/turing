@@ -391,7 +391,7 @@ def tui():
         def confirm(name, args):
             """Ask on the bottom line whether to run a tool that writes or sends."""
             h, _ = stdscr.getmaxyx()
-            stdscr.addstr(h - 1, 0, f"Run {name}({', '.join(args)})? [y/N] "[: stdscr.getmaxyx()[1] - 1])
+            stdscr.addstr(h - 1, 0, f"{harness.confirm_line(name, args)} [y/N] "[: stdscr.getmaxyx()[1] - 1])
             stdscr.refresh()
             return stdscr.getkey().lower() == "y"
 

@@ -5,8 +5,12 @@ harness.Session and chat.safe_turn underneath, so a native window app needs zero
 Protocol, one JSON object per line, unbuffered stdin/stdout:
     host -> her:  {"ask": "what you typed"}
     her -> host:  {"working": "tool_name(args)"}      zero or more, as each tool call is found
-    her -> host:  {"confirm": {"name": "...", "args": [...]}}   only before a write; blocks for a reply
+    her -> host:  {"confirm": {"name": "...", "args": [...], "note": "..."}}   only before a write; blocks for a
+                  reply. "note" only appears when the step costs money (restyle, keep_look) and names the price
     host -> her:  {"yes": true}                        or {"yes": false}
+    her -> host:  {"mode": {"voice": bool, "face": bool}}   only after a switch: {"ask": "/voice"} or {"ask": "/face"}
+                  (any line chat.toggle() knows). Voice on here means she says every reply out loud; face on opens
+                  her face window. Neither ever reaches the harness
     her -> host:  {"answer": "the final reply"}         exactly one per turn, always last
 
     python3 app/chat_pipe.py            # runs the protocol over real stdin/stdout
@@ -19,6 +23,33 @@ import feedback
 import followup
 
 HISTORY_TURNS = 10  # how many past turns a follow-up ("again", "again for X", "open it") can see
+SWITCHES = {"/voice": "voice", "voice": "voice", "voice on": "voice", "voice off": "voice", "voice mode": "voice", "talk": "voice",
+            "/face": "face", "/video": "face", "face": "face", "video": "face", "face on": "face", "face off": "face",
+            "video on": "face", "video off": "face"}  # chat.toggle()'s words, plus "voice off" since here voice stays a mode
+
+
+def switch(which, modes):
+    """Flip voice or face for this session and say what changed. modes is {"voice": bool, "face": server or None}.
+    The face window prints nothing to stdout here: that would break the protocol."""
+    if which == "voice":
+        modes["voice"] = not modes["voice"]
+        return "Voice on: I'll say my replies out loud." if modes["voice"] else "Voice off."
+    import face
+    if modes["face"]:
+        modes["face"].shutdown()
+        modes["face"] = None
+        return "Face off."
+    if not face.available():
+        return f"No face yet: make one with the character-creator skill into {face.CHARACTER}."
+    modes["face"] = face.start()
+    return "Face on." if modes["face"] else "Her face is already open in another window."
+
+
+def _say_aloud(text):
+    """Speak one reply in the background so the pipe never waits on the audio."""
+    import threading
+    import voice
+    threading.Thread(target=voice.speak, args=(text,), daemon=True).start()
 
 
 def run(read_line, write, ask_fn):
@@ -35,6 +66,7 @@ def run(read_line, write, ask_fn):
     exactly like it does through harness.Session, even though a fresh Session is made every turn."""
     last = {"q": None, "tool": "answer", "args": (), "reply": None}
     history = []
+    modes = {"voice": False, "face": None}
     while True:
         line = read_line()
         if line is None:
@@ -50,6 +82,12 @@ def run(read_line, write, ask_fn):
             continue
 
         bare = question.strip()
+        which = SWITCHES.get(bare.lower()) if isinstance(bare, str) else None
+        if which:
+            said = switch(which, modes)
+            write({"mode": {"voice": modes["voice"], "face": bool(modes["face"])}})
+            write({"answer": said})
+            continue
         if feedback.is_summary(bare):
             write({"answer": feedback.feedback_summary()})
             continue
@@ -77,7 +115,11 @@ def run(read_line, write, ask_fn):
 
         def confirm(name, args):
             """Ask the host, block for exactly one reply line."""
-            write({"confirm": {"name": name, "args": list(args)}})
+            import harness
+            ask = {"name": name, "args": list(args)}
+            if harness.confirm_note(name):
+                ask["note"] = harness.confirm_note(name)
+            write({"confirm": ask})
             reply = read_line()
             try:
                 return bool(json.loads(reply or "{}").get("yes"))
@@ -90,6 +132,8 @@ def run(read_line, write, ask_fn):
         history.append({"q": question, "calls": list(calls), "result": answer or ""})
         del history[:-HISTORY_TURNS]
         write({"answer": answer if answer is not None else "That is not a command I know."})
+        if modes["voice"] and answer:
+            _say_aloud(answer)
 
 
 def _stdio():

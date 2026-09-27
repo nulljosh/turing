@@ -5,6 +5,8 @@ Every ability, in the words you say. Anything that writes, sends or looks at you
 ## Talk and listen
 
 - **Talk.** `./.venv/bin/python app/chat.py --voice`: you speak, Whisper transcribes on the Mac, she answers out loud. Talk over her while she's answering and a real run of your voice on the mic cuts her off and she starts listening right away. `--wake samantha` (off unless you pass it) keeps her idle, listening in short chunks, until you say the wake word first; then she drops it and takes the rest as the command.
+- **Change her voice.** "What voices do you have" lists the ElevenLabs premade voices her key can use. "Change your voice to George" switches for good, after a yes. Free.
+- **Change her look.** "Change your look: ginger with glasses", "make yourself a redhead": a new portrait, about 5 cents, kept aside until you say "keep that look", which renders her new idle and talking loops for about $1.40. Both ask first and say the price. Setup: docs/VOICE-AND-FACE.md.
 - **Transcribe.** "Transcribe the video ~/Desktop/clip.mp4": the words out of any video or audio file in your home folder, same Whisper pipeline.
 
 ## See

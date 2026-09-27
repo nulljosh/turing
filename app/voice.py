@@ -89,8 +89,22 @@ def should_barge_in(levels, threshold=BARGE_THRESHOLD, run=BARGE_RUN):
 
 
 ELEVEN_URL = "https://api.elevenlabs.io/v1/text-to-speech/{voice}?output_format=mp3_44100_128"
-ELEVEN_VOICE = os.environ.get("ELEVENLABS_VOICE", "EXAVITQu4vr4xnSDxMaL")  # Sarah, a premade voice the free plan can use; set your own id
+ELEVEN_VOICE = "EXAVITQu4vr4xnSDxMaL"  # Sarah, a premade voice the free plan can use: the fallback when nothing else names one
 CACHE_DIR = os.path.expanduser(os.environ.get("SAMANTHA_VOICE_CACHE", "~/.samantha/voice-cache"))  # one mp3 per line she has said
+
+
+def current_voice():
+    """The ElevenLabs voice id she speaks with: ELEVENLABS_VOICE when set, else the current character's
+    character.json "voice_id" (set_voice writes it), else Sarah."""
+    if os.environ.get("ELEVENLABS_VOICE"):
+        return os.environ["ELEVENLABS_VOICE"]
+    import json
+    path = os.path.join(os.path.expanduser(os.environ.get("SAMANTHA_CHARACTER", "~/.samantha/characters/samantha")), "character.json")
+    try:
+        with open(path) as f:
+            return json.load(f).get("voice_id") or ELEVEN_VOICE
+    except (OSError, ValueError, AttributeError):
+        return ELEVEN_VOICE
 
 
 def eleven_mp3(text, key, fetch=None):
@@ -100,11 +114,12 @@ def eleven_mp3(text, key, fetch=None):
     import hashlib
     import json
     import urllib.request
-    cache = os.path.join(CACHE_DIR, hashlib.sha256(f"{ELEVEN_VOICE}|eleven_flash_v2_5|{text}".encode()).hexdigest() + ".mp3")
+    voice_id = current_voice()
+    cache = os.path.join(CACHE_DIR, hashlib.sha256(f"{voice_id}|eleven_flash_v2_5|{text}".encode()).hexdigest() + ".mp3")
     if os.path.isfile(cache) and os.path.getsize(cache) > 0:
         return cache  # said this exact line before: replay it, no second credit
     try:
-        req = urllib.request.Request(ELEVEN_URL.format(voice=ELEVEN_VOICE), method="POST",
+        req = urllib.request.Request(ELEVEN_URL.format(voice=voice_id), method="POST",
                                      data=json.dumps({"text": text, "model_id": "eleven_flash_v2_5"}).encode(),
                                      headers={"xi-api-key": key, "Content-Type": "application/json", "Accept": "audio/mpeg"})
         audio = (fetch or (lambda r: urllib.request.urlopen(r, timeout=15).read()))(req)

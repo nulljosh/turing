@@ -6,12 +6,13 @@ name still lives on the tools module and eval/actions.py can keep patching it th
 """
 import re
 
+import tools_character
 import tools_dev
 import tools_organizer
 import tools_system
 from tools_apps import _MUSIC, duration
 
-FAMILIES = (tools_organizer, tools_system, tools_dev)
+FAMILIES = (tools_organizer, tools_system, tools_dev, tools_character)
 
 
 def register_families(tools_dict, tools_globals):
@@ -25,14 +26,14 @@ def register_families(tools_dict, tools_globals):
 # message, a clipboard write loses what was there, the screen goes dark). Only a command that
 # names them runs them, never a model's own choice. The real fix is the harness asking first.
 NOT_FOR_MODELS = {"ask_llm", "see_screen", "see_image", "see_camera", "click_text", "type_text", "press_key", "run_shortcut", "copy_to_clipboard", "sleep_display", "call_mcp_tool", "close_tab", "remember", "recall", "forget", "read_screen", "ask_screen",
-                   "edit_last_draft", "edit_file", "write_code"}  # her memory is private: only her own commands and the harness touch it. edit_last_draft needs the in-process path it just wrote, and confirms itself with the diff, so it is phrase-routed only, never a model's own pick or MCP
+                   "edit_last_draft", "edit_file", "write_code", "restyle", "keep_look"}  # her memory is private: only her own commands and the harness touch it. edit_last_draft needs the in-process path it just wrote, and confirms itself with the diff, so it is phrase-routed only, never a model's own pick or MCP
 
 # Tools that leave something behind or send something out: a note, a reminder, a file on the
 # Desktop, a Shortcut, the clipboard, a dark screen. The harness asks before any of these run.
 WRITES = {"ask_llm", "see_screen", "see_image", "see_camera", "click_text", "type_text", "press_key", "ask_screen", "read_screen", "remember", "forget", "close_tab", "call_mcp_tool", "new_note", "new_reminder", "make_logo", "paint_image", "run_shortcut", "copy_to_clipboard", "sleep_display", "save_research", "write_document", "run_code",
           "remove_background", "upscale_image", "enhance_image", "grayscale_image", "rotate_image", "flip_image",
           "resize_image", "crop_square", "convert_image", "move_file", "copy_file", "rename_file", "zip_file", "unzip_file", "trash_file",
-          "complete_reminder", "add_event", "append_note", "quit_app", "do_not_disturb", "run_tests"}
+          "complete_reminder", "add_event", "append_note", "quit_app", "do_not_disturb", "run_tests", "set_voice", "restyle", "keep_look"}
 
 
 # A pick with no argument to check (disk_space, uptime...) or a loose one needs evidence in the sentence: some word that

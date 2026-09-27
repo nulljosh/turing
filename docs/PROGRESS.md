@@ -1,5 +1,8 @@
 # Progress log
 
+- 2026-09-27 🎉 v4.17.0: ask her to change her voice ("change your voice to George", free) or her look ("make yourself ginger", about 5 cents, "keep that look" about $1.40, both ask first and say the price). The Mac app gets Voice and Face buttons and a Customize menu.
+  `v4.17.0 · 131 tools · 586 tests · docs coverage 100% · laws all hold · biggest eval/gen_heldout2.py 647 · actions 231/231 · parity 231/231 · util_diff 261/261`
+
 - 2026-09-26 🎉 v4.16.3: tidied the repo root from 64 files to 20. Code in app/, helpers in scripts/, supporting docs in docs/; launchers, resource paths and all checks updated.
   `v4.16.3 · 126 tools · 561 tests · docs coverage 100% · laws all hold · biggest app/tools_util.py 700 · actions 221/221 · parity 221/221 · util_diff 261/261`
 

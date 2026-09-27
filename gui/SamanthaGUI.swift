@@ -7,7 +7,8 @@ import Foundation
 /// One line she sent back, parsed. Pure, so --check can exercise it with no process, no model.
 enum PipeMessage: Equatable {
     case working(String)
-    case confirm(name: String, args: [String])
+    case confirm(name: String, args: [String], note: String)
+    case mode(voice: Bool, face: Bool)
     case answer(String)
 }
 
@@ -18,7 +19,10 @@ func parseLine(_ line: String) -> PipeMessage? {
     if let working = obj["working"] as? String { return .working(working) }
     if let answer = obj["answer"] as? String { return .answer(answer) }
     if let confirm = obj["confirm"] as? [String: Any], let name = confirm["name"] as? String {
-        return .confirm(name: name, args: (confirm["args"] as? [Any])?.map { "\($0)" } ?? [])
+        return .confirm(name: name, args: (confirm["args"] as? [Any])?.map { "\($0)" } ?? [], note: confirm["note"] as? String ?? "")
+    }
+    if let mode = obj["mode"] as? [String: Any] {
+        return .mode(voice: mode["voice"] as? Bool ?? false, face: mode["face"] as? Bool ?? false)
     }
     return nil
 }
@@ -27,6 +31,18 @@ func parseLine(_ line: String) -> PipeMessage? {
 func askLine(_ text: String) -> String {
     let data = try! JSONSerialization.data(withJSONObject: ["ask": text])
     return String(data: data, encoding: .utf8)! + "\n"
+}
+
+/// The sentence a Customize sheet sends: the same words she routes when you type them.
+func customizeLine(_ kind: Customize, _ text: String) -> String {
+    let text = text.trimmingCharacters(in: .whitespacesAndNewlines)
+    return kind == .voice ? "change your voice to \(text)" : "change your look: \(text)"
+}
+
+/// Which Customize sheet is open.
+enum Customize: String, Identifiable {
+    case voice, look
+    var id: String { rawValue }
 }
 
 func yesLine(_ yes: Bool) -> String {
@@ -38,8 +54,11 @@ func yesLine(_ yes: Bool) -> String {
 final class Samantha: ObservableObject {
     @Published var transcript: [String] = []
     @Published var busy = false
-    @Published var pending: (name: String, args: [String])?
+    @Published var pending: (name: String, args: [String], note: String)?
     @Published var status = "Starting…"
+    @Published var voiceOn = false
+    @Published var faceOn = false
+    @Published var customize: Customize?
     private var job: Process?
     private var stdin: FileHandle?
     private var buffer = ""
@@ -101,7 +120,10 @@ final class Samantha: ObservableObject {
         case .working(let text):
             transcript.append("  [\(text)]")
             status = text  // first-run setup ("Setting up Samantha, about two minutes...") reads here, plainly
-        case .confirm(let name, let args): pending = (name, args)
+        case .confirm(let name, let args, let note): pending = (name, args, note)
+        case .mode(let voice, let face):
+            voiceOn = voice
+            faceOn = face
         case .answer(let text):
             transcript.append("Samantha: \(text)")
             busy = false
@@ -115,6 +137,9 @@ final class Samantha: ObservableObject {
         busy = true
         stdin.write(askLine(text).data(using: .utf8)!)
     }
+
+    /// The Voice and Face buttons: the same /voice and /face switches the terminal chat understands.
+    func toggle(_ which: String) { send("/\(which)") }
 
     func reply(_ yes: Bool) {
         guard let stdin, pending != nil else { return }
@@ -178,12 +203,15 @@ private struct TypingIndicator: View {
 
 /// The confirm prompt, native-material, spring in and out: it appears exactly when a write needs a yes.
 private struct ConfirmBar: View {
-    let pending: (name: String, args: [String])
+    let pending: (name: String, args: [String], note: String)
     let reply: (Bool) -> Void
 
     var body: some View {
         HStack {
-            Text("Run \(pending.name)(\(pending.args.joined(separator: ", ")))?").font(.callout)
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Run \(pending.name)(\(pending.args.joined(separator: ", ")))?").font(.callout)
+                if !pending.note.isEmpty { Text(pending.note).font(.caption).foregroundStyle(.secondary) }
+            }
             Spacer()
             Button("No") { reply(false) }.keyboardShortcut(.cancelAction)
             Button("Yes") { reply(true) }.keyboardShortcut(.defaultAction).buttonStyle(.borderedProminent)
@@ -209,6 +237,17 @@ struct ChatView: View {
             Text(samantha.status).font(.caption2).foregroundStyle(.tertiary).padding(.bottom, 6)
         }
         .frame(minWidth: 420, minHeight: 480)
+        .toolbar {
+            ToolbarItemGroup {
+                Toggle(isOn: Binding(get: { samantha.voiceOn }, set: { _ in samantha.toggle("voice") })) {
+                    Label("Voice", systemImage: "waveform")
+                }.help("Say her replies out loud").disabled(inputDisabled)
+                Toggle(isOn: Binding(get: { samantha.faceOn }, set: { _ in samantha.toggle("face") })) {
+                    Label("Face", systemImage: "person.crop.square")
+                }.help("Show her face").disabled(inputDisabled)
+            }
+        }
+        .sheet(item: $samantha.customize) { kind in CustomizeSheet(kind: kind, samantha: samantha) }
         .animation(.spring(duration: 0.35), value: samantha.pending == nil)
         .onAppear { samantha.start() }
     }
@@ -256,15 +295,54 @@ struct ChatView: View {
     }
 }
 
+/// Change voice... and Change look...: one line of words, sent as the sentence she already routes.
+private struct CustomizeSheet: View {
+    let kind: Customize
+    @ObservedObject var samantha: Samantha
+    @State private var text = ""
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text(kind == .voice ? "Change her voice" : "Change her look").font(.headline)
+            Text(kind == .voice ? "A premade ElevenLabs voice by name, like George."
+                                : "Describe it, like ginger with glasses. A new portrait costs a few cents; keeping it costs about $1.40.")
+                .font(.caption).foregroundStyle(.secondary)
+            TextField(kind == .voice ? "Voice name" : "Describe the look", text: $text).textFieldStyle(.roundedBorder).onSubmit(go)
+            HStack {
+                if kind == .voice { Button("What voices?") { samantha.send("what voices do you have"); dismiss() } }
+                Spacer()
+                Button("Cancel") { dismiss() }.keyboardShortcut(.cancelAction)
+                Button("Send", action: go).keyboardShortcut(.defaultAction).disabled(text.trimmingCharacters(in: .whitespaces).isEmpty)
+            }
+        }
+        .padding(16).frame(width: 380)
+    }
+
+    private func go() {
+        guard !text.trimmingCharacters(in: .whitespaces).isEmpty else { return }
+        samantha.send(customizeLine(kind, text))
+        dismiss()
+    }
+}
+
 /// No process, no model: prove the pure parsing and encoding, the exact same way PaintBar's --check works.
 func runSelfCheck() -> Never {
     precondition(parseLine("{\"answer\": \"hi\"}") == .answer("hi"))
     precondition(parseLine("{\"working\": \"open_app(chrome)\"}") == .working("open_app(chrome)"))
-    if case .confirm(let name, let args)? = parseLine("{\"confirm\": {\"name\": \"new_note\", \"args\": [\"buy milk\"]}}") {
-        precondition(name == "new_note" && args == ["buy milk"])
+    if case .confirm(let name, let args, let note)? = parseLine("{\"confirm\": {\"name\": \"new_note\", \"args\": [\"buy milk\"]}}") {
+        precondition(name == "new_note" && args == ["buy milk"] && note.isEmpty)
     } else {
         fatalError("confirm did not parse")
     }
+    if case .confirm(_, _, let note)? = parseLine("{\"confirm\": {\"name\": \"keep_look\", \"args\": [], \"note\": \"about $1.40\"}}") {
+        precondition(note == "about $1.40")
+    } else {
+        fatalError("confirm note did not parse")
+    }
+    precondition(parseLine("{\"mode\": {\"voice\": true, \"face\": false}}") == .mode(voice: true, face: false))
+    precondition(customizeLine(.voice, " George ") == "change your voice to George")
+    precondition(customizeLine(.look, "ginger") == "change your look: ginger")
     precondition(parseLine("not json") == nil)
     precondition(askLine("hi") == "{\"ask\":\"hi\"}\n")
     precondition(yesLine(true) == "{\"yes\":true}\n")
@@ -282,5 +360,11 @@ struct SamanthaGUIApp: App {
 
     var body: some Scene {
         WindowGroup("Samantha") { ChatView(samantha: samantha) }
+            .commands {
+                CommandMenu("Customize") {
+                    Button("Change voice...") { samantha.customize = .voice }
+                    Button("Change look...") { samantha.customize = .look }
+                }
+            }
     }
 }

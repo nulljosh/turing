@@ -5,6 +5,25 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "app"))
 import tempfile
 import voice
 voice.CACHE_DIR = tempfile.mkdtemp()  # never touch the real cache
+os.environ["SAMANTHA_CHARACTER"] = tempfile.mkdtemp()  # never read the real character either
+
+
+def test_current_voice():
+    """The env var wins, then the character's voice_id, then Sarah when there is no file or it is broken."""
+    import json
+    os.environ.pop("ELEVENLABS_VOICE", None)
+    path = os.path.join(os.environ["SAMANTHA_CHARACTER"], "character.json")
+    assert voice.current_voice() == voice.ELEVEN_VOICE  # no character.json yet
+    with open(path, "w") as f:
+        f.write("{not json")
+    assert voice.current_voice() == voice.ELEVEN_VOICE
+    with open(path, "w") as f:
+        json.dump({"voice_id": "georgeid"}, f)
+    assert voice.current_voice() == "georgeid"
+    os.environ["ELEVENLABS_VOICE"] = "envid"
+    assert voice.current_voice() == "envid"
+    os.environ.pop("ELEVENLABS_VOICE")
+    os.remove(path)
 
 
 def test_speaker():
@@ -32,5 +51,6 @@ def test_speaker():
 
 
 if __name__ == "__main__":
+    test_current_voice()
     test_speaker()
     print("PASS: ElevenLabs voice with say fallback")

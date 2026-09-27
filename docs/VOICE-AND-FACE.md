@@ -22,7 +22,9 @@ echo "set -gx ELEVENLABS_API_KEY 'sk_...'" >> ~/.config/fish/secrets.fish
 ./.venv/bin/python app/chat.py --voice
 ```
 
-Her default voice is Sarah, one of the premade voices. The Free plan can only use premade voices over the API, a library voice answers 402. To pick another, set `ELEVENLABS_VOICE` to its id.
+Her default voice is Sarah, one of the premade voices. The Free plan can only use premade voices over the API, a library voice answers 402.
+
+To pick another, just ask. "What voices do you have" lists the premade ones. "Change your voice to George" switches, after a yes. It is free: it only saves the voice in her `character.json`. A name she doesn't know changes nothing, and she names the close ones. `ELEVENLABS_VOICE` still wins if you set it.
 
 With a key set, the words she says go to ElevenLabs to be voiced. That is the one thing voice mode sends off the Mac. No key, no send.
 
@@ -44,6 +46,8 @@ echo "set -gx HIGGSFIELD_API_KEY 'id:secret'" >> ~/.config/fish/secrets.fish
 ```
 
 3. Make her face with the character-creator skill in Claude Code: "make her ginger", "round glasses", "new character". It writes a portrait first. When you like it, it renders the loops into `~/.samantha/characters/samantha/`.
+Or just ask her. "Change your look: ginger with glasses" or "make yourself a redhead" makes a new portrait, about 5 cents, into a `staged` folder next to her current one. Her face stays the same until you say "keep that look". That renders her idle and talking loops from the new portrait, about $1.40, then swaps it in and keeps the old look in `old/`. Both ask first, and the question says the price before anything is spent.
+
 4. Talk to her with her face on:
 
 ```bash
@@ -51,6 +55,10 @@ echo "set -gx HIGGSFIELD_API_KEY 'id:secret'" >> ~/.config/fish/secrets.fish
 ```
 
 A window opens on `localhost`. She breathes and blinks while idle, nods while you talk, and talks while her voice plays.
+
+## In the Mac app
+
+The window has Voice and Face buttons in its toolbar. Voice says every reply out loud. Face opens her face window. The Customize menu has Change voice... and Change look..., which send the same sentences as above.
 
 ## Keep the keys private
 

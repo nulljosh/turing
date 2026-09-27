@@ -174,9 +174,21 @@ def _sub():
     print(chat_pipe._real_ask(sys.stdin.read().strip(), lambda line: print(line, file=sys.stderr), lambda n, a: False))
 
 
+def confirm_note(name):
+    """What a confirm must say besides the call itself: the price of a paid render (restyle, keep_look), else ""."""
+    import tools_character
+    return tools_character.CONFIRM_NOTES.get(name, "")
+
+
+def confirm_line(name, args):
+    """The question every confirm asks: the call, plus its price when it costs money."""
+    note = confirm_note(name)
+    return f"Run {name}({', '.join(args)})?" + (f" {note}" if note else "")
+
+
 def _ask_yes(name, args):
     """Ask on the terminal whether to run a tool that writes or sends."""
-    return input(f"  Run {name}({', '.join(args)})? [y/N] ").strip().lower() in ("y", "yes")
+    return input(f"  {confirm_line(name, args)} [y/N] ").strip().lower() in ("y", "yes")
 
 
 def main():

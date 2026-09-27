@@ -871,6 +871,18 @@
     [/^open (?:the )?(.+?)(?: repo)? in (?:the editor|vs ?code)$/i, function (m) { return ["open_in_editor", m[1]]; }]
   ].concat(ROUTES);
 
+  // the character family, same tools as tools_character.py: her voice and her look. The stand-in Mac has no
+  // ElevenLabs key and no Higgsfield account, and a new look costs real money, so the page only routes them.
+  ["list_voices", "set_voice", "restyle", "keep_look"]
+    .forEach(function (name) { U[name] = function () { return REAL_MAC; }; U.NEEDS_MAC.push(name); });
+  ROUTES = [
+    [/^(?:what|which) voices (?:do you have|can you (?:use|do)|are there)\??$|^(?:list|show)(?: me)? (?:your |the )?voices$/i,
+     function () { return ["list_voices", ""]; }],
+    [/^(?:change|switch|set) your voice to (.+?)\.?$/i, function (m) { return ["set_voice", m[1]]; }],
+    [/^change your look(?::| to)? (.+)$|^make yourself (.+)$/i, function (m) { return ["restyle", m[1] || m[2]]; }],
+    [/^keep (?:that|this|the new) look\.?$/i, function () { return ["keep_look", ""]; }]
+  ].concat(ROUTES);
+
   root.Samantha = { route: route, chain: chain, exact: exact, bare: bare, urlOf: urlOf, appMatch: appMatch, APPS: APPS, SITES: SITES,
                     stem: stem, keywords: keywords, isProject: isProject,
                     pageRoute: pageRoute, section: section, sound: sound, duration: duration, COLORS: COLORS, util: U };

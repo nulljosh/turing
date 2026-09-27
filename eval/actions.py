@@ -283,6 +283,14 @@ CASES = [
     ("what apps are running", "running_apps", ""),
 
     ("summarize github.com", "summarize", "github.com"),
+    # her character: voice and look
+    ("what voices do you have", "list_voices", None),
+    ("list your voices", "list_voices", None),
+    ("change your voice to george", "set_voice", "george"),
+    ("switch your voice to Sarah", "set_voice", "Sarah"),
+    ("change your look: ginger with glasses", "restyle", "ginger with glasses"),
+    ("make yourself a redhead in a green sweater", "restyle", "a redhead in a green sweater"),
+    ("keep that look", "keep_look", None),
     # these look like the new commands and are not
     ("what is the weather system on jupiter", None, None),
     ("what is music theory", None, None),

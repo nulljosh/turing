@@ -1,5 +1,5 @@
 {
-  "version": "4.16.3",
+  "version": "4.17.0",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -20,12 +20,16 @@
         "documented": 11
       },
       "app/chat.py": {
-        "total": 18,
-        "documented": 18
+        "total": 19,
+        "documented": 19
       },
       "app/chat_pipe.py": {
-        "total": 11,
-        "documented": 11
+        "total": 13,
+        "documented": 13
+      },
+      "app/face.py": {
+        "total": 8,
+        "documented": 8
       },
       "app/feedback.py": {
         "total": 8,
@@ -36,8 +40,8 @@
         "documented": 5
       },
       "app/harness.py": {
-        "total": 15,
-        "documented": 15
+        "total": 17,
+        "documented": 17
       },
       "app/intent.py": {
         "total": 7,
@@ -75,6 +79,10 @@
         "total": 23,
         "documented": 23
       },
+      "app/tools_character.py": {
+        "total": 13,
+        "documented": 13
+      },
       "app/tools_code.py": {
         "total": 7,
         "documented": 7
@@ -88,12 +96,12 @@
         "documented": 14
       },
       "app/tools_gui.py": {
-        "total": 8,
-        "documented": 8
+        "total": 11,
+        "documented": 11
       },
       "app/tools_image.py": {
-        "total": 17,
-        "documented": 17
+        "total": 18,
+        "documented": 18
       },
       "app/tools_llm.py": {
         "total": 6,
@@ -120,8 +128,8 @@
         "documented": 6
       },
       "app/tools_screen_agent.py": {
-        "total": 3,
-        "documented": 3
+        "total": 5,
+        "documented": 5
       },
       "app/tools_see.py": {
         "total": 9,
@@ -132,8 +140,8 @@
         "documented": 7
       },
       "app/tools_util.py": {
-        "total": 43,
-        "documented": 43
+        "total": 35,
+        "documented": 35
       },
       "app/tools_write.py": {
         "total": 8,
@@ -151,9 +159,13 @@
         "total": 20,
         "documented": 20
       },
-      "app/voice.py": {
+      "app/util_words.py": {
         "total": 9,
         "documented": 9
+      },
+      "app/voice.py": {
+        "total": 12,
+        "documented": 12
       },
       "scripts/gen_jt_docs.py": {
         "total": 13,
@@ -239,6 +251,10 @@
         "total": 3,
         "documented": 3
       },
+      "eval/screen_bench.py": {
+        "total": 15,
+        "documented": 15
+      },
       "eval/smoke_images.py": {
         "total": 5,
         "documented": 5
@@ -258,6 +274,10 @@
       "tests/test_badge.py": {
         "total": 11,
         "documented": 11
+      },
+      "tests/test_character.py": {
+        "total": 24,
+        "documented": 24
       },
       "tests/test_chat.py": {
         "total": 26,
@@ -283,6 +303,10 @@
         "total": 40,
         "documented": 40
       },
+      "tests/test_face.py": {
+        "total": 3,
+        "documented": 3
+      },
       "tests/test_feedback.py": {
         "total": 31,
         "documented": 31
@@ -296,8 +320,8 @@
         "documented": 1
       },
       "tests/test_gui.py": {
-        "total": 11,
-        "documented": 11
+        "total": 13,
+        "documented": 13
       },
       "tests/test_harness.py": {
         "total": 32,
@@ -364,8 +388,8 @@
         "documented": 9
       },
       "tests/test_screen_agent.py": {
-        "total": 18,
-        "documented": 18
+        "total": 22,
+        "documented": 22
       },
       "tests/test_see.py": {
         "total": 27,
@@ -390,6 +414,10 @@
       "tests/test_voice.py": {
         "total": 25,
         "documented": 25
+      },
+      "tests/test_voice_eleven.py": {
+        "total": 5,
+        "documented": 5
       },
       "tests/test_write.py": {
         "total": 23,
@@ -440,7 +468,7 @@
   "measured": {
     "tools": {
       "before": 0,
-      "after": 126
+      "after": 131
     },
     "actions_eval": "77/77",
     "knowledge_sweep": {
