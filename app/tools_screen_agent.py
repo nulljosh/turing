@@ -44,11 +44,13 @@ def _schema(fn):
 
 
 def _look():
-    """Every line of text on the screen now, or None when nothing visible may happen (evals, tests)."""
+    """What the frontmost app shows now, or None when nothing visible may happen (evals, tests). The accessibility
+    tree first: it covers only the app she is driving, so a ticking clock or a busy terminal elsewhere on the screen
+    never reads as a change. OCR of the whole screen only when the app labels nothing."""
     if os.environ.get("SAMANTHA_HEADLESS") == "1":
         return None
     import tools_gui
-    return tools_gui.screen_boxes()
+    return tools_gui.ax_boxes() or tools_gui.screen_boxes()
 
 
 def screen_task(task, max_steps=MAX_STEPS, log=None, confirm=None):
