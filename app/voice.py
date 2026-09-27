@@ -90,13 +90,19 @@ def should_barge_in(levels, threshold=BARGE_THRESHOLD, run=BARGE_RUN):
 
 ELEVEN_URL = "https://api.elevenlabs.io/v1/text-to-speech/{voice}?output_format=mp3_44100_128"
 ELEVEN_VOICE = os.environ.get("ELEVENLABS_VOICE", "EXAVITQu4vr4xnSDxMaL")  # Sarah, a premade voice the free plan can use; set your own id
+CACHE_DIR = os.path.expanduser(os.environ.get("SAMANTHA_VOICE_CACHE", "~/.samantha/voice-cache"))  # one mp3 per line she has said
 
 
 def eleven_mp3(text, key, fetch=None):
     """Her words as an ElevenLabs mp3 on disk, or None on any failure. Opt-in: only runs when ELEVENLABS_API_KEY
-    is set, and it is the one path where her reply leaves the Mac (the text goes to ElevenLabs to be voiced)."""
+    is set, and it is the one path where her reply leaves the Mac (the text goes to ElevenLabs to be voiced).
+    Every line is cached in CACHE_DIR by voice and text, so a line she has said before replays for free."""
+    import hashlib
     import json
     import urllib.request
+    cache = os.path.join(CACHE_DIR, hashlib.sha256(f"{ELEVEN_VOICE}|eleven_flash_v2_5|{text}".encode()).hexdigest() + ".mp3")
+    if os.path.isfile(cache) and os.path.getsize(cache) > 0:
+        return cache  # said this exact line before: replay it, no second credit
     try:
         req = urllib.request.Request(ELEVEN_URL.format(voice=ELEVEN_VOICE), method="POST",
                                      data=json.dumps({"text": text, "model_id": "eleven_flash_v2_5"}).encode(),
@@ -106,10 +112,10 @@ def eleven_mp3(text, key, fetch=None):
         return None
     if not audio:
         return None
-    fd, path = tempfile.mkstemp(suffix=".mp3")
-    with os.fdopen(fd, "wb") as f:
+    os.makedirs(CACHE_DIR, exist_ok=True)
+    with open(cache, "wb") as f:
         f.write(audio)
-    return path
+    return cache
 
 
 def speaker(text, fetch=None):

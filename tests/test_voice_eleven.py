@@ -2,7 +2,9 @@
 import os
 import sys
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "app"))
+import tempfile
 import voice
+voice.CACHE_DIR = tempfile.mkdtemp()  # never touch the real cache
 
 
 def test_speaker():
@@ -17,6 +19,10 @@ def test_speaker():
         return b"ID3fake"
     cmd = voice.speaker("hi", fetch=ok)
     assert cmd[0] == "afplay" and open(cmd[1], "rb").read() == b"ID3fake" and seen["key"] == "k"
+    def never(req):
+        """A second call for the same line must never reach the network."""
+        raise AssertionError("cached line fetched again")
+    assert voice.speaker("hi", fetch=never) == cmd  # same line: replayed from the cache
     os.remove(cmd[1])
     def boom(req):
         """A fake ElevenLabs that is down."""

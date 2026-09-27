@@ -42,6 +42,18 @@ def test_face():
             server.shutdown()
 
 
+def test_toggle():
+    """The chat's mode switches: /voice and /face (and their plain-word forms) toggle; real questions never do."""
+    import chat
+    for t in ("/voice", "Voice on", "talk"):
+        assert chat.toggle(t) == "voice"
+    for t in ("/face", "/video", "video off", "Face"):
+        assert chat.toggle(t) == "face"
+    for t in ("what's the weather", "voice memos app", "open facetime"):
+        assert chat.toggle(t) is None
+
+
 if __name__ == "__main__":
     test_face()
+    test_toggle()
     print("PASS: face window serves only her media and follows her state")

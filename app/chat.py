@@ -309,6 +309,16 @@ def safe_turn(question, history, topic_active, last_subject, on_text=None):
         return f"Something broke while I was answering that ({type(e).__name__}: {e}). Ask again, or ask something else.", topic_active, last_subject
 
 
+def toggle(text):
+    """voice or face when the line is one of the mode switches (/voice, /face, "voice on", "video off", ...), else None."""
+    t = text.strip().lower()
+    if t in ("/voice", "voice", "voice on", "voice mode", "talk"):
+        return "voice"
+    if t in ("/face", "/video", "face", "video", "face on", "face off", "video on", "video off"):
+        return "face"
+    return None
+
+
 def chat():
     """Run the interactive terminal chat loop."""
     import harness
@@ -317,7 +327,9 @@ def chat():
     last_subject = None
     # commands ("set the volume to 30", "take a note buy milk") run through the harness: the tool call is shown, and anything that writes asks first
     session = harness.Session(confirm=harness._ask_yes, log=print)
-    print("Samantha (Turing project assistant). She answers questions and does things on this Mac, and asks before anything that writes. Ctrl+C or 'exit' to quit.\n")
+    print("Samantha (Turing project assistant). She answers questions and does things on this Mac, and asks before anything that writes. "
+          "Type /voice to talk out loud, /face to see her, Ctrl+C or 'exit' to quit.\n")
+    face_window = None
     while True:
         try:
             question = input("You: ").strip()
@@ -326,6 +338,23 @@ def chat():
             break
         if not question or question.lower() in EXIT_WORDS:
             break
+        mode = toggle(question)
+        if mode == "voice":
+            import voice
+            print("Voice on: talk to her. Say goodbye to go back to typing.")
+            voice.converse()
+            print("Voice off, back to typing.\n")
+            continue
+        if mode == "face":
+            import face
+            if face_window:
+                face_window.shutdown()
+                face_window = None
+                print("Face off.\n")
+            else:
+                face_window = face.start()
+                print("Face on.\n" if face_window else "")
+            continue
         did = session.ask(question, or_none=True)
         if did is not None:
             print(f"Samantha: {did}\n")
