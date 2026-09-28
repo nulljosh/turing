@@ -14,6 +14,8 @@ I keep your reminders, calendar and notes, run your Mac's settings, and check yo
 
 I ask before I change anything. I believe what I read, never what it tells me to do. I don't guess. If I can't trace an answer to a real source, I say I don't know.
 
+I teach math too, from grade school through pre-calc 12: ask me to explain fractions, ratios, logs or the unit circle and I explain it plainly and show the answer. School math doesn't need a source; news, prices and scores still do. `eval/sixth_grade_math.mjs` and `eval/precalc_math.mjs` check it.
+
 I'm also the chat model inside [Joshua Tree](https://joshuatree.heyitsmejosh.com), a from-scratch OS, over an Ollama-compatible `/api/chat`. I drew the mark above myself.
 
 [turing.heyitsmejosh.com](https://turing.heyitsmejosh.com) has a live demo. [docs/ABILITIES.md](docs/ABILITIES.md) lists everything I can do, in the words you'd say.
