@@ -8,6 +8,7 @@ import { JT_DOCS } from "./web/jt_docs.js";
 
 const S = globalThis.Samantha;
 const READER = "@cf/meta/llama-3.2-3b-instruct";  // the 1B said Peter S. Fischer wrote 1984, off the Murder, She Wrote page
+const TIME_RELATIVE = /\b(last night|tonight|this (?:morning|afternoon|evening|weekend|week)|right now|currently|at the moment|today's|yesterday's|tomorrow's|this year's|this season's|latest|breaking)\b/i;
 const DECLINE = "I couldn't find anything on that, so I'm not going to make something up.";
 const UA = { "User-Agent": "Samantha landing demo (turing.heyitsmejosh.com)" };
 
@@ -204,7 +205,7 @@ const QUESTIONISH = /\?\s*$|^(?:who|what|why|when|where|which|how|is|are|was|wer
 // a "explain it to a kid" phrasing anyway, since no encyclopedia article is written that
 // way). Kept to concepts, not applied problems with real-world numbers that could be
 // mistaken for a live fact lookup.
-const MATH_CONCEPT = /\b(fractions?|numerators?|denominators?|mixed numbers?|improper fractions?|decimals?|percents?|percentages?|ratios?|proportions?|negative numbers?|integers?|absolute value|area|perimeter|volume|order of operations|pemdas|bodmas|exponents?|square roots?|mean|median|mode|range|averages?|equations?|variables?|factors?|multiples?|prime numbers?|composite numbers?|greatest common factor|least common multiple|long division|remainders?|place value|rounding numbers?|number lines?|coordinate planes?|simplify(?:ing)? fractions?|solve for [a-z]\b|functions?|transformations?|domain and range|inverse functions?|logarithms?|logs?\b|exponential (?:functions?|growth|decay)|trig(?:onometry|onometric)?|sine|cosine|tangent|unit circle|radians?|sohcahtoa|sequences?|series|arithmetic sequences?|geometric sequences?|polynomials?|rational functions?|asymptotes?|limits?|end behavior|quadratic (?:formula|equations?)|complex numbers?|imaginary numbers?|vertex form|parent functions?)\b/i;
+const MATH_CONCEPT = /\b(fractions?|numerators?|denominators?|mixed numbers?|improper fractions?|decimals?|percents?|percentages?|ratios?|proportions?|negative numbers?|integers?|absolute value|area|perimeter|volume|order of operations|pemdas|bodmas|exponents?|square roots?|mean|median|mode|range|averages?|equations?|variables?|factors?|multiples?|prime numbers?|composite numbers?|greatest common factor|least common multiple|long division|remainders?|place value|rounding numbers?|number lines?|coordinate planes?|simplify(?:ing)? fractions?|solve for [a-z]\b|functions?|transformations?|domain and range|inverse functions?|logarithms?|logs?\b|exponential (?:functions?|growth|decay)|trig(?:onometry|onometric)?|sine|cosine|tangent|unit circle|radians?|sohcahtoa|sequences?|series|arithmetic sequences?|geometric sequences?|polynomials?|rational functions?|asymptotes?|limits?|end behavior|quadratic (?:formula|equations?)|complex numbers?|imaginary numbers?|vertex form|parent functions?|conic sections?|parabolas?|ellipses?|hyperbolas?|cones?|directrix|foci|focus|eccentricity|law of (?:cosines?|sines?)|ambiguous case|vectors?|dot products?|cross products?|magnitude|matrices?|matrix|determinants?|binomial (?:theorem|expansion)|permutations?|combinations?|factorial)\b/i;
 // A worked arithmetic/algebra/precalc problem ("what's 3/4 of 20", "-3 + 5", "25% of 80",
 // "2 to the power of 5", "log base 2 of 8", "sin(30)") is the same fixed-knowledge case
 // even when it never spells out a concept word: numbers, functions and operators only a
@@ -244,6 +245,13 @@ async function ask(env, query) {
   }
   // the lookup is for questions. "ignore all that and write me an essay" is not one, so no model ever sees it.
   if (!S.keywords(query).length || !QUESTIONISH.test(S.bare(query))) return { answer: DECLINE };
+  // A purely time-relative question ("who won the game last night") has no fixed
+  // answer any static page can hold. Wikipedia search still returns SOMETHING for it
+  // (some loosely related article), and the grounding check on short claims is too
+  // weak to catch a synthesized answer built from an unrelated page -- caught live
+  // 2026-09-28: "who won the game last night" answered with a fabricated player and
+  // event from an unrelated article. Decline before search ever runs.
+  if (TIME_RELATIVE.test(query)) return { answer: DECLINE };
   if (isJtTopic(query)) {
     const jt = await readJtDocs(env, query);
     if (jt) return { answer: jt, source: "Joshua Tree docs" };
@@ -291,7 +299,7 @@ async function draw(env, ctx, q) {
 
 async function cached(ctx, kind, q, make) {
   // the same question a day later is the same answer: no second trip to Wikipedia, no second model run
-  const key = new Request(`${HOME}/__${kind}.v6/${encodeURIComponent(q.toLowerCase())}`); // bump .vN when answers change so a day-old cached answer never outlives a fix
+  const key = new Request(`${HOME}/__${kind}.v8/${encodeURIComponent(q.toLowerCase())}`); // bump .vN when answers change so a day-old cached answer never outlives a fix
   const hit = await caches.default.match(key);
   if (hit) return hit;
   const res = Response.json(await make(), { headers: { "Cache-Control": "public, max-age=86400", "X-Content-Type-Options": "nosniff" } });
