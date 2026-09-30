@@ -28,7 +28,7 @@ Voice and face (2026-09-27, afternoon): she speaks with ElevenLabs (Sarah) whene
 
 1. Rerun `eval/screen_bench.py` on the Mac (needs qwen3:1.7b) and fix what it finds until every task passes. Done 2026-09-30: Escape kill switch (v4.17.1); law 12 own-words check for consequential screen clicks (v4.17.2). Try Escape on the real Mac once: it reads key state through Quartz via ctypes, untestable in the cloud.
 2. Keep closing GitHub issues (27 open): each one shipped, merged into a duplicate, or moved to the roadmap with a reason.
-3. Picker: v5.0 still needs fewer than ten wrong past the guard and zero refused on the blind third set. Round fourteen is prepared (v4.17.3); split training/gen_hands_data.py (658 lines) next: its filler pools into their own module.
+3. Picker: v5.0 still needs fewer than ten wrong past the guard and zero refused on the blind third set. Round fourteen is prepared (v4.17.3); gen_hands_data.py is split (v4.17.6). Next cloud-side split: web/samantha.js (893) and web/demo.js (736), which Law 8 does not yet count; then eval/gen_heldout2.py (647).
 
 ## Restart prompt
 

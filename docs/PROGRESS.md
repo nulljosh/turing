@@ -1,5 +1,8 @@
 # Progress log
 
+- 2026-09-30 v4.17.6: split the picker's data generator in two (training/gen_hands_data.py 658 lines to 468, filler pools in training/hands_pools.py). The training data it writes is byte-for-byte the same, checked. The file-size ceiling dropped from 700 to 650.
+  `v4.17.6 · 131 tools · 607 tests · docs coverage 100% · laws all hold · biggest eval/gen_heldout2.py 647 · actions 231/231 · parity 231/231 · util_diff 261/261`
+
 - 2026-09-30 v4.17.5: the landing demo paints in the styles too ("paint the mona lisa as a mosaic", sketch, stained glass, pointillism, poster), same six as her Mac, checked in a real browser; eval/web_demo.py covers it.
   `v4.17.5 · 131 tools · 607 tests · docs coverage 100% · laws all hold · biggest training/gen_hands_data.py 658 · actions 231/231 · parity 231/231 · util_diff 261/261`
 

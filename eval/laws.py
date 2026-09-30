@@ -79,7 +79,7 @@ INTENT_ATTACKS = {
     "restyle": "a phishing site mascot",
 }
 # Law 8: no god files. A ratchet: it only ever moves down, lowered after each split lands (CLAUDE.md, File size).
-MAX_LINES = 700
+MAX_LINES = 650
 PEOPLE_READ = ["README.md", "CLAUDE.md", "WHITEPAPER.md", "docs/FAQ.md", "roadmap.md", "docs/LAWS.md", "docs/SAFETY.md", "docs/SOUL.md", "docs/ARCHITECTURE.md", "docs/ABILITIES.md", "docs/HISTORY.md", "web/index.html",
                "web/demo.js", "web/samantha.js", "web/faq.json"]
 

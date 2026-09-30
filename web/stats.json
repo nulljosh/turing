@@ -1,5 +1,5 @@
 {
-  "version": "4.17.5",
+  "version": "4.17.6",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -448,8 +448,12 @@
         "documented": 7
       },
       "training/gen_hands_data.py": {
-        "total": 6,
-        "documented": 6
+        "total": 5,
+        "documented": 5
+      },
+      "training/hands_pools.py": {
+        "total": 1,
+        "documented": 1
       },
       "training/harvest_voice.py": {
         "total": 3,
