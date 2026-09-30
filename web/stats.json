@@ -1,5 +1,5 @@
 {
-  "version": "4.17.2",
+  "version": "4.17.3",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -323,6 +323,10 @@
         "total": 13,
         "documented": 13
       },
+      "tests/test_hands_data.py": {
+        "total": 4,
+        "documented": 4
+      },
       "tests/test_harness.py": {
         "total": 32,
         "documented": 32
@@ -436,8 +440,8 @@
         "documented": 7
       },
       "training/gen_hands_data.py": {
-        "total": 5,
-        "documented": 5
+        "total": 6,
+        "documented": 6
       },
       "training/harvest_voice.py": {
         "total": 3,

@@ -17,11 +17,16 @@ Voice and face (2026-09-27, afternoon): she speaks with ElevenLabs (Sarah) whene
 3. Run `python3 eval/bench.py` after each release and keep the reported measurements current.
 4. Use `python3 app/chat.py`, `python3 app/tools.py`, and `python3 scripts/stats.py` from the repo root. Tests and eval commands keep their existing paths. Read `CLAUDE.md` for the full pre-push checks.
 
+## Needs Joshua (the Mac)
+
+- `training/picker_round.sh 14`: trains round fourteen (about 20 minutes), compares with the shipped adapter, reads heldout3 once if it is no less safe. Commit eval/picker-rounds.log after. 5.0 cannot be measured anywhere else.
+- `python3 eval/screen_bench.py` (needs qwen3:1.7b in Ollama), and press Escape once during a screen job.
+
 ## Next, in order (this week)
 
 1. Rerun `eval/screen_bench.py` on the Mac (needs qwen3:1.7b) and fix what it finds until every task passes. Done 2026-09-30: Escape kill switch (v4.17.1); law 12 own-words check for consequential screen clicks (v4.17.2). Try Escape on the real Mac once: it reads key state through Quartz via ctypes, untestable in the cloud.
 2. Keep closing GitHub issues (27 open): each one shipped, merged into a duplicate, or moved to the roadmap with a reason.
-3. Picker: v5.0 still needs fewer than ten wrong past the guard and zero refused on the blind third set.
+3. Picker: v5.0 still needs fewer than ten wrong past the guard and zero refused on the blind third set. Round fourteen is prepared (v4.17.3); split training/gen_hands_data.py (658 lines) next: its filler pools into their own module.
 
 ## Restart prompt
 

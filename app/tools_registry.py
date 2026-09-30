@@ -47,25 +47,25 @@ _EVIDENCE = {
     "roll_dice": r"roll|dice|\bdie\b|\bd\d|throw|toss", "random_number": r"random|number", "make_password": r"password",
     "hash_text": r"hash|sha|checksum", "word_count": r"word", "tip": r"\btip", "is_prime": r"prime|factor|divid", "roman_numeral": r"roman",
     "morse_code": r"morse", "new_note": r"note|jot|write|remember|save|down", "say": r"\bsay|speak|announce|voice|aloud|out loud|words",
-    "free_when": r"\bfree\b|\bbusy\b|availab|do i have time|when am i|\bschedule\b|open slot|\bgap\b",
+    "free_when": r"\bfree\b|\bbusy\b|availab|do i have time|when am i|\bschedule\b|open slot|\bgap\b|\bam i open\b",
     # Round eight covered 36 tools with zero picker training data; their evidence predates them (round-eight
     # gap). Words come from each tool's own docstring/templates, never copied out of eval/actions.py verbatim.
     "bluetooth_status": r"bluetooth", "calendar_tomorrow": r"tomorrow",
     "running_apps": r"running|open apps|apps open|what's open|apps are open|application",
     "recent_downloads": r"download", "unread_mail": r"mail|email|inbox",
     "git_status": r"status|changed|dirty|\bdiff\b|\bbranch\b|ahead|behind", "recent_commits": r"commit",
-    "run_tests": r"\btest", "open_prs": r"\bprs?\b|pull request",
+    "run_tests": r"\btest", "open_prs": r"\bprs?\b|pull request|waiting (?:for|on) (?:a )?review",
     "open_in_editor": r"editor|vscode|vs code|in code", "quit_app": r"quit|close|shut down|\bkill\b",
     "dark_mode": r"dark|\blight\b|appearance|theme", "do_not_disturb": r"disturb|\bdnd\b|focus|silence|quiet",
     "zip_file": r"\bzip\b|compress", "unzip_file": r"unzip|extract|unpack", "trash_file": r"trash|delete|throw away|get rid of",
-    "copy_file": r"\bcopy\b|duplicate", "move_file": r"\bmove\b|relocate", "rename_file": r"rename|new name|call it",
+    "copy_file": r"\bcopy\b|duplicate", "move_file": r"\bmove\b|relocate|\bdrag\b", "rename_file": r"rename|new name|call it|change the name|retitle",
     "append_note": r"\bnote\b", "add_event": r"calend[ae]r|event|schedule|appt|appointment",
-    "complete_reminder": r"remind|done|finish|complete|check off|\bmark\b", "list_reminders": r"reminder",
+    "complete_reminder": r"remind|done|finish|complete|check off|\bmark\b|tick off|cross off", "list_reminders": r"reminder",
     "search_notes": r"\bnotes?\b", "needs_attention": r"attention|needs me|focus on|deal with|need to handle|urgent",
     "find_file": r"find|locate|where(?:'s| is)", "folder_size": r"\bbig\b|\bsize\b|\bspace\b|take up",
-    "research": r"research|deep dive|look into|dig into|investigate", "research_more": r"\bmore\b|deeper|expand|further|continue|again",
+    "research": r"research|deep dive|look into|dig into|investigate|brief on", "research_more": r"\bmore\b|deeper|expand|further|continue|again",
     "summarize": r"summar", "transcribe_video": r"transcribe|said in|captions|subtitles",
-    "translate": r"translat|how do you say", "write_document": r"draft|write (?:a |an )?(?:doc|document|email|memo|file)|compose",
+    "translate": r"translat|how (?:do|would|can|should) (?:you|i) say", "write_document": r"draft|write (?:a |an )?(?:doc|document|email|memo|file)|compose",
     # Round ten: resize_image and read_file had no evidence at all, so any wrong pick with its
     # argument copied verbatim (list_dir/read_file's own guard, or resize_image's default check,
     # never required a word about the tool itself) passed the guard automatically. "make it bigger"
@@ -85,11 +85,11 @@ _EVIDENCE = {
     "current_date": r"\bdate\b|what day|today's date|which day",
     "feedback_summary": r"feedback|rating|rate you|how am i rating|thumbs|track record|how'?m i doing",
     "list_mcp_tools": r"\bmcp\b|other (?:server|assistant)s?|server'?s? tools|other tools",
-    "screenshot": r"screenshot|screen ?shot|screencap|picture of (?:the |my )?screen|capture (?:the |my )?screen"
+    "screenshot": r"screenshot|screen ?shot|screen ?grab|screencap|picture of (?:the |my )?screen|capture (?:the |my )?screen"
                   r"|grab (?:the |my )?screen|snap (?:the |my )?screen",
     "clipboard": r"clipboard|copied|\bcopy\b|pasteboard",
     "battery": r"battery|\bcharge\b|charging|power level|plugged in|\bjuice\b|\bpower\b|battery life",
-    "weather": r"weather|forecast|\brain\b|\bsnow\b|umbrella|degrees out|sunny|cloudy|storm|cold (?:is it|out)"
+    "weather": r"weather|forecast|\brain(?:ing|y)?\b|\bsnow(?:ing|y)?\b|\btemperature\b|need a (?:jacket|coat)|umbrella|degrees out|sunny|cloudy|storm|cold (?:is it|out)"
                r"|hot (?:is it|out)|nice out|\boutside\b|\btemp\b",
     # base64_encode/decode, reverse_text, shout and json_pretty are deliberately left with no
     # _EVIDENCE this round: a bisection against eval/heldout.jsonl's one-line summary (never its

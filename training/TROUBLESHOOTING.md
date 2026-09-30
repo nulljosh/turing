@@ -23,7 +23,7 @@ It imports `mlx_lm.lora`'s own `main()` unmodified, just sets the caps first. No
 For long unattended runs, use `train_resilient.sh` instead of calling `run_lora_capped.py` directly, it wraps the same thing with auto-restart-on-crash (with backoff), a memory check before each attempt, and resumes from the last checkpoint instead of starting over:
 
 ```
-./train_resilient.sh mlx-community/Qwen2.5-0.5B-Instruct-4bit ./ada-1-adapter 500
+training/train_resilient.sh mlx-community/Qwen2.5-0.5B-Instruct-4bit ./ada-1-adapter 500
 ```
 
 Still no daemon, no cron. You run it and it exits when done or out of retries.

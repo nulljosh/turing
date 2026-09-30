@@ -4,8 +4,9 @@
 # starting over, caps retries so a bad config can't crash-loop forever.
 # Still no daemon: you run this by hand, it exits when done or out of retries.
 #
-# Usage: ./train_resilient.sh <model> <adapter-path> <iters> [max_retries]
+# Usage: training/train_resilient.sh <model> <adapter-path> <iters> [max_retries]   (paths from the repo root)
 # DATA=./data/stage picks another folder of train.jsonl + valid.jsonl (default ./data).
+# LORA_ARGS="--batch-size 4 --num-layers 16" passes extra mlx_lm.lora flags (the picker's recipe, say).
 
 set -u
 MODEL="${1:?model required}"
@@ -15,7 +16,8 @@ MAX_RETRIES="${4:-6}"
 LOG="${ADAPTER}.resilient.log"
 MIN_FREE_MB=500
 
-cd "$(dirname "$0")"
+# Always from the repo root: .venv, data/ and the adapters live there, this script lives in training/ (since 4.16.3).
+cd "$(dirname "$0")/.."
 
 log() { echo "[$(date +%H:%M:%S)] $1" | tee -a "$LOG"; }
 
@@ -48,10 +50,10 @@ while [ "$attempt" -lt "$MAX_RETRIES" ]; do
   fi
 
   log "attempt $attempt: starting (free=${FREE_MB}MB, resume=${RESUME_FLAG:+yes})"
-  ./.venv/bin/python "$(dirname "$0")/run_lora_capped.py" \
+  ./.venv/bin/python training/run_lora_capped.py \
     --model "$MODEL" \
     --train --data "${DATA:-./data}" --iters "$ITERS" \
-    --grad-checkpoint $RESUME_FLAG \
+    --grad-checkpoint $RESUME_FLAG ${LORA_ARGS:-} \
     --adapter-path "$ADAPTER" \
     >> "$LOG" 2>&1
 

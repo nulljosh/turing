@@ -22,6 +22,7 @@ import sys
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "eval"))
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "app"))
+import tools
 from tools import HANDS_SYSTEM as SYSTEM  # the exact prompt tools.pick() sends
 
 APPS = (["safari", "chrome", "notes", "mail", "calendar", "music", "spotify", "pixelmator", "xcode", "terminal", "finder",
@@ -93,6 +94,45 @@ CSVS = (["sales.csv", "budget.csv", "data.csv"], ["expenses.csv"])
 VIDEOS = (["~/desktop/clip.mp4", "~/downloads/meeting.mov", "~/desktop/interview.mp4"], ["~/downloads/lecture.mp4"])
 SEARCHWORDS = (["eggs", "the budget", "recipe", "passwords", "project ideas"], ["car insurance", "flight info"])
 ZIPS = (["~/downloads/photos.zip", "~/desktop/archive.zip", "~/downloads/backup.zip"], ["~/downloads/project.zip"])
+
+# Round fourteen pools for the two-argument tools: (spoken, arg) pairs, spoken in more than one joining word.
+_SRC = (["~/desktop/a.txt", "~/downloads/receipt.pdf", "~/documents/budget.csv", "~/desktop/photo.jpg", "notes.txt",
+         "~/downloads/old-project", "report.docx", "~/desktop/slides.key"], ["~/downloads/lease.pdf", "todo.md"])
+_DST = (["~/documents", "~/desktop", "~/documents/archive", "~/pictures", "~/documents/code", "the archive folder"],
+        ["~/music", "~/documents/taxes"])
+
+
+def _pairs_of(srcs, dsts, joins, arg):
+    """Every source with a rotating destination, spoken with each join word: (spoken, arg) filler pairs."""
+    return [(f"{s}{joins[i % len(joins)]}{dsts[i % len(dsts)]}", arg(s, dsts[i % len(dsts)])) for i, s in enumerate(srcs)]
+
+
+MOVES = tuple(_pairs_of(_SRC[h], _DST[h], (" to ", " into ", " over to ", " in "), lambda s, d: f"{s}\t{d}") for h in (0, 1))
+RENAMES = tuple(_pairs_of(_SRC[h], (["b.txt", "final.pdf", "budget-2026.csv", "beach.jpg", "old.txt"], ["draft-2.md"])[h],
+                          (" to ",), lambda s, d: f"{s}\t{d}") for h in (0, 1))
+_SAYINGS = ((["hello", "good night", "where is the train station", "i love you", "see you tomorrow", "how much is this",
+              "happy birthday"], ["the bill please"]), (["french", "spanish", "german", "japanese", "italian", "korean"],
+                                                        ["portuguese"]))
+PHRASE_TO = tuple(_pairs_of(_SAYINGS[0][h], _SAYINGS[1][h], (" to ", " into "), lambda s, d: f"{s}\t{d}") for h in (0, 1))
+PHRASE_IN = tuple(_pairs_of(_SAYINGS[0][h], _SAYINGS[1][h], (" in ",), lambda s, d: f"{s}\t{d}") for h in (0, 1))
+APPENDS = tuple(_pairs_of((["buy eggs", "call the vet", "renew the car insurance", "fix the gate", "order printer ink"],
+                           ["book the campsite"])[h], (["groceries", "todo", "house", "errands"], ["weekend"])[h],
+                          (" to my ", " onto the ", " to the ", " at the end of my "),
+                          lambda s, d: f"{s}\t{d}") for h in (0, 1))
+APPENDS = tuple([(f"{sp} note", a) for sp, a in APPENDS[h]] for h in (0, 1))
+DOC_FINDS = tuple(_pairs_of((["the deadline", "invoice number", "the total", "insurance", "the address"], ["the signature"])[h],
+                            (["~/report.pdf", "~/documents/contract.pdf", "~/desktop/notes.txt", "~/downloads/invoice.pdf"],
+                             ["~/documents/policy.docx"])[h], (" in ", " inside ", " in the document "),
+                            lambda s, d: f"{s}\t{d}") for h in (0, 1))
+DOC_ASKS = tuple([(f"{d} and tell me {q}", f"{q}\t{d}") for q, d in zip(
+    (["what the deadline is", "who signed it", "how much is owed", "when it expires", "what the main point is"],
+     ["what the fee is"])[h], (["~/report.pdf", "~/documents/contract.pdf", "~/desktop/notes.txt", "~/downloads/invoice.pdf",
+                                "~/plan.pdf"], ["~/documents/policy.docx"])[h])] for h in (0, 1))
+ROTATES = tuple([(f"{i} {w}{n}", f"{i} by {n}") for i, w, n in zip(IMAGES[h], ("by ", "by ", "", "by "), ("90", "180", "270", "90"))]
+                for h in (0, 1))
+RESIZES = tuple([(f"{i} to {n}", f"{i} to {n}") for i, n in zip(IMAGES[h], ("1024", "512", "800", "2048", "256"))] for h in (0, 1))
+CONVERTS = tuple([(f"{i} {w} {n}", f"{i} to {n}") for i, w, n in zip(IMAGES[h], ("to", "into", "as", "to", "to"),
+                                                                   ("png", "jpg", "webp", "png", "heic"))] for h in (0, 1))
 
 # tool: (train templates, held-out templates, fillers, arg). arg None copies the filler, a string is fixed.
 # A filler that is a (spoken, arg) pair carries its own arg.
@@ -401,6 +441,30 @@ SPEC = [
     ("translate", ["translate the page github.com into spanish"], ["translate the page github.com into spanish"],
      NONE, "github.com\tspanish"),
 
+    # Round fourteen: the two-argument tools had one or two fixed sentences each, so any other wording was a guess.
+    # Written from the tool docstrings only; the arg keeps each tool's own shape (tab between the two parts, or the
+    # image tools' "path by 90" / "path to 1024" / "path to png").
+    ("move_file", ["move {}", "drag {}", "move the file {}", "move over {}", "please move {}"], ["relocate the file {}"], MOVES, None),
+    ("copy_file", ["copy {}", "make a copy of {}", "copy the file {}", "duplicate {}", "copy over {}"], ["put a copy of {}"], MOVES, None),
+    ("rename_file", ["rename {}", "change the name of {}", "retitle {}", "rename the file {}", "give a new name to {}"],
+     ["retitle the file {}"], RENAMES, None),
+    ("translate", ["translate {}", "translate the phrase {}", "translate the words {}", "can you translate {}"],
+     ["translate this: {}"], PHRASE_TO, None),
+    ("translate", ["how would you say {}", "how do i say {}", "how do you say {}", "how can i say {}"], ["how should i say {}"],
+     PHRASE_IN, None),
+    ("append_note", ["append {}", "add {}", "tack {}", "put {}", "jot {}", "write {}"], ["slip {}"], APPENDS, None),
+    ("find_in_document", ["find {}", "search for {}", "look for {}", "locate {}", "spot {}"], ["hunt for {}"], DOC_FINDS, None),
+    ("ask_document", ["read {}", "check {}", "look at {}", "go through {}", "skim {}"], ["open {}"], DOC_ASKS, None),
+    ("rotate_image", ["rotate {}", "turn {}", "spin {}", "rotate the image {}", "rotate the photo {}"], ["twist {}"], ROTATES, None),
+    ("resize_image", ["resize {}", "scale {}", "shrink {}", "resize the photo {}", "resize the image {}"], ["size {}"], RESIZES, None),
+    ("convert_image", ["convert {}", "change {}", "save {}", "turn {}", "export {}"], ["make {}"], CONVERTS, None),
+    ("base64_encode", ["convert {} to base64", "base64 the text {}", "what is {} in base64"], ["give me {} as base64"], WORDS, None),
+    ("base64_decode", ["decode {}", "decode the base64 {}", "what does {} decode to", "unbase64 {}"],
+     ["what's {} in plain text"], (["aGVsbG8=", "dGVzdA==", "c2FtYW50aGE=", "dHVyaW5n"], ["d29ybGQ="]), None),
+    ("reverse_text", ["write {} backwards", "spell {} backwards", "reverse the words {}"], ["{} in reverse"], WORDS, None),
+    ("json_pretty", ["pretty print {}", "indent this json {}", "make this json readable: {}"], ["clean up the json {}"],
+     (['{"a":1,"b":2}', '{"x":[1,2,3]}', '{"name":"sam","age":3}', '[1,2,{"k":"v"}]'], ['{"ok":true}']), None),
+
     # more than one step, or reading a page and saying what it says: that is agent() work
     ("agent", ["poke around {} and tell me what's up", "go to {} and summarize it", "open {} and tell me the top story",
                "read {} and tell me what's new", "check {} and tell me if anything is interesting",
@@ -461,7 +525,20 @@ TRICKY = (["what is music theory", "who plays the next james bond", "what is the
            "what is git", "how does git work", "what is a pull request", "what is dark mode", "what does do not disturb mean",
            "how does translation software work", "what is bluetooth", "how do you research a topic well", "what is a unit test",
            "what is a commit message", "what does zipping a file do", "why do computers need memory", "what is a csv file",
-           "how does spotlight search work on a mac"],
+           "how does spotlight search work on a mac",
+           # round fourteen: near misses for the two-argument tools, so more tool rows never cost her abstains
+           "what is base64", "why do people use base64", "what does json stand for", "is json better than xml",
+           "how do i move files on a mac", "what's the difference between copy and move", "why can't i rename a file",
+           "what is a good naming scheme for files", "how many languages are there", "is french hard to learn",
+           "what language do they speak in brazil", "how do translators work", "what's the best note taking app",
+           "should i keep notes in one file", "what is a pdf", "who invented the pdf", "why are pdfs hard to edit",
+           "what makes a good contract", "what is an invoice", "how do i rotate my phone screen", "what is image resolution",
+           "what's the difference between png and jpg", "why is webp smaller", "what is a heic file", "how big is 4k",
+           "what does it mean to back up a file", "where do deleted files go", "what is a file extension",
+           "can you read handwriting", "what does reverse mean in math", "what is a palindrome", "what's the opposite of shout",
+           "how do you say no politely", "what is a document", "why is my downloads folder so big",
+           "how do photographers edit photos", "is it safe to rename system files", "what's in a zip file",
+           "how does copy and paste work", "what's a good password manager", "what does archive mean in email"],
           ["what is the speed of sound", "who wrote the song yesterday", "how do noise cancelling headphones work",
            "what is a battery made of", "why do we have leap years on the calendar", "is it bad to skip breakfast",
            "what is a volume in a book series", "who opened the first mcdonalds", "what does google do with my data",
@@ -520,6 +597,13 @@ def _pairs(rng, held, n):
     return [rng.choice(singles) + rng.choice(JOINS[held]) + rng.choice(singles) for _ in range(n)]
 
 
+# Tools whose guard deliberately refuses some of their own template phrasings (tools_registry._AGAINST, round eleven):
+# "what's 9*9" is ask_local's arithmetic, "what's in my downloads" is recent_downloads, "look up the weather" is
+# weather, "what's happening on X" reads the page. A training row the guard refuses teaches a pick that can never
+# run, so those rows are dropped. Any other tool with a refused row is a template bug: tests/test_hands_data.py.
+GUARD_OVERRULES = {"calculate", "list_dir", "web_search", "summarize", "unread_mail"}
+
+
 def build(held, per_template, seed):
     """Build training or test set of command phrasings and expected tool calls."""
     rng, rows = random.Random(seed), {}
@@ -531,7 +615,10 @@ def build(held, per_template, seed):
             pool = (fillers[1] + fillers[0][:3]) if held else fillers[0]
             for f in rng.sample(pool, min(len(pool), per_template)) * (1 if "{}" in t else per_template):
                 spoken, carried = f if isinstance(f, tuple) else (f, f)
-                rows.setdefault(_dress(rng, t.format(spoken), held), _call(tool, carried if arg is None else arg))
+                text, got = _dress(rng, t.format(spoken), held), carried if arg is None else arg
+                if tool in GUARD_OVERRULES and not tools._sound(tool, got, text):
+                    continue
+                rows.setdefault(text, _call(tool, got))
     for q in PLAIN[held] + (TRICKY[held] + TASKS[held]) * (1 if held else 3):
         for _ in range(1 if held else 5):  # 63 tools means more ways to mistake a question for a command
             text = q if rng.random() < 0.6 else rng.choice(["hey ", "ok ", "samantha ", "so ", "quick question, "]) + q
@@ -544,6 +631,10 @@ def main():
     from actions import CASES
     from basic_questions import CASES as QUESTIONS
     reserved = {c[0].lower() for c in CASES} | {q[0].lower() for q in QUESTIONS}  # other evals stay unseen
+    here = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    for name in ("heldout.jsonl", "heldout2.jsonl", "heldout3.jsonl"):  # the blind sets most of all
+        with open(os.path.join(here, "eval", name)) as f:
+            reserved |= {json.loads(line)["text"].lower().rstrip(".?!") for line in f if line.strip()}
     train = {k: v for k, v in build(0, 9, seed=7).items() if k.lower().rstrip(".?!") not in reserved}
     test = {k: v for k, v in build(1, 4, seed=11).items() if k not in train}
     items = list(train.items())
