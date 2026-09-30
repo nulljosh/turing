@@ -1,5 +1,8 @@
 # Progress log
 
+- 2026-09-30 v4.17.5: the landing demo paints in the styles too ("paint the mona lisa as a mosaic", sketch, stained glass, pointillism, poster), same six as her Mac, checked in a real browser; eval/web_demo.py covers it.
+  `v4.17.5 · 131 tools · 607 tests · docs coverage 100% · laws all hold · biggest training/gen_hands_data.py 658 · actions 231/231 · parity 231/231 · util_diff 261/261`
+
 - 2026-09-30 🎉 v4.17.4: she paints in six styles now. "Paint lake.jpg as a mosaic": squares, mosaic, dots (pointillism), poster, sketch (pencil cross-hatching) and stained glass, all from one plan of the photo, a couple of seconds each (pixelmator/styles.py).
   `v4.17.4 · 131 tools · 607 tests · docs coverage 100% · laws all hold · biggest training/gen_hands_data.py 658 · actions 231/231 · parity 231/231 · util_diff 261/261`
 

@@ -1,4 +1,4 @@
-# Turing loop handoff (2026-09-30)
+# Turing loop handoff (2026-09-30, evening; v4.17.5)
 
 ## What the loop is
 
@@ -18,6 +18,8 @@ Voice and face (2026-09-27, afternoon): she speaks with ElevenLabs (Sarah) whene
 4. Use `python3 app/chat.py`, `python3 app/tools.py`, and `python3 scripts/stats.py` from the repo root. Tests and eval commands keep their existing paths. Read `CLAUDE.md` for the full pre-push checks.
 
 ## Needs Joshua (the Mac)
+
+- Deploy the landing page (v4.17.5 has the painting styles in the demo): the worktree + `npx wrangler deploy` line in CLAUDE.md, then check the live /stats.json. The cloud has no wrangler login.
 
 - `training/picker_round.sh 14`: trains round fourteen (about 20 minutes), compares with the shipped adapter, reads heldout3 once if it is no less safe. Commit eval/picker-rounds.log after. 5.0 cannot be measured anywhere else.
 - `python3 eval/screen_bench.py` (needs qwen3:1.7b in Ollama), and press Escape once during a screen job.

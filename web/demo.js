@@ -372,6 +372,10 @@
     paint: function (cmd) {
       closeWins();  // the picture is the show: nothing sits on top of it
       var text = (cmd || '').toLowerCase().trim();
+      // "as a mosaic", "in pencil style", "like stained glass": the same six styles as pixelmator/styles.py
+      var STYLE_WORDS = { mosaic: 'mosaic', tiles: 'mosaic', dots: 'dots', dot: 'dots', pointillism: 'dots', poster: 'poster', 'pop art': 'poster', sketch: 'sketch', pencil: 'sketch', drawing: 'sketch', 'stained glass': 'glass', glass: 'glass', squares: 'squares' };
+      var how = 'squares', styleMatch = /\s+(?:as|in|like)\s+(?:a |an )?(stained glass|pop art|pointillism|mosaic|tiles|dots?|poster|sketch|pencil|drawing|glass|squares)(?:\s+(?:style|painting))?[.!?]*$/.exec(text);
+      if (styleMatch) { how = STYLE_WORDS[styleMatch[1]]; text = text.slice(0, styleMatch.index); }
       var subject = text.replace(/^(?:me |us )?(?:an? |the |some )?(?:picture|painting|drawing|image|photo|sketch|illustration) of /, '').replace(/^(?:me |an? |the |some )+/, '').replace(/[.!?]+$/, '').trim();
       var index = -1;
       if (/mona|lisa/.test(text)) index = 0;
@@ -380,8 +384,9 @@
       if (index < 0 && subject.length > 1 && !/^(?:it|that|this|again|another|something|anything)$/.test(subject)) return PAGE.draw(subject);
       if (index < 0) index = (lastPaintIndex + 1) % paintNames.length;
       lastPaintIndex = index;
-      if (typeof window.samanthaPaint === 'function') window.samanthaPaint(index);
-      return 'Painting ' + paintNames[index].replace(/^The /, 'the ').replace(/^Mona/, 'the Mona') + ' from 30,000 squares.';
+      if (typeof window.samanthaPaint === 'function') window.samanthaPaint(index, how);
+      var named = paintNames[index].replace(/^The /, 'the ').replace(/^Mona/, 'the Mona');
+      return how === 'squares' ? 'Painting ' + named + ' from 30,000 squares.' : 'Painting ' + named + (how === 'glass' ? ' as stained glass.' : how === 'dots' ? ' in dots, like pointillism.' : ' as a ' + how + '.');
     },
     // Anything at all. An image model on Cloudflare imagines it, then she rebuilds the picture from 30,000 squares in front of you.
     draw: function (what) {
@@ -652,7 +657,7 @@
   // No theme commands and no barrel roll in the reel: moving a visitor's whole page unasked reads as a bug.
   // ---- idle reel: if nobody types, she shows what she does. Silent, and it stops the moment you touch anything ----
   var REEL = ['paint the mona lisa', 'open chrome and go to en.wikipedia.org/wiki/Alan_Turing', 'set the volume to 40', 'paint the eniac',
-              'what is 17*23', 'make me a complex logo for a surf school', 'make me an original wordless logo for turing', "what's the weather in tokyo", 'play some music', 'skip this song', 'paint the last supper',
+              'what is 17*23', 'make me a complex logo for a surf school', 'make me an original wordless logo for turing', "what's the weather in tokyo", 'play some music', 'skip this song', 'paint the last supper as a mosaic',
               'who painted the mona lisa', 'scroll to the results', 'take a screenshot', 'draw a lighthouse at dusk', 'draw a fox in the snow', 'calculate 17*23', 'convert 72 f to c', 'time in tokyo', 'roll 2d6', 'is 91 prime', 'days until christmas', 'who invented the telephone', 'reset the page'];
   // more phrasings for the input's autocomplete only. The reel stays short.
   var MORE = ['what are my reminders', 'search notes for eggs', 'what apps are running', 'turn on dark mode', 'git status', 'recent commits', 'take a note pick up milk', 'set a timer for 1 minute', 'open chrome and go to github.com', 'change the title to Hello there', 'draw a robot reading a book', 'draw a sailboat on a calm lake', 'imagine a city on the moon', 'do a barrel roll', 'tip on 45', 'roman numerals for 2026', 'sha256 of turing', 'base64 encode hello', 'morse sos', 'flip a coin', 'generate a strong password',
