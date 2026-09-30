@@ -32,6 +32,28 @@ Voice and face (2026-09-27, afternoon): she speaks with ElevenLabs (Sarah) whene
 
 ## Restart prompt
 
+Paste this in a new session after the Mac steps above (the first block is what to do by hand; the second is the prompt).
+
+By hand, at the Mac, in the turing folder:
+
 ```
-/loop work the Turing roadmap until the next major version (5.0.0), one round at a time, watching Claude usage and tapering on overage; hard stop at 90% session usage.
+git pull
+training/picker_round.sh 14     # about 20 min; close heavy apps first; one training job at a time
+python3 eval/screen_bench.py    # needs Ollama running with qwen3:1.7b
+```
+
+Then start a session and paste:
+
+```
+/loop work the Turing roadmap until 5.0.0, one round at a time, watching Claude usage (taper to CI checks and red fixes on overage or an allowed_warning status; hard stop at 90% session usage).
+
+Start here: picker round 14 has been run on the Mac. Read docs/LOOP-HANDOFF.md, eval/picker-rounds.log and the last lines of the picker_round.sh output I paste below. Do not read eval/heldout3.jsonl's rows or any breakdown of it, and never tune or train on it: it is the blind judge for 5.0 (needs under 10 wrong past the guard and 0 right picks refused).
+1. If round 14 was no less safe than the shipped adapter on the standard set and heldout2: report the heldout3 totals. If it clears 5.0, give me the exact ship commands (mv hands-adapter hands-adapter-old && mv hands-adapter-round14 hands-adapter, then ./release.sh 5.0.0) and do the major-release docs pass (WHITEPAPER, landing page, README, badge motif).
+2. If it was worse or did not clear the bar: write a short BAKEOFF.md entry (totals only), keep the shipped adapter, and plan round 15 from dev-set misses only (training/ data and the guard in app/tools_registry.py), never from heldout3.
+3. Also from my Mac run: screen_bench.py results (fix what fails), and tell me how the six painting styles looked through real ImageMagick (mosaic and glass lose detail on faces).
+Then: split web/samantha.js (893) and web/demo.js (736) one per round, behind the full check set, lowering the Law 8 ceiling after each.
+Deploys are automatic after a green push (Cloudflare token secret exists). TLDR only when you report.
+
+My pasted output:
+<paste the end of training/picker_round.sh 14 and screen_bench.py here>
 ```
