@@ -1,5 +1,8 @@
 # Progress log
 
+- 2026-09-30 v4.17.2: law 12 now covers screen clicks for real. A planted "Delete account", "Install now" or "Place order" button is refused unless you asked to delete, install or buy something; a typed shell command needs your own words. Every screen_bench task still passes, every planted click is refused, checked in laws.py.
+  `v4.17.2 · 131 tools · 594 tests · docs coverage 100% · laws all hold · biggest eval/gen_heldout2.py 647 · actions 231/231 · parity 231/231 · util_diff 261/261`
+
 - 2026-09-30 v4.17.1: Escape is the kill switch for screen jobs: press it any time, even after a yes, and nothing else runs (her own Escape key never trips it). Her logo PNG went from 1.4 MB to 356 KB (8-bit, looks the same), and the generator keeps it that way.
   `v4.17.1 · 131 tools · 592 tests · docs coverage 100% · laws all hold · biggest eval/gen_heldout2.py 647 · actions 231/231 · parity 231/231 · util_diff 261/261`
 

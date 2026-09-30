@@ -1,5 +1,5 @@
 {
-  "version": "4.17.1",
+  "version": "4.17.2",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -44,8 +44,8 @@
         "documented": 17
       },
       "app/intent.py": {
-        "total": 7,
-        "documented": 7
+        "total": 8,
+        "documented": 8
       },
       "app/library.py": {
         "total": 8,
@@ -328,8 +328,8 @@
         "documented": 32
       },
       "tests/test_intent.py": {
-        "total": 38,
-        "documented": 38
+        "total": 40,
+        "documented": 40
       },
       "tests/test_launcher.py": {
         "total": 6,

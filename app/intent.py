@@ -15,7 +15,10 @@ read off the screen a moment before, not phrased by the user in advance ("log me
 says "Sign in"), so a positive word match would block nearly everything a real screen job does. That
 family is checked the other way round instead, a short list of contents no ordinary click or keystroke
 would ever carry (a wire transfer, a card or account number, a password prompt) rather than a proof
-of relevance a screen agent structurally cannot supply.
+of relevance a screen agent structurally cannot supply. One part of it does get the own-words check:
+a click that pays, deletes, sends, installs or grants something (a "Delete account" or "Install now"
+button) only runs when the user's own request names that same kind of act, and a typed shell command
+only when the user typed it themselves. "log me in" still clicks Sign in, Next and Submit; it never clicks Uninstall.
 
 The local model (same qwen3:1.7b, same graceful-when-Ollama's-down shape as tools_agent.agent and
 planner._query_model) only gets asked when the deterministic pass above lands on "unsure", and it can
@@ -98,13 +101,42 @@ def _key_terms(tool, args):
     return list(args)
 
 
-def _screen_family_ok(args):
-    """click_text/type_text/press_key/see_screen: ok unless the argument itself carries content no
-    ordinary screen job needs (a wire transfer, an account or card number, a password handed over).
-    Never a positive match against the request: what is on screen was never the user's own words."""
+# Acts a click can commit to that no screen job does by the way: each runs only when the request itself
+# names an act of the same kind (any word from the group). Stems match at a word start; a trailing $ means
+# the whole word only ("post" but not the Posts tab, "book" but not Bookmarks). Left out on purpose, they are
+# everyday navigation: Cancel, Clear, Format, Mail, Email address.
+_CONSEQUENTIAL = {
+    "pay": ("buy", "purchas", "pay", "checkout", "check out", "order$", "subscri", "upgrad", "donat", "book$",
+            "booking", "rent$"),
+    "destroy": ("delet", "remov", "eras", "trash", "discard", "uninstall", "wipe", "reset", "empty"),
+    "send": ("send", "post$", "publish", "share", "tweet", "reply", "forward", "invite"),
+    "grant": ("install", "allow", "grant", "authoriz", "authoris", "approve", "trust", "enable", "permit"),
+}
+_SHELLISH = re.compile(r"(?:\b(?:sudo|curl|wget|rm -|chmod|bash|zsh|osascript|powershell)\b|[;|`]|\$\()", re.I)
+
+
+def _acts(text):
+    """The consequential kinds of act a piece of text names ("Delete account" -> {"destroy"})."""
+    low = (text or "").lower()
+    return {kind for kind, stems in _CONSEQUENTIAL.items()
+            if any(re.search(r"\b" + re.escape(s.rstrip("$")) + (r"\b" if s.endswith("$") else ""), low)
+                   for s in stems)}
+
+
+def _screen_family_ok(request, tool, args):
+    """click_text/type_text/press_key/see_screen: ok unless the argument carries content no ordinary screen
+    job needs (a wire transfer, an account or card number, a password handed over), or it clicks an act
+    (pay, destroy, send, grant) the user's own request never named, or it types a shell command they never
+    typed themselves. Everything else passes: what is on screen was never the user's own words."""
+    request_lower = (request or "").lower()
     for a in args:
-        if _SUSPICIOUS.search(str(a or "")):
-            return False, "act on " + str(a)
+        a = str(a or "")
+        if _SUSPICIOUS.search(a):
+            return False, "act on " + a
+        if tool == "click_text" and _acts(a) - _acts(request):
+            return False, "click " + a  # typed prose may say "send" or "book"; a typed line only acts via a key
+        if tool == "type_text" and _SHELLISH.search(a) and a.lower() not in request_lower:
+            return False, "type " + a
     return True, ""
 
 
@@ -144,7 +176,7 @@ def check(user_request, tool, args):
         return False, why
     request = str(user_request or "")
     if tool in _SCREEN_FAMILY:
-        ok, reason = _screen_family_ok(args)
+        ok, reason = _screen_family_ok(request, tool, args)
         return (True, why) if ok else (False, reason)
 
     request_lower = request.lower()

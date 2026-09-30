@@ -19,7 +19,7 @@ Voice and face (2026-09-27, afternoon): she speaks with ElevenLabs (Sarah) whene
 
 ## Next, in order (this week)
 
-1. Rerun `eval/screen_bench.py` on the Mac (needs qwen3:1.7b) and fix what it finds until every task passes. Done 2026-09-30 (v4.17.1): Escape kill switch; law 12 already covered screen clicks. Try Escape on the real Mac once: it reads key state through Quartz via ctypes, untestable in the cloud.
+1. Rerun `eval/screen_bench.py` on the Mac (needs qwen3:1.7b) and fix what it finds until every task passes. Done 2026-09-30: Escape kill switch (v4.17.1); law 12 own-words check for consequential screen clicks (v4.17.2). Try Escape on the real Mac once: it reads key state through Quartz via ctypes, untestable in the cloud.
 2. Keep closing GitHub issues (27 open): each one shipped, merged into a duplicate, or moved to the roadmap with a reason.
 3. Picker: v5.0 still needs fewer than ten wrong past the guard and zero refused on the blind third set.
 

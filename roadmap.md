@@ -22,7 +22,7 @@ Not data centres or training data: the gaps we can actually close. Each round pi
 - [ ] **Remembers the conversation.** Started in 4.12: "do that again", "same but for nimble", "what about tomorrow", "open it" work for every tool from a ten-turn history; a past result never supplies a command (law 10). Closes at 7.0 with memory across sessions.
 - [ ] **Thinks for herself.** Real answers come from the borrowed 9B; eyes and voice are small models that miss details. Target: 8.0, distillation from frontier teachers.
 - [ ] **Learns from use.** Started in 4.11: say "good", "wrong" or "wrong, I meant X" after any answer and it is saved on the Mac (~/.samantha/feedback.jsonl); training/feedback_to_data.py turns corrections into picker training rows, never copying test phrasings. Closes when the next retrain actually uses them.
-- [ ] **Doesn't believe everything she reads.** Mostly closed in 4.14: reads are fenced (law 9), never replayed (law 10), can't change a plan (law 11), and every write a model proposes is checked against your own words before it can even ask you (law 12, 40 of 43 write tools, zero false blocks). Left: screen clicks use a weaker blocklist, and three writes with no argument rely only on your yes.
+- [ ] **Doesn't believe everything she reads.** Mostly closed in 4.14: reads are fenced (law 9), never replayed (law 10), can't change a plan (law 11), and every write a model proposes is checked against your own words before it can even ask you (law 12, 40 of 43 write tools, zero false blocks). Left: three writes with no argument rely only on your yes (screen clicks got the own-words check in 4.17.2).
 
 ### Majors
 
@@ -72,9 +72,9 @@ Ask her to draft something in our voice, or answer a question about one of our o
   - [x] Look after every action: screenshot, act, screenshot again, and check the screen changed the way she expected before the next step
   - [x] Find things by the accessibility tree first, OCR text second, so she clicks buttons with no visible label
   - [x] A real step budget (about 25) with a clear stop: done, stuck, or needs you
-  - [ ] Every click and keystroke shown before it runs, one yes covers one task, Escape stops her at once
+  - [ ] Every click and keystroke shown before it runs, one yes covers one task, Escape stops her at once (Escape shipped in 4.17.1; one-yes-per-task still open)
   - [ ] A test bench of ten local tasks (TextEdit, Finder, Safari on a local page, System Settings read-only) scored headless, so each round is measured
-  - [ ] Close the weak spot in law 12: screen clicks go through the same own-words check as every other write
+  - [x] Close the weak spot in law 12: screen clicks go through the same own-words check as every other write (4.17.2: pay, delete, send and grant clicks need the same act in your words; typed shell lines need your own words)
 - [ ] **Frontier gaps.** Where she trails the big models, cheapest fix first:
   - [ ] Invented tool names ("free_space", "date_today"): snapping to the closest name was tried and dropped (one good snap in 1895 picks, six wrong ones, "remove_file" became move_file); the family-first picker below is the real fix
   - [ ] Argument shape: tools read loose wording themselves ("between 1 and 100", "dec 25 2026", "150 lbs to kg") instead of the picker learning every format
@@ -93,6 +93,6 @@ Ask her to draft something in our voice, or answer a question about one of our o
 - [ ] Two-step picking: pick a family first, then a tool inside it, so no single choice is bigger than about twelve
 - [ ] System family, the rest: brightness and turning bluetooth on or off (this Mac has no CLI for either and nothing gets installed; dark mode, running apps, quit an app, bluetooth status and Do Not Disturb via a Shortcut shipped in 4.8)
 - [ ] Browser family, the rest: download a file
-- [ ] Knowledge family, the rest: define a word
+- [x] Knowledge family, the rest: define a word (define_word, the Mac dictionary, offline)
 - [ ] Blender family (Blender 5.2 LTS installed, headless): render a scene, make a simple 3D object, turn a logo into 3D text, convert between 3D formats, report what's in a file
 - [ ] Sharp paintings: merge same-color neighbor cells so each layer buys more picture
