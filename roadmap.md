@@ -36,6 +36,11 @@ Not data centres or training data: the gaps we can actually close. Each round pi
 ### What needs Joshua's keyboard
 
 - [x] Add the CLOUDFLARE_API_TOKEN repo secret (done 2026-09-30: every green push now deploys the live site and checks its version)
+- [ ] **On the Mac, next time (set 2026-09-30):**
+  - [ ] `training/picker_round.sh 14`: trains picker round fourteen (about 20 min), compares it with the shipped adapter, reads the blind heldout3 set once if it is no less safe. Commit `eval/picker-rounds.log` after. The 5.0 bar (under 10 wrong past the guard, 0 right picks refused) can only be measured there.
+  - [ ] `python3 eval/screen_bench.py` (needs qwen3:1.7b in Ollama), and press Escape once during a real screen job.
+  - [ ] Paint one photo per style on the Mac (`paint lake.jpg as a sketch`, and the other five): the cloud previews used Pillow, this checks the real ImageMagick output. Mosaic and glass lose detail on faces; tune.
+  - [ ] Painting styles shipped as 4.17.4; they are a minor-release ability, so 4.18.0 waits for its badge motif (needs magick, potrace and OCR on the Mac).
 - [ ] Try voice and on-screen control on the Mac: `python3 app/chat.py --voice` needs the microphone once, and "click ..." needs Screen Recording and Accessibility permission for the terminal.
 
 ### How we compete with trillion-dollar labs
