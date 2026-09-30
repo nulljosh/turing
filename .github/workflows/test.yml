@@ -48,6 +48,7 @@ jobs:
       - run: python3 tests/test_voice.py
       - run: python3 tests/test_chat_pipe.py
       - run: python3 tests/test_gui.py
+      - run: python3 tests/test_screen_agent.py
       - run: python3 tests/test_see.py
       - run: python3 tests/test_research.py
       - run: python3 tests/test_write.py

@@ -4,7 +4,7 @@ What Samantha will and will not do, and how that is actually enforced. docs/LAWS
 
 ## What she will not do without asking you first
 
-Anything that leaves a mark: writing a note, a reminder, or a file, sending something, clicking or typing on your screen, calling another MCP server, remembering something about you, or waking your screen. The harness shows the exact command before it runs and waits for a yes. A no runs nothing, not a smaller version of the thing, nothing at all (docs/LAWS.md, rule 3).
+Anything that leaves a mark: writing a note, a reminder, or a file, sending something, clicking or typing on your screen, calling another MCP server, remembering something about you, or waking your screen. The harness shows the exact command before it runs and waits for a yes. A no runs nothing, not a smaller version of the thing, nothing at all (docs/LAWS.md, rule 3). During a multi-step screen job, Escape is the kill switch: press it any time, even after a yes, and nothing else runs.
 
 ## What never reaches a model's menu
 

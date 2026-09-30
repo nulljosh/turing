@@ -167,5 +167,52 @@ class LooksAfterActing(unittest.TestCase):
         self.assertEqual(clicked, ["Downloads"])
 
 
+class KillSwitch(unittest.TestCase):
+    """Escape ends a screen job before her next step, whatever the confirm said; her own Escape key never does."""
+
+    run_task = ScreenTask.run_task
+
+    def test_escape_before_a_step_stops_the_job_and_nothing_runs(self):
+        """Escape down before the first model turn: the job ends with STOPPED, the model is never asked, nothing clicks."""
+        with mock.patch.object(tools_screen_agent, "_escape_down", return_value=True):
+            result, fake_llm, log = self.run_task([call("click_text", target="Sign in"), say("Done.")])
+        self.assertEqual(result, tools_screen_agent.STOPPED)
+        self.assertEqual((fake_llm.calls, log), ([], []))
+
+    def test_escape_during_the_confirm_beats_a_yes(self):
+        """The user says yes, then presses Escape before the step runs: Escape wins, the click never happens."""
+        pressed = []
+        clicked = []
+
+        def confirm(name, args):
+            """Say yes, but hold Escape down from this moment on."""
+            pressed.append(name)
+            return True
+        with mock.patch.object(tools_screen_agent, "_escape_down", side_effect=lambda: bool(pressed)):
+            result, _, log = self.run_task([call("click_text", target="Sign in"), say("Done.")], confirm=confirm,
+                                           click_text=lambda target: clicked.append(target) or "Clicked.")
+        self.assertEqual(result, tools_screen_agent.STOPPED)
+        self.assertEqual((clicked, log), ([], []))
+
+    def test_her_own_escape_key_never_trips_the_kill_switch(self):
+        """press_key("escape") from her plan holds own while it runs, so the Escape it makes cannot stop the job."""
+        state = {"down": False}
+
+        def press(key):
+            """Her own key press: Escape reads as down only while it runs."""
+            state["down"] = True
+            self.assertTrue(tools_screen_agent._escape_down())
+            state["down"] = False
+            return f"Pressed {key}."
+        with mock.patch.object(tools_screen_agent, "_escape_down", side_effect=lambda: state["down"]):
+            result, _, log = self.run_task([call("press_key", key="escape"), say("Closed the dialog.")], press_key=press)
+        self.assertEqual(result, "Closed the dialog.")
+        self.assertEqual(log, ["  [press_key(escape)]"])
+
+    def test_escape_reads_false_off_a_mac(self):
+        """Headless (tests, evals, Linux CI) never reads the keyboard at all."""
+        self.assertFalse(tools_screen_agent._escape_down())
+
+
 if __name__ == "__main__":
     unittest.main()

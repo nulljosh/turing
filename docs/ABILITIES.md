@@ -32,7 +32,7 @@ Every ability, in the words you say. Anything that writes, sends or looks at you
 ## Do
 
 - **Apps and sites.** Open an app, go to a site, search the web or one site, read a page, list, switch, read and close Chrome tabs.
-- **Her hands.** "Click Sign in", "type hello", "press return", "log me into X": she reads the screen, acts one step at a time, asks before each.
+- **Her hands.** "Click Sign in", "type hello", "press return", "log me into X": she reads the screen, acts one step at a time, asks before each. Press Escape any time and the job stops before her next step.
 - **Files.** "Find resume.docx", "what did I just download", "how big is ~/Movies", "read the document ~/notes.pdf", "find milk in the document ~/notes.pdf", then "move", "copy", "rename", "zip", "unzip", "trash" any of them. Trash is Finder's Trash, never a hard delete.
 - **Write.** "Draft an email about the release", "write a doc about the roadmap": the local model drafts it, she saves it in your home folder.
 - **Edit the last draft.** "Make it shorter", "make it friendlier", "add a line about Friday": rewrites the file write_document just saved, shows a diff of the change, and asks before writing it. Says plainly when there is no draft yet.

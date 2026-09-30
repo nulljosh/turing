@@ -1,5 +1,8 @@
 # Progress log
 
+- 2026-09-30 v4.17.1: Escape is the kill switch for screen jobs: press it any time, even after a yes, and nothing else runs (her own Escape key never trips it). Her logo PNG went from 1.4 MB to 356 KB (8-bit, looks the same), and the generator keeps it that way.
+  `v4.17.1 · 131 tools · 592 tests · docs coverage 100% · laws all hold · biggest eval/gen_heldout2.py 647 · actions 231/231 · parity 231/231 · util_diff 261/261`
+
 - 2026-09-27 🎉 v4.17.0: ask her to change her voice ("change your voice to George", free) or her look ("make yourself ginger", about 5 cents, "keep that look" about $1.40, both ask first and say the price). The Mac app gets Voice and Face buttons and a Customize menu.
   `v4.17.0 · 131 tools · 586 tests · docs coverage 100% · laws all hold · biggest eval/gen_heldout2.py 647 · actions 231/231 · parity 231/231 · util_diff 261/261`
 

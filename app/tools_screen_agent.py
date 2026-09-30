@@ -4,10 +4,14 @@ type_text, press_key, see_screen) are in NOT_FOR_MODELS on purpose, so no model 
 task calls for it. This one only starts when the sentence names a screen job explicitly, and unlike the general
 agent, EVERY step is confirmed before it runs, even a read (see_screen), not just the writes: a plan she cannot
 show you first is not a plan you can trust. Her eyes (see_screen) let her find icons that have no text to click.
+Escape is the kill switch: pressing it at any point ends the job before her next step, confirm or no confirm.
 """
+import ctypes
 import json
 import os
 import re
+import sys
+import threading
 import time
 import urllib.error
 import urllib.request
@@ -58,6 +62,39 @@ def _written_call(content, tools_by_name):
     return [{"function": {"name": name, "arguments": args}}] if name in tools_by_name and isinstance(args, dict) else []
 
 
+ESCAPE = 53  # macOS virtual key code for Escape
+_quartz = None
+
+
+def _escape_down():
+    """True while Escape is held on this Mac's keyboard, read straight from Quartz through ctypes (no pyobjc, no
+    accessibility prompt: key state is not key logging). False wherever it cannot tell: Linux, headless, tests."""
+    global _quartz
+    if sys.platform != "darwin" or os.environ.get("SAMANTHA_HEADLESS") == "1":
+        return False
+    try:
+        if _quartz is None:
+            _quartz = ctypes.CDLL("/System/Library/Frameworks/ApplicationServices.framework/ApplicationServices")
+            _quartz.CGEventSourceKeyState.argtypes = [ctypes.c_int32, ctypes.c_uint16]
+            _quartz.CGEventSourceKeyState.restype = ctypes.c_bool
+        return bool(_quartz.CGEventSourceKeyState(0, ESCAPE))  # 0: combined session state, any keyboard
+    except (OSError, AttributeError):
+        return False
+
+
+def _watch_escape(stop, done, own):
+    """Poll Escape every 50 ms until the job ends; set stop the moment the user presses it. Her own press_key
+    ("escape" to close a dialog) sets own while it runs, so she never trips her own kill switch."""
+    while not done.is_set():
+        if not own.is_set() and _escape_down():
+            stop.set()
+            return
+        done.wait(0.05)
+
+
+STOPPED = "You pressed Escape, so I stopped. Nothing else ran."
+
+
 def _look():
     """What the frontmost app shows now, or None when nothing visible may happen (evals, tests). The accessibility
     tree first: it covers only the app she is driving, so a ticking clock or a busy terminal elsewhere on the screen
@@ -70,13 +107,26 @@ def _look():
 
 def screen_task(task, max_steps=MAX_STEPS, log=None, confirm=None):
     """Plan and run a multi-step screen job ("log me into X") with a local model. Every step, even a look at the
-    screen, is confirmed before it runs: confirm(name, args) -> bool. A no ends the job at once. Returns what
-    happened, in plain words, or why it stopped early."""
+    screen, is confirmed before it runs: confirm(name, args) -> bool. A no ends the job at once, and so does Escape,
+    pressed any time. Returns what happened, in plain words, or why it stopped early."""
+    stop, done, own = threading.Event(), threading.Event(), threading.Event()
+    threading.Thread(target=_watch_escape, args=(stop, done, own), daemon=True).start()
+    try:
+        return _run_job(task, max_steps, log, confirm, lambda: stop.is_set() or (not own.is_set() and _escape_down()), own)
+    finally:
+        done.set()
+
+
+def _run_job(task, max_steps, log, confirm, halted, own):
+    """The plan-act loop behind screen_task. halted() is the Escape check, asked before every model turn and right
+    before every step runs; own is set while she presses a key herself."""
     import tools  # here, not at the top: tools.py never imports this module at load time either
     tools_by_name = _tools()
     messages = [{"role": "system", "content": SYSTEM}, {"role": "user", "content": task}]
     last, nudges = None, 0  # the previous step when it changed nothing; times she was told to act, not narrate
     for _ in range(max_steps):
+        if halted():
+            return STOPPED
         body = json.dumps({"model": MODEL, "messages": messages, "stream": False, "think": False,
                            "tools": [_schema(f) for f in tools_by_name.values()]}).encode()
         req = urllib.request.Request(OLLAMA_CHAT, body, {"Content-Type": "application/json"})
@@ -109,6 +159,8 @@ def screen_task(task, max_steps=MAX_STEPS, log=None, confirm=None):
                 return f"I stopped: that step would {why}, which you didn't ask for."
             elif confirm and not confirm(name, tuple(map(str, args.values()))):
                 return "Okay, I stopped there."  # a no ends the whole job, not just that step
+            elif halted():
+                return STOPPED  # Escape while the confirm was up still wins over a yes
             else:
                 takes = fn.__code__.co_varnames[:fn.__code__.co_argcount]
                 # Every screen tool takes one argument; a small model often names it wrong ("text" for target).
@@ -117,10 +169,16 @@ def screen_task(task, max_steps=MAX_STEPS, log=None, confirm=None):
                 # Look before and after every action, so the next step starts from what really happened.
                 # ponytail: two full-screen OCRs per action; diff one window if it gets slow
                 before = _look() if name in ACTIONS else None
+                if name == "press_key":
+                    own.set()
                 try:
                     result = fn(**{k: v for k, v in args.items() if k in takes})
                 except Exception as e:
                     result = f"{name} failed: {e}"
+                finally:
+                    if name == "press_key":
+                        time.sleep(0 if os.environ.get("SAMANTHA_HEADLESS") == "1" else 0.15)  # let her key come up
+                        own.clear()
                 if before is not None:
                     import tools_gui
                     time.sleep(0.6)  # let the click land and the window redraw

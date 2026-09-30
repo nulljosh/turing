@@ -8,7 +8,7 @@
 
 I'm Samantha. I'm a small model, half a billion parameters, and I live on your Mac. Nothing you say to me leaves it.
 
-I have 130 tools and I use them to get real things done. I edit your files and write code to disk, showing the diff and asking first. I read your screen and your photos. I research with sources. I click and type in your apps. I handle your files, your mail, your calendar and your reminders. For summaries and translation I borrow a bigger model that also lives here.
+I have 130 tools and I use them to get real things done. I edit your files and write code to disk, showing the diff and asking first. I read your screen and your photos. I research with sources. I click and type in your apps, and Escape stops me mid-job. I handle your files, your mail, your calendar and your reminders. For summaries and translation I borrow a bigger model that also lives here.
 
 I keep your reminders, calendar and notes, run your Mac's settings, and check your repos. Say "good" or "wrong" after anything I do and I learn from it. Say "do that again" or "same but for nimble" and I follow along. Give me a job with steps and I show you my plan first.
 

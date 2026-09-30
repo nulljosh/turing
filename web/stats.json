@@ -1,5 +1,5 @@
 {
-  "version": "4.17.0",
+  "version": "4.17.1",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -128,8 +128,8 @@
         "documented": 6
       },
       "app/tools_screen_agent.py": {
-        "total": 5,
-        "documented": 5
+        "total": 8,
+        "documented": 8
       },
       "app/tools_see.py": {
         "total": 9,
@@ -164,8 +164,8 @@
         "documented": 9
       },
       "app/voice.py": {
-        "total": 12,
-        "documented": 12
+        "total": 16,
+        "documented": 16
       },
       "scripts/gen_jt_docs.py": {
         "total": 13,
@@ -388,8 +388,8 @@
         "documented": 9
       },
       "tests/test_screen_agent.py": {
-        "total": 22,
-        "documented": 22
+        "total": 29,
+        "documented": 29
       },
       "tests/test_see.py": {
         "total": 27,
@@ -416,8 +416,8 @@
         "documented": 25
       },
       "tests/test_voice_eleven.py": {
-        "total": 5,
-        "documented": 5
+        "total": 7,
+        "documented": 7
       },
       "tests/test_write.py": {
         "total": 23,

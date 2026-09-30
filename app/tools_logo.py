@@ -546,7 +546,7 @@ def promote_mark(root=None):
         tmp_icon = os.path.join(tmp, "icon.svg")
         with open(tmp_icon, "w") as f:
             f.write(icon)
-        _run(["magick", "-background", "none", tmp_icon, "-resize", "1024x1024", os.path.join(here, "web", "samantha-logo.png")], timeout=60)
+        _run(["magick", "-background", "none", tmp_icon, "-resize", "1024x1024", "-depth", "8", os.path.join(here, "web", "samantha-logo.png")], timeout=60)
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
     return True, "promoted"
