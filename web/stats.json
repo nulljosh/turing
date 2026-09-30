@@ -1,5 +1,5 @@
 {
-  "version": "4.17.3",
+  "version": "4.17.4",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -108,8 +108,8 @@
         "documented": 6
       },
       "app/tools_logo.py": {
-        "total": 28,
-        "documented": 28
+        "total": 29,
+        "documented": 29
       },
       "app/tools_organizer.py": {
         "total": 7,
@@ -187,13 +187,21 @@
         "total": 9,
         "documented": 9
       },
+      "pixelmator/styles.py": {
+        "total": 12,
+        "documented": 12
+      },
       "pixelmator/test_pxm.py": {
-        "total": 53,
-        "documented": 53
+        "total": 54,
+        "documented": 54
       },
       "pixelmator/test_pxm_run.py": {
         "total": 48,
         "documented": 48
+      },
+      "pixelmator/test_styles.py": {
+        "total": 10,
+        "documented": 10
       },
       "eval/a11y.py": {
         "total": 1,
@@ -408,8 +416,8 @@
         "documented": 10
       },
       "tests/test_tools_image.py": {
-        "total": 21,
-        "documented": 21
+        "total": 25,
+        "documented": 25
       },
       "tests/test_untrusted.py": {
         "total": 25,

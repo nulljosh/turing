@@ -266,21 +266,44 @@ def make_logo(description):
             if os.path.exists(out) else f"ImageMagick refused my design: {result[-300:]}")
 
 
+PAINT_STYLES = ("squares", "mosaic", "dots", "poster", "sketch", "glass")  # pixelmator/styles.py STYLES, same order
+_STYLE_WORDS = {"pointillism": "dots", "pointillist": "dots", "dot": "dots", "pencil": "sketch", "drawing": "sketch",
+                "engraving": "sketch", "stained glass": "glass", "stained-glass": "glass", "screen print": "poster",
+                "pop art": "poster", "tiles": "mosaic", "tile": "mosaic", "square": "squares"}
+_STYLE_TAIL = re.compile(r"\s+(?:as|in|like)\s+(?:a |an )?(" + "|".join(sorted(set(PAINT_STYLES) | set(_STYLE_WORDS), key=len, reverse=True))
+                         + r")(?:\s+(?:style|painting|drawing))?\s*$", re.I)
+
+
+def paint_style(arg):
+    """"cat.png as a mosaic" -> ("cat.png", "mosaic"); no style named -> (arg, "squares")."""
+    m = _STYLE_TAIL.search(arg or "")
+    if not m:
+        return (arg or "").strip(), "squares"
+    word = m.group(1).lower()
+    return arg[:m.start()].strip(), _STYLE_WORDS.get(word, word)
+
+
 def paint_image(path):
-    """Repaint a photo out of tens of thousands of colored squares with ImageMagick. Takes the path of an image file."""
+    """Repaint a photo from thousands of shapes with ImageMagick. Takes the path of an image file, optionally with a
+    style: "cat.png as a mosaic" (squares, mosaic, dots, poster, sketch, glass)."""
+    path, style = paint_style(path)
+    if re.search(r"\.(?:jpe?g|png|heic|webp|tiff?)\s+(?:as|in|like)\s", path, re.I):
+        return f"I can paint in these styles: {', '.join(PAINT_STYLES)}."
     full = _inside_home(path.strip().strip("'\""))
     if not full or not os.path.isfile(full):
         return f"I can't find an image at {path}."
-    out = tools_image.output("samantha-painting.png")
+    out = tools_image.output("samantha-painting.png" if style == "squares" else f"samantha-painting-{style}.png")
     if os.path.exists(out):
         os.remove(out)  # a stale file must not read as a fresh success
     if not shutil.which("magick"):
         return "ImageMagick (`magick`) is not installed, so I can't paint this."
     # pixelmator/pxm.py's quadtree planner and its ImageMagick engine draw the plan in seconds; this
     # never touches Pixelmator Pro, only the magick engine.
-    result = _run([sys.executable, PXM, "paint", full, "--out", out, "--engine", "magick", "--shapes", "40000",
-                   "--detail", "1024", "--size", "2048"], timeout=120)
-    return (f"Painted it from 40,000 squares, saved to {out}." if os.path.exists(out)
+    shapes = {"squares": 40000, "poster": 20000, "dots": 9000, "sketch": 30000, "mosaic": 3500, "glass": 1800}[style]
+    result = _run([sys.executable, PXM, "paint", full, "--out", out, "--engine", "magick", "--shapes", str(shapes),
+                   "--detail", "1024" if style == "squares" else "512", "--size", "2048", "--style", style], timeout=120)
+    what = "40,000 squares" if style == "squares" else f"the {style} style"
+    return (f"Painted it in {what}, saved to {out}." if os.path.exists(out)
             else f"Painting failed: {result[-300:]}")
 
 

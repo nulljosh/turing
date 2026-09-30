@@ -353,6 +353,13 @@ class Paint(unittest.TestCase):
         self.assertEqual(code, pxm.EXIT_USAGE)
         self.assertIn("--shapes", err)
 
+    def test_a_style_needs_the_magick_engine(self):
+        """--style mosaic on the Pixelmator engine is a usage error that says what to add."""
+        with mock.patch.object(pxm, "read_pixels", return_value=(2, 2, [[(0, 0, 0)] * 2] * 2)):
+            code, _, err = run_main("paint", "x.jpg", "--out", "x.png", "--style", "mosaic")
+        self.assertEqual(code, pxm.EXIT_USAGE)
+        self.assertIn("--engine magick", err)
+
     def test_frames_are_thinned_but_the_last_layer_always_gets_one(self):
         """Frames are thinned but the last layer always gets one."""
         layers = [{"type": "rectangle", "width": 5, "height": 5, "fill": "#000"}] * 7

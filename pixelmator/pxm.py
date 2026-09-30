@@ -429,31 +429,35 @@ def paint_timeout(layers):
     return int(120 + layers * 0.1 + layers * layers / 8000)
 
 
-def paint_magick(w, h, layers, outs):
+def paint_magick(w, h, layers, outs, mvg_text=None, background="black", smooth=False):
     """Draw the quadtree with ImageMagick: one MVG file of rectangles, one process, no app.
 
     The plan is the same one Pixelmator builds, so the picture is identical; only the
-    executor changes. 30000 squares take seconds here, not the better part of an hour."""
+    executor changes. 30000 squares take seconds here, not the better part of an hour.
+    A style (styles.py) hands over its own MVG, background and smoothing instead."""
     magick = shutil.which("magick")
     if not magick:
         raise PxmError("ImageMagick is not installed", hint="brew install imagemagick", code=EXIT_ENV)
     with tempfile.NamedTemporaryFile("w", suffix=".mvg", delete=False) as f:
-        f.write("stroke none\n")
-        for L in layers:
-            f.write("fill %s\nrectangle %d,%d %d,%d\n" % (L["fill"], L["x"], L["y"], L["x"] + L["width"] - 1, L["y"] + L["height"] - 1))
+        if mvg_text is not None:
+            f.write(mvg_text)
+        else:
+            f.write("stroke none\n")
+            for L in layers:
+                f.write("fill %s\nrectangle %d,%d %d,%d\n" % (L["fill"], L["x"], L["y"], L["x"] + L["width"] - 1, L["y"] + L["height"] - 1))
         mvg = f.name
     try:
         for path in outs:
             path = os.path.abspath(os.path.expanduser(path))
             os.makedirs(os.path.dirname(path), exist_ok=True)
-            p = subprocess.run([magick, "-size", "%dx%d" % (w, h), "xc:black", "+antialias", "-draw", "@" + mvg, path],
-                               text=True, capture_output=True)
+            p = subprocess.run([magick, "-size", "%dx%d" % (w, h), "xc:" + background, "-antialias" if smooth else "+antialias",
+                                "-draw", "@" + mvg, path], text=True, capture_output=True)
             if p.returncode:
                 raise PxmError("magick failed", hint=p.stderr.strip()[-200:], code=EXIT_VERIFY)
             print("exported: %s" % path)
     finally:
         os.unlink(mvg)
-    print("ok: %d squares, drawn with ImageMagick" % len(layers))
+    print("ok: %d %s, drawn with ImageMagick" % (len(layers), "shapes" if mvg_text is not None else "squares"))
 
 
 def cmd_paint(args):
@@ -466,6 +470,16 @@ def cmd_paint(args):
     args._build_label = "paint %s" % os.path.basename(args.image)
     w, h, rows = read_pixels(os.path.expanduser(args.image), side=args.detail)
     scale = max(1, round(args.size / max(w, h)))
+    if args.style != "squares":
+        if not magick:
+            raise PxmError("--style %s needs the ImageMagick engine" % args.style, hint="Add --engine magick.", code=EXIT_USAGE)
+        import styles  # sibling module: pixelmator/styles.py
+        background, prims = styles.draw(styles.cells(w, h, rows, args.shapes), scale, args.style)
+        if args.dry_run:
+            print("%d shapes in the %s style on a %dx%d canvas" % (len(prims), args.style, w * scale, h * scale))
+            return
+        return paint_magick(w * scale, h * scale, prims, args.out, styles.to_mvg(background, prims), background,
+                            smooth=args.style in ("dots", "sketch", "mosaic"))
     layers = paint_layers(w, h, rows, args.shapes, scale, args.shape)
     if magick:
         if args.dry_run:
@@ -584,6 +598,8 @@ def main(argv=None):
                    help="pixelmator builds it as layers you can open; magick draws the same plan in seconds")
     p.add_argument("--shapes", type=int, default=2000, help="square budget (default 2000; up to 20000 in Pixelmator, 500000 with magick)")
     p.add_argument("--shape", choices=("rectangle", "ellipse"), default="rectangle")
+    p.add_argument("--style", choices=("squares", "mosaic", "dots", "poster", "sketch", "glass"), default="squares",
+                   help="how to draw it (magick engine): see pixelmator/styles.py")
     p.add_argument("--detail", type=int, default=256,
                    help="longest side of the grid the image is sampled on (default 256)")
     p.add_argument("--merge-every", type=int, default=500, metavar="N",

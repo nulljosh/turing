@@ -1,5 +1,8 @@
 # Progress log
 
+- 2026-09-30 🎉 v4.17.4: she paints in six styles now. "Paint lake.jpg as a mosaic": squares, mosaic, dots (pointillism), poster, sketch (pencil cross-hatching) and stained glass, all from one plan of the photo, a couple of seconds each (pixelmator/styles.py).
+  `v4.17.4 · 131 tools · 607 tests · docs coverage 100% · laws all hold · biggest training/gen_hands_data.py 658 · actions 231/231 · parity 231/231 · util_diff 261/261`
+
 - 2026-09-30 v4.17.3: round fourteen of the picker is ready to train. Her training set was teaching 232 picks the guard then refused (every one a right pick refused waiting to happen); now zero, and a test keeps it there. The two-argument tools got real training, the held-out sets can never leak into training, the data generator runs again (it was failing its own check), and train_resilient.sh works from the new layout. One command on the Mac runs the round: training/picker_round.sh 14.
   `v4.17.3 · 131 tools · 596 tests · docs coverage 100% · laws all hold · biggest training/gen_hands_data.py 658 · actions 231/231 · parity 231/231 · util_diff 261/261`
 

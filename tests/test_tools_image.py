@@ -343,5 +343,33 @@ class TestNoPixelmator(unittest.TestCase):
         self.assertNotIn("osascript", src)
 
 
+class PaintStyles(unittest.TestCase):
+    """paint_image's styles: the words people say, and the flag that reaches pxm.py."""
+
+    def test_style_words(self):
+        """"as a mosaic", "in pencil style", "like stained glass": each lands on a real style; none means squares."""
+        import tools_logo
+        for arg, want in (("cat.png", ("cat.png", "squares")), ("cat.png as a mosaic", ("cat.png", "mosaic")),
+                          ("~/x.jpg in pencil style", ("~/x.jpg", "sketch")), ("lake.jpg like stained glass", ("lake.jpg", "glass")),
+                          ("a.png as pointillism", ("a.png", "dots")), ("b.png as a poster", ("b.png", "poster"))):
+            self.assertEqual(tools_logo.paint_style(arg), want)
+
+    def test_the_style_reaches_pxm_and_an_unknown_one_is_a_sentence(self):
+        """The chosen style goes to pxm.py as --style; "as a banana" lists the styles instead of failing to find a file."""
+        import tools_logo
+        home = os.path.expanduser("~")
+        with tempfile.NamedTemporaryFile(suffix=".jpg", dir=home) as f, \
+                patch("shutil.which", return_value="/usr/bin/magick"), \
+                patch.object(tools_logo, "_run", return_value="") as run:
+            tools_logo.paint_image(f.name + " as a sketch")
+            argv = run.call_args[0][0]
+            self.assertEqual(argv[argv.index("--style") + 1], "sketch")
+            self.assertIn("styles", tools_logo.paint_image(f.name + " as a banana"))
+
+    def test_the_router_keeps_the_style(self):
+        """"paint lake.jpg as a sketch" routes to paint_image with the style still on the argument."""
+        import tools
+        self.assertEqual(tools.plan("paint lake.jpg as a sketch"), [("paint_image", ("lake.jpg as a sketch",))])
+
 if __name__ == "__main__":
     unittest.main()

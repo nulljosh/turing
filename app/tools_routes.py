@@ -57,7 +57,7 @@ def install(t):
         (re.compile(r"^what needs (?:my attention|me)$", re.I), lambda m: t.needs_attention()),
         (re.compile(r"^(?:am i free|when am i free|how free am i|do i have (?:any )?time)(?:\s+(.+))?$", re.I), lambda m: t.free_when(m.group(1) or "")),
         (re.compile(r"^(?:make|design|draw|create|build)(?: me)? (?:a |an )?((?:(?:complex|intricate|detailed|elaborate|ornate|fancy|crazy|insane|original|wordless|abstract|textless) )*)(?:logo|icon)(?: for| of)? (.+)$", re.I), lambda m: t.make_logo((m.group(1) or "") + m.group(2))),
-        (re.compile(r"^(?:paint|repaint)(?: me)? (?:a picture of |a painting of |the (?:image|photo|picture) (?:at )?)?(\S+\.(?:jpe?g|png|heic|webp|tiff?))$", re.I), lambda m: t.paint_image(m.group(1))),
+        (re.compile(r"^(?:paint|repaint)(?: me)? (?:a picture of |a painting of |the (?:image|photo|picture) (?:at )?)?(\S+\.(?:jpe?g|png|heic|webp|tiff?)(?:\s+(?:as|in|like)\s+(?:a |an )?[a-z -]+?)?)$", re.I), lambda m: t.paint_image(m.group(1))),
         (re.compile(r"^(?:(?:show me |tell me )?what(?:'s| is) (?:on|in) (?:my |the )?clipboard|(?:read|show)(?: me)? (?:my |the )?clipboard)\b", re.I), lambda m: t.clipboard()),
         (re.compile(r"^(?:set |turn |put )?(?:the |it |my )?(?:volume )?(?:up |down )?(?:to |at )(\d{1,3})\b", re.I), lambda m: t.set_volume(m.group(1))),
         (re.compile(r"^(?:set |turn )?(?:the )?volume (\d{1,3})\b", re.I), lambda m: t.set_volume(m.group(1))),

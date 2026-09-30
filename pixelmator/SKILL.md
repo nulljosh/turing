@@ -65,6 +65,21 @@ python3 $PXM paint mona.jpg --out mona.png --shapes 3000 --headless --gif mona.g
 Add `--engine magick` to draw the same plan with ImageMagick instead of Pixelmator: no app, no layers to open, 40000 squares in about a second. `--shapes 40000 --detail 1024 --size 2048` gives a crisp painting. Pixelmator stays the way to watch it build and to get real layers; `--gif` and `--frames` need it.
 
 - `--shapes` is the layer budget (default 2000). `--detail` is the sampling grid (default 256). `--size` is the canvas. `--shape ellipse` gives a pointillist look.
+- `--style` (magick engine) draws the same plan six ways, from `styles.py`. Each reads best at its own budget:
+
+  | style | looks like | `--shapes` |
+  |---|---|---|
+  | `squares` | flat squares edge to edge (default) | 40000 |
+  | `mosaic` | rounded tiles with dark grout | 3500 |
+  | `dots` | overlapping dabs on cream paper, pointillism | 9000 |
+  | `poster` | eight bold colors, a screen print | 20000 |
+  | `sketch` | pencil cross-hatching, darker tones get more layers | 30000 |
+  | `glass` | stained glass, rich color and black lead | 1800 |
+
+  ```bash
+  python3 $PXM paint lake.jpg --engine magick --style sketch --shapes 30000 --detail 512 --size 2048 --out lake-sketch.png
+  ```
+  Samantha's `paint_image` picks the budget for you: "paint lake.jpg as a sketch", "... like stained glass", "... as pointillism".
 - `--out` repeats: `--out a.png --out a.pxd`.
 - Speed: about 10 layers a second, slower as the document fills. 3000 layers is roughly ten minutes. Start it with `run_in_background` and wait for the notification. Do not poll.
 - The GIF takes about 60 frames however many layers there are.
