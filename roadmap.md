@@ -35,7 +35,7 @@ Not data centres or training data: the gaps we can actually close. Each round pi
 
 ### What needs Joshua's keyboard
 
-- [ ] Add the CLOUDFLARE_API_TOKEN repo secret (Settings, Secrets, Actions). Without it the deploy job only prints an error and shows green, so the live site sat on 4.2.1 until 2026-09-25, when the loop found it in landing QA and deployed by hand. Until then every release is deployed by hand from the Mac.
+- [x] Add the CLOUDFLARE_API_TOKEN repo secret (done 2026-09-30: every green push now deploys the live site and checks its version)
 - [ ] Try voice and on-screen control on the Mac: `python3 app/chat.py --voice` needs the microphone once, and "click ..." needs Screen Recording and Accessibility permission for the terminal.
 
 ### How we compete with trillion-dollar labs
