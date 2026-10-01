@@ -1,4 +1,4 @@
-# Turing loop handoff (2026-10-01, morning; v4.17.6, live)
+# Turing loop handoff (2026-10-01, evening; v4.17.7, live)
 
 ## What the loop is
 
@@ -6,7 +6,7 @@ Work the Turing roadmap toward v5.0.0: her own tool-calling head, better picker 
 
 ## Where things stand
 
-v4.17.6 (2026-10-01, shipped live): picker round 14 trained but lost. Candidate 1308/1959 right (88 wrong past guard, 7 refused) vs shipped 1312/1959 (22 past guard, 0 refused). Not shipped; hands-adapter-round14 held for reference. The gen_hands_data.py improvements ship: richer training templates for two-argument tools, guard evidence for old phrasings, and null-ratio distribution improved to 0.163. Computer use: screen jobs look at the frontmost app after every action (accessibility tree, OCR fallback), click by accessibility first, run up to 25 steps. eval/screen_bench.py all pass in the cloud but still needs qwen3:1.7b on the Mac (Escape kill switch works, law 12 own-words check for screen clicks in place). define_word reads the Mac dictionary offline. Landing page follows Astra. Headless runs never write Desktop. Voice and face: she speaks ElevenLabs Sarah, cached, with her face animated on /face command (list_voices, set_voice, restyle, keep_look each priced before running). Default: twee, strawberry blonde, glasses, cardigan. The worker's /api/speak voices text for Joshua Tree, which speaks her Chat replies through its own sound card. Next: her face inside Joshua Tree's Chat (in progress), then the landing demo.
+v4.17.7 (2026-10-01 evening, shipped live): voice moved to ElevenLabs' Eleven v4 model via Text to Dialogue endpoint (faster: 1.49s→1.22s to first sound); Mac app voice.py still on flash v2.5. Picker round 14 trained but lost—candidate 1308/1959 right (88 wrong past guard, 7 refused) vs shipped 1312/1959 (22 past guard, 0 refused)—not shipped; hands-adapter-round14 held for reference. Gen_hands_data.py improvements ship: richer training templates for two-argument tools, guard evidence for old phrasings, null-ratio 0.163. Computer use: screen jobs look at frontmost app after every action (accessibility tree, OCR fallback), click by accessibility first, run up to 25 steps. eval/screen_bench.py all pass in the cloud but needs qwen3:1.7b on the Mac (Escape kill switch works, law 12 own-words check for screen clicks in place). define_word reads the Mac dictionary offline. Landing follows Astra. Headless never writes Desktop. Face animates on /face command (list_voices, set_voice, restyle, keep_look each priced before running; default: twee, strawberry blonde, glasses, cardigan). Worker /api/speak voices text for Joshua Tree, which speaks her Chat replies through its own sound card. Next: her face inside Joshua Tree's Chat (in progress), then landing demo.
 
 ## Next, in order
 
