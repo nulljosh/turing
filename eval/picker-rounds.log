@@ -1,0 +1,2 @@
+2026-10-01 round14 hands-adapter standard: 1312/1959 passed, 536 picked the wrong tool, 22 of those get past the guard in tools.do(), 0 right picks refused by the guard, 398s, hands-adapter
+2026-10-01 round14 hands-adapter-round14 standard: 1308/1959 passed, 556 picked the wrong tool, 88 of those get past the guard in tools.do(), 7 right picks refused by the guard, 365s, hands-adapter-round14
