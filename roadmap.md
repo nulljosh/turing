@@ -35,7 +35,6 @@ Not data centres or training data: the gaps we can actually close. Each round pi
 
 ### What needs Joshua's keyboard
 
-- [x] Add the CLOUDFLARE_API_TOKEN repo secret (done 2026-09-30: every green push now deploys the live site and checks its version)
 - [ ] **On the Mac, next time (set 2026-09-30):**
   - [ ] `training/picker_round.sh 14`: trains picker round fourteen (about 20 min), compares it with the shipped adapter, reads the blind heldout3 set once if it is no less safe. Commit `eval/picker-rounds.log` after. The 5.0 bar (under 10 wrong past the guard, 0 right picks refused) can only be measured there.
   - [ ] `python3 eval/screen_bench.py` (needs qwen3:1.7b in Ollama), and press Escape once during a real screen job.
@@ -70,16 +69,10 @@ Ask her to draft something in our voice, or answer a question about one of our o
 
 ### Open backlog
 
-- [x] **Her voice.** ElevenLabs when a key is set, `say` otherwise, barge-in unchanged (2026-09-27).
-- [x] **Her face.** `--face` window: idle, listening and talking loops, rendered once per character (2026-09-27).
 - [ ] **Voice and face, next:** `--character <name>` to switch faces and voices by name; her idle loop on the landing page; Secretary's phone calls in her voice (waiting on Twilio support ticket 29739232 to restore account access).
 - [ ] **This week: computer use.** Give her a task ("book the 3pm slot on this page", "fill in this form from my notes") and she drives the Mac to finish it, like ChatGPT's agent. She already has see_screen, click_text, type_text, press_key and a six-step agent. Missing, in build order:
-  - [x] Look after every action: screenshot, act, screenshot again, and check the screen changed the way she expected before the next step
-  - [x] Find things by the accessibility tree first, OCR text second, so she clicks buttons with no visible label
-  - [x] A real step budget (about 25) with a clear stop: done, stuck, or needs you
   - [ ] Every click and keystroke shown before it runs, one yes covers one task, Escape stops her at once (Escape shipped in 4.17.1; one-yes-per-task still open)
   - [ ] A test bench of ten local tasks (TextEdit, Finder, Safari on a local page, System Settings read-only) scored headless, so each round is measured
-  - [x] Close the weak spot in law 12: screen clicks go through the same own-words check as every other write (4.17.2: pay, delete, send and grant clicks need the same act in your words; typed shell lines need your own words)
 - [ ] **Frontier gaps.** Where she trails the big models, cheapest fix first:
   - [ ] Invented tool names ("free_space", "date_today"): snapping to the closest name was tried and dropped (one good snap in 1895 picks, six wrong ones, "remove_file" became move_file); the family-first picker below is the real fix
   - [ ] Argument shape: tools read loose wording themselves ("between 1 and 100", "dec 25 2026", "150 lbs to kg") instead of the picker learning every format
@@ -98,6 +91,5 @@ Ask her to draft something in our voice, or answer a question about one of our o
 - [ ] Two-step picking: pick a family first, then a tool inside it, so no single choice is bigger than about twelve
 - [ ] System family, the rest: brightness and turning bluetooth on or off (this Mac has no CLI for either and nothing gets installed; dark mode, running apps, quit an app, bluetooth status and Do Not Disturb via a Shortcut shipped in 4.8)
 - [ ] Browser family, the rest: download a file
-- [x] Knowledge family, the rest: define a word (define_word, the Mac dictionary, offline)
 - [ ] Blender family (Blender 5.2 LTS installed, headless): render a scene, make a simple 3D object, turn a logo into 3D text, convert between 3D formats, report what's in a file
 - [ ] Sharp paintings: merge same-color neighbor cells so each layer buys more picture
