@@ -10,6 +10,8 @@ v4.17.7 (2026-10-01 evening, shipped live): voice moved to ElevenLabs' Eleven v4
 
 ## Next, in order
 
+Round 16 shipped as v4.17.9: eval/heldout4.jsonl is the new readable dev set (mirrors heldout3); deictic "trash this file" asks which (tools_registry.needs_target). Blind heldout3 now 12 past guard, 26 refused, 7 asked. 5.0 needs under 10 and 0. Next: read heldout4's remaining 6 refusals and 7 past guard, then train argument shape for what guard rules cannot fix.
+
 Round 15 shipped as v4.17.8, guard only: standard 22 to 10 past guard, heldout2 20 to 6, blind heldout3 flat (16 past, 32 refused). Guard tuning no longer moves the blind set. Round 16 is training: teach argument shape (tab pairs for copy/move/translate/append_note, paths copied verbatim), since most of the 32 refusals are the right tool with a malformed argument. Rescore fast with a one-time pick dump (`picks.py dump`, then rescore guard edits in seconds), never on heldout3 rows.
 
 Round 14 is done and lost. Next round 15: retrain from dev-set misses only (new training data + guard in app/tools_registry.py), never from heldout3.

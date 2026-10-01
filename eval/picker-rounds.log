@@ -4,3 +4,7 @@
 2026-10-01 round15 guard-only hands-adapter heldout2: 350/500 passed, 6 past guard, 5 refused (was 20, 7)
 2026-10-01 round15 guard-only hands-adapter heldout3 (blind, totals only): 343/465 passed, 16 past guard, 32 refused (old guard 17, 31)
 2026-10-01 round15 guard-only hands-adapter-round14 standard: 1308/1959 passed, 48 past guard, 2 refused; heldout2 340/500, 19, 8. Not swapped.
+2026-10-01 round16 guard+ask hands-adapter standard: 1312/1959 passed, 7 past guard, 0 refused, 0 asked
+2026-10-01 round16 guard+ask hands-adapter heldout2: 350/500 passed, 5 past guard, 5 refused, 0 asked
+2026-10-01 round16 guard+ask hands-adapter heldout4 (new dev set): 267/455 passed, 7 past guard, 6 refused, 16 asked (was 24, 31)
+2026-10-01 round16 guard+ask hands-adapter heldout3 (blind, totals only): 343/465 passed, 12 past guard, 26 refused, 7 asked (was 16, 32)

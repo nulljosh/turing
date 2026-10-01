@@ -308,6 +308,7 @@ WRITES = tools_registry.WRITES
 _EVIDENCE = tools_registry._EVIDENCE
 _AGAINST = tools_registry._AGAINST
 _sound = tools_registry._sound
+needs_target = tools_registry.needs_target
 
 import tools_write  # noqa: E402  (phrase-routed only: each confirms itself with a diff, never a model's tool)
 _WRITERS = {f.__name__: f for f in (tools_write.edit_last_draft, tools_write.edit_file, tools_write.write_code)}
@@ -462,6 +463,8 @@ def do(query, log=None, confirm=None):
     if _faq_knows(query):
         return None  # a question her own FAQ answers is about her, not a job for her hands
     picked = pick(query)
+    if picked and picked[0] == "ask":
+        return picked[1]
     if picked and picked[0] != "agent":
         if log:
             log(f"  [{picked[0]}({picked[1]})]")

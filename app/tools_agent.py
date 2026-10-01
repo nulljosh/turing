@@ -7,6 +7,7 @@ import re
 import urllib.request
 
 import intent
+import tools_registry
 import untrusted
 
 HANDS_ADAPTER = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "hands-adapter")
@@ -113,7 +114,8 @@ def pick(query):
     gen_hands_data.py, scored by eval/hands.py. MLX on Apple Silicon, else
     llama-cpp-python over the GGUF export so Windows and Linux get the same
     picker (_load_hands). Returns (tool, arg), ("agent", ""), or None when it
-    is not a command, the pick is unsound, or neither backend is here. None
+    is not a command, the pick is unsound, or neither backend is here. ("ask", question) when the
+    sentence names the tool but only points at its target ("trash this file"). None
     always means: carry on as if she had not looked."""
     global _hands, _hands_backend
     if untrusted.is_untrusted(query):
@@ -135,7 +137,12 @@ def pick(query):
         return None
     if tool == "agent":
         return "agent", ""
-    return (tool, arg) if tool and tools._sound(tool, arg, query) else None
+    if not tool:
+        return None
+    if tools._sound(tool, arg, query):
+        return tool, arg
+    ask = tools_registry.needs_target(tool, arg, query)
+    return ("ask", ask) if ask else None  # round sixteen: "crop this image" asks which image, never guesses
 
 
 def _faq_knows(query):

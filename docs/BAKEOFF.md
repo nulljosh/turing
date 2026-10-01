@@ -252,3 +252,18 @@ Round fourteen lost because new weights make different mistakes than the round-n
 Round fourteen's weights under the new guard: standard 1308 / 48 / 2, heldout2 340 / 19 / 8. Still behind shipped, not swapped.
 
 **Decision: guard shipped.** Big wins on both dev sets, flat on the blind set. That gap is the finding: guard rules tuned on dev misses no longer move the blind number, so 5.0 (under 10 past guard, 0 refused on heldout3) will not come from more guard rounds. The 32 refusals are mostly right tools with a badly shaped argument (an unsplit tab pair, a reworded path), which is a model problem. Next: train the argument shape, not the tool choice.
+
+## Round sixteen (2026-10-01): a fourth blind set to steer by, and "which file?" instead of a refusal
+
+Round fifteen's guard moved the dev sets but not heldout3, so the dev sets were not showing what the blind set fails on. A fresh writer that saw only the tool list (name and first docstring line, nothing else in the repo) wrote `eval/heldout4.jsonl`: four phrasings per tool plus 80 non-commands, 455 rows after the overlap filter. It behaves like heldout3 (shipped adapter: 24 past guard, 31 refused against heldout3's 16 and 32), and unlike heldout3 it can be read, so it is the new dev set.
+
+What it showed: about half the refusals were "trash this file", "crop this image", "translate this to spanish". The sentence names the tool and points at a target it never names; the model invents one ("original", "~/Documents") and the guard is right to refuse. Running the tool on an empty argument is not safe either (zip_file("") zips the home folder). So `tools_registry.needs_target` returns a question ("Which file? Name it, like ~/Documents/report.pdf.") when the sentence points ("this", "that", "the file") with that family's own noun, the tool's own evidence holds, and the guessed argument is unsound; `pick()` returns ("ask", question) and `do()` replies with it, running nothing. `eval/hands.py` counts these as "asked which", not refused, because that is what she now does. The rest: evidence gaps (decompress, pwd, notifications, "info on"), chit-chat firing open_app and music with no word about either, read_file accepting any path at all (now it copies its path from the sentence like every other file tool).
+
+| Set | Round fifteen guard | Round sixteen |
+|---|---|---|
+| standard (1959) | 1312 / 10 past guard / 0 refused | 1312 / 7 / 0 |
+| heldout2 (500) | 350 / 6 / 5 | 350 / 5 / 5 |
+| heldout4, new dev (455) | 267 / 24 / 31 | 267 / 7 / 6, 16 asked |
+| heldout3, blind (465) | 343 / 16 / 32 | 343 / 12 / 26, 7 asked |
+
+**Decision: shipped.** The blind set moved this time. 5.0 still needs under 10 past and 0 refused there: 2 and 26 to go.

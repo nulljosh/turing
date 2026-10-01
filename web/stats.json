@@ -1,5 +1,5 @@
 {
-  "version": "4.17.8",
+  "version": "4.17.9",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -116,8 +116,8 @@
         "documented": 7
       },
       "app/tools_registry.py": {
-        "total": 3,
-        "documented": 3
+        "total": 4,
+        "documented": 4
       },
       "app/tools_research.py": {
         "total": 10,
@@ -336,8 +336,8 @@
         "documented": 4
       },
       "tests/test_harness.py": {
-        "total": 33,
-        "documented": 33
+        "total": 34,
+        "documented": 34
       },
       "tests/test_intent.py": {
         "total": 40,

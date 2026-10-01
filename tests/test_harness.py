@@ -312,6 +312,24 @@ class AgentGrounding(unittest.TestCase):
         self.assertTrue(tools._sound("calculate", "20% of 50", "whats 20% of 50"))
         self.assertTrue(tools._sound("paint_image", "~/a.jpg", "rebuild ~/a.jpg in pixelmator"))
 
+    def test_round_sixteen_points_without_naming_asks_which(self):
+        """Round sixteen: "trash this file" names the tool but not its target. A guessed target never runs; she
+        asks which. Chit-chat and a named, sound target are not questions."""
+        self.assertIn("Which file", tools.needs_target("trash_file", "~/Documents", "trash this file for me"))
+        self.assertIn("Which image", tools.needs_target("crop_square", "original", "crop this image to a square"))
+        self.assertIn("Which words", tools.needs_target("translate", "this to spanish", "translate this to spanish"))
+        self.assertIsNone(tools.needs_target("trash_file", "~/a.txt", "trash ~/a.txt"))  # sound: runs, no question
+        self.assertIsNone(tools.needs_target("open_app", "that", "that's so beautiful"))
+        self.assertIsNone(tools.needs_target("zip_file", "", "that was a fun trip"))
+        self.assertFalse(tools._sound("read_file", "~/x/roadmap.txt", "show me the text from this file"))
+        self.assertTrue(tools._sound("read_file", "~/notes.txt", "read ~/notes.txt"))
+        self.assertFalse(tools._sound("open_app", "traveling", "traveling really opens your mind"))
+        self.assertFalse(tools._sound("music", "play", "i love collecting vinyl records"))
+        self.assertTrue(tools._sound("music", "playing", "who sings this"))
+        self.assertTrue(tools._sound("set_volume", "55", "turn it to 55"))
+        with mock.patch.object(tools, "pick", return_value=("ask", "Which file? Name it.")):
+            self.assertEqual(tools.do("trash this file"), "Which file? Name it.")
+
 
 class SpawnTests(unittest.TestCase):
     """Subagents: every task gets its own, the answers come back in order, and the turn is recorded."""

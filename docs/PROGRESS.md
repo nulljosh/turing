@@ -1,5 +1,7 @@
 # Progress log
 
+- 2026-10-01 v4.17.9: "trash this file" now gets "Which file?" instead of a refusal or a guess. A fourth blind test set to steer by. Blind set: wrong picks past the guard 16 to 12, refusals 32 to 26.
+  `v4.17.9 · 131 tools · 609 tests · docs coverage 100% · laws all hold · biggest eval/gen_heldout2.py 647 · actions 231/231 · parity 231/231 · util_diff 261/261`
 - 2026-10-01 v4.17.8: picker guard round fifteen. Wrong picks that reach the Mac drop 22 to 10 on the standard set and 20 to 6 on heldout2, no right pick newly refused there. The blind set barely moves (17 to 16 past, 31 to 32 refused), so the next gain has to come from training, not more guard rules.
   `v4.17.8 · 131 tools · 608 tests · docs coverage 100% · laws all hold · biggest eval/gen_heldout2.py 647 · actions 231/231 · parity 231/231 · util_diff 261/261`
 - 2026-10-01 v4.17.7: her voice moves to ElevenLabs' new Eleven v4 model (through Text to Dialogue, same 16kHz audio Joshua Tree already plays). One test line came back faster to first sound, 1.22s against 1.49s. Flip SPEAK_V4 to false to roll back.

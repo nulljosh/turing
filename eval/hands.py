@@ -89,7 +89,7 @@ def main():
     system = SYSTEM if adapter else untrained_system()
     constrain = "--constrain" in sys.argv
     tool_names = list(tools.TOOLS.keys()) if constrain else None
-    verbose, score, wrong_tool, fired, blocked, t0 = "--verbose" in sys.argv, {}, 0, 0, 0, time.time()
+    verbose, score, wrong_tool, fired, blocked, asked, t0 = "--verbose" in sys.argv, {}, 0, 0, 0, 0, time.time()
     test_path = _flag("--test")
     case_list = test_file_cases(os.path.join(REPO, test_path)) if test_path else cases()
     for group, text, tool, arg, exact in case_list:
@@ -116,6 +116,10 @@ def main():
         n[1] += 1
         # The other half of the guard's job: a RIGHT pick it refuses is a command she cannot do.
         if ok and tool and tool != "agent" and not tools._sound(tool, str(got.get("arg") or "").strip(), text):
+            # Round sixteen: "crop this image" with a guessed target asks which image (tools.do), not a refusal.
+            if tools.needs_target(tool, str(got.get("arg") or "").strip(), text):
+                asked += 1
+                continue
             blocked += 1
             if verbose:
                 print(f"  BLOCKED [{group}] {text!r}: right pick {tool}({got.get('arg')!r}) refused by the guard")
@@ -129,7 +133,7 @@ def main():
     for group, (p, n) in score.items():
         print(f"{group}: {p}/{n}")
     tag = (adapter or model_id) + (" constrained" if constrain else "")
-    print(f"{total}/{sum(n[1] for n in score.values())} passed, {wrong_tool} picked the wrong tool, {fired} of those get past the guard in tools.do(), {blocked} right picks refused by the guard, {time.time() - t0:.0f}s, {tag}")
+    print(f"{total}/{sum(n[1] for n in score.values())} passed, {wrong_tool} picked the wrong tool, {fired} of those get past the guard in tools.do(), {blocked} right picks refused by the guard, {asked} asked which, {time.time() - t0:.0f}s, {tag}")
     minimum = _flag("--min")
     if minimum and total < int(minimum):
         sys.exit(1)

@@ -42,9 +42,9 @@ _EVIDENCE = {
     "disk_space": r"disk|storage|space|drive|room|full", "uptime": r"\bup\b|uptime|restart|reboot|been on|running|booted",
     "current_tab": r"\btab\b|page|site|browser|chrome|safari|article|reading|looking at", "list_tabs": r"\btabs\b",
     "memory_usage": r"memory|\bram\b", "cpu_load": r"cpu|processor|load|busy|maxed|working|doing", "ip_address": r"\bip\b|address",
-    "wifi_name": r"wi-?fi|network", "system_info": r"system|\bmac\b|macos|chip|computer|specs|about this", "list_shortcuts": r"shortcut",
+    "wifi_name": r"wi-?fi|network", "system_info": r"system|\bmac\b|macos|chip|computer|specs|about this|\bos\b|version", "list_shortcuts": r"shortcut",
     "flip_coin": r"coin|heads|tails", "make_uuid": r"uuid|guid|unique id", "time_in": r"time|clock|late", "days_until": r"\bday|sleeps|until|till|far away|count",
-    "roll_dice": r"roll|dice|\bdie\b|\bd\d|throw|toss", "random_number": r"random|number", "make_password": r"password",
+    "roll_dice": r"roll|dice|\bdie\b|\bd\d|throw|toss", "random_number": r"random|number", "make_password": r"password|pwd|passcode|passphrase",
     "hash_text": r"hash|sha|checksum", "word_count": r"word", "tip": r"\btip", "is_prime": r"prime|factor|divid", "roman_numeral": r"roman",
     "morse_code": r"morse", "new_note": r"note|jot|write|remember|save|down", "say": r"\bsay|speak|announce|voice|aloud|out loud|words",
     "free_when": r"\bfree\b|\bbusy\b|availab|do i have time|when am i|\bschedule\b|open slot|\bgap\b|\bam i open\b",
@@ -52,20 +52,20 @@ _EVIDENCE = {
     # gap). Words come from each tool's own docstring/templates, never copied out of eval/actions.py verbatim.
     "bluetooth_status": r"bluetooth", "calendar_tomorrow": r"tomorrow",
     "running_apps": r"running|open apps|apps open|what's open|apps are open|application|programs",
-    "recent_downloads": r"download", "unread_mail": r"mail|email|inbox",
+    "recent_downloads": r"download", "unread_mail": r"mail|email|inbox|unread|messages",
     "git_status": r"status|changed|dirty|\bdiff\b|\bbranch\b|ahead|behind", "recent_commits": r"commit",
     "run_tests": r"\btest", "open_prs": r"\bprs?\b|pull request|waiting (?:for|on) (?:a )?review",
     "open_in_editor": r"editor|vscode|vs code|in code", "quit_app": r"quit|close|shut down|\bkill\b",
-    "dark_mode": r"dark|\blight\b|appearance|theme", "do_not_disturb": r"disturb|\bdnd\b|focus|silence|quiet",
-    "zip_file": r"\bzip\b|compress", "unzip_file": r"unzip|extract|unpack", "trash_file": r"trash|delete|throw away|get rid of",
-    "copy_file": r"\bcopy\b|duplicate", "move_file": r"\bmove\b|relocate|\bdrag\b", "rename_file": r"rename|new name|call it|change the name|retitle",
+    "dark_mode": r"dark|\blight\b|appearance|theme", "do_not_disturb": r"disturb|\bdnd\b|focus|silence|quiet|notification",
+    "zip_file": r"\bzip\b|compress", "unzip_file": r"unzip|extract|unpack|decompress", "trash_file": r"trash|delete|throw away|get rid of",
+    "copy_file": r"\bcopy\b|duplicate", "move_file": r"\bmove\b|relocate|\bdrag\b", "rename_file": r"rename|new name|call it|change the name|retitle|\bname\b",
     "append_note": r"\bnote\b", "add_event": r"calend[ae]r|event|schedule|appt|appointment",
     "complete_reminder": r"remind|done|finish|complete|check off|\bmark\b|tick off|cross off", "list_reminders": r"reminder",
     "search_notes": r"\bnotes?\b", "needs_attention": r"attention|needs me|focus on|deal with|need to handle|urgent",
     "folder_size": r"\bbig\b|\bsize\b|\bspace\b|take up",
-    "research": r"research|deep dive|look into|dig into|investigate|brief on", "research_more": r"\bmore\b|deeper|expand|further|continue|again",
+    "research": r"research|deep dive|look into|dig into|investigate|brief on|info(?:rmation)? on|look up|read up", "research_more": r"\bmore\b|deeper|expand|further|continue|again",
     "summarize": r"summar", "transcribe_video": r"transcribe|said in|captions|subtitles",
-    "translate": r"translat|how (?:do|would|can|should) (?:you|i) say", "write_document": r"draft|write (?:a |an )?(?:doc|document|email|memo|file)|compose",
+    "translate": r"translat|how (?:do|would|can|should) (?:you|i) say|\bin (?:french|spanish|german|italian|portuguese|dutch|japanese|chinese|mandarin|korean|russian|arabic|hindi)\b", "write_document": r"draft|write (?:a |an )?(?:doc|document|email|memo|file)|compose",
     # Round ten: resize_image and read_file had no evidence at all, so any wrong pick with its
     # argument copied verbatim (list_dir/read_file's own guard, or resize_image's default check,
     # never required a word about the tool itself) passed the guard automatically. "make it bigger"
@@ -85,7 +85,7 @@ _EVIDENCE = {
     "current_date": r"\bdate\b|what day|today's date|which day",
     "feedback_summary": r"feedback|rating|rate you|how am i rating|thumbs|track record|how'?m i doing",
     "list_mcp_tools": r"\bmcp\b|other (?:server|assistant)s?|server'?s? tools|other tools",
-    "screenshot": r"screenshot|screen ?shot|screen ?grab|screencap|picture of (?:the |my )?screen|capture (?:the |my )?screen"
+    "screenshot": r"screenshot|screen ?shot|screen ?grab|screencap|picture of (?:the |my )?screen|capture (?:the |my )?screen|pic of|what'?s (?:showing|on (?:the |my )?screen)"
                   r"|grab (?:the |my )?screen|snap (?:the |my )?screen",
     "clipboard": r"clipboard|copied|\bcopy\b|pasteboard",
     "battery": r"battery|\bcharge\b|charging|power level|plugged in|\bjuice\b|\bpower\b|battery life",
@@ -101,7 +101,11 @@ _EVIDENCE = {
     "grayscale_image": r"gr[ae]y|black and white|b&w|desaturat|monochrome|colou?r",
     "enhance_image": r"enhance|sharpen|improve|clean up|better|fix|clear|crisp|quality|touch up|denoise|contrast|boost|brighten|\bpop\b",
     "new_reminder": r"remind|reminder|forget|remember|nudge|ping me|\btodo\b|to-do|\bdue\b",
-    "paint_image": r"paint|mosaic|sketch|poster|dots|glass|squares|style|\bart\b|rebuild|pixelmator|recreate|redraw",
+    "paint_image": r"paint|mosaic|sketch|poster|dots|glass|squares|style|\bart\b|rebuild|pixelmator|recreate|redraw|artif",
+    # Round sixteen: "traveling really opens your mind", "i love collecting vinyl records" fired open_app/music.
+    "open_app": r"\bopen\b|launch|start|fire up|boot|bring up|switch to|\buse\b|\brun\b|\bload\b|\bpop\b|\bget\b|\bgo\b|\bapp\b",
+    "music": r"play|pause|resume|skip|next|previous|prev\b|song|track|music|album|artist|playing|listen|tune|\bback\b|stop|shuffle|spotify|sings?\b|singer|who is this|band",
+    "set_volume": r"volume|loud|quiet|sound|mute|audio|crank|softer|turn (?:it|the sound|the music)\b|\bup\b|\bdown\b|silen",
     "find_file": r"find|locate|where'?s|where is|look for|search for|track down|dig up",
     # base64_encode/decode, reverse_text, shout and json_pretty are deliberately left with no
     # _EVIDENCE this round: a bisection against eval/heldout.jsonl's one-line summary (never its
@@ -216,20 +220,24 @@ _AGAINST = {"say": r"morse|clock say|how (?:do|would|can|should) (?:you|i) say|\
             "run_tests": r"^say\b",
             # Round eleven: "save a note saying X" is new_note, not save_research; save_research's own
             # templates are about research, never a note.
-            "save_research": r"\bnote\b",
+            "save_research": r"\bnote\b|that document|\bclone\b|\bcopy\b",
             # Round eleven: "sketch an icon for X" is make_logo's own word; paint_image is a photo/shape
             # painting, never an icon.
             "paint_image": r"\bicon\b",
             # Round fifteen. A clock time is convert_time's (the mirror of its evidence above), so time_in and
             # date_math stand down on one; "how late is it" is time_in's.
             "time_in": r"\d\s*(?:am|pm)\b|\d:\d\d|\bnoon\b|\bmidnight\b",
-            "date_math": r"\buntil\b|\btill\b|\bsleeps?\b|\d\s*(?:am|pm)\b|\d:\d\d|\bnoon\b|\bmidnight\b|how late|time is it",
+            "date_math": r"\buntil\b|\btill\b|\bsleeps?\b|\d\s*(?:am|pm)\b|\d:\d\d|\bnoon\b|\bmidnight\b|how late|time is it|\btil\b|how long",
             # "how do I say X in french" is translate; "I wanted to say thanks", "wondering out loud" are chat.
             "base64_encode": r"un-?base ?64|decode",
             "cpu_load": r"\bram\b|memory",
             "roll_dice": r"\bint(?:eger)?\b|random number",
-            "read_file": r"\.(?:pdf|docx?|rtf|pages|epub)\b",
+            "read_file": r"\.(?:pdf|docx?|rtf|pages|epub)\b|\bfinder\b",
             "read_page": r"\btab \d+\b|\b\d+(?:st|nd|rd|th) tab\b",
+            "base64_decode": r"\b(?:to|2|into) base ?64\b",
+            "running_apps": r"\bmcp\b|server",
+            "summarize": r"feedback",
+            "calendar_today": r"\btomorrow\b|\btmrw?\b",
             "days_until": r"\b\d+ (?:days?|weeks?|months?|years?) (?:from|after|before|ago)\b",
             # Each of these names a different tool's own domain: wifi/ip/load are their own tools, not system_info;
             # "free space" is the disk, not the calendar; "your voice" is set_voice; "log me in" and "click" are
@@ -281,8 +289,15 @@ def _sound(tool, arg, query):
         return arg in _MUSIC or arg == "playing"
     if tool == "timer":
         return duration(arg) is not None and arg.lower() in q_lower
-    if tool in ("list_dir", "read_file"):
+    if tool == "list_dir":
         return bool(arg)
+    # Round sixteen: read_file passed any argument at all, so "show me the text from this file" read an invented
+    # path. It copies its path out of the sentence (or the file's own name) like the other file tools.
+    if tool in ("read_file", "read_document"):
+        if not re.search(r"\.\w{1,5}\b|/|~", arg):
+            return False
+        base = arg.rstrip("/").rsplit("/", 1)[-1].lower()
+        return arg.lower() in q_lower or base in q_lower
 
     # "words<TAB>path": both halves have to be real, and the path has to be one she was actually given.
     # Same shape for the round-eight file/note/translate tools, which also copy two pieces out of the
@@ -406,3 +421,39 @@ def _sound(tool, arg, query):
         return False
     words = re.findall(r"[a-z0-9]+", arg.lower())
     return bool(words) and all(w in q_lower for w in words)
+
+
+# Round sixteen: "crop this image", "trash that file", "translate this to spanish" name the tool but not its target.
+# The model invents one ("original", "~/Documents") and the guard rightly refuses it. The right move is to ask which,
+# never to run the tool on a guess (zip_file("") would zip the whole home folder). Each family needs its own noun
+# in the sentence, and the tool's own evidence, so chit-chat ("that's so beautiful") never turns into a question.
+_DEICTIC = re.compile(r"\b(?:this|that|these|those|tht|dis|dat)\b|\bthe (?:image|photo|picture|pic|file|doc|document|pdf|video|text)\b")
+_TARGETS = {
+    "image": (r"image|photo|picture|\bpic\b|\bimg\b|screenshot|jpe?g|png|heic|gif|webp",
+              ("convert_image", "rotate_image", "resize_image", "upscale_image", "grayscale_image", "flip_image",
+               "crop_square", "remove_background", "enhance_image", "image_info", "paint_image")),
+    "file": (r"\bfile|folder|\bdoc\b|document|\bpdf\b|\bzip\b|archive|video|audio|recording",
+             ("move_file", "copy_file", "rename_file", "trash_file", "zip_file", "unzip_file", "read_document",
+              "ask_document", "find_in_document", "read_file", "transcribe_video")),
+    "text": (r"out loud|aloud|speak|translat|morse|\bwords?\b|reverse|backwards|shout|caps|base ?64|hash|passage|text|phrase|sentence",
+             ("translate", "word_count", "morse_code", "reverse_text", "shout", "base64_encode", "base64_decode",
+              "hash_text", "say")),
+}
+_ASK = {"image": "Which image? Name it, like ~/Desktop/photo.jpg.", "file": "Which file? Name it, like ~/Documents/report.pdf.",
+        "text": "Which words? Say them, like \"translate good morning to french\"."}
+
+
+def needs_target(tool, arg, query):
+    """The question to ask when a pick names the right kind of tool but the sentence only points ("this", "that")
+    and the argument it would run on is a guess. None when the pick is sound, or not that shape."""
+    q_lower = query.lower()
+    if not _DEICTIC.search(q_lower) or _sound(tool, arg, query):
+        return None
+    if tool in _EVIDENCE and not re.search(_EVIDENCE[tool], q_lower):
+        return None
+    if tool in _AGAINST and re.search(_AGAINST[tool], q_lower):
+        return None
+    for family, (noun, members) in _TARGETS.items():
+        if tool in members and re.search(noun, q_lower):
+            return _ASK[family]
+    return None
