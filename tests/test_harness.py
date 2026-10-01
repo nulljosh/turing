@@ -292,6 +292,26 @@ class AgentGrounding(unittest.TestCase):
         self.assertFalse(tools._sound("json_pretty", "{}", "why does json even exist"))
         self.assertTrue(tools._sound("json_pretty", '{"a": 1}', 'pretty print {"a": 1}'))
 
+    def test_round_fifteen_wrong_tools_stand_down(self):
+        """Round fifteen: a wrong pick with a copied argument and no word about the tool itself, or a word
+        that names another tool's domain, does not fire. The tool's own phrasing still does."""
+        self.assertFalse(tools._sound("flip_image", "hello there", "flip hello there backwards"))
+        self.assertTrue(tools._sound("flip_image", "~/a.png", "mirror ~/a.png"))
+        self.assertFalse(tools._sound("time_in", "5pm pst in paris", "what time is 5pm pst in paris"))
+        self.assertTrue(tools._sound("time_in", "paris", "what time is it in paris"))
+        self.assertFalse(tools._sound("date_math", "denver", "how late is it in denver"))
+        self.assertTrue(tools._sound("date_math", "10 days from now", "what date is 10 days from now"))
+        self.assertFalse(tools._sound("say", "goodbye in german", "how would i say goodbye in german"))
+        self.assertFalse(tools._sound("say", "the ride", "i wanted to say thanks for the ride"))
+        self.assertTrue(tools._sound("say", "dinner is ready", "say dinner is ready"))
+        self.assertFalse(tools._sound("new_note", "call mom to my todo", "add call mom to my todo note"))
+        self.assertFalse(tools._sound("cpu_load", "", "is my ram full"))
+        self.assertFalse(tools._sound("shout", "zoom", "kill zoom, it hung"))
+        self.assertFalse(tools._sound("web_search", "groceries", "search my notes for groceries"))
+        self.assertFalse(tools._sound("system_info", "", "what wifi am i on"))
+        self.assertTrue(tools._sound("calculate", "20% of 50", "whats 20% of 50"))
+        self.assertTrue(tools._sound("paint_image", "~/a.jpg", "rebuild ~/a.jpg in pixelmator"))
+
 
 class SpawnTests(unittest.TestCase):
     """Subagents: every task gets its own, the answers come back in order, and the turn is recorded."""

@@ -238,3 +238,17 @@ Candidate: 1308/1959 passed, 556 picked the wrong tool, 88 of those get past the
 Shipped (hands-adapter): 1312/1959 passed, 536 picked the wrong tool, 22 of those get past the guard, 0 right picks refused.
 
 The candidate is less safe on both metrics: 88 wrong picks past the guard against 22 (up from 9 at v4.17.0), and introduced 7 right picks refused where the shipped adapter has zero. Not shipped; kept as hands-adapter-round14/ for reference. The `gen_hands_data.py` changes from the preparation phase (round fourteen, 2026-09-30) are shipping because they improve the training distribution and the generator's null-ratio check, not because the adapter improved. Next round 15: retraining from dev-set misses only (training data + guard in app/tools_registry.py), never from heldout3; screen_bench.py still not run on the Mac; then split web/samantha.js and web/demo.js.
+
+## Round fifteen (2026-10-01): guard-only, and the guard has hit its ceiling
+
+Round fourteen lost because new weights make different mistakes than the round-nine weights the guard was tuned on. So round fifteen tuned the guard against both adapters' dev-set misses (standard and heldout2), no retrain. Picks were dumped once per adapter and rescored in seconds per guard change. New evidence for tools a wrong pick reached with a copied argument and no word about the tool (date_math, calculate, shout, flip/grayscale/enhance/paint_image, new_reminder), new against-rules where a word names another tool's domain (a clock time is convert_time's, "how do I say X in french" is translate's, "my notes" is search_notes'), image tools need an image, and a duplicate dict key that had silently thrown away web_search's first rule since round eleven.
+
+| Set | Shipped, old guard | Shipped, round fifteen guard |
+|---|---|---|
+| standard (1959) | 1312 / 22 past guard / 0 refused | 1312 / 10 / 0 |
+| heldout2 (500) | 350 / 20 / 7 | 350 / 6 / 5 |
+| heldout3, blind, read once (465) | 343 / 17 / 31 | 343 / 16 / 32 |
+
+Round fourteen's weights under the new guard: standard 1308 / 48 / 2, heldout2 340 / 19 / 8. Still behind shipped, not swapped.
+
+**Decision: guard shipped.** Big wins on both dev sets, flat on the blind set. That gap is the finding: guard rules tuned on dev misses no longer move the blind number, so 5.0 (under 10 past guard, 0 refused on heldout3) will not come from more guard rounds. The 32 refusals are mostly right tools with a badly shaped argument (an unsplit tab pair, a reworded path), which is a model problem. Next: train the argument shape, not the tool choice.

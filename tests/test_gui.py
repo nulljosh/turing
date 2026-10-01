@@ -105,7 +105,8 @@ class Hands(unittest.TestCase):
             self.assertIn("brew install cliclick", tools_gui.click_text("OK"))
             self.assertIn("brew install cliclick", tools_gui.type_text("hi"))
         with mock.patch.dict(os.environ, {"SAMANTHA_HEADLESS": "0"}), mock.patch("shutil.which", return_value="/bin/cliclick"), \
-                mock.patch.object(tools_gui, "screen_boxes", return_value=[]):
+                mock.patch.object(tools_gui, "screen_boxes", return_value=[]), \
+                mock.patch.object(tools_gui, "ax_boxes", return_value=[]):  # else a real "OK" on screen wins
             self.assertIn("could not read the screen", tools_gui.click_text("OK"))
         self.assertIn("Click what", tools_gui.click_text("  "))
         self.assertEqual(tools_gui.click_text("OK"), "Would click OK.")

@@ -1,2 +1,6 @@
 2026-10-01 round14 hands-adapter standard: 1312/1959 passed, 536 picked the wrong tool, 22 of those get past the guard in tools.do(), 0 right picks refused by the guard, 398s, hands-adapter
 2026-10-01 round14 hands-adapter-round14 standard: 1308/1959 passed, 556 picked the wrong tool, 88 of those get past the guard in tools.do(), 7 right picks refused by the guard, 365s, hands-adapter-round14
+2026-10-01 round15 guard-only hands-adapter standard: 1312/1959 passed, 10 past guard, 0 refused (was 22, 0)
+2026-10-01 round15 guard-only hands-adapter heldout2: 350/500 passed, 6 past guard, 5 refused (was 20, 7)
+2026-10-01 round15 guard-only hands-adapter heldout3 (blind, totals only): 343/465 passed, 16 past guard, 32 refused (old guard 17, 31)
+2026-10-01 round15 guard-only hands-adapter-round14 standard: 1308/1959 passed, 48 past guard, 2 refused; heldout2 340/500, 19, 8. Not swapped.

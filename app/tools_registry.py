@@ -43,7 +43,7 @@ _EVIDENCE = {
     "current_tab": r"\btab\b|page|site|browser|chrome|safari|article|reading|looking at", "list_tabs": r"\btabs\b",
     "memory_usage": r"memory|\bram\b", "cpu_load": r"cpu|processor|load|busy|maxed|working|doing", "ip_address": r"\bip\b|address",
     "wifi_name": r"wi-?fi|network", "system_info": r"system|\bmac\b|macos|chip|computer|specs|about this", "list_shortcuts": r"shortcut",
-    "flip_coin": r"coin|heads|tails", "make_uuid": r"uuid|guid", "time_in": r"time|clock|late", "days_until": r"\bday|sleeps|until|till|far away|count",
+    "flip_coin": r"coin|heads|tails", "make_uuid": r"uuid|guid|unique id", "time_in": r"time|clock|late", "days_until": r"\bday|sleeps|until|till|far away|count",
     "roll_dice": r"roll|dice|\bdie\b|\bd\d|throw|toss", "random_number": r"random|number", "make_password": r"password",
     "hash_text": r"hash|sha|checksum", "word_count": r"word", "tip": r"\btip", "is_prime": r"prime|factor|divid", "roman_numeral": r"roman",
     "morse_code": r"morse", "new_note": r"note|jot|write|remember|save|down", "say": r"\bsay|speak|announce|voice|aloud|out loud|words",
@@ -51,7 +51,7 @@ _EVIDENCE = {
     # Round eight covered 36 tools with zero picker training data; their evidence predates them (round-eight
     # gap). Words come from each tool's own docstring/templates, never copied out of eval/actions.py verbatim.
     "bluetooth_status": r"bluetooth", "calendar_tomorrow": r"tomorrow",
-    "running_apps": r"running|open apps|apps open|what's open|apps are open|application",
+    "running_apps": r"running|open apps|apps open|what's open|apps are open|application|programs",
     "recent_downloads": r"download", "unread_mail": r"mail|email|inbox",
     "git_status": r"status|changed|dirty|\bdiff\b|\bbranch\b|ahead|behind", "recent_commits": r"commit",
     "run_tests": r"\btest", "open_prs": r"\bprs?\b|pull request|waiting (?:for|on) (?:a )?review",
@@ -62,7 +62,7 @@ _EVIDENCE = {
     "append_note": r"\bnote\b", "add_event": r"calend[ae]r|event|schedule|appt|appointment",
     "complete_reminder": r"remind|done|finish|complete|check off|\bmark\b|tick off|cross off", "list_reminders": r"reminder",
     "search_notes": r"\bnotes?\b", "needs_attention": r"attention|needs me|focus on|deal with|need to handle|urgent",
-    "find_file": r"find|locate|where(?:'s| is)", "folder_size": r"\bbig\b|\bsize\b|\bspace\b|take up",
+    "folder_size": r"\bbig\b|\bsize\b|\bspace\b|take up",
     "research": r"research|deep dive|look into|dig into|investigate|brief on", "research_more": r"\bmore\b|deeper|expand|further|continue|again",
     "summarize": r"summar", "transcribe_video": r"transcribe|said in|captions|subtitles",
     "translate": r"translat|how (?:do|would|can|should) (?:you|i) say", "write_document": r"draft|write (?:a |an )?(?:doc|document|email|memo|file)|compose",
@@ -91,6 +91,18 @@ _EVIDENCE = {
     "battery": r"battery|\bcharge\b|charging|power level|plugged in|\bjuice\b|\bpower\b|battery life",
     "weather": r"weather|forecast|\brain(?:ing|y)?\b|\bsnow(?:ing|y)?\b|\btemperature\b|need a (?:jacket|coat)|umbrella|degrees out|sunny|cloudy|storm|cold (?:is it|out)"
                r"|hot (?:is it|out)|nice out|\boutside\b|\btemp\b",
+    # Round fifteen: tools a wrong pick reached with a copied argument and no word about the tool itself
+    # ("flip good morning backwards" flip_image, "kill slack" shout, "make x.png into jpg" grayscale_image).
+    # Words come from each tool's own docstring and templates.
+    "date_math": r"\bdays?\b|\bweeks?\b|\bmonths?\b|\byears?\b|\bdate\b|\bago\b|\bbefore\b|\bafter\b|from (?:now|today)|christmas|\d{4}-\d\d",
+    "calculate": r"\d|plus|minus|times|divided|sqrt|square root|percent|squared|cubed|\bmath\b|calculat|\bpi\b",
+    "shout": r"shout|caps|upper ?case|yell|loud|capital",
+    "flip_image": r"flip|mirror|upside",
+    "grayscale_image": r"gr[ae]y|black and white|b&w|desaturat|monochrome|colou?r",
+    "enhance_image": r"enhance|sharpen|improve|clean up|better|fix|clear|crisp|quality|touch up|denoise|contrast|boost|brighten|\bpop\b",
+    "new_reminder": r"remind|reminder|forget|remember|nudge|ping me|\btodo\b|to-do|\bdue\b",
+    "paint_image": r"paint|mosaic|sketch|poster|dots|glass|squares|style|\bart\b|rebuild|pixelmator|recreate|redraw",
+    "find_file": r"find|locate|where'?s|where is|look for|search for|track down|dig up",
     # base64_encode/decode, reverse_text, shout and json_pretty are deliberately left with no
     # _EVIDENCE this round: a bisection against eval/heldout.jsonl's one-line summary (never its
     # rows, per this round's no-peek rule) traced a real-picks-refused regression to this group,
@@ -140,7 +152,13 @@ def _is_general_knowledge_question(q_lower):
     usually"), not a request aimed at the user's own device, data or a real action."""
     return bool(_GENERAL_KNOWLEDGE.search(q_lower)) and not _PERSONAL_OR_IMPERATIVE.search(q_lower)
 # ...and words that say the sentence is about a different tool. "say help in morse code" is morse_code, not say.
-_AGAINST = {"say": r"morse|clock say", "wifi_name": r"address|\bip\b", "weather": r"\bapp\b", "web_search": r"\.(?:com|org|net|io|ca)\b",
+# Round fifteen: "how do I say X in french" is translate; "I wanted to say thanks", "wondering out loud" are chat,
+# and the weather on another planet is trivia.
+_AGAINST = {"say": r"morse|clock say|how (?:do|would|can|should) (?:you|i) say|\bin (?:french|spanish|german|italian|portuguese"
+                   r"|dutch|japanese|chinese|mandarin|korean|russian|arabic|hindi)\b|(?:want|wanted|meant) to say"
+                   r"|(?:wondering|thinking) out loud|do you think",
+            "wifi_name": r"address|\bip\b",
+            "weather": r"\bapp\b|\bon (?:mars|venus|jupiter|saturn|mercury|neptune|uranus|pluto|the moon)\b", 
             # "close the github tab" is close_tab, not quit_app. "extract the zip" is unzip_file, not zip_file.
             # "summarize my unread mail" is summarize, not unread_mail.
             "quit_app": r"\btab\b", "zip_file": r"\bextract\b|\bunzip\b", "unread_mail": r"\bsummar",
@@ -160,7 +178,8 @@ _AGAINST = {"say": r"morse|clock say", "wifi_name": r"address|\bip\b", "weather"
             # "write a brief on X" / "do my notes mention X" are research/search_notes, not new_note:
             # new_note's own evidence regex matches bare "write" or "note", which both leak into these.
             # Round eleven: "draft me a file" is write_document, not a note.
-            "new_note": r"\bbrief\b|\bresearch\b|\bmention\b|\bsearch\b.{0,20}\bnotes?\b|\bfind\b.{0,20}\bnotes?\b|\blook for\b.{0,20}\bnotes?\b|\bdraft\b",
+            "new_note": r"\bbrief\b|\bresearch\b|\bmention\b|\bsearch\b.{0,20}\bnotes?\b|\bfind\b.{0,20}\bnotes?\b|\blook for\b.{0,20}\bnotes?\b|\bdraft\b"
+                        r"|\bto (?:my|the) [\w ]{1,30} note\b",  # round fifteen: "to my groceries note" is append_note
             # Round eleven: the biggest single wrong-past-guard cluster was "what is 2+2"/"what's 10
             # times 7" firing calculate. In production that phrasing never needs calculate: ask_local's
             # own arithmetic() answers plain sums before the picker is ever reached, and word-operator
@@ -168,8 +187,8 @@ _AGAINST = {"say": r"morse|clock say", "wifi_name": r"address|\bip\b", "weather"
             # "times"/"plus" to symbols), so calculate() failing that copied arg is a real bug, not a
             # style choice. A file extension or a unit word (convert_units'/run_code's own vocabulary)
             # is the same shape: not arithmetic, a different tool's job.
-            "calculate": r"\bwhat'?s\b|\bwhat is\b|celsius|fahrenheit|kilomet|\bkm\b|\bmiles?\b|\bpounds?\b|\bkg\b"
-                         r"|inches|centimet|\bmeters?\b|gallons|liters|\.csv\b|\.py\b|\.js\b",
+            "calculate": r"\bwhat'?s\b(?!.*%)|\bwhat is\b(?!.*%)|celsius|fahrenheit|kilomet|\bkm\b|\bmiles?\b|\bpounds?\b|\bkg\b"
+                         r"|inches|centimet|\bmeters?\b|gallons|liters|\.csv\b|\.py\b|\.js\b|\btips?\b",
             # Round eleven: recent_downloads owns "what's in my downloads folder"; list_dir's own
             # templates never say "downloads folder", only a literal path or a generic "the folder".
             "list_dir": r"downloads folder|\bmy downloads\b",
@@ -179,7 +198,6 @@ _AGAINST = {"say": r"morse|clock say", "wifi_name": r"address|\bip\b", "weather"
             "find_in_document": r"\bwhat (?:is|does|are)\b",
             # Round eleven: days_until owns "how many days/sleeps until"; date_math's own templates
             # never say "until"/"till".
-            "date_math": r"\buntil\b|\btill\b|\bsleeps?\b",
             # Round eleven: folder_size owns "how big is X"/"how much does X take up"; disk_space's
             # own templates are about the whole disk, never a named folder.
             "disk_space": r"take up|\bfolder\b",
@@ -188,7 +206,7 @@ _AGAINST = {"say": r"morse|clock say", "wifi_name": r"address|\bip\b", "weather"
             "read_document": r"\btab\b|github\.com|\.com\b|\.org\b|\.io\b",
             # Round eleven: weather has its own tool; "look up the weather" should never fall to a
             # generic web search.
-            "web_search": r"\bweather\b",
+            "web_search": r"\bweather\b|\.(?:com|org|net|io|ca)\b|\bmy notes\b|\bnotes for\b|pull requests?|\bprs\b",  # round fifteen: merged, a second key had silently replaced the first
             # Round eleven: "translate 5 km to miles" is a unit conversion someone phrased with the
             # word "translate", not a language-translation command; convert_units still fires the
             # right tool for the plain "5 km to miles" shape, this only blocks the misleading verb.
@@ -201,7 +219,27 @@ _AGAINST = {"say": r"morse|clock say", "wifi_name": r"address|\bip\b", "weather"
             "save_research": r"\bnote\b",
             # Round eleven: "sketch an icon for X" is make_logo's own word; paint_image is a photo/shape
             # painting, never an icon.
-            "paint_image": r"\bicon\b"}
+            "paint_image": r"\bicon\b",
+            # Round fifteen. A clock time is convert_time's (the mirror of its evidence above), so time_in and
+            # date_math stand down on one; "how late is it" is time_in's.
+            "time_in": r"\d\s*(?:am|pm)\b|\d:\d\d|\bnoon\b|\bmidnight\b",
+            "date_math": r"\buntil\b|\btill\b|\bsleeps?\b|\d\s*(?:am|pm)\b|\d:\d\d|\bnoon\b|\bmidnight\b|how late|time is it",
+            # "how do I say X in french" is translate; "I wanted to say thanks", "wondering out loud" are chat.
+            "base64_encode": r"un-?base ?64|decode",
+            "cpu_load": r"\bram\b|memory",
+            "roll_dice": r"\bint(?:eger)?\b|random number",
+            "read_file": r"\.(?:pdf|docx?|rtf|pages|epub)\b",
+            "read_page": r"\btab \d+\b|\b\d+(?:st|nd|rd|th) tab\b",
+            "days_until": r"\b\d+ (?:days?|weeks?|months?|years?) (?:from|after|before|ago)\b",
+            # Each of these names a different tool's own domain: wifi/ip/load are their own tools, not system_info;
+            # "free space" is the disk, not the calendar; "your voice" is set_voice; "log me in" and "click" are
+            # screen work, not a site to open; "how many minutes is 3 hours" is a conversion, not a timer.
+            "system_info": r"wi-?fi|\bip\b|address|loaded|\bcpu\b|\bram\b|memory|battery|disk|free space",
+            "free_when": r"free space|\bdisk\b|storage",
+            "set_volume": r"\bvoice\b",
+            "music": r"disturb",
+            "open_url": r"\blog (?:me )?in(?:to)?\b|\bclick\b",
+            "timer": r"how many|\bin (?:seconds|minutes|hours)\b"}
 
 
 def _sound(tool, arg, query):
@@ -317,6 +355,10 @@ def _sound(tool, arg, query):
     # the path's own basename or stem, same fallback shape as copy_file/move_file/rename_file above.
     if tool in ("convert_image", "rotate_image", "resize_image", "upscale_image", "grayscale_image",
                 "flip_image", "crop_square", "remove_background", "enhance_image", "image_info") and arg:
+        # Round fifteen: "flip good morning backwards" is text. An image tool needs a file, or the word for one.
+        if not re.search(r"\.(?:png|jpe?g|gif|heic|webp|tiff?|bmp)\b|/", arg.lower()) and \
+                not re.search(r"\b(?:image|photo|picture|pic|screenshot)s?\b", q_lower):
+            return False
         if arg.lower() in q_lower:
             return True
         base = arg.split()[0].rstrip("/").rsplit("/", 1)[-1].lower()
