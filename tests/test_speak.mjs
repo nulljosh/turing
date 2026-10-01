@@ -27,11 +27,17 @@ expect("other site", (await worker.fetch(post({ text: "hi" }, { origin: "https:/
 expect("no key", (await worker.fetch(post({ text: "hi" }), env(undefined), ctx)).status, 503);
 let calls = 0;
 const realFetch = globalThis.fetch;
-globalThis.fetch = async () => { calls++; const b = new ArrayBuffer(4); new DataView(b).setInt16(0, 32767, true); return new Response(b); };
+let sent;
+globalThis.fetch = async (u, init) => { calls++; sent = { u, body: JSON.parse(init.body) }; const b = new ArrayBuffer(4); new DataView(b).setInt16(0, 32767, true); return new Response(b); };
 const first = await worker.fetch(post({ text: "hello there", format: "pcm8" }), env("k"), ctx);
 expect("pcm8 status", first.status, 200);
 expect("pcm8 bytes", (await first.arrayBuffer()).byteLength, 2);
 await worker.fetch(post({ text: "hello there", format: "pcm8" }), env("k"), ctx);
 expect("second identical line served from cache", calls, 1);
+// Eleven v4: Text to Dialogue at raw 16kHz PCM, the text (tags and all) passed through untouched
+await worker.fetch(post({ text: "[whispering] hi there", format: "pcm8" }), env("k"), ctx);
+expect("v4 endpoint", sent.u, "https://api.elevenlabs.io/v1/text-to-dialogue?output_format=pcm_16000");
+expect("v4 model", sent.body.model_id, "eleven_v4");
+expect("tags pass through", sent.body.inputs[0].text, "[whispering] hi there");
 globalThis.fetch = realFetch;
 console.log("PASS: /api/speak rejects empty text, other sites and a missing key, and caches repeats");

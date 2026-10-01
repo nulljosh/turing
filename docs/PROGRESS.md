@@ -1,5 +1,7 @@
 # Progress log
 
+- 2026-10-01 v4.17.7: her voice moves to ElevenLabs' new Eleven v4 model (through Text to Dialogue, same 16kHz audio Joshua Tree already plays). One test line came back faster to first sound, 1.22s against 1.49s. Flip SPEAK_V4 to false to roll back.
+  `v4.17.7 · 131 tools · 607 tests · docs coverage 100% · laws all hold · biggest eval/gen_heldout2.py 647 · actions 231/231 · parity 231/231 · util_diff 261/261`
 - 2026-09-30 v4.17.6: split the picker's data generator in two (training/gen_hands_data.py 658 lines to 468, filler pools in training/hands_pools.py). The training data it writes is byte-for-byte the same, checked. The file-size ceiling dropped from 700 to 650.
   `v4.17.6 · 131 tools · 607 tests · docs coverage 100% · laws all hold · biggest eval/gen_heldout2.py 647 · actions 231/231 · parity 231/231 · util_diff 261/261`
 
