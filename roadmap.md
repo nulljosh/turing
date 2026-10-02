@@ -96,3 +96,6 @@ Ask her to draft something in our voice, or answer a question about one of our o
 - [ ] Browser family, the rest: download a file
 - [ ] Blender family (Blender 5.2 LTS installed, headless): render a scene, make a simple 3D object, turn a logo into 3D text, convert between 3D formats, report what's in a file
 - [ ] Sharp paintings: merge same-color neighbor cells so each layer buys more picture
+
+## Ingested 2026-10-02
+- [ ] Landing page demo should start simple and progressively take on harder tasks.
