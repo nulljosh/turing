@@ -53,17 +53,17 @@ _EVIDENCE = {
     "bluetooth_status": r"bluetooth", "calendar_tomorrow": r"tomorrow",
     "running_apps": r"running|open apps|apps open|what's open|apps are open|application|programs",
     "recent_downloads": r"download", "unread_mail": r"mail|email|inbox|unread|messages",
-    "git_status": r"status|changed|dirty|\bdiff\b|\bbranch\b|ahead|behind", "recent_commits": r"commit",
+    "git_status": r"status|changed|dirty|\bdiff\b|\bbranch\b|ahead|behind|\bgit\b", "recent_commits": r"commit",
     "run_tests": r"\btest", "open_prs": r"\bprs?\b|pull request|waiting (?:for|on) (?:a )?review",
     "open_in_editor": r"editor|vscode|vs code|in code", "quit_app": r"quit|close|shut down|\bkill\b",
     "dark_mode": r"dark|\blight\b|appearance|theme", "do_not_disturb": r"disturb|\bdnd\b|focus|silence|quiet|notification",
     "zip_file": r"\bzip\b|compress", "unzip_file": r"unzip|extract|unpack|decompress", "trash_file": r"trash|delete|throw away|get rid of",
-    "copy_file": r"\bcopy\b|duplicate", "move_file": r"\bmove\b|relocate|\bdrag\b", "rename_file": r"rename|new name|call it|change the name|retitle|\bname\b",
+    "copy_file": r"\bcopy\b|duplicate|\bcp\b", "move_file": r"\bmove\b|relocate|\bdrag\b|\bmv\b", "rename_file": r"rename|new name|call it|change the name|retitle|\bname\b",
     "append_note": r"\bnote\b", "add_event": r"calend[ae]r|event|schedule|appt|appointment",
     "complete_reminder": r"remind|done|finish|complete|check off|\bmark\b|tick off|cross off", "list_reminders": r"reminder",
     "search_notes": r"\bnotes?\b", "needs_attention": r"attention|needs me|focus on|deal with|need to handle|urgent",
     "folder_size": r"\bbig\b|\bsize\b|\bspace\b|take up",
-    "research": r"research|deep dive|look into|dig into|investigate|brief on|info(?:rmation)? on|look up|read up", "research_more": r"\bmore\b|deeper|expand|further|continue|again",
+    "research": r"research|deep dive|look into|dig into|investigate|brief on|info(?:rmation)? on|look up|read up|info(?:rmation)? about", "research_more": r"\bmore\b|deeper|expand|further|continue|again",
     "summarize": r"summar", "transcribe_video": r"transcribe|said in|captions|subtitles",
     "translate": r"translat|how (?:do|would|can|should) (?:you|i) say|\b(?:in|into|to) (?:french|spanish|german|italian|portuguese|dutch|japanese|chinese|mandarin|korean|russian|arabic|hindi)\b", "write_document": r"draft|write (?:a |an )?(?:doc|document|email|memo|file)|compose",
     # Round ten: resize_image and read_file had no evidence at all, so any wrong pick with its
@@ -72,7 +72,7 @@ _EVIDENCE = {
     # with no number is upscale_image, not resize_image; "crunch the numbers in X" is run_code,
     # not read_file's own words.
     "resize_image": r"resize|resolution|\bsize\b|\d+\s*(?:px|pixels?|%|percent)|\bto \d{2,}|\d{3,}|scale|shrink|smaller",
-    "read_file": r"\bread\b|\bcat\b|\bshow\b|\bprint\b|display|\bsay\b|contents|written|inside",
+    "read_file": r"\bread\b|\bcat\b|\bshow\b|\bprint\b|display|\bsay\b|contents|written|inside|what'?s in",
     # Round eleven: convert_time and time_in kept swapping for each other. A specific clock time
     # (a digit with am/pm, an hour:minute, noon/midnight, or a named zone) is convert_time's own
     # territory; "how late is it in X"/"what time is it in X" with no clock time is time_in's.
@@ -344,7 +344,7 @@ def _sound(tool, arg, query):
         return bool(a) and bool(b) and a.lower() in q_lower and b in q_lower
 
     if tool in ("find_in_document", "ask_document"):
-        a, _, b = arg.partition("\t")
+        a, b = tools.doc_pair(arg)  # the same split the tools run
         return bool(a) and bool(b) and a.lower() in q_lower and b.lower() in q_lower
 
     # append_note is the same content<TAB>note-name shape, but round nine showed a wrapper phrasing
@@ -379,11 +379,11 @@ def _sound(tool, arg, query):
             return bool(re.search(r"\bon\b|\bdark\b|enable", q_lower))
         return False
     if tool == "do_not_disturb":
-        a = arg.lower()
+        a = (arg.lower().split() or [""])[0]  # round twenty: "on for the next couple hours" is "on"
         if a == "off":
             return bool(re.search(r"\boff\b|out of|disable|turn off|end focus|\bstop\b", q_lower))
         if a == "on":
-            return bool(re.search(r"\bon\b|enable|turn on|start focus|\benter\b|put me in|\bin do not disturb", q_lower))
+            return bool(re.search(r"\bon\b|enable|turn on|start focus|\benter\b|put me in|\bin do not disturb|activate", q_lower))
         return False
 
     # add_event's argument is the event title, which the model sometimes pads with the time phrase
@@ -469,17 +469,18 @@ def _sound(tool, arg, query):
 # in the sentence, and the tool's own evidence, so chit-chat ("that's so beautiful") never turns into a question.
 _DEICTIC = re.compile(r"\b(?:this|that|these|those|tht|dis|dat)\b|\bthe (?:image|photo|picture|pic|file|doc|document|pdf|video|text)\b")
 _TARGETS = {
-    "image": (r"image|photo|picture|\bpic\b|\bimg\b|screenshot|jpe?g|png|heic|gif|webp",
+    "image": (r"image|photo|picture|\bpic\b|\bimg\b|screenshot|jpe?g|png|heic|gif|webp|rotate|crop|grayscale|upscale",
               ("convert_image", "rotate_image", "resize_image", "upscale_image", "grayscale_image", "flip_image",
                "crop_square", "remove_background", "enhance_image", "image_info", "paint_image")),
     "file": (r"\bfile|folder|\bdoc\b|document|\bpdf\b|\bzip\b|archive|video|audio|recording",
              ("move_file", "copy_file", "rename_file", "trash_file", "zip_file", "unzip_file", "read_document",
               "ask_document", "find_in_document", "read_file", "transcribe_video")),
+    "app": (r"\bapp\b|program|window", ("quit_app",)),
     "text": (r"(?:in|into|to) (?:french|spanish|german|italian|portuguese|dutch|japanese|chinese|korean|russian)\b|out loud|aloud|speak|translat|morse|\bwords?\b|reverse|backwards|shout|caps|base ?64|hash|passage|text|phrase|sentence",
              ("translate", "word_count", "morse_code", "reverse_text", "shout", "base64_encode", "base64_decode",
               "hash_text", "say")),
 }
-_ASK = {"image": "Which image? Name it, like ~/Desktop/photo.jpg.", "file": "Which file? Name it, like ~/Documents/report.pdf.",
+_ASK = {"app": "Which app? Name it, like Safari.", "image": "Which image? Name it, like ~/Desktop/photo.jpg.", "file": "Which file? Name it, like ~/Documents/report.pdf.",
         "text": "Which words? Say them, like \"translate good morning to french\"."}
 
 
@@ -487,7 +488,11 @@ def needs_target(tool, arg, query):
     """The question to ask when a pick names the right kind of tool but the sentence only points ("this", "that")
     and the argument it would run on is a guess. None when the pick is sound, or not that shape."""
     q_lower = query.lower()
-    if not _DEICTIC.search(q_lower) or _sound(tool, arg, query):
+    if _sound(tool, arg, query):
+        return None
+    # Round twenty: "move my project folder to a different location" names no file either: no path, no file name.
+    vague = not re.search(r"~/|/\w|\b[\w-]+\.[a-z0-9]{2,4}\b", q_lower)
+    if not _DEICTIC.search(q_lower) and not vague:
         return None
 
         return None
@@ -496,6 +501,18 @@ def needs_target(tool, arg, query):
     if tool in _AGAINST and re.search(_AGAINST[tool], q_lower):
         return None
     for family, (noun, members) in _TARGETS.items():
+        if family == "text" and not _DEICTIC.search(q_lower):
+            continue  # words to translate are never "vague": an unnamed phrase is just a bad copy
         if tool in members and re.search(noun, q_lower):
             return _ASK[family]
     return None
+
+
+def repair(tool, arg, query):
+    """The argument a pick really runs on: round twenty fills in what the picker left out but the sentence says plainly
+    ("translate 'buenos dias' to english" copied without "english"). pick() and eval/hands.py both call this first."""
+    import tools
+    if tool == "translate" and "\t" not in arg and not tools.translate_pair(arg)[1]:
+        m = re.search(rf"\b(?:to|into|in)\s+({tools.LANGUAGES})\b", query, re.I)
+        return f"{arg}\t{m.group(1).lower()}" if m else arg
+    return arg

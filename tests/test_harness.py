@@ -345,6 +345,15 @@ class AgentGrounding(unittest.TestCase):
         self.assertFalse(tools._sound("say", "michael", "let me hear the michael voice"))
         self.assertTrue(tools._sound("say", "ship it", "use your voice to say ship it"))
         self.assertTrue(tools._sound("new_reminder", "call mom at 10am", "remind me to call mom tomorrow at 10am"))
+        # Round twenty: a vague ask with no file named asks which; cp/mv; "on for two hours" is on; a document pair
+        # with no tab; translate takes its language from the sentence when the copy left it out.
+        self.assertIn("Which file", tools.needs_target("move_file", "~/Documents", "move my project folder to a different location"))
+        self.assertIn("Which app", tools.needs_target("quit_app", "the app", "close that app"))
+        self.assertIsNone(tools.needs_target("move_file", "x", "move ~/a.txt somewhere"))  # a named file is not vague
+        self.assertTrue(tools._sound("copy_file", "~/dl/invoice\t~/finances", "cp ~/dl/invoice to ~/finances"))
+        self.assertTrue(tools._sound("do_not_disturb", "on for two hours", "turn on do not disturb for two hours"))
+        self.assertEqual(tools.doc_pair("xyz in ~/report.pdf"), ("xyz", "~/report.pdf"))
+        self.assertEqual(tools.repair("translate", "buenos dias", "translate 'buenos dias' to english"), "buenos dias\tenglish")
         with mock.patch.object(tools, "pick", return_value=("ask", "Which file? Name it.")):
             self.assertEqual(tools.do("trash this file"), "Which file? Name it.")
 

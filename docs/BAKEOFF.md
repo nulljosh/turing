@@ -312,3 +312,20 @@ Its mistakes still showed real guard holes, fixed for both adapters: open_app's 
 | heldout3 (blind, read once) | 11 / 23 | 9 / 23 |
 
 **Decision: guard shipped, weights not.** Blind past-guard is 9: under the 5.0 bar of ten for the first time. Refusals, 23, are the whole gap now. The round-nineteen weights point the way: they get far more fresh wording right, so a round that pairs them with a guard tuned to their own mistakes (the round-nine recipe) is the next try.
+
+## Round twenty (2026-10-01): heldout3 retires, heldout6 is the sealed judge
+
+heldout3's refusals never showed up on any dev set, and the no-peek rule meant they could not be fixed honestly. Same move as when heldout gave way to heldout2: a fresh writer (tool list only) wrote `eval/heldout6.jsonl`, 439 rows after the overlap filter, and it was sealed before heldout3 was opened. Nobody reads heldout6's rows; it is the 5.0 judge from here. One slip, recorded: its first reading ran while this round's guard edits were already in progress, so it is not a clean v4.17.12 baseline.
+
+What heldout3 showed: most of its refusals were vague asks with no file named at all ("move my project folder to a different location", "close that app", "rotate by 180"), where the model invents a target and the guard is right to refuse. `needs_target` now asks which one for those too (any file or image ask with no path or file name in the sentence, and a new app family). Plus cp and mv, "do not disturb on for two hours", "xyz in ~/report.pdf" with no tab (`tools_util.doc_pair`, shared by the tools and the guard), and `tools_registry.repair`: translate takes its language from the sentence when the copy left it out. pick() and eval/hands.py both call repair first, so the score is what she does.
+
+| Set | Round nineteen guard | Round twenty |
+|---|---|---|
+| standard | 7 past / 0 refused | 7 / 0 |
+| heldout2 | 4 / 2 | 4 / 1 |
+| heldout4 | 4 / 5 | 4 / 5, 17 asked |
+| heldout5 | 9 / 5 | 9 / 5 |
+| heldout3 (now open) | 9 / 23 | 9 / 6, 17 asked |
+| heldout6 (sealed judge) | 12 / 14 (mid-round) | 12 / 11, 16 asked |
+
+**Decision: shipped.** The judge says 12 past and 11 refused; 5.0 needs under 10 and 0. heldout3's 9 was partly that set's luck.

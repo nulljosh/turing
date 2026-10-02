@@ -1,5 +1,7 @@
 # Progress log
 
+- 2026-10-01 v4.17.13: "move my project folder somewhere" gets "Which file?", not a guess or a no. A new sealed test is the 5.0 judge: 12 wrong picks past the guard, 11 refused.
+  `v4.17.13 · 131 tools · 609 tests · docs coverage 100% · laws all hold · biggest app/tools_util.py 649 · actions 231/231 · parity 231/231 · util_diff 261/261`
 - 2026-10-01 v4.17.12: wrong picks past the guard on the blind set drop to 9, under the 5.0 bar for the first time. "When you get a sec" no longer opens an app called "urgent". Refusals, 23, are the last gap to 5.0.
   `v4.17.12 · 131 tools · 609 tests · docs coverage 100% · laws all hold · biggest eval/gen_heldout2.py 647 · actions 231/231 · parity 231/231 · util_diff 261/261`
 - 2026-10-01 v4.17.11: "copy resume.pdf to the documents folder" now lands in ~/Documents, not wherever the app started. File and translate picks read "X to Y" the way you said it. Blind set: 11 past the guard, refusals 26 to 23.

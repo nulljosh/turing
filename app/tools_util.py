@@ -184,9 +184,19 @@ def transcribe_video(path):
     return text if text else "I heard no speech in that file."
 
 
+def doc_pair(request):
+    """'words<TAB>path' as (words, path). Round twenty: the picker sometimes skips the tab ("xyz in ~/documents/report.pdf");
+    a trailing path or file name after "in" is the second half."""
+    words, _, path = request.partition("\t")
+    if not path:
+        m = re.match(r"(.+?)\s+(?:in|from|inside)\s+((?:~/|/)?\S+\.\w{2,5})$", request.strip(), re.I)
+        words, path = (m.group(1), m.group(2)) if m else (words, "")
+    return words.strip(), path.strip()
+
+
 def find_in_document(request):
     """Find the passages of a document that mention some words. Takes 'words<TAB>path'. Up to three passages."""
-    words, _, path = request.partition("\t")
+    words, path = doc_pair(request)
     text, why = _doc_text(path)
     if why:
         return why
@@ -246,7 +256,7 @@ def _read_and_answer(text, question):
 
 def ask_document(request):
     """Answer a question about a document in the home folder, from its text only. Takes 'question<TAB>path'. Needs Ollama running."""
-    question, _, path = request.partition("\t")
+    question, path = doc_pair(request)
     text, why = _doc_text(path)
     if why:
         return why

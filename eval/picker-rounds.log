@@ -16,3 +16,7 @@
 2026-10-01 round19 hands-adapter-round19 (trained, argument-shape data): standard 1258/1960, 17 past, 0 refused; heldout2 351/500, 6, 3; heldout4 293/455, 6, 10, 20 asked; heldout5 (untouched this round) 359/507, 11, 9. Not swapped.
 2026-10-01 round19 hands-adapter, round nineteen guard: standard 1307/1960, 7, 0; heldout2 350/500, 4, 2; heldout4 267/455, 4, 5, 17 asked; heldout5 308/507, 9, 5
 2026-10-01 round19 hands-adapter heldout3 (blind, totals only, read once): 343/465 passed, 9 past guard, 23 refused, 7 asked
+2026-10-01 round20 heldout3 retired as judge (rows opened); eval/heldout6.jsonl is the sealed judge (439 rows, never read)
+2026-10-01 round20 hands-adapter heldout6 (sealed, first read, scored mid-round-20 guard): 285/439 passed, 12 past guard, 14 refused, 13 asked
+2026-10-01 round20 hands-adapter: standard 1307/1960, 7, 0; heldout2 350/500, 4, 1; heldout4 267/455, 4, 5, 17 asked; heldout5 308/507, 9, 5, 3 asked; heldout3 (now dev) 343/465, 9, 6, 17 asked
+2026-10-01 round20 hands-adapter heldout6 (sealed, final read): 285/439 passed, 12 past guard, 11 refused, 16 asked

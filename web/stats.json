@@ -1,5 +1,5 @@
 {
-  "version": "4.17.12",
+  "version": "4.17.13",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -116,8 +116,8 @@
         "documented": 7
       },
       "app/tools_registry.py": {
-        "total": 4,
-        "documented": 4
+        "total": 5,
+        "documented": 5
       },
       "app/tools_research.py": {
         "total": 10,
@@ -140,8 +140,8 @@
         "documented": 7
       },
       "app/tools_util.py": {
-        "total": 35,
-        "documented": 35
+        "total": 36,
+        "documented": 36
       },
       "app/tools_write.py": {
         "total": 8,

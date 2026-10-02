@@ -442,7 +442,7 @@ def main():
     from basic_questions import CASES as QUESTIONS
     reserved = {c[0].lower() for c in CASES} | {q[0].lower() for q in QUESTIONS}  # other evals stay unseen
     here = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    for name in ("heldout.jsonl", "heldout2.jsonl", "heldout3.jsonl", "heldout4.jsonl", "heldout5.jsonl"):  # the blind sets most of all
+    for name in ("heldout.jsonl", "heldout2.jsonl", "heldout3.jsonl", "heldout4.jsonl", "heldout5.jsonl", "heldout6.jsonl"):  # the blind sets most of all
         with open(os.path.join(here, "eval", name)) as f:
             reserved |= {json.loads(line)["text"].lower().rstrip(".?!") for line in f if line.strip()}
     train = {k: v for k, v in build(0, 9, seed=7).items() if k.lower().rstrip(".?!") not in reserved}

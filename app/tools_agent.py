@@ -139,6 +139,7 @@ def pick(query):
         return "agent", ""
     if not tool:
         return None
+    arg = tools.repair(tool, arg, query)
     if tools._sound(tool, arg, query):
         return tool, arg
     ask = tools_registry.needs_target(tool, arg, query)

@@ -107,6 +107,8 @@ def main():
             got = json.loads(found.group(0)) if found else {}
         except ValueError:
             got = {}
+        if got.get("tool"):  # the argument pick() really runs on (tools.repair), so the score is what she does
+            got["arg"] = tools.repair(got["tool"], str(got.get("arg") or "").strip(), text)
         got_arg = str(got.get("arg") or "").lower().strip()
         if tool == "timer" and got.get("tool") == "timer":
             got_arg, arg = str(tools.duration(got_arg)), str(tools.duration(arg))

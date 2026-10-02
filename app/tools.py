@@ -318,6 +318,8 @@ _EVIDENCE = tools_registry._EVIDENCE
 _AGAINST = tools_registry._AGAINST
 _sound = tools_registry._sound
 needs_target = tools_registry.needs_target
+repair = tools_registry.repair
+doc_pair = tools_util.doc_pair
 
 import tools_write  # noqa: E402  (phrase-routed only: each confirms itself with a diff, never a model's tool)
 _WRITERS = {f.__name__: f for f in (tools_write.edit_last_draft, tools_write.edit_file, tools_write.write_code)}
