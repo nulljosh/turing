@@ -327,6 +327,12 @@ class AgentGrounding(unittest.TestCase):
         self.assertFalse(tools._sound("music", "play", "i love collecting vinyl records"))
         self.assertTrue(tools._sound("music", "playing", "who sings this"))
         self.assertTrue(tools._sound("set_volume", "55", "turn it to 55"))
+        # Round seventeen: music needs its own verb, and a no-argument tool ignores a stray argument.
+        self.assertFalse(tools._sound("music", "pause", "this song keeps getting stuck in my head"))
+        self.assertTrue(tools._sound("music", "pause", "cut the music"))
+        self.assertTrue(tools._sound("music", "play", "put some music on"))
+        self.assertTrue(tools._sound("needs_attention", "urgency", "what needs urgent action"))
+        self.assertFalse(tools._sound("battery", "", "my battery of tests went well"))
         with mock.patch.object(tools, "pick", return_value=("ask", "Which file? Name it.")):
             self.assertEqual(tools.do("trash this file"), "Which file? Name it.")
 

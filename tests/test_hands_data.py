@@ -33,9 +33,9 @@ class HandsData(unittest.TestCase):
             os.chdir(here)
 
     def test_no_held_out_phrasing_in_training(self):
-        """Not one row of heldout, heldout2, heldout3 or heldout4 appears in training, however it is punctuated."""
+        """Not one row of heldout, heldout2, heldout3, heldout4 or heldout5 appears in training, however it is punctuated."""
         seen = {m[1]["content"].lower().rstrip(".?!") for m in self.rows}
-        for name in ("heldout.jsonl", "heldout2.jsonl", "heldout3.jsonl", "heldout4.jsonl"):
+        for name in ("heldout.jsonl", "heldout2.jsonl", "heldout3.jsonl", "heldout4.jsonl", "heldout5.jsonl"):
             with open(os.path.join(REPO, "eval", name)) as f:
                 texts = {json.loads(line)["text"].lower().rstrip(".?!") for line in f if line.strip()}
             self.assertFalse(seen & texts, name)

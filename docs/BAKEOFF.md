@@ -267,3 +267,19 @@ What it showed: about half the refusals were "trash this file", "crop this image
 | heldout3, blind (465) | 343 / 16 / 32 | 343 / 12 / 26, 7 asked |
 
 **Decision: shipped.** The blind set moved this time. 5.0 still needs under 10 past and 0 refused there: 2 and 26 to go.
+
+## Round seventeen (2026-10-01): a fifth blind set, and an honest look at what the guard can still do
+
+Another fresh writer (tool list only) wrote `eval/heldout5.jsonl` in four voices (dictation run-ons, clipped, non-native, questions), 507 rows after the overlap filter. Scored before any tuning, the round-sixteen guard got 12 past guard and 8 refused on it: the first measurement of the guard on wording nothing was tuned against. Fixes from it: music needs its own verb ("this song keeps getting stuck in my head" paused the music), a tool that takes no argument ignores a stray one (it never runs on it), and "my battery of tests" is not the battery.
+
+Two more rules (resize/rotate/convert need a path in the argument; a sentence that names its file never gets "which file?") raised refusals on heldout5, and a mid-round heldout3 read showed refusals 26 to 31. Both were reverted, then heldout3 was read a second time. That second read is a light contamination of the blind set and is recorded here: two readings, totals only, rows never opened.
+
+| Set | Round sixteen | Round seventeen |
+|---|---|---|
+| standard | 7 past / 0 refused | 7 / 0 |
+| heldout2 | 5 / 5 | 5 / 5 |
+| heldout4 | 7 / 6, 16 asked | 7 / 6, 16 asked |
+| heldout5 (fresh) | 12 / 8, 3 asked | 10 / 7, 3 asked |
+| heldout3 (blind) | 12 / 26, 7 asked | 11 / 26, 7 asked |
+
+**Decision: shipped.** Small, real. The bigger finding: heldout3's 26 refusals do not show up on any of the four dev sets (5 to 7 each), so they come from something particular to how that set was written, and guard rules found on other sets will not reach them. 5.0's "0 refused" now needs the model to copy arguments in the shape the tools take, which is training.

@@ -239,6 +239,7 @@ _AGAINST = {"say": r"morse|clock say|how (?:do|would|can|should) (?:you|i) say|\
             "summarize": r"feedback",
             "calendar_today": r"\btomorrow\b|\btmrw?\b",
             "days_until": r"\b\d+ (?:days?|weeks?|months?|years?) (?:from|after|before|ago)\b",
+            "battery": r"battery of",
             # Each of these names a different tool's own domain: wifi/ip/load are their own tools, not system_info;
             # "free space" is the disk, not the calendar; "your voice" is set_voice; "log me in" and "click" are
             # screen work, not a site to open; "how many minutes is 3 hours" is a conversion, not a timer.
@@ -280,13 +281,24 @@ def _sound(tool, arg, query):
     if tool == "open_app" and arg.lower() == "samantha":
         return False
 
+    # Round seventeen: a tool that takes no argument never runs on one (do() calls it bare), so a stray argument
+    # ("urgency" for "what needs urgent action") is not a guess that touches anything. Evidence above still applies.
+    fn = tools.TOOLS.get(tool)
+    if fn is not None and fn.__code__.co_argcount == 0:
+        return True
+
     if tool == "set_volume":
         # "mute" and "kill the sound" mean 0, and no digit appears in the sentence
         silent = arg == "0" and re.search(r"\b(?:mute|silen\w+|(?:sound|volume|audio) off|kill the (?:sound|volume|audio))\b", query, re.I)
         return arg in ("up", "down") or bool(silent) or (arg.isdigit() and arg in query)
     if tool == "music":
-        # arg must be an exact command, not a loose phrase
-        return arg in _MUSIC or arg == "playing"
+        # arg must be an exact command, not a loose phrase. Round seventeen: and the sentence has to ask for that
+        # command ("pause" needs pause/stop/hold), so "this song keeps getting stuck in my head" pauses nothing.
+        verbs = {"play": r"\bplay|resume|put .{0,15}\bon\b|start|unpause|keep going|hear|crank|tunes", "pause": r"pause|\bstop\b|\bhold\b|quiet|shut|\bcut\b|kill|silence|enough",
+                 "next": r"next|skip|another", "previous": r"previous|\bprev\b|\bback\b|last (?:song|track)|again"}
+        if arg == "playing":
+            return True
+        return arg in _MUSIC and bool(re.search(verbs.get(arg, r"$^"), q_lower))
     if tool == "timer":
         return duration(arg) is not None and arg.lower() in q_lower
     if tool == "list_dir":
@@ -448,6 +460,8 @@ def needs_target(tool, arg, query):
     and the argument it would run on is a guess. None when the pick is sound, or not that shape."""
     q_lower = query.lower()
     if not _DEICTIC.search(q_lower) or _sound(tool, arg, query):
+        return None
+
         return None
     if tool in _EVIDENCE and not re.search(_EVIDENCE[tool], q_lower):
         return None

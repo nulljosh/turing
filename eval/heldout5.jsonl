@@ -1,0 +1,507 @@
+{"text": "um so can you like open spotify for me please", "tool": "open_app", "arg_hint": "spotify"}
+{"text": "open Microsoft Excel", "tool": "open_app", "arg_hint": "Excel"}
+{"text": "The app called Notes, you open it yes?", "tool": "open_app", "arg_hint": "Notes"}
+{"text": "Could you open Safari for me?", "tool": "open_app", "arg_hint": "Safari"}
+{"text": "um can you pull up like hacker news in the browser for me", "tool": "open_url", "arg_hint": "hacker news"}
+{"text": "open www.github.com", "tool": "open_url", "arg_hint": "github.com"}
+{"text": "You open the website bbc.com yes please", "tool": "open_url", "arg_hint": "bbc.com"}
+{"text": "Could you navigate to medium.com in Chrome?", "tool": "open_url", "arg_hint": "medium.com"}
+{"text": "um so can you search for how tall is the statue of liberty", "tool": "web_search", "arg_hint": "statue of liberty"}
+{"text": "search google for best coffee shops in Seattle", "tool": "web_search", "arg_hint": "coffee shops in Seattle"}
+{"text": "What is the recipe for chocolate cake, you search for this?", "tool": "web_search", "arg_hint": "chocolate cake"}
+{"text": "Is there a way to search for latest Tesla stock price?", "tool": "web_search", "arg_hint": "Tesla stock price"}
+{"text": "um what tab is showing right now on my browser", "tool": "current_tab", "arg_hint": ""}
+{"text": "tell me which tab I'm viewing", "tool": "current_tab", "arg_hint": ""}
+{"text": "The current tab, what is it showing?", "tool": "current_tab", "arg_hint": ""}
+{"text": "Can you show me what's in the active tab?", "tool": "current_tab", "arg_hint": ""}
+{"text": "um so can you read like the whole article on the page please", "tool": "read_page", "arg_hint": ""}
+{"text": "fetch the text from techcrunch.com", "tool": "read_page", "arg_hint": "techcrunch.com"}
+{"text": "You read for me the page content yes", "tool": "read_page", "arg_hint": ""}
+{"text": "Could you tell me what's written on linkedin.com?", "tool": "read_page", "arg_hint": "linkedin.com"}
+{"text": "um so like can you give me a nice summary of this thing", "tool": "summarize", "arg_hint": ""}
+{"text": "summarize the article for me", "tool": "summarize", "arg_hint": ""}
+{"text": "You make short version of text about Docker, yes?", "tool": "summarize", "arg_hint": ""}
+{"text": "Could you condense this into a brief summary?", "tool": "summarize", "arg_hint": ""}
+{"text": "um can you translate this into like spanish or something", "tool": "translate", "arg_hint": "spanish"}
+{"text": "translate to French the phrase bonjour ami", "tool": "translate", "arg_hint": "French"}
+{"text": "This text about Japan, you change to German language?", "tool": "translate", "arg_hint": "German"}
+{"text": "Is there a way to convert this page into Italian?", "tool": "translate", "arg_hint": "Italian"}
+{"text": "um so can you take a screenshot for me please", "tool": "screenshot", "arg_hint": ""}
+{"text": "snap a screenshot of the desktop", "tool": "screenshot", "arg_hint": ""}
+{"text": "Screenshot please, you make one?", "tool": "screenshot", "arg_hint": ""}
+{"text": "Could you capture the screen for me?", "tool": "screenshot", "arg_hint": ""}
+{"text": "um what's on my clipboard right now", "tool": "clipboard", "arg_hint": ""}
+{"text": "tell me what I just copied", "tool": "clipboard", "arg_hint": ""}
+{"text": "The clipboard contents, what is it?", "tool": "clipboard", "arg_hint": ""}
+{"text": "Can you show me what I have copied?", "tool": "clipboard", "arg_hint": ""}
+{"text": "um so can you like turn up the volume to 75 please", "tool": "set_volume", "arg_hint": "75"}
+{"text": "set volume to 50 percent", "tool": "set_volume", "arg_hint": "50"}
+{"text": "Could you lower the speaker volume down?", "tool": "set_volume", "arg_hint": "down"}
+{"text": "um what's my battery level right now", "tool": "battery", "arg_hint": ""}
+{"text": "is this Mac plugged in", "tool": "battery", "arg_hint": ""}
+{"text": "Battery percentage, how much is it?", "tool": "battery", "arg_hint": ""}
+{"text": "Can you tell me the power status?", "tool": "battery", "arg_hint": ""}
+{"text": "um so can you say hello world out loud for me", "tool": "say", "arg_hint": "hello world"}
+{"text": "speak the text good morning everyone", "tool": "say", "arg_hint": "good morning everyone"}
+{"text": "The words thank you so much, you say this?", "tool": "say", "arg_hint": "thank you so much"}
+{"text": "Is there a way to speak this sentence aloud: welcome to the meeting?", "tool": "say", "arg_hint": "welcome to the meeting"}
+{"text": "um can you show me what's in the Downloads folder", "tool": "list_dir", "arg_hint": "Downloads"}
+{"text": "list the Desktop directory for me", "tool": "list_dir", "arg_hint": "Desktop"}
+{"text": "What files inside Documents folder you show?", "tool": "list_dir", "arg_hint": "Documents"}
+{"text": "Could you list what's in the Pictures folder?", "tool": "list_dir", "arg_hint": "Pictures"}
+{"text": "um so can you read this file called config.txt for me", "tool": "read_file", "arg_hint": "config.txt"}
+{"text": "read the contents of notes.md", "tool": "read_file", "arg_hint": "notes.md"}
+{"text": "The file called report.pdf, you show it to me?", "tool": "read_file", "arg_hint": "report.pdf"}
+{"text": "Is there a way to view the contents of settings.json?", "tool": "read_file", "arg_hint": "settings.json"}
+{"text": "um can you like make me a cool logo with a spiral or something", "tool": "make_logo", "arg_hint": ""}
+{"text": "design a complex intricate logo", "tool": "make_logo", "arg_hint": "complex"}
+{"text": "Logo very simple shape, you make this for me?", "tool": "make_logo", "arg_hint": "simple"}
+{"text": "Could you create a sophisticated logo icon?", "tool": "make_logo", "arg_hint": ""}
+{"text": "um so can you paint over this photo ~/Desktop/photo.jpg in a cool way", "tool": "paint_image", "arg_hint": "photo.jpg"}
+{"text": "repaint the image ~/Pictures/sunset.png", "tool": "paint_image", "arg_hint": "sunset.png"}
+{"text": "This file vacation.heic, you make it artistic?", "tool": "paint_image", "arg_hint": "vacation.heic"}
+{"text": "Could you transform the photo at ~/Downloads/portrait.jpg?", "tool": "paint_image", "arg_hint": "portrait.jpg"}
+{"text": "um can you like play the music app please", "tool": "music", "arg_hint": "play"}
+{"text": "pause the current song", "tool": "music", "arg_hint": "pause"}
+{"text": "Next track you play, yes?", "tool": "music", "arg_hint": "next"}
+{"text": "Is there a way to go to the previous song?", "tool": "music", "arg_hint": "previous"}
+{"text": "um what's the weather like in Tokyo right now", "tool": "weather", "arg_hint": "Tokyo"}
+{"text": "tell me the weather for Boston", "tool": "weather", "arg_hint": "Boston"}
+{"text": "The weather here, what is it?", "tool": "weather", "arg_hint": ""}
+{"text": "Could you check the weather in Dubai?", "tool": "weather", "arg_hint": "Dubai"}
+{"text": "um so can you like start a timer for 10 minutes", "tool": "timer", "arg_hint": "10 minutes"}
+{"text": "set a timer for 90 seconds", "tool": "timer", "arg_hint": "90 seconds"}
+{"text": "Timer please, 2 hours maybe?", "tool": "timer", "arg_hint": "2 hours"}
+{"text": "Could you start a timer for half an hour?", "tool": "timer", "arg_hint": "half an hour"}
+{"text": "um so can you create a note for me about my grocery list", "tool": "new_note", "arg_hint": "grocery list"}
+{"text": "make a new note with the text remember to call mom", "tool": "new_note", "arg_hint": "remember to call mom"}
+{"text": "Note you create, subject vacation plans?", "tool": "new_note", "arg_hint": "vacation plans"}
+{"text": "Is there a way to create a note about meeting notes from today?", "tool": "new_note", "arg_hint": "meeting notes from today"}
+{"text": "um can you set a reminder for me to water the plants tomorrow at 9am", "tool": "new_reminder", "arg_hint": "water the plants"}
+{"text": "add a reminder in 20 minutes to check email", "tool": "new_reminder", "arg_hint": "check email"}
+{"text": "Reminder for Friday about birthday party, yes?", "tool": "new_reminder", "arg_hint": "birthday party"}
+{"text": "Could you set up a reminder for next Monday at 2pm about gym session?", "tool": "new_reminder", "arg_hint": "gym session"}
+{"text": "um what's on my calendar today", "tool": "calendar_today", "arg_hint": ""}
+{"text": "show me today's schedule", "tool": "calendar_today", "arg_hint": ""}
+{"text": "Calendar for today, what you have?", "tool": "calendar_today", "arg_hint": ""}
+{"text": "Can you tell me what events are scheduled for today?", "tool": "calendar_today", "arg_hint": ""}
+{"text": "um so can you check my unread emails for me", "tool": "unread_mail", "arg_hint": ""}
+{"text": "show me unread messages", "tool": "unread_mail", "arg_hint": ""}
+{"text": "Unread mails about project alpha, you find?", "tool": "unread_mail", "arg_hint": "project alpha"}
+{"text": "Is there a way to see unread emails from my boss?", "tool": "unread_mail", "arg_hint": ""}
+{"text": "um what needs my attention right now", "tool": "needs_attention", "arg_hint": ""}
+{"text": "give me a summary of what requires attention", "tool": "needs_attention", "arg_hint": ""}
+{"text": "What is important for me today, you say?", "tool": "needs_attention", "arg_hint": ""}
+{"text": "Could you tell me what needs urgent action?", "tool": "needs_attention", "arg_hint": ""}
+{"text": "um so can you tell me when I'm free on Thursday afternoon", "tool": "free_when", "arg_hint": "Thursday afternoon"}
+{"text": "when is my schedule open this week", "tool": "free_when", "arg_hint": "this week"}
+{"text": "Am I free on Friday, you check?", "tool": "free_when", "arg_hint": "Friday"}
+{"text": "Is there a way to find gaps in my calendar for next Tuesday?", "tool": "free_when", "arg_hint": "next Tuesday"}
+{"text": "um can you like remove the background from this photo ~/Desktop/profile.jpg", "tool": "remove_background", "arg_hint": "profile.jpg"}
+{"text": "cut out the background from ~/Pictures/headshot.png", "tool": "remove_background", "arg_hint": "headshot.png"}
+{"text": "Background remove from image document.heic yes?", "tool": "remove_background", "arg_hint": "document.heic"}
+{"text": "Could you strip the background from the photo at ~/Downloads/group.jpg?", "tool": "remove_background", "arg_hint": "group.jpg"}
+{"text": "um so can you like make this image bigger by 300 percent", "tool": "upscale_image", "arg_hint": ""}
+{"text": "upscale ~/Pictures/small.png please", "tool": "upscale_image", "arg_hint": "small.png"}
+{"text": "This photo icon.png, you make it bigger?", "tool": "upscale_image", "arg_hint": "icon.png"}
+{"text": "Could you enlarge the image at ~/Desktop/artwork.jpg?", "tool": "upscale_image", "arg_hint": "artwork.jpg"}
+{"text": "um can you improve the colors on this photo ~/Documents/faded.jpg", "tool": "enhance_image", "arg_hint": "faded.jpg"}
+{"text": "enhance the contrast of ~/Pictures/dull.png", "tool": "enhance_image", "arg_hint": "dull.png"}
+{"text": "Image automatically enhanced you do yes, file is background.heic?", "tool": "enhance_image", "arg_hint": "background.heic"}
+{"text": "Is there a way to boost the colors in this photo ~/Downloads/dull.jpg?", "tool": "enhance_image", "arg_hint": "dull.jpg"}
+{"text": "um so can you turn this photo into black and white", "tool": "grayscale_image", "arg_hint": ""}
+{"text": "convert ~/Pictures/color.jpg to grayscale", "tool": "grayscale_image", "arg_hint": "color.jpg"}
+{"text": "Grayscale the image sunset.png yes?", "tool": "grayscale_image", "arg_hint": "sunset.png"}
+{"text": "Could you make the photo at ~/Desktop/vibrant.heic grayscale?", "tool": "grayscale_image", "arg_hint": "vibrant.heic"}
+{"text": "um can you rotate this image by 90 degrees clockwise", "tool": "rotate_image", "arg_hint": "90"}
+{"text": "rotate ~/Pictures/sideways.jpg by 45 degrees", "tool": "rotate_image", "arg_hint": "45"}
+{"text": "The photo landscape.png, rotate 180 degree yes?", "tool": "rotate_image", "arg_hint": "180"}
+{"text": "Could you turn the image at ~/Downloads/twisted.jpg by 270 degrees?", "tool": "rotate_image", "arg_hint": "270"}
+{"text": "um so can you flip this photo horizontally", "tool": "flip_image", "arg_hint": "horizontal"}
+{"text": "flip ~/Pictures/mirror.jpg vertically", "tool": "flip_image", "arg_hint": "vertical"}
+{"text": "The image reflected.png, you flip it?", "tool": "flip_image", "arg_hint": ""}
+{"text": "Is there a way to flip the photo at ~/Desktop/reversed.heic?", "tool": "flip_image", "arg_hint": ""}
+{"text": "um can you make this image smaller, like max 800 pixels", "tool": "resize_image", "arg_hint": "800"}
+{"text": "resize ~/Pictures/huge.jpg to 1024", "tool": "resize_image", "arg_hint": "1024"}
+{"text": "Image icon-large.png, resize to 256 pixel yes?", "tool": "resize_image", "arg_hint": "256"}
+{"text": "Could you shrink the photo at ~/Downloads/oversized.jpg to 512 pixels?", "tool": "resize_image", "arg_hint": "512"}
+{"text": "um so can you crop this image into a square shape", "tool": "crop_square", "arg_hint": ""}
+{"text": "make ~/Pictures/rectangle.jpg a perfect square", "tool": "crop_square", "arg_hint": ""}
+{"text": "Crop square the image portrait.png yes?", "tool": "crop_square", "arg_hint": ""}
+{"text": "Could you crop the photo at ~/Desktop/wide.heic into a square?", "tool": "crop_square", "arg_hint": ""}
+{"text": "um can you convert this image from png to jpg format", "tool": "convert_image", "arg_hint": "jpg"}
+{"text": "convert ~/Pictures/file.jpg to webp", "tool": "convert_image", "arg_hint": "webp"}
+{"text": "Change image format photo.png to heic yes?", "tool": "convert_image", "arg_hint": "heic"}
+{"text": "Is there a way to convert the file at ~/Downloads/document.pdf to jpg?", "tool": "convert_image", "arg_hint": "jpg"}
+{"text": "um what are the dimensions of this image ~/Desktop/picture.jpg", "tool": "image_info", "arg_hint": "picture.jpg"}
+{"text": "tell me the pixel size of ~/Pictures/photo.png", "tool": "image_info", "arg_hint": "photo.png"}
+{"text": "Image size details artwork.heic you show?", "tool": "image_info", "arg_hint": "artwork.heic"}
+{"text": "Can you tell me the resolution of the file at ~/Downloads/image.jpg?", "tool": "image_info", "arg_hint": "image.jpg"}
+{"text": "um so can you find a file called report.pdf in my home folder", "tool": "find_file", "arg_hint": "report.pdf"}
+{"text": "search for ~/Documents using Spotlight, keyword budget", "tool": "find_file", "arg_hint": "budget"}
+{"text": "File with name screenshot.png you find please?", "tool": "find_file", "arg_hint": "screenshot.png"}
+{"text": "Is there a way to locate files containing the word invoice?", "tool": "find_file", "arg_hint": "invoice"}
+{"text": "um what's the newest stuff in my Downloads folder", "tool": "recent_downloads", "arg_hint": ""}
+{"text": "show me recent files I downloaded", "tool": "recent_downloads", "arg_hint": ""}
+{"text": "Downloads folder recent files, you list?", "tool": "recent_downloads", "arg_hint": ""}
+{"text": "Can you tell me what I downloaded lately?", "tool": "recent_downloads", "arg_hint": ""}
+{"text": "um so can you tell me how big the Documents folder is", "tool": "folder_size", "arg_hint": "Documents"}
+{"text": "how much space does ~/Pictures take up", "tool": "folder_size", "arg_hint": "Pictures"}
+{"text": "Size of folder Projects, you calculate?", "tool": "folder_size", "arg_hint": "Projects"}
+{"text": "Could you tell me the disk space used by the Desktop folder?", "tool": "folder_size", "arg_hint": "Desktop"}
+{"text": "um can you move this file ~/Desktop/old.txt to ~/Documents", "tool": "move_file", "arg_hint": "old.txt"}
+{"text": "move ~/Pictures/photo.jpg to ~/Archive", "tool": "move_file", "arg_hint": "photo.jpg"}
+{"text": "File draft.md from Downloads to Documents you move?", "tool": "move_file", "arg_hint": "draft.md"}
+{"text": "Is there a way to move the file at ~/Desktop/image.png to ~/Pictures?", "tool": "move_file", "arg_hint": "image.png"}
+{"text": "um so can you copy this file ~/Desktop/template.docx to ~/Documents", "tool": "copy_file", "arg_hint": "template.docx"}
+{"text": "copy ~/Pictures/favorite.jpg to ~/Archive", "tool": "copy_file", "arg_hint": "favorite.jpg"}
+{"text": "File backup.zip from Desktop to Drive you copy?", "tool": "copy_file", "arg_hint": "backup.zip"}
+{"text": "Could you duplicate the file at ~/Downloads/important.pdf to ~/Documents?", "tool": "copy_file", "arg_hint": "important.pdf"}
+{"text": "um can you rename this file from oldname.txt to newname.txt", "tool": "rename_file", "arg_hint": "oldname.txt"}
+{"text": "rename ~/Desktop/presentation.pptx to report_2024.pptx", "tool": "rename_file", "arg_hint": "presentation.pptx"}
+{"text": "File config-old.json you change name to config-new.json?", "tool": "rename_file", "arg_hint": "config-old.json"}
+{"text": "Is there a way to rename the photo at ~/Pictures/IMG_001.jpg to vacation_pic.jpg?", "tool": "rename_file", "arg_hint": "IMG_001.jpg"}
+{"text": "um so can you zip up this folder ~/Desktop/backup into archive.zip", "tool": "zip_file", "arg_hint": "backup"}
+{"text": "compress ~/Documents/project into a zip file", "tool": "zip_file", "arg_hint": "project"}
+{"text": "Folder Downloads you make it into zip yes?", "tool": "zip_file", "arg_hint": "Downloads"}
+{"text": "Could you create a zip archive of the ~/Pictures/Vacation folder?", "tool": "zip_file", "arg_hint": "Vacation"}
+{"text": "um can you unzip this archive ~/Desktop/files.zip please", "tool": "unzip_file", "arg_hint": "files.zip"}
+{"text": "extract ~/Downloads/archive.zip", "tool": "unzip_file", "arg_hint": "archive.zip"}
+{"text": "Zip file document.zip you extract?", "tool": "unzip_file", "arg_hint": "document.zip"}
+{"text": "Is there a way to decompress the file at ~/Desktop/backup.zip?", "tool": "unzip_file", "arg_hint": "backup.zip"}
+{"text": "um so can you delete this file ~/Desktop/junk.txt", "tool": "trash_file", "arg_hint": "junk.txt"}
+{"text": "move ~/Downloads/unwanted.pdf to trash", "tool": "trash_file", "arg_hint": "unwanted.pdf"}
+{"text": "File error-log.txt from Desktop trash you put?", "tool": "trash_file", "arg_hint": "error-log.txt"}
+{"text": "Could you delete the folder at ~/Documents/OldBackup?", "tool": "trash_file", "arg_hint": "OldBackup"}
+{"text": "um what's 25 plus 17", "tool": "calculate", "arg_hint": ""}
+{"text": "calculate 150 divided by 3", "tool": "calculate", "arg_hint": ""}
+{"text": "Math you do: what is 5% of 200?", "tool": "calculate", "arg_hint": "5%"}
+{"text": "Is there a way to compute the square root of 144?", "tool": "calculate", "arg_hint": ""}
+{"text": "um so can you convert 5 kilometers to miles", "tool": "convert_units", "arg_hint": "kilometers"}
+{"text": "how many pounds is 80 kilograms", "tool": "convert_units", "arg_hint": "kilograms"}
+{"text": "Temperature 32 fahrenheit to celsius you convert?", "tool": "convert_units", "arg_hint": "fahrenheit"}
+{"text": "Is there a way to convert 2 hours to minutes?", "tool": "convert_units", "arg_hint": "hours"}
+{"text": "um what does the word serendipity mean", "tool": "define_word", "arg_hint": "serendipity"}
+{"text": "Word eloquent, what is meaning?", "tool": "define_word", "arg_hint": "eloquent"}
+{"text": "Could you tell me what \"paradigm shift\" means?", "tool": "define_word", "arg_hint": "paradigm shift"}
+{"text": "um what time is it in Paris right now", "tool": "time_in", "arg_hint": "Paris"}
+{"text": "tell me the current time in Sydney", "tool": "time_in", "arg_hint": "Sydney"}
+{"text": "Time in Mumbai, what is?", "tool": "time_in", "arg_hint": "Mumbai"}
+{"text": "Can you tell me what time it is in Berlin?", "tool": "time_in", "arg_hint": "Berlin"}
+{"text": "convert 9am London to Singapore time", "tool": "convert_time", "arg_hint": "London"}
+{"text": "Time 18:00 in Chicago to Mexico City you change?", "tool": "convert_time", "arg_hint": "Chicago"}
+{"text": "Is there a way to convert 2pm Sydney time to Los Angeles?", "tool": "convert_time", "arg_hint": "Sydney"}
+{"text": "um what's today's date", "tool": "current_date", "arg_hint": ""}
+{"text": "tell me what day of the week it is", "tool": "current_date", "arg_hint": ""}
+{"text": "Today date and weekday you give?", "tool": "current_date", "arg_hint": ""}
+{"text": "Can you tell me today's date?", "tool": "current_date", "arg_hint": ""}
+{"text": "um how many days until christmas 2026", "tool": "days_until", "arg_hint": "christmas"}
+{"text": "how many days from now until 2026-12-31", "tool": "days_until", "arg_hint": "2026-12-31"}
+{"text": "Days until halloween, what number?", "tool": "days_until", "arg_hint": "halloween"}
+{"text": "Is there a way to find how many days until new year?", "tool": "days_until", "arg_hint": "new year"}
+{"text": "um so can you tell me what date is 30 days from now", "tool": "date_math", "arg_hint": "30 days"}
+{"text": "what date was 2 weeks ago", "tool": "date_math", "arg_hint": "2 weeks ago"}
+{"text": "Date 100 day after 2026-01-15 you calculate?", "tool": "date_math", "arg_hint": "100 day"}
+{"text": "Is there a way to find the date 6 months from now?", "tool": "date_math", "arg_hint": "6 months"}
+{"text": "um can you flip a coin for me", "tool": "flip_coin", "arg_hint": ""}
+{"text": "flip a coin to help me decide", "tool": "flip_coin", "arg_hint": ""}
+{"text": "Coin flip you do?", "tool": "flip_coin", "arg_hint": ""}
+{"text": "Could you toss a coin for me?", "tool": "flip_coin", "arg_hint": ""}
+{"text": "um so can you roll some dice for me like 2d6", "tool": "roll_dice", "arg_hint": "2d6"}
+{"text": "Dice 3d8 you roll please?", "tool": "roll_dice", "arg_hint": "3d8"}
+{"text": "Is there a way to roll 10 dice with 12 sides?", "tool": "roll_dice", "arg_hint": "10"}
+{"text": "um give me a random number between 1 and 100", "tool": "random_number", "arg_hint": ""}
+{"text": "pick a random whole number", "tool": "random_number", "arg_hint": ""}
+{"text": "Number random from 50 to 75 you generate?", "tool": "random_number", "arg_hint": ""}
+{"text": "Could you give me a random number?", "tool": "random_number", "arg_hint": ""}
+{"text": "um so can you generate a password for me like 16 characters", "tool": "make_password", "arg_hint": "16"}
+{"text": "create a random password 24 characters long", "tool": "make_password", "arg_hint": "24"}
+{"text": "Password secure you make, 32 character yes?", "tool": "make_password", "arg_hint": "32"}
+{"text": "Is there a way to make a 48 character password?", "tool": "make_password", "arg_hint": "48"}
+{"text": "um can you generate a uuid for me", "tool": "make_uuid", "arg_hint": ""}
+{"text": "create a new UUID", "tool": "make_uuid", "arg_hint": ""}
+{"text": "UUID random you make?", "tool": "make_uuid", "arg_hint": ""}
+{"text": "Could you generate a unique identifier?", "tool": "make_uuid", "arg_hint": ""}
+{"text": "um so what's the SHA-256 hash of hello world", "tool": "hash_text", "arg_hint": "hello world"}
+{"text": "hash the text password123", "tool": "hash_text", "arg_hint": "password123"}
+{"text": "Hash code for secure-key you make?", "tool": "hash_text", "arg_hint": "secure-key"}
+{"text": "Is there a way to hash the phrase my secret?", "tool": "hash_text", "arg_hint": "my secret"}
+{"text": "um can you encode this text into base64", "tool": "base64_encode", "arg_hint": ""}
+{"text": "base64 encode the string data.json", "tool": "base64_encode", "arg_hint": "data.json"}
+{"text": "Text hello-world you encode base64?", "tool": "base64_encode", "arg_hint": ""}
+{"text": "Is there a way to convert this to base64: config value?", "tool": "base64_encode", "arg_hint": ""}
+{"text": "um so can you decode this base64 string aGVsbG8gd29ybGQ=", "tool": "base64_decode", "arg_hint": "aGVsbG8gd29ybGQ="}
+{"text": "base64 decode VGhpcyBpcyBhIHRlc3Q=", "tool": "base64_decode", "arg_hint": "VGhpcyBpcyBhIHRlc3Q="}
+{"text": "Decode from base64 bXlkYXRh you do?", "tool": "base64_decode", "arg_hint": "bXlkYXRh"}
+{"text": "Could you decode this base64: RXhhbXBsZQ==?", "tool": "base64_decode", "arg_hint": "RXhhbXBsZQ=="}
+{"text": "um count the words in this text please", "tool": "word_count", "arg_hint": ""}
+{"text": "how many characters in the phrase artificial intelligence", "tool": "word_count", "arg_hint": ""}
+{"text": "Text count word and character you do for sentence machine learning?", "tool": "word_count", "arg_hint": ""}
+{"text": "Can you tell me the word count of this passage?", "tool": "word_count", "arg_hint": ""}
+{"text": "um so can you reverse the text backwards", "tool": "reverse_text", "arg_hint": ""}
+{"text": "reverse the string hello world", "tool": "reverse_text", "arg_hint": ""}
+{"text": "Reverse text amazing you do?", "tool": "reverse_text", "arg_hint": ""}
+{"text": "Is there a way to flip this text around: palindrome?", "tool": "reverse_text", "arg_hint": ""}
+{"text": "um can you make this text into all capital letters", "tool": "shout", "arg_hint": ""}
+{"text": "shout the phrase quiet please", "tool": "shout", "arg_hint": "quiet please"}
+{"text": "Uppercase you make from 'hello friend'?", "tool": "shout", "arg_hint": ""}
+{"text": "Could you convert this to capitals: amazing news?", "tool": "shout", "arg_hint": ""}
+{"text": "um so what's the morse code for hello", "tool": "morse_code", "arg_hint": "hello"}
+{"text": "convert the text SOS to morse code", "tool": "morse_code", "arg_hint": "SOS"}
+{"text": "Morse code for message alpha bravo you make?", "tool": "morse_code", "arg_hint": ""}
+{"text": "Is there a way to translate this to morse: help?", "tool": "morse_code", "arg_hint": ""}
+{"text": "um can you like fix up this json format", "tool": "json_pretty", "arg_hint": ""}
+{"text": "pretty print {\"name\":\"Joshua\",\"age\":25}", "tool": "json_pretty", "arg_hint": ""}
+{"text": "JSON indented you make from messy data?", "tool": "json_pretty", "arg_hint": ""}
+{"text": "Could you format this JSON nicely?", "tool": "json_pretty", "arg_hint": ""}
+{"text": "um is the number 17 a prime number", "tool": "is_prime", "arg_hint": "17"}
+{"text": "check if 144 is prime", "tool": "is_prime", "arg_hint": "144"}
+{"text": "Prime number 97 yes or no?", "tool": "is_prime", "arg_hint": "97"}
+{"text": "Is there a way to check if 256 is prime?", "tool": "is_prime", "arg_hint": "256"}
+{"text": "um so can you write the number 42 in roman numerals", "tool": "roman_numeral", "arg_hint": "42"}
+{"text": "convert 1984 to roman numerals", "tool": "roman_numeral", "arg_hint": "1984"}
+{"text": "Roman numeral for 777 you make?", "tool": "roman_numeral", "arg_hint": "777"}
+{"text": "Could you write 3456 in roman numerals?", "tool": "roman_numeral", "arg_hint": "3456"}
+{"text": "um so can you figure out the tip on a bill of 85 dollars", "tool": "tip", "arg_hint": "85"}
+{"text": "calculate tips for a 120 dollar meal", "tool": "tip", "arg_hint": "120"}
+{"text": "Bill 45.50, tip percent 15 18 20 you calculate?", "tool": "tip", "arg_hint": "45.50"}
+{"text": "Is there a way to figure out the tip on a 200 dollar check?", "tool": "tip", "arg_hint": "200"}
+{"text": "um how much free disk space is on this Mac", "tool": "disk_space", "arg_hint": ""}
+{"text": "tell me available storage", "tool": "disk_space", "arg_hint": ""}
+{"text": "Disk space free on this computer you check?", "tool": "disk_space", "arg_hint": ""}
+{"text": "Can you tell me how much storage is left?", "tool": "disk_space", "arg_hint": ""}
+{"text": "um how long has this Mac been on", "tool": "uptime", "arg_hint": ""}
+{"text": "tell me the uptime of this computer", "tool": "uptime", "arg_hint": ""}
+{"text": "Since restart how many hour or day?", "tool": "uptime", "arg_hint": ""}
+{"text": "Can you tell me how long since the last reboot?", "tool": "uptime", "arg_hint": ""}
+{"text": "um so how much memory does this Mac have", "tool": "memory_usage", "arg_hint": ""}
+{"text": "check memory usage and available RAM", "tool": "memory_usage", "arg_hint": ""}
+{"text": "Memory free and total you show?", "tool": "memory_usage", "arg_hint": ""}
+{"text": "Is there a way to see how much memory is free?", "tool": "memory_usage", "arg_hint": ""}
+{"text": "um what's the CPU load right now", "tool": "cpu_load", "arg_hint": ""}
+{"text": "tell me how busy the processor is", "tool": "cpu_load", "arg_hint": ""}
+{"text": "Load average processor you check?", "tool": "cpu_load", "arg_hint": ""}
+{"text": "Can you tell me the current CPU usage?", "tool": "cpu_load", "arg_hint": ""}
+{"text": "um what's my IP address on this network", "tool": "ip_address", "arg_hint": ""}
+{"text": "show me the local IP address", "tool": "ip_address", "arg_hint": ""}
+{"text": "Network IP you tell?", "tool": "ip_address", "arg_hint": ""}
+{"text": "Could you show me my network IP?", "tool": "ip_address", "arg_hint": ""}
+{"text": "um what wifi network am I on right now", "tool": "wifi_name", "arg_hint": ""}
+{"text": "tell me the name of the network I'm connected to", "tool": "wifi_name", "arg_hint": ""}
+{"text": "WiFi name you show?", "tool": "wifi_name", "arg_hint": ""}
+{"text": "Is there a way to see what WiFi I'm on?", "tool": "wifi_name", "arg_hint": ""}
+{"text": "um what macOS version is this", "tool": "system_info", "arg_hint": ""}
+{"text": "tell me the system information", "tool": "system_info", "arg_hint": ""}
+{"text": "Computer chip and memory you show?", "tool": "system_info", "arg_hint": ""}
+{"text": "Can you tell me the specs of this Mac?", "tool": "system_info", "arg_hint": ""}
+{"text": "um so can you show this file in Finder ~/Desktop/photo.jpg", "tool": "reveal_in_finder", "arg_hint": "photo.jpg"}
+{"text": "open ~/Documents/report.pdf in Finder", "tool": "reveal_in_finder", "arg_hint": "report.pdf"}
+{"text": "File config.json you show in Finder?", "tool": "reveal_in_finder", "arg_hint": "config.json"}
+{"text": "Could you reveal the folder at ~/Downloads in Finder?", "tool": "reveal_in_finder", "arg_hint": "Downloads"}
+{"text": "um what shortcuts do I have on this Mac", "tool": "list_shortcuts", "arg_hint": ""}
+{"text": "show me my Apple Shortcuts", "tool": "list_shortcuts", "arg_hint": ""}
+{"text": "Shortcuts installed you list?", "tool": "list_shortcuts", "arg_hint": ""}
+{"text": "Can you tell me what shortcuts are available?", "tool": "list_shortcuts", "arg_hint": ""}
+{"text": "um what tools can you access", "tool": "list_mcp_tools", "arg_hint": ""}
+{"text": "show me the list of available tools", "tool": "list_mcp_tools", "arg_hint": ""}
+{"text": "Tools you have access you list?", "tool": "list_mcp_tools", "arg_hint": ""}
+{"text": "Is there a way to see what tools are available?", "tool": "list_mcp_tools", "arg_hint": ""}
+{"text": "um what tabs are open in my browser right now", "tool": "list_tabs", "arg_hint": ""}
+{"text": "show me all the open Chrome tabs", "tool": "list_tabs", "arg_hint": ""}
+{"text": "Tabs open in browser you list?", "tool": "list_tabs", "arg_hint": ""}
+{"text": "Can you tell me what tabs I have open?", "tool": "list_tabs", "arg_hint": ""}
+{"text": "um so can you switch to tab number 3", "tool": "switch_tab", "arg_hint": "3"}
+{"text": "bring the tab with github to the front", "tool": "switch_tab", "arg_hint": "github"}
+{"text": "Tab number 2 you bring to front?", "tool": "switch_tab", "arg_hint": "2"}
+{"text": "Is there a way to switch to the tab with hacker news?", "tool": "switch_tab", "arg_hint": "hacker news"}
+{"text": "um so read what's on the tab please", "tool": "read_tab", "arg_hint": ""}
+{"text": "get the text from the current browser tab", "tool": "read_tab", "arg_hint": ""}
+{"text": "Tab content you show for tab 4?", "tool": "read_tab", "arg_hint": ""}
+{"text": "Could you read the text on that tab for me?", "tool": "read_tab", "arg_hint": ""}
+{"text": "um can you read this PDF file ~/Documents/manual.pdf", "tool": "read_document", "arg_hint": "manual.pdf"}
+{"text": "read the contents of ~/Desktop/report.docx", "tool": "read_document", "arg_hint": "report.docx"}
+{"text": "Document contract.pdf you read for me?", "tool": "read_document", "arg_hint": "contract.pdf"}
+{"text": "Is there a way to see the text in ~/Downloads/notes.txt?", "tool": "read_document", "arg_hint": "notes.txt"}
+{"text": "um so can you find the parts about pricing in this ~/Desktop/guide.pdf", "tool": "find_in_document", "arg_hint": "pricing"}
+{"text": "search for budget and expenses in ~/Documents/report.docx", "tool": "find_in_document", "arg_hint": "budget"}
+{"text": "Document terms and conditions you find passages about from contract.pdf?", "tool": "find_in_document", "arg_hint": "terms and conditions"}
+{"text": "Is there a way to find mentions of deadline in ~/Downloads/email.txt?", "tool": "find_in_document", "arg_hint": "deadline"}
+{"text": "um so can you answer me what is the main topic of ~/Desktop/article.pdf", "tool": "ask_document", "arg_hint": "main topic"}
+{"text": "what does the document ~/Documents/manual.docx say about setup", "tool": "ask_document", "arg_hint": "setup"}
+{"text": "Question about features you answer from~/Downloads/guide.pdf?", "tool": "ask_document", "arg_hint": "features"}
+{"text": "Is there a way to ask this document a question: what are the requirements in ~/Desktop/spec.txt?", "tool": "ask_document", "arg_hint": "requirements"}
+{"text": "um so can you like research about the history of coffee", "tool": "research", "arg_hint": "coffee"}
+{"text": "research sustainable energy sources", "tool": "research", "arg_hint": "sustainable energy"}
+{"text": "Topic artificial intelligence you research for me?", "tool": "research", "arg_hint": "artificial intelligence"}
+{"text": "Is there a way to research about space exploration?", "tool": "research", "arg_hint": "space exploration"}
+{"text": "um can you tell me more about quantum computing", "tool": "research_more", "arg_hint": "quantum computing"}
+{"text": "follow up on machine learning with more details", "tool": "research_more", "arg_hint": "machine learning"}
+{"text": "More you tell about climate change yes?", "tool": "research_more", "arg_hint": "climate change"}
+{"text": "Could you give me more information about blockchain?", "tool": "research_more", "arg_hint": "blockchain"}
+{"text": "um so can you save that research to a file please", "tool": "save_research", "arg_hint": ""}
+{"text": "save the research about renewable energy to my desktop", "tool": "save_research", "arg_hint": ""}
+{"text": "Research you saved as document yes?", "tool": "save_research", "arg_hint": ""}
+{"text": "Is there a way to save this research brief?", "tool": "save_research", "arg_hint": ""}
+{"text": "um so can you like draft an email to the team about the schedule change", "tool": "write_document", "arg_hint": "schedule change"}
+{"text": "write a proposal for a new project called website redesign", "tool": "write_document", "arg_hint": "website redesign"}
+{"text": "Document you make about meeting minutes from today?", "tool": "write_document", "arg_hint": "meeting minutes"}
+{"text": "Is there a way to draft a letter about performance review?", "tool": "write_document", "arg_hint": "performance review"}
+{"text": "um so can you transcribe this video at ~/Desktop/demo.mp4", "tool": "transcribe_video", "arg_hint": "demo.mp4"}
+{"text": "what does this audio file ~/Downloads/podcast.m4a say", "tool": "transcribe_video", "arg_hint": "podcast.m4a"}
+{"text": "Video content ~/Documents/presentation.mov you write down?", "tool": "transcribe_video", "arg_hint": "presentation.mov"}
+{"text": "Is there a way to get the transcription of ~/Desktop/recording.wav?", "tool": "transcribe_video", "arg_hint": "recording.wav"}
+{"text": "um so can you like run some code to analyze my data", "tool": "run_code", "arg_hint": ""}
+{"text": "execute code to calculate average of 10 20 30", "tool": "run_code", "arg_hint": ""}
+{"text": "Code you run for stats on ~/Desktop/data.csv?", "tool": "run_code", "arg_hint": ""}
+{"text": "Is there a way to run Python to process this file?", "tool": "run_code", "arg_hint": ""}
+{"text": "um what reminders do I have", "tool": "list_reminders", "arg_hint": ""}
+{"text": "Reminders incomplete you list please?", "tool": "list_reminders", "arg_hint": ""}
+{"text": "Can you tell me what reminders are pending?", "tool": "list_reminders", "arg_hint": ""}
+{"text": "um so can you mark the reminder about laundry as done", "tool": "complete_reminder", "arg_hint": "laundry"}
+{"text": "complete the reminder for groceries", "tool": "complete_reminder", "arg_hint": "groceries"}
+{"text": "Reminder project alpha done you mark?", "tool": "complete_reminder", "arg_hint": "project alpha"}
+{"text": "Is there a way to finish the reminder about dentist?", "tool": "complete_reminder", "arg_hint": "dentist"}
+{"text": "um so can you add an event to my calendar called team meeting at 2pm", "tool": "add_event", "arg_hint": "team meeting"}
+{"text": "create a calendar event lunch with Sarah at noon", "tool": "add_event", "arg_hint": "lunch with Sarah"}
+{"text": "Event doctor appointment tomorrow 10am you add?", "tool": "add_event", "arg_hint": "doctor appointment"}
+{"text": "Is there a way to add an event called conference on Friday at 9am?", "tool": "add_event", "arg_hint": "conference"}
+{"text": "um what's on my calendar tomorrow", "tool": "calendar_tomorrow", "arg_hint": ""}
+{"text": "Events tomorrow you list?", "tool": "calendar_tomorrow", "arg_hint": ""}
+{"text": "Can you tell me what I have scheduled for tomorrow?", "tool": "calendar_tomorrow", "arg_hint": ""}
+{"text": "um so can you find notes about project alpha", "tool": "search_notes", "arg_hint": "project alpha"}
+{"text": "search my notes for the word budget", "tool": "search_notes", "arg_hint": "budget"}
+{"text": "Notes about vacation you find?", "tool": "search_notes", "arg_hint": "vacation"}
+{"text": "Is there a way to search notes for the topic ideas?", "tool": "search_notes", "arg_hint": "ideas"}
+{"text": "um so can you add this to my shopping list note", "tool": "append_note", "arg_hint": "shopping list"}
+{"text": "append buy milk and eggs to the groceries note", "tool": "append_note", "arg_hint": "buy milk and eggs"}
+{"text": "Note meeting notes you add action item follow up yes?", "tool": "append_note", "arg_hint": "action item follow up"}
+{"text": "Is there a way to add a line to my ideas note about career goals?", "tool": "append_note", "arg_hint": "career goals"}
+{"text": "um so can you turn off dark mode for me", "tool": "dark_mode", "arg_hint": "off"}
+{"text": "Dark mode on you set?", "tool": "dark_mode", "arg_hint": "on"}
+{"text": "um what apps are open right now on my Mac", "tool": "running_apps", "arg_hint": ""}
+{"text": "show me all the running applications", "tool": "running_apps", "arg_hint": ""}
+{"text": "Apps visible you list?", "tool": "running_apps", "arg_hint": ""}
+{"text": "Can you tell me which apps are currently open?", "tool": "running_apps", "arg_hint": ""}
+{"text": "um so can you quit Slack for me", "tool": "quit_app", "arg_hint": "Slack"}
+{"text": "close the Excel app", "tool": "quit_app", "arg_hint": "Excel"}
+{"text": "App Music you quit please?", "tool": "quit_app", "arg_hint": "Music"}
+{"text": "Is there a way to close Safari?", "tool": "quit_app", "arg_hint": "Safari"}
+{"text": "um so can you turn on Do Not Disturb", "tool": "do_not_disturb", "arg_hint": "on"}
+{"text": "turn off Do Not Disturb mode", "tool": "do_not_disturb", "arg_hint": "off"}
+{"text": "Do Not Disturb you toggle?", "tool": "do_not_disturb", "arg_hint": "toggle"}
+{"text": "um is my Bluetooth on", "tool": "bluetooth_status", "arg_hint": ""}
+{"text": "tell me if Bluetooth is connected", "tool": "bluetooth_status", "arg_hint": ""}
+{"text": "Bluetooth device you show me?", "tool": "bluetooth_status", "arg_hint": ""}
+{"text": "Can you check the Bluetooth status?", "tool": "bluetooth_status", "arg_hint": ""}
+{"text": "um what's the git status of this repo", "tool": "git_status", "arg_hint": ""}
+{"text": "show me what changed in the repository", "tool": "git_status", "arg_hint": ""}
+{"text": "Git branch and changes you show?", "tool": "git_status", "arg_hint": ""}
+{"text": "Is there a way to check the repo status?", "tool": "git_status", "arg_hint": ""}
+{"text": "um what are the recent commits in this project", "tool": "recent_commits", "arg_hint": ""}
+{"text": "show me the last 5 commits", "tool": "recent_commits", "arg_hint": ""}
+{"text": "Commits recent you list with date?", "tool": "recent_commits", "arg_hint": ""}
+{"text": "Can you show me recent commit history?", "tool": "recent_commits", "arg_hint": ""}
+{"text": "um so can you run the tests for this project", "tool": "run_tests", "arg_hint": ""}
+{"text": "execute the test suite", "tool": "run_tests", "arg_hint": ""}
+{"text": "Tests you run for the repo?", "tool": "run_tests", "arg_hint": ""}
+{"text": "Is there a way to run the test command?", "tool": "run_tests", "arg_hint": ""}
+{"text": "um what pull requests are open in this repo", "tool": "open_prs", "arg_hint": ""}
+{"text": "show me the list of open PRs", "tool": "open_prs", "arg_hint": ""}
+{"text": "Pull requests you list for this project?", "tool": "open_prs", "arg_hint": ""}
+{"text": "Can you tell me about the open pull requests?", "tool": "open_prs", "arg_hint": ""}
+{"text": "um so can you open this repo in the editor", "tool": "open_in_editor", "arg_hint": ""}
+{"text": "open the project folder in Visual Studio Code", "tool": "open_in_editor", "arg_hint": ""}
+{"text": "Editor you open the repo folder yes?", "tool": "open_in_editor", "arg_hint": ""}
+{"text": "Is there a way to open this code project in my IDE?", "tool": "open_in_editor", "arg_hint": ""}
+{"text": "um what voices can I use", "tool": "list_voices", "arg_hint": ""}
+{"text": "show me the available ElevenLabs voices", "tool": "list_voices", "arg_hint": ""}
+{"text": "Voices you have you list?", "tool": "list_voices", "arg_hint": ""}
+{"text": "Can you tell me what voices are available?", "tool": "list_voices", "arg_hint": ""}
+{"text": "um so can you switch my voice to Rachel", "tool": "set_voice", "arg_hint": "Rachel"}
+{"text": "change my voice to Alex", "tool": "set_voice", "arg_hint": "Alex"}
+{"text": "Voice James you set for me?", "tool": "set_voice", "arg_hint": "James"}
+{"text": "Is there a way to use the Luna voice?", "tool": "set_voice", "arg_hint": "Luna"}
+{"text": "um what feedback have I given you", "tool": "feedback_summary", "arg_hint": ""}
+{"text": "show me my feedback history", "tool": "feedback_summary", "arg_hint": ""}
+{"text": "Feedback summary you show me?", "tool": "feedback_summary", "arg_hint": ""}
+{"text": "Can you tell me how I've rated you?", "tool": "feedback_summary", "arg_hint": ""}
+{"text": "I really love pizza, especially the margherita kind with fresh basil", "tool": null, "arg_hint": ""}
+{"text": "Do you think Python is better than JavaScript for backend development", "tool": null, "arg_hint": ""}
+{"text": "The weather today seems perfect for a beach trip", "tool": null, "arg_hint": ""}
+{"text": "I wonder what the capital of Kazakhstan is", "tool": null, "arg_hint": ""}
+{"text": "My favorite movie this year has been the new sci-fi thriller", "tool": null, "arg_hint": ""}
+{"text": "That restaurant downtown has really amazing salmon dishes", "tool": null, "arg_hint": ""}
+{"text": "I think machine learning is going to change everything in the next decade", "tool": null, "arg_hint": ""}
+{"text": "Do you have any good recommendations for hiking trails near Vancouver", "tool": null, "arg_hint": ""}
+{"text": "This coffee is exactly the temperature I like", "tool": null, "arg_hint": ""}
+{"text": "I've been reading a lot about climate science lately and it's quite concerning", "tool": null, "arg_hint": ""}
+{"text": "That painting in the museum yesterday really struck me emotionally", "tool": null, "arg_hint": ""}
+{"text": "I'm curious about what books you think I should read next", "tool": null, "arg_hint": ""}
+{"text": "The traffic on the 401 was absolutely terrible this morning", "tool": null, "arg_hint": ""}
+{"text": "I love how much brighter my home feels with the new lighting", "tool": null, "arg_hint": ""}
+{"text": "Have you noticed how streaming services are changing the entertainment industry", "tool": null, "arg_hint": ""}
+{"text": "That concert last week was probably the best live music I've ever heard", "tool": null, "arg_hint": ""}
+{"text": "I'm thinking about getting a new bicycle but I'm not sure which brand to choose", "tool": null, "arg_hint": ""}
+{"text": "The new update to the operating system seems pretty solid so far", "tool": null, "arg_hint": ""}
+{"text": "I find it fascinating how bees navigate using the sun's position", "tool": null, "arg_hint": ""}
+{"text": "This year's fashion trends are quite different from what I expected", "tool": null, "arg_hint": ""}
+{"text": "I'm really impressed by how far electric vehicle technology has come", "tool": null, "arg_hint": ""}
+{"text": "That documentary about space exploration left me speechless", "tool": null, "arg_hint": ""}
+{"text": "I think remote work has genuinely improved my productivity and happiness", "tool": null, "arg_hint": ""}
+{"text": "The new neighborhood restaurant opened last month and it's quite good", "tool": null, "arg_hint": ""}
+{"text": "I've been wondering about the history of ancient Rome recently", "tool": null, "arg_hint": ""}
+{"text": "That album from the indie artist absolutely blew my mind", "tool": null, "arg_hint": ""}
+{"text": "I'm still trying to figure out cryptocurrency and blockchain technology", "tool": null, "arg_hint": ""}
+{"text": "This houseplant I bought has grown so much over the summer", "tool": null, "arg_hint": ""}
+{"text": "I think the future of transportation will be very different from today", "tool": null, "arg_hint": ""}
+{"text": "That conversation earlier really got me thinking about my career path", "tool": null, "arg_hint": ""}
+{"text": "I love how my garden is starting to look with all the flowers blooming", "tool": null, "arg_hint": ""}
+{"text": "Have you ever noticed how the moon looks different depending on the time of month", "tool": null, "arg_hint": ""}
+{"text": "I'm really enjoying learning to cook new cuisines lately", "tool": null, "arg_hint": ""}
+{"text": "That puzzle I've been working on is finally starting to make sense", "tool": null, "arg_hint": ""}
+{"text": "The architecture in that building downtown is truly remarkable", "tool": null, "arg_hint": ""}
+{"text": "I think storytelling is one of the most underrated art forms today", "tool": null, "arg_hint": ""}
+{"text": "This tea blend I discovered has become my favorite afternoon drink", "tool": null, "arg_hint": ""}
+{"text": "I find it amazing how different cultures have such unique perspectives", "tool": null, "arg_hint": ""}
+{"text": "That podcast series really sparked my interest in philosophy", "tool": null, "arg_hint": ""}
+{"text": "I'm fascinated by how language evolves and changes over time", "tool": null, "arg_hint": ""}
+{"text": "The sunrise this morning was particularly beautiful and colorful", "tool": null, "arg_hint": ""}
+{"text": "I've been meaning to learn a new skill but haven't started yet", "tool": null, "arg_hint": ""}
+{"text": "That museum exhibit about fossils was really educational and interesting", "tool": null, "arg_hint": ""}
+{"text": "I think collaboration is the key to solving most complex problems", "tool": null, "arg_hint": ""}
+{"text": "This book I'm reading explores some really thought-provoking ideas", "tool": null, "arg_hint": ""}
+{"text": "I'm curious about how different people approach problem-solving", "tool": null, "arg_hint": ""}
+{"text": "That performance art installation was quite unconventional and engaging", "tool": null, "arg_hint": ""}
+{"text": "I love how community gardens bring people together around shared goals", "tool": null, "arg_hint": ""}
+{"text": "I wonder if artificial intelligence will eventually surpass human creativity", "tool": null, "arg_hint": ""}
+{"text": "The recipe I tried yesterday turned out surprisingly well", "tool": null, "arg_hint": ""}
+{"text": "I find the history of technology really fascinating and inspiring", "tool": null, "arg_hint": ""}
+{"text": "That debate about environmental policy had some really good points from both sides", "tool": null, "arg_hint": ""}
+{"text": "I'm amazed by how well my meditation practice has improved my focus", "tool": null, "arg_hint": ""}
+{"text": "This song keeps getting stuck in my head and I actually don't mind it", "tool": null, "arg_hint": ""}
+{"text": "I think quality time with friends and family is what matters most", "tool": null, "arg_hint": ""}
+{"text": "That scientific discovery about DNA structure changed everything", "tool": null, "arg_hint": ""}
+{"text": "I'm exploring different types of cuisine and loving the diversity", "tool": null, "arg_hint": ""}
+{"text": "The way that city was designed really shows thoughtful urban planning", "tool": null, "arg_hint": ""}
+{"text": "I find it interesting how different generations have different values", "tool": null, "arg_hint": ""}
+{"text": "That film completely subverted my expectations in the best way", "tool": null, "arg_hint": ""}
+{"text": "I think sustainable living practices are becoming more mainstream now", "tool": null, "arg_hint": ""}
+{"text": "This hobby I picked up has become such a great stress reliever", "tool": null, "arg_hint": ""}
+{"text": "I'm amazed by how much information is available on the internet", "tool": null, "arg_hint": ""}
+{"text": "That conversation about dreams was really intriguing", "tool": null, "arg_hint": ""}
+{"text": "I love how different art styles can convey such different emotions", "tool": null, "arg_hint": ""}
+{"text": "I wonder what life will be like fifty years from now", "tool": null, "arg_hint": ""}
+{"text": "This workspace arrangement has made me so much more productive", "tool": null, "arg_hint": ""}
+{"text": "I think mentorship is incredibly valuable for personal growth", "tool": null, "arg_hint": ""}
+{"text": "That mountain view was absolutely breathtaking and worth the hike", "tool": null, "arg_hint": ""}
+{"text": "I'm thinking about taking a trip to Italy next summer", "tool": null, "arg_hint": ""}
+{"text": "That podcast about psychology was absolutely fascinating to listen to", "tool": null, "arg_hint": ""}
+{"text": "I really appreciate how people collaborate across different countries now", "tool": null, "arg_hint": ""}
+{"text": "That sunset at the beach was one of the most memorable moments", "tool": null, "arg_hint": ""}
+{"text": "I wonder if we'll ever fully understand quantum mechanics", "tool": null, "arg_hint": ""}
+{"text": "This new furniture I bought really transforms the living room", "tool": null, "arg_hint": ""}
+{"text": "I think sustainable energy is going to be essential for the future", "tool": null, "arg_hint": ""}
+{"text": "That trivia night was so much fun and competitive", "tool": null, "arg_hint": ""}
+{"text": "I love how my garden looks in the early morning light", "tool": null, "arg_hint": ""}
+{"text": "The way people communicate online has changed so dramatically", "tool": null, "arg_hint": ""}
+{"text": "I'm curious about what comes next in my career journey", "tool": null, "arg_hint": ""}

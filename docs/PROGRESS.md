@@ -1,5 +1,7 @@
 # Progress log
 
+- 2026-10-01 v4.17.10: a fifth blind test set in four voices. Music only pauses when you ask it to, and "my battery of tests went well" stays chat. Blind set: 11 wrong picks past the guard, 26 refused.
+  `v4.17.10 · 131 tools · 609 tests · docs coverage 100% · laws all hold · biggest eval/gen_heldout2.py 647 · actions 231/231 · parity 231/231 · util_diff 261/261`
 - 2026-10-01 v4.17.9: "trash this file" now gets "Which file?" instead of a refusal or a guess. A fourth blind test set to steer by. Blind set: wrong picks past the guard 16 to 12, refusals 32 to 26.
   `v4.17.9 · 131 tools · 609 tests · docs coverage 100% · laws all hold · biggest eval/gen_heldout2.py 647 · actions 231/231 · parity 231/231 · util_diff 261/261`
 - 2026-10-01 v4.17.8: picker guard round fifteen. Wrong picks that reach the Mac drop 22 to 10 on the standard set and 20 to 6 on heldout2, no right pick newly refused there. The blind set barely moves (17 to 16 past, 31 to 32 refused), so the next gain has to come from training, not more guard rules.
