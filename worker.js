@@ -129,6 +129,34 @@ export const smallTalk = q => {
 // wrong instead of just honestly declining.
 const NEVER_LEAVE_JT = /\bjoshua\s*tree\b|\b(?:this|here)\b/i;
 
+// Portfolio mode (heyitsmejosh.com boots Joshua Tree with "portfolio" on the command
+// line) is Joshua's own site, and the face on screen is his, so the chat answers as him.
+// kernel/chat.h sends "persona":"joshua" on the request there and nowhere else. Fixed
+// lines for the greetings and the demo's own "show me around", then a short pack of
+// what he has built for the grounded reader, then the usual Joshua Tree pipeline.
+const JOSHUA_DOCS = `== Joshua Trommel ==
+Joshua Trommel is a developer in Vancouver, Canada. His site is heyitsmejosh.com.
+He builds apps, a programming language, and an operating system, mostly alone, shipping fast.
+Joshua Tree is his operating system: an i386 kernel written from scratch in C, with its own windowing, dock, apps, networking and a talking assistant. It boots in a web browser through v86 and on QEMU. The portfolio site boots it live.
+Plank is his programming language: one-file compiled programs, Result and ? error handling, generics, enums, tuples, regex, modules, packages from GitHub, a REPL and a formatter. It scripts Joshua Tree and Samantha.
+Samantha is the assistant inside Joshua Tree and on the Mac, from his Turing project: she answers questions, sets reminders, takes notes, opens apps and speaks.
+His apps: Epiphany (a finance dashboard with live markets), Curbfind (a Craigslist browser), Bookrank (book summaries), Lexly (language learning), Sparkjar (an idea forum), Quotestreak (a quote guessing game), Keyrate (a typing test), Toroid (Game of Life on a torus), Homeqi (feng shui home assessment), Fieldbook (every field of science explained plainly), Curvely (an equation grapher), Notate (on-device transcription), Healstack (health tracking), Siftbox (inbox triage), Windgate (guided breathing), Madobe (a WebKit browser), Plain (a text editor), Nimble (instant answers), Seamark (reads values off charts), Hamurabi (the 1968 kingdom game).
+Pricing: every app is free or one dollar. Web apps run on Cloudflare, native apps are on the App Store for iPhone and Mac.
+He writes in C, Swift, JavaScript and Python, and builds with Claude Code.`;
+const JOSHUA_INTRO = "Hey, I'm Joshua. I build apps, a language called Plank, and this operating system, Joshua Tree. Ask me about any of it.";
+const JOSHUA_TALK = [
+  [/^(?:hi|hello|hey|yo|hiya|good (?:morning|evening|afternoon))(?: there| joshua| josh)?[!.?]*$/i, "Hey. Ask me about anything I've built."],
+  [/^(?:how are you|how's it going|how are things)(?: doing| today)?[!.?]*$/i, "Good, building. What do you want to see?"],
+  [/^(?:thanks|thank you|thx|cheers|ty)(?: so much| joshua| josh)?[!.?]*$/i, "Any time."],
+  [/^(?:introduce yourself|tell me about yourself|who are you|what are you|what do you do|what can you do|help)[!.?]*$/i, JOSHUA_INTRO],
+  [/^(?:show me around|give me (?:a|the) tour|show me (?:the|your) (?:apps|os|work)|what is this|what am i looking at)[!.?]*$/i,
+    "Sure. This is Joshua Tree, an operating system I wrote from scratch, booting live in your browser. The dock is my apps: Epiphany, Curbfind, Bookrank, Lexly, Sparkjar, Quotes, Keyrate, Toroid. Watch."],
+];
+export const joshuaTalk = q => {
+  const t = q.trim(), rest = t.replace(/^(?:hi|hello|hey|yo|hiya)(?:,)?(?: there| joshua| josh)?[,!.]?\s+/i, "");
+  return (JOSHUA_TALK.find(([re]) => re.test(t) || re.test(rest)) || [])[1] || null;
+};
+
 // The reply text for one /api/chat turn: small talk, then the Joshua Tree pack (tried
 // again with "this"/"here" spelled out, since the reader model does not always resolve
 // them against a wall of text), then the same knowledge pipeline /api/ask uses. Earlier
@@ -136,7 +164,13 @@ const NEVER_LEAVE_JT = /\bjoshua\s*tree\b|\b(?:this|here)\b/i;
 // history but this only ever answers the newest user message. A question that names
 // Joshua Tree, or points at "this"/"here", never falls through to the general web
 // pipeline: declining is honest, a stray Wikipedia hit on the wrong "1.0.1" is not.
-async function chatAnswer(env, question) {
+async function chatAnswer(env, question, persona) {
+  if (persona === "joshua") {
+    const j = joshuaTalk(question);
+    if (j) return j;
+    const jd = await readGrounded(env, question, JOSHUA_DOCS);
+    if (jd) return jd;
+  }
   const small = smallTalk(question);
   if (small) return small;
   const spelled = question.replace(/\bthis\b/gi, "Joshua Tree").replace(/\bhere\b/gi, "in Joshua Tree");
@@ -389,7 +423,8 @@ export default {
       const last = messages.slice().reverse().find(m => m && m.role === "user" && typeof m.content === "string");
       const q = String(last?.content || "").replace(/[\u0000-\u001f]/g, " ").trim().slice(0, 200);
       if (!q) return Response.json(ollamaReply(DECLINE), { status: 400 });
-      return cached(ctx, "chat", q, async () => ollamaReply(await chatAnswer(env, q)));
+      const persona = body.persona === "joshua" ? "joshua" : "";
+      return cached(ctx, persona ? "chat-joshua" : "chat", q, async () => ollamaReply(await chatAnswer(env, q, persona)));
     }
 
     const q = String(body.q || "").replace(/[\u0000-\u001f]/g, " ").trim().slice(0, 200);
