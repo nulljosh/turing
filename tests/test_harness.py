@@ -333,6 +333,18 @@ class AgentGrounding(unittest.TestCase):
         self.assertTrue(tools._sound("music", "play", "put some music on"))
         self.assertTrue(tools._sound("needs_attention", "urgency", "what needs urgent action"))
         self.assertFalse(tools._sound("battery", "", "my battery of tests went well"))
+        # Round nineteen: an app name is short and never a file; list_dir copies its folder; "a 45 second timer" is
+        # 45 seconds; a file name is not a website; "the michael voice" is set_voice, "use your voice to say" is say.
+        self.assertFalse(tools._sound("open_app", "draft.docx", "track down draft.docx"))
+        self.assertFalse(tools._sound("open_app", "urgent", "what's urgent right now when you get a sec"))
+        self.assertTrue(tools._sound("open_app", "finder", "launch finder"))
+        self.assertFalse(tools._sound("list_dir", "~/Documents/Code/airbnb.json", "what's in that config file"))
+        self.assertTrue(tools._sound("list_dir", "~/Downloads", "what's in ~/Downloads"))
+        self.assertTrue(tools._sound("timer", "45 seconds", "give me a 45 second timer"))
+        self.assertFalse(tools._sound("open_url", "report.pdf", "track down report.pdf"))
+        self.assertFalse(tools._sound("say", "michael", "let me hear the michael voice"))
+        self.assertTrue(tools._sound("say", "ship it", "use your voice to say ship it"))
+        self.assertTrue(tools._sound("new_reminder", "call mom at 10am", "remind me to call mom tomorrow at 10am"))
         with mock.patch.object(tools, "pick", return_value=("ask", "Which file? Name it.")):
             self.assertEqual(tools.do("trash this file"), "Which file? Name it.")
 

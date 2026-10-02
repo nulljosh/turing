@@ -296,3 +296,19 @@ The file tools resolved a bare name ("notes.txt", "the archive folder") against 
 | heldout3 (blind, read once) | 11 / 26 | 11 / 23 |
 
 **Decision: shipped.** No retrain. 5.0 needs 1 more off past-guard and all 23 refusals; next is a training round on argument shape.
+
+## Round nineteen (2026-10-01): trained on argument shape; the weights lose, the guard ships, and the blind set crosses one 5.0 line
+
+Training data grew plain-word destinations ("the documents folder", "my desktop"), "move X from A to B", and quoted translate phrases ("put 'thank you very much' into german"). `hands-adapter-round19`, shipped recipe, 7 minutes on the Mac. It understands fresh wording far better than the shipped weights (heldout4 293 against 267 right, heldout5 359 against 308), but makes new mistakes and gets more past the guard on every set, heldout5 included, which was held out of this round's guard tuning: 11 past and 9 refused against shipped's 9 and 5. Not swapped; kept on disk.
+
+Its mistakes still showed real guard holes, fixed for both adapters: open_app's evidence matched "get" in "when you get a sec", so any polite request could open an "app" called "urgent" or "thursday afternoon" (an app name is now short, never a file, path or number); list_dir accepted any path at all; open_url took "report.pdf" for a website; "use your voice to say X" and "the michael voice" were confused; a 45 second timer was not 45 seconds; new_reminder and new_note accept their words in a different order. A splice bug from round seventeen had put a voice rule inside say's language group; fixed. The standard set grew by one row when the data was regenerated, so it reads 1307 of 1960 now, same weights.
+
+| Set | Round eighteen | Round nineteen guard |
+|---|---|---|
+| standard | 7 past / 0 refused | 7 / 0 |
+| heldout2 | 5 / 2 | 4 / 2 |
+| heldout4 | 7 / 6 | 4 / 5 |
+| heldout5 (untouched) | 10 / 5 | 9 / 5 |
+| heldout3 (blind, read once) | 11 / 23 | 9 / 23 |
+
+**Decision: guard shipped, weights not.** Blind past-guard is 9: under the 5.0 bar of ten for the first time. Refusals, 23, are the whole gap now. The round-nineteen weights point the way: they get far more fresh wording right, so a round that pairs them with a guard tuned to their own mistakes (the round-nine recipe) is the next try.

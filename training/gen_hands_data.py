@@ -341,7 +341,7 @@ SPEC = [
     ("copy_file", ["copy {}", "make a copy of {}", "copy the file {}", "duplicate {}", "copy over {}"], ["put a copy of {}"], MOVES, None),
     ("rename_file", ["rename {}", "change the name of {}", "retitle {}", "rename the file {}", "give a new name to {}"],
      ["retitle the file {}"], RENAMES, None),
-    ("translate", ["translate {}", "translate the phrase {}", "translate the words {}", "can you translate {}"],
+    ("translate", ["translate {}", "translate the phrase {}", "translate the words {}", "can you translate {}", "put {}", "turn {}"],
      ["translate this: {}"], PHRASE_TO, None),
     ("translate", ["how would you say {}", "how do i say {}", "how do you say {}", "how can i say {}"], ["how should i say {}"],
      PHRASE_IN, None),

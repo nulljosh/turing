@@ -65,13 +65,13 @@ _EVIDENCE = {
     "folder_size": r"\bbig\b|\bsize\b|\bspace\b|take up",
     "research": r"research|deep dive|look into|dig into|investigate|brief on|info(?:rmation)? on|look up|read up", "research_more": r"\bmore\b|deeper|expand|further|continue|again",
     "summarize": r"summar", "transcribe_video": r"transcribe|said in|captions|subtitles",
-    "translate": r"translat|how (?:do|would|can|should) (?:you|i) say|\bin (?:french|spanish|german|italian|portuguese|dutch|japanese|chinese|mandarin|korean|russian|arabic|hindi)\b", "write_document": r"draft|write (?:a |an )?(?:doc|document|email|memo|file)|compose",
+    "translate": r"translat|how (?:do|would|can|should) (?:you|i) say|\b(?:in|into|to) (?:french|spanish|german|italian|portuguese|dutch|japanese|chinese|mandarin|korean|russian|arabic|hindi)\b", "write_document": r"draft|write (?:a |an )?(?:doc|document|email|memo|file)|compose",
     # Round ten: resize_image and read_file had no evidence at all, so any wrong pick with its
     # argument copied verbatim (list_dir/read_file's own guard, or resize_image's default check,
     # never required a word about the tool itself) passed the guard automatically. "make it bigger"
     # with no number is upscale_image, not resize_image; "crunch the numbers in X" is run_code,
     # not read_file's own words.
-    "resize_image": r"resize|resolution|\bsize\b|\d",
+    "resize_image": r"resize|resolution|\bsize\b|\d+\s*(?:px|pixels?|%|percent)|\bto \d{2,}|\d{3,}|scale|shrink|smaller",
     "read_file": r"\bread\b|\bcat\b|\bshow\b|\bprint\b|display|\bsay\b|contents|written|inside",
     # Round eleven: convert_time and time_in kept swapping for each other. A specific clock time
     # (a digit with am/pm, an hour:minute, noon/midnight, or a named zone) is convert_time's own
@@ -100,12 +100,14 @@ _EVIDENCE = {
     "flip_image": r"flip|mirror|upside",
     "grayscale_image": r"gr[ae]y|black and white|b&w|desaturat|monochrome|colou?r",
     "enhance_image": r"enhance|sharpen|improve|clean up|better|fix|clear|crisp|quality|touch up|denoise|contrast|boost|brighten|\bpop\b",
-    "new_reminder": r"remind|reminder|forget|remember|nudge|ping me|\btodo\b|to-do|\bdue\b",
+    "new_reminder": r"remind|reminder|forget|remember|nudge|ping me|\btodo\b|to-do|\bdue\b|tell me to",
     "paint_image": r"paint|mosaic|sketch|poster|dots|glass|squares|style|\bart\b|rebuild|pixelmator|recreate|redraw|artif",
     # Round sixteen: "traveling really opens your mind", "i love collecting vinyl records" fired open_app/music.
-    "open_app": r"\bopen\b|launch|start|fire up|boot|bring up|switch to|\buse\b|\brun\b|\bload\b|\bpop\b|\bget\b|\bgo\b|\bapp\b",
+    "open_app": r"\bopen\b|launch|start|fire up|boot|bring up|switch to|\buse\b|\brun\b|\bload\b|\bpop\b|\bapp\b",  # not "get": "when you get a sec" is filler
     "music": r"play|pause|resume|skip|next|previous|prev\b|song|track|music|album|artist|playing|listen|tune|\bback\b|stop|shuffle|spotify|sings?\b|singer|who is this|band",
     "set_volume": r"volume|loud|quiet|sound|mute|audio|crank|softer|turn (?:it|the sound|the music)\b|\bup\b|\bdown\b|silen",
+    "make_logo": r"logo|icon|\bmark\b|emblem|badge|wordmark",
+    "remove_background": r"background|cut ?out|transparent|isolate",
     "find_file": r"find|locate|where'?s|where is|look for|search for|track down|dig up",
     # base64_encode/decode, reverse_text, shout and json_pretty are deliberately left with no
     # _EVIDENCE this round: a bisection against eval/heldout.jsonl's one-line summary (never its
@@ -160,7 +162,7 @@ def _is_general_knowledge_question(q_lower):
 # and the weather on another planet is trivia.
 _AGAINST = {"say": r"morse|clock say|how (?:do|would|can|should) (?:you|i) say|\bin (?:french|spanish|german|italian|portuguese"
                    r"|dutch|japanese|chinese|mandarin|korean|russian|arabic|hindi)\b|(?:want|wanted|meant) to say"
-                   r"|(?:wondering|thinking) out loud|do you think",
+                   r"|(?:wondering|thinking) out loud|do you think|\bthe \w+ voice\b|(?:change|switch|set) (?:your|the|her) voice",
             "wifi_name": r"address|\bip\b",
             "weather": r"\bapp\b|\bon (?:mars|venus|jupiter|saturn|mercury|neptune|uranus|pluto|the moon)\b", 
             # "close the github tab" is close_tab, not quit_app. "extract the zip" is unzip_file, not zip_file.
@@ -178,11 +180,11 @@ _AGAINST = {"say": r"morse|clock say|how (?:do|would|can|should) (?:you|i) say|\
             "open_app": r"\bnew email\b|\bunread mail\b|\bmail from\b|\bemail from\b|\bin (?:the )?finder\b|\btab\b|\btests?\b|test suite"
                         r"|\bpull up\b|\bhop on\b|\bgo to\b|\bvisit\b|\bbrowse to\b|\btake me to\b|\bhead to\b|\bnavigate to\b"
                         r"|\bjump over to\b|\bget me to\b|\bbring me to\b|\blog (?:me )?into\b|\bclick\b|\bprs?\b|pull request"
-                        r"|\bguid\b|\buuid\b|\bfolder\b",
+                        r"|\bguid\b|\buuid\b|\bfolder\b|\bsearch\b|open slot|openings?\b",
             # "write a brief on X" / "do my notes mention X" are research/search_notes, not new_note:
             # new_note's own evidence regex matches bare "write" or "note", which both leak into these.
             # Round eleven: "draft me a file" is write_document, not a note.
-            "new_note": r"\bbrief\b|\bresearch\b|\bmention\b|\bsearch\b.{0,20}\bnotes?\b|\bfind\b.{0,20}\bnotes?\b|\blook for\b.{0,20}\bnotes?\b|\bdraft\b"
+            "new_note": r"\bbrief\b|\bresearch\b|\bmention\b|\bsearch\b.{0,20}\bnotes?\b|\bfind\b.{0,20}\bnotes?\b|\blook for\b.{0,20}\bnotes?\b|\bdraft\b|make sure i remember|\bremind"
                         r"|\bto (?:my|the) [\w ]{1,30} note\b",  # round fifteen: "to my groceries note" is append_note
             # Round eleven: the biggest single wrong-past-guard cluster was "what is 2+2"/"what's 10
             # times 7" firing calculate. In production that phrasing never needs calculate: ask_local's
@@ -191,7 +193,7 @@ _AGAINST = {"say": r"morse|clock say|how (?:do|would|can|should) (?:you|i) say|\
             # "times"/"plus" to symbols), so calculate() failing that copied arg is a real bug, not a
             # style choice. A file extension or a unit word (convert_units'/run_code's own vocabulary)
             # is the same shape: not arithmetic, a different tool's job.
-            "calculate": r"\bwhat'?s\b(?!.*%)|\bwhat is\b(?!.*%)|celsius|fahrenheit|kilomet|\bkm\b|\bmiles?\b|\bpounds?\b|\bkg\b"
+            "calculate": r"\bwhat'?s\b(?!.*%)|\bwhat is\b(?!.*%)|celsius|fahrenheit|kilomet|\bkm\b|\bmiles?\b|\bpounds?\b|\bkg\b|\bfactor|\bprime"
                          r"|inches|centimet|\bmeters?\b|gallons|liters|\.csv\b|\.py\b|\.js\b|\btips?\b",
             # Round eleven: recent_downloads owns "what's in my downloads folder"; list_dir's own
             # templates never say "downloads folder", only a literal path or a generic "the folder".
@@ -199,18 +201,18 @@ _AGAINST = {"say": r"morse|clock say|how (?:do|would|can|should) (?:you|i) say|\
             # Round eleven: ask_document is a question about a document ("what is the deadline in
             # ~/plan.pdf"); find_in_document's own templates are always "find X in the document Y",
             # never a question word.
-            "find_in_document": r"\bwhat (?:is|does|are)\b",
+            "find_in_document": r"\bwhat (?:is|does|are)\b|\bmy notes\b",
             # Round eleven: days_until owns "how many days/sleeps until"; date_math's own templates
             # never say "until"/"till".
             # Round eleven: folder_size owns "how big is X"/"how much does X take up"; disk_space's
             # own templates are about the whole disk, never a named folder.
-            "disk_space": r"take up|\bfolder\b",
+            "disk_space": r"take up|\bfolder\b|\bram\b|memory|\bdir\b",
             # Round eleven: read_tab/switch_tab own "the X tab"; read_page owns a URL. read_document
             # is for a local file, never a browser tab or a web address.
-            "read_document": r"\btab\b|github\.com|\.com\b|\.org\b|\.io\b",
+            "read_document": r"\btab\b|github\.com|\.com\b|\.org\b|\.io\b|clipboard|crunch|analy[sz]e",
             # Round eleven: weather has its own tool; "look up the weather" should never fall to a
             # generic web search.
-            "web_search": r"\bweather\b|\.(?:com|org|net|io|ca)\b|\bmy notes\b|\bnotes for\b|pull requests?|\bprs\b",  # round fifteen: merged, a second key had silently replaced the first
+            "web_search": r"\bweather\b|\.(?:com|org|net|io|ca)\b|\bmy notes\b|\bnotes for\b|pull requests?|\bprs\b|bluetooth|\bnotes? (?:mentioning|about|for|with)\b",  # round fifteen: merged, a second key had silently replaced the first
             # Round eleven: "translate 5 km to miles" is a unit conversion someone phrased with the
             # word "translate", not a language-translation command; convert_units still fires the
             # right tool for the plain "5 km to miles" shape, this only blocks the misleading verb.
@@ -227,17 +229,23 @@ _AGAINST = {"say": r"morse|clock say|how (?:do|would|can|should) (?:you|i) say|\
             # Round fifteen. A clock time is convert_time's (the mirror of its evidence above), so time_in and
             # date_math stand down on one; "how late is it" is time_in's.
             "time_in": r"\d\s*(?:am|pm)\b|\d:\d\d|\bnoon\b|\bmidnight\b",
-            "date_math": r"\buntil\b|\btill\b|\bsleeps?\b|\d\s*(?:am|pm)\b|\d:\d\d|\bnoon\b|\bmidnight\b|how late|time is it|\btil\b|how long",
+            "date_math": r"\buntil\b|\btill\b|\bsleeps?\b|\d\s*(?:am|pm)\b|\d:\d\d|\bnoon\b|\bmidnight\b|how late|time is it|\btil\b|how long|days to\b|count the days",
             # "how do I say X in french" is translate; "I wanted to say thanks", "wondering out loud" are chat.
-            "base64_encode": r"un-?base ?64|decode",
+            "base64_encode": r"un-?base ?64|decode|what'?s this|\bdecode",
             "cpu_load": r"\bram\b|memory",
             "roll_dice": r"\bint(?:eger)?\b|random number",
             "read_file": r"\.(?:pdf|docx?|rtf|pages|epub)\b|\bfinder\b",
             "read_page": r"\btab \d+\b|\b\d+(?:st|nd|rd|th) tab\b",
             "base64_decode": r"\b(?:to|2|into) base ?64\b",
             "running_apps": r"\bmcp\b|server",
-            "summarize": r"feedback",
+            "summarize": r"feedback|rating",
             "calendar_today": r"\btomorrow\b|\btmrw?\b",
+            "current_tab": r"\bcontent|\btext\b|\bsay\b|on this page|\btab \d",
+            "memory_usage": r"your memory",
+            "ask_document": r"\.(?:mp4|mov|m4a|mp3|wav)\b",
+            "move_file": r"\b(?:the |to )trash\b",
+            "rotate_image": r"mirror|\bflip",
+            "new_reminder": r"^any reminders|what reminders|\breminders about\b",
             "days_until": r"\b\d+ (?:days?|weeks?|months?|years?) (?:from|after|before|ago)\b",
             "battery": r"battery of",
             # Each of these names a different tool's own domain: wifi/ip/load are their own tools, not system_info;
@@ -247,7 +255,7 @@ _AGAINST = {"say": r"morse|clock say|how (?:do|would|can|should) (?:you|i) say|\
             "free_when": r"free space|\bdisk\b|storage",
             "set_volume": r"\bvoice\b",
             "music": r"disturb",
-            "open_url": r"\blog (?:me )?in(?:to)?\b|\bclick\b",
+            "open_url": r"\blog (?:me )?in(?:to)?\b|\bclick\b|\bcontent\b|\btext from\b|track down|\bskim\b|\btldr\b|report back|what'?s on|^search for\b|\bfolder\b",
             "timer": r"how many|\bin (?:seconds|minutes|hours)\b"}
 
 
@@ -299,10 +307,11 @@ def _sound(tool, arg, query):
         if arg == "playing":
             return True
         return arg in _MUSIC and bool(re.search(verbs.get(arg, r"$^"), q_lower))
-    if tool == "timer":
-        return duration(arg) is not None and arg.lower() in q_lower
-    if tool == "list_dir":
-        return bool(arg)
+    if tool == "timer":  # "a 45 second timer" is the same "45 seconds"
+        return duration(arg) is not None and (arg.lower() in q_lower or re.sub(r"s\b", "", arg.lower()) in q_lower)
+    if tool == "list_dir":  # round nineteen: copied from the sentence, or the folder's own name, never invented
+        base = arg.rstrip("/").rsplit("/", 1)[-1].lower()
+        return bool(arg) and (arg.lower() in q_lower or (len(base) > 2 and base in q_lower))
     # Round sixteen: read_file passed any argument at all, so "show me the text from this file" read an invented
     # path. It copies its path out of the sentence (or the file's own name) like the other file tools.
     if tool in ("read_file", "read_document"):
@@ -374,7 +383,7 @@ def _sound(tool, arg, query):
         if a == "off":
             return bool(re.search(r"\boff\b|out of|disable|turn off|end focus|\bstop\b", q_lower))
         if a == "on":
-            return bool(re.search(r"\bon\b|enable|turn on|start focus|\benter\b", q_lower))
+            return bool(re.search(r"\bon\b|enable|turn on|start focus|\benter\b|put me in|\bin do not disturb", q_lower))
         return False
 
     # add_event's argument is the event title, which the model sometimes pads with the time phrase
@@ -398,6 +407,15 @@ def _sound(tool, arg, query):
         base = arg.split()[0].rstrip("/").rsplit("/", 1)[-1].lower()
         stem = base.rsplit(".", 1)[0]
         return base in q_lower or (len(stem) > 2 and stem in q_lower)
+
+    # Round nineteen: a reminder to finish names which one; an app name is a short name, never a file, a path or a
+    # sentence; a file name is not a website.
+    if tool == "complete_reminder" and not arg:
+        return False
+    if tool == "open_app" and (re.search(r"\.\w{2,4}$|[~/]|\d", arg) or len(arg.split()) > 3):
+        return False
+    if tool == "open_url" and re.search(r"\.(?:pdf|docx?|txt|md|zip|jpe?g|png|csv|py|key|mp4|mov)$", arg.lower()):
+        return False
 
     # An app or a site with no name is never a real command.
     if not arg and tool in ("open_app", "open_url"):
@@ -436,6 +454,9 @@ def _sound(tool, arg, query):
     # Not for writes, not for anything that opens something you would see, and not for a two-part
     # "a<TAB>b" argument: 4.16.4's gate caught "any openings tomorrow" opening an app and
     # "freezing point of water in fahrenheit" converting units, both from scattered words.
+    if tool in ("new_reminder", "new_note") and "\t" not in arg:  # round nineteen: "call mom at 10am" from
+        words = re.findall(r"[a-z0-9]+", arg.lower())                    # "call mom tomorrow at 10am": all her words
+        return bool(words) and all(re.search(rf"\b{w}\b", q_lower) for w in words)
     if tool in WRITES or tool in ("open_app", "open_url") or "\t" in arg:
         return False
     words = re.findall(r"[a-z0-9]+", arg.lower())
@@ -454,7 +475,7 @@ _TARGETS = {
     "file": (r"\bfile|folder|\bdoc\b|document|\bpdf\b|\bzip\b|archive|video|audio|recording",
              ("move_file", "copy_file", "rename_file", "trash_file", "zip_file", "unzip_file", "read_document",
               "ask_document", "find_in_document", "read_file", "transcribe_video")),
-    "text": (r"out loud|aloud|speak|translat|morse|\bwords?\b|reverse|backwards|shout|caps|base ?64|hash|passage|text|phrase|sentence",
+    "text": (r"(?:in|into|to) (?:french|spanish|german|italian|portuguese|dutch|japanese|chinese|korean|russian)\b|out loud|aloud|speak|translat|morse|\bwords?\b|reverse|backwards|shout|caps|base ?64|hash|passage|text|phrase|sentence",
              ("translate", "word_count", "morse_code", "reverse_text", "shout", "base64_encode", "base64_decode",
               "hash_text", "say")),
 }

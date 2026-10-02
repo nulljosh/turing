@@ -75,8 +75,9 @@ ZIPS = (["~/downloads/photos.zip", "~/desktop/archive.zip", "~/downloads/backup.
 # Round fourteen pools for the two-argument tools: (spoken, arg) pairs, spoken in more than one joining word.
 _SRC = (["~/desktop/a.txt", "~/downloads/receipt.pdf", "~/documents/budget.csv", "~/desktop/photo.jpg", "notes.txt",
          "~/downloads/old-project", "report.docx", "~/desktop/slides.key"], ["~/downloads/lease.pdf", "todo.md"])
-_DST = (["~/documents", "~/desktop", "~/documents/archive", "~/pictures", "~/documents/code", "the archive folder"],
-        ["~/music", "~/documents/taxes"])
+_DST = (["~/documents", "~/desktop", "~/documents/archive", "~/pictures", "~/documents/code", "the archive folder",
+         "the documents folder", "my desktop", "downloads"],  # round nineteen: plain words, resolved under home by the tool
+        ["~/music", "~/documents/taxes", "my pictures folder"])
 
 
 def _pairs_of(srcs, dsts, joins, arg):
@@ -85,12 +86,20 @@ def _pairs_of(srcs, dsts, joins, arg):
 
 
 MOVES = tuple(_pairs_of(_SRC[h], _DST[h], (" to ", " into ", " over to ", " in "), lambda s, d: f"{s}\t{d}") for h in (0, 1))
+# Round nineteen: "move draft.md from downloads to documents" names a source folder too; the pair is still file<TAB>place.
+_FROM = ((["draft.md", "taxes.pdf", "song.mp3", "plan.txt"], ["memo.docx"]), (["downloads", "my desktop", "documents"], ["desktop"]))
+MOVES = tuple(MOVES[h] + [(f"{s} from {_FROM[1][h][i % len(_FROM[1][h])]} to {d}", f"{s}\t{d}")
+                          for i, (s, d) in enumerate(zip(_FROM[0][h], _DST[h][::-1]))] for h in (0, 1))
 RENAMES = tuple(_pairs_of(_SRC[h], (["b.txt", "final.pdf", "budget-2026.csv", "beach.jpg", "old.txt"], ["draft-2.md"])[h],
                           (" to ",), lambda s, d: f"{s}\t{d}") for h in (0, 1))
 _SAYINGS = ((["hello", "good night", "where is the train station", "i love you", "see you tomorrow", "how much is this",
               "happy birthday"], ["the bill please"]), (["french", "spanish", "german", "japanese", "italian", "korean"],
                                                         ["portuguese"]))
 PHRASE_TO = tuple(_pairs_of(_SAYINGS[0][h], _SAYINGS[1][h], (" to ", " into "), lambda s, d: f"{s}\t{d}") for h in (0, 1))
+# Round nineteen: the words in quotes ("put 'thank you very much' into german"); the quotes are not part of the text.
+PHRASE_TO = tuple(PHRASE_TO[h] + [(f"'{w}' into {l}", f"{w}\t{l}") for w, l in
+                                  zip(([["thank you very much", "where is my hotel", "nice to meet you"], ["good luck"]])[h],
+                                      ([["german", "spanish", "japanese"], ["italian"]])[h])] for h in (0, 1))
 PHRASE_IN = tuple(_pairs_of(_SAYINGS[0][h], _SAYINGS[1][h], (" in ",), lambda s, d: f"{s}\t{d}") for h in (0, 1))
 APPENDS = tuple(_pairs_of((["buy eggs", "call the vet", "renew the car insurance", "fix the gate", "order printer ink"],
                            ["book the campsite"])[h], (["groceries", "todo", "house", "errands"], ["weekend"])[h],
