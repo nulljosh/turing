@@ -51,5 +51,6 @@ for (const [a, want] of [
   ["Joshua Tree is his operating system.", "Joshua Tree is my operating system."],
   ["His site is heyitsmejosh.com.", "My site is heyitsmejosh.com."],
   ["Joshua was born to ship.", "I was born to ship."],
+  ["I'm based in Vancouver, Canada, and writes in C, Swift.", "I'm based in Vancouver, Canada, and write in C, Swift."],
 ]) expect("asJoshua " + a, asJoshua(a), want);
 console.log("PASS: Joshua speaks as himself");

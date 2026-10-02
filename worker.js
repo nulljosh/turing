@@ -162,6 +162,8 @@ export const asJoshua = a => a
   .replace(new RegExp(`\\b${ME} (was|wrote|built|made|shipped|started)\\b`, "g"), "I $1")
   .replace(new RegExp(`\\b${ME} (has|does|goes)\\b`, "g"), (_, v) => "I " + { has: "have", does: "do", goes: "go" }[v])
   .replace(new RegExp(`\\b${ME} (\\w+?)(e?)s\\b`, "g"), (_, v, e) => "I " + v + (/(?:ch|sh|ss|x)$/.test(v) ? "" : e))
+  .replace(/\b(and|but) (build|write|ship|make|use|run|love)s\b/g, "$1 $2")  // the model's own "I'm in Vancouver, and writes C"
+  .replace(/\b(and|but) (has|does|goes)\b/g, (_, c, v) => c + " " + { has: "have", does: "do", goes: "go" }[v])
   .replace(/\bJoshua(?! Tree)(?: Trommel)?'s\b/g, "my").replace(/\bHis\b/g, "My").replace(/\bhis\b/g, "my").replace(/\bhim\b/g, "me")
   .replace(/^(I'm|I|my)\b/, w => w[0].toUpperCase() + w.slice(1));
 export const joshuaTalk = q => {
