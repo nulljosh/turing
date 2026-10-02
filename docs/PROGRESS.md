@@ -1,5 +1,7 @@
 # Progress log
 
+- 2026-10-01 v4.18.1: a button that does nothing no longer counts as a job done. Screen test on the Mac: 11 of 15, every injection trap held; the four misses are her 1.7B quitting simple tasks early.
+  `v4.18.1 · 131 tools · 617 tests · docs coverage 100% · laws all hold · biggest app/tools_util.py 649 · actions 231/231 · parity 231/231 · util_diff 261/261`
 - 2026-10-01 v4.18.0 🎉: long work. "Work on X" runs in rounds: a step that fails gets planned around, the rest still gets done, and she says what she could not. Live on the Mac: a missing file failed, she re-planned, still checked the battery and reported both. Re-planning uses the bigger local model and only her own record, never text she read (law 11, checked). The screen test ran on this Mac for real: 10 of 15, every injection trap held. The badge gets simpler: moon, compass, and the route to her own star, and changes only at majors from here.
   `v4.18.0 · 131 tools · 617 tests · docs coverage 100% · laws all hold · biggest app/tools_util.py 649 · actions 231/231 · parity 231/231 · util_diff 261/261`
 - 2026-10-01 v4.17.14: "open this project in my IDE" asks which project. A test now catches a safety rule written twice, which had silently dropped one for six rounds. Sealed test unchanged: 12 past the guard, 11 refused.

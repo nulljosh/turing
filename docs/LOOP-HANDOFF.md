@@ -10,6 +10,8 @@ v4.17.9 (2026-10-01 late): round 16 shipped. Fresh writer built heldout4.jsonl (
 
 ## Next, in order
 
+v4.18.1: screen bench on the Mac 11/15 (dead button fixed; login, cookies, search, form: the 1.7B stops early, try qwen3:8b for screen jobs or a nudge when no tool call comes). Then multi-hop deep research, then video as 4.19.
+
 v4.18.0 shipped long work (planner.work: rounds, re-plan from her own record, carry the rest, journal in ~/.samantha/work) and a simpler badge that changes only at majors. Next: screen_bench real failures (search, form stop early; dead button claims success), then multi-hop deep research, then video (4.19). The 5.0 judge (sealed heldout6) still reads 12 past guard, 11 refused.
 
 Round 20 shipped as v4.17.13. heldout3 is retired and open (a dev set now); eval/heldout6.jsonl is the sealed 5.0 judge: never print or read its rows, totals only, once per final candidate. Judge now: 12 past guard, 11 refused, 16 asked. Dev sets: standard, heldout2, heldout3, heldout4, heldout5.

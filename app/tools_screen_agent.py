@@ -146,6 +146,8 @@ def _run_job(task, max_steps, log, confirm, halted, own):
                 messages.append({"role": "user", "content": "Go ahead and make that tool call now. Answer in words "
                                                             "only once the job is done or blocked."})
                 continue
+            if last is not None and last[0] == "click_text":  # eval/screen_bench.py "dead": the last action changed nothing, yet she said done
+                return f"That didn't work: {last[0]} changed nothing on the screen, so I stopped. Take a look."
             return said or "I stopped there."
         for c in calls:
             name, args = c["function"]["name"], c["function"].get("arguments") or {}
