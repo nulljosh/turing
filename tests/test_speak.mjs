@@ -41,3 +41,15 @@ expect("v4 model", sent.body.model_id, "eleven_v4");
 expect("tags pass through", sent.body.inputs[0].text, "[whispering] hi there");
 globalThis.fetch = realFetch;
 console.log("PASS: /api/speak rejects empty text, other sites and a missing key, and caches repeats");
+
+// On his own site the Joshua persona speaks as him: the reader's third-person sentence becomes first person
+const { asJoshua } = await import("../worker.js");
+for (const [a, want] of [
+  ["Joshua Trommel is a developer in Vancouver, Canada, who builds apps.", "I'm a developer in Vancouver, Canada, who builds apps."],
+  ["Joshua Trommel builds apps, a programming language, and an operating system.", "I build apps, a programming language, and an operating system."],
+  ["He writes in C, Swift, JavaScript and Python.", "I write in C, Swift, JavaScript and Python."],
+  ["Joshua Tree is his operating system.", "Joshua Tree is my operating system."],
+  ["His site is heyitsmejosh.com.", "My site is heyitsmejosh.com."],
+  ["Joshua was born to ship.", "I was born to ship."],
+]) expect("asJoshua " + a, asJoshua(a), want);
+console.log("PASS: Joshua speaks as himself");

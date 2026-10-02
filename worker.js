@@ -152,6 +152,18 @@ const JOSHUA_TALK = [
   [/^(?:show me around|give me (?:a|the) tour|show me (?:the|your) (?:apps|os|work)|what is this|what am i looking at)[!.?]*$/i,
     "Sure. This is Joshua Tree, an operating system I wrote from scratch, booting live in your browser. The dock is my apps: Epiphany, Curbfind, Bookrank, Lexly, Sparkjar, Quotes, Keyrate, Toroid. Watch."],
 ];
+// The reader quotes JOSHUA_DOCS, which is about him in the third person, so its sentence
+// comes back as "Joshua Trommel is a developer". On his own site that line is his, so
+// turn it into "I'm a developer". ponytail: regex verb agreement (builds -> build), covers
+// the docs' verbs; irregular ones beyond does/has/goes would need a word list.
+const ME = "(?:Joshua(?! Tree)(?: Trommel)?|He)";
+export const asJoshua = a => a
+  .replace(new RegExp(`\\b${ME} is\\b`, "g"), "I'm")
+  .replace(new RegExp(`\\b${ME} (was|wrote|built|made|shipped|started)\\b`, "g"), "I $1")
+  .replace(new RegExp(`\\b${ME} (has|does|goes)\\b`, "g"), (_, v) => "I " + { has: "have", does: "do", goes: "go" }[v])
+  .replace(new RegExp(`\\b${ME} (\\w+?)(e?)s\\b`, "g"), (_, v, e) => "I " + v + (/(?:ch|sh|ss|x)$/.test(v) ? "" : e))
+  .replace(/\bJoshua(?! Tree)(?: Trommel)?'s\b/g, "my").replace(/\bHis\b/g, "My").replace(/\bhis\b/g, "my").replace(/\bhim\b/g, "me")
+  .replace(/^(I'm|I|my)\b/, w => w[0].toUpperCase() + w.slice(1));
 export const joshuaTalk = q => {
   const t = q.trim(), rest = t.replace(/^(?:hi|hello|hey|yo|hiya)(?:,)?(?: there| joshua| josh)?[,!.]?\s+/i, "");
   return (JOSHUA_TALK.find(([re]) => re.test(t) || re.test(rest)) || [])[1] || null;
@@ -169,7 +181,7 @@ async function chatAnswer(env, question, persona) {
     const j = joshuaTalk(question);
     if (j) return j;
     const jd = await readGrounded(env, question, JOSHUA_DOCS);
-    if (jd) return jd;
+    if (jd) return asJoshua(jd);
   }
   const small = smallTalk(question);
   if (small) return small;
