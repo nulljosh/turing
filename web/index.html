@@ -525,7 +525,7 @@ python3 -m venv .venv && ./.venv/bin/pip install mlx-lm
         docsHtml += '</div></div>';
 
         var limitHtml = '<div class="limitations"><p class="limitations-title">Limitations</p>' +
-          '<p>Her own 0.5B picker chooses tools: 77 of 105 by wording, 789 of 1055 on sentences it never saw, 49 wrong picks still get past the guard, down from 123, and it refuses 7 right ones. Multi-step work borrows a 1.7B. ' +
+          '<p>Her own 0.5B picker chooses tools. On a sealed test of 439 sentences nobody on the project has read, 12 wrong picks still get past the guard and she refuses 11 right ones; 5.0 needs under 10 and none. Multi-step work borrows a 1.7B, and planning around a failure an 8B. ' +
           'Knowledge is 62 of 65 with zero confidently wrong. ' +
           'Logos are dial choices from a fixed set; her mark she drew herself. ' +
           'The picker and chat now run on Windows and Linux too, through Ollama. The Mac tools stay on the Mac.</p></div>';
