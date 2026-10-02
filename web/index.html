@@ -96,7 +96,22 @@
       .card.full .desk-space{height:min(56vh,600px)}
       .card.full canvas{max-height:52vh}
       #chat-input,#chat-send{min-height:44px;box-sizing:border-box}
-      footer a{display:inline-block;padding:14px 6px;margin:-14px -6px}
+  /* Footer directory: four columns, two-by-two on phones. */
+  footer .foot-rule { display: flex; align-items: center; gap: 16px; max-width: 880px; margin: 0 auto; padding: 14px 20px 28px; font-size: 13px; letter-spacing: .06em; font-weight: 500; color: var(--muted); }
+  footer .foot-rule::before { content: ""; order: 1; flex: 1; height: 1px; background: var(--line); }
+  footer .foot-rule > :first-child { order: 0; }
+  footer .foot-rule > :last-child { order: 2; }
+  @media (max-width: 520px) { footer .foot-rule { flex-wrap: wrap; justify-content: center; gap: 10px 16px; } footer .foot-rule::before { order: -1; flex-basis: 100%; } }
+  .foot-dir { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px 24px; max-width: 880px; margin: 0 auto; padding: 0 20px 28px; text-align: left; }
+  .foot-col h3 { margin: 0 0 8px; font-size: 12px; font-weight: 600; color: var(--fg); letter-spacing: 0.02em; }
+  .foot-col ul { list-style: none; margin: 0; padding: 0; }
+  .foot-col a { position: relative; display: inline-block; padding: 5px 0; margin: 0; color: var(--muted); text-decoration: none; font-size: 13px; line-height: 1.35; }
+  .foot-col a::after { content: ""; position: absolute; top: 50%; left: 0; transform: translateY(-50%); width: 100%; height: 44px; min-width: 44px; }
+  .foot-col a:hover { color: var(--fg); text-decoration: underline; }
+  .foot-bar { max-width: 880px; margin: 0 auto; padding: 18px 20px 0; border-top: 1px solid var(--line); }
+  .foot-bar .foot-meta { margin: 0; text-align: left; color: var(--muted); font-size: 12.5px; line-height: 1.9; }
+  .foot-bar .foot-meta a { color: var(--muted); }
+  @media (max-width: 700px) { .foot-dir { grid-template-columns: repeat(2, 1fr); } }
 
       a{color:inherit;text-decoration-color:var(--ember);text-decoration-thickness:2px;text-underline-offset:3px}
       a:hover{color:var(--ember-ink)}
@@ -202,7 +217,7 @@
       .nav, footer{padding-left:16px;padding-right:16px}
     </style>
   </head>
-  <body>
+  <body id="top">
     <a class="skip" href="#content">Skip to content</a>
     <div class="bg-nodes" aria-hidden="true">
       <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="20" cy="20" r="4"/><circle cx="70" cy="35" r="4"/><circle cx="45" cy="70" r="4"/><circle cx="80" cy="80" r="4"/><path d="M20 20L70 35M70 35L45 70M45 70L20 20M45 70L80 80"/></svg>
@@ -369,7 +384,7 @@
         </div>
       </section>
 
-      <section>
+      <section id="run">
         <div class="col">
         <h2>Run it yourself</h2>
         <div class="card">
@@ -395,9 +410,51 @@ python3 -m venv .venv && ./.venv/bin/pip install mlx-lm
       </section>
 
       </main>
-      <footer>
       <div class="mark-foot"><span class="ink" role="img" aria-label="Samantha's mark, drawn by her"></span></div>
-        <a href="privacy.html">Privacy</a> &middot; <a href="https://github.com/nulljosh/turing">Source</a> &middot; <a href="https://heyitsmejosh.com/docs.html#turing">Docs</a> · README has the full write-up.
+      <footer>
+        <div class="foot-rule" aria-hidden="true"><span>Turing</span><span>A small model, trained in the open</span></div>
+        <nav class="foot-dir" aria-label="Footer">
+          <div class="foot-col">
+            <h3>Turing</h3>
+            <ul>
+              <li><a href="#demo">Talk to Samantha</a></li>
+              <li><a href="https://github.com/nulljosh/turing/releases">Releases</a></li>
+              <li><a href="https://github.com/nulljosh/turing/blob/main/docs/PROGRESS.md">Progress</a></li>
+              <li><a href="https://github.com/nulljosh/turing/blob/main/docs/HISTORY.md">History</a></li>
+            </ul>
+          </div>
+          <div class="foot-col">
+            <h3>Explore</h3>
+            <ul>
+              <li><a href="#demo">Try it live</a></li>
+              <li><a href="#abilities-section">What she can do</a></li>
+              <li><a href="#results-section">Results</a></li>
+              <li><a href="#run">Run it yourself</a></li>
+            </ul>
+          </div>
+          <div class="foot-col">
+            <h3>Developers</h3>
+            <ul>
+              <li><a href="https://github.com/nulljosh/turing">Source</a></li>
+              <li><a href="https://github.com/nulljosh/turing/blob/main/docs/ARCHITECTURE.md">Architecture</a></li>
+              <li><a href="https://github.com/nulljosh/turing/blob/main/docs/SAFETY.md">Safety</a></li>
+              <li><a href="https://github.com/nulljosh/turing/blob/main/docs/FAQ.md">FAQ</a></li>
+              <li><a href="https://github.com/nulljosh/turing/issues">Report a bug</a></li>
+            </ul>
+          </div>
+          <div class="foot-col">
+            <h3>Project</h3>
+            <ul>
+              <li><a href="privacy.html">Privacy</a></li>
+              <li><a href="https://github.com/nulljosh/turing/blob/main/LICENSE">License (Apache 2.0)</a></li>
+              <li><a href="https://heyitsmejosh.com">Portfolio</a></li>
+              <li><a href="#top">Back to top</a></li>
+            </ul>
+          </div>
+        </nav>
+        <div class="foot-bar">
+          <p class="foot-meta">Turing <span id="footver"></span> &middot; Apache License 2.0 &middot; &copy; 2026 Joshua Trommel &middot; Made with <span aria-hidden="true">&hearts;</span> in Vancouver, BC</p>
+        </div>
       </footer>
     </div>
 
@@ -480,6 +537,7 @@ python3 -m venv .venv && ./.venv/bin/pip install mlx-lm
       }).catch(() => {});
 
       fetch('stats.json').then(r => r.json()).then(s => {
+        if (s && s.version) document.getElementById('footver').textContent = 'v' + s.version;
         var placeholder = document.getElementById('results-placeholder');
         if (!s || !s.measured) { placeholder.textContent = 'stats unavailable'; return; }
 
