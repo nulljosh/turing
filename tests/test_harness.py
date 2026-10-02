@@ -354,8 +354,28 @@ class AgentGrounding(unittest.TestCase):
         self.assertTrue(tools._sound("do_not_disturb", "on for two hours", "turn on do not disturb for two hours"))
         self.assertEqual(tools.doc_pair("xyz in ~/report.pdf"), ("xyz", "~/report.pdf"))
         self.assertEqual(tools.repair("translate", "buenos dias", "translate 'buenos dias' to english"), "buenos dias\tenglish")
+        # Round twenty-one: a newline where the tab belongs; chit-chat about taste and weather stays chat.
+        self.assertEqual(tools.repair("append_note", "ideas\nproject ideas", "append ideas to the project ideas note"), "ideas\tproject ideas")
+        self.assertFalse(tools._sound("music", "playing", "what kind of music do you like"))
+        self.assertFalse(tools._sound("weather", "", "can you believe the weather today"))
+        self.assertIn("Which project", tools.needs_target("open_in_editor", "this code project", "open this code project in my IDE"))
         with mock.patch.object(tools, "pick", return_value=("ask", "Which file? Name it.")):
             self.assertEqual(tools.do("trash this file"), "Which file? Name it.")
+
+
+class GuardTables(unittest.TestCase):
+    """The guard's rule tables, as written."""
+
+    def test_no_rule_key_written_twice(self):
+        """A dict literal keeps only the last of two equal keys, silently: web_search lost a rule that way for six
+        rounds, and calculate nearly did in round twenty-one."""
+        import ast
+        import collections
+        src = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "app", "tools_registry.py")).read()
+        for node in ast.walk(ast.parse(src)):
+            if isinstance(node, ast.Dict):
+                keys = collections.Counter(k.value for k in node.keys if isinstance(k, ast.Constant))
+                self.assertEqual([k for k, n in keys.items() if n > 1], [], f"line {node.lineno}")
 
 
 class SpawnTests(unittest.TestCase):

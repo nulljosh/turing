@@ -329,3 +329,7 @@ What heldout3 showed: most of its refusals were vague asks with no file named at
 | heldout6 (sealed judge) | 12 / 14 (mid-round) | 12 / 11, 16 asked |
 
 **Decision: shipped.** The judge says 12 past and 11 refused; 5.0 needs under 10 and 0. heldout3's 9 was partly that set's luck.
+
+## Round twenty-one (2026-10-01): the open sets keep falling, the sealed judge does not move
+
+A newline where the tab belongs is read as the tab; "this code project" and "that file" point at something and never name it, so file, image, app and project tools ask which; chit-chat about taste and the weather stays chat; open_in_editor knows "IDE"; and a second duplicate key (calculate) was caught, so `tests/test_harness.py::GuardTables` now fails on any rule key written twice. Open sets: heldout3 5 past / 4 refused, heldout4 3 / 4, heldout5 3 / 3. Sealed heldout6: 12 / 11, unchanged, 23 asked. **Shipped** for the fixes and the test. The guard is near what rules can do; what moves the judge next is the model, or a better question from her.

@@ -20,3 +20,5 @@
 2026-10-01 round20 hands-adapter heldout6 (sealed, first read, scored mid-round-20 guard): 285/439 passed, 12 past guard, 14 refused, 13 asked
 2026-10-01 round20 hands-adapter: standard 1307/1960, 7, 0; heldout2 350/500, 4, 1; heldout4 267/455, 4, 5, 17 asked; heldout5 308/507, 9, 5, 3 asked; heldout3 (now dev) 343/465, 9, 6, 17 asked
 2026-10-01 round20 hands-adapter heldout6 (sealed, final read): 285/439 passed, 12 past guard, 11 refused, 16 asked
+2026-10-01 round21 hands-adapter: standard 1307/1960, 7, 0; heldout2 350/500, 3, 1; heldout3 343/465, 5, 4, 22 asked; heldout4 267/455, 3, 4, 24 asked; heldout5 308/507, 3, 3, 5 asked
+2026-10-01 round21 hands-adapter heldout6 (sealed, read once): 285/439 passed, 12 past guard, 11 refused, 23 asked

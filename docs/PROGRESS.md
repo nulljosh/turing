@@ -1,5 +1,7 @@
 # Progress log
 
+- 2026-10-01 v4.17.14: "open this project in my IDE" asks which project. A test now catches a safety rule written twice, which had silently dropped one for six rounds. Sealed test unchanged: 12 past the guard, 11 refused.
+  `v4.17.14 · 131 tools · 610 tests · docs coverage 100% · laws all hold · biggest app/tools_util.py 649 · actions 231/231 · parity 231/231 · util_diff 261/261`
 - 2026-10-01 v4.17.13: "move my project folder somewhere" gets "Which file?", not a guess or a no. A new sealed test is the 5.0 judge: 12 wrong picks past the guard, 11 refused.
   `v4.17.13 · 131 tools · 609 tests · docs coverage 100% · laws all hold · biggest app/tools_util.py 649 · actions 231/231 · parity 231/231 · util_diff 261/261`
 - 2026-10-01 v4.17.12: wrong picks past the guard on the blind set drop to 9, under the 5.0 bar for the first time. "When you get a sec" no longer opens an app called "urgent". Refusals, 23, are the last gap to 5.0.

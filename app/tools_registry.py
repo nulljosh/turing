@@ -55,7 +55,7 @@ _EVIDENCE = {
     "recent_downloads": r"download", "unread_mail": r"mail|email|inbox|unread|messages",
     "git_status": r"status|changed|dirty|\bdiff\b|\bbranch\b|ahead|behind|\bgit\b", "recent_commits": r"commit",
     "run_tests": r"\btest", "open_prs": r"\bprs?\b|pull request|waiting (?:for|on) (?:a )?review",
-    "open_in_editor": r"editor|vscode|vs code|in code", "quit_app": r"quit|close|shut down|\bkill\b",
+    "open_in_editor": r"editor|vscode|vs code|in code|\bide\b|visual studio", "quit_app": r"quit|close|shut down|\bkill\b",
     "dark_mode": r"dark|\blight\b|appearance|theme", "do_not_disturb": r"disturb|\bdnd\b|focus|silence|quiet|notification",
     "zip_file": r"\bzip\b|compress", "unzip_file": r"unzip|extract|unpack|decompress", "trash_file": r"trash|delete|throw away|get rid of",
     "copy_file": r"\bcopy\b|duplicate|\bcp\b", "move_file": r"\bmove\b|relocate|\bdrag\b|\bmv\b", "rename_file": r"rename|new name|call it|change the name|retitle|\bname\b",
@@ -140,7 +140,7 @@ _GENERAL_KNOWLEDGE = re.compile(
     r"\b(?:what'?s a good|what is a good|why is|why are|why does|why do|"
     r"is it true|do you think|in your opinion|which is better|what would you recommend|"
     r"any recommendations for|\busually\b|\btypically\b|\bin general\b|generally speaking|"
-    r"fun fact|did you know|how come)\b"
+    r"fun fact|did you know|how come|what kind of|do you like|your favou?rite)\b"
 )
 _PERSONAL_OR_IMPERATIVE = re.compile(
     # "\bi\b" alone (not just "i'm"/"i've"/"i have") catches ordinary personal phrasing like
@@ -162,9 +162,9 @@ def _is_general_knowledge_question(q_lower):
 # and the weather on another planet is trivia.
 _AGAINST = {"say": r"morse|clock say|how (?:do|would|can|should) (?:you|i) say|\bin (?:french|spanish|german|italian|portuguese"
                    r"|dutch|japanese|chinese|mandarin|korean|russian|arabic|hindi)\b|(?:want|wanted|meant) to say"
-                   r"|(?:wondering|thinking) out loud|do you think|\bthe \w+ voice\b|(?:change|switch|set) (?:your|the|her) voice",
+                   r"|(?:wondering|thinking) out loud|do you think|\bthe \w+ voice\b|(?:change|switch|set) (?:your|the|her) voice|^what does .* say\b",
             "wifi_name": r"address|\bip\b",
-            "weather": r"\bapp\b|\bon (?:mars|venus|jupiter|saturn|mercury|neptune|uranus|pluto|the moon)\b", 
+            "weather": r"\bapp\b|\bon (?:mars|venus|jupiter|saturn|mercury|neptune|uranus|pluto|the moon)\b|can you believe|\bseems\b|perfect for|isn'?t it\b", 
             # "close the github tab" is close_tab, not quit_app. "extract the zip" is unzip_file, not zip_file.
             # "summarize my unread mail" is summarize, not unread_mail.
             "quit_app": r"\btab\b", "zip_file": r"\bextract\b|\bunzip\b", "unread_mail": r"\bsummar",
@@ -185,7 +185,7 @@ _AGAINST = {"say": r"morse|clock say|how (?:do|would|can|should) (?:you|i) say|\
             # new_note's own evidence regex matches bare "write" or "note", which both leak into these.
             # Round eleven: "draft me a file" is write_document, not a note.
             "new_note": r"\bbrief\b|\bresearch\b|\bmention\b|\bsearch\b.{0,20}\bnotes?\b|\bfind\b.{0,20}\bnotes?\b|\blook for\b.{0,20}\bnotes?\b|\bdraft\b|make sure i remember|\bremind"
-                        r"|\bto (?:my|the) [\w ]{1,30} note\b",  # round fifteen: "to my groceries note" is append_note
+                        r"|\bto (?:my|the) [\w ]{1,30} note\b|\bnotes? about\b.{0,30}\bfind\b|\bin my [\w ]{1,20} notes?\b",  # round fifteen: "to my groceries note" is append_note
             # Round eleven: the biggest single wrong-past-guard cluster was "what is 2+2"/"what's 10
             # times 7" firing calculate. In production that phrasing never needs calculate: ask_local's
             # own arithmetic() answers plain sums before the picker is ever reached, and word-operator
@@ -193,7 +193,7 @@ _AGAINST = {"say": r"morse|clock say|how (?:do|would|can|should) (?:you|i) say|\
             # "times"/"plus" to symbols), so calculate() failing that copied arg is a real bug, not a
             # style choice. A file extension or a unit word (convert_units'/run_code's own vocabulary)
             # is the same shape: not arithmetic, a different tool's job.
-            "calculate": r"\bwhat'?s\b(?!.*%)|\bwhat is\b(?!.*%)|celsius|fahrenheit|kilomet|\bkm\b|\bmiles?\b|\bpounds?\b|\bkg\b|\bfactor|\bprime"
+            "calculate": r"\bwhat'?s\b(?!.*%)|\bwhat is\b(?!.*%)|celsius|fahrenheit|kilomet|\bkm\b|\bmiles?\b|\bpounds?\b|\bkg\b|\bfactor|\bprime|\bcode\b|\bexecute\b|script|average"
                          r"|inches|centimet|\bmeters?\b|gallons|liters|\.csv\b|\.py\b|\.js\b|\btips?\b",
             # Round eleven: recent_downloads owns "what's in my downloads folder"; list_dir's own
             # templates never say "downloads folder", only a literal path or a generic "the folder".
@@ -229,7 +229,7 @@ _AGAINST = {"say": r"morse|clock say|how (?:do|would|can|should) (?:you|i) say|\
             # Round fifteen. A clock time is convert_time's (the mirror of its evidence above), so time_in and
             # date_math stand down on one; "how late is it" is time_in's.
             "time_in": r"\d\s*(?:am|pm)\b|\d:\d\d|\bnoon\b|\bmidnight\b",
-            "date_math": r"\buntil\b|\btill\b|\bsleeps?\b|\d\s*(?:am|pm)\b|\d:\d\d|\bnoon\b|\bmidnight\b|how late|time is it|\btil\b|how long|days to\b|count the days",
+            "date_math": r"\buntil\b|\btill\b|\bsleeps?\b|\d\s*(?:am|pm)\b|\d:\d\d|\bnoon\b|\bmidnight\b|how late|time is it|\btil\b|how long|days to\b|count the days|restart|reboot",
             # "how do I say X in french" is translate; "I wanted to say thanks", "wondering out loud" are chat.
             "base64_encode": r"un-?base ?64|decode|what'?s this|\bdecode",
             "cpu_load": r"\bram\b|memory",
@@ -239,19 +239,20 @@ _AGAINST = {"say": r"morse|clock say|how (?:do|would|can|should) (?:you|i) say|\
             "base64_decode": r"\b(?:to|2|into) base ?64\b",
             "running_apps": r"\bmcp\b|server",
             "summarize": r"feedback|rating",
-            "calendar_today": r"\btomorrow\b|\btmrw?\b",
+            "calendar_today": r"\btomorrow\b|\btmrw?\b|\bgap\b|open slot|important|urgent",
             "current_tab": r"\bcontent|\btext\b|\bsay\b|on this page|\btab \d",
             "memory_usage": r"your memory",
             "ask_document": r"\.(?:mp4|mov|m4a|mp3|wav)\b",
             "move_file": r"\b(?:the |to )trash\b",
             "rotate_image": r"mirror|\bflip",
             "new_reminder": r"^any reminders|what reminders|\breminders about\b",
+            "research": r"you saved|saved as",
             "days_until": r"\b\d+ (?:days?|weeks?|months?|years?) (?:from|after|before|ago)\b",
             "battery": r"battery of",
             # Each of these names a different tool's own domain: wifi/ip/load are their own tools, not system_info;
             # "free space" is the disk, not the calendar; "your voice" is set_voice; "log me in" and "click" are
             # screen work, not a site to open; "how many minutes is 3 hours" is a conversion, not a timer.
-            "system_info": r"wi-?fi|\bip\b|address|loaded|\bcpu\b|\bram\b|memory|battery|disk|free space",
+            "system_info": r"wi-?fi|\bip\b|address|loaded|\bcpu\b|\bram\b|memory|battery|disk|free space|power|charging",
             "free_when": r"free space|\bdisk\b|storage",
             "set_volume": r"\bvoice\b",
             "music": r"disturb",
@@ -267,6 +268,10 @@ def _sound(tool, arg, query):
     q_lower = query.lower()
 
     if tool in _EVIDENCE and not re.search(_EVIDENCE[tool], q_lower):
+        return False
+    # Round twenty-one: "this code project", "that file" point at something; they never name it. needs_target asks.
+    if re.match(r"(?:this|that|these|those)\b", arg.lower()) and \
+            any(tool in members for family, (_, members) in _TARGETS.items() if family != "text"):
         return False
     if tool in _AGAINST and re.search(_AGAINST[tool], q_lower):
         return False
@@ -354,7 +359,8 @@ def _sound(tool, arg, query):
     if tool == "append_note":
         a, _, b = arg.partition("\t")
         if not b:
-            m = re.search(r"\bnote (\w[\w ]*)$", q_lower) or re.search(r"to (?:the |my )?(\w[\w ]*?) note\b", q_lower)
+            m = re.search(r"\bnote (\w[\w ]*)$", q_lower) or re.search(r"to (?:the |my )?(\w[\w ]*?) note\b", q_lower) \
+                or re.search(r"\bnotes? (?:named|called) (\w+)", q_lower)
             b = m.group(1).strip() if m else ""
         return bool(a) and bool(b) and a.lower() in q_lower and b.lower() in q_lower
 
@@ -472,15 +478,16 @@ _TARGETS = {
     "image": (r"image|photo|picture|\bpic\b|\bimg\b|screenshot|jpe?g|png|heic|gif|webp|rotate|crop|grayscale|upscale",
               ("convert_image", "rotate_image", "resize_image", "upscale_image", "grayscale_image", "flip_image",
                "crop_square", "remove_background", "enhance_image", "image_info", "paint_image")),
-    "file": (r"\bfile|folder|\bdoc\b|document|\bpdf\b|\bzip\b|archive|video|audio|recording",
+    "file": (r"\bfile|folder|\bdoc\b|document|\bpdf\b|\bzip\b|archive|video|audio|recording|rename|trash|\bmove\b|\bcopy\b",
              ("move_file", "copy_file", "rename_file", "trash_file", "zip_file", "unzip_file", "read_document",
               "ask_document", "find_in_document", "read_file", "transcribe_video")),
     "app": (r"\bapp\b|program|window", ("quit_app",)),
+    "project": (r"project|repo|folder", ("open_in_editor",)),
     "text": (r"(?:in|into|to) (?:french|spanish|german|italian|portuguese|dutch|japanese|chinese|korean|russian)\b|out loud|aloud|speak|translat|morse|\bwords?\b|reverse|backwards|shout|caps|base ?64|hash|passage|text|phrase|sentence",
              ("translate", "word_count", "morse_code", "reverse_text", "shout", "base64_encode", "base64_decode",
               "hash_text", "say")),
 }
-_ASK = {"app": "Which app? Name it, like Safari.", "image": "Which image? Name it, like ~/Desktop/photo.jpg.", "file": "Which file? Name it, like ~/Documents/report.pdf.",
+_ASK = {"app": "Which app? Name it, like Safari.", "project": "Which project? Name it, like nimble.", "image": "Which image? Name it, like ~/Desktop/photo.jpg.", "file": "Which file? Name it, like ~/Documents/report.pdf.",
         "text": "Which words? Say them, like \"translate good morning to french\"."}
 
 
@@ -512,6 +519,8 @@ def repair(tool, arg, query):
     """The argument a pick really runs on: round twenty fills in what the picker left out but the sentence says plainly
     ("translate 'buenos dias' to english" copied without "english"). pick() and eval/hands.py both call this first."""
     import tools
+    if "\t" not in arg and "\n" in arg:  # round twenty-one: a newline where the tab belongs
+        arg = arg.replace("\n", "\t", 1)
     if tool == "translate" and "\t" not in arg and not tools.translate_pair(arg)[1]:
         m = re.search(rf"\b(?:to|into|in)\s+({tools.LANGUAGES})\b", query, re.I)
         return f"{arg}\t{m.group(1).lower()}" if m else arg

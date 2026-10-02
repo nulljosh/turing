@@ -24,6 +24,8 @@ Not data centres or training data: the gaps we can actually close. Each round pi
 - [ ] **Learns from use.** Started in 4.11: say "good", "wrong" or "wrong, I meant X" after any answer and it is saved on the Mac (~/.samantha/feedback.jsonl); training/feedback_to_data.py turns corrections into picker training rows, never copying test phrasings. Closes when the next retrain actually uses them.
 - [ ] **Doesn't believe everything she reads.** Mostly closed in 4.14: reads are fenced (law 9), never replayed (law 10), can't change a plan (law 11), and every write a model proposes is checked against your own words before it can even ask you (law 12, 40 of 43 write tools, zero false blocks). Left: three writes with no argument rely only on your yes (screen clicks got the own-words check in 4.17.2).
 
+- **4.18, edit a video.** Trim a clip, cut a section out, mute it, make a GIF, change the speed, burn in captions from her own transcript. ffmpeg on the Mac, every write asks first and saves a new file beside the original.
+
 ### Majors
 
 - **5.0, her own head.** Every tool picked by her own model, nothing through the exact router. Check: `eval/hands.py` scores 106 of 106 tools by wording, zero right picks blocked, and fewer than ten wrong picks slip past the guard, on a matched test set.
