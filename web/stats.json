@@ -1,5 +1,5 @@
 {
-  "version": "4.17.10",
+  "version": "4.17.11",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -64,8 +64,8 @@
         "documented": 8
       },
       "app/tools.py": {
-        "total": 31,
-        "documented": 31
+        "total": 32,
+        "documented": 32
       },
       "app/tools_agent.py": {
         "total": 5,
@@ -92,8 +92,8 @@
         "documented": 11
       },
       "app/tools_files.py": {
-        "total": 14,
-        "documented": 14
+        "total": 16,
+        "documented": 16
       },
       "app/tools_gui.py": {
         "total": 11,

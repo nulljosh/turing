@@ -10,6 +10,8 @@ v4.17.9 (2026-10-01 late): round 16 shipped. Fresh writer built heldout4.jsonl (
 
 ## Next, in order
 
+Round 18 shipped as v4.17.11 (code-side argument shape, plain folder names resolve under home). Blind heldout3: 11 past guard, 23 refused, 7 asked. Round 19: training on argument shape, scored on standard, heldout2, heldout4, heldout5, then heldout3 once.
+
 Round 17 shipped as v4.17.10: eval/heldout5.jsonl is a second readable dev set. Blind heldout3: 11 past guard, 26 refused, 7 asked (read twice in round 17, totals only, see BAKEOFF). The 26 refusals do not appear on any dev set, so round 18 is training: argument shape (tab pairs, paths copied verbatim), scored on standard, heldout2, heldout4, heldout5, then heldout3 once.
 
 1. Read heldout4's remaining 6 refusals and 7 wrong picks, fix them (never train on heldout3).

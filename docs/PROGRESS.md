@@ -1,5 +1,7 @@
 # Progress log
 
+- 2026-10-01 v4.17.11: "copy resume.pdf to the documents folder" now lands in ~/Documents, not wherever the app started. File and translate picks read "X to Y" the way you said it. Blind set: 11 past the guard, refusals 26 to 23.
+  `v4.17.11 · 131 tools · 609 tests · docs coverage 100% · laws all hold · biggest eval/gen_heldout2.py 647 · actions 231/231 · parity 231/231 · util_diff 261/261`
 - 2026-10-01 v4.17.10: a fifth blind test set in four voices. Music only pauses when you ask it to, and "my battery of tests went well" stays chat. Blind set: 11 wrong picks past the guard, 26 refused.
   `v4.17.10 · 131 tools · 609 tests · docs coverage 100% · laws all hold · biggest eval/gen_heldout2.py 647 · actions 231/231 · parity 231/231 · util_diff 261/261`
 - 2026-10-01 v4.17.9: "trash this file" now gets "Which file?" instead of a refusal or a guess. A fourth blind test set to steer by. Blind set: wrong picks past the guard 16 to 12, refusals 32 to 26.

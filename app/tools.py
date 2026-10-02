@@ -201,11 +201,20 @@ LANGUAGES = ("english|french|spanish|german|italian|portuguese|dutch|swedish|nor
              "cantonese|korean|vietnamese|thai|indonesian|latin")
 
 
+def translate_pair(request):
+    """'text<TAB>language' as (text, language). Round eighteen: the picker sometimes skips the tab ("where is the
+    bathroom into spanish"); a known language after a closing to/into/in is the second half."""
+    text, _, language = request.partition("\t")
+    if not language:
+        m = re.match(rf"(.+?)\s+(?:to|into|in)\s+({LANGUAGES})$", request.strip(), re.I)
+        text, language = (m.group(1), m.group(2)) if m else (text, "")
+    return text.strip().strip("\"'"), language.strip().lower()
+
+
 def translate(request):
     """Translate text, or a whole page, into a named language with the biggest local model, offline. Takes
     'text<TAB>language'; text that is a URL or site name is fetched first and its opening is translated."""
-    text, _, language = request.partition("\t")
-    text, language = text.strip().strip("\"'"), language.strip().lower()
+    text, language = translate_pair(request)
     if not text or not language:
         return 'Translate what, into what? Say it like "translate good morning to french".'
     if _url(text):

@@ -283,3 +283,16 @@ Two more rules (resize/rotate/convert need a path in the argument; a sentence th
 | heldout3 (blind) | 12 / 26, 7 asked | 11 / 26, 7 asked |
 
 **Decision: shipped.** Small, real. The bigger finding: heldout3's 26 refusals do not show up on any of the four dev sets (5 to 7 each), so they come from something particular to how that set was written, and guard rules found on other sets will not reach them. 5.0's "0 refused" now needs the model to copy arguments in the shape the tools take, which is training.
+
+## Round eighteen (2026-10-01): argument shape in code, and a path bug
+
+The file tools resolved a bare name ("notes.txt", "the archive folder") against whatever folder the app started in, not home, and the training data already teaches "the archive folder". `tools_files._plain` now reads a spoken place as a path under home ("the documents folder" is ~/Documents, "my desktop" is ~/Desktop); hidden and outside paths still resolve to nothing. `tools_files.split_pair` reads the pair the picker meant when it skips the tab ("resume.pdf to the documents folder", "draft.md from downloads to documents") or tabs every word, and `tools.translate_pair` does the same for "where is the bathroom into spanish". The guard calls the same splitters the tools run, so it checks what would really happen. A bare "this" is never translated.
+
+| Set | Round seventeen | Round eighteen |
+|---|---|---|
+| standard | 7 past / 0 refused | 7 / 0 |
+| heldout2 | 5 / 5 | 5 / 2 |
+| heldout5 | 10 / 7 | 10 / 5 |
+| heldout3 (blind, read once) | 11 / 26 | 11 / 23 |
+
+**Decision: shipped.** No retrain. 5.0 needs 1 more off past-guard and all 23 refusals; next is a training round on argument shape.

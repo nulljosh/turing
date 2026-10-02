@@ -11,9 +11,27 @@ import time
 HOME = os.path.realpath(os.path.expanduser("~"))
 
 
+_FOLDERS = ("Desktop", "Documents", "Downloads", "Pictures", "Music", "Movies", "Public")
+
+
+def _plain(path):
+    """A spoken place as a path: "the documents folder" and "my desktop" are ~/Documents and ~/Desktop, and a bare
+    name ("notes.txt") lives under home, never under whatever folder the app happened to start in."""
+    p = path.strip().strip("'\"")
+    if not p or p.startswith(("~", "/")):
+        return p
+    p = re.sub(r"^(?:the|my)\s+", "", p, flags=re.I)
+    p = re.sub(r"\s+(?:folder|directory|dir)$", "", p, flags=re.I).strip()
+    head, _, rest = p.partition("/")
+    for name in _FOLDERS:
+        if head.lower() == name.lower():
+            return "~/" + name + ("/" + rest if rest else "")
+    return "~/" + p
+
+
 def _home(path):
     """The real path of something inside the home folder, or None: outside it or hidden."""
-    full = os.path.realpath(os.path.expanduser(path.strip().strip("'\"") or "~"))
+    full = os.path.realpath(os.path.expanduser(_plain(path) or "~"))
     rel = os.path.relpath(full, HOME)
     if rel.startswith("..") or any(p.startswith(".") for p in rel.split(os.sep) if p != "."):
         return None
@@ -95,9 +113,21 @@ def folder_size(path):
 HEADLESS = os.environ.get("SAMANTHA_HEADLESS") == "1"
 
 
+def split_pair(request):
+    """'src<TAB>dst' as (src, dst). Round eighteen: the picker sometimes skips the tab ("draft.md to the documents
+    folder", "draft.md from downloads to documents") or splits on every word ("invoices<TAB>folder<TAB>to<TAB>backup");
+    the first and last pieces, or the sentence's own "to"/"into", are the pair."""
+    parts = [x.strip() for x in request.split("\t") if x.strip()]
+    if len(parts) >= 2:
+        return parts[0], parts[-1]
+    m = re.match(r"(.+?)\s+from\s+.+?\s+(?:to|into)\s+(.+)$", request.strip(), re.I) or \
+        re.match(r"(.+)\s+(?:over to|into|to)\s+(.+)$", request.strip(), re.I)
+    return (m.group(1).strip(), m.group(2).strip()) if m else (request.strip(), "")
+
+
 def _pair(request):
     """(source, destination) from 'src<TAB>dst', each a real path inside home, or (None, why)."""
-    src, _, dst = request.partition("\t")
+    src, dst = split_pair(request)
     full = _home(src) if src.strip() else None
     if not full or not os.path.exists(full):
         return None, f"No file or folder {src.strip()} I am allowed to touch."
@@ -228,6 +258,11 @@ def demo():
     """Self-check: the pure parts, no Spotlight needed."""
     assert _size(12) == "12 bytes" and _size(2048) == "2.0 KB" and _size(3 * 1024 ** 3) == "3.0 GB"
     assert _home("~/.ssh/id_rsa") is None and _home("/etc/passwd") is None and _home("~/Documents") is not None
+    assert _home("the documents folder") == os.path.join(HOME, "Documents") and _home("my desktop") == os.path.join(HOME, "Desktop")
+    assert _home("notes.txt") == os.path.join(HOME, "notes.txt") and _home("../etc") is None and _home(".ssh") is None
+    assert split_pair("a.txt\t~/documents") == ("a.txt", "~/documents") and split_pair("invoices\tfolder\tto\tbackup") == ("invoices", "backup")
+    assert split_pair("resume.pdf to the documents folder") == ("resume.pdf", "the documents folder")
+    assert split_pair("draft.md from Downloads to Documents") == ("draft.md", "Documents")
     assert "No folder" in folder_size("~/.ssh") and "No folder" in folder_size("/etc")
     for bad in ("~/.ssh/id_rsa\t~/Desktop", "/etc/passwd\t~/Desktop", "~/../../etc/passwd\t~/Desktop"):
         assert "allowed" in move_file(bad) and "allowed" in copy_file(bad), bad

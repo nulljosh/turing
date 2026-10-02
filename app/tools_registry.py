@@ -319,7 +319,8 @@ def _sound(tool, arg, query):
     # pdf", "my notes file") instead. Accept the path's own basename (no extension either) as evidence
     # too, same shape as the zip_file/folder_size fix below.
     if tool in ("copy_file", "move_file", "rename_file"):
-        a, _, b = arg.partition("\t")
+        import tools_files  # the same split the tools run, so the guard checks what would really run
+        a, b = tools_files.split_pair(arg)
         if not (a and b):
             return False
         a_base = a.rstrip("/").rsplit("/", 1)[-1].lower()
@@ -327,7 +328,13 @@ def _sound(tool, arg, query):
         a_ok = a.lower() in q_lower or a_base in q_lower or (len(a_stem) > 2 and a_stem in q_lower)
         return a_ok and b.lower() in q_lower
 
-    if tool in ("find_in_document", "ask_document", "translate"):
+    if tool == "translate":
+        a, b = tools.translate_pair(arg)  # the same split translate() runs
+        if a.lower() in ("this", "that", "it", "these", "those"):
+            return False  # "translate this to spanish" names no words: needs_target asks which
+        return bool(a) and bool(b) and a.lower() in q_lower and b in q_lower
+
+    if tool in ("find_in_document", "ask_document"):
         a, _, b = arg.partition("\t")
         return bool(a) and bool(b) and a.lower() in q_lower and b.lower() in q_lower
 
