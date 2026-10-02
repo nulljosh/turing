@@ -71,6 +71,7 @@ Ask her to draft something in our voice, or answer a question about one of our o
 
 ### Open backlog
 
+- [ ] **Copy Helix 2.5's recipe:** pretrain on recorded human behaviour before task training (Figure Helix 2.5, 2026-09-17). Helix 2.5 raised zero-shot success from 9% to 56% on chores in unseen homes.
 - [ ] **Voice and face, next:** `--character <name>` to switch faces and voices by name; her idle loop on the landing page; Secretary's phone calls in her voice (waiting on Twilio support ticket 29739232 to restore account access).
 - [ ] **This week: computer use.** Give her a task ("book the 3pm slot on this page", "fill in this form from my notes") and she drives the Mac to finish it, like ChatGPT's agent. She already has see_screen, click_text, type_text, press_key and a six-step agent. Missing, in build order:
   - [ ] Every click and keystroke shown before it runs, one yes covers one task, Escape stops her at once (Escape shipped in 4.17.1; one-yes-per-task still open)
