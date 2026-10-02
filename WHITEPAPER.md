@@ -1,8 +1,8 @@
 # Turing Technical Whitepaper
 
-**v4.15.0** | September 2026
+**v4.18.0** | October 2026
 
-Turing builds small language models on one Mac. Its first model, Samantha, is a 0.5B model trained on your own writing. She will never out-think a frontier model. She does not try to. She runs on your Mac, costs nothing per question, keeps everything on the machine, and gets real work done with 106 exact tools. When a question is too hard for her, she borrows a bigger brain that also lives on the Mac. You can type to her or talk to her. She can see your screen, click in your apps, and research a topic with sources. She asks before anything that changes something.
+Turing builds small language models on one Mac. Its first model, Samantha, is a 0.5B model trained on your own writing. She will never out-think a frontier model. She does not try to. She runs on your Mac, costs nothing per question, keeps everything on the machine, and gets real work done with 131 exact tools. When a question is too hard for her, she borrows a bigger brain that also lives on the Mac. You can type to her or talk to her. She can see your screen, click in your apps, and research a topic with sources. She asks before anything that changes something.
 
 ## The core idea
 
@@ -41,6 +41,8 @@ Then a teacher. Claude writes practice questions and answers from real passages 
 - **Learn from you.** Say "good", "wrong" or "wrong, I meant X" after any answer. It is saved on your Mac, never sent anywhere, and becomes training data for her next retrain.
 - **Follow along.** "Do that again", "same but for nimble", "what about tomorrow", "open it". Follow-ups work for every tool from the last ten turns, and something she read can never be replayed as a command.
 - **Plan.** "Find resume.docx and move it to Documents", "git status of nimble and if anything changed run its tests". She shows her plan first, checks every step, stops the moment one fails, and asks before every write. Nothing she reads along the way can change the plan.
+- **Long work.** "Work on cleaning up my downloads." She plans in rounds. When a step fails she plans around it, keeps doing the parts that still can be done, and tells you at the end what she could not. Each new plan comes from your words and her own record of what ran, never from what she read. A journal of every round is kept on the Mac.
+- **Asks when you point.** "Trash this file", "crop that image", "move my project folder somewhere": the sentence names the tool but not the target, so she asks which one instead of guessing.
 - **Everything else.** Her Mac, pictures and painting, math and time, documents, memory across sessions, Chrome tabs, Apple Shortcuts, and MCP in both directions. The picker and chat also run on Windows and Linux through Ollama; the Mac tools stay on the Mac.
 
 ## Promises she keeps
@@ -48,7 +50,7 @@ Then a teacher. Claude writes practice questions and answers from real passages 
 She believes what she reads, never what it tells her to do. Text from a page, an email, a file or the screen is fenced as data before any model sees it and can never pick a tool; law 9 tries three injection attacks through every reading tool on every push. When a model proposes a write, it is checked against your own words before it can even ask you: a recipient, path or link that only came from something she read is stopped.
 
 
-Rules live in docs/LAWS.md and are checked against every tool on every push. Anything that writes, sends or looks at your screen asks first. Private tools never reach a model's menu. Her hands stay in your home folder. On the 65-question knowledge check she gets 62 right and 0 confidently wrong; the rest she declines.
+Rules live in docs/LAWS.md and are checked against every tool on every push. Anything that writes, sends or looks at your screen asks first. Private tools never reach a model's menu. Her hands stay in your home folder. On the 65-question knowledge check she gets 62 right and 0 confidently wrong; the rest she declines. On a sealed test of 439 sentences nobody on the project has read, her own picker lets 12 wrong picks past the guard and refuses 11 right ones; 5.0 needs under 10 and none.
 
 ## Limits, stated plainly
 

@@ -331,6 +331,7 @@ tools_routes.install(sys.modules[__name__])  # builds _ROUTES etc against this m
 _ROUTES = tools_routes._ROUTES
 _GREEDY = tools_routes._GREEDY
 _MULTISTEP = tools_routes._MULTISTEP
+_WORK_ON = re.compile(r"^(?:work on|keep working on|keep (?:at it|going) until|see it through:?|get this done:?)\s+(.+)$", re.I)
 _EYES = tools_routes._EYES
 _SCREEN_JOB = tools_routes._SCREEN_JOB
 _ACTION = tools_routes._ACTION
@@ -465,11 +466,15 @@ def do(query, log=None, confirm=None):
     if _SCREEN_JOB.search(_bare(query)):
         from tools_screen_agent import screen_task
         return screen_task(query, log=log, confirm=confirm)
+    goal = _WORK_ON.match(_bare(query))
+    if goal:  # "work on X": a long job, planned in rounds, recovering when a step fails (planner.work)
+        import planner
+        return planner.work(goal.group(1), log=log, confirm=confirm) or agent(goal.group(1), log=log, confirm=confirm)
     if _MULTISTEP.search(_bare(query)) and not _EYES.search(_bare(query)):
         import planner
         steps = planner.plan(query)
         if steps:
-            return planner.run(steps, query, log=log, confirm=confirm)
+            return planner.work(query, log=log, confirm=confirm, first=steps)  # recovers when a step fails
         return agent(query, log=log, confirm=confirm)
     if _faq_knows(query):
         return None  # a question her own FAQ answers is about her, not a job for her hands

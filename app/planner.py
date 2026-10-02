@@ -77,10 +77,10 @@ def plan(request, max_steps=MAX_STEPS):
     return _fallback_split(request)
 
 
-def _query_model(request, tool_names):
+def _query_model(request, tool_names, model=None):
     """Ask MODEL for a JSON plan over tool_names. Returns the model's raw "steps" list (not yet validated),
     or None when Ollama is down, times out, or the reply is not JSON with a "steps" list at all."""
-    body = json.dumps({"model": MODEL, "stream": False, "think": False, "format": "json", "messages": [
+    body = json.dumps({"model": model or MODEL, "stream": False, "think": False, "format": "json", "messages": [
         {"role": "system", "content": SYSTEM + " Tools: " + ", ".join(sorted(tool_names)) + "."},
         {"role": "user", "content": request}]}).encode()
     req = urllib.request.Request(OLLAMA_CHAT, body, {"Content-Type": "application/json"})
@@ -200,7 +200,7 @@ def _fill(arg, steps, results):
     return _PLACEHOLDER.sub(repl, arg)
 
 
-def run(steps, request=None, log=None, confirm=None):
+def run(steps, request=None, log=None, confirm=None, trace=None):
     """Execute a validated plan (from plan()) step by step, in order. With 2 or more steps, shows the whole
     plan and asks once, through confirm, before anything runs; a no there stops before a single step runs.
     A step whose "if" guard does not hold against the step before it is skipped, not run. After every step
@@ -217,16 +217,19 @@ def run(steps, request=None, log=None, confirm=None):
         return None
     import tools
     if len(steps) >= 2 and confirm and not confirm("plan", ("Here's my plan: " + " ".join(_describe(i, s) for i, s in enumerate(steps, 1)) + " Go?",)):
+        _note(trace, 0, {"tool": "plan", "arg": ""}, "declined")
         return "Okay, I will not."
     results, last = {}, None
     for i, step in enumerate(steps, start=1):
         if step.get("if") and i > 1 and not _condition_holds(step["if"], results.get(i - 1)):
             if log:
                 log(f"  [skipped step {i}: {step['tool']}, {step['if']} did not hold]")
+            _note(trace, i, step, "skipped")
             continue
         try:
             arg = _fill(step["arg"], steps, results)
         except ValueError as e:
+            _note(trace, i, step, "failed", str(e))
             return f"I can't run step {i} ({step['tool']}): {e}."
         name = step["tool"]
         fn = tools.TOOLS.get(name)
@@ -235,18 +238,131 @@ def run(steps, request=None, log=None, confirm=None):
         if step.get("_model") and request is not None and name in tools.WRITES:
             ok, why = intent.check(request, name, (arg,))
             if not ok:
+                _note(trace, i, step, "refused")
                 return f"I stopped: that step would {why}, which you didn't ask for."
         if confirm and name in tools.WRITES and not confirm(name, (arg,)):
+            _note(trace, i, step, "declined")
             return f"Okay, I will not run step {i} ({name})."
         if log:
             log(f"  [{name}({arg})]")
         try:
             result = fn(arg) if fn.__code__.co_argcount else fn()
         except Exception as e:
+            _note(trace, i, step, "failed", f"{type(e).__name__}")
             return f"Step {i} ({name}) failed: {e}."
         result = untrusted.wrap(name, result)
         results[i] = result
         if _looks_failed(result):
+            # her own words only: a reading tool's failure text could be a planted instruction (law 11)
+            _note(trace, i, dict(step, arg=arg), "failed", None if untrusted.is_untrusted(result) else str(result)[:160])
             return f"Stopped after step {i} ({name}): {result}"
+        _note(trace, i, dict(step, arg=arg), "ok")
         last = str(result)
     return last
+
+
+def _note(trace, i, step, status, why=None):
+    """One line of run()'s record for work(): which step, which tool and argument, and whether it ran ("ok"),
+    failed, was skipped, or was stopped by the user ("declined") or by law 12 ("refused"). why is her own
+    failure text, or None when the failing result came from something she read."""
+    if trace is not None:
+        trace.append({"step": i, "tool": step["tool"], "arg": step.get("arg", ""), "status": status, "why": why})
+
+
+MAX_ROUNDS = 4
+MAX_WORK_STEPS = 24
+REPLAN = ("The user's goal is below, then what already happened. Plan only the steps still needed to reach the goal. "
+          "Never repeat a step that is done. A step that failed will fail again exactly as written: reach the same "
+          "goal another way (a shorter or broader argument, a different tool), or leave that part out.")
+REPLAN_MODEL = "qwen3:8b"  # re-planning is the thinking part of long work; the bigger local model, same Ollama
+
+
+def _work_dir():
+    """Where work() keeps its journal: ~/.samantha/work, or SAMANTHA_OUT/a temp folder when SAMANTHA_HEADLESS=1."""
+    import os
+    import tempfile
+    if os.environ.get("SAMANTHA_HEADLESS") == "1":
+        base = os.environ.get("SAMANTHA_OUT") or os.path.join(tempfile.gettempdir(), "samantha-out")
+    else:
+        base = os.path.expanduser("~/.samantha")
+    path = os.path.join(base, "work")
+    os.makedirs(path, exist_ok=True)
+    return path
+
+
+def work(request, log=None, confirm=None, rounds=MAX_ROUNDS, max_steps=MAX_WORK_STEPS, first=None):
+    """Long work: keep going until the job is done, recovering when a step fails. Each round is an ordinary fixed
+    plan (plan()/run(), law 11 holds inside it). When a step fails, she plans the rest again from the user's own
+    request and her own record of what ran and what failed: a failing reading tool's text never reaches the new
+    plan, and every model-picked write is still checked against the request (law 12) and still asks. Stops when a
+    round finishes cleanly, when the user says no, when law 12 refuses a step, when the same step fails twice,
+    or when the rounds or the step budget run out. Writes a journal of every round to _work_dir() and returns
+    a short report. first is a plan already made for round one (tools.do() makes one to decide it is plan work)."""
+    import json as _json
+    import os
+    import time
+    if untrusted.is_untrusted(request):
+        return None
+    import tools
+    tool_names = set(tools.model_tools())
+    journal, history, failed_before, used, carry = {"goal": request, "rounds": []}, [], set(), 0, []
+    reply, outcome = None, "ran out of rounds"
+    for r in range(1, rounds + 1):
+        if r == 1:
+            steps = first or plan(request)
+        else:
+            facts = "\n".join(f"- {h['status']}: {h['tool']}({h['arg']})" + (f": {h['why']}" if h.get("why") else "")
+                              for h in history if h["status"] in ("ok", "failed"))
+            banned = "\n".join(f"- do not use again: {t}({a})" for t, a in sorted(failed_before))
+            raw = _query_model(f"{REPLAN}\nGoal: {request}\nSo far:\n{facts}\n{banned}", tool_names, REPLAN_MODEL)
+            if raw is None:
+                raw = _query_model(f"{REPLAN}\nGoal: {request}\nSo far:\n{facts}\n{banned}", tool_names)
+            done = {(h["tool"], h["arg"]) for h in history if h["status"] == "ok"}
+            steps = [st for st in (_validate(raw, tool_names) if raw is not None else [])
+                     if (st["tool"], st["arg"]) not in failed_before | done]  # a repeat is never progress
+            steps = steps or carry  # no new idea from the model: still do the rest of the job that never ran
+        if not steps:
+            outcome = "found no other way to do what is left" if r > 1 else "could not make a plan"
+            break
+        steps = steps[:max(0, max_steps - used)]
+        if not steps:
+            outcome = "used up the step budget"
+            break
+        if log and r > 1:
+            log(f"  [round {r}: planning around the failure]")
+        trace = []
+        reply = run(steps, request, log=log, confirm=confirm, trace=trace)
+        used += sum(1 for t in trace if t["status"] in ("ok", "failed"))
+        history += trace
+        journal["rounds"].append({"steps": [{k: v for k, v in s.items() if k != "_model"} for s in steps], "trace": trace})
+        stops = {t["status"] for t in trace} & {"declined", "refused"}
+        if stops:
+            outcome = "you said no" if "declined" in stops else "a step was not what you asked for"
+            break
+        fails = [t for t in trace if t["status"] == "failed"]
+        if not fails:
+            outcome = "done"
+            break
+        failed_before |= {(t["tool"], t["arg"]) for t in fails}
+        # The steps after the failure never ran. Those that do not lean on the failed step (no {stepN} pointing
+        # at it, no "if" on it) can still be done next round, as written: they came from the same plan.
+        stop_at = fails[0]["step"]
+        carry = [st for k, st in enumerate(steps, start=1) if k > stop_at and not st.get("if")
+                 and not any(int(m.group(1)) >= stop_at for m in _PLACEHOLDER.finditer(st["arg"]))]
+    journal.update(outcome=outcome, steps=used, reply=str(reply)[:500])
+    try:
+        path = os.path.join(_work_dir(), time.strftime("%Y%m%d-%H%M%S") + ".json")
+        with open(path, "w") as f:
+            _json.dump(journal, f, indent=1)
+    except OSError:
+        path = None
+    n = len(journal["rounds"])
+    if outcome == "done" and n == 1:
+        return reply  # a job that worked first time reads exactly as it always did
+    missed = sorted({f"{t}({a_})" for t, a_ in failed_before} - {f"{h['tool']}({h['arg']})" for h in history if h["status"] == "ok"})
+    if missed and outcome == "done":
+        outcome = "done"
+        reply = f"{str(reply).rstrip('.')}. I could not do: {', '.join(missed)}."
+    head = f"Done in {n} round{'s' if n != 1 else ''}, {used} steps." if outcome == "done" else \
+        f"I stopped after {n} round{'s' if n != 1 else ''} and {used} steps: {outcome}."
+    return f"{head} {reply}" if reply else head

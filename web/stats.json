@@ -1,5 +1,5 @@
 {
-  "version": "4.17.14",
+  "version": "4.18.0",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -56,8 +56,8 @@
         "documented": 4
       },
       "app/planner.py": {
-        "total": 10,
-        "documented": 10
+        "total": 13,
+        "documented": 13
       },
       "app/serve.py": {
         "total": 8,
@@ -380,8 +380,8 @@
         "documented": 32
       },
       "tests/test_planner.py": {
-        "total": 35,
-        "documented": 35
+        "total": 44,
+        "documented": 44
       },
       "tests/test_reader.py": {
         "total": 13,

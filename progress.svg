@@ -4,8 +4,8 @@
   text { font-family: -apple-system, Helvetica, Arial, sans-serif; fill: var(--ink); }
   line, polyline { stroke: var(--ink); fill: none; }
   .g { stroke-dasharray: 1 4; }
-</style><text x="50" y="11" font-size="10">Lines of real code</text><line x1="50" y1="26" x2="470" y2="26" class="g"/><text x="46" y="29" font-size="9" text-anchor="end">25479</text><line x1="50" y1="97" x2="470" y2="97" class="g"/><text x="46" y="100" font-size="9" text-anchor="end">12739</text>
+</style><text x="50" y="11" font-size="10">Lines of real code</text><line x1="50" y1="26" x2="470" y2="26" class="g"/><text x="46" y="29" font-size="9" text-anchor="end">28440</text><line x1="50" y1="96" x2="470" y2="96" class="g"/><text x="46" y="99" font-size="9" text-anchor="end">14220</text>
 <line x1="50" y1="26" x2="50" y2="166"/><line x1="50" y1="166" x2="470" y2="166"/>
-<polyline points="50,166 60,163 70,162 80,160 90,158 100,154 110,151 120,141 130,134 140,126 150,124 160,122 170,117 180,112 190,109 200,108 210,106 220,105 230,102 240,100 250,98 260,97 270,95 280,93 290,91 300,87 310,85 320,83 330,80 340,77 350,76 360,74 370,74 380,72 390,67 400,64 410,61 420,59 430,51 440,44 450,38 460,33 470,26" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
-<text x="50" y="182" font-size="10">Sep 13</text><text x="470" y="182" font-size="10" text-anchor="end">Sep 26</text>
-<text x="50" y="196" font-size="10" font-weight="600">25,479 lines &#183; 100% documented &#183; 418 commits since Sep 13 2026</text></svg>
+<polyline points="50,166 60,163 70,161 80,159 90,155 100,149 110,138 120,130 130,127 140,124 150,118 160,115 170,113 180,112 190,109 200,106 210,104 220,104 230,100 240,99 250,95 260,92 270,89 280,86 290,84 300,84 310,80 320,75 330,72 340,68 350,59 360,53 370,43 380,41 390,41 400,41 410,42 420,39 430,36 440,32 450,28 460,27 470,26" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="50" y="182" font-size="10">Sep 13</text><text x="470" y="182" font-size="10" text-anchor="end">Oct 1</text>
+<text x="50" y="196" font-size="10" font-weight="600">28,440 lines &#183; 100% documented &#183; 476 commits since Sep 13 2026</text></svg>

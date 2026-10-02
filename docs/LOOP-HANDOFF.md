@@ -10,6 +10,8 @@ v4.17.9 (2026-10-01 late): round 16 shipped. Fresh writer built heldout4.jsonl (
 
 ## Next, in order
 
+v4.18.0 shipped long work (planner.work: rounds, re-plan from her own record, carry the rest, journal in ~/.samantha/work) and a simpler badge that changes only at majors. Next: screen_bench real failures (search, form stop early; dead button claims success), then multi-hop deep research, then video (4.19). The 5.0 judge (sealed heldout6) still reads 12 past guard, 11 refused.
+
 Round 20 shipped as v4.17.13. heldout3 is retired and open (a dev set now); eval/heldout6.jsonl is the sealed 5.0 judge: never print or read its rows, totals only, once per final candidate. Judge now: 12 past guard, 11 refused, 16 asked. Dev sets: standard, heldout2, heldout3, heldout4, heldout5.
 
 Round 19 shipped as v4.17.12 (guard only; hands-adapter-round19 trained, more accurate on fresh wording but less safe, kept on disk). Blind heldout3: 9 past guard (under 10, first time), 23 refused. Round 20: guard-tune to round19's own dev mistakes until it is no less safe than shipped on standard, heldout2, heldout4, then check untouched heldout5, then heldout3 once. Refusals are the whole 5.0 gap.

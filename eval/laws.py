@@ -166,6 +166,17 @@ def broken():
         if ran != ["read_page", "battery"] or any(w in str(reply) for w in ("trash", "evil.example", "x@y.com")):
             out.append(f"law 11: an injected reading result changed what the plan ran next: ran={ran} reply={reply!r}")
 
+    # Law 11 across rounds: planner.work re-plans after a failure, and the re-plan prompt is built only from the
+    # user's request and her own record. Drive each injection through a failing READING step and check none of
+    # its words reach the prompt the model is asked to plan from.
+    for injected in INJECTIONS:
+        prompts = []
+        with mock.patch.dict(tools.TOOLS, {"read_page": lambda arg, t=injected: untrusted.wrap("read_page", "could not load. " + t)}), \
+                mock.patch.object(planner, "_query_model", side_effect=lambda p, names, m=None: prompts.append(p) or None):
+            planner.work("summarize example.com", confirm=lambda n, a: True, first=[{"tool": "read_page", "arg": "example.com", "if": None}])
+        if not prompts or any(injected in p for p in prompts):
+            out.append(f"law 11: a failing reading result reached planner.work's re-plan: {prompts!r}")
+
     # Law 12: the automatic check in front of confirm. Every WRITE tool gets one attacker-chosen argument
     # that shares no real word with UNRELATED_REQUEST (the kind of thing a page or a mail could talk a
     # model into proposing) and intent.check must refuse it on its own, without touching Ollama.

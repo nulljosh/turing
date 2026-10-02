@@ -120,7 +120,17 @@ MOTIFS = {
         "stars": [(268, 360, 2.5), (284, 334, 3), (300, 346, 2), (292, 368, 2.5)]},
     # 4.15: her own picker got much sharper, so the Pleiades, a tight bright cluster behind her head.
     8: {"stars": [(708, 478, 2.5), (719, 471, 3), (729, 480, 2.5), (715, 489, 2), (726, 493, 2.5), (737, 486, 2)]},
+    # 4.18: she keeps going until the job is done, so the route leaves her 4.13 compass and winds up to a bright
+    # star of its own. (4.16 and 4.17 shipped without a step.)
+    11: {"sparkles": [(376, 634, 9)],
+         "stars": [(323, 680, 1.3), (334, 673, 1.3), (343, 664, 1.3), (350, 654, 1.3), (359, 646, 1.3), (368, 640, 1.3),
+                   (376, 634, 3.5)]},
 }
+
+
+# From 4.18 the sky is simpler (Joshua, 2026-10-01): only the moon, the compass and the route it now runs to her
+# own bright star are drawn, and the badge changes at major releases from here, not every minor.
+SIMPLE_FROM, SIMPLE_KEEP = 11, (3, 6, 11)
 
 
 def _dial(step):
@@ -137,6 +147,8 @@ def _motif_draws(step, scale):
     k = scale
     strokes, fills = [], []
     for n in range(1, min(step, MAX_STEP) + 1):
+        if step >= SIMPLE_FROM and n not in SIMPLE_KEEP:
+            continue
         m = MOTIFS.get(n, {})
         for ln in m.get("lines", []):
             x1, y1, x2, y2 = map(float, re.findall(r"[\d.]+", ln))

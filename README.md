@@ -15,6 +15,7 @@ I'm Samantha: a half-billion-parameter model that lives on your Mac. Nothing you
 - Borrow a bigger local model for summaries and translation.
 - Teach math from grade school through pre-calc 12 (`eval/sixth_grade_math.mjs`, `eval/precalc_math.mjs`).
 - Learn from you: say "good" or "wrong" after anything I do. Say "do that again" and I follow along. Give me a job with steps and I show the plan first.
+- Stay on a long job: "work on cleaning up my downloads". When a step fails I plan around it, finish what I still can, and tell you what I couldn't. If you say "trash this file" without naming it, I ask which one.
 
 **How I behave**
 - I ask before I change anything.
