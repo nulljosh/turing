@@ -352,6 +352,7 @@ const ollamaReply = text => ({ model: "samantha", message: { role: "assistant", 
 // ElevenLabs does the voicing (the key is a Worker secret, never in the kernel); the same words come
 // back from cache for a day, so a repeated phrase never spends a second credit.
 const SPEAK_VOICE = "EXAVITQu4vr4xnSDxMaL"; // Sarah, same voice as app/voice.py
+const JOSHUA_VOICE = "nQH5GJCKrAA51EWJRaiD"; // Joshua's own clone (face skill, 2026-10-02): the portfolio face speaks as him, kernel/drivers/speak.c sends "voice":"joshua"
 // Eleven v4 only answers on Text to Dialogue (/v1/text-to-dialogue, inputs[]); v2.5 Flash is the old /v1/text-to-speech.
 // Flip SPEAK_V4 to false to roll back. Square-bracket tags like [whispering] pass through untouched.
 const SPEAK_V4 = true;
@@ -361,17 +362,17 @@ export function pcm16ToPcm8(buf) {
   for (let i = 0; i < out.length; i++) out[i] = (src.getInt16(i * 2, true) >> 8) + 128;
   return out;
 }
-async function speak(env, ctx, text, format) {
-  const pcm = format === "pcm8";
-  const key = new Request(`${HOME}/__speak/${SPEAK_MODEL}/${pcm ? "pcm8" : "mp3"}/${encodeURIComponent(text)}`);
+async function speak(env, ctx, text, format, who) {
+  const pcm = format === "pcm8", voice = who === "joshua" ? JOSHUA_VOICE : SPEAK_VOICE;
+  const key = new Request(`${HOME}/__speak/${SPEAK_MODEL}/${voice}/${pcm ? "pcm8" : "mp3"}/${encodeURIComponent(text)}`);
   const hit = await caches.default.match(key);
   if (hit) return hit;
   if (!env.ELEVENLABS_API_KEY) return new Response("No voice configured", { status: 503 });
   const out = `output_format=${pcm ? "pcm_16000" : "mp3_44100_128"}`;
-  const r = await fetch(SPEAK_V4 ? `https://api.elevenlabs.io/v1/text-to-dialogue?${out}` : `https://api.elevenlabs.io/v1/text-to-speech/${SPEAK_VOICE}?${out}`, {
+  const r = await fetch(SPEAK_V4 ? `https://api.elevenlabs.io/v1/text-to-dialogue?${out}` : `https://api.elevenlabs.io/v1/text-to-speech/${voice}?${out}`, {
     method: "POST",
     headers: { "xi-api-key": env.ELEVENLABS_API_KEY, "Content-Type": "application/json" },
-    body: JSON.stringify(SPEAK_V4 ? { inputs: [{ text, voice_id: SPEAK_VOICE }], model_id: SPEAK_MODEL } : { text, model_id: SPEAK_MODEL }),
+    body: JSON.stringify(SPEAK_V4 ? { inputs: [{ text, voice_id: voice }], model_id: SPEAK_MODEL } : { text, model_id: SPEAK_MODEL }),
   });
   if (!r.ok) return new Response("Voice unavailable", { status: 502 });
   const audio = pcm ? pcm16ToPcm8(await r.arrayBuffer()) : await r.arrayBuffer();
@@ -413,7 +414,7 @@ export default {
       if (env.SPEAK_LIMIT && !(await env.SPEAK_LIMIT.limit({ key: ip })).success) return new Response("Too much talking for one minute", { status: 429 });
       const text = String(body.text || "").replace(/[\u0000-\u001f]/g, " ").trim().slice(0, 300);
       if (!text) return new Response("Nothing to say", { status: 400 });
-      return speak(env, ctx, text, body.format);
+      return speak(env, ctx, text, body.format, body.voice);
     }
 
     if (isChat) {
