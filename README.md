@@ -52,3 +52,4 @@ Every push runs the full suite, and every version is a tagged GitHub release. Wi
 - [`docs/SOUL.md`](docs/SOUL.md) and [`docs/SAFETY.md`](docs/SAFETY.md): who she is, what she will and will not do
 - [`roadmap.md`](roadmap.md): the plan and the open gaps; [`docs/HISTORY.md`](docs/HISTORY.md): what the loop did
 - [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md): every file and what it owns
+- [`docs/agent-graph.svg`](docs/agent-graph.svg): how a request moves through her: route, check, your yes, run
