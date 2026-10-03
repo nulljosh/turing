@@ -141,7 +141,7 @@ Joshua Tree is his operating system: an i386 kernel written from scratch in C, w
 Plank is his programming language: one-file compiled programs, Result and ? error handling, generics, enums, tuples, regex, modules, packages from GitHub, a REPL and a formatter. It scripts Joshua Tree and Samantha.
 Samantha is the assistant inside Joshua Tree and on the Mac, from his Turing project: she answers questions, sets reminders, takes notes, opens apps and speaks.
 His apps: Epiphany (a finance dashboard with live markets), Curbfind (a Craigslist browser), Bookrank (book summaries), Lexly (language learning), Sparkjar (an idea forum), Quotestreak (a quote guessing game), Keyrate (a typing test), Toroid (Game of Life on a torus), Homeqi (feng shui home assessment), Fieldbook (every field of science explained plainly), Curvely (an equation grapher), Notate (on-device transcription), Healstack (health tracking), Siftbox (inbox triage), Windgate (guided breathing), Madobe (a WebKit browser), Plain (a text editor), Nimble (instant answers), Seamark (reads values off charts), Hamurabi (the 1968 kingdom game).
-Pricing: every app is free or one dollar. Web apps run on Cloudflare, native apps are on the App Store for iPhone and Mac.
+Pricing: every app is free or 99 cents. Web apps run on Cloudflare, native apps are on the App Store for iPhone and Mac.
 He writes in C, Swift, JavaScript and Python, and builds with Claude Code.`;
 const JOSHUA_INTRO = "Hey, I'm Joshua. I build apps, a language called Plank, and this operating system, Joshua Tree. Ask me about any of it.";
 const JOSHUA_TALK = [
@@ -150,7 +150,7 @@ const JOSHUA_TALK = [
   [/^(?:thanks|thank you|thx|cheers|ty)(?: so much| joshua| josh)?[!.?]*$/i, "Any time."],
   [/^(?:introduce yourself|tell me about yourself|who are you|what are you|what do you do|what can you do|help)[!.?]*$/i, JOSHUA_INTRO],
   [/^(?:show me around|give me (?:a|the) tour|show me (?:the|your) (?:apps|os|work)|what is this|what am i looking at)[!.?]*$/i,
-    "Sure. This is Joshua Tree, an operating system I wrote from scratch, booting live in your browser. The dock is my apps: Epiphany, Curbfind, Bookrank, Lexly, Sparkjar, Quotes, Keyrate, Toroid. Watch."],
+    "Hey, I'm Joshua. I live in Vancouver, and I build software, mostly on my own. This is Joshua Tree, an operating system I wrote from scratch in C. It's booting live in your browser, right now. The dock is my apps: Epiphany, Curbfind, Bookrank, Lexly, Sparkjar, Quotes, Keyrate and Toroid. Every one is free or ninety-nine cents. Nothing here is a video. It's all real, and running. Watch."],
 ];
 // The reader quotes JOSHUA_DOCS, which is about him in the third person, so its sentence
 // comes back as "Joshua Trommel is a developer". On his own site that line is his, so
@@ -376,8 +376,14 @@ export function pcm16ToPcm8(buf) {
   for (let i = 0; i < out.length; i++) out[i] = (src.getInt16(i * 2, true) >> 8) + 128;
   return out;
 }
+// Joshua's clone runs fast (about 170 words a minute); a beat after each sentence and comma
+// brings it to a natural pace (picked by ear, 2026-10-03). Speed settings barely moved it.
+export function paceJoshua(text) {
+  return text.replace(/([.!?])\s+(?=\S)/g, "$1.. ").replace(/,\s+/g, "... ");
+}
 async function speak(env, ctx, text, format, who) {
   const pcm = format === "pcm8", voice = who === "joshua" ? JOSHUA_VOICE : SPEAK_VOICE;
+  if (who === "joshua") text = paceJoshua(text);
   const key = new Request(`${HOME}/__speak/${SPEAK_MODEL}/${voice}/${pcm ? "pcm8" : "mp3"}/${encodeURIComponent(text)}`);
   const hit = await caches.default.match(key);
   if (hit) return hit;

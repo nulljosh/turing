@@ -1,5 +1,5 @@
 // /api/speak's kernel format: 16-bit signed PCM from ElevenLabs becomes 8-bit unsigned, silence at 128.
-import { pcm16ToPcm8, smallTalk } from "../worker.js";
+import { pcm16ToPcm8, smallTalk, paceJoshua } from "../worker.js";
 const b = new ArrayBuffer(8), v = new DataView(b);
 [0, 32767, -32768, 256].forEach((x, i) => v.setInt16(i * 2, x, true));
 const out = Array.from(pcm16ToPcm8(b));
@@ -54,3 +54,5 @@ for (const [a, want] of [
   ["I'm based in Vancouver, Canada, and writes in C, Swift.", "I'm based in Vancouver, Canada, and write in C, Swift."],
 ]) expect("asJoshua " + a, asJoshua(a), want);
 console.log("PASS: Joshua speaks as himself");
+expect("paceJoshua", paceJoshua("Sure. This is it, live. Watch."), "Sure... This is it... live... Watch.");
+console.log("PASS: Joshua's voice gets a beat after sentences and commas");
