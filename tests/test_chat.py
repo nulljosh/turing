@@ -249,6 +249,13 @@ def test_any_failure_in_the_answer_chain_keeps_the_chat_alive():
     assert "boom" in answer and topic is True and subject == "steve jobs"
 
 
+def test_build_prompt_reads_back_what_she_remembers():
+    """Verify build_prompt() lists remembered facts before the history, and leaves the section out when there are none."""
+    with_mem = build_prompt([], "ctx", "q", ["my dog is called Biscuit"])
+    assert "- my dog is called Biscuit" in with_mem and with_mem.index("Biscuit") < with_mem.index("Context:")
+    assert "remember" not in build_prompt([], "ctx", "q")
+
+
 if __name__ == "__main__":
     tests = [v for k, v in list(globals().items()) if k.startswith("test_")]
     for t in tests:

@@ -11,6 +11,8 @@ import os, re, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from ask import search, try_extract, faq_match, general_knowledge, is_project_question, is_question, current_officeholder, _WHO_PREFIX, _QUESTION_PREFIX, _keywords, project_vocabulary, clock, arithmetic, convert, local_answer, NETWORK_DOWN, OUT_OF_SCOPE, UNREACHABLE, LOOKUP_FAILED, MODEL, ADAPTER, SYSTEM
 
+from util_words import memory_context
+
 HISTORY_TURNS = 3  # how many prior exchanges to keep as short-term memory
 
 MODEL_DOWN = "My own model isn't answering on this machine right now, so I can't write that one. Questions I can look up and things I can do still work."
@@ -184,9 +186,13 @@ def generate(prompt, max_tokens=80, on_text=None):
     return text
 
 
-def build_prompt(history, context, question):
-    """Construct a model prompt including system message, conversation history, and context."""
+def build_prompt(history, context, question, memory=()):
+    """Construct a model prompt including system message, what she remembers about the user, conversation history, and context."""
     parts = [SYSTEM, ""]
+    if memory:
+        parts.append("Things the user told you to remember (use them only if they help the answer):")
+        parts.extend(f"- {m}" for m in memory)
+        parts.append("")
     if history:
         parts.append("Recent conversation:")
         for q, a in history[-HISTORY_TURNS:]:
@@ -258,7 +264,7 @@ def answer_turn(question, history, topic_active, last_subject=None, on_text=None
             answered_from_project = True
         else:
             context = "\n\n---\n\n".join(r["text"][:800] for r in results)
-            prompt = build_prompt(history, context, question)
+            prompt = build_prompt(history, context, question, memory_context(question))
             try:
                 answer = clean(generate(prompt, on_text=on_text), question) or MODEL_DOWN
             except (OSError, ImportError):

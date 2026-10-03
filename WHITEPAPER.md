@@ -1,12 +1,12 @@
 # Turing Technical Whitepaper
 
-**v4.18.0** | October 2026
+**v4.19.0** | October 2026
 
 Turing builds small language models on one Mac. Its first model, Samantha, is a 0.5B model trained on your own writing. She will never out-think a frontier model. She does not try to. She runs on your Mac, costs nothing per question, keeps everything on the machine, and gets real work done with 131 exact tools. When a question is too hard for her, she borrows a bigger brain that also lives on the Mac. You can type to her or talk to her. She can see your screen, click in your apps, and research a topic with sources. She asks before anything that changes something.
 
 ## The core idea
 
-A small model cannot hold facts without making them up. So Samantha does not try to remember. She looks things up and she uses tools.
+A small model cannot hold facts without making them up. So Samantha does not try to remember. She looks things up and she uses tools. The one thing she does hold on to is what you tell her to remember: a short list of facts in a file on your Mac, which she reads back into an answer when a fact shares a real word with your question (at most three, never anywhere public).
 
 Every request goes down the same ladder, and the first rung that holds wins:
 

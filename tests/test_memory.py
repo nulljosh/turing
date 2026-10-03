@@ -83,6 +83,24 @@ class MemoryTests(unittest.TestCase):
             self.assertNotIn(name, tools.model_tools())
         self.assertLessEqual({"remember", "forget"}, tools.WRITES)
 
+    def test_memory_reads_back_into_answers(self):
+        """A fact that shares a real word with the question is read back; "the" and "what" alone never match; nothing relevant gives nothing."""
+        u.remember("my dog is called Biscuit")
+        self.assertEqual(u.memory_context("what is my dog's name, biscuit?"), ["my dog is called Biscuit"])
+        self.assertEqual(u.memory_context("what is the capital of france"), [])
+        self.assertEqual(u.memory_context("   "), [])
+
+    def test_memory_reads_nothing_headless_without_a_file(self):
+        """Headless runs (tests, evals, CI) never pull in the real memory file: it is only read when SAMANTHA_MEMORY names one."""
+        u.remember("my dog is called Biscuit")
+        os.environ.pop("SAMANTHA_MEMORY")
+        self.assertEqual(u.memory_context("tell me about my dog biscuit"), [])
+
+    def test_memory_survives_a_broken_file(self):
+        """A corrupt memory file means no memory, never a crash in the middle of an answer."""
+        open(self.path, "w").write("{not json")
+        self.assertEqual(u.memory_context("my dog biscuit"), [])
+
 
 if __name__ == "__main__":
     unittest.main()

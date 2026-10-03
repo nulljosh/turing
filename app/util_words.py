@@ -62,6 +62,21 @@ def recall_lines(query):
     return [f for n, _, f in scored if n][:3]
 
 
+_COMMON = {"the", "and", "you", "are", "was", "what", "who", "when", "where", "why", "how", "does", "did", "can", "could", "would", "should",
+           "with", "for", "this", "that", "have", "has", "had", "not", "but", "his", "her", "its", "your", "our", "from", "about", "tell", "please"}
+
+
+def memory_context(question):
+    """The remembered facts that bear on a question, to read back into her answer: up to three that share a real word with it
+    (not "the" or "what"), best first. Nothing when she remembers nothing relevant. In headless mode (tests, evals, CI) it reads
+    nothing unless SAMANTHA_MEMORY names a file, so no run ever pulls in the real memory file by accident."""
+    if os.environ.get("SAMANTHA_HEADLESS") and not os.environ.get("SAMANTHA_MEMORY"):
+        return []
+    want = _words(question) - _COMMON
+    scored = sorted(((len(want & (_words(f) - _COMMON)), i, f) for i, f in enumerate(_facts())), key=lambda t: (-t[0], -t[1]))
+    return [f for n, _, f in scored if n][:3]
+
+
 def remember(text):
     """Remember a fact across sessions, in a file on this Mac. Asks first, and only when told to, never chosen by a model."""
     fact = " ".join(text.split())[:300]

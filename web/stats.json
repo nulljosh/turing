@@ -1,5 +1,5 @@
 {
-  "version": "4.18.2",
+  "version": "4.19.0",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -160,8 +160,8 @@
         "documented": 20
       },
       "app/util_words.py": {
-        "total": 9,
-        "documented": 9
+        "total": 10,
+        "documented": 10
       },
       "app/voice.py": {
         "total": 16,
@@ -288,8 +288,8 @@
         "documented": 24
       },
       "tests/test_chat.py": {
-        "total": 26,
-        "documented": 26
+        "total": 27,
+        "documented": 27
       },
       "tests/test_chat_pipe.py": {
         "total": 15,
@@ -364,8 +364,8 @@
         "documented": 12
       },
       "tests/test_memory.py": {
-        "total": 11,
-        "documented": 11
+        "total": 14,
+        "documented": 14
       },
       "tests/test_needs_me.py": {
         "total": 16,
