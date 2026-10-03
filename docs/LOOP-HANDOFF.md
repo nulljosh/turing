@@ -8,6 +8,11 @@ Joshua's call 2026-10-02: loop toward v10.0.0 if the budget allows, one major at
 
 v4.17.9 (2026-10-01 late): round 16 shipped. Fresh writer built heldout4.jsonl (455 rows, readable dev set mirroring heldout3); deictic "trash this file" / "crop this image" now asks "Which file?" / "Which image?" instead of refusing (tools_registry.needs_target). Standard test 22→10 wrong past guard, heldout2 20→6. Blind heldout3: 12 past guard, 26 refused, 7 ask-which. v5.0 gate is under 10 past guard, 0 refused on heldout3. Lesson from round 15: guard rules tuned on dev misses no longer move the blind set; training is needed, mainly argument shape (tab pairs for copy/move/translate/append_note). Fast loop: dump an adapter's raw picks once, rescore guard edits in seconds. Voice at Eleven v4 (1.49s→1.22s). 127 tools, knowledge 62/65, picker 395/484 unseen.
 
+
+## v5.0 reality check (2026-10-02, Joshua set the goal to v5)
+
+Round 22 (same recipe, fresh template data) was worse and less safe: 19 past the guard against 7 on standard. Nothing swapped. Two things stand between her and 5.0. (1) The picker: the sealed judge reads 12 wrong past the guard and 11 right picks refused, and the bar is under 10 and 0; a 0.5B model is at about 65 percent of phrasings right. (2) The architecture: `tools.act()` is still the exact regex router and it answers first, the model only sees what the router misses; 5.0 says nothing goes through the router. Removing it today would drop her well below what she does now. The notes say bigger bases crashed training on this Mac (Qwen3.5-0.8B twice), so a bigger head needs training off this machine, which is Joshua's call (cost). The free lever left is data from her own live misses, not templates.
+
 ## Next, in order
 
 v4.18.1: screen bench on the Mac 11/15 (dead button fixed; login, cookies, search, form: the 1.7B stops early, try qwen3:8b for screen jobs or a nudge when no tool call comes). Then multi-hop deep research, then video as 4.19.
