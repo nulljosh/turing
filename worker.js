@@ -432,7 +432,7 @@ export default {
     if (url.pathname === "/api/speak") {
       // every word costs real ElevenLabs credits: a tight per-visitor allowance and a hard length cap
       if (env.SPEAK_LIMIT && !(await env.SPEAK_LIMIT.limit({ key: ip })).success) return new Response("Too much talking for one minute", { status: 429 });
-      const text = String(body.text || "").replace(/[\u0000-\u001f]/g, " ").trim().slice(0, 300);
+      const text = String(body.text || "").replace(/[\u0000-\u001f]/g, " ").trim().slice(0, 600); // matches the kernel's SPEAK_TEXT_MAX; 300 cut the portfolio intro mid-sentence
       if (!text) return new Response("Nothing to say", { status: 400 });
       return speak(env, ctx, text, body.format, body.voice);
     }
