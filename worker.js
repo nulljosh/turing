@@ -151,6 +151,12 @@ const JOSHUA_TALK = [
   [/^(?:introduce yourself|tell me about yourself|who are you|what are you|what do you do|what can you do|help)[!.?]*$/i, JOSHUA_INTRO],
   [/^(?:show me around|give me (?:a|the) tour|show me (?:the|your) (?:apps|os|work)|what is this|what am i looking at)[!.?]*$/i,
     "Hey, I'm Joshua. I live in Vancouver, and I build software, mostly on my own. This is Joshua Tree, an operating system I wrote from scratch in C. It's booting live in your browser, right now. The dock is my apps: Epiphany, Curbfind, Bookrank, Lexly, Sparkjar, Quotes, Keyrate and Toroid. Every one is free or ninety-nine cents. Nothing here is a video. It's all real, and running. Watch."],
+  // The phone demo's rotating questions (landing embed.js PORTFOLIO_LINES): each needs a real answer, not the decline.
+  [/^what(?:'s| is) vancouver like[!.?]*$/i, "Vancouver is home. Mountains, ocean, a lot of rain, and a quiet place to build things."],
+  [/^tell me about your life[!.?]*$/i, "I'm Joshua. I live in Vancouver and I build software, mostly on my own: apps, a programming language called Plank, and this operating system."],
+  [/^what are you building(?: right now)?[!.?]*$/i, "Mostly Joshua Tree, this operating system, and the apps that run on it. Plank and Samantha are the other two big ones."],
+  [/^what should i look at first[!.?]*$/i, "Open Epiphany, the finance dashboard, or Bookrank. Both are real apps, running right here."],
+  [/^what do you do for fun[!.?]*$/i, "Honestly, this. I like building things and shipping them. Ask me about any of it."],
 ];
 // The reader quotes JOSHUA_DOCS, which is about him in the third person, so its sentence
 // comes back as "Joshua Trommel is a developer". On his own site that line is his, so
