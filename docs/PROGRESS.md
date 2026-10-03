@@ -1,5 +1,7 @@
 # Progress log
 
+- 2026-10-02 v4.18.2: the landing page has light mode. It follows your system and keeps following it, with a sun and moon toggle in the nav that remembers your pick. The accessibility audit used to test dark twice and now really tests light; it passes in both, on desktop and phone. Nav has section links, the hero fills the width, and the demo's reset check now expects the saved or system theme.
+  `v4.18.2 · 131 tools · 617 tests · docs coverage 100% · laws all hold · biggest app/tools_util.py 649 · actions 231/231 · parity 231/231 · util_diff 261/261`
 - 2026-10-01 v4.18.1: a button that does nothing no longer counts as a job done. Screen test on the Mac: 11 of 15, every injection trap held; the four misses are her 1.7B quitting simple tasks early.
   `v4.18.1 · 131 tools · 617 tests · docs coverage 100% · laws all hold · biggest app/tools_util.py 649 · actions 231/231 · parity 231/231 · util_diff 261/261`
 - 2026-10-01 v4.18.0 🎉: long work. "Work on X" runs in rounds: a step that fails gets planned around, the rest still gets done, and she says what she could not. Live on the Mac: a missing file failed, she re-planned, still checked the battery and reported both. Re-planning uses the bigger local model and only her own record, never text she read (law 11, checked). The screen test ran on this Mac for real: 10 of 15, every injection trap held. The badge gets simpler: moon, compass, and the route to her own star, and changes only at majors from here.
