@@ -1,0 +1,25 @@
+1	/Users/joshua/tmp_monocode/monocode
+1	/Users/joshua/UnrealEngine
+1	/Users/joshua/UnrealEngine/UnrealTrace
+2	/Users/joshua/_external
+2	/Users/joshua/.codex/packages
+2	/Users/joshua/.rbenv
+2	/Users/joshua/.rbenv/versions
+2	/Users/joshua/Library/Caches
+2	/Users/joshua/Library/Group Containers
+2	/Users/joshua/Library/Metadata
+2	/Users/joshua/Library/Mobile Documents
+3	/Users/joshua/.codex
+3	/Users/joshua/.local
+3	/Users/joshua/.local/share
+4	/Users/joshua/Library/Containers
+7	/Users/joshua/.claude/projects
+8	/Users/joshua/.claude
+8	/Users/joshua/.colima
+8	/Users/joshua/.colima/_lima
+9	/Users/joshua/Library/Developer
+12	/Users/joshua/Library/Application Support
+31	/Users/joshua/Documents/Code
+32	/Users/joshua/Documents
+34	/Users/joshua/Library
+92	/Users/joshua
