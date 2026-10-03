@@ -333,3 +333,7 @@ What heldout3 showed: most of its refusals were vague asks with no file named at
 ## Round twenty-one (2026-10-01): the open sets keep falling, the sealed judge does not move
 
 A newline where the tab belongs is read as the tab; "this code project" and "that file" point at something and never name it, so file, image, app and project tools ask which; chit-chat about taste and the weather stays chat; open_in_editor knows "IDE"; and a second duplicate key (calculate) was caught, so `tests/test_harness.py::GuardTables` now fails on any rule key written twice. Open sets: heldout3 5 past / 4 refused, heldout4 3 / 4, heldout5 3 / 3. Sealed heldout6: 12 / 11, unchanged, 23 asked. **Shipped** for the fixes and the test. The guard is near what rules can do; what moves the judge next is the model, or a better question from her.
+
+## Round twenty-two (2026-10-02): same recipe, fresh data, worse and less safe
+
+Retrained the picker with the shipped recipe on regenerated data (6 minutes). Standard: shipped 1307 right, 7 past the guard; candidate 1258 right, 19 past the guard. heldout2: 351 right but 5 past the guard and 2 refused (shipped 350, 3, 1). The candidate is less safe, so heldout3 and the sealed heldout6 were not read and nothing was swapped. Lesson: retraining the same recipe on the same template data does not move the 5.0 judge. The next lever has to be different data (her own live misses, not templates) or a bigger head, not another round of this.
