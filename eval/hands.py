@@ -7,7 +7,7 @@ and the right argument. A command sent to the wrong tool is the dangerous
 kind of wrong, so it is counted apart from a command that was declined.
 
 Run: ./.venv/bin/python eval/hands.py [--adapter hands-adapter] [--model ID] [--verbose] [--min N]
-     --model takes any MLX model. Without an adapter the tool list rides in the prompt.
+     --model takes any MLX model. Without an adapter the tool list rides in the prompt, unless --trained says the model already learned the short prompt (a merged model from training/kaggle_train.py).
      --test PATH scores a held-out jsonl of {"text", "tool", "arg_hint"} rows instead of the
      usual hands-data/actions/questions mix, as a single "heldout" group. Matching is loose
      (arg_hint just has to appear in what the model said), since these phrasings were written
@@ -86,7 +86,7 @@ def main():
     from mlx_lm import load, generate
     adapter, model_id = _flag("--adapter"), _flag("--model", BASE)
     model, tok = load(model_id, adapter_path=os.path.join(REPO, adapter) if adapter else None)
-    system = SYSTEM if adapter else untrained_system()
+    system = SYSTEM if (adapter or "--trained" in sys.argv) else untrained_system()  # --trained: a fully merged model that learned the short prompt
     constrain = "--constrain" in sys.argv
     tool_names = list(tools.TOOLS.keys()) if constrain else None
     verbose, score, wrong_tool, fired, blocked, asked, t0 = "--verbose" in sys.argv, {}, 0, 0, 0, 0, time.time()

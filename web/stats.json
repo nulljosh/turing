@@ -1,5 +1,5 @@
 {
-  "version": "4.19.0",
+  "version": "4.19.1",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -343,6 +343,10 @@
         "total": 40,
         "documented": 40
       },
+      "tests/test_kaggle_train.py": {
+        "total": 3,
+        "documented": 3
+      },
       "tests/test_launcher.py": {
         "total": 6,
         "documented": 6
@@ -458,6 +462,10 @@
       "training/harvest_voice.py": {
         "total": 3,
         "documented": 3
+      },
+      "training/kaggle_train.py": {
+        "total": 5,
+        "documented": 5
       },
       "training/parse_log.py": {
         "total": 1,
