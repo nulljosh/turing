@@ -1,12 +1,14 @@
-# Turing loop handoff (2026-10-01, late; v4.17.9, round 16 shipped)
+# Turing loop handoff (2026-10-02, loop stopped by Joshua)
+
+**Loop status: stopped as of 2026-10-02.** Restart prompt below for when to resume.
 
 ## What the loop is
 
-Joshua's call 2026-10-02: loop toward v10.0.0 if the budget allows, one major at a time in roadmap order (5.0 her own head, then 7.0, 6.0, 8.0, 9.0, 10.0). Hard stop and /checkpoint at 90% usage, never mid-round. Work the Turing roadmap toward v5.0.0 first: her own tool-calling head, better picker accuracy, and research beyond Wikipedia. One round at a time, measured against held-out sets. Watch usage and taper on overage; hard stop at 90% session usage. This checkpoint saves the resume point; it does not restart training or the loop.
+Work toward v5.0.0 (her own tool-calling head, better picker accuracy, research beyond Wikipedia). Loop target: until v5.0.0 on this Mac, then v10.0.0 in order (7.0, 6.0, 8.0, 9.0, 10.0). Hard stop and checkpoint at 90% usage. One round at a time, measured against held-out sets. v5.0 waiting on free GPU training (Joshua running Kaggle this weekend).
 
 ## Where things stand
 
-v4.17.9 (2026-10-01 late): round 16 shipped. Fresh writer built heldout4.jsonl (455 rows, readable dev set mirroring heldout3); deictic "trash this file" / "crop this image" now asks "Which file?" / "Which image?" instead of refusing (tools_registry.needs_target). Standard test 22→10 wrong past guard, heldout2 20→6. Blind heldout3: 12 past guard, 26 refused, 7 ask-which. v5.0 gate is under 10 past guard, 0 refused on heldout3. Lesson from round 15: guard rules tuned on dev misses no longer move the blind set; training is needed, mainly argument shape (tab pairs for copy/move/translate/append_note). Fast loop: dump an adapter's raw picks once, rescore guard edits in seconds. Voice at Eleven v4 (1.49s→1.22s). 127 tools, knowledge 62/65, picker 395/484 unseen.
+v4.19.1 shipped (2026-10-02): free GPU training package added (training/kaggle_train.py, docs/KAGGLE.md, hands-data/samantha-hands.zip). v5.0 gate unchanged: under 10 wrong past guard and 0 refused on sealed test heldout6. Currently 12 wrong and 11 refused. Template-data training rounds parked after round 22 proved less safe. Loop waits for real feedback: type "good" or "wrong" in chat, saved to ~/.samantha/feedback.jsonl. Retrain at 60+ rows via `python3 training/feedback_to_data.py`, then `training/picker_round.sh <next>`. Joshua runs Kaggle training this weekend; sealed test will move when that passes. 127 tools, knowledge 62/65, picker 395/484 unseen, voice Eleven v4.
 
 
 ## v5.0 reality check (2026-10-02, Joshua set the goal to v5)
@@ -36,12 +38,12 @@ Round 17 shipped as v4.17.10: eval/heldout5.jsonl is a second readable dev set. 
 
 ## Restart prompt
 
-Paste this in a new session:
+Loop paused. Paste this when ready to resume:
 
 ```
 /loop work the Turing roadmap until v5.0.0, one round at a time (read docs/LOOP-HANDOFF.md), then /checkpoint.
 
-Start here: round 16 shipped as v4.17.9. Read docs/LOOP-HANDOFF.md. Next round 17: read heldout4's 6 refusals and 7 wrong picks, fix them. Train argument shape (tab pairs for copy/move/translate/append_note) via pick-dump scoring: dump raw picks once with current adapter, rescore guard edits in seconds, never train on heldout3 rows. Score on standard (1959) and heldout2 (500) only. If no worse than round 16, read heldout3 once and report totals. If it clears 5.0 gate (under 10 wrong past guard, 0 refused on heldout3), ship it: mv hands-adapter hands-adapter-old && mv hands-adapter-round17 hands-adapter, then ./release.sh 5.0.0, major-release docs pass. If worse, BAKEOFF entry (totals only), keep shipped adapter, plan round 18.
+Start here: v4.19.1 shipped with free GPU training package (training/kaggle_train.py, docs/KAGGLE.md). v5.0 gate blocked on sealed test: 12 wrong past guard and 11 refused, need under 10 and 0. Joshua running Kaggle training this weekend. Until that completes, watch ~/.samantha/feedback.jsonl for real user feedback (chat "good" or "wrong") and retrain at 60+ rows via training/feedback_to_data.py and training/picker_round.sh. On Kaggle success, run eval/hands.py --trained to confirm the new model moves the sealed test score. If it clears 5.0 gate, ship it with major-release docs pass (WHITEPAPER, landing, README, badge). Template-data rounds are parked; no more until feedback data drives training.
 
-Deploys are automatic after green push. TLDR only when reporting.
+Deploys are automatic after green push. Hard stop at 90% session usage. TLDR only when reporting.
 ```
