@@ -2,7 +2,7 @@
 
 ## What the loop is
 
-Work the Turing roadmap toward v5.0.0: her own tool-calling head, better picker accuracy, and research beyond Wikipedia. One round at a time, measured against held-out sets. Watch usage and taper on overage; hard stop at 90% session usage. This checkpoint saves the resume point; it does not restart training or the loop.
+Joshua's call 2026-10-02: loop toward v10.0.0 if the budget allows, one major at a time in roadmap order (5.0 her own head, then 7.0, 6.0, 8.0, 9.0, 10.0). Hard stop and /checkpoint at 90% usage, never mid-round. Work the Turing roadmap toward v5.0.0 first: her own tool-calling head, better picker accuracy, and research beyond Wikipedia. One round at a time, measured against held-out sets. Watch usage and taper on overage; hard stop at 90% session usage. This checkpoint saves the resume point; it does not restart training or the loop.
 
 ## Where things stand
 
