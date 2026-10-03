@@ -47,6 +47,7 @@ Every push runs the full suite, and every version is a tagged GitHub release. Wi
 ## More
 
 - [`docs/ABILITIES.md`](docs/ABILITIES.md): every ability and the limits, plainly
+- [`docs/PERSONAS.md`](docs/PERSONAS.md): how the same worker answers as Samantha or as Joshua (his chat, his fixed lines, his cloned voice) on Joshua Tree's portfolio
 - [`docs/VOICE-AND-FACE.md`](docs/VOICE-AND-FACE.md): ElevenLabs voice and Higgsfield face setup; then ask her to change either ("change your voice to George")
 - [`WHITEPAPER.md`](WHITEPAPER.md): how she works, in one page
 - [`docs/SOUL.md`](docs/SOUL.md) and [`docs/SAFETY.md`](docs/SAFETY.md): who she is, what she will and will not do
