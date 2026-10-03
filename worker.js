@@ -451,7 +451,7 @@ export default {
       const q = String(last?.content || "").replace(/[\u0000-\u001f]/g, " ").trim().slice(0, 200);
       if (!q) return Response.json(ollamaReply(DECLINE), { status: 400 });
       const persona = body.persona === "joshua" ? "joshua" : "";
-      return cached(ctx, persona ? "chat-joshua" : "chat", q, async () => ollamaReply(await chatAnswer(env, q, persona)));
+      return cached(ctx, persona ? "chat-joshua2" : "chat", q, async () => ollamaReply(await chatAnswer(env, q, persona)));
     }
 
     const q = String(body.q || "").replace(/[\u0000-\u001f]/g, " ").trim().slice(0, 200);
