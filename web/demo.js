@@ -415,7 +415,7 @@
       go(node);
       return 'Scrolled to ' + label(node) + '.';
     },
-    theme: function (mode) { document.documentElement.setAttribute('data-theme', mode); return mode === 'dark' ? 'Lights off.' : 'Lights on.'; },
+    theme: function (mode) { window.setTheme(mode); return mode === 'dark' ? 'Lights off.' : 'Lights on.'; },
     text_size: function (dir) {
       zoom = Math.max(0.8, Math.min(1.5, zoom + (dir === 'bigger' ? 0.15 : -0.15)));
       wrap.style.zoom = zoom;
@@ -445,7 +445,7 @@
     },
     reset_page: function () {
       h1.textContent = original.h1; userTagline = false; clearTimeout(typing); clearTimeout(backTimer); tagline.textContent = original.tagline; h1.style.color = ''; zoom = 1; wrap.style.zoom = '';
-      document.documentElement.removeAttribute('data-theme');
+      window.setTheme((function () { try { return localStorage.getItem('turing-theme'); } catch (e) { return null; } })() || window.systemTheme());
       sections().forEach(function (x) { x.style.display = ''; });
       if (window.speechSynthesis) speechSynthesis.cancel();
       return 'Page is back to how Joshua left it.';
