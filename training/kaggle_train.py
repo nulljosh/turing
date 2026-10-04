@@ -64,7 +64,12 @@ def load_rows(path, tok):
 
 def main():
     """Train, merge and save. Heavy imports live here so the helpers above are testable without torch."""
+    import sys
     import torch
+    if not torch.cuda.is_available():
+        sys.exit("No GPU. On Kaggle: verify your phone in Settings, then Accelerator: GPU T4 x2.")
+    # Kaggle's image ships a torchao too old for its own peft, and peft refuses to load; hiding it makes peft skip it.
+    sys.modules.setdefault("torchao", None)
     from peft import LoraConfig, get_peft_model
     from transformers import AutoModelForCausalLM, AutoTokenizer, Trainer, TrainingArguments
 
