@@ -160,7 +160,7 @@ def _is_general_knowledge_question(q_lower):
 # ...and words that say the sentence is about a different tool. "say help in morse code" is morse_code, not say.
 # Round fifteen: "how do I say X in french" is translate; "I wanted to say thanks", "wondering out loud" are chat,
 # and the weather on another planet is trivia.
-_AGAINST = {"say": r"morse|clock say|how (?:do|would|can|should) (?:you|i) say|\bin (?:french|spanish|german|italian|portuguese"
+_AGAINST = {"say": r"\bset\b.*\bvoice\b|\bvoice\b.*\bset\b|morse|clock say|how (?:do|would|can|should) (?:you|i) say|\bin (?:french|spanish|german|italian|portuguese"
                    r"|dutch|japanese|chinese|mandarin|korean|russian|arabic|hindi)\b|(?:want|wanted|meant) to say"
                    r"|(?:wondering|thinking) out loud|do you think|\bthe \w+ voice\b|(?:change|switch|set) (?:your|the|her) voice|^what does .* say\b",
             "wifi_name": r"address|\bip\b",
@@ -177,7 +177,7 @@ _AGAINST = {"say": r"morse|clock say|how (?:do|would|can|should) (?:you|i) say|\
             # own outright ("pull up", "go to", "hop on", "visit", "browse to", "take me to", "head
             # to", "navigate to", "jump over to", "get me to", "bring me to", "log into") and a few
             # words that are never an app name (a uuid/guid, "prs", her own name, a folder).
-            "open_app": r"\bnew email\b|\bunread mail\b|\bmail from\b|\bemail from\b|\bin (?:the )?finder\b|\btab\b|\btests?\b|test suite"
+            "open_app": r"\bshortcut\b|\bnew email\b|\bunread mail\b|\bmail from\b|\bemail from\b|\bin (?:the )?finder\b|\btab\b|\btests?\b|test suite"
                         r"|\bpull up\b|\bhop on\b|\bgo to\b|\bvisit\b|\bbrowse to\b|\btake me to\b|\bhead to\b|\bnavigate to\b"
                         r"|\bjump over to\b|\bget me to\b|\bbring me to\b|\blog (?:me )?into\b|\bclick\b|\bprs?\b|pull request"
                         r"|\bguid\b|\buuid\b|\bfolder\b|\bsearch\b|open slot|openings?\b",
@@ -238,14 +238,14 @@ _AGAINST = {"say": r"morse|clock say|how (?:do|would|can|should) (?:you|i) say|\
             "read_page": r"\btab \d+\b|\b\d+(?:st|nd|rd|th) tab\b",
             "base64_decode": r"\b(?:to|2|into) base ?64\b",
             "running_apps": r"\bmcp\b|server",
-            "summarize": r"feedback|rating",
+            "summarize": r"feedback|rating|(?:needs|requires) (?:my )?attention",
             "calendar_today": r"\btomorrow\b|\btmrw?\b|\bgap\b|open slot|important|urgent",
             "current_tab": r"\bcontent|\btext\b|\bsay\b|on this page|\btab \d",
             "memory_usage": r"your memory",
             "ask_document": r"\.(?:mp4|mov|m4a|mp3|wav)\b",
             "move_file": r"\b(?:the |to )trash\b",
             "rotate_image": r"mirror|\bflip",
-            "new_reminder": r"^any reminders|what reminders|\breminders about\b",
+            "new_reminder": r"\bmark\b|^any reminders|what reminders|\breminders about\b",
             "research": r"you saved|saved as|\b(?:save|keep|store) (?:it|that|this|the research)\b",  # round twenty-three: research blocks save_research contexts
             "days_until": r"\b\d+ (?:days?|weeks?|months?|years?) (?:from|after|before|ago)\b",
             "battery": r"battery of",
