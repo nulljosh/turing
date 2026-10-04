@@ -486,6 +486,10 @@ def do(query, log=None, confirm=None):
     picked = pick(query)
     if picked and picked[0] == "ask":
         return picked[1]
+    if picked and picked[0] == "unsure":  # her 1.5B was not sure of the tool: run it only on a yes, and never without someone to ask
+        if not confirm or not confirm(picked[1], (picked[2],)):
+            return None if not confirm else "Okay, I will not."
+        picked, confirm = picked[1:], None  # already asked once; a WRITE is not asked twice
     if picked and picked[0] != "agent":
         if log:
             log(f"  [{picked[0]}({picked[1]})]")

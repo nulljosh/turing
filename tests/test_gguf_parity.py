@@ -40,7 +40,7 @@ def main():
     cases = json.load(open(FIXTURE))
     agree, total = 0, len(cases)
     for c in cases:
-        raw = _generate_hands("llama_cpp", model, None, c["cmd"])
+        raw = _generate_hands("llama_cpp", model, None, c["cmd"])[0]
         m = re.search(r"\{.*?\}", raw, re.S)
         got = json.loads(m.group(0)) if m else {}
         ok = got.get("tool") == c["tool"] and str(got.get("arg") or "").strip() == c["arg"]

@@ -16,6 +16,8 @@ HANDS_GGUF = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file
 HANDS_SYSTEM = 'You are Samantha\'s hands. Reply with one JSON tool call. If this is not a command, reply {"tool": null, "arg": ""}.'
 _hands = None
 _hands_backend = None  # "mlx" or "llama_cpp", set once _hands loads
+UNSURE = 0.6  # the 1.5B's lowest tool-name token probability under this asks first: on standard, heldout2 and heldout4 it turned 9 of 26 confident-looking wrong picks into questions for about 1 in 100 right ones (round 24)
+_unsure_at = 0.0  # only the 1.5B is calibrated; the 0.5B adapter and the GGUF never ask on confidence
 
 
 def _load_hands():
@@ -25,6 +27,8 @@ def _load_hands():
     try:
         from mlx_lm import load
         if os.path.isdir(HANDS_MODEL):
+            global _unsure_at
+            _unsure_at = UNSURE
             return "mlx", *load(HANDS_MODEL)
         if os.path.isdir(HANDS_ADAPTER):
             return "mlx", *load("mlx-community/Qwen2.5-0.5B-Instruct-4bit", adapter_path=HANDS_ADAPTER)
@@ -39,16 +43,37 @@ def _load_hands():
     return None
 
 
+def _tool_confidence(pieces):
+    """Lowest probability among the tokens that spell the tool name in {"tool": "name", ...}; 1.0 when there is none."""
+    text, low = "", 1.0
+    for piece, p in pieces:
+        start = len(text)
+        text += piece
+        i = text.find('"tool"')
+        if i < 0:
+            continue
+        q1 = text.find('"', text.find(":", i) + 1)
+        q2 = text.find('"', q1 + 1) if q1 >= 0 else -1
+        if q1 >= 0 and start + len(piece) > q1 + 1 and (q2 < 0 or start < q2):
+            low = min(low, p)
+        if q2 >= 0 and start >= q2:
+            break
+    return low
+
+
 def _generate_hands(backend, model, tok, query):
-    """Same system prompt, temperature 0, max_tokens 48, stop at <|im_end|> on both backends."""
+    """Same system prompt, temperature 0, max_tokens 48, stop at <|im_end|> on both backends.
+    Returns (text, confidence): MLX measures how sure the tool name was (_tool_confidence); llama.cpp reports 1.0."""
     if backend == "mlx":
-        from mlx_lm import generate
+        import math
+        from mlx_lm import stream_generate
         prompt = tok.apply_chat_template([{"role": "system", "content": HANDS_SYSTEM}, {"role": "user", "content": query}],
                                          add_generation_prompt=True, tokenize=False)
-        return generate(model, tok, prompt=prompt, max_tokens=48, verbose=False)
+        pieces = [(r.text, math.exp(float(r.logprobs[r.token]))) for r in stream_generate(model, tok, prompt=prompt, max_tokens=48)]
+        return "".join(p for p, _ in pieces), _tool_confidence(pieces)
     prompt = f"<|im_start|>system\n{HANDS_SYSTEM}<|im_end|>\n<|im_start|>user\n{query}<|im_end|>\n<|im_start|>assistant\n"
     out = model.create_completion(prompt=prompt, max_tokens=48, temperature=0.0, stop=["<|im_end|>"])
-    return out["choices"][0]["text"]
+    return out["choices"][0]["text"], 1.0
 
 
 def agent(task, max_steps=6, log=None, confirm=None):
@@ -117,7 +142,8 @@ def pick(query):
     gen_hands_data.py, scored by eval/hands.py. MLX on Apple Silicon, else
     llama-cpp-python over the GGUF export so Windows and Linux get the same
     picker (_load_hands). Returns (tool, arg), ("agent", ""), or None when it
-    is not a command, the pick is unsound, or neither backend is here. ("ask", question) when the
+    is not a command, the pick is unsound, or neither backend is here. ("unsure", tool, arg) when the 1.5B was not
+    sure of the tool name (UNSURE): the caller asks before running it. ("ask", question) when the
     sentence names the tool but only points at its target ("trash this file"). None
     always means: carry on as if she had not looked."""
     global _hands, _hands_backend
@@ -133,7 +159,7 @@ def pick(query):
         return None
     backend, model, tok = _hands
     try:
-        raw = _generate_hands(backend, model, tok, query)
+        raw, sure = _generate_hands(backend, model, tok, query)
         got = json.loads(re.search(r"\{.*?\}", raw, re.S).group(0))
         tool, arg = got.get("tool"), str(got.get("arg") or "").strip()
     except Exception:
@@ -144,7 +170,7 @@ def pick(query):
         return None
     arg = tools.repair(tool, arg, query)
     if tools._sound(tool, arg, query):
-        return tool, arg
+        return ("unsure", tool, arg) if sure < _unsure_at else (tool, arg)
     ask = tools_registry.needs_target(tool, arg, query)
     return ("ask", ask) if ask else None  # round sixteen: "crop this image" asks which image, never guesses
 
