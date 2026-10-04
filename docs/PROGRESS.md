@@ -1,5 +1,6 @@
 # Progress log
 
+- 2026-10-04: v4.20.0. She explains a codebase, teaches a topic with a quiz, emails a contact by name (asks first), and opens an app and does the job through the screen agent. Guard rounds 24 to 27 (fewer right answers refused). Her bigger 1.5B picker is built and loadable but stays off by default: not yet as safe as the 0.5B on the messy test sets. Everything above asks first where it writes.
 - 2026-10-03: Landing demo paint performance: batched styled() drawing across frames to keep main-thread tasks under 200ms. mosaic, dots, poster, glass, and sketch styles now draw in requestAnimationFrame batches instead of blocking the main thread.
 - 2026-10-02 v4.19.1: a free-GPU training package for the bigger picker. One script to paste into a Kaggle notebook, a guide for the Mac side, and a flag so a merged model can be scored. Untested on a real GPU until it is run; the Mac side of the loop is parked until real feedback rows exist.
   `v4.19.1 · 131 tools · 621 tests · docs coverage 100% · laws all hold · biggest app/tools_util.py 649 · actions 231/231 · parity 231/231 · util_diff 261/261`

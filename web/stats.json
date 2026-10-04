@@ -1,5 +1,5 @@
 {
-  "version": "4.19.6",
+  "version": "4.20.0",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -68,8 +68,8 @@
         "documented": 32
       },
       "app/tools_agent.py": {
-        "total": 5,
-        "documented": 5
+        "total": 6,
+        "documented": 6
       },
       "app/tools_apps.py": {
         "total": 14,
@@ -103,6 +103,10 @@
         "total": 18,
         "documented": 18
       },
+      "app/tools_learn.py": {
+        "total": 3,
+        "documented": 3
+      },
       "app/tools_llm.py": {
         "total": 6,
         "documented": 6
@@ -110,6 +114,10 @@
       "app/tools_logo.py": {
         "total": 29,
         "documented": 29
+      },
+      "app/tools_mail_send.py": {
+        "total": 2,
+        "documented": 2
       },
       "app/tools_organizer.py": {
         "total": 7,
@@ -128,8 +136,8 @@
         "documented": 6
       },
       "app/tools_screen_agent.py": {
-        "total": 8,
-        "documented": 8
+        "total": 9,
+        "documented": 9
       },
       "app/tools_see.py": {
         "total": 9,
@@ -236,8 +244,8 @@
         "documented": 1
       },
       "eval/hands.py": {
-        "total": 5,
-        "documented": 5
+        "total": 6,
+        "documented": 6
       },
       "eval/jt_chat.py": {
         "total": 4,
@@ -355,6 +363,10 @@
         "total": 2,
         "documented": 2
       },
+      "tests/test_learn.py": {
+        "total": 16,
+        "documented": 16
+      },
       "tests/test_library.py": {
         "total": 11,
         "documented": 11
@@ -362,6 +374,10 @@
       "tests/test_llm.py": {
         "total": 21,
         "documented": 21
+      },
+      "tests/test_mail_send.py": {
+        "total": 18,
+        "documented": 18
       },
       "tests/test_mcp.py": {
         "total": 12,
@@ -378,6 +394,10 @@
       "tests/test_nimble.py": {
         "total": 4,
         "documented": 4
+      },
+      "tests/test_open_app_and_task.py": {
+        "total": 20,
+        "documented": 20
       },
       "tests/test_organizer.py": {
         "total": 32,
@@ -423,6 +443,10 @@
         "total": 25,
         "documented": 25
       },
+      "tests/test_unsure.py": {
+        "total": 3,
+        "documented": 3
+      },
       "tests/test_untrusted.py": {
         "total": 25,
         "documented": 25
@@ -452,8 +476,8 @@
         "documented": 7
       },
       "training/gen_hands_data.py": {
-        "total": 5,
-        "documented": 5
+        "total": 6,
+        "documented": 6
       },
       "training/hands_pools.py": {
         "total": 1,
@@ -464,8 +488,8 @@
         "documented": 3
       },
       "training/kaggle_train.py": {
-        "total": 5,
-        "documented": 5
+        "total": 6,
+        "documented": 6
       },
       "training/parse_log.py": {
         "total": 1,
@@ -492,7 +516,7 @@
   "measured": {
     "tools": {
       "before": 0,
-      "after": 131
+      "after": 134
     },
     "actions_eval": "77/77",
     "knowledge_sweep": {

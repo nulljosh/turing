@@ -17,6 +17,8 @@ Every ability, in the words you say. Anything that writes, sends or looks at you
 
 ## Know
 
+- **Explain a codebase.** "Explain the nimble codebase", "walk me through turing": she reads that project's README, CLAUDE.md and folder list and explains it in plain words. Read only. (Mac and Linux/Windows with a local model.)
+- **Teach me.** "Teach me about tides": a short lesson from Wikipedia and her library, then two quiz questions. Read only.
 - **Answer.** Questions go down a ladder: exact routes, her own picker, the project FAQ and your notes, then Wikipedia and DuckDuckGo, then her offline library (the fieldbook plus ~10,000 Wikipedia leads). If nothing holds the answer she says so.
 - **Research.** "Research the history of the printing press": Wikipedia, her library and your notes, then a brief with a source after every sentence. Name a page in the question ("research the docs at example.com/api") and she reads it and cites it too, or tells you plainly when it's JS-only or blocked instead of pretending it never came up. "Tell me more about X" tries the sources she already has before going back out for fresh ones. "Save that" writes it to a file.
 - **Run code.** "Stats on sales.csv", "average of the price column in sales.csv", "chart sales.csv", "plot column price of sales.csv": the biggest local model writes a short Python script from your request and the file's header, and it only ever runs in a sandbox, a fresh temp folder holding a copy of that one file, no network, a time and memory cap. A chart comes back as a real PNG. Asks first.
@@ -33,6 +35,8 @@ Every ability, in the words you say. Anything that writes, sends or looks at you
 
 ## Do
 
+- **Email a contact.** "Email mom saying I'll be late": she finds mom in Contacts, shows you the address and the message, and sends only after you say yes. Asks which when a name matches no one or several people.
+- **Open an app and do the job.** "Open notes and make a shopping list with eggs and milk": she opens the app, then drives it step by step through the screen agent. Every click and keystroke asks first. Her small screen model still stops early on some jobs (search and forms), so check the result.
 - **Apps and sites.** Open an app, go to a site, search the web or one site, read a page, list, switch, read and close Chrome tabs.
 - **Her hands.** "Click Sign in", "type hello", "press return", "log me into X": she reads the screen, acts one step at a time, asks before each. Press Escape any time and the job stops before her next step.
 - **Files.** "Find resume.docx", "what did I just download", "how big is ~/Movies", "read the document ~/notes.pdf", "find milk in the document ~/notes.pdf", then "move", "copy", "rename", "zip", "unzip", "trash" any of them. Trash is Finder's Trash, never a hard delete.
