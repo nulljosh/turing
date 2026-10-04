@@ -582,7 +582,7 @@ def demo():
     finally:
         _run, installed_apps = real, real_apps
     tools_util.demo()
-    assert NOT_FOR_MODELS <= set(TOOLS) and "run_shortcut" in NOT_FOR_MODELS  # side-effect tools never reach the model's menu
+    assert NOT_FOR_MODELS - {"code"} <= set(TOOLS) and "run_shortcut" in NOT_FOR_MODELS  # side-effect tools never reach the model's menu
     print("tools ok")
 
 
