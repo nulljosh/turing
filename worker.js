@@ -372,7 +372,7 @@ const ollamaReply = text => ({ model: "samantha", message: { role: "assistant", 
 // ElevenLabs does the voicing (the key is a Worker secret, never in the kernel); the same words come
 // back from cache for a day, so a repeated phrase never spends a second credit.
 const SPEAK_VOICE = "EXAVITQu4vr4xnSDxMaL"; // Sarah, same voice as app/voice.py
-const JOSHUA_VOICE = "nQH5GJCKrAA51EWJRaiD"; // Joshua's own clone (face skill, 2026-10-02): the portfolio face speaks as him, kernel/drivers/speak.c sends "voice":"joshua"
+const JOSHUA_VOICE = "lR5K8BS32CIEL9tHRq6K"; // Joshua v3, his own instant clone from nine minutes of his memo (2026-10-03; v2 nQH5GJCKrAA51EWJRaiD was four samples, scored 0.886 vs 0.933 on held-out speech): the portfolio face speaks as him, kernel/drivers/speak.c sends "voice":"joshua"
 // Eleven v4 only answers on Text to Dialogue (/v1/text-to-dialogue, inputs[]); v2.5 Flash is the old /v1/text-to-speech.
 // Flip SPEAK_V4 to false to roll back. Square-bracket tags like [whispering] pass through untouched.
 const SPEAK_V4 = true;
