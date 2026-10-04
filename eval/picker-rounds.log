@@ -27,3 +27,5 @@
 2026-10-02 round22 hands-adapter eval/heldout2.jsonl: 350/500 passed, 117 picked the wrong tool, 3 of those get past the guard in tools.do(), 1 right picks refused by the guard, 1 asked which, 92s, hands-adapter
 2026-10-02 round22 hands-adapter-round22 eval/heldout2.jsonl: 351/500 passed, 92 picked the wrong tool, 5 of those get past the guard in tools.do(), 2 right picks refused by the guard, 0 asked which, 94s, hands-adapter-round22
 2026-10-03 GBNF grammar trial eval/gguf_fixture.json (20 cases): without constraint 18/20 (90%), with tool-name validity constraint 17/20 (85%), delta -1 (-5%). Grammar hurts performance. Hallucinations fixed: 2 (search_app, logout_app), but valid pick broken: 1. Do not wire in.
+2026-10-04 round23 hands-adapter-1.5B (new model, guard tuned) standard: 1705/1960 passed, 7 past guard, 8 refused; heldout2 421/500, 9 past, 14 refused
+2026-10-04 round23 hands-adapter (shipped 0.5B baseline) standard: 1307/1960 passed, 7 past guard, 0 refused (SAFE - unchanged)

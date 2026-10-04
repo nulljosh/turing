@@ -209,7 +209,7 @@ _AGAINST = {"say": r"morse|clock say|how (?:do|would|can|should) (?:you|i) say|\
             "disk_space": r"take up|\bfolder\b|\bram\b|memory|\bdir\b",
             # Round eleven: read_tab/switch_tab own "the X tab"; read_page owns a URL. read_document
             # is for a local file, never a browser tab or a web address.
-            "read_document": r"\btab\b|github\.com|\.com\b|\.org\b|\.io\b|clipboard|crunch|analy[sz]e|~|/|\.txt|\.md",  # round twenty-three: block file paths, read_file owns those
+            "read_document": r"\btab\b|github\.com|\.com\b|\.org\b|\.io\b|clipboard|crunch|analy[sz]e|\.(?:pdf|docx?|rtf|pages|epub)\b",  # round twenty-three: read_file owns PDFs and documents; plain text and markdown paths stay read_document's (taught picks)
             # Round eleven: weather has its own tool; "look up the weather" should never fall to a
             # generic web search.
             "web_search": r"\bweather\b|\.(?:com|org|net|io|ca)\b|\bmy notes\b|\bnotes for\b|pull requests?|\bprs\b|bluetooth|\bnotes? (?:mentioning|about|for|with)\b|\bon the books\b|\bbooks today\b|who is this (?:artist|band)\b|\bwhat does the .+ (?:tab|page) (?:say|show)\b|search (youtube|spotify|google maps|amazon|github|wikipedia|reddit)|my shortcuts|pull up|shortcuts list|\bgo to .+? and search\b",  # round twenty-three: web_search blocks open_url/youtube contexts
