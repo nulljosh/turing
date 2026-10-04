@@ -17,7 +17,7 @@ Round 22 (same recipe, fresh template data) was worse and less safe: 19 past the
 
 ## Next, in order
 
-1. **v4.20.1 shipped (2026-10-04): round-30 guard rules.** Kaggle v9 (1.5B, gentle DPO) now reads standard 1720/1960 L7 R0, heldout2 L8 R3, heldout4 L9 R17, heldout5 L3 R5. Leaks under 10 everywhere; refusals block the heldout6 read. Next: (a) cut refused right picks on heldout2 and heldout5 (never tune on heldout4 text), (b) fix the data conflict (train teaches "summarize this page" as read_page, test wants summarize) in training/gen_hands_data.py, upload the dataset with test.jsonl, rerun Kaggle. In zsh pass `--test file` as two words. `eval/hands.py --dump` then `--rescore` rescoring takes seconds.
+1. **v4.20.2 shipped (2026-10-04): rounds 30 and 31.** Guard rules plus a data fix (one phrase, one tool). Kaggle v9 reads standard 1720/1960 L7 R0, heldout2 L8 R2, heldout4 L9 R17, heldout5 L3 R4. Kaggle v10 trains on the fixed data (dataset now carries test.jsonl, kernel scores 200 rows itself). Next: score v10 on the dev sets with `--dump`, then keep cutting refusals on heldout2 and heldout5 (never tune on heldout4 text; heldout6 stays sealed until dev refusals are near 0). In zsh pass `--test file` as two words.
 2. Once Kaggle finishes, fetch the trained adapter (uvx kaggle kernels output, see docs/KAGGLE.md).
 3. Score on standard, heldout2, heldout4, heldout5 (never read heldout6 until final candidate).
 4. If DPO clears 5.0 gate (under 10 wrong, 0 refused on heldout6), ship v5.0.0 with major-release docs pass (WHITEPAPER, landing, README, badge, LOOP-HANDOFF for v6).

@@ -64,7 +64,7 @@ _EVIDENCE = {
     "search_notes": r"\bnotes?\b", "needs_attention": r"attention|needs me|focus on|deal with|need to handle|urgent",
     "folder_size": r"\bbig\b|\bsize\b|\bspace\b|take up",
     "research": r"research|deep dive|look into|dig into|investigate|brief on|info(?:rmation)? on|look up|read up|info(?:rmation)? about", "research_more": r"\bmore\b|deeper|expand|further|continue|again",
-    "summarize": r"summar|boil (?:it )?down|condense", "transcribe_video": r"transcribe|spoken|\bsays? in\b|said in|captions|subtitles",
+    "summarize": r"summar|boil (?:it )?down|condense", "transcribe_video": r"\bwrite (?:\w+ )?down\b|transcribe|spoken|\bsays? in\b|said in|captions|subtitles",
     "translate": r"translat|how (?:do|would|can|should) (?:you|i) say|\b(?:in|into|to) (?:french|spanish|german|italian|portuguese|dutch|japanese|chinese|mandarin|korean|russian|arabic|hindi)\b", "write_document": r"draft|write (?:a |an )?(?:doc|document|email|memo|file)|compose",
     # Round ten: resize_image and read_file had no evidence at all, so any wrong pick with its
     # argument copied verbatim (list_dir/read_file's own guard, or resize_image's default check,
@@ -479,7 +479,7 @@ def _sound(tool, arg, query):
         return bool(words) and all(re.search(rf"\b{w}\b", q_lower) for w in words)
     if tool in WRITES or tool in ("open_app", "open_url") or "\t" in arg:
         return False
-    words = re.findall(r"[a-z0-9]+", arg.lower())
+    words = [w for w in re.findall(r"[a-z0-9]+", arg.lower()) if not (tool == "convert_units" and w in ("to", "in"))]  # "98.6 f to celsius" from "98.6 f in celsius"
     return bool(words) and all(w in q_lower for w in words)
 
 

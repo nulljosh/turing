@@ -1,5 +1,7 @@
 # Progress log
 
+- 2026-10-04: v4.20.2 🎉 "Summarize this page" is now taught as one tool, not three. She converts "98.6 f in celsius" and transcribes a video when asked to "write it down" instead of refusing.
+  v4.20.2 · 135 tools · 681 tests · docs coverage 100% · laws all hold · biggest app/tools_util.py 649 · actions 231/231 · parity 231/231 · util_diff 261/261
 - 2026-10-04: v4.20.1 🎉 Tighter guard: "kill the sound" no longer quits an app, "tap Next" no longer skips a song, and five more wrong picks are stopped. The bigger 1.5B picker (Kaggle v9) now reads 1720 of 1960 with 7 past the guard and nothing refused on standard. The coder asks before it reads anything.
   v4.20.1 · 135 tools · 681 tests · docs coverage 100% · laws all hold · biggest app/tools_util.py 649 · actions 231/231 · parity 231/231 · util_diff 261/261
 - 2026-10-04: v4.20.0. She explains a codebase, teaches a topic with a quiz, emails a contact by name (asks first), and opens an app and does the job through the screen agent. Guard rounds 24 to 27 (fewer right answers refused). Her bigger 1.5B picker is built and loadable but stays off by default: not yet as safe as the 0.5B on the messy test sets. Everything above asks first where it writes.

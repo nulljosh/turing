@@ -180,7 +180,7 @@ SPEC = [
     ("shout", ["shout {}", "uppercase {}", "make {} uppercase"], ["yell {}"], WORDS, None),
     ("reveal_in_finder", ["show {} in finder", "reveal {} in finder", "open {} in finder", "pop open {} in finder"],
      ["open {} in the finder"], DIRS, None),
-    ("read_page", ["read this page", "what does this page say", "summarize this page", "read the current page"],
+    ("read_page", ["read this page", "what does this page say", "read the current page"],
      ["what's on this page"], NONE, ""),
     ("list_tabs", ["list my tabs", "what tabs do i have", "show my chrome tabs", "what tabs are open"],
      ["show me all my tabs"], NONE, ""),
@@ -361,9 +361,9 @@ SPEC = [
     # more than one step, or reading a page and saying what it says: that is agent() work
     ("agent", ["poke around {} and tell me what's up", "go to {} and summarize it", "open {} and tell me the top story",
                "read {} and tell me what's new", "check {} and tell me if anything is interesting",
-               "look at {} then give me the gist", "what's on {}", "summarize {}", "what's new on {}"],
+               "look at {} then give me the gist", "what's on {}", "what's new on {}"],
      ["skim {} for me and report back", "dig through {} and find something good", "tldr {}"], SITES, ""),
-    ("agent", ["read this page and summarize it", "summarize this page", "what does this page say",
+    ("agent", ["read this page and summarize it",  # "summarize this page" is summarize's and "what does this page say" is read_page's (the router agrees): one phrase, one tool
                "take a screenshot and then tell me my battery", "open notes and read my clipboard",
                "search for mlx lora and summarize what you find", "go to github then tell me what tab is open"],
      ["tldr this page", "open safari and then tell me what's playing", "give me the gist of this tab"], NONE, ""),
