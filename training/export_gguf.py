@@ -76,10 +76,20 @@ def main():
         json.dump(cfg, open(cfg_path, "w"), indent=2)
 
     os.makedirs(os.path.dirname(args.out), exist_ok=True)
-    print(f"3/3 converting to GGUF Q8_0 at {args.out}...")
+    # Straight to q8_0 from this llama.cpp's converter writes a file that speaks gibberish (checked 2026-10-03 on two
+    # runtimes); f16 is clean, and quantizing the f16 file with llama-quantize gives a good Q8_0. So: f16 first.
+    f16 = args.out + ".f16.tmp"
+    print(f"3/3 converting to GGUF f16, then quantizing to Q8_0 at {args.out}...")
     subprocess.run([sys.executable, convert_script, args.work_dir,
-                     "--outtype", "q8_0", "--outfile", args.out,
+                     "--outtype", "f16", "--outfile", f16,
                      "--model-name", "samantha-hands"], check=True)
+    quant = shutil.which("llama-quantize") or os.path.join(args.llama_cpp, "build", "bin", "llama-quantize")
+    if os.path.isfile(quant) or shutil.which(quant):
+        subprocess.run([quant, f16, args.out, "Q8_0"], check=True)
+        os.remove(f16)
+    else:
+        print("no llama-quantize found: keeping the f16 file (about twice the size, same answers)")
+        os.replace(f16, args.out)
 
     size_mb = os.path.getsize(args.out) / 1e6
     print(f"done: {args.out} ({size_mb:.0f} MB)")

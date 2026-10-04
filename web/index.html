@@ -491,7 +491,12 @@ python3 -m venv .venv &amp;&amp; ./.venv/bin/pip install mlx-lm
             <button type="button" class="pill pill-dark copy-install">Copy install command</button>
             <button type="button" class="pill pill-dark install-app" hidden>Install app</button>
           </div>
-          <p class="sub" style="margin-top:14px;font-size:14px"><b>Mac:</b> the app, everything she can do. <b>Windows, Linux and phones:</b> press Install app (Chrome or Edge) for the portable half of her, offline: math, time, conversions, text, memory. Or run her chat over Ollama (GGUF). The parts that drive your screen and apps stay on the Mac.</p>
+          <pre style="white-space:pre-wrap;font-size:13px;margin:14px 0 0;font-family:ui-monospace,Menlo,monospace"># Linux
+curl -fsSL https://raw.githubusercontent.com/nulljosh/turing/main/install/install.sh | sh
+
+# Windows (PowerShell)
+irm https://raw.githubusercontent.com/nulljosh/turing/main/install/install.ps1 | iex</pre>
+          <p class="sub" style="margin-top:14px;font-size:14px"><b>Mac:</b> the app, everything she can do. <b>Windows, Linux and phones:</b> press Install app (Chrome or Edge) for the portable half of her, offline: math, time, conversions, text, memory. Or run the one-line install above for her chat and tool picker. The parts that drive your screen and apps stay on the Mac.</p>
           <p class="meta" style="margin-top:14px">
             <span>Latest: <b id="version">-</b></span>
             <span><a id="release-link" href="https://github.com/nulljosh/turing/releases">Release notes</a></span>
@@ -768,7 +773,10 @@ window.addEventListener("appinstalled",function(){btns.forEach(function(b){b.hid
 btns.forEach(function(b){b.addEventListener("click",function(){if(ev){ev.prompt();ev=null;btns.forEach(function(x){x.hidden=true})}})})})();
 </script>
 <script>
-document.querySelectorAll(".copy-install").forEach(function(b){var t=b.textContent;b.addEventListener("click",function(){var c="git clone https://github.com/nulljosh/turing && cd turing && python3 -m venv .venv && ./.venv/bin/pip install mlx-lm && ./.venv/bin/python app/chat.py";
+document.querySelectorAll(".copy-install").forEach(function(b){var t=b.textContent;b.addEventListener("click",function(){var p=navigator.platform||"",c;
+if(/Win/i.test(p))c="irm https://raw.githubusercontent.com/nulljosh/turing/main/install/install.ps1 | iex";
+else if(/Linux|X11/i.test(p+navigator.userAgent)&&!/Mac/i.test(p))c="curl -fsSL https://raw.githubusercontent.com/nulljosh/turing/main/install/install.sh | sh";
+else c="git clone https://github.com/nulljosh/turing && cd turing && python3 -m venv .venv && ./.venv/bin/pip install mlx-lm && ./.venv/bin/python app/chat.py";
 function done(){b.textContent="Copied";setTimeout(function(){b.textContent=t},1800)}
 if(navigator.clipboard)navigator.clipboard.writeText(c).then(done,done);else done()})});
 </script>
