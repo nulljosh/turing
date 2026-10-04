@@ -1,5 +1,6 @@
 # Progress log
 
+- 2026-10-03: Landing demo paint performance: batched styled() drawing across frames to keep main-thread tasks under 200ms. mosaic, dots, poster, glass, and sketch styles now draw in requestAnimationFrame batches instead of blocking the main thread.
 - 2026-10-02 v4.19.1: a free-GPU training package for the bigger picker. One script to paste into a Kaggle notebook, a guide for the Mac side, and a flag so a merged model can be scored. Untested on a real GPU until it is run; the Mac side of the loop is parked until real feedback rows exist.
   `v4.19.1 · 131 tools · 621 tests · docs coverage 100% · laws all hold · biggest app/tools_util.py 649 · actions 231/231 · parity 231/231 · util_diff 261/261`
 - 2026-10-02 v4.19.0 🎉: she uses what she remembers. Tell her your dog is called Biscuit and a later question about your dog gets that fact in front of the model, up to three facts that share a real word with the question. Headless runs, tests and the public demo never read the file. Also tried round 22 of the picker: same recipe on fresh data came out less safe (19 past the guard against 7), so nothing swapped. Next toward 7.0: a morning brief.

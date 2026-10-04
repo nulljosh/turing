@@ -90,7 +90,6 @@ Ask her to draft something in our voice, or answer a question about one of our o
 - [ ] Picker trick: more "not a command" and "not sure" examples so she abstains instead of guessing
 - [ ] PaintBar (moved to nulljosh/paintbar): share its background setting with Samantha's own paint tool, add launch at login
 - [ ] Landing demo logo is too basic: real design pass, the SVG bloom rules look thin next to the real tool
-- [ ] Landing demo graphics are slow: profile paint.js and drawLogo, cap cells, batch with requestAnimationFrame
 - [ ] Two-step picking: pick a family first, then a tool inside it, so no single choice is bigger than about twelve
 - [ ] System family, the rest: brightness and turning bluetooth on or off (this Mac has no CLI for either and nothing gets installed; dark mode, running apps, quit an app, bluetooth status and Do Not Disturb via a Shortcut shipped in 4.8)
 - [ ] Browser family, the rest: download a file

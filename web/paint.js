@@ -61,6 +61,26 @@ function pop(hp) {
   return top;
 }
 
+// Draw cells in batches across multiple frames to avoid long tasks
+function drawBatch(drawFn, cells, batchSize, onComplete) {
+  if (!cells.length) { if (onComplete) onComplete(); return; }
+  let index = 0;
+  function nextBatch() {
+    const start = performance.now();
+    const end = Math.min(index + batchSize, cells.length);
+    for (let i = index; i < end; i++) drawFn(cells[i], i);
+    index = end;
+    document.getElementById('paint-n').textContent = index;
+    if (index < cells.length) {
+      // Schedule next batch on next frame
+      requestAnimationFrame(nextBatch);
+    } else if (onComplete) {
+      onComplete();
+    }
+  }
+  requestAnimationFrame(nextBatch);
+}
+
 // The styled painting: plan the cells at once (leaves only, like styles.cells), then draw them one style's way.
 function leaves(budget) {
   const heap = [cell(0, 0, w, h)], done = [];
@@ -79,25 +99,45 @@ function rich([r, g, b], sat, val) {  // more saturated, a touch brighter: light
   const m = (r + g + b) / 3;
   return 'rgb(' + [r, g, b].map(v => Math.max(0, Math.min(255, (m + (v - m) * sat) * val)) | 0).join(',') + ')';
 }
+
+function drawBatch(drawFn, cells, batchSize, onComplete) {
+  let index = 0;
+  function nextBatch() {
+    const end = Math.min(index + batchSize, cells.length);
+    for (let i = index; i < end; i++) drawFn(cells[i]);
+    index = end;
+    document.getElementById('paint-n').textContent = index;
+    if (index < cells.length) requestAnimationFrame(nextBatch);
+    else if (onComplete) onComplete();
+  }
+  nextBatch();
+}
+
 function styled(name) {
   const cs = leaves(STYLE_CELLS[name]), rnd = (s => () => (s = (s * 16807) % 2147483647) / 2147483647)(7);
   ctx.fillStyle = name === 'mosaic' ? '#1E1C1A' : name === 'glass' ? '#101010' : name === 'poster' ? '#000' : '#F4EFE4';
   ctx.fillRect(0, 0, w, h);
-  if (name === 'mosaic' || name === 'glass') for (const q of cs) {
-    const side = Math.min(q.x1 - q.x0, q.y1 - q.y0), gap = Math.max(1, Math.min(6, Math.round(side * (name === 'mosaic' ? 0.06 : 0.1))));
-    if (q.x1 - q.x0 <= 2 * gap || q.y1 - q.y0 <= 2 * gap) continue;
-    ctx.fillStyle = name === 'mosaic' ? q.fill : rich(rgbOf(q), 1.5, 1.1);
-    ctx.beginPath(); ctx.roundRect(q.x0 + gap, q.y0 + gap, q.x1 - q.x0 - 2 * gap, q.y1 - q.y0 - 2 * gap, name === 'mosaic' ? gap : 0); ctx.fill();
-  }
-  if (name === 'dots') for (const q of cs.sort((a, b) => (b.x1 - b.x0) * (b.y1 - b.y0) - (a.x1 - a.x0) * (a.y1 - a.y0))) {
-    const cw = q.x1 - q.x0, ch = q.y1 - q.y0, n = Math.max(1, Math.min(6, Math.round(Math.max(cw, ch) / Math.min(cw, ch)) + (Math.min(cw, ch) > 20 ? 2 : 0)));
-    ctx.fillStyle = rich(rgbOf(q), 1.25, 1.03);
-    for (let i = 0; i < n; i++) {
-      const r = Math.max(0.8, Math.sqrt(cw * ch / n) * (0.55 + rnd() * 0.2));
-      ctx.beginPath(); ctx.arc(q.x0 + (0.2 + rnd() * 0.6) * cw, q.y0 + (0.2 + rnd() * 0.6) * ch, r, 0, 7); ctx.fill();
-    }
-  }
-  if (name === 'poster') {
+
+  if (name === 'mosaic' || name === 'glass') {
+    const batchSize = 100;
+    drawBatch(q => {
+      const side = Math.min(q.x1 - q.x0, q.y1 - q.y0), gap = Math.max(1, Math.min(6, Math.round(side * (name === 'mosaic' ? 0.06 : 0.1))));
+      if (q.x1 - q.x0 <= 2 * gap || q.y1 - q.y0 <= 2 * gap) return;
+      ctx.fillStyle = name === 'mosaic' ? q.fill : rich(rgbOf(q), 1.5, 1.1);
+      ctx.beginPath(); ctx.roundRect(q.x0 + gap, q.y0 + gap, q.x1 - q.x0 - 2 * gap, q.y1 - q.y0 - 2 * gap, name === 'mosaic' ? gap : 0); ctx.fill();
+    }, cs, batchSize);
+  } else if (name === 'dots') {
+    const sorted = cs.sort((a, b) => (b.x1 - b.x0) * (b.y1 - b.y0) - (a.x1 - a.x0) * (a.y1 - a.y0));
+    const batchSize = 50;
+    drawBatch(q => {
+      const cw = q.x1 - q.x0, ch = q.y1 - q.y0, n = Math.max(1, Math.min(6, Math.round(Math.max(cw, ch) / Math.min(cw, ch)) + (Math.min(cw, ch) > 20 ? 2 : 0)));
+      ctx.fillStyle = rich(rgbOf(q), 1.25, 1.03);
+      for (let i = 0; i < n; i++) {
+        const r = Math.max(0.8, Math.sqrt(cw * ch / n) * (0.55 + rnd() * 0.2));
+        ctx.beginPath(); ctx.arc(q.x0 + (0.2 + rnd() * 0.6) * cw, q.y0 + (0.2 + rnd() * 0.6) * ch, r, 0, 7); ctx.fill();
+      }
+    }, sorted, batchSize);
+  } else if (name === 'poster') {
     // eight colors by area (a small k-means, same seed every time), then every cell takes its nearest
     let cen = Array.from({length: 8}, () => rgbOf(cs[(rnd() * cs.length) | 0]));
     const near = p => cen.reduce((bi, c, i) => (c[0] - p[0]) ** 2 + (c[1] - p[1]) ** 2 + (c[2] - p[2]) ** 2 < (cen[bi][0] - p[0]) ** 2 + (cen[bi][1] - p[1]) ** 2 + (cen[bi][2] - p[2]) ** 2 ? i : bi, 0);
@@ -106,9 +146,13 @@ function styled(name) {
       for (const q of cs) { const p = rgbOf(q), a = (q.x1 - q.x0) * (q.y1 - q.y0), s = sum[near(p)]; s[0] += p[0] * a; s[1] += p[1] * a; s[2] += p[2] * a; s[3] += a; }
       cen = cen.map((c, i) => sum[i][3] ? sum[i].slice(0, 3).map(v => v / sum[i][3]) : c);
     }
-    for (const q of cs) { const c = cen[near(rgbOf(q))]; ctx.fillStyle = 'rgb(' + c.map(v => v | 0).join(',') + ')'; ctx.fillRect(q.x0, q.y0, q.x1 - q.x0, q.y1 - q.y0); }
-  }
-  if (name === 'sketch') {
+    const batchSize = 200;
+    drawBatch(q => {
+      const c = cen[near(rgbOf(q))];
+      ctx.fillStyle = 'rgb(' + c.map(v => v | 0).join(',') + ')';
+      ctx.fillRect(q.x0, q.y0, q.x1 - q.x0, q.y1 - q.y0);
+    }, cs, batchSize);
+  } else if (name === 'sketch') {
     // pencil: equalized tones, one hatch layer per step darker, all on one lattice so strokes run on unbroken
     const lum = q => { const [r, g, b] = rgbOf(q); return (0.299 * r + 0.587 * g + 0.114 * b) / 255; };
     const byTone = cs.map(q => [lum(q), (q.x1 - q.x0) * (q.y1 - q.y0)]).sort((a, b) => a[0] - b[0]);
@@ -127,8 +171,11 @@ function styled(name) {
       }
     }
     ctx.stroke();
+    document.getElementById('paint-n').textContent = cs.length;
   }
-  document.getElementById('paint-n').textContent = cs.length;
+  if (name !== 'mosaic' && name !== 'glass' && name !== 'dots' && name !== 'poster' && name !== 'sketch') {
+    document.getElementById('paint-n').textContent = cs.length;
+  }
 }
 
 function paint() {
