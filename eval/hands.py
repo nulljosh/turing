@@ -7,11 +7,14 @@ and the right argument. A command sent to the wrong tool is the dangerous
 kind of wrong, so it is counted apart from a command that was declined.
 
 Run: ./.venv/bin/python eval/hands.py [--adapter hands-adapter] [--model ID] [--verbose] [--min N]
+     [--dump PATH] [--rescore PATH...]
      --model takes any MLX model. Without an adapter the tool list rides in the prompt, unless --trained says the model already learned the short prompt (a merged model from training/kaggle_train.py).
      --test PATH scores a held-out jsonl of {"text", "tool", "arg_hint"} rows instead of the
      usual hands-data/actions/questions mix, as a single "heldout" group. Matching is loose
      (arg_hint just has to appear in what the model said), since these phrasings were written
      by hand and were never fitted to any tool's exact argument format.
+     --dump PATH: append one JSONL line per case with: group, text, wanted tool, wanted arg, exact, picked tool, picked arg (before repair).
+     --rescore PATH...: skip model loading, read cached picks from PATH(s), and re-score against current guard rules.
 """
 import json
 import os
@@ -81,17 +84,82 @@ def test_file_cases(path):
 PREFILL = '{"tool": '
 
 
+def score_picks(picks, verbose=False):
+    """Score a list of picks (from model or cached) against guard rules.
+    Returns: score dict, wrong_tool count, fired count, blocked count, asked count.
+    A pick is (group, text, wanted_tool, wanted_arg, exact, picked_tool, picked_arg_before_repair).
+    """
+    score, wrong_tool, fired, blocked, asked = {}, 0, 0, 0, 0
+    for group, text, tool, arg, exact, picked_tool, picked_arg_raw in picks:
+        # Repair the argument (same as the model evaluation does)
+        picked_arg = tools.repair(picked_tool, picked_arg_raw, text) if picked_tool else ""
+        picked_arg_cmp = str(picked_arg or "").lower().strip()
+        if tool == "timer" and picked_tool == "timer":
+            picked_arg_cmp, arg = str(tools.duration(picked_arg_cmp)), str(tools.duration(arg))
+        ok = picked_tool == tool and (picked_arg_cmp == (arg or "").lower() if exact else (arg or "").lower() in picked_arg_cmp)
+        n = score.setdefault(group, [0, 0])
+        n[0] += ok
+        n[1] += 1
+        # The other half of the guard's job: a RIGHT pick it refuses is a command she cannot do.
+        if ok and tool and tool != "agent" and not tools._sound(picked_tool, picked_arg_raw, text):
+            if tools.needs_target(picked_tool, picked_arg_raw, text):
+                asked += 1
+                continue
+            blocked += 1
+            if verbose:
+                print(f"  BLOCKED [{group}] {text[:80]!r}: right pick {tool}({picked_arg!r}) refused by the guard")
+        if not ok:
+            wrong_tool += bool(picked_tool) and picked_tool != tool
+            # what tools.do() would really run: a wrong pick that is also unsound never fires
+            fired += bool(picked_tool) and picked_tool not in (tool, "agent") and tools._sound(picked_tool, picked_arg_raw, text)
+            if verbose and picked_tool != tool:
+                print(f"  PAST [{group}] {text[:80]!r}: picked {picked_tool}({picked_arg_raw!r}), want {tool}({arg!r})")
+    return score, wrong_tool, fired, blocked, asked
+
+
 def main():
     """Evaluate the model's tool-picking accuracy against test cases."""
+    # Check if we're rescoring cached picks instead of running the model
+    rescore_paths = []
+    for i, arg in enumerate(sys.argv[1:]):
+        if arg == "--rescore":
+            rescore_paths = sys.argv[i + 2:]
+            break
+
+    if rescore_paths:
+        # Rescore mode: read cached picks and re-score
+        all_picks = []
+        for path in rescore_paths:
+            with open(path) as f:
+                for line in f:
+                    row = json.loads(line)
+                    all_picks.append((row["group"], row["text"], row["wanted_tool"], row["wanted_arg"],
+                                      row["exact"], row["picked_tool"], row["picked_arg_raw"]))
+        verbose = "--verbose" in sys.argv
+        score, wrong_tool, fired, blocked, asked = score_picks(all_picks, verbose=verbose)
+        total = sum(n[0] for n in score.values())
+        for group, (p, n) in score.items():
+            print(f"{group}: {p}/{n}")
+        print(f"{total}/{sum(n[1] for n in score.values())} passed, {wrong_tool} picked the wrong tool, {fired} of those get past the guard in tools.do(), {blocked} right picks refused by the guard, {asked} asked which")
+        return
+
+    # Normal mode: run the model
     from mlx_lm import load, generate
     adapter, model_id = _flag("--adapter"), _flag("--model", BASE)
     model, tok = load(model_id, adapter_path=os.path.join(REPO, adapter) if adapter else None)
     system = SYSTEM if (adapter or "--trained" in sys.argv) else untrained_system()  # --trained: a fully merged model that learned the short prompt
     constrain = "--constrain" in sys.argv
     tool_names = list(tools.TOOLS.keys()) if constrain else None
-    verbose, score, wrong_tool, fired, blocked, asked, t0 = "--verbose" in sys.argv, {}, 0, 0, 0, 0, time.time()
+    verbose = "--verbose" in sys.argv
+    dump_path = _flag("--dump")
+    dump_file = open(dump_path, "a") if dump_path else None
+
     test_path = _flag("--test")
     case_list = test_file_cases(os.path.join(REPO, test_path)) if test_path else cases()
+
+    # Collect all picks first so we can dump them
+    picks = []
+    t0 = time.time()
     for group, text, tool, arg, exact in case_list:
         prompt = tok.apply_chat_template([{"role": "system", "content": system}, {"role": "user", "content": text}],
                                          add_generation_prompt=True, tokenize=False, enable_thinking=False)
@@ -107,30 +175,21 @@ def main():
             got = json.loads(found.group(0)) if found else {}
         except ValueError:
             got = {}
-        if got.get("tool"):  # the argument pick() really runs on (tools.repair), so the score is what she does
-            got["arg"] = tools.repair(got["tool"], str(got.get("arg") or "").strip(), text)
-        got_arg = str(got.get("arg") or "").lower().strip()
-        if tool == "timer" and got.get("tool") == "timer":
-            got_arg, arg = str(tools.duration(got_arg)), str(tools.duration(arg))
-        ok = got.get("tool", "?") == tool and (got_arg == (arg or "").lower() if exact else (arg or "").lower() in got_arg)
-        n = score.setdefault(group, [0, 0])
-        n[0] += ok
-        n[1] += 1
-        # The other half of the guard's job: a RIGHT pick it refuses is a command she cannot do.
-        if ok and tool and tool != "agent" and not tools._sound(tool, str(got.get("arg") or "").strip(), text):
-            # Round sixteen: "crop this image" with a guessed target asks which image (tools.do), not a refusal.
-            if tools.needs_target(tool, str(got.get("arg") or "").strip(), text):
-                asked += 1
-                continue
-            blocked += 1
-            if verbose:
-                print(f"  BLOCKED [{group}] {text!r}: right pick {tool}({got.get('arg')!r}) refused by the guard")
-        if not ok:
-            wrong_tool += bool(got.get("tool")) and got.get("tool") != tool
-            # what tools.do() would really run: a wrong pick that is also unsound never fires
-            fired += bool(got.get("tool")) and got.get("tool") not in (tool, "agent") and tools._sound(got["tool"], str(got.get("arg") or "").strip(), text)
-            if verbose:
-                print(f"  MISS [{group}] {text!r}: want {tool}({arg!r}) got {raw.strip()[:70]!r}")
+        picked_tool = got.get("tool")
+        picked_arg_raw = str(got.get("arg") or "").strip()
+        picks.append((group, text, tool, arg, exact, picked_tool, picked_arg_raw))
+
+        if dump_file:
+            dump_file.write(json.dumps({"group": group, "text": text, "wanted_tool": tool, "wanted_arg": arg,
+                                        "exact": exact, "picked_tool": picked_tool, "picked_arg_raw": picked_arg_raw}) + "\n")
+            dump_file.flush()
+
+    if dump_file:
+        dump_file.close()
+
+    # Now score all picks
+    score, wrong_tool, fired, blocked, asked = score_picks(picks, verbose=verbose)
+
     total = sum(n[0] for n in score.values())
     for group, (p, n) in score.items():
         print(f"{group}: {p}/{n}")

@@ -209,10 +209,10 @@ _AGAINST = {"say": r"morse|clock say|how (?:do|would|can|should) (?:you|i) say|\
             "disk_space": r"take up|\bfolder\b|\bram\b|memory|\bdir\b",
             # Round eleven: read_tab/switch_tab own "the X tab"; read_page owns a URL. read_document
             # is for a local file, never a browser tab or a web address.
-            "read_document": r"\btab\b|github\.com|\.com\b|\.org\b|\.io\b|clipboard|crunch|analy[sz]e",
+            "read_document": r"\btab\b|github\.com|\.com\b|\.org\b|\.io\b|clipboard|crunch|analy[sz]e|~|/|\.txt|\.md",  # round twenty-three: block file paths, read_file owns those
             # Round eleven: weather has its own tool; "look up the weather" should never fall to a
             # generic web search.
-            "web_search": r"\bweather\b|\.(?:com|org|net|io|ca)\b|\bmy notes\b|\bnotes for\b|pull requests?|\bprs\b|bluetooth|\bnotes? (?:mentioning|about|for|with)\b",  # round fifteen: merged, a second key had silently replaced the first
+            "web_search": r"\bweather\b|\.(?:com|org|net|io|ca)\b|\bmy notes\b|\bnotes for\b|pull requests?|\bprs\b|bluetooth|\bnotes? (?:mentioning|about|for|with)\b|\bon the books\b|\bbooks today\b|who is this (?:artist|band)\b|\bwhat does the .+ (?:tab|page) (?:say|show)\b|search (youtube|spotify|google maps|amazon|github|wikipedia|reddit)|my shortcuts|pull up|shortcuts list|\bgo to .+? and search\b",  # round twenty-three: web_search blocks open_url/youtube contexts
             # Round eleven: "translate 5 km to miles" is a unit conversion someone phrased with the
             # word "translate", not a language-translation command; convert_units still fires the
             # right tool for the plain "5 km to miles" shape, this only blocks the misleading verb.
@@ -234,7 +234,7 @@ _AGAINST = {"say": r"morse|clock say|how (?:do|would|can|should) (?:you|i) say|\
             "base64_encode": r"un-?base ?64|decode|what'?s this|\bdecode",
             "cpu_load": r"\bram\b|memory",
             "roll_dice": r"\bint(?:eger)?\b|random number",
-            "read_file": r"\.(?:pdf|docx?|rtf|pages|epub)\b|\bfinder\b",
+            "read_file": r"\.(?:pdf|docx?|rtf|pages|epub)\b|\bfinder\b|\bopen and read\b|answer (?:a )?question",  # round twenty-three: block read_document phrases
             "read_page": r"\btab \d+\b|\b\d+(?:st|nd|rd|th) tab\b",
             "base64_decode": r"\b(?:to|2|into) base ?64\b",
             "running_apps": r"\bmcp\b|server",
@@ -246,7 +246,7 @@ _AGAINST = {"say": r"morse|clock say|how (?:do|would|can|should) (?:you|i) say|\
             "move_file": r"\b(?:the |to )trash\b",
             "rotate_image": r"mirror|\bflip",
             "new_reminder": r"^any reminders|what reminders|\breminders about\b",
-            "research": r"you saved|saved as",
+            "research": r"you saved|saved as|\bsave\b|\bkeep\b|\bstore\b",  # round twenty-three: research blocks save_research contexts
             "days_until": r"\b\d+ (?:days?|weeks?|months?|years?) (?:from|after|before|ago)\b",
             "battery": r"battery of",
             # Each of these names a different tool's own domain: wifi/ip/load are their own tools, not system_info;
@@ -255,7 +255,7 @@ _AGAINST = {"say": r"morse|clock say|how (?:do|would|can|should) (?:you|i) say|\
             "system_info": r"wi-?fi|\bip\b|address|loaded|\bcpu\b|\bram\b|memory|battery|disk|free space|power|charging",
             "free_when": r"free space|\bdisk\b|storage",
             "set_volume": r"\bvoice\b",
-            "music": r"disturb",
+            "music": r"disturb|\bproject\b|blocked|paused",  # round twenty-three: block project context confusion
             "open_url": r"\blog (?:me )?in(?:to)?\b|\bclick\b|\bcontent\b|\btext from\b|track down|\bskim\b|\btldr\b|report back|what'?s on|^search for\b|\bfolder\b",
             "timer": r"how many|\bin (?:seconds|minutes|hours)\b"}
 
