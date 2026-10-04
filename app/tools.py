@@ -457,6 +457,14 @@ def do(query, log=None, confirm=None):
     ask_back = missing(query)
     if ask_back:
         return ask_back
+    # "open app and handle task": open the app, then drive it with the screen agent
+    open_and_goal = tools_routes._OPEN_APP_AND_GOAL.match(tools_routes._bare(query))
+    if open_and_goal and confirm is not None:  # never without confirmation available
+        app_name, task = open_and_goal.group(1), open_and_goal.group(2)
+        # only if the app actually exists
+        if _app_match(app_name):
+            from tools_screen_agent import open_app_and_task
+            return open_app_and_task(app_name, task, log=log, confirm=confirm)
     # before the single routes, whose free-text arguments ("open (.+)") would swallow "and set the volume to 20"
     steps = chain(query, log=log, confirm=confirm)
     if steps:

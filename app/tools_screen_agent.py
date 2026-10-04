@@ -195,3 +195,28 @@ def _run_job(task, max_steps, log, confirm, halted, own):
             content = untrusted.fence(result) if name in untrusted.READING else str(result)
             messages.append({"role": "tool", "tool_name": name, "content": content})
     return "I ran out of steps before finishing that. Here is where things stand: " + (messages[-1].get("content") or "")
+
+
+def open_app_and_task(app_name, task, log=None, confirm=None):
+    """Open an app by name, then drive it with screen_task to complete a goal.
+
+    Returns the screen_task result if the app opens, or an error if the app does not exist.
+    The confirm function is required: screen_task only runs with user confirmation at each step."""
+    import tools
+    from tools_routes import _bare
+
+    # Extract the bare app name in case there's trailing text
+    bare_app = _bare(app_name.strip())
+
+    # Try to open the app
+    result = tools.open_app(bare_app)
+    if result.startswith("No app"):
+        return result
+
+    if log:
+        log(f"  [open_app({bare_app})]")
+
+    # Now drive the screen agent with the task. The task must be user-requested,
+    # passed through intent.check to ensure no injection. We route through screen_task
+    # which will ask for confirmation at every step.
+    return screen_task(task, log=log, confirm=confirm)

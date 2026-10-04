@@ -132,6 +132,10 @@ _EYES = re.compile(r"^(?:look at|describe|see|check out|what(?:'s| is) in) (?:(?
 # step at a time, every step confirmed. Ahead of _MULTISTEP so "log me into X and check my email" does not go to the
 # tool-picking agent(), which has no screen tools at all (they are NOT_FOR_MODELS on purpose).
 _SCREEN_JOB = re.compile(r"^(?:log (?:me )?(?:in|into)|sign (?:me )?(?:in|into)|walk me through|step me through)\b", re.I)
+# "open app X and handle Y": open the app, then drive it with the screen agent. Ahead of the greedy "open" route
+# so "open notes and make a shopping list" reaches the screen agent, not web_search. Requires the app to exist
+# and the goal to be something the screen agent can handle, checked by _open_app_and_goal in do().
+_OPEN_APP_AND_GOAL = re.compile(r"^(?:open|launch|start) (?:up )?(.+?) (?:and|then) (.+)$", re.I)
 _ACTION = re.compile(r"^(?:open|launch|start|go to|visit|browse|pull up|search|google|look up|poke around|take a|grab a|screenshot|make|design|draw|paint|repaint|play|pause|skip|remind me|set a)\b", re.I)
 # People do not type commands, they ask. "can you open chrome", "hey open
 # github", "open up spotify for me please". Stripped once here so every route
