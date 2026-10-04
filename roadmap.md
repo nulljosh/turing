@@ -88,6 +88,10 @@ Ask her to draft something in our voice, or answer a question about one of our o
 - [ ] Picker trick: train on her mistakes. Write new templates for the kinds of wording she misses, never copy test cases into training
 - [ ] Picker trick: teacher and student. Have the local 8B write varied phrasings per tool with labels, train on those alongside the templates
 - [ ] Picker trick: more "not a command" and "not sure" examples so she abstains instead of guessing
+- [ ] Picker trick: preference pairs. Every "wrong, I meant X" in ~/.samantha/feedback.jsonl is a bad pick and a good one; train on the pair with DPO (TRL) once there are 60+ rows, not just the good half
+- [ ] Outside benchmark: score her on the Berkeley Function Calling Leaderboard next to other small models, so her numbers are not only our own test sets
+- [ ] Tool-name grammar: run the portable picker in llama.cpp with a GBNF grammar that only allows real tool names (the round-six logits trie collapsed accuracy; this is a different path, measure before shipping)
+- [ ] Hugging Face page: publish the GGUF and the adapter with a model card (what she does, the measured numbers, the limits); needs Joshua's HF token
 - [ ] PaintBar (moved to nulljosh/paintbar): share its background setting with Samantha's own paint tool, add launch at login
 - [ ] Landing demo logo is too basic: real design pass, the SVG bloom rules look thin next to the real tool
 - [ ] Two-step picking: pick a family first, then a tool inside it, so no single choice is bigger than about twelve
