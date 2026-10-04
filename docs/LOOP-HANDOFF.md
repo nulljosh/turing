@@ -17,7 +17,7 @@ Round 22 (same recipe, fresh template data) was worse and less safe: 19 past the
 
 ## Next, in order
 
-1. **Kaggle version 8 DPO training in flight:** 720 labeled commands from teacher training, 41 mistakes converted to DPO preference pairs, now training the DPO stage. Results pending.
+1. **Kaggle v8 DPO scored and failed (2026-10-04):** standard 151/1960 vs 1705 for the SFT-only 1.5B, it learned to abstain. Not shipped, see BAKEOFF round twenty-eight. Trainer now saves the SFT-only model too and runs DPO at 1 epoch, lr 5e-6. Next: more preference pairs from live misses, rerun on Kaggle, or score the SFT-only 1.5B on dev sets for the router-off design.
 2. Once Kaggle finishes, fetch the trained adapter (uvx kaggle kernels output, see docs/KAGGLE.md).
 3. Score on standard, heldout2, heldout4, heldout5 (never read heldout6 until final candidate).
 4. If DPO clears 5.0 gate (under 10 wrong, 0 refused on heldout6), ship v5.0.0 with major-release docs pass (WHITEPAPER, landing, README, badge, LOOP-HANDOFF for v6).

@@ -337,3 +337,7 @@ A newline where the tab belongs is read as the tab; "this code project" and "tha
 ## Round twenty-two (2026-10-02): same recipe, fresh data, worse and less safe
 
 Retrained the picker with the shipped recipe on regenerated data (6 minutes). Standard: shipped 1307 right, 7 past the guard; candidate 1258 right, 19 past the guard. heldout2: 351 right but 5 past the guard and 2 refused (shipped 350, 3, 1). The candidate is less safe, so heldout3 and the sealed heldout6 were not read and nothing was swapped. Lesson: retraining the same recipe on the same template data does not move the 5.0 judge. The next lever has to be different data (her own live misses, not templates) or a bigger head, not another round of this.
+
+## Round twenty-eight (2026-10-04): DPO on the 1.5B collapsed to abstaining
+
+Kaggle version 8 trained the 1.5B SFT, then a DPO stage on the 41 teacher mistakes (2 epochs, lr 5e-5, beta 0.1). The pairs looked learned (prefers chosen on 38 of 41) but standard scored 151/1960 against 1705 for the SFT-only 1.5B: 0 wrong, 0 past the guard, 0 refused, and almost nothing picked. Too much pull, too few pairs: it learned to say nothing. Not shipped, other sets not read. Next: the trainer now saves the SFT-only model beside the DPO one, and DPO runs 1 epoch at lr 5e-6. 41 pairs is thin, so more pairs from live misses before another run.

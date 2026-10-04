@@ -92,6 +92,9 @@ def main():
     Trainer(model=model, args=args, train_dataset=train, eval_dataset=valid, data_collator=lambda rows: {k: torch.tensor(v) for k, v in pad_batch(rows, tok.pad_token_id).items()}).train()
     merged = model.merge_and_unload()
     pairs_path = os.path.join(DATA, "pairs.jsonl")
+    if os.path.exists(pairs_path):
+        merged.save_pretrained(OUT + "-sft")  # the SFT-only model, kept so a bad DPO stage costs nothing
+        tok.save_pretrained(OUT + "-sft")
     if os.path.exists(pairs_path):  # round twenty-eight: teacher preference pairs, "this call, not that one"
         merged = dpo_stage(merged, tok, [json.loads(line) for line in open(pairs_path)], torch, get_peft_model, LoraConfig)
     merged.save_pretrained(OUT)
@@ -99,7 +102,7 @@ def main():
     print("saved", OUT, "- zip it and download")
 
 
-def dpo_stage(model, tok, pairs, torch, get_peft_model, LoraConfig, epochs=2, lr=5e-5):
+def dpo_stage(model, tok, pairs, torch, get_peft_model, LoraConfig, epochs=1, lr=5e-6):
     """DPO on {"messages": [system, user], "chosen": call, "rejected": call} pairs with a fresh LoRA on the SFT model.
     The SFT model itself is the reference: its log-probs come from the same weights with the adapter switched off."""
     model = get_peft_model(model, LoraConfig(r=16, lora_alpha=32, lora_dropout=0.0, target_modules="all-linear", task_type="CAUSAL_LM"))
