@@ -1,0 +1,721 @@
+{"text": "Hey open mail thanks", "tool": "open_app", "arg": "mail"}
+{"text": "Ok now open mail", "tool": "open_app", "arg": "mail"}
+{"text": "open mail pls thanks", "tool": "open_app", "arg": "mail"}
+{"text": "Could you hey can u launch safari pls", "tool": "open_app", "arg": "safari"}
+{"text": "Real quick, hey can u launch safari pls", "tool": "open_app", "arg": "safari"}
+{"text": "samantha, hey can u launch safari pls", "tool": "open_app", "arg": "safari"}
+{"text": "Pls boot up vscode rn pls", "tool": "open_app", "arg": "vscode"}
+{"text": "If u could boot up vscode rn k", "tool": "open_app", "arg": "vscode"}
+{"text": "Pls boot up vscode rn thanks", "tool": "open_app", "arg": "vscode"}
+{"text": "Yo start slack thanks", "tool": "open_app", "arg": "slack"}
+{"text": "Pls start slack ty", "tool": "open_app", "arg": "slack"}
+{"text": "Real quick, start slack lol thx", "tool": "open_app", "arg": "slack"}
+{"text": "Could you start slack k", "tool": "open_app", "arg": "slack"}
+{"text": "Could you fire up calculator thanks", "tool": "open_app", "arg": "calculator"}
+{"text": "Real quick, fire up calculator thx", "tool": "open_app", "arg": "calculator"}
+{"text": "Fire up calculator thanks", "tool": "open_app", "arg": "calculator"}
+{"text": "Can you get spotify open thanks", "tool": "open_app", "arg": "spotify"}
+{"text": "yo get spotify open", "tool": "open_app", "arg": "spotify"}
+{"text": "Could you get spotify open pls pls", "tool": "open_app", "arg": "spotify"}
+{"text": "Pls head to github pls!", "tool": "open_url", "arg": "github"}
+{"text": "Um so like head to github pls?", "tool": "open_url", "arg": "github"}
+{"text": "Hey samantha, head to github rn", "tool": "open_url", "arg": "github"}
+{"text": "yo pull up google.com pls", "tool": "open_url", "arg": "google.com"}
+{"text": "Ok now pull up google.com", "tool": "open_url", "arg": "google.com"}
+{"text": "right, pull up google.com thx", "tool": "open_url", "arg": "google.com"}
+{"text": "Pull up google.com lol thanks", "tool": "open_url", "arg": "google.com"}
+{"text": "Real quick, take me to youtube ty", "tool": "open_url", "arg": "youtube"}
+{"text": "can you take me to youtube", "tool": "open_url", "arg": "youtube"}
+{"text": "Ok now visit hacker news pls", "tool": "open_url", "arg": "hacker news"}
+{"text": "Can you visit hacker news pls", "tool": "open_url", "arg": "hacker news"}
+{"text": "right, search for python tutorials rn", "tool": "web_search", "arg": "python tutorials"}
+{"text": "Ok now search for python tutorials", "tool": "web_search", "arg": "python tutorials"}
+{"text": "if u could search 4 python tutorials pls thanks", "tool": "web_search", "arg": "python tutorials"}
+{"text": "Ok search for python tutorials", "tool": "web_search", "arg": "python tutorials"}
+{"text": "hey samantha, google how to bake bread k", "tool": "web_search", "arg": "how to bake bread"}
+{"text": "could you google how to bake bread ty", "tool": "web_search", "arg": "how to bake bread"}
+{"text": "Samantha, google how to bake bread k", "tool": "web_search", "arg": "how to bake bread"}
+{"text": "real quick, look up best productivity apps", "tool": "web_search", "arg": "best productivity apps"}
+{"text": "um so like look up best productivity apps lol asap", "tool": "web_search", "arg": "best productivity apps"}
+{"text": "look up best productivity apps when u can", "tool": "web_search", "arg": "best productivity apps"}
+{"text": "Right, find info on machine learning thanks", "tool": "web_search", "arg": "machine learning"}
+{"text": "Ok now find info on machine learning", "tool": "web_search", "arg": "machine learning"}
+{"text": "Ok find info on machine learning when u can", "tool": "web_search", "arg": "machine learning"}
+{"text": "Search the web for climate change pls", "tool": "web_search", "arg": "climate change"}
+{"text": "I need search the web for climate change rn", "tool": "web_search", "arg": "climate change"}
+{"text": "Ok search the web for climate change k!", "tool": "web_search", "arg": "climate change"}
+{"text": "so take a screenshot k", "tool": "screenshot", "arg": ""}
+{"text": "could you take a screenshot ty", "tool": "screenshot", "arg": ""}
+{"text": "please grab the screen pls thx", "tool": "screenshot", "arg": ""}
+{"text": "I need grab the screen pls k", "tool": "screenshot", "arg": ""}
+{"text": "i need grab the screen pls when u can", "tool": "screenshot", "arg": ""}
+{"text": "Ok screencap this thanks", "tool": "screenshot", "arg": ""}
+{"text": "Real quick, screencap this thx", "tool": "screenshot", "arg": ""}
+{"text": "Screencap this pls", "tool": "screenshot", "arg": ""}
+{"text": "Yo capture my screen pls", "tool": "screenshot", "arg": ""}
+{"text": "Hey capture my screen pls asap", "tool": "screenshot", "arg": ""}
+{"text": "Hey samantha, capture my screen thx", "tool": "screenshot", "arg": ""}
+{"text": "what's on my clipboard ok ty", "tool": "clipboard", "arg": ""}
+{"text": "Real quick, show clipboard contents", "tool": "clipboard", "arg": ""}
+{"text": "Pls show clipboard contents pls", "tool": "clipboard", "arg": ""}
+{"text": "If u could show clipboard contents when u can", "tool": "clipboard", "arg": ""}
+{"text": "read what i just copied", "tool": "clipboard", "arg": ""}
+{"text": "Samantha, read what i just copied ty", "tool": "clipboard", "arg": ""}
+{"text": "could you tell me what i copied thanks", "tool": "clipboard", "arg": ""}
+{"text": "Could you tell me what i copied when u can", "tool": "clipboard", "arg": ""}
+{"text": "I need how's my battery thanks", "tool": "battery", "arg": ""}
+{"text": "If u could check my charge level thx", "tool": "battery", "arg": ""}
+{"text": "Pls check my charge level thanks", "tool": "battery", "arg": ""}
+{"text": "Real quick, check my charge level rn", "tool": "battery", "arg": ""}
+{"text": "Am i plugged in", "tool": "battery", "arg": ""}
+{"text": "am i plugged in thanks", "tool": "battery", "arg": ""}
+{"text": "Hey what's my battery percentage", "tool": "battery", "arg": ""}
+{"text": "Could you turn it up to 50 pls", "tool": "set_volume", "arg": "50"}
+{"text": "ok now turn it up to 50", "tool": "set_volume", "arg": "50"}
+{"text": "Yo turn it up to 50 k", "tool": "set_volume", "arg": "50"}
+{"text": "Would you make it louder rn", "tool": "set_volume", "arg": "up"}
+{"text": "Ok now make it louder ty", "tool": "set_volume", "arg": "up"}
+{"text": "Real quick, make it louder k.", "tool": "set_volume", "arg": "up"}
+{"text": "Hey samantha, volume down pls", "tool": "set_volume", "arg": "down"}
+{"text": "Yo volume down pls?", "tool": "set_volume", "arg": "down"}
+{"text": "I need mute the sound", "tool": "set_volume", "arg": "0"}
+{"text": "Real quick, mute the sound thx", "tool": "set_volume", "arg": "0"}
+{"text": "Hey samantha, mute the sound thanks", "tool": "set_volume", "arg": "0"}
+{"text": "Pls set volume to 75 ty", "tool": "set_volume", "arg": "75"}
+{"text": "Real quick, set volume to 75 ok asap", "tool": "set_volume", "arg": "75"}
+{"text": "Right, set volume to 75", "tool": "set_volume", "arg": "75"}
+{"text": "Please what's the weather pls", "tool": "weather", "arg": ""}
+{"text": "Is it raining thx", "tool": "weather", "arg": ""}
+{"text": "Pls is it raining when u can", "tool": "weather", "arg": ""}
+{"text": "is it raining thanks", "tool": "weather", "arg": ""}
+{"text": "would you weather in seattle", "tool": "weather", "arg": "seattle"}
+{"text": "Could you weather in seattle rn?", "tool": "weather", "arg": "seattle"}
+{"text": "Would you weather in seattle ok thx.", "tool": "weather", "arg": "seattle"}
+{"text": "Hey set a timer for 10 minutes rn", "tool": "timer", "arg": "10 minutes"}
+{"text": "Set a timer for 10 minutes lol when u can", "tool": "timer", "arg": "10 minutes"}
+{"text": "Hey set a timer for 10 minutes k", "tool": "timer", "arg": "10 minutes"}
+{"text": "please set a timer for 10 minutes when u can", "tool": "timer", "arg": "10 minutes"}
+{"text": "If u could timer 5 mins pls asap", "tool": "timer", "arg": "5 mins"}
+{"text": "Yo timer 5 mins pls k!", "tool": "timer", "arg": "5 mins"}
+{"text": "Please countdown 30 seconds when u can", "tool": "timer", "arg": "30 seconds"}
+{"text": "Countdown 30 seconds thanks", "tool": "timer", "arg": "30 seconds"}
+{"text": "Countdown 30 seconds thx", "tool": "timer", "arg": "30 seconds"}
+{"text": "Ok now countdown 30 seconds pls asap?", "tool": "timer", "arg": "30 seconds"}
+{"text": "I need give me a 2 hour timer asap", "tool": "timer", "arg": "2 hour"}
+{"text": "Give me a 2 hour timer", "tool": "timer", "arg": "2 hour"}
+{"text": "If u could note buy groceries pls", "tool": "new_note", "arg": "buy groceries"}
+{"text": "Note buy groceries k", "tool": "new_note", "arg": "buy groceries"}
+{"text": "Note buy groceries rn", "tool": "new_note", "arg": "buy groceries"}
+{"text": "I need jot down call the dentist asap", "tool": "new_note", "arg": "call the dentist"}
+{"text": "Hey samantha, jot down call the dentist when u can", "tool": "new_note", "arg": "call the dentist"}
+{"text": "could you jot down call the dentist rn", "tool": "new_note", "arg": "call the dentist"}
+{"text": "Um so like make a note meeting at 3pm rn", "tool": "new_note", "arg": "meeting at 3pm"}
+{"text": "Make a note meeting at 3pm thx", "tool": "new_note", "arg": "meeting at 3pm"}
+{"text": "Um so like make a note meeting at 3pm lol", "tool": "new_note", "arg": "meeting at 3pm"}
+{"text": "Pls make a note meeting at 3pm pls", "tool": "new_note", "arg": "meeting at 3pm"}
+{"text": "Real quick, note to self finish the report", "tool": "new_note", "arg": "finish the report"}
+{"text": "Could you note to self finish the report k", "tool": "new_note", "arg": "finish the report"}
+{"text": "Pls remind me to call bob asap?", "tool": "new_reminder", "arg": "call bob"}
+{"text": "Right, remind me to call bob", "tool": "new_reminder", "arg": "call bob"}
+{"text": "I need set a reminder to pick up milk thx", "tool": "new_reminder", "arg": "pick up milk"}
+{"text": "right, set a reminder to pick up milk thanks", "tool": "new_reminder", "arg": "pick up milk"}
+{"text": "Set a reminder to pick up milk lol ty", "tool": "new_reminder", "arg": "pick up milk"}
+{"text": "Don't let me forget 2 email sarah when u can", "tool": "new_reminder", "arg": "email sarah"}
+{"text": "Ok now create a reminder pay bills asap", "tool": "new_reminder", "arg": "pay bills"}
+{"text": "Create a reminder pay bills ok asap.", "tool": "new_reminder", "arg": "pay bills"}
+{"text": "Samantha, create a reminder pay bills", "tool": "new_reminder", "arg": "pay bills"}
+{"text": "Please create a reminder pay bills lol k?", "tool": "new_reminder", "arg": "pay bills"}
+{"text": "Would you create a reminder pay bills when u can", "tool": "new_reminder", "arg": "pay bills"}
+{"text": "What's on my calendar ty", "tool": "calendar_today", "arg": ""}
+{"text": "Hey any meetings today pls", "tool": "calendar_today", "arg": ""}
+{"text": "Pls what's my schedule ty", "tool": "calendar_today", "arg": ""}
+{"text": "What's my schedule pls thanks", "tool": "calendar_today", "arg": ""}
+{"text": "what's my schedule asap", "tool": "calendar_today", "arg": ""}
+{"text": "Could you show me today's events", "tool": "calendar_today", "arg": ""}
+{"text": "Show me today's events ok", "tool": "calendar_today", "arg": ""}
+{"text": "Show me today's events thanks", "tool": "calendar_today", "arg": ""}
+{"text": "Pls what's the date k", "tool": "current_date", "arg": ""}
+{"text": "please what's the date rn", "tool": "current_date", "arg": ""}
+{"text": "What day is it thanks", "tool": "current_date", "arg": ""}
+{"text": "Today's date pls thx", "tool": "current_date", "arg": ""}
+{"text": "Right, today's date pls", "tool": "current_date", "arg": ""}
+{"text": "Play some music when u can", "tool": "music", "arg": "play"}
+{"text": "so play some music pls thx", "tool": "music", "arg": "play"}
+{"text": "would you play some music pls", "tool": "music", "arg": "play"}
+{"text": "Pause the song ty", "tool": "music", "arg": "pause"}
+{"text": "Real quick, pause the song rn", "tool": "music", "arg": "pause"}
+{"text": "so pause the song rn", "tool": "music", "arg": "pause"}
+{"text": "right, skip to the next track asap", "tool": "music", "arg": "next"}
+{"text": "hey skip to the next track asap", "tool": "music", "arg": "next"}
+{"text": "Yo skip to the next track?", "tool": "music", "arg": "next"}
+{"text": "Could you skip to the next track ok", "tool": "music", "arg": "next"}
+{"text": "Can you go back a song", "tool": "music", "arg": "previous"}
+{"text": "Right, go back a song when u can", "tool": "music", "arg": "previous"}
+{"text": "If u could go back a song asap", "tool": "music", "arg": "previous"}
+{"text": "Right, calculate 50 times 2 ty", "tool": "calculate", "arg": "50 times 2"}
+{"text": "Um so like calculate 50 times 2 thanks", "tool": "calculate", "arg": "50 times 2"}
+{"text": "Calculate 50 times 2 thanks", "tool": "calculate", "arg": "50 times 2"}
+{"text": "Samantha, work out sqrt(144) asap", "tool": "calculate", "arg": "sqrt(144)"}
+{"text": "Right, work out sqrt(144) thanks", "tool": "calculate", "arg": "sqrt(144)"}
+{"text": "Work out sqrt(144) when u can", "tool": "calculate", "arg": "sqrt(144)"}
+{"text": "Yo make me a logo for my startup", "tool": "make_logo", "arg": "my startup"}
+{"text": "Pls make me a logo for my startup", "tool": "make_logo", "arg": "my startup"}
+{"text": "I need design an icon for myapp", "tool": "make_logo", "arg": "myapp"}
+{"text": "Real quick, design an icon for myapp pls", "tool": "make_logo", "arg": "myapp"}
+{"text": "Right, design an icon for myapp ok pls", "tool": "make_logo", "arg": "myapp"}
+{"text": "So create a logo for the project rn!", "tool": "make_logo", "arg": "the project"}
+{"text": "Ok now create a logo for the project", "tool": "make_logo", "arg": "the project"}
+{"text": "right, draw an icon for xyz ty", "tool": "make_logo", "arg": "xyz"}
+{"text": "Could you draw an icon 4 xyz thx", "tool": "make_logo", "arg": "xyz"}
+{"text": "draw an icon for xyz thanks", "tool": "make_logo", "arg": "xyz"}
+{"text": "Draw an icon for xyz", "tool": "make_logo", "arg": "xyz"}
+{"text": "Paint ~/downloads/sunset.jpg when u can", "tool": "paint_image", "arg": "~/downloads/sunset.jpg"}
+{"text": "Real quick, paint ~/downloads/sunset.jpg lol k", "tool": "paint_image", "arg": "~/downloads/sunset.jpg"}
+{"text": "If u could paint ~/downloads/sunset.jpg k!", "tool": "paint_image", "arg": "~/downloads/sunset.jpg"}
+{"text": "Would you turn the photo into a painting pls", "tool": "paint_image", "arg": "the photo"}
+{"text": "Can you turn the photo into a painting thanks?", "tool": "paint_image", "arg": "the photo"}
+{"text": "turn the photo into a painting when u can", "tool": "paint_image", "arg": "the photo"}
+{"text": "Samantha, paint my picture in mosaic style", "tool": "paint_image", "arg": "my picture"}
+{"text": "Paint my picture in mosaic style lol pls", "tool": "paint_image", "arg": "my picture"}
+{"text": "Right, paint my picture in mosaic style rn", "tool": "paint_image", "arg": "my picture"}
+{"text": "Hey samantha, paint my picture in mosaic style", "tool": "paint_image", "arg": "my picture"}
+{"text": "Please flip a coin for me ty!", "tool": "flip_coin", "arg": ""}
+{"text": "Can you flip a coin for me ty", "tool": "flip_coin", "arg": ""}
+{"text": "If u could flip a coin for me k", "tool": "flip_coin", "arg": ""}
+{"text": "I need flip a coin 4 me lol", "tool": "flip_coin", "arg": ""}
+{"text": "if u could heads or tails asap", "tool": "flip_coin", "arg": ""}
+{"text": "heads or tails when u can", "tool": "flip_coin", "arg": ""}
+{"text": "Pls heads or tails thanks", "tool": "flip_coin", "arg": ""}
+{"text": "hey samantha, coin toss when u can", "tool": "flip_coin", "arg": ""}
+{"text": "hey coin toss when u can", "tool": "flip_coin", "arg": ""}
+{"text": "Please settle it with a coin flip when u can", "tool": "flip_coin", "arg": ""}
+{"text": "Samantha, settle it with a coin flip", "tool": "flip_coin", "arg": ""}
+{"text": "Um so like roll a d20", "tool": "roll_dice", "arg": "d20"}
+{"text": "Um so like roll a d20 ty", "tool": "roll_dice", "arg": "d20"}
+{"text": "Yo give me a roll of 2d6 thx", "tool": "roll_dice", "arg": "2d6"}
+{"text": "Right, give me a roll of 2d6 ty", "tool": "roll_dice", "arg": "2d6"}
+{"text": "ok now roll 1d100 asap", "tool": "roll_dice", "arg": "1d100"}
+{"text": "real quick, roll 1d100 when u can", "tool": "roll_dice", "arg": "1d100"}
+{"text": "roll 1d100 pls", "tool": "roll_dice", "arg": "1d100"}
+{"text": "Would you throw 3d6 asap", "tool": "roll_dice", "arg": "3d6"}
+{"text": "Real quick, throw 3d6 thanks", "tool": "roll_dice", "arg": "3d6"}
+{"text": "Pick a random number between 1 and 100", "tool": "random_number", "arg": "1 and 100"}
+{"text": "Pick a random number between 1 and 100 rn", "tool": "random_number", "arg": "1 and 100"}
+{"text": "Hey samantha, pick a random number between 1 and 100 asap", "tool": "random_number", "arg": "1 and 100"}
+{"text": "ok now give me a random number from 1 to 50", "tool": "random_number", "arg": "1 to 50"}
+{"text": "would you give me a random number from 1 to 50 k", "tool": "random_number", "arg": "1 to 50"}
+{"text": "Can you random number 1 to 1000 k", "tool": "random_number", "arg": "1 to 1000"}
+{"text": "please random number 1 to 1000", "tool": "random_number", "arg": "1 to 1000"}
+{"text": "Samantha, make a strong password with 16 characters rn", "tool": "make_password", "arg": "16 characters"}
+{"text": "Make a strong password with 16 characters!", "tool": "make_password", "arg": "16 characters"}
+{"text": "Generate a 20 character password rn", "tool": "make_password", "arg": "20 character"}
+{"text": "Yo generate a 20 character password thx", "tool": "make_password", "arg": "20 character"}
+{"text": "Right, generate a 20 character password pls asap!", "tool": "make_password", "arg": "20 character"}
+{"text": "Yo generate a 20 character password rn", "tool": "make_password", "arg": "20 character"}
+{"text": "I need i need a new password thanks", "tool": "make_password", "arg": ""}
+{"text": "Hey i need a new password thanks", "tool": "make_password", "arg": ""}
+{"text": "would you make me a pwd", "tool": "make_password", "arg": ""}
+{"text": "ok now make me a pwd rn", "tool": "make_password", "arg": ""}
+{"text": "If u could generate a uuid", "tool": "make_uuid", "arg": ""}
+{"text": "pls generate a uuid!", "tool": "make_uuid", "arg": ""}
+{"text": "I need generate a uuid pls when u can?", "tool": "make_uuid", "arg": ""}
+{"text": "Hey make me a new guid ty", "tool": "make_uuid", "arg": ""}
+{"text": "make me a new guid pls ty", "tool": "make_uuid", "arg": ""}
+{"text": "samantha, make me a new guid ty!", "tool": "make_uuid", "arg": ""}
+{"text": "Ok now make me a new guid pls ty", "tool": "make_uuid", "arg": ""}
+{"text": "make me a new guid", "tool": "make_uuid", "arg": ""}
+{"text": "Please create a uuid pls k", "tool": "make_uuid", "arg": ""}
+{"text": "Hey create a uuid pls pls", "tool": "make_uuid", "arg": ""}
+{"text": "Create a uuid pls lol when u can", "tool": "make_uuid", "arg": ""}
+{"text": "so spit out a uuid thanks", "tool": "make_uuid", "arg": ""}
+{"text": "Hey samantha, spit out a uuid thanks", "tool": "make_uuid", "arg": ""}
+{"text": "Ok spit out a uuid k", "tool": "make_uuid", "arg": ""}
+{"text": "Please how much storage do i have left thx", "tool": "disk_space", "arg": ""}
+{"text": "um so like how much storage do i have left lol rn", "tool": "disk_space", "arg": ""}
+{"text": "How much storage do i have left", "tool": "disk_space", "arg": ""}
+{"text": "So check my disk space thanks", "tool": "disk_space", "arg": ""}
+{"text": "Ok now check my disk space asap", "tool": "disk_space", "arg": ""}
+{"text": "Check my disk space thanks", "tool": "disk_space", "arg": ""}
+{"text": "Pls am i running out of space pls", "tool": "disk_space", "arg": ""}
+{"text": "Would you when did i last restart!", "tool": "uptime", "arg": ""}
+{"text": "Right, when did i last restart lol thanks", "tool": "uptime", "arg": ""}
+{"text": "Samantha, when did i last restart", "tool": "uptime", "arg": ""}
+{"text": "so when did i last restart thanks", "tool": "uptime", "arg": ""}
+{"text": "Can you uptime check ty", "tool": "uptime", "arg": ""}
+{"text": "Would you uptime check lol thanks.", "tool": "uptime", "arg": ""}
+{"text": "Real quick, uptime check thx", "tool": "uptime", "arg": ""}
+{"text": "Hey how long since reboot pls", "tool": "uptime", "arg": ""}
+{"text": "Samantha, check my memory", "tool": "memory_usage", "arg": ""}
+{"text": "Check my memory pls rn", "tool": "memory_usage", "arg": ""}
+{"text": "So check my memory thanks", "tool": "memory_usage", "arg": ""}
+{"text": "Check my memory asap", "tool": "memory_usage", "arg": ""}
+{"text": "Pls how much ram do i have pls", "tool": "memory_usage", "arg": ""}
+{"text": "How busy is the cpu pls", "tool": "cpu_load", "arg": ""}
+{"text": "What's the processor usage", "tool": "cpu_load", "arg": ""}
+{"text": "Is my cpu maxed out ty", "tool": "cpu_load", "arg": ""}
+{"text": "Yo is my cpu maxed out asap", "tool": "cpu_load", "arg": ""}
+{"text": "Pls what's my ip address", "tool": "ip_address", "arg": ""}
+{"text": "Um so like what's my ip address rn", "tool": "ip_address", "arg": ""}
+{"text": "If u could show my local ip ty", "tool": "ip_address", "arg": ""}
+{"text": "I need show my local ip when u can", "tool": "ip_address", "arg": ""}
+{"text": "If u could show my local ip when u can.", "tool": "ip_address", "arg": ""}
+{"text": "Would you tell me my network address thanks", "tool": "ip_address", "arg": ""}
+{"text": "Please tell me my network address asap", "tool": "ip_address", "arg": ""}
+{"text": "Pls which wifi is this thanks", "tool": "wifi_name", "arg": ""}
+{"text": "Real quick, tell me about this mac asap", "tool": "system_info", "arg": ""}
+{"text": "pls tell me about this mac rn", "tool": "system_info", "arg": ""}
+{"text": "please tell me about this mac", "tool": "system_info", "arg": ""}
+{"text": "Hey what version of macos is this thanks", "tool": "system_info", "arg": ""}
+{"text": "Yo what version of macos is this rn?", "tool": "system_info", "arg": ""}
+{"text": "What chip does this have asap", "tool": "system_info", "arg": ""}
+{"text": "Yo what chip does this have k", "tool": "system_info", "arg": ""}
+{"text": "If u could system info k", "tool": "system_info", "arg": ""}
+{"text": "So system info thanks", "tool": "system_info", "arg": ""}
+{"text": "Hey list my shortcuts k", "tool": "list_shortcuts", "arg": ""}
+{"text": "Um so like list my shortcuts thanks", "tool": "list_shortcuts", "arg": ""}
+{"text": "So list my shortcuts rn", "tool": "list_shortcuts", "arg": ""}
+{"text": "Samantha, show all my shortcuts", "tool": "list_shortcuts", "arg": ""}
+{"text": "so show all my shortcuts pls", "tool": "list_shortcuts", "arg": ""}
+{"text": "Could you show all my shortcuts rn", "tool": "list_shortcuts", "arg": ""}
+{"text": "Ok show all my shortcuts.", "tool": "list_shortcuts", "arg": ""}
+{"text": "real quick, show all my shortcuts pls thx!", "tool": "list_shortcuts", "arg": ""}
+{"text": "Right, tell me the time in london", "tool": "time_in", "arg": "london"}
+{"text": "Tell me the time in london thanks", "tool": "time_in", "arg": "london"}
+{"text": "Hey what's the time in sydney ty!", "tool": "time_in", "arg": "sydney"}
+{"text": "Hey what's the time in sydney asap!", "tool": "time_in", "arg": "sydney"}
+{"text": "Could you current time in bangkok pls", "tool": "time_in", "arg": "bangkok"}
+{"text": "Please current time in bangkok", "tool": "time_in", "arg": "bangkok"}
+{"text": "Right, current time in bangkok ty", "tool": "time_in", "arg": "bangkok"}
+{"text": "Pls what time is 3pm pst in new york", "tool": "convert_time", "arg": "3pm pst in new york"}
+{"text": "pls what time is 3pm pst in new york when u can!", "tool": "convert_time", "arg": "3pm pst in new york"}
+{"text": "Ok convert 9am london to tokyo rn", "tool": "convert_time", "arg": "9am london to tokyo"}
+{"text": "Um so like convert 9am london to tokyo rn", "tool": "convert_time", "arg": "9am london to tokyo"}
+{"text": "Um so like what's 2 weeks from today", "tool": "date_math", "arg": "2 weeks from today"}
+{"text": "What's 2 weeks from today rn", "tool": "date_math", "arg": "2 weeks from today"}
+{"text": "Hey when is 1 month after christmas thanks?", "tool": "date_math", "arg": "1 month after christmas"}
+{"text": "So when is 1 month after christmas", "tool": "date_math", "arg": "1 month after christmas"}
+{"text": "So 90 days from today when u can", "tool": "date_math", "arg": "90 days from today"}
+{"text": "Ok 90 days from today", "tool": "date_math", "arg": "90 days from today"}
+{"text": "Pls how many days until christmas", "tool": "days_until", "arg": "christmas"}
+{"text": "yo how many days until christmas when u can", "tool": "days_until", "arg": "christmas"}
+{"text": "Pls days till my birthday thanks", "tool": "days_until", "arg": "my birthday"}
+{"text": "days till my birthday", "tool": "days_until", "arg": "my birthday"}
+{"text": "how long till new year thanks", "tool": "days_until", "arg": "new year"}
+{"text": "Pls count the days to halloween", "tool": "days_until", "arg": "halloween"}
+{"text": "So count the days to halloween asap", "tool": "days_until", "arg": "halloween"}
+{"text": "Define serendipity rn.", "tool": "define_word", "arg": "serendipity"}
+{"text": "Pls define serendipity pls k", "tool": "define_word", "arg": "serendipity"}
+{"text": "I need define serendipity", "tool": "define_word", "arg": "serendipity"}
+{"text": "Please whats the definition of ephemeral asap.", "tool": "define_word", "arg": "ephemeral"}
+{"text": "If u could what's the definition of ephemeral rn", "tool": "define_word", "arg": "ephemeral"}
+{"text": "Can you look up ubiquitous k", "tool": "define_word", "arg": "ubiquitous"}
+{"text": "pls look up ubiquitous pls", "tool": "define_word", "arg": "ubiquitous"}
+{"text": "Ok now dictionary definition of gregarious k", "tool": "define_word", "arg": "gregarious"}
+{"text": "Would you dictionary definition of gregarious thanks!", "tool": "define_word", "arg": "gregarious"}
+{"text": "Right, dictionary definition of gregarious when u can", "tool": "define_word", "arg": "gregarious"}
+{"text": "real quick, dictionary definition of gregarious lol asap", "tool": "define_word", "arg": "gregarious"}
+{"text": "Can you list the files in ~/documents ty", "tool": "list_dir", "arg": "~/documents"}
+{"text": "Right, list the files in ~/documents rn", "tool": "list_dir", "arg": "~/documents"}
+{"text": "Please what's in ~/desktop", "tool": "list_dir", "arg": "~/desktop"}
+{"text": "Please what's in ~/desktop thanks", "tool": "list_dir", "arg": "~/desktop"}
+{"text": "Ls ~/ thanks", "tool": "list_dir", "arg": "~/"}
+{"text": "could you ls ~/ pls", "tool": "list_dir", "arg": "~/"}
+{"text": "pls ls ~/ lol", "tool": "list_dir", "arg": "~/"}
+{"text": "please read ~/notes.txt pls.", "tool": "read_file", "arg": "~/notes.txt"}
+{"text": "Real quick, read ~/notes.txt asap", "tool": "read_file", "arg": "~/notes.txt"}
+{"text": "Hey show me ~/todo.md pls", "tool": "read_file", "arg": "~/todo.md"}
+{"text": "So show me ~/todo.md k", "tool": "read_file", "arg": "~/todo.md"}
+{"text": "Hey what does ~/config.json say rn", "tool": "read_file", "arg": "~/config.json"}
+{"text": "hey what does ~/config.json say pls", "tool": "read_file", "arg": "~/config.json"}
+{"text": "Hey samantha, cat ~/readme.md ty", "tool": "read_file", "arg": "~/readme.md"}
+{"text": "Would you cat ~/readme.md", "tool": "read_file", "arg": "~/readme.md"}
+{"text": "real quick, cat ~/readme.md thanks", "tool": "read_file", "arg": "~/readme.md"}
+{"text": "yo delete ~/downloads/old.txt thx", "tool": "trash_file", "arg": "~/downloads/old.txt"}
+{"text": "If u could delete ~/downloads/old.txt ty", "tool": "trash_file", "arg": "~/downloads/old.txt"}
+{"text": "right, throw away ~/temp.doc thanks", "tool": "trash_file", "arg": "~/temp.doc"}
+{"text": "Ok throw away ~/temp.doc thanks.", "tool": "trash_file", "arg": "~/temp.doc"}
+{"text": "ok now throw away ~/temp.doc", "tool": "trash_file", "arg": "~/temp.doc"}
+{"text": "Copy ~/desktop/a.txt to ~/documents pls", "tool": "copy_file", "arg": "~/desktop/a.txt\t~/documents"}
+{"text": "Copy ~/desktop/a.txt to ~/documents asap", "tool": "copy_file", "arg": "~/desktop/a.txt\t~/documents"}
+{"text": "please duplicate ~/downloads/photo.jpg to ~/pictures k", "tool": "copy_file", "arg": "~/downloads/photo.jpg\t~/pictures"}
+{"text": "Yo duplicate ~/downloads/photo.jpg to ~/pictures pls asap", "tool": "copy_file", "arg": "~/downloads/photo.jpg\t~/pictures"}
+{"text": "can you duplicate ~/downloads/photo.jpg to ~/pictures rn", "tool": "copy_file", "arg": "~/downloads/photo.jpg\t~/pictures"}
+{"text": "Please duplicate ~/downloads/photo.jpg to ~/pictures", "tool": "copy_file", "arg": "~/downloads/photo.jpg\t~/pictures"}
+{"text": "Would you move ~/desktop/draft.doc to ~/documents", "tool": "move_file", "arg": "~/desktop/draft.doc\t~/documents"}
+{"text": "Hey samantha, move ~/desktop/draft.doc to ~/documents rn", "tool": "move_file", "arg": "~/desktop/draft.doc\t~/documents"}
+{"text": "Right, move ~/desktop/draft.doc to ~/documents pls when u can", "tool": "move_file", "arg": "~/desktop/draft.doc\t~/documents"}
+{"text": "Relocate ~/downloads/file.zip to ~/archive thanks", "tool": "move_file", "arg": "~/downloads/file.zip\t~/archive"}
+{"text": "Hey samantha, relocate ~/downloads/file.zip to ~/archive k", "tool": "move_file", "arg": "~/downloads/file.zip\t~/archive"}
+{"text": "um so like rename ~/desktop/old.txt to new.txt", "tool": "rename_file", "arg": "~/desktop/old.txt\tnew.txt"}
+{"text": "So rename ~/desktop/old.txt to new.txt pls", "tool": "rename_file", "arg": "~/desktop/old.txt\tnew.txt"}
+{"text": "Pls rename ~/desktop/old.txt to new.txt thx", "tool": "rename_file", "arg": "~/desktop/old.txt\tnew.txt"}
+{"text": "Hey samantha, append buy milk to the groceries note", "tool": "append_note", "arg": "buy milk\tgroceries"}
+{"text": "Could you append buy milk to the groceries note rn", "tool": "append_note", "arg": "buy milk\tgroceries"}
+{"text": "Add visit the dentist to my todo note thanks", "tool": "append_note", "arg": "visit the dentist\ttodo"}
+{"text": "Um so like add visit the dentist to my todo note thanks", "tool": "append_note", "arg": "visit the dentist\ttodo"}
+{"text": "real quick, add visit the dentist to my todo note ok rn.", "tool": "append_note", "arg": "visit the dentist\ttodo"}
+{"text": "Mark the email reminder as done k", "tool": "complete_reminder", "arg": "the email reminder"}
+{"text": "Could you mark the email reminder as done ty", "tool": "complete_reminder", "arg": "the email reminder"}
+{"text": "Would you mark the email reminder as done ty", "tool": "complete_reminder", "arg": "the email reminder"}
+{"text": "Would you finish the reminder to call mom rn", "tool": "complete_reminder", "arg": "the reminder to call mom"}
+{"text": "Could you finish the reminder to call mom lol ty", "tool": "complete_reminder", "arg": "the reminder to call mom"}
+{"text": "Finish the reminder to call mom k", "tool": "complete_reminder", "arg": "the reminder to call mom"}
+{"text": "Hey show my reminders k", "tool": "list_reminders", "arg": ""}
+{"text": "Would you show my reminders?", "tool": "list_reminders", "arg": ""}
+{"text": "Please what reminders do i have thx", "tool": "list_reminders", "arg": ""}
+{"text": "I need pull up my reminders!", "tool": "list_reminders", "arg": ""}
+{"text": "Pull up my reminders thx", "tool": "list_reminders", "arg": ""}
+{"text": "could you pull up my reminders ok ty!", "tool": "list_reminders", "arg": ""}
+{"text": "Pls pull up my reminders", "tool": "list_reminders", "arg": ""}
+{"text": "Would you search notes for python", "tool": "search_notes", "arg": "python"}
+{"text": "Pls search notes for python rn", "tool": "search_notes", "arg": "python"}
+{"text": "Yo find design in my notes", "tool": "search_notes", "arg": "design"}
+{"text": "Right, find design in my notes ty", "tool": "search_notes", "arg": "design"}
+{"text": "real quick, look for budget in notes ty", "tool": "search_notes", "arg": "budget"}
+{"text": "Yo look for budget in notes", "tool": "search_notes", "arg": "budget"}
+{"text": "Um so like do my notes mention meetings pls", "tool": "search_notes", "arg": "meetings"}
+{"text": "yo do my notes mention meetings thanks", "tool": "search_notes", "arg": "meetings"}
+{"text": "Could you find my presentation.pptx asap", "tool": "find_file", "arg": "presentation.pptx"}
+{"text": "hey samantha, find my presentation.pptx k", "tool": "find_file", "arg": "presentation.pptx"}
+{"text": "Hey samantha, find my presentation.pptx", "tool": "find_file", "arg": "presentation.pptx"}
+{"text": "Could you find my presentation.pptx pls when u can", "tool": "find_file", "arg": "presentation.pptx"}
+{"text": "Ok now where is that photo ty", "tool": "find_file", "arg": "that photo"}
+{"text": "where is that photo thanks", "tool": "find_file", "arg": "that photo"}
+{"text": "Ok now locate the excel file?", "tool": "find_file", "arg": "the excel file"}
+{"text": "I need locate the excel file pls", "tool": "find_file", "arg": "the excel file"}
+{"text": "Pls locate the excel file thx", "tool": "find_file", "arg": "the excel file"}
+{"text": "Track down the invoice rn", "tool": "find_file", "arg": "the invoice"}
+{"text": "Track down the invoice when u can!", "tool": "find_file", "arg": "the invoice"}
+{"text": "Pls how big is ~/documents thx", "tool": "folder_size", "arg": "~/documents"}
+{"text": "Please what's the size of my downloads folder k", "tool": "folder_size", "arg": "~/downloads"}
+{"text": "Can you zip ~/documents thanks", "tool": "zip_file", "arg": "~/documents"}
+{"text": "Please zip ~/documents.", "tool": "zip_file", "arg": "~/documents"}
+{"text": "Pls zip ~/documents pls", "tool": "zip_file", "arg": "~/documents"}
+{"text": "Hey samantha, compress the folder ~/old-projects asap!", "tool": "zip_file", "arg": "~/old-projects"}
+{"text": "Samantha, compress the folder ~/old-projects pls ty", "tool": "zip_file", "arg": "~/old-projects"}
+{"text": "Ok compress the folder ~/old-projects thx", "tool": "zip_file", "arg": "~/old-projects"}
+{"text": "Ok now compress the folder ~/old-projects thanks", "tool": "zip_file", "arg": "~/old-projects"}
+{"text": "Hey unzip ~/downloads/archive.zip thx", "tool": "unzip_file", "arg": "~/downloads/archive.zip"}
+{"text": "So unzip ~/downloads/archive.zip when u can", "tool": "unzip_file", "arg": "~/downloads/archive.zip"}
+{"text": "Unzip ~/downloads/archive.zip pls asap", "tool": "unzip_file", "arg": "~/downloads/archive.zip"}
+{"text": "could you unzip ~/downloads/archive.zip thanks", "tool": "unzip_file", "arg": "~/downloads/archive.zip"}
+{"text": "ok now research artificial intelligence pls", "tool": "research", "arg": "artificial intelligence"}
+{"text": "yo research artificial intelligence pls asap", "tool": "research", "arg": "artificial intelligence"}
+{"text": "Pls research artificial intelligence thanks", "tool": "research", "arg": "artificial intelligence"}
+{"text": "Samantha, deep dive into blockchain asap", "tool": "research", "arg": "blockchain"}
+{"text": "If u could deep dive into blockchain k", "tool": "research", "arg": "blockchain"}
+{"text": "pls look into climate solutions when u can", "tool": "research", "arg": "climate solutions"}
+{"text": "Would you look into climate solutions asap?", "tool": "research", "arg": "climate solutions"}
+{"text": "please tell me more about quantum computing k", "tool": "research_more", "arg": "quantum computing"}
+{"text": "Would you tell me more about quantum computing rn", "tool": "research_more", "arg": "quantum computing"}
+{"text": "right, go deeper on web3 k", "tool": "research_more", "arg": "web3"}
+{"text": "Ok now go deeper on web3 when u can", "tool": "research_more", "arg": "web3"}
+{"text": "right, expand on renewable energy thanks", "tool": "research_more", "arg": "renewable energy"}
+{"text": "Expand on renewable energy asap", "tool": "research_more", "arg": "renewable energy"}
+{"text": "I need summarize this page", "tool": "summarize", "arg": ""}
+{"text": "Yo summarize this page", "tool": "summarize", "arg": ""}
+{"text": "What's the summary of this tab", "tool": "summarize", "arg": ""}
+{"text": "can you translate hello to french rn", "tool": "translate", "arg": "hello\tfrench"}
+{"text": "Hey translate hello to french k", "tool": "translate", "arg": "hello\tfrench"}
+{"text": "Hey samantha, translate goodbye to german", "tool": "translate", "arg": "goodbye\tgerman"}
+{"text": "Can you translate goodbye to german thanks", "tool": "translate", "arg": "goodbye\tgerman"}
+{"text": "Hey reverse the text hello when u can", "tool": "reverse_text", "arg": "hello"}
+{"text": "Um so like reverse the text hello thanks", "tool": "reverse_text", "arg": "hello"}
+{"text": "ok now spell goodbye backwards thx", "tool": "reverse_text", "arg": "goodbye"}
+{"text": "samantha, spell goodbye backwards thanks", "tool": "reverse_text", "arg": "goodbye"}
+{"text": "Can you spell goodbye backwards", "tool": "reverse_text", "arg": "goodbye"}
+{"text": "I need uppercase this text", "tool": "shout", "arg": "this text"}
+{"text": "Uppercase this text pls!", "tool": "shout", "arg": "this text"}
+{"text": "If u could uppercase this text", "tool": "shout", "arg": "this text"}
+{"text": "Can you make hello all caps thanks", "tool": "shout", "arg": "hello"}
+{"text": "Pls make hello all caps pls", "tool": "shout", "arg": "hello"}
+{"text": "Ok make hello all caps ok ty", "tool": "shout", "arg": "hello"}
+{"text": "yell out the word test", "tool": "shout", "arg": "test"}
+{"text": "pls yell out the word test thanks", "tool": "shout", "arg": "test"}
+{"text": "So yell out the word test asap", "tool": "shout", "arg": "test"}
+{"text": "Would you sha256 of password", "tool": "hash_text", "arg": "password"}
+{"text": "so sha256 of password k", "tool": "hash_text", "arg": "password"}
+{"text": "Right, hash the text hello world thx?", "tool": "hash_text", "arg": "hello world"}
+{"text": "um so like hash the text hello world pls pls", "tool": "hash_text", "arg": "hello world"}
+{"text": "Um so like hash the text hello world pls", "tool": "hash_text", "arg": "hello world"}
+{"text": "Yo hash the text hello world", "tool": "hash_text", "arg": "hello world"}
+{"text": "If u could count the words in this text", "tool": "word_count", "arg": "this text"}
+{"text": "Yo count the words in this text lol", "tool": "word_count", "arg": "this text"}
+{"text": "Ok now count the words in this text", "tool": "word_count", "arg": "this text"}
+{"text": "Ok count the words in this text rn", "tool": "word_count", "arg": "this text"}
+{"text": "Hey how many words are in that sentence k", "tool": "word_count", "arg": "that sentence"}
+{"text": "If u could how many words are in that sentence thanks", "tool": "word_count", "arg": "that sentence"}
+{"text": "Base64 encode hello", "tool": "base64_encode", "arg": "hello"}
+{"text": "Base64 encode hello asap", "tool": "base64_encode", "arg": "hello"}
+{"text": "ok base64 encode hello ty", "tool": "base64_encode", "arg": "hello"}
+{"text": "would you convert world to base64 thanks", "tool": "base64_encode", "arg": "world"}
+{"text": "hey convert world 2 base64 ok ty", "tool": "base64_encode", "arg": "world"}
+{"text": "If u could convert world to base64 pls", "tool": "base64_encode", "arg": "world"}
+{"text": "Convert world to base64 asap", "tool": "base64_encode", "arg": "world"}
+{"text": "Can you base64 decode agvsbg8= ty", "tool": "base64_decode", "arg": "aGVsbG8="}
+{"text": "Ok base64 decode agvsbg8= k", "tool": "base64_decode", "arg": "aGVsbG8="}
+{"text": "Pls base64 decode agvsbg8= ty", "tool": "base64_decode", "arg": "aGVsbG8="}
+{"text": "Ok base64 decode agvsbg8= pls", "tool": "base64_decode", "arg": "aGVsbG8="}
+{"text": "What does dgvzda== decode to pls pls", "tool": "base64_decode", "arg": "dGVzdA=="}
+{"text": "Yo what does dgvzda== decode to", "tool": "base64_decode", "arg": "dGVzdA=="}
+{"text": "Pls what does dgvzda== decode to pls ty", "tool": "base64_decode", "arg": "dGVzdA=="}
+{"text": "I need what's the tip on a 50 dollar bill when u can", "tool": "tip", "arg": "50 dollar bill"}
+{"text": "what's the tip on a 50 dollar bill", "tool": "tip", "arg": "50 dollar bill"}
+{"text": "I need whats the tip on a 50 dollar bill ok thanks", "tool": "tip", "arg": "50 dollar bill"}
+{"text": "Please calculate the tip on 100 bucks thanks", "tool": "tip", "arg": "100 bucks"}
+{"text": "um so like calculate the tip on 100 bucks thanks", "tool": "tip", "arg": "100 bucks"}
+{"text": "Calculate the tip on 100 bucks ok", "tool": "tip", "arg": "100 bucks"}
+{"text": "Um so like is 17 prime", "tool": "is_prime", "arg": "17"}
+{"text": "Please factor 42 asap", "tool": "is_prime", "arg": "42"}
+{"text": "yo factor 42 rn", "tool": "is_prime", "arg": "42"}
+{"text": "I need roman numerals for 2024 thanks", "tool": "roman_numeral", "arg": "2024"}
+{"text": "Yo roman numerals for 2024 thanks", "tool": "roman_numeral", "arg": "2024"}
+{"text": "Roman numerals for 2024 thx", "tool": "roman_numeral", "arg": "2024"}
+{"text": "what is 99 in roman numerals thanks!", "tool": "roman_numeral", "arg": "99"}
+{"text": "Um so like what is 99 in roman numerals", "tool": "roman_numeral", "arg": "99"}
+{"text": "Would you morse code for sos thx", "tool": "morse_code", "arg": "SOS"}
+{"text": "Morse code for sos pls thanks!", "tool": "morse_code", "arg": "SOS"}
+{"text": "Please morse code for sos thanks?", "tool": "morse_code", "arg": "SOS"}
+{"text": "Morse code 4 sos lol k", "tool": "morse_code", "arg": "SOS"}
+{"text": "Could you morse code for sos", "tool": "morse_code", "arg": "SOS"}
+{"text": "Ok now translate hello to morse when u can", "tool": "morse_code", "arg": "HELLO"}
+{"text": "Translate hello to morse asap", "tool": "morse_code", "arg": "HELLO"}
+{"text": "If u could show all my tabs pls", "tool": "list_tabs", "arg": ""}
+{"text": "Real quick, show all my tabs asap", "tool": "list_tabs", "arg": ""}
+{"text": "Please show all my tabs thanks", "tool": "list_tabs", "arg": ""}
+{"text": "Hey what tabs are open thanks", "tool": "list_tabs", "arg": ""}
+{"text": "So list my chrome tabs thanks", "tool": "list_tabs", "arg": ""}
+{"text": "Um so like list my chrome tabs thanks?", "tool": "list_tabs", "arg": ""}
+{"text": "Hey samantha, list my chrome tabs ok ty", "tool": "list_tabs", "arg": ""}
+{"text": "If u could switch to the github tab", "tool": "switch_tab", "arg": "github"}
+{"text": "So switch to the github tab ty", "tool": "switch_tab", "arg": "github"}
+{"text": "Um so like switch 2 the github tab lol thx", "tool": "switch_tab", "arg": "github"}
+{"text": "So jump to the mail tab", "tool": "switch_tab", "arg": "mail"}
+{"text": "Pls jump to the mail tab", "tool": "switch_tab", "arg": "mail"}
+{"text": "Read the current tab asap", "tool": "read_tab", "arg": ""}
+{"text": "read the current tab when u can", "tool": "read_tab", "arg": ""}
+{"text": "Please what does this tab say pls", "tool": "read_tab", "arg": ""}
+{"text": "yo what does this tab say thanks!", "tool": "read_tab", "arg": ""}
+{"text": "Hey summarize the page i'm on asap", "tool": "read_tab", "arg": ""}
+{"text": "Um so like summarize the page i'm on ok thanks", "tool": "read_tab", "arg": ""}
+{"text": "Hey summarize the page i'm on", "tool": "read_tab", "arg": ""}
+{"text": "Summarize the page i'm on!", "tool": "read_tab", "arg": ""}
+{"text": "What's on my current tab rn", "tool": "current_tab", "arg": ""}
+{"text": "Pls whats on my current tab", "tool": "current_tab", "arg": ""}
+{"text": "I need which page am i on thx", "tool": "current_tab", "arg": ""}
+{"text": "Um so like which page am i on", "tool": "current_tab", "arg": ""}
+{"text": "yo which page am i on ty", "tool": "current_tab", "arg": ""}
+{"text": "Right, check my unread email thx", "tool": "unread_mail", "arg": ""}
+{"text": "Right, check my unread email k", "tool": "unread_mail", "arg": ""}
+{"text": "Any messages from alice rn", "tool": "unread_mail", "arg": "alice"}
+{"text": "If u could what apps are running", "tool": "running_apps", "arg": ""}
+{"text": "what apps are running when u can", "tool": "running_apps", "arg": ""}
+{"text": "Hey what apps are running ok rn", "tool": "running_apps", "arg": ""}
+{"text": "If u could list open programs rn", "tool": "running_apps", "arg": ""}
+{"text": "Hey samantha, list open programs rn!", "tool": "running_apps", "arg": ""}
+{"text": "if u could which apps are currently open k", "tool": "running_apps", "arg": ""}
+{"text": "If u could which apps are currently open k", "tool": "running_apps", "arg": ""}
+{"text": "Pls what's in my downloads thanks", "tool": "recent_downloads", "arg": ""}
+{"text": "Real quick, show recent downloads", "tool": "recent_downloads", "arg": ""}
+{"text": "Hey show recent downloads", "tool": "recent_downloads", "arg": ""}
+{"text": "If u could show recent downloads", "tool": "recent_downloads", "arg": ""}
+{"text": "Please what did i just download thx", "tool": "recent_downloads", "arg": ""}
+{"text": "Um so like close the mail app when u can", "tool": "quit_app", "arg": "mail"}
+{"text": "Close the mail app", "tool": "quit_app", "arg": "mail"}
+{"text": "Can you close the mail app pls rn", "tool": "quit_app", "arg": "mail"}
+{"text": "Um so like quit slack thx", "tool": "quit_app", "arg": "slack"}
+{"text": "Um so like quit slack", "tool": "quit_app", "arg": "slack"}
+{"text": "right, quit slack", "tool": "quit_app", "arg": "slack"}
+{"text": "Shut down vscode", "tool": "quit_app", "arg": "vscode"}
+{"text": "Right, shut down vscode k", "tool": "quit_app", "arg": "vscode"}
+{"text": "Hey shut down vscode ok when u can", "tool": "quit_app", "arg": "vscode"}
+{"text": "Um so like shut down vscode asap", "tool": "quit_app", "arg": "vscode"}
+{"text": "Could you turn on do not disturb thanks", "tool": "do_not_disturb", "arg": "on"}
+{"text": "Ok now turn on do not disturb ok rn.", "tool": "do_not_disturb", "arg": "on"}
+{"text": "Please turn on do not disturb", "tool": "do_not_disturb", "arg": "on"}
+{"text": "If u could turn on do not disturb when u can", "tool": "do_not_disturb", "arg": "on"}
+{"text": "Disable focus mode asap", "tool": "do_not_disturb", "arg": "off"}
+{"text": "Ok now disable focus mode", "tool": "do_not_disturb", "arg": "off"}
+{"text": "yo disable focus mode", "tool": "do_not_disturb", "arg": "off"}
+{"text": "I need turn on dark mode rn?", "tool": "dark_mode", "arg": "on"}
+{"text": "Ok turn on dark mode thanks", "tool": "dark_mode", "arg": "on"}
+{"text": "samantha, turn on dark mode pls", "tool": "dark_mode", "arg": "on"}
+{"text": "Pls turn on dark mode ty", "tool": "dark_mode", "arg": "on"}
+{"text": "Ok switch to light mode k", "tool": "dark_mode", "arg": "off"}
+{"text": "Would you switch to light mode", "tool": "dark_mode", "arg": "off"}
+{"text": "Ok toggle dark mode thanks", "tool": "dark_mode", "arg": "toggle"}
+{"text": "Yo toggle dark mode rn", "tool": "dark_mode", "arg": "toggle"}
+{"text": "Um so like toggle dark mode pls", "tool": "dark_mode", "arg": "toggle"}
+{"text": "Hey samantha, check bluetooth thanks", "tool": "bluetooth_status", "arg": ""}
+{"text": "Hey check bluetooth ok pls", "tool": "bluetooth_status", "arg": ""}
+{"text": "Check bluetooth thanks", "tool": "bluetooth_status", "arg": ""}
+{"text": "Ok check bluetooth rn", "tool": "bluetooth_status", "arg": ""}
+{"text": "Hey is bluetooth on when u can", "tool": "bluetooth_status", "arg": ""}
+{"text": "Hey samantha, bluetooth check thx", "tool": "bluetooth_status", "arg": ""}
+{"text": "If u could bluetooth check lol", "tool": "bluetooth_status", "arg": ""}
+{"text": "Can you bluetooth check k", "tool": "bluetooth_status", "arg": ""}
+{"text": "Please bluetooth check asap", "tool": "bluetooth_status", "arg": ""}
+{"text": "Pls what's on my calendar tomorrow thanks", "tool": "calendar_tomorrow", "arg": ""}
+{"text": "What's on my calendar tomorrow thanks", "tool": "calendar_tomorrow", "arg": ""}
+{"text": "Pls show tomorrow's events", "tool": "calendar_tomorrow", "arg": ""}
+{"text": "Hey show tomorrow's events thanks", "tool": "calendar_tomorrow", "arg": ""}
+{"text": "Real quick, show tmrw's events thanks", "tool": "calendar_tomorrow", "arg": ""}
+{"text": "What do i have tmrw", "tool": "calendar_tomorrow", "arg": ""}
+{"text": "Um so like am i free tomorrow when u can", "tool": "free_when", "arg": ""}
+{"text": "Samantha, when am i free k", "tool": "free_when", "arg": ""}
+{"text": "If u could when am i free pls k", "tool": "free_when", "arg": ""}
+{"text": "Real quick, when am i free", "tool": "free_when", "arg": ""}
+{"text": "Pls do i have free time tomorrow pls", "tool": "free_when", "arg": "tomorrow"}
+{"text": "do i have free time tomorrow thx.", "tool": "free_when", "arg": "tomorrow"}
+{"text": "Could you check git status", "tool": "git_status", "arg": ""}
+{"text": "Pls check git status", "tool": "git_status", "arg": ""}
+{"text": "What's changed in git thanks", "tool": "git_status", "arg": ""}
+{"text": "Ok git status of the project rn.", "tool": "git_status", "arg": "the project"}
+{"text": "Hey git status of the project pls rn", "tool": "git_status", "arg": "the project"}
+{"text": "Please git status of the project k", "tool": "git_status", "arg": "the project"}
+{"text": "samantha, git status of the project when u can!", "tool": "git_status", "arg": "the project"}
+{"text": "Samantha, show recent commits thanks", "tool": "recent_commits", "arg": ""}
+{"text": "hey show recent commits ty", "tool": "recent_commits", "arg": ""}
+{"text": "Pls show recent commits thx", "tool": "recent_commits", "arg": ""}
+{"text": "Please what are the last commits k", "tool": "recent_commits", "arg": ""}
+{"text": "um so like what are the last commits", "tool": "recent_commits", "arg": ""}
+{"text": "Samantha, recent commits in nimble", "tool": "recent_commits", "arg": "nimble"}
+{"text": "Hey recent commits in nimble pls", "tool": "recent_commits", "arg": "nimble"}
+{"text": "please recent commits in nimble ty", "tool": "recent_commits", "arg": "nimble"}
+{"text": "I need recent commits in nimble k", "tool": "recent_commits", "arg": "nimble"}
+{"text": "Can you run the tests", "tool": "run_tests", "arg": ""}
+{"text": "Could you run the tests", "tool": "run_tests", "arg": ""}
+{"text": "Test everything thx", "tool": "run_tests", "arg": ""}
+{"text": "Could you run tests for the app k", "tool": "run_tests", "arg": "the app"}
+{"text": "right, run tests for the app ok rn", "tool": "run_tests", "arg": "the app"}
+{"text": "If u could run tests for the app thanks.", "tool": "run_tests", "arg": "the app"}
+{"text": "Any open pull requests asap", "tool": "open_prs", "arg": ""}
+{"text": "hey samantha, show open prs pls", "tool": "open_prs", "arg": ""}
+{"text": "I need show open prs lol", "tool": "open_prs", "arg": ""}
+{"text": "Um so like show open prs k", "tool": "open_prs", "arg": ""}
+{"text": "Please show open prs thanks", "tool": "open_prs", "arg": ""}
+{"text": "I need what's waiting for review on epiphany thanks?", "tool": "open_prs", "arg": "epiphany"}
+{"text": "Right, open the nimble repo in vs code ty", "tool": "open_in_editor", "arg": "nimble"}
+{"text": "I need open the nimble repo in vs code rn", "tool": "open_in_editor", "arg": "nimble"}
+{"text": "i need open the nimble repo in vs code rn", "tool": "open_in_editor", "arg": "nimble"}
+{"text": "i need edit epiphany in the editor thanks", "tool": "open_in_editor", "arg": "epiphany"}
+{"text": "Right, edit epiphany in the editor k", "tool": "open_in_editor", "arg": "epiphany"}
+{"text": "I need edit epiphany in the editor when u can?", "tool": "open_in_editor", "arg": "epiphany"}
+{"text": "Ok now read the pdf ~/report.pdf thanks", "tool": "read_document", "arg": "~/report.pdf"}
+{"text": "Ok now read the pdf ~/report.pdf", "tool": "read_document", "arg": "~/report.pdf"}
+{"text": "would you open and read ~/invoice.pdf thanks", "tool": "read_document", "arg": "~/invoice.pdf"}
+{"text": "I need open and read ~/invoice.pdf when u can", "tool": "read_document", "arg": "~/invoice.pdf"}
+{"text": "um so like find budget in ~/report.pdf rn?", "tool": "find_in_document", "arg": "budget\t~/report.pdf"}
+{"text": "Can you find budget in ~/report.pdf", "tool": "find_in_document", "arg": "budget\t~/report.pdf"}
+{"text": "Hey search for the total in ~/invoice.pdf pls", "tool": "find_in_document", "arg": "the total\t~/invoice.pdf"}
+{"text": "Pls search for the total in ~/invoice.pdf asap", "tool": "find_in_document", "arg": "the total\t~/invoice.pdf"}
+{"text": "i need what does ~/report.pdf say about the budget thanks", "tool": "ask_document", "arg": "about the budget\t~/report.pdf"}
+{"text": "Please what does ~/report.pdf say about the budget", "tool": "ask_document", "arg": "about the budget\t~/report.pdf"}
+{"text": "Real quick, in ~/notes.txt, what's the deadline asap", "tool": "ask_document", "arg": "what's the deadline\t~/notes.txt"}
+{"text": "Yo in ~/notes.txt, what's the deadline", "tool": "ask_document", "arg": "what's the deadline\t~/notes.txt"}
+{"text": "in ~/notes.txt, what's the deadline rn", "tool": "ask_document", "arg": "what's the deadline\t~/notes.txt"}
+{"text": "Pls what are the dimensions of ~/photo.jpg thanks", "tool": "image_info", "arg": "~/photo.jpg"}
+{"text": "Hey samantha, remove the background from ~/pic.jpg", "tool": "remove_background", "arg": "~/pic.jpg"}
+{"text": "pls remove the background from ~/pic.jpg pls", "tool": "remove_background", "arg": "~/pic.jpg"}
+{"text": "remove the background from ~/pic.jpg thx", "tool": "remove_background", "arg": "~/pic.jpg"}
+{"text": "Pls remove the background from ~/pic.jpg thanks", "tool": "remove_background", "arg": "~/pic.jpg"}
+{"text": "Real quick, cut out the background of ~/photo.png rn", "tool": "remove_background", "arg": "~/photo.png"}
+{"text": "pls cut out the background of ~/photo.png rn", "tool": "remove_background", "arg": "~/photo.png"}
+{"text": "Could you upscale ~/photo.jpg asap", "tool": "upscale_image", "arg": "~/photo.jpg"}
+{"text": "Ok upscale ~/photo.jpg when u can?", "tool": "upscale_image", "arg": "~/photo.jpg"}
+{"text": "Upscale ~/photo.jpg?", "tool": "upscale_image", "arg": "~/photo.jpg"}
+{"text": "Please increase the resolution of ~/image.png thanks", "tool": "upscale_image", "arg": "~/image.png"}
+{"text": "could you increase the resolution of ~/image.png ok thx", "tool": "upscale_image", "arg": "~/image.png"}
+{"text": "Hey increase the resolution of ~/image.png", "tool": "upscale_image", "arg": "~/image.png"}
+{"text": "Increase the resolution of ~/image.png", "tool": "upscale_image", "arg": "~/image.png"}
+{"text": "Would you enhance ~/photo.jpg asap", "tool": "enhance_image", "arg": "~/photo.jpg"}
+{"text": "If u could enhance ~/photo.jpg thx", "tool": "enhance_image", "arg": "~/photo.jpg"}
+{"text": "Could you improve the colors of ~/pic.png pls", "tool": "enhance_image", "arg": "~/pic.png"}
+{"text": "improve the colors of ~/pic.png", "tool": "enhance_image", "arg": "~/pic.png"}
+{"text": "Can you grayscale ~/color.jpg", "tool": "grayscale_image", "arg": "~/color.jpg"}
+{"text": "Pls grayscale ~/color.jpg pls", "tool": "grayscale_image", "arg": "~/color.jpg"}
+{"text": "Um so like make ~/photo.png black and white thanks", "tool": "grayscale_image", "arg": "~/photo.png"}
+{"text": "Um so like make ~/photo.png black and white pls thx", "tool": "grayscale_image", "arg": "~/photo.png"}
+{"text": "Make ~/photo.png black and white", "tool": "grayscale_image", "arg": "~/photo.png"}
+{"text": "Flip ~/photo.jpg horizontally thx", "tool": "flip_image", "arg": "~/photo.jpg"}
+{"text": "Samantha, flip ~/photo.jpg horizontally thanks", "tool": "flip_image", "arg": "~/photo.jpg"}
+{"text": "I need flip ~/photo.jpg horizontally pls", "tool": "flip_image", "arg": "~/photo.jpg"}
+{"text": "Can you mirror ~/image.png rn", "tool": "flip_image", "arg": "~/image.png"}
+{"text": "Can you mirror ~/image.png asap", "tool": "flip_image", "arg": "~/image.png"}
+{"text": "Could you crop ~/photo.jpg to a square pls", "tool": "crop_square", "arg": "~/photo.jpg"}
+{"text": "Pls crop ~/photo.jpg to a square when u can", "tool": "crop_square", "arg": "~/photo.jpg"}
+{"text": "Samantha, crop ~/photo.jpg to a square asap", "tool": "crop_square", "arg": "~/photo.jpg"}
+{"text": "Right, square crop ~/image.png thanks", "tool": "crop_square", "arg": "~/image.png"}
+{"text": "If u could square crop ~/image.png ok when u can.", "tool": "crop_square", "arg": "~/image.png"}
+{"text": "Right, square crop ~/image.png rn", "tool": "crop_square", "arg": "~/image.png"}
+{"text": "Would you square crop ~/image.png thx", "tool": "crop_square", "arg": "~/image.png"}
+{"text": "Please convert ~/photo.jpg to png ty", "tool": "convert_image", "arg": "~/photo.jpg\tpng"}
+{"text": "Samantha, convert ~/photo.jpg to png rn", "tool": "convert_image", "arg": "~/photo.jpg\tpng"}
+{"text": "Ok turn ~/image.png into jpg rn", "tool": "convert_image", "arg": "~/image.png\tjpg"}
+{"text": "Could you turn ~/image.png into jpg when u can", "tool": "convert_image", "arg": "~/image.png\tjpg"}
+{"text": "pls turn ~/image.png into jpg rn", "tool": "convert_image", "arg": "~/image.png\tjpg"}
+{"text": "Real quick, rotate ~/photo.jpg by 90 rn", "tool": "rotate_image", "arg": "~/photo.jpg\tby 90"}
+{"text": "Rotate ~/photo.jpg by 90 asap!", "tool": "rotate_image", "arg": "~/photo.jpg\tby 90"}
+{"text": "Rotate ~/photo.jpg by 90 thanks", "tool": "rotate_image", "arg": "~/photo.jpg\tby 90"}
+{"text": "Could you turn ~/image.png by 180 degrees ty", "tool": "rotate_image", "arg": "~/image.png\tby 180"}
+{"text": "So turn ~/image.png by 180 degrees pls", "tool": "rotate_image", "arg": "~/image.png\tby 180"}
+{"text": "Pls turn ~/image.png by 180 degrees pls", "tool": "rotate_image", "arg": "~/image.png\tby 180"}
+{"text": "samantha, turn ~/image.png by 180 degrees asap", "tool": "rotate_image", "arg": "~/image.png\tby 180"}
+{"text": "Um so like turn ~/image.png by 180 degrees lol thanks", "tool": "rotate_image", "arg": "~/image.png\tby 180"}
+{"text": "So resize ~/photo.jpg to 1024 when u can", "tool": "resize_image", "arg": "~/photo.jpg\tto 1024"}
+{"text": "Could you resize ~/photo.jpg to 1024 when u can", "tool": "resize_image", "arg": "~/photo.jpg\tto 1024"}
+{"text": "Would you resize ~/photo.jpg to 1024 ty", "tool": "resize_image", "arg": "~/photo.jpg\tto 1024"}
+{"text": "Right, scale ~/image.png to 512 thanks", "tool": "resize_image", "arg": "~/image.png\tto 512"}
+{"text": "Real quick, scale ~/image.png to 512 pls k", "tool": "resize_image", "arg": "~/image.png\tto 512"}
+{"text": "Hey samantha, scale ~/image.png to 512 when u can", "tool": "resize_image", "arg": "~/image.png\tto 512"}
+{"text": "Ok scale ~/image.png to 512 ok thanks", "tool": "resize_image", "arg": "~/image.png\tto 512"}
+{"text": "So scale ~/image.png to 512", "tool": "resize_image", "arg": "~/image.png\tto 512"}
+{"text": "I need convert 5 km to miles rn", "tool": "convert_units", "arg": "5 km"}
+{"text": "Please convert 5 km to miles pls", "tool": "convert_units", "arg": "5 km"}
+{"text": "Real quick, convert 5 km to miles k", "tool": "convert_units", "arg": "5 km"}
+{"text": "Yo convert 5 km to miles pls pls", "tool": "convert_units", "arg": "5 km"}
+{"text": "right, convert 10 lb to kg k", "tool": "convert_units", "arg": "10 lb"}
+{"text": "Real quick, convert 10 lb to kg rn", "tool": "convert_units", "arg": "10 lb"}
+{"text": "Pls convert 10 lb 2 kg ok", "tool": "convert_units", "arg": "10 lb"}
+{"text": "who is your favorite artist rn", "tool": null, "arg": ""}
+{"text": "Hey do you have thoughts on ai k", "tool": null, "arg": ""}
+{"text": "Please what movie should i watch thanks", "tool": null, "arg": ""}
+{"text": "how many stars are in the sky k", "tool": null, "arg": ""}
+{"text": "i need what's your take on modern music ty?", "tool": null, "arg": ""}
+{"text": "what's the best programming language thanks", "tool": null, "arg": ""}
+{"text": "do you like cooking ty", "tool": null, "arg": ""}
+{"text": "Should i eat breakfast rn", "tool": null, "arg": ""}
+{"text": "Hey do you enjoy reading ty", "tool": null, "arg": ""}
+{"text": "Pls how long should sleep last", "tool": null, "arg": ""}
+{"text": "Yo is exercise important when u can", "tool": null, "arg": ""}
+{"text": "What's the best vacation spot rn", "tool": null, "arg": ""}
+{"text": "What's your favorite holiday pls?", "tool": null, "arg": ""}
+{"text": "Pls what's your stance on veganism!", "tool": null, "arg": ""}
+{"text": "I need what's a good hobby to pick up k", "tool": null, "arg": ""}
+{"text": "um so like should i move to another city pls", "tool": null, "arg": ""}
+{"text": "Is minimalism worth trying thanks", "tool": null, "arg": ""}
+{"text": "I need do you think school is useful pls", "tool": null, "arg": ""}
+{"text": "i need should i dye my hair.", "tool": null, "arg": ""}
+{"text": "should i ask them out when u can", "tool": null, "arg": ""}
+{"text": "If u could what's the best career path thanks", "tool": null, "arg": ""}
+{"text": "Real quick, check my battery and then open notes thx", "tool": "agent", "arg": ""}
+{"text": "samantha, go to hacker news and summarize what's trending k", "tool": "agent", "arg": ""}
+{"text": "Ok now search for productivity tips and read me the top result", "tool": "agent", "arg": ""}
+{"text": "right, open spotify, then tell me what's playing rn", "tool": "agent", "arg": ""}
+{"text": "Yo take a screenshot and upload it somewhere", "tool": "agent", "arg": ""}
+{"text": "Yo find the current time in tokyo and set a reminder for 3 hours from now thanks", "tool": "agent", "arg": ""}
+{"text": "yo look at my calendar for tomorrow and tell me if i'm free at 2pm rn", "tool": "agent", "arg": ""}
+{"text": "check git status and then run the tests ty", "tool": "agent", "arg": ""}
+{"text": "If u could list my open prs and tell me which ones need review thanks", "tool": "agent", "arg": ""}
+{"text": "Ok read my unread mail and give me a summary asap", "tool": "agent", "arg": ""}
+{"text": "Yo search for climate policy and summarize the findings thx", "tool": "agent", "arg": ""}
+{"text": "I need open the file ~/downloads/report.pdf and tell me what it says", "tool": "agent", "arg": ""}
+{"text": "Ok check my disk space and clean up if i'm running low", "tool": "agent", "arg": ""}
+{"text": "i need go to github and show me the top trending repos ty", "tool": "agent", "arg": ""}
+{"text": "would you read this page and give me the highlights", "tool": "agent", "arg": ""}
+{"text": "Ok now look at the weather and then tell me what to wear rn", "tool": "agent", "arg": ""}
+{"text": "Yo search for the latest news and summarize it", "tool": "agent", "arg": ""}
+{"text": "Open twitter and find something interesting to read", "tool": "agent", "arg": ""}
+{"text": "Real quick, check my recent commits and create a summary of changes when u can", "tool": "agent", "arg": ""}
+{"text": "Pls poke around youtube and tell me what's trending today", "tool": "agent", "arg": ""}
+{"text": "Hey samantha, look up tomorrow's weather and check my schedule", "tool": "agent", "arg": ""}

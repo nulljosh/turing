@@ -22,6 +22,7 @@ DATA = os.environ.get("DATA") or _found("train.jsonl", "/kaggle/input/samantha-h
 OUT = os.environ.get("OUT", "/kaggle/working/hands-merged")
 EPOCHS = float(os.environ.get("EPOCHS", "2"))
 MAXLEN = int(os.environ.get("MAXLEN", "512"))
+BETA = float(os.environ.get("BETA", "0.1"))  # DPO: how far the policy may move from the SFT model on each preference pair
 
 
 def mask_prompt(prompt_ids, full_ids):
@@ -49,6 +50,12 @@ def encode(tok, messages):
     full = prompt + messages[-1]["content"] + tok.eos_token
     p, f = tok(prompt, add_special_tokens=False)["input_ids"], tok(full, add_special_tokens=False)["input_ids"]
     return {"input_ids": f[:MAXLEN], "labels": mask_prompt(p, f)[:MAXLEN]}
+
+
+def dpo_logit(policy_chosen, ref_chosen, policy_rejected, ref_rejected, beta=BETA):
+    """The DPO margin: how much more the policy (than the frozen SFT model) prefers the chosen call over the rejected one, times beta.
+    Works on floats and on torch tensors; the loss is -logsigmoid of this."""
+    return beta * ((policy_chosen - ref_chosen) - (policy_rejected - ref_rejected))
 
 
 def load_rows(path, tok):
@@ -84,9 +91,44 @@ def main():
                              fp16=True, logging_steps=25, eval_strategy="epoch", save_strategy="no", report_to=[], remove_unused_columns=False)
     Trainer(model=model, args=args, train_dataset=train, eval_dataset=valid, data_collator=lambda rows: {k: torch.tensor(v) for k, v in pad_batch(rows, tok.pad_token_id).items()}).train()
     merged = model.merge_and_unload()
+    pairs_path = os.path.join(DATA, "pairs.jsonl")
+    if os.path.exists(pairs_path):  # round twenty-eight: teacher preference pairs, "this call, not that one"
+        merged = dpo_stage(merged, tok, [json.loads(line) for line in open(pairs_path)], torch, get_peft_model, LoraConfig)
     merged.save_pretrained(OUT)
     tok.save_pretrained(OUT)
     print("saved", OUT, "- zip it and download")
+
+
+def dpo_stage(model, tok, pairs, torch, get_peft_model, LoraConfig, epochs=2, lr=5e-5):
+    """DPO on {"messages": [system, user], "chosen": call, "rejected": call} pairs with a fresh LoRA on the SFT model.
+    The SFT model itself is the reference: its log-probs come from the same weights with the adapter switched off."""
+    model = get_peft_model(model, LoraConfig(r=16, lora_alpha=32, lora_dropout=0.0, target_modules="all-linear", task_type="CAUSAL_LM"))
+    opt = torch.optim.AdamW([p for p in model.parameters() if p.requires_grad], lr=lr)
+
+    def logprob(messages, completion):
+        """Sum of the completion's token log-probs after the prompt."""
+        enc = encode(tok, messages + [{"role": "assistant", "content": completion}])
+        ids = torch.tensor([enc["input_ids"]], device=model.device)
+        labels = torch.tensor([enc["labels"]], device=model.device)[:, 1:]
+        logits = model(ids).logits[:, :-1].float()
+        mask = labels != -100
+        lp = torch.log_softmax(logits, -1).gather(-1, labels.clamp(min=0).unsqueeze(-1)).squeeze(-1)
+        return (lp * mask).sum()
+
+    with torch.no_grad(), model.disable_adapter():
+        refs = [(logprob(p["messages"], p["chosen"]).item(), logprob(p["messages"], p["rejected"]).item()) for p in pairs]
+    model.train()
+    for epoch in range(epochs):
+        total, won = 0.0, 0
+        for p, (rc, rr) in zip(pairs, refs):
+            margin = dpo_logit(logprob(p["messages"], p["chosen"]), rc, logprob(p["messages"], p["rejected"]), rr)
+            loss = -torch.nn.functional.logsigmoid(margin)
+            loss.backward()
+            opt.step()
+            opt.zero_grad()
+            total, won = total + loss.item(), won + (margin.item() > 0)
+        print(f"dpo epoch {epoch + 1}: loss {total / len(pairs):.4f}, prefers chosen on {won}/{len(pairs)}", flush=True)
+    return model.merge_and_unload()
 
 
 if __name__ == "__main__":
