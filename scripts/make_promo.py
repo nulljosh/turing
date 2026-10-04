@@ -23,6 +23,8 @@ import voice  # noqa: E402
 URL = next((a for a in sys.argv[1:] if a.startswith("http")), "https://turing.heyitsmejosh.com")
 W, H = 1280, 720
 # (what she says over it, [what is typed into the demo while she says it]); each segment lasts at least as long as its line
+# lines shown on a card over the last demo segment: the things the web stand-in cannot do, said plainly as Mac-only, never faked
+MAC_ONLY = ["research the history of the printing press", "what's on my screen", "click Sign in"]
 SEGMENTS = [
     ("This is Samantha. A small AI that lives on your Mac. Free, and private.", []),
     ("She paints from thirty thousand squares. She draws anything you can name.", ["paint the mona lisa", "draw a lighthouse at dusk"]),
@@ -30,7 +32,7 @@ SEGMENTS = [
     ("She keeps your notes, your reminders and your calendar.", ["write a note to buy milk", "remind me to call mom tomorrow at 9"]),
     ("She finds your files, reads them, and tells you how big they are.", ["show me the files in ~/Documents", "find budget.pdf"]),
     ("She does the math, converts units and counts the days.", ["what is 17*23", "convert 72 f to c", "days until christmas"]),
-    ("Ask her anything. On a real Mac she researches with sources, reads your screen and clicks for you. She always asks first.", ["who painted the mona lisa"]),
+    ("Ask her anything. On a real Mac she researches with sources, reads your screen and clicks for you. She always asks first.", []),
     ("Free. Private. Download her for Mac.", []),
 ]
 
@@ -70,7 +72,7 @@ def record(clips, out_dir):
         page.wait_for_selector("#chat-input")
         page.focus("#chat-input")  # a click would re-arm the page's idle reel, which then types over the script; typing stops it for good
         page.wait_for_timeout(1200)
-        for (mp3, seconds), (_, prompts) in zip(clips, SEGMENTS):
+        for (mp3, seconds), (line, prompts) in zip(clips, SEGMENTS):
             seg_start = time.time()
             starts.append(seg_start - t0)
             for prompt in prompts:
@@ -83,6 +85,11 @@ def record(clips, out_dir):
                     if page.evaluate("document.querySelectorAll('#chat-transcript .chat-message').length") >= seen + 2:
                         break
                 page.wait_for_timeout(1200)
+            if line.startswith("Ask her anything"):
+                page.evaluate("""(lines) => { const d = document.createElement('div');
+                  d.style.cssText = 'position:fixed;inset:0;z-index:99;background:#fff;color:#151515;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;font:600 34px -apple-system,Helvetica,sans-serif;text-align:center';
+                  d.innerHTML = lines.map(l => '<div>' + l + '</div>').join('') + '<div style="font:500 22px -apple-system,Helvetica,sans-serif;color:#666;margin-top:14px">On a real Mac. She always asks first.</div>';
+                  document.body.appendChild(d); }""", MAC_ONLY)
             spent = time.time() - seg_start
             page.wait_for_timeout(int(max(0, seconds + 0.7 - spent) * 1000))
         page.wait_for_timeout(800)
