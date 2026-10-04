@@ -138,14 +138,6 @@
       .hero .hero-cta{margin-bottom:12px;gap:8px}
       .pill{min-height:44px;font-family:inherit;cursor:pointer}
       button.pill{border:1px solid var(--line)}
-      .chips{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:12px}
-      .chip{font:inherit;font-size:13px;min-height:44px;padding:0 14px;border-radius:var(--r-pill);border:1px solid var(--line);background:transparent;color:var(--muted);cursor:pointer}
-      .chip:hover{border-color:var(--ember);color:var(--fg)}
-      .chip:focus-visible{outline:2px solid var(--fg);outline-offset:3px}
-      .chips-more{max-width:760px;margin:0 auto 12px}
-      .chip-fam{display:flex;gap:6px;flex-wrap:wrap;align-items:center;justify-content:center;margin-top:8px}
-      .chip-fam-name{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;min-width:104px;text-align:right;padding-right:6px}
-      @media (max-width:640px){.chip-fam-name{min-width:100%;text-align:center;padding:0}}
       main>section,main>.pull-quote,.mark-foot,footer{scroll-snap-align:start}
       main>section{min-height:calc(100svh - 77px);margin-top:0;display:flex;flex-direction:column;justify-content:center;padding:40px 0;box-sizing:border-box}
       main>section>.col,main>section>.wide{width:100%;box-sizing:border-box}
@@ -343,33 +335,6 @@
           <button type="button" class="pill pill-dark copy-install" aria-label="Copy the install command">Copy install command</button>
           <button type="button" class="pill pill-dark install-app" hidden>Install app</button>
         </div>
-        <div class="chips" role="group" aria-label="Try a feature">
-          <button type="button" class="chip" data-q="paint the mona lisa">Paint</button>
-          <button type="button" class="chip" data-q="draw a lighthouse at dusk">Draw</button>
-          <button type="button" class="chip" data-q="make me a complex logo for a surf school">Logo</button>
-          <button type="button" class="chip" data-q="open chrome and go to en.wikipedia.org/wiki/Alan_Turing">Browse</button>
-          <button type="button" class="chip" data-q="set the volume to 40">Volume</button>
-          <button type="button" class="chip" data-q="play some music">Music</button>
-          <button type="button" class="chip" data-q="take a screenshot">Screen</button>
-          <button type="button" class="chip" data-q="what's the weather in tokyo">Weather</button>
-          <button type="button" class="chip" data-q="who painted the mona lisa">Ask</button>
-          <button type="button" class="chip" data-q="what is 17*23">Math</button>
-          <button type="button" class="chip" data-q="convert 72 f to c">Convert</button>
-          <button type="button" class="chip" data-q="time in tokyo">Time</button>
-          <button type="button" class="chip" data-q="roll 2d6">Dice</button>
-          <button type="button" class="chip" data-q="sha256 of turing">Text</button>
-          <button type="button" class="chip" data-q="set a timer for 1 minute">Timer</button>
-          <button type="button" class="chip" data-q="scroll to the results">Page</button>
-        </div>
-        <details class="more chips-more"><summary>See everything she can do</summary>
-          <div class="chip-fam"><span class="chip-fam-name">Files</span><button type="button" class="chip" data-q="show me the files in ~/Documents">List a folder</button><button type="button" class="chip" data-q="read the file ~/notes.txt">Read a file</button><button type="button" class="chip" data-q="find budget.pdf">Find a file</button><button type="button" class="chip" data-q="how big is ~/Downloads">Folder size</button><button type="button" class="chip" data-q="summarize ~/plan.md">Summarize</button></div>
-          <div class="chip-fam"><span class="chip-fam-name">Notes and time</span><button type="button" class="chip" data-q="write a note to buy milk">New note</button><button type="button" class="chip" data-q="remind me to call mom tomorrow at 9">Reminder</button><button type="button" class="chip" data-q="list my reminders">Your reminders</button><button type="button" class="chip" data-q="what is on my calendar today">Calendar</button><button type="button" class="chip" data-q="add dentist to my calendar tomorrow at 3">Add event</button><button type="button" class="chip" data-q="days until christmas">Countdown</button><button type="button" class="chip" data-q="what day is it">Date</button></div>
-          <div class="chip-fam"><span class="chip-fam-name">Your Mac</span><button type="button" class="chip" data-q="how much battery do i have">Battery</button><button type="button" class="chip" data-q="how much disk space is free">Disk space</button><button type="button" class="chip" data-q="what is my ip address">IP address</button><button type="button" class="chip" data-q="is bluetooth on">Bluetooth</button><button type="button" class="chip" data-q="turn on dark mode">Dark mode</button><button type="button" class="chip" data-q="uptime">Uptime</button><button type="button" class="chip" data-q="what apps are running">Running apps</button><button type="button" class="chip" data-q="quit safari">Quit an app</button><button type="button" class="chip" data-q="what tabs are open">Browser tabs</button><button type="button" class="chip" data-q="what is on my screen">Read screen</button></div>
-          <div class="chip-fam"><span class="chip-fam-name">Words</span><button type="button" class="chip" data-q="define serendipity">Define</button><button type="button" class="chip" data-q="translate hello to french">Translate</button><button type="button" class="chip" data-q="word count of the quick brown fox">Word count</button><button type="button" class="chip" data-q="reverse text hello">Reverse</button><button type="button" class="chip" data-q="shout hello">Shout</button><button type="button" class="chip" data-q="say hello there">Say it</button><button type="button" class="chip" data-q="morse code sos">Morse</button><button type="button" class="chip" data-q="base64 encode turing">Base64</button><button type="button" class="chip" data-q="pretty print json {&quot;a&quot;:1}">Pretty JSON</button></div>
-          <div class="chip-fam"><span class="chip-fam-name">Numbers</span><button type="button" class="chip" data-q="convert 5 miles to km">Units</button><button type="button" class="chip" data-q="make a password">Password</button><button type="button" class="chip" data-q="random number between 1 and 100">Random</button><button type="button" class="chip" data-q="flip a coin">Coin</button><button type="button" class="chip" data-q="make a uuid">UUID</button></div>
-          <div class="chip-fam"><span class="chip-fam-name">Images</span><button type="button" class="chip" data-q="grayscale cat.png">Grayscale</button><button type="button" class="chip" data-q="flip portrait.jpg horizontally">Flip</button></div>
-          <div class="chip-fam"><span class="chip-fam-name">Research</span><button type="button" class="chip" data-q="research how lora works">Research</button><button type="button" class="chip" data-q="ask claude what is a lora">Ask a bigger model</button></div>
-        </details>
         <div class="hero-media" id="demo">
         <div class="card" style="display:flex;flex-direction:column">
           <div id="desk" class="desk" aria-label="A stand-in Mac that Samantha controls">

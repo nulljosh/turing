@@ -1,5 +1,7 @@
 # Progress log
 
+- 2026-10-04: v4.20.7 🎉 The landing demo plays itself through everything she can do, with no buttons: pictures, her Mac, notes and reminders, files, words, numbers, research. The stand-in Mac now answers disk, apps, Bluetooth, uptime and the calendar with labelled sample values instead of "run her on a real Mac".
+  v4.20.7 · 135 tools · 681 tests · docs coverage 100% · laws all hold · biggest app/tools_util.py 649 · actions 231/231 · parity 231/231 · util_diff 261/261
 - 2026-10-04: v4.20.6 🎉 The landing demo shows everything she can do: "See everything she can do" opens 56 one-tap examples across files, notes and time, your Mac, words, numbers, images and research.
   v4.20.6 · 135 tools · 681 tests · docs coverage 100% · laws all hold · biggest app/tools_util.py 649 · actions 231/231 · parity 231/231 · util_diff 261/261
 - 2026-10-04: v4.20.5 🎉 "How much time since boot", "what tasks do I have" and "list visible apps" now run instead of being refused.

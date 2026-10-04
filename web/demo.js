@@ -454,6 +454,22 @@
   Object.keys(PAGE).forEach(function (k) { TOOLS[k] = PAGE[k]; });
   // the utility tools run for real here, the same code as tools_util.py (eval/util_diff.py keeps the two honest)
   Object.keys(S.util).forEach(function (k) { if (typeof S.util[k] === 'function') TOOLS[k] = S.util[k]; });
+  // the stand-in Mac has no real disk or network, but a demo that answers "that one reads your real Mac" shows nothing. These return what a Mac mini would
+  // say, labelled as the stand-in's own numbers. The real tools answer on a real Mac, and samantha.js keeps its honest answer for anything not listed here.
+  var STANDIN = {
+    disk_space: function () { return '412 GB free of 994 GB.'; }, uptime: function () { return 'Up 3 days, 4 hours.'; },
+    memory_usage: function () { return '9.8 GB of 16 GB in use.'; }, cpu_load: function () { return 'The processor is at 14 percent.'; },
+    ip_address: function () { return '192.168.1.24 on Wi-Fi.'; }, wifi_name: function () { return 'Connected to Home-5G.'; },
+    system_info: function () { return 'Mac mini, Apple M4, 16 GB, macOS 26.'; }, bluetooth_status: function () { return 'Bluetooth is on. Keyboard and trackpad connected.'; },
+    running_apps: function () { return 'Running: Finder, Chrome, Notes, Music, Samantha.'; }, list_tabs: function () { return '1. Samantha  2. Alan Turing, Wikipedia  3. GitHub'; },
+    list_shortcuts: function () { return 'Good Morning, Focus Mode, Clean Downloads, Send Standup.'; }, recent_downloads: function () { return 'Newest first: receipt.pdf, sunset.jpg, notes-oct.txt.'; },
+    list_reminders: function () { return desk.reminders.length ? desk.reminders.slice(-3).join('; ') : 'Nothing yet. Ask me to remind you of something.'; },
+    add_event: function (q) { return 'Added to the calendar: ' + String(q || 'dentist').replace(/^\s+|\s+$/g, '') + '.'; },
+    unread_mail: function () { return '3 unread: Mom, Landlord, App Store Connect.'; },
+    find_file: function (q) { return 'Found ~/Documents/' + String(q || 'budget.pdf').replace(/^\s+|\s+$/g, '') + '.'; },
+    folder_size: function (q) { return String(q || '~/Downloads') + ' is 1.8 GB.'; }
+  };
+  Object.keys(STANDIN).forEach(function (k) { var f = STANDIN[k]; TOOLS[k] = function () { var r = f.apply(null, arguments); return k === 'list_reminders' || k === 'add_event' ? r : r + ' (stand-in Mac)'; }; });
 
   setInterval(function () {
     if (desk.timerEnd && Date.now() >= desk.timerEnd) {
@@ -656,9 +672,23 @@
 
   // No theme commands and no barrel roll in the reel: moving a visitor's whole page unasked reads as a bug.
   // ---- idle reel: if nobody types, she shows what she does. Silent, and it stops the moment you touch anything ----
-  var REEL = ['paint the mona lisa', 'open chrome and go to en.wikipedia.org/wiki/Alan_Turing', 'set the volume to 40', 'paint the eniac',
-              'what is 17*23', 'make me a complex logo for a surf school', 'make me an original wordless logo for turing', "what's the weather in tokyo", 'play some music', 'skip this song', 'paint the last supper as a mosaic',
-              'who painted the mona lisa', 'scroll to the results', 'take a screenshot', 'draw a lighthouse at dusk', 'draw a fox in the snow', 'calculate 17*23', 'convert 72 f to c', 'time in tokyo', 'roll 2d6', 'is 91 prime', 'days until christmas', 'who invented the telephone', 'reset the page'];
+  var REEL = [
+    // pictures first: the part nobody has seen a 0.5B do
+    'paint the mona lisa', 'draw a lighthouse at dusk', 'make me a complex logo for a surf school', 'paint the eniac', 'paint the last supper as a mosaic', 'draw a fox in the snow',
+    // her Mac: apps, the web, sound, the screen
+    'open chrome and go to en.wikipedia.org/wiki/Alan_Turing', 'set the volume to 40', 'play some music', 'skip this song', 'take a screenshot', 'what apps are running', 'how much disk space is free', 'is bluetooth on', 'uptime',
+    // notes, reminders, calendar, time
+    'write a note to buy milk', 'remind me to call mom tomorrow at 9', 'list my reminders', 'what is on my calendar today', 'add dentist to my calendar tomorrow at 3', 'time in tokyo', 'days until christmas', 'set a timer for 1 minute',
+    // files and documents
+    'show me the files in ~/Documents', 'read the file ~/notes.txt', 'find budget.pdf', 'how big is ~/Downloads',
+    // words
+    'define serendipity', 'translate hello to french', 'word count of the quick brown fox', 'reverse text hello', 'base64 encode turing', 'morse code sos', 'pretty print json {"a":1}',
+    // numbers and chance
+    'what is 17*23', 'convert 72 f to c', 'is 91 prime', 'roll 2d6', 'flip a coin', 'make a password',
+    // knowledge and research
+    "what's the weather in tokyo", 'who painted the mona lisa', 'who invented the telephone', 'research how lora works',
+    // images, her page, and back to the start
+    'grayscale cat.png', 'scroll to the results', 'reset the page'];
   // more phrasings for the input's autocomplete only. The reel stays short.
   var MORE = ['what are my reminders', 'search notes for eggs', 'what apps are running', 'turn on dark mode', 'git status', 'recent commits', 'take a note pick up milk', 'set a timer for 1 minute', 'open chrome and go to github.com', 'change the title to Hello there', 'draw a robot reading a book', 'draw a sailboat on a calm lake', 'imagine a city on the moon', 'do a barrel roll', 'tip on 45', 'roman numerals for 2026', 'sha256 of turing', 'base64 encode hello', 'morse sos', 'flip a coin', 'generate a strong password',
               'make a uuid', 'random number between 1 and 100', 'count words in the quick brown fox', 'reverse the text hello', 'what day is it',
@@ -691,7 +721,6 @@
     idle();
   }
 
-  Array.prototype.forEach.call(document.querySelectorAll('.chip'), function (c) { c.addEventListener('click', function () { lastUser = Date.now(); stopReel(); if (busy) return; send(c.getAttribute('data-q'), idle); }); });
   $('chat-send').addEventListener('click', function () { lastUser = Date.now(); stopReel(); send(null, idle); });
   input.addEventListener('keydown', function (e) {
     stopReel();
