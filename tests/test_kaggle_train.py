@@ -33,3 +33,6 @@ assert row["labels"][-3:] == [ord("{"), ord("}"), ord("!")] and row["labels"][0]
 assert abs(k.dpo_logit(-1.0, -2.0, -3.0, -3.0, beta=0.1) - 0.1) < 1e-9  # chosen rose 1 nat over the reference, rejected held
 assert k.dpo_logit(-2.0, -2.0, -1.0, -3.0, beta=0.5) < 0  # the policy moved toward the rejected call: negative margin
 print("ok")
+
+assert k.parse_tool('{"tool": "weather", "arg": "x"}') == "weather" and k.parse_tool("no pick") is None and k.parse_tool("{bad json}") is None
+assert k.parse_tool('{"tool": null, "arg": ""}') is None

@@ -22,3 +22,5 @@ Compare with the numbers for the shipped picker in `eval/picker-rounds.log` (sta
 
 ## Not done yet
 The merged model is scored, not wired in: the app loads the picker as the 0.5B base plus an adapter, so using a merged model means a small loader change. Do that only if the scores are worth it. The exact router also still answers first; 5.0 needs it out of the live path.
+
+The kernel scores itself: after SFT and again after DPO it picks the tool on the first 200 rows of test.jsonl (valid.jsonl if there is none) and prints both. If DPO scores worse, the SFT model ships instead, so a collapse (round twenty-eight) never reaches the download. The SFT-only model is also saved beside it as hands-merged-sft.

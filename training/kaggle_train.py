@@ -9,6 +9,7 @@ Settings come from the environment: BASE, DATA, OUT, EPOCHS, MAXLEN. ponytail: p
 import glob
 import json
 import os
+import re
 
 
 def _found(name, default):
@@ -22,6 +23,7 @@ DATA = os.environ.get("DATA") or _found("train.jsonl", "/kaggle/input/samantha-h
 OUT = os.environ.get("OUT", "/kaggle/working/hands-merged")
 EPOCHS = float(os.environ.get("EPOCHS", "2"))
 MAXLEN = int(os.environ.get("MAXLEN", "512"))
+SCORE_N = int(os.environ.get("SCORE_N", "200"))  # rows scored in-kernel after each stage
 BETA = float(os.environ.get("BETA", "0.1"))  # DPO: how far the policy may move from the SFT model on each preference pair
 
 
@@ -58,6 +60,29 @@ def dpo_logit(policy_chosen, ref_chosen, policy_rejected, ref_rejected, beta=BET
     return beta * ((policy_chosen - ref_chosen) - (policy_rejected - ref_rejected))
 
 
+def parse_tool(raw):
+    """The tool name in a model reply (the first {...} object's "tool"), or None when there is no pick or it is not JSON."""
+    found = re.search(r"\{.*?\}", raw, re.S)
+    try:
+        return json.loads(found.group(0)).get("tool") if found else None
+    except (ValueError, AttributeError):
+        return None
+
+
+def score_slice(model, tok, rows, torch, n=SCORE_N):
+    """Fraction of the first n chat rows whose greedy reply picks the same tool as the row's own answer. A cheap in-kernel stand-in for eval/hands.py, enough to see a collapse before anything is downloaded."""
+    model.eval()
+    right = total = 0
+    for row in rows[:n]:
+        msgs = row["messages"]
+        want = parse_tool(msgs[-1]["content"])
+        ids = tok(tok.apply_chat_template(msgs[:-1], add_generation_prompt=True, tokenize=False), add_special_tokens=False, return_tensors="pt")["input_ids"].to(model.device)
+        with torch.no_grad():
+            out = model.generate(ids, max_new_tokens=48, do_sample=False, pad_token_id=tok.pad_token_id)
+        right, total = right + (parse_tool(tok.decode(out[0][ids.shape[1]:], skip_special_tokens=True)) == want), total + 1
+    return right / max(total, 1)
+
+
 def load_rows(path, tok):
     """Read a jsonl of {"messages": [...]} rows and encode them, skipping any row that is malformed instead of dying on it."""
     rows = []
@@ -92,11 +117,19 @@ def main():
     Trainer(model=model, args=args, train_dataset=train, eval_dataset=valid, data_collator=lambda rows: {k: torch.tensor(v) for k, v in pad_batch(rows, tok.pad_token_id).items()}).train()
     merged = model.merge_and_unload()
     pairs_path = os.path.join(DATA, "pairs.jsonl")
-    if os.path.exists(pairs_path):
+    held = [json.loads(line) for line in open(os.path.join(DATA, "test.jsonl" if os.path.exists(os.path.join(DATA, "test.jsonl")) else "valid.jsonl"))]
+    sft_score = score_slice(merged, tok, held, torch)
+    print(f"SFT picks the right tool on {sft_score:.1%} of {min(SCORE_N, len(held))} held rows", flush=True)
+    if os.path.exists(pairs_path):  # round twenty-eight: teacher preference pairs, "this call, not that one"
         merged.save_pretrained(OUT + "-sft")  # the SFT-only model, kept so a bad DPO stage costs nothing
         tok.save_pretrained(OUT + "-sft")
-    if os.path.exists(pairs_path):  # round twenty-eight: teacher preference pairs, "this call, not that one"
+        sft_state = {k: v.detach().clone().cpu() for k, v in merged.state_dict().items()}
         merged = dpo_stage(merged, tok, [json.loads(line) for line in open(pairs_path)], torch, get_peft_model, LoraConfig)
+        dpo_score = score_slice(merged, tok, held, torch)
+        print(f"DPO picks the right tool on {dpo_score:.1%}", flush=True)
+        if dpo_score < sft_score:  # round twenty-eight collapsed to abstaining (151/1960): never ship a DPO that scores worse
+            print("DPO scored worse than SFT, shipping the SFT model", flush=True)
+            merged.load_state_dict(sft_state)
     merged.save_pretrained(OUT)
     tok.save_pretrained(OUT)
     print("saved", OUT, "- zip it and download")
