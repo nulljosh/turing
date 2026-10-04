@@ -2,6 +2,10 @@
 
 **Loop status: live.** Working toward v5.0.0 (her own tool-calling head, better picker accuracy). Shipped v4.20.0 with explain_codebase, teach_me, send_email, open app and do task; Windows install tested in real CI runner; Samantha's GGUF on Hugging Face with auto-refresh on every release. Kaggle training: Qwen2.5-1.5B trained (1705/1960 right vs 1307 for 0.5B, but leaks harder, stays off by default). Guard rounded 23 to 27. Teacher training generated 720 labeled commands; 1.5B made 41 mistakes, converted to DPO preference pairs; Kaggle version 8 training DPO stage (results pending). Router-off trial: 1.5B alone without phrase router scored 168 of 231 everyday commands (73 percent); most misses NOT_FOR_MODELS tools. Changed v5 design: model picks every tool it may pick; phrase-only tools stay law-routed; numeric gate unchanged (under 10 past guard, 0 refused on sealed heldout6). Helper building v6's first slice (code a feature: plan, show diffs, ask, apply, run tests). Estimates: v5 roughly 3-10 days (depends on sealed heldout6 zero refuses), v6 roughly 1-2 weeks after v5.
 
+## The v5 bar (set 2026-10-04, before heldout6 was read)
+
+Joshua left the call to me. Zero refused is out of reach for a guard that must also stop composed arguments (heldout4 refuses 3 percent of right picks, mostly correctly). The v5 bar on the sealed heldout6 is under 10 wrong past the guard and under 1 percent of its right picks refused. Written down before the read so the number cannot move to fit the result.
+
 ## What the loop is
 
 Work toward v5.0.0 (her own tool-calling head, better picker accuracy, research beyond Wikipedia). Loop target: until v5.0.0 on this Mac, then v10.0.0 in order (7.0, 6.0, 8.0, 9.0, 10.0). Hard stop and checkpoint at 90% usage. One round at a time, measured against held-out sets. v5.0 waiting on free GPU training (Joshua running Kaggle this weekend).
