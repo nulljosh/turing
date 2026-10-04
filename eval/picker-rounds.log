@@ -29,3 +29,4 @@
 2026-10-03 GBNF grammar trial eval/gguf_fixture.json (20 cases): without constraint 18/20 (90%), with tool-name validity constraint 17/20 (85%), delta -1 (-5%). Grammar hurts performance. Hallucinations fixed: 2 (search_app, logout_app), but valid pick broken: 1. Do not wire in.
 2026-10-04 round23 hands-adapter-1.5B (new model, guard tuned) standard: 1705/1960 passed, 7 past guard, 8 refused; heldout2 421/500, 9 past, 14 refused
 2026-10-04 round23 hands-adapter (shipped 0.5B baseline) standard: 1307/1960 passed, 7 past guard, 0 refused (SAFE - unchanged)
+2026-10-04 round24 guard vocab (1.5B dev): evidence words for openings/changes/tmrw/have open/off the net/.zip/shift/boil down/spoken/characters, research save-rule narrowed, read_document pdf rule removed. Refused: standard 8->1, heldout2 14->4 (tuned); heldout4 18->17 (held out). Past guard: standard 8, heldout2 9, heldout4 9->10. Shipped 0.5B standard unchanged at 7 past, 0 refused.

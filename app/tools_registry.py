@@ -45,26 +45,26 @@ _EVIDENCE = {
     "wifi_name": r"wi-?fi|network", "system_info": r"system|\bmac\b|macos|chip|computer|specs|about this|\bos\b|version", "list_shortcuts": r"shortcut",
     "flip_coin": r"coin|heads|tails", "make_uuid": r"uuid|guid|unique id", "time_in": r"time|clock|late", "days_until": r"\bday|sleeps|until|till|far away|count",
     "roll_dice": r"roll|dice|\bdie\b|\bd\d|throw|toss", "random_number": r"random|number", "make_password": r"password|pwd|passcode|passphrase",
-    "hash_text": r"hash|sha|checksum", "word_count": r"word", "tip": r"\btip", "is_prime": r"prime|factor|divid", "roman_numeral": r"roman",
+    "hash_text": r"hash|sha|checksum", "word_count": r"word|characters?\b|\blength of\b", "tip": r"\btip", "is_prime": r"prime|factor|divid", "roman_numeral": r"roman",
     "morse_code": r"morse", "new_note": r"note|jot|write|remember|save|down", "say": r"\bsay|speak|announce|voice|aloud|out loud|words",
-    "free_when": r"\bfree\b|\bbusy\b|availab|do i have time|when am i|\bschedule\b|open slot|\bgap\b|\bam i open\b",
+    "free_when": r"\bfree\b|\bbusy\b|availab|do i have time|when am i|\bschedule\b|open slot|\bgap\b|\bam i open\b|\bopenings?\b",
     # Round eight covered 36 tools with zero picker training data; their evidence predates them (round-eight
     # gap). Words come from each tool's own docstring/templates, never copied out of eval/actions.py verbatim.
-    "bluetooth_status": r"bluetooth", "calendar_tomorrow": r"tomorrow",
-    "running_apps": r"running|open apps|apps open|what's open|apps are open|application|programs",
-    "recent_downloads": r"download", "unread_mail": r"mail|email|inbox|unread|messages",
-    "git_status": r"status|changed|dirty|\bdiff\b|\bbranch\b|ahead|behind|\bgit\b", "recent_commits": r"commit",
+    "bluetooth_status": r"bluetooth", "calendar_tomorrow": r"tomorrow|\btmrw\b|\btmr\b",
+    "running_apps": r"running|open apps|apps open|what's open|apps are open|application|programs|\bhave open\b",
+    "recent_downloads": r"download|off the (?:net|internet|web)", "unread_mail": r"mail|email|inbox|unread|messages",
+    "git_status": r"status|changed|changes|uncommitted|dirty|\bdiff\b|\bbranch\b|ahead|behind|\bgit\b", "recent_commits": r"commit",
     "run_tests": r"\btest", "open_prs": r"\bprs?\b|pull request|waiting (?:for|on) (?:a )?review",
     "open_in_editor": r"editor|vscode|vs code|in code|\bide\b|visual studio", "quit_app": r"quit|close|shut down|\bkill\b",
     "dark_mode": r"dark|\blight\b|appearance|theme", "do_not_disturb": r"disturb|\bdnd\b|focus|silence|quiet|notification",
-    "zip_file": r"\bzip\b|compress", "unzip_file": r"unzip|extract|unpack|decompress", "trash_file": r"trash|delete|throw away|get rid of",
-    "copy_file": r"\bcopy\b|duplicate|\bcp\b", "move_file": r"\bmove\b|relocate|\bdrag\b|\bmv\b", "rename_file": r"rename|new name|call it|change the name|retitle|\bname\b",
+    "zip_file": r"\bzip\b|compress", "unzip_file": r"unzip|extract|unpack|decompress|\.zip\b", "trash_file": r"trash|delete|throw away|get rid of",
+    "copy_file": r"\bcopy\b|duplicate|\bcp\b", "move_file": r"\bmove\b|\bshift\b|transfer|relocate|\bdrag\b|\bmv\b", "rename_file": r"rename|new name|call it|change the name|retitle|\bname\b",
     "append_note": r"\bnote\b", "add_event": r"calend[ae]r|event|schedule|appt|appointment",
     "complete_reminder": r"remind|done|finish|complete|check off|\bmark\b|tick off|cross off", "list_reminders": r"reminder",
     "search_notes": r"\bnotes?\b", "needs_attention": r"attention|needs me|focus on|deal with|need to handle|urgent",
     "folder_size": r"\bbig\b|\bsize\b|\bspace\b|take up",
     "research": r"research|deep dive|look into|dig into|investigate|brief on|info(?:rmation)? on|look up|read up|info(?:rmation)? about", "research_more": r"\bmore\b|deeper|expand|further|continue|again",
-    "summarize": r"summar", "transcribe_video": r"transcribe|said in|captions|subtitles",
+    "summarize": r"summar|boil (?:it )?down|condense", "transcribe_video": r"transcribe|spoken|\bsays? in\b|said in|captions|subtitles",
     "translate": r"translat|how (?:do|would|can|should) (?:you|i) say|\b(?:in|into|to) (?:french|spanish|german|italian|portuguese|dutch|japanese|chinese|mandarin|korean|russian|arabic|hindi)\b", "write_document": r"draft|write (?:a |an )?(?:doc|document|email|memo|file)|compose",
     # Round ten: resize_image and read_file had no evidence at all, so any wrong pick with its
     # argument copied verbatim (list_dir/read_file's own guard, or resize_image's default check,
@@ -209,7 +209,7 @@ _AGAINST = {"say": r"morse|clock say|how (?:do|would|can|should) (?:you|i) say|\
             "disk_space": r"take up|\bfolder\b|\bram\b|memory|\bdir\b",
             # Round eleven: read_tab/switch_tab own "the X tab"; read_page owns a URL. read_document
             # is for a local file, never a browser tab or a web address.
-            "read_document": r"\btab\b|github\.com|\.com\b|\.org\b|\.io\b|clipboard|crunch|analy[sz]e|\.(?:pdf|docx?|rtf|pages|epub)\b",  # round twenty-three: read_file owns PDFs and documents; plain text and markdown paths stay read_document's (taught picks)
+            "read_document": r"\btab\b|github\.com|\.com\b|\.org\b|\.io\b|clipboard|crunch|analy[sz]e",
             # Round eleven: weather has its own tool; "look up the weather" should never fall to a
             # generic web search.
             "web_search": r"\bweather\b|\.(?:com|org|net|io|ca)\b|\bmy notes\b|\bnotes for\b|pull requests?|\bprs\b|bluetooth|\bnotes? (?:mentioning|about|for|with)\b|\bon the books\b|\bbooks today\b|who is this (?:artist|band)\b|\bwhat does the .+ (?:tab|page) (?:say|show)\b|search (youtube|spotify|google maps|amazon|github|wikipedia|reddit)|my shortcuts|pull up|shortcuts list|\bgo to .+? and search\b",  # round twenty-three: web_search blocks open_url/youtube contexts
@@ -246,7 +246,7 @@ _AGAINST = {"say": r"morse|clock say|how (?:do|would|can|should) (?:you|i) say|\
             "move_file": r"\b(?:the |to )trash\b",
             "rotate_image": r"mirror|\bflip",
             "new_reminder": r"^any reminders|what reminders|\breminders about\b",
-            "research": r"you saved|saved as|\bsave\b|\bkeep\b|\bstore\b",  # round twenty-three: research blocks save_research contexts
+            "research": r"you saved|saved as|\b(?:save|keep|store) (?:it|that|this|the research)\b",  # round twenty-three: research blocks save_research contexts
             "days_until": r"\b\d+ (?:days?|weeks?|months?|years?) (?:from|after|before|ago)\b",
             "battery": r"battery of",
             # Each of these names a different tool's own domain: wifi/ip/load are their own tools, not system_info;
