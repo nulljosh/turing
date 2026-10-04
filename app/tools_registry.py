@@ -4,6 +4,7 @@ honest. Split from tools.py for size (CLAUDE.md, File size). register_families()
 the caller's own TOOLS dict and globals() (tools.py's), not this module's, so a moved
 name still lives on the tools module and eval/actions.py can keep patching it there.
 """
+import os
 import re
 
 import tools_character
@@ -252,7 +253,7 @@ _AGAINST = {"say": r"\bset\b.*\bvoice\b|\bvoice\b.*\bset\b|morse|clock say|how (
             # Each of these names a different tool's own domain: wifi/ip/load are their own tools, not system_info;
             # "free space" is the disk, not the calendar; "your voice" is set_voice; "log me in" and "click" are
             # screen work, not a site to open; "how many minutes is 3 hours" is a conversion, not a timer.
-            "system_info": r"wi-?fi|\bip\b|address|loaded|\bcpu\b|\bram\b|memory|battery|disk|free space|power|charging",
+            "system_info": r"wi-?fi|\bip\b|address|loaded|\bcpu\b|^(?!.*\b(?:chip|specs)\b).*\b(?:ram|memory)\b|battery|disk|free space|power|charging",
             "free_when": r"free space|\bdisk\b|storage",
             "set_volume": r"\bvoice\b",
             "music": r"disturb|\bproject\b|blocked|paused|\b(?:tap|click)\b",
@@ -367,7 +368,7 @@ def _sound(tool, arg, query):
     # from the sentence itself rather than trusting an unsplit argument.
     # Round twenty-six: "roll 4 dice with 8 sides" is 4d8. She writes dice notation, so the guard checks its numbers, not the string.
     if tool == "roll_dice":
-        m = re.fullmatch(r"(\d*)d(\d+)", arg.lower().strip())
+        m = re.fullmatch(r"(\d*)d(\d+)", arg.lower().strip()) or re.fullmatch(r"(\d+)\s+(\d+)(?: sides?)?", arg.lower().strip())  # round 32: "10 12 sides"
         return bool(m) and all(n in q_lower for n in m.groups() if n)
 
     if tool == "append_note":
@@ -398,6 +399,8 @@ def _sound(tool, arg, query):
         if a == "on":
             return bool(re.search(r"\bon\b|\bdark\b|enable", q_lower))
         return False
+    if tool == "reveal_in_finder":  # round 32: the path she resolved ("~/Documents/Resume.pdf") need only end in the file named
+        return bool(arg) and os.path.basename(arg).lower() in q_lower and "finder" in q_lower
     if tool == "do_not_disturb":
         a = (arg.lower().split() or [""])[0]  # round twenty: "on for the next couple hours" is "on"
         if a == "off":
