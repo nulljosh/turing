@@ -326,6 +326,11 @@ _WRITERS = {f.__name__: f for f in (tools_write.edit_last_draft, tools_write.edi
 TOOLS.update(_WRITERS)
 globals().update(_WRITERS)
 
+import tools_learn  # noqa: E402  (learning tools: explain_codebase, teach_me, spliced from here for size)
+for f in tools_learn.TOOLS:
+    TOOLS[f.__name__] = f
+    globals()[f.__name__] = f
+
 import tools_routes  # noqa: E402  (the regex router: phrase table + text normalization, split for size)
 tools_routes.install(sys.modules[__name__])  # builds _ROUTES etc against this module, never `import tools` inside
 _ROUTES = tools_routes._ROUTES

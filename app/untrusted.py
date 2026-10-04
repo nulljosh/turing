@@ -8,7 +8,7 @@ Kept its own file, not folded into tools.py (law 8, file size); tools.py imports
 # Tools whose return value is text written by someone other than the user: a page, mail, a document,
 # a note, the screen, an MCP server, a transcript. Their results are fenced before a model that picks
 # tools ever sees them, and never trusted as a command by do()/plan()/act().
-READING = {"read_page", "read_tab", "research", "research_more", "summarize", "translate",
+READING = {"read_page", "read_tab", "research", "research_more", "teach_me", "summarize", "translate",
            "unread_mail", "needs_attention", "read_file", "read_document", "find_in_document", "ask_document",
            "search_notes", "read_screen", "ask_screen", "see_screen", "see_image", "see_camera",
            "call_mcp_tool", "transcribe_video", "current_tab", "list_tabs"}

@@ -97,8 +97,8 @@ Ask her to draft something in our voice, or answer a question about one of our o
   - [ ] Full app support: every app's main actions reachable by voice, not just open/switch/quit
   - [ ] Photoshop, Pixelmator, video and audio editors: real edits (trim a clip, cut audio, apply an adjustment), not just paint_image and transcribe
   - [ ] "code feature in xyz project": the v6 coding harness (read the repo, edit, run tests, ask before writing), beyond today's write_code
-  - [ ] "teach me xyz": a lesson mode on top of research (explain, quiz, check understanding)
-  - [ ] "explain this codebase to me": read a repo's README, CLAUDE.md and layout and walk through it
+  - [x] "teach me xyz": a lesson mode on top of research (explain, quiz, check understanding)
+  - [x] "explain this codebase to me": read a repo's README, CLAUDE.md and layout and walk through it
   - [ ] "make a promo video about xyz with these assets": ElevenLabs voice plus Higgsfield clips plus ffmpeg, the way the Turing promo was made; costs money, asks first with the price
   - [ ] "build me a game with Unreal Engine": hand off to the Unreal pipeline (the unreal-game skill) from her chat
 - [ ] Hugging Face page: publish the GGUF and the adapter with a model card (what she does, the measured numbers, the limits); needs Joshua's HF token
