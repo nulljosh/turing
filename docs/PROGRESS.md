@@ -1,5 +1,7 @@
 # Progress log
 
+- 2026-10-04: v4.20.11 🎉 The landing page tells search and social the truth: a real title and description, a Twitter card, and a link preview that no longer says "from scratch" (she is a fine-tune). The chat box says "Ask her anything" and no longer cuts off on a phone.
+  v4.20.11 · 135 tools · 681 tests · docs coverage 100% · laws all hold · biggest app/tools_util.py 649 · actions 231/231 · parity 231/231 · util_diff 261/261
 - 2026-10-04: v4.20.10 🎉 The commercial now covers all of it: after the live demo it shows what only a real Mac can do (research with sources, reading your screen, clicking for you), labelled as Mac-only, with the narration to match.
   v4.20.10 · 135 tools · 681 tests · docs coverage 100% · laws all hold · biggest app/tools_util.py 649 · actions 231/231 · parity 231/231 · util_diff 261/261
 - 2026-10-04: v4.20.9 🎉 A new commercial: 94 seconds of the real demo in her own voice, walking through painting, her Mac, notes and reminders, files, math and questions, captioned. The demo now starts at once instead of showing an empty Mac, and the install box no longer repeats the Download buttons.

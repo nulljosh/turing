@@ -3,7 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Turing</title>
+    <title>Turing: Samantha, a small AI that lives on your Mac</title>
+    <meta name="description" content="Samantha is a small, free, private AI that runs on your Mac. She paints, runs your apps, keeps notes and reminders, finds files, does the math and researches. Try her right on the page.">
+    <link rel="canonical" href="https://turing.heyitsmejosh.com/">
     <meta name="theme-color" content="#000000">
     <link rel="icon" type="image/svg+xml" href="icon.svg">
     <link rel="manifest" href="manifest.webmanifest">
@@ -11,8 +13,13 @@
     <meta property="og:image" content="https://turing.heyitsmejosh.com/samantha-logo.png">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Turing">
-    <meta property="og:title" content="Turing, Samantha">
-    <meta property="og:description" content="A small language model, trained in the open, from scratch.">
+    <meta property="og:title" content="Samantha, a small AI that lives on your Mac">
+    <meta property="og:description" content="Free, private, and she runs on your Mac. Watch her paint, run your apps, keep your notes and find your files.">
+    <meta property="og:url" content="https://turing.heyitsmejosh.com/">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Samantha, a small AI that lives on your Mac">
+    <meta name="twitter:description" content="Free, private, and she runs on your Mac. Watch her paint, run your apps, keep your notes and find your files.">
+    <meta name="twitter:image" content="https://turing.heyitsmejosh.com/samantha-logo.png">
     <script>
       /* Theme: saved choice wins, else follow the system and keep following it. setTheme(mode, save) is shared with demo.js. */
       (function () {
@@ -372,7 +379,7 @@
           <div id="chat-transcript" aria-live="polite" aria-label="Conversation with Samantha" style="flex:1;overflow-y:auto;min-height:96px;max-height:340px;margin-bottom:12px;font-size:14px;line-height:1.5;padding-right:8px"></div>
           <div style="display:flex;gap:8px">
             <label for="chat-input" style="display:none">Ask Samantha</label>
-            <input type="text" id="chat-input" list="chat-suggest" maxlength="200" autocomplete="off" placeholder="Try: set the volume to 30" style="flex:1;min-width:0;padding:8px 12px;border:1px solid var(--line);border-radius:var(--r-pill);font-size:16px;background:var(--bg);color:var(--fg);font-family:inherit" />
+            <input type="text" id="chat-input" list="chat-suggest" maxlength="200" autocomplete="off" placeholder="Ask her anything" style="flex:1;min-width:0;padding:8px 12px;border:1px solid var(--line);border-radius:var(--r-pill);font-size:16px;background:var(--bg);color:var(--fg);font-family:inherit" />
             <button id="chat-send" style="padding:8px 20px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--fg);font-size:14px;cursor:pointer;font-weight:600" type="button">Send</button>
           </div>
           <datalist id="chat-suggest"></datalist>

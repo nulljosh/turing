@@ -9,12 +9,15 @@ Run: ./.venv/bin/python scripts/make_promo.py [url=https://turing.heyitsmejosh.c
 Needs ELEVENLABS_API_KEY (environment or the fish secrets file), ffmpeg and playwright's Chromium. Nothing is written to web/ until the whole build worked."""
 import glob
 import json
+import math
 import os
 import shutil
 import subprocess
 import sys
+import struct
 import tempfile
 import time
+import wave
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(REPO, "app"))
@@ -28,10 +31,10 @@ MAC_ONLY = ["research the history of the printing press", "what's on my screen",
 SEGMENTS = [
     ("This is Samantha. A small AI that lives on your Mac. Free, and private.", []),
     ("She paints from thirty thousand squares. She draws anything you can name.", ["paint the mona lisa", "draw a lighthouse at dusk"]),
-    ("She runs your Mac. Volume, music, screenshots, your apps.", ["set the volume to 40", "play some music", "take a screenshot"]),
-    ("She keeps your notes, your reminders and your calendar.", ["write a note to buy milk", "remind me to call mom tomorrow at 9"]),
-    ("She finds your files, reads them, and tells you how big they are.", ["show me the files in ~/Documents", "find budget.pdf"]),
-    ("She does the math, converts units and counts the days.", ["what is 17*23", "convert 72 f to c", "days until christmas"]),
+    ("She runs your Mac. Volume, screenshots, your apps.", ["set the volume to 40", "take a screenshot"]),
+    ("She keeps your notes and reminders.", ["remind me to call mom tomorrow at 9"]),
+    ("She finds your files.", ["find budget.pdf"]),
+    ("She does the math and converts units.", ["what is 17*23", "convert 72 f to c"]),
     ("Ask her anything. On a real Mac she researches with sources, reads your screen and clicks for you. She always asks first.", []),
     ("Free. Private. Download her for Mac.", []),
 ]
@@ -98,13 +101,42 @@ def record(clips, out_dir):
     return glob.glob(os.path.join(out_dir, "*.webm"))[0], starts
 
 
+def music(seconds, path, rate=22050):
+    """A soft synthesized bed under her voice: a slow C, Am, F, G arpeggio in triangle-ish tones with a long decay, no samples and
+    nothing to license. Written as a mono wav of the given length; the mux mixes it far below the narration."""
+    chords = [(130.81, [261.63, 329.63, 392.0, 523.25]), (110.0, [220.0, 261.63, 329.63, 440.0]),
+              (87.31, [174.61, 261.63, 349.23, 440.0]), (98.0, [196.0, 246.94, 293.66, 392.0])]
+    step, n, frames = 60 / 84 / 2, int(seconds * rate), []
+    for i in range(n):
+        t = i / rate
+        k = int(t / step)
+        bar = (k // 8) % len(chords)
+        bass, notes = chords[bar]
+        local = t - k * step
+        f = notes[k % len(notes)]
+        v = 0.5 * math.exp(-local * 3.2) * (math.sin(2 * math.pi * f * t) + 0.25 * math.sin(4 * math.pi * f * t))
+        v += 0.35 * math.sin(2 * math.pi * bass * t) * (0.6 + 0.4 * math.sin(2 * math.pi * 0.12 * t))
+        frames.append(struct.pack("<h", int(max(-1, min(1, v * 0.6)) * 32767)))
+    with wave.open(path, "wb") as w:
+        w.setnchannels(1)
+        w.setsampwidth(2)
+        w.setframerate(rate)
+        w.writeframes(b"".join(frames))
+    return path
+
+
 def build(webm, starts, clips, out_dir):
     """Mux the recording with each narration clip delayed to its segment start, write captions, cut a poster. Returns the three file paths."""
-    inputs, filters = ["-i", webm], []
+    total = starts[-1] + clips[-1][1] + 1.5
+    bed = music(total, os.path.join(out_dir, "bed.wav"))
+    inputs, filters = ["-i", webm, "-i", bed], []
     for i, ((mp3, _), start) in enumerate(zip(clips, starts)):
         inputs += ["-i", mp3]
-        filters.append(f"[{i + 1}:a]adelay={int(start * 1000)}|{int(start * 1000)}[a{i}]")
-    mix = "".join(f"[a{i}]" for i in range(len(clips))) + f"amix=inputs={len(clips)}:normalize=0[aout]"
+        filters.append(f"[{i + 2}:a]adelay={int(start * 1000)}|{int(start * 1000)}[a{i}]")
+    voice_mix = "".join(f"[a{i}]" for i in range(len(clips))) + f"amix=inputs={len(clips)}:normalize=0[voice]"
+    # the bed sits about 22 dB under her voice, fades in and out, and gets a little echo so it reads as a room, not a beep
+    bed_chain = f"[1:a]aecho=0.8:0.6:380:0.25,volume=0.16,afade=t=in:d=2,afade=t=out:st={total - 3:.2f}:d=3[bed]"
+    mix = voice_mix + ";" + bed_chain + ";[voice][bed]amix=inputs=2:normalize=0:duration=longest[aout]"
     mp4 = os.path.join(out_dir, "promo.mp4")
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", *inputs, "-filter_complex", ";".join(filters + [mix]), "-map", "0:v", "-map", "[aout]",
                     "-c:v", "libx264", "-crf", "30", "-preset", "slow", "-pix_fmt", "yuv420p", "-vf", "scale=1280:-2", "-c:a", "aac", "-b:a", "96k",
