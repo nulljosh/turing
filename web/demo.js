@@ -708,7 +708,7 @@
   function idle() {
     stopReel();
     if (reduceMotion || isLive || document.hidden) return;
-    idleTimer = setTimeout(function () { if (!busy) { reel = true; desk.playing = false; nextReel(); } }, Date.now() - lastUser < 90000 ? 30000 : reelAt ? 6000 : 2200);  // a visitor's own drawing stays 30 seconds
+    idleTimer = setTimeout(function () { if (!busy) { reel = true; desk.playing = false; nextReel(); } }, Date.now() - lastUser < 90000 ? 30000 : reelAt ? 6000 : 500);  // a visitor's own drawing stays 30 seconds
   }
 
   function startDemo() {

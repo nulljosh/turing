@@ -1,5 +1,5 @@
 {
-  "version": "4.20.8",
+  "version": "4.20.9",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -182,6 +182,10 @@
       "scripts/gen_jt_docs.py": {
         "total": 13,
         "documented": 13
+      },
+      "scripts/make_promo.py": {
+        "total": 6,
+        "documented": 6
       },
       "scripts/stats.py": {
         "total": 7,
