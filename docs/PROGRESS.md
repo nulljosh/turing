@@ -1,5 +1,7 @@
 # Progress log
 
+- 2026-10-04: v4.20.5 🎉 "How much time since boot", "what tasks do I have" and "list visible apps" now run instead of being refused.
+  v4.20.5 · 135 tools · 681 tests · docs coverage 100% · laws all hold · biggest app/tools_util.py 649 · actions 231/231 · parity 231/231 · util_diff 261/261
 - 2026-10-04: v4.20.4 🎉 "Book a call with the accountant" now schedules the call. Her 1.5B picker (Kaggle v10, cleaner training data) is under 10 past the guard on all four dev sets.
   v4.20.4 · 135 tools · 681 tests · docs coverage 100% · laws all hold · biggest app/tools_util.py 649 · actions 231/231 · parity 231/231 · util_diff 261/261
 - 2026-10-04: v4.20.3 🎉 Fewer right answers refused: "show me resume.pdf in finder", "show me what's in the Downloads folder" and "roll 10 dice with 12 sides" now run.
