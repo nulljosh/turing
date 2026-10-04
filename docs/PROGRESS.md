@@ -1,5 +1,7 @@
 # Progress log
 
+- 2026-10-04: v4.20.8 🎉 A calmer landing page: one headline, the demo playing itself, everything she can do written out as plain text right under it, then the video. Nav is two links, no full-screen panels, training loss tucked away, no sideways scroll on phones.
+  v4.20.8 · 135 tools · 681 tests · docs coverage 100% · laws all hold · biggest app/tools_util.py 649 · actions 231/231 · parity 231/231 · util_diff 261/261
 - 2026-10-04: v4.20.7 🎉 The landing demo plays itself through everything she can do, with no buttons: pictures, her Mac, notes and reminders, files, words, numbers, research. The stand-in Mac now answers disk, apps, Bluetooth, uptime and the calendar with labelled sample values instead of "run her on a real Mac".
   v4.20.7 · 135 tools · 681 tests · docs coverage 100% · laws all hold · biggest app/tools_util.py 649 · actions 231/231 · parity 231/231 · util_diff 261/261
 - 2026-10-04: v4.20.6 🎉 The landing demo shows everything she can do: "See everything she can do" opens 56 one-tap examples across files, notes and time, your Mac, words, numbers, images and research.

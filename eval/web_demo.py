@@ -57,7 +57,7 @@ STEPS = [
     ("dark mode", "Lights off.", lambda p: p.evaluate("document.documentElement.dataset.theme") == "dark"),
     ("scroll to the results", "Scrolled to Results.", lambda p: p.evaluate("window.scrollY") > 200),
     ("go to github", "Opened https://github.com", None),
-    ("hide the training loss", "Hid Training loss", lambda p: p.evaluate("[...document.querySelectorAll('section')].filter(s => s.style.display === 'none').length") == 1),
+    ("hide the questions", "Hid Questions", lambda p: p.evaluate("[...document.querySelectorAll('section')].filter(s => s.style.display === 'none').length") == 1),
     # nobody gets to inject markup through her, by rule or by model
     ("change the title to <img src=x onerror=alert(1)><script>alert(2)</script>", "", lambda p: p.locator("h1 img, h1 script").count() == 0 and "<img" in p.inner_text("h1")),
     ("take a note <svg onload=alert(3)>", "Noted", lambda p: p.locator("#desk-space svg[onload]").count() == 0),

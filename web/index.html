@@ -275,6 +275,26 @@
       }
       .col, .wide, .hero{padding-left:max(20px, env(safe-area-inset-left));padding-right:max(20px, env(safe-area-inset-right))}
       .nav, footer{padding-left:16px;padding-right:16px}
+
+      /* Simplified, ChatGPT-style: one calm column, no full-screen panels, round composer, quiet links. */
+      html{scroll-snap-type:none!important}
+      main>section{min-height:0!important;margin-top:72px!important;display:block!important;padding:0!important}
+      .hero{background:var(--bg)}
+      .hero h1{font-size:clamp(28px,5vw,40px)!important;font-weight:600!important;letter-spacing:-0.02em}
+      .hero .sub{font-size:17px!important;max-width:620px}
+      .hero .card{border-radius:24px;border-color:var(--line);background:var(--bg);box-shadow:0 1px 2px rgba(0,0,0,.04)}
+      .hero .hero-cta .copy-install{background:none;border:0;color:var(--muted);text-decoration:underline;text-underline-offset:3px;padding:9px 6px}
+      .hero .hero-cta .copy-install:hover{color:var(--fg)}
+      .nav{border-bottom-color:transparent}
+      .sub2{color:var(--muted);font-size:16px;margin:0 0 8px;max-width:620px}
+      .can{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:32px 48px;margin:28px 0 20px}
+      .can h3{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin:0 0 6px}
+      .can ul{list-style:none;margin:0;padding:0}
+      .can li{padding:9px 0;border-top:1px solid var(--line);line-height:1.45}
+      .can q{quotes:none;display:block;font-size:15px;font-weight:500;color:var(--fg)}
+      .can li span{display:block;color:var(--muted);font-size:14px}
+      @media (max-width:700px){.can{grid-template-columns:1fr;gap:24px}}
+      pre{overflow-wrap:anywhere;max-width:100%}
     </style>
   </head>
   <body id="top">
@@ -313,10 +333,7 @@
       <a class="nav-mark" href="#content">Turing</a>
       <div class="nav-actions">
         <div class="nav-links">
-          <a href="#demo" class="nav-link">Demo</a>
-          <a href="#results-section" class="nav-link">Results</a>
           <a href="#run" class="nav-link">Download</a>
-          <a href="#faq" class="nav-link">FAQ</a>
           <a href="https://github.com/nulljosh/turing" class="nav-link">Source</a>
         </div>
         <button type="button" id="theme-toggle" class="theme-btn" aria-label="Switch to light mode" aria-pressed="false">
@@ -328,8 +345,8 @@
 
     <div class="wrap">
       <header class="hero">
-        <h1>A small model on your Mac that talks, sees, researches, and works your apps.</h1>
-        <p class="sub">Nothing leaves the machine. Try her below: tap a feature or type anything.</p>
+        <h1>Meet Samantha.</h1>
+        <p class="sub">A small AI that lives on your Mac. Free, private, and it runs itself through everything she can do while you watch.</p>
         <div class="hero-cta">
           <a class="pill pill-light dl-main" href="https://github.com/nulljosh/turing/releases/download/mac-app/SamanthaGUI.zip" download>Download for Mac</a>
           <button type="button" class="pill pill-dark copy-install" aria-label="Copy the install command">Copy install command</button>
@@ -365,21 +382,11 @@
 
       <main id="content">
 
-      <section id="promo">
+      <section id="can">
         <div class="wide">
-        <h2>See it in under 40 seconds</h2>
-        <video controls muted playsinline preload="none" poster="promo-poster.jpg" style="width:100%;border:1px solid var(--line);border-radius:12px;display:block;background:#000" aria-label="A 40 second tour of Samantha">
-          <source src="promo.mp4" type="video/mp4">
-          <track kind="captions" src="promo.vtt" srclang="en" label="English">
-        </video>
-        </div>
-      </section>
-
-      <section id="abilities-section">
-        <div class="col">
         <h2>What she can do</h2>
-        <p class="sub">Type any of these in the demo above. Autocomplete suggests them.</p>
-        <p>On the Mac you can talk to her out loud, she sees your screen and photos, researches a topic with cited sources, works any app for you step by step with your yes (she looks again after every click, stops when stuck, and Escape stops her any time), looks words up in the Mac's own dictionary, and asks a bigger local LLM by name when a question is too hard for her. She has <span data-stat="tools">127</span> tools, she edits any file or writes code to disk with a diff and your yes, her words stream in as she writes them, and she draws a photo from 40,000 squares in about a second. Seven rules keep all of it honest.</p>
+        <p class="sub2">Say it, type it, or watch the demo above run through all of it. Anything that writes, sends or deletes asks first.</p>
+        <div class="can"><div><h3>Draw and paint</h3><ul><li><q>paint the mona lisa</q><span>Rebuilt from 30,000 squares.</span></li><li><q>draw a lighthouse at dusk</q><span>An image model imagines it, she rebuilds it.</span></li><li><q>make me a logo for a surf school</q><span>An icon, never text.</span></li><li><q>paint cat.png as a mosaic</q><span>Six styles: mosaic, dots, poster, sketch, glass, squares.</span></li></ul></div><div><h3>Run your Mac</h3><ul><li><q>open chrome and go to wikipedia.org</q><span>Opens it and goes there.</span></li><li><q>set the volume to 40</q><span>Done.</span></li><li><q>play some music</q><span>Plays, pauses, skips.</span></li><li><q>take a screenshot</q><span>Saved to your Desktop.</span></li><li><q>how much battery do i have</q><span>Reads it off the Mac.</span></li><li><q>turn on dark mode</q><span>Flips it.</span></li></ul></div><div><h3>Notes, reminders, calendar, mail</h3><ul><li><q>write a note to buy milk</q><span>Into Notes.</span></li><li><q>remind me to call mom tomorrow at 9</q><span>A real reminder, with the time.</span></li><li><q>what&#x27;s on my calendar today</q><span>Reads it out.</span></li><li><q>add dentist to my calendar tomorrow at 3</q><span>Adds it.</span></li><li><q>email mom saying I&#x27;ll be late</q><span>Shows you the words first and sends only on a yes.</span></li></ul></div><div><h3>Files and documents</h3><ul><li><q>show me the files in ~/Documents</q><span>Lists them.</span></li><li><q>find budget.pdf</q><span>Searches your Mac.</span></li><li><q>summarize ~/Desktop/report.pdf</q><span>Three to five real sentences.</span></li><li><q>what&#x27;s the deadline in proposal.pdf</q><span>Answers from the file.</span></li><li><q>transcribe the video ~/Desktop/clip.mp4</q><span>Pulls the words out of any video or audio.</span></li></ul></div><div><h3>Words and numbers</h3><ul><li><q>translate good morning to french</q><span>Offline.</span></li><li><q>define serendipity</q><span>Plain meaning.</span></li><li><q>what is 17*23</q><span>391.</span></li><li><q>convert 72 f to c</q><span>22.2 C.</span></li><li><q>tip on a 42 dollar bill</q><span>The tip and the total.</span></li><li><q>days until christmas</q><span>Counts them.</span></li></ul></div><div><h3>Research and learning</h3><ul><li><q>research the history of the printing press</q><span>A short brief with a source after every sentence.</span></li><li><q>explain the nimble codebase</q><span>Walks you through a project.</span></li><li><q>teach me about tides</q><span>A short lesson and two quiz questions.</span></li><li><q>ask qwen what is a lora</q><span>Hands the hard ones to a bigger model on your Mac.</span></li></ul></div><div><h3>Her eyes and hands</h3><ul><li><q>what&#x27;s on my screen</q><span>Reads it with the system&#x27;s own text recognition.</span></li><li><q>what&#x27;s in ~/Desktop/cat.png</q><span>A vision model looks and answers.</span></li><li><q>click Sign in</q><span>Shows each step and asks before it happens.</span></li><li><q>work on cleaning up my downloads</q><span>Plans in rounds and tells you what she couldn&#x27;t do.</span></li></ul></div></div>
         <details class="more">
           <summary>Every tool, and how she plugs in</summary>
           <p><b>Her Mac.</b> Open apps and sites, search, read the current tab, screenshots, the clipboard, volume, battery, music, notes, reminders with a time ("remind me tomorrow at 9am to call mom"), the calendar, unread mail, timers, the weather, files: find one by name, what you just downloaded, how big a folder is, then move, copy, rename, zip, unzip or trash it, asking first.</p>
@@ -416,10 +423,16 @@
         </div>
       </section>
 
-      <div class="pull-quote">
-        <blockquote>A wrong, confident answer is worse than an honest "I don't know." She retrieves and cites instead of remembering and guessing.</blockquote>
-        <cite>docs/SOUL.md</cite>
-      </div>
+      <section id="promo">
+        <div class="wide">
+        <h2>Watch her work</h2>
+        <video controls muted playsinline preload="none" poster="promo-poster.jpg" style="width:100%;border:1px solid var(--line);border-radius:12px;display:block;background:#000" aria-label="A 40 second tour of Samantha">
+          <source src="promo.mp4" type="video/mp4">
+          <track kind="captions" src="promo.vtt" srclang="en" label="English">
+        </video>
+        </div>
+      </section>
+
 
       <section id="results-section">
         <div class="col"><h2>Results</h2>
@@ -428,7 +441,7 @@
       </section>
 
       <section>
-        <div class="col"><h2>Training loss</h2></div>
+        <div class="col"><details class="more" ontoggle="window.dispatchEvent(new Event('resize'))"><summary>How she trained: the loss curve</summary></div>
         <div class="wide">
         <div class="card">
           <div id="chart-wrap">
@@ -442,18 +455,17 @@
           <p class="graph-explainer">Round six of the picker, the one she runs today. The line is training loss, the dots are validation loss. Lower is better. The first validation point, logged before training started, is left off so the real curve is readable.</p>
         </div>
         </div>
+        </details>
       </section>
 
-      <div class="pull-quote">
-        <blockquote>Her hands stay in the home folder. Reading, listing or revealing a hidden file or a path outside it is refused.</blockquote>
-        <cite>docs/LAWS.md</cite>
-      </div>
-
-      <section>
+      <section id="about">
         <div class="col">
-        <h2>What this is</h2>
+        <h2>About</h2>
         <details class="more"><summary>How she was made</summary>
         <p>Samantha is a LoRA fine-tune of a small open base model, trained on the project's own Obsidian wiki and READMEs so it actually knows the codebase and writes in house voice. No from-scratch pretraining, that path was tried once (project code name Arthur) and produced gibberish. This time: small model, real data, short loop, iterate.</p>
+        </details>
+        <details class="more"><summary>Where this is going</summary>
+        <p>A small model on your own Mac cannot out-think a frontier model, and it does not try. It wins by staying private, free per question, and honest: it looks things up instead of guessing, and it asks before it acts. Next: whole jobs done end to end, not just single steps, still asking first at every one. See <code>roadmap.md</code> for the live plan.</p>
         </details>
         </div>
       </section>
@@ -495,15 +507,6 @@ irm https://raw.githubusercontent.com/nulljosh/turing/main/install/install.ps1 |
         <details class="more"><summary>Is she as smart as ChatGPT or Claude?</summary><p>No, and she does not pretend to be. She is small. She wins by being private, free per question, and honest: she looks things up and says "I don't know" instead of guessing. For a hard question she can hand it to a bigger model on your own Mac.</p></details>
         <details class="more"><summary>Does the demo here do everything?</summary><p>It does the things a web page can: paint, draw, math, time, the stand-in Mac. Talking out loud, seeing your screen, researching and working your real apps need the Mac app.</p></details>
         <details class="more"><summary>Where is the source?</summary><p>All of it is on <a href="https://github.com/nulljosh/turing">GitHub</a>, open and free to read.</p></details>
-        </div>
-      </section>
-
-      <section>
-        <div class="col">
-        <h2>The big idea</h2>
-        <details class="more"><summary>Where this is going</summary>
-        <p>A small model on your own Mac cannot out-think a frontier model, and it does not try. It wins by staying private, free per question, and honest: it looks things up instead of guessing, and it asks before it acts. Next: whole jobs done end to end, not just single steps, still asking first at every one. See <code>roadmap.md</code> for the live plan.</p>
-        </details>
         </div>
       </section>
 
