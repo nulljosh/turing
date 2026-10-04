@@ -140,6 +140,9 @@ def route(query, log=None, confirm=None):
 
     what, proj = m.group("what"), m.group("proj")
 
+    if confirm is not None and not confirm("code", (f"{what} in {proj}",)):  # Law 3: a no runs nothing, so ask before reading anything
+        return "Okay, I will not."
+
     # Resolve project (exact match required)
     path, err = _repo(proj)
     if err:
@@ -228,3 +231,8 @@ def route(query, log=None, confirm=None):
         return f"Tests failed:\n{test_out}\n\n{undo}"
 
     return f"Wrote {len(changed)} file(s)." + (f" {test_out}" if test_out else "")
+
+
+def code(query, log=None, confirm=None):
+    """The "code" tool: phrase-routed only ("code X in Y"), so it is registered for the harness's write gate and never picked by a model."""
+    return route(query, log=log, confirm=confirm) or 'Say it like "code a retry in turing".'

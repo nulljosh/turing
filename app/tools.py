@@ -325,6 +325,7 @@ import tools_write  # noqa: E402  (phrase-routed only: each confirms itself with
 import tools_coder  # noqa: E402  (phrase-routed only: code X in Y, no model pick)
 _WRITERS = {f.__name__: f for f in (tools_write.edit_last_draft, tools_write.edit_file, tools_write.write_code)}
 TOOLS.update(_WRITERS)
+TOOLS["code"] = tools_coder.code
 globals().update(_WRITERS)
 
 import tools_learn  # noqa: E402  (learning tools: explain_codebase, teach_me, spliced from here for size)
@@ -582,7 +583,7 @@ def demo():
     finally:
         _run, installed_apps = real, real_apps
     tools_util.demo()
-    assert NOT_FOR_MODELS - {"code"} <= set(TOOLS) and "run_shortcut" in NOT_FOR_MODELS  # side-effect tools never reach the model's menu
+    assert NOT_FOR_MODELS <= set(TOOLS) and "run_shortcut" in NOT_FOR_MODELS  # side-effect tools never reach the model's menu
     print("tools ok")
 
 
