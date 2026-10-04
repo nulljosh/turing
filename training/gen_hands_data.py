@@ -392,6 +392,27 @@ def _dress(rng, text, held):
     return out.capitalize() + rng.choice(".?!") if roll < 0.12 else out.capitalize() if roll < 0.2 else out
 
 
+# Round twenty-eight: real people type in text-speak ("remind me 2 call bob", "whats on tmrw", "u there"). The 1.5B
+# never saw it, so it leaked and was refused on exactly those sentences. Train-only, a quarter of rows, and a row
+# keeps its texty form only when every piece of its argument is still copied out of it.
+_TEXTY = [(r"\byou\b", "u"), (r"\byour\b", "ur"), (r"\bplease\b", "pls"), (r"\btomorrow\b", "tmrw"), (r"\btonight\b", "tonite"),
+          (r"\bwhat's\b", "whats"), (r"\bthat's\b", "thats"), (r"\bit's\b", "its"), (r"\bto (?=[a-z])", "2 "), (r"\bfor (?=[a-z])", "4 "),
+          (r"\bare\b", "r"), (r"\bthanks\b", "thx"), (r"\bwith\b", "w/"), (r"\bbecause\b", "cuz")]
+
+
+def _texty(rng, text, tool, arg):
+    """Text-speak version of a command, or the command unchanged when the rewrite would hide part of its argument
+    or the guard would refuse it (a taught pick has to be one that can run: tests/test_hands_data.py)."""
+    import re
+    out = text.lower()
+    for pat, rep in _TEXTY:
+        if rng.random() < 0.6:
+            out = re.sub(pat, rep, out)
+    out = out.rstrip(".?!") + rng.choice(["", "", " ok", " pls", " lol", " ty"])
+    parts = [x for x in str(arg or "").lower().split("\t") if x]
+    return out if all(x in out for x in parts) and (not tool or tools._sound(tool, arg, out)) else text
+
+
 JOINS = ([" and then ", " then ", ", then ", " and after that "], [" and once that's done ", " followed by: "])
 
 
@@ -426,6 +447,8 @@ def build(held, per_template, seed):
             for f in rng.sample(pool, min(len(pool), per_template)) * (1 if "{}" in t else per_template):
                 spoken, carried = f if isinstance(f, tuple) else (f, f)
                 text, got = _dress(rng, t.format(spoken), held), carried if arg is None else arg
+                if not held and rng.random() < 0.25:
+                    text = _texty(rng, text, tool, got)
                 if tool in GUARD_OVERRULES and not tools._sound(tool, got, text):
                     continue
                 rows.setdefault(text, _call(tool, got))
