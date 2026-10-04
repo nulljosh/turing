@@ -101,3 +101,16 @@ jobs:
           print("stale README refs:", bad)
           sys.exit(bool(bad))
           PY
+
+  windows_install:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      # the real one-liner on real Windows; chat gets an empty stdin so it exits at once
+      - name: install.ps1
+        shell: pwsh
+        run: '"" | ./install/install.ps1'
