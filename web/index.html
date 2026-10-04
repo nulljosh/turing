@@ -31,16 +31,16 @@
       })();
     </script>
     <style>
-      /* Design system: pure black, one accent (ember) used sparingly for text/decor only. */
-      :root{--bg:#000000;--fg:#f2f2f2;--muted:#9a9a9a;--line:#2a2a2a;--accent:#f2f2f2;--ember:#E8A96A;--ember-ink:#F4C893;
+      /* Design system: pure black, one neutral accent (ember, now gray) used sparingly for text/decor only. */
+      :root{--bg:#000000;--fg:#f2f2f2;--muted:#9a9a9a;--line:#2a2a2a;--accent:#f2f2f2;--ember:#b8b8b8;--ember-ink:#f2f2f2;
         --hero-bg:#0a0a0a;--card-bg:#0d0d0d;
         --r-sm:6px;--r-md:10px;--r-pill:999px;--s-1:8px;--s-2:16px;--s-3:24px;--s-4:40px;--s-5:64px}
       :root{color-scheme:dark}
-      :root[data-theme="light"]{color-scheme:light;--bg:#ffffff;--fg:#151515;--muted:#666;--line:#e4e4e4;--accent:#151515;--ember-ink:#97581B;--hero-bg:#f4f4f2;--card-bg:#fafafa}
+      :root[data-theme="light"]{color-scheme:light;--bg:#ffffff;--fg:#151515;--muted:#666;--line:#e4e4e4;--accent:#151515;--ember:#151515;--ember-ink:#151515;--hero-bg:#f4f4f4;--card-bg:#fafafa}
       .wrap.roll{animation:roll 1.1s ease-in-out}
       @keyframes roll{to{transform:rotate(360deg)}}
       section.lit{animation:lit 1.6s ease-out}
-      @keyframes lit{0%,60%{outline:3px solid #f2b33d;outline-offset:8px}100%{outline:3px solid transparent;outline-offset:8px}}
+      @keyframes lit{0%,60%{outline:3px solid var(--fg);outline-offset:8px}100%{outline:3px solid transparent;outline-offset:8px}}
       *{box-sizing:border-box}
       html{background:var(--bg)}
       body{margin:0;background:var(--bg);color:var(--fg);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",Helvetica,Arial,sans-serif;
@@ -132,6 +132,9 @@
       .hero .desk-space.painting canvas{flex:1 1 0;min-height:0;width:100%;height:100%;object-fit:contain}
       .hero #chat-status,.hero #demo-full{display:none!important}
       @media (min-width:700px) and (min-height:640px){.hero{height:calc(100svh - 77px)}}
+      .hero .hero-cta{margin-bottom:12px;gap:8px}
+      .pill{min-height:44px;font-family:inherit;cursor:pointer}
+      button.pill{border:1px solid var(--line)}
       .chips{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:12px}
       .chip{font:inherit;font-size:13px;min-height:44px;padding:0 14px;border-radius:var(--r-pill);border:1px solid var(--line);background:transparent;color:var(--muted);cursor:pointer}
       .chip:hover{border-color:var(--ember);color:var(--fg)}
@@ -173,7 +176,7 @@
 
       a{color:inherit;text-decoration-color:var(--ember);text-decoration-thickness:2px;text-underline-offset:3px}
       a:hover{color:var(--ember-ink)}
-      ::selection{background:var(--ember);color:#15110d}
+      ::selection{background:var(--ember);color:var(--bg)}
       input[type=range]{accent-color:var(--ember)}
       #chat-send{background:var(--fg)!important;border-color:var(--fg)!important;color:var(--bg)!important;border-radius:var(--r-pill)!important}
       #chat-send:hover{opacity:.86}
@@ -231,7 +234,7 @@
       .chat-message-content{color:var(--fg)}
       .chat-logo{margin:8px 0;text-align:center}
       .desk{--desk:#151515;border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-bottom:12px;background:var(--desk)}
-      :root[data-theme="light"] .desk{--desk:#ecece8}
+      :root[data-theme="light"] .desk{--desk:#ececec}
       .desk-bar{display:flex;gap:12px;align-items:center;font-size:12px;padding:5px 10px;border-bottom:1px solid var(--line);color:var(--fg);white-space:nowrap;overflow:hidden}
       .desk-bar b{color:var(--fg)}
       .desk-right{margin-left:auto;display:flex;gap:8px;align-items:center}
@@ -313,7 +316,8 @@
         <div class="nav-links">
           <a href="#demo" class="nav-link">Demo</a>
           <a href="#results-section" class="nav-link">Results</a>
-          <a href="#run" class="nav-link">Run it</a>
+          <a href="#run" class="nav-link">Download</a>
+          <a href="#faq" class="nav-link">FAQ</a>
           <a href="https://github.com/nulljosh/turing" class="nav-link">Source</a>
         </div>
         <button type="button" id="theme-toggle" class="theme-btn" aria-label="Switch to light mode" aria-pressed="false">
@@ -327,6 +331,10 @@
       <header class="hero">
         <h1>A small model on your Mac that talks, sees, researches, and works your apps.</h1>
         <p class="sub">Nothing leaves the machine. Try her below: tap a feature or type anything.</p>
+        <div class="hero-cta">
+          <a class="pill pill-light" href="https://github.com/nulljosh/turing/releases/latest/download/SamanthaGUI.zip" download>Download for Mac</a>
+          <button type="button" class="pill pill-dark copy-install" aria-label="Copy the install command">Copy install command</button>
+        </div>
         <div class="chips" role="group" aria-label="Try a feature">
           <button type="button" class="chip" data-q="paint the mona lisa">Paint</button>
           <button type="button" class="chip" data-q="draw a lighthouse at dusk">Draw</button>
@@ -460,15 +468,32 @@
         <div class="col">
         <h2>Run it yourself</h2>
         <div class="card">
-          <pre style="white-space:pre-wrap;font-size:13px;margin:0;font-family:ui-monospace,Menlo,monospace">git clone https://github.com/nulljosh/turing
+          <pre id="install-cmd" style="white-space:pre-wrap;font-size:13px;margin:0;font-family:ui-monospace,Menlo,monospace">git clone https://github.com/nulljosh/turing
 cd turing
-python3 -m venv .venv && ./.venv/bin/pip install mlx-lm
-./.venv/bin/python chat.py</pre>
+python3 -m venv .venv &amp;&amp; ./.venv/bin/pip install mlx-lm
+./.venv/bin/python app/chat.py</pre>
+          <div class="hero-cta" style="margin:14px 0 0;justify-content:flex-start">
+            <a class="pill pill-light" href="https://github.com/nulljosh/turing/releases/latest/download/SamanthaGUI.zip" download>Download for Mac</a>
+            <button type="button" class="pill pill-dark copy-install">Copy install command</button>
+          </div>
           <p class="meta" style="margin-top:14px">
             <span>Latest: <b id="version">-</b></span>
             <span><a id="release-link" href="https://github.com/nulljosh/turing/releases">Release notes</a></span>
           </p>
         </div>
+        </div>
+      </section>
+
+      <section id="faq">
+        <div class="col">
+        <h2>Questions</h2>
+        <details class="more"><summary>Is it really private?</summary><p>Yes. She runs on your Mac. Your words, files and screen never go to a server. The demo on this page is a stand-in on Cloudflare, so type nothing you would not post.</p></details>
+        <details class="more"><summary>What does it cost?</summary><p>Nothing. No account, no key, no subscription, and no per-question fee. It runs on the chip you already paid for.</p></details>
+        <details class="more"><summary>What do I need to run her?</summary><p>A Mac with Apple silicon and a few gigabytes free. Download the app, open it once, and she sets herself up.</p></details>
+        <details class="more"><summary>Can she break my stuff?</summary><p>Not without asking. Anything that writes, sends or deletes asks first, and her hands stay in your home folder. Seven rules, checked on every push, keep it that way. <a href="https://github.com/nulljosh/turing/blob/main/docs/LAWS.md">Read them</a>.</p></details>
+        <details class="more"><summary>Is she as smart as ChatGPT or Claude?</summary><p>No, and she does not pretend to be. She is small. She wins by being private, free per question, and honest: she looks things up and says "I don't know" instead of guessing. For a hard question she can hand it to a bigger model on your own Mac.</p></details>
+        <details class="more"><summary>Does the demo here do everything?</summary><p>It does the things a web page can: paint, draw, math, time, the stand-in Mac. Talking out loud, seeing your screen, researching and working your real apps need the Mac app.</p></details>
+        <details class="more"><summary>Where is the source?</summary><p>All of it is on <a href="https://github.com/nulljosh/turing">GitHub</a>, open and free to read.</p></details>
         </div>
       </section>
 
@@ -670,7 +695,7 @@ python3 -m venv .venv && ./.venv/bin/pip install mlx-lm
           c.width = w * dpr; c.height = h * dpr; ctx.setTransform(1,0,0,1,0,0); ctx.scale(dpr, dpr);
           ctx.clearRect(0, 0, w, h);
           var css = function(n) { return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); };
-          var fg = css('--fg') || '#f2f2f2', line = css('--line') || '#2a2a2a', ember = css('--ember') || '#E8A96A';
+          var fg = css('--fg') || '#f2f2f2', line = css('--line') || '#2a2a2a', ember = css('--ember') || '#b8b8b8';
           var padL = 20, padR = 20, barH = 28, y = h / 2 - barH / 2;
           var pct = Math.min(1, Math.max(0, t.value / t.max));
           if (t.invert) pct = 1 - pct;
@@ -714,6 +739,11 @@ python3 -m venv .venv && ./.venv/bin/pip install mlx-lm
       });
     </script>
     <script>document.getElementById("theme-toggle").addEventListener("click",function(){setTheme(document.documentElement.getAttribute("data-theme")==="light"?"dark":"light",true)})</script>
+<script>
+document.querySelectorAll(".copy-install").forEach(function(b){var t=b.textContent;b.addEventListener("click",function(){var c="git clone https://github.com/nulljosh/turing && cd turing && python3 -m venv .venv && ./.venv/bin/pip install mlx-lm && ./.venv/bin/python app/chat.py";
+function done(){b.textContent="Copied";setTimeout(function(){b.textContent=t},1800)}
+if(navigator.clipboard)navigator.clipboard.writeText(c).then(done,done);else done()})});
+</script>
     <script src="samantha.js"></script>
     <script src="demo.js"></script>
   <script src="paint.js" defer></script>
