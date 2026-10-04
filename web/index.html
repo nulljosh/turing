@@ -114,6 +114,34 @@
       .mark-foot .ink{display:inline-block;width:min(70vw,420px);aspect-ratio:1;background:var(--fg);-webkit-mask:url(badge.svg) center/contain no-repeat,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:url(badge.svg) center/contain no-repeat,linear-gradient(#000 0 0);mask-composite:exclude}
       footer{margin-top:56px;font-size:13px;color:var(--muted);text-align:center;padding-bottom:64px}
 
+
+      /* Hero is the demo, one full screen. Sections below snap one by one. */
+      html{scroll-snap-type:y mandatory;scroll-padding-top:77px}
+      .hero{min-height:calc(100svh - 77px);display:flex;flex-direction:column;padding:20px 20px 16px;scroll-snap-align:start;box-sizing:border-box}
+      .hero h1{font-size:clamp(20px,3.2vw,30px);margin-bottom:6px}
+      .hero .sub{font-size:14px;margin-bottom:12px}
+      .hero .hero-media{flex:1;display:flex;width:100%;box-sizing:border-box;padding:0}
+      .hero .hero-media .card{flex:1;max-width:none;min-height:0}
+      .hero .desk{flex:1;display:flex;flex-direction:column;min-height:0}
+      .hero .desk-space{flex:1;height:auto;min-height:160px}
+      .hero #chat-transcript{flex:0 1 auto!important;max-height:15vh!important;text-align:left}
+      .hero .card{text-align:left}
+      .hero .desk{flex:1 1 0}
+      .hero .desk-space.painting{flex:1;min-height:0;padding-bottom:0}
+      .hero .desk-space canvas{max-height:none}
+      .hero .desk-space.painting canvas{flex:1 1 0;min-height:0;width:100%;height:100%;object-fit:contain}
+      .hero #chat-status,.hero #demo-full{display:none!important}
+      @media (min-width:700px) and (min-height:640px){.hero{height:calc(100svh - 77px)}}
+      .chips{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:12px}
+      .chip{font:inherit;font-size:13px;min-height:44px;padding:0 14px;border-radius:var(--r-pill);border:1px solid var(--line);background:transparent;color:var(--muted);cursor:pointer}
+      .chip:hover{border-color:var(--ember);color:var(--fg)}
+      .chip:focus-visible{outline:2px solid var(--fg);outline-offset:3px}
+      main>section,main>.pull-quote,.mark-foot,footer{scroll-snap-align:start}
+      main>section{min-height:calc(100svh - 77px);margin-top:0;display:flex;flex-direction:column;justify-content:center;padding:40px 0;box-sizing:border-box}
+      main>section>.col,main>section>.wide{width:100%;box-sizing:border-box}
+      .pull-quote{min-height:calc(100svh - 77px);display:flex;flex-direction:column;justify-content:center;margin:0 auto}
+      @media (prefers-reduced-motion:reduce){html{scroll-snap-type:none}}
+
       .skip{position:absolute;left:-999px;top:8px;background:var(--fg);color:var(--bg);padding:10px 14px;border-radius:8px;z-index:100;font-weight:600;text-decoration:none}
       .skip:focus{left:8px}
       .js .reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
@@ -298,22 +326,26 @@
     <div class="wrap">
       <header class="hero">
         <h1>A small model on your Mac that talks, sees, researches, and works your apps.</h1>
-        <p class="sub">Nothing leaves the machine.</p>
-        <div class="hero-cta">
-          <a href="#demo" class="pill pill-light">Try the demo</a>
-          <a href="https://github.com/nulljosh/turing" class="pill pill-dark">View source</a>
+        <p class="sub">Nothing leaves the machine. Try her below: tap a feature or type anything.</p>
+        <div class="chips" role="group" aria-label="Try a feature">
+          <button type="button" class="chip" data-q="paint the mona lisa">Paint</button>
+          <button type="button" class="chip" data-q="draw a lighthouse at dusk">Draw</button>
+          <button type="button" class="chip" data-q="make me a complex logo for a surf school">Logo</button>
+          <button type="button" class="chip" data-q="open chrome and go to en.wikipedia.org/wiki/Alan_Turing">Browse</button>
+          <button type="button" class="chip" data-q="set the volume to 40">Volume</button>
+          <button type="button" class="chip" data-q="play some music">Music</button>
+          <button type="button" class="chip" data-q="take a screenshot">Screen</button>
+          <button type="button" class="chip" data-q="what's the weather in tokyo">Weather</button>
+          <button type="button" class="chip" data-q="who painted the mona lisa">Ask</button>
+          <button type="button" class="chip" data-q="what is 17*23">Math</button>
+          <button type="button" class="chip" data-q="convert 72 f to c">Convert</button>
+          <button type="button" class="chip" data-q="time in tokyo">Time</button>
+          <button type="button" class="chip" data-q="roll 2d6">Dice</button>
+          <button type="button" class="chip" data-q="sha256 of turing">Text</button>
+          <button type="button" class="chip" data-q="set a timer for 1 minute">Timer</button>
+          <button type="button" class="chip" data-q="scroll to the results">Page</button>
         </div>
-        <div class="name-split">
-          <div><span class="name-label">Project</span><b>Turing</b></div>
-          <div><span class="name-label">Model</span><b>Samantha</b></div>
-        </div>
-      </header>
-
-      <main id="content">
-
-      <section id="demo">
-        <div class="wide"><h2>Talk to Samantha</h2></div>
-        <div class="hero-media">
+        <div class="hero-media" id="demo">
         <div class="card" style="display:flex;flex-direction:column">
           <div id="desk" class="desk" aria-label="A stand-in Mac that Samantha controls">
             <div class="desk-bar">
@@ -339,7 +371,9 @@
           <datalist id="chat-suggest"></datalist>
         </div>
         </div>
-      </section>
+      </header>
+
+      <main id="content">
 
       <section id="abilities-section">
         <div class="col">

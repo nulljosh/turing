@@ -691,6 +691,7 @@
     idle();
   }
 
+  Array.prototype.forEach.call(document.querySelectorAll('.chip'), function (c) { c.addEventListener('click', function () { lastUser = Date.now(); stopReel(); if (busy) return; send(c.getAttribute('data-q'), idle); }); });
   $('chat-send').addEventListener('click', function () { lastUser = Date.now(); stopReel(); send(null, idle); });
   input.addEventListener('keydown', function (e) {
     stopReel();
@@ -702,7 +703,7 @@
   // ---- borrowed from Joshua Tree's landing: sections ease in on scroll, and the demo can fill the screen ----
   (function () {
     document.documentElement.classList.add('js');
-    var secs = Array.prototype.slice.call(document.querySelectorAll('section')).slice(1);
+    var secs = Array.prototype.slice.call(document.querySelectorAll('section'));
     if ('IntersectionObserver' in window && !reduceMotion) {
       var io = new IntersectionObserver(function (es) {
         es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
