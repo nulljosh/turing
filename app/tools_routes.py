@@ -18,6 +18,7 @@ import tools_dev
 import tools_files
 import tools_image
 import tools_learn
+import tools_mail_send
 import tools_organizer
 import tools_system
 import tools_util
@@ -102,7 +103,7 @@ def install(t):
     _ROUTES = _ROUTES + tuple((pat, _util_route(name, arg)) for pat, name, arg in tools_util.ROUTES)  # 31 utility tools: math, text, dice, this Mac's vitals
     # organizer's, system's and dev's own phrasings go in FRONT of everything above: "search notes for X" would
     # otherwise be swallowed by the "search ... for" catch-all, and "quit spotify"/"run the tests" by nothing today either
-    _ROUTES = tuple((pat, _util_route(name, arg)) for _mod in (tools_learn, tools_organizer, tools_system, tools_dev, tools_character) for pat, name, arg in _mod.ROUTES) + _ROUTES
+    _ROUTES = tuple((pat, _util_route(name, arg)) for _mod in (tools_learn, tools_mail_send, tools_organizer, tools_system, tools_dev, tools_character) for pat, name, arg in _mod.ROUTES) + _ROUTES
 
     def _schema(fn):
         """Build OpenAI tool schema from function signature and docstring."""

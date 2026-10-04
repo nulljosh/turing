@@ -92,7 +92,7 @@ Ask her to draft something in our voice, or answer a question about one of our o
 - [ ] Outside benchmark: score her on the Berkeley Function Calling Leaderboard next to other small models, so her numbers are not only our own test sets
 - [x] Tool-name grammar: attempted 2026-10-03. GBNF grammar measured on gguf_fixture.json (20 cases): without constraint 18/20 (90%), with validity constraint 17/20 (85%), delta -5%. Grammar hurts. Tested: a procedural constraint rejecting invalid tool names fixes 2 hallucinations (search_app, logout_app) but breaks 1 valid pick. Round six collapsed on logits trie for same reason. Not shipping.
 - [ ] From Joshua's notebook (2026-10-04), key phrases she should handle:
-  - [ ] "email mom xyz": send mail to a contact by name (today she only reads unread mail); asks first, a WRITE
+  - [x] "email mom xyz": send mail to a contact by name (today she only reads unread mail); asks first, a WRITE
   - [ ] "open app X and handle xyz": open, then drive it with click_text/type_text through the screen agent, end to end
   - [ ] Full app support: every app's main actions reachable by voice, not just open/switch/quit
   - [ ] Photoshop, Pixelmator, video and audio editors: real edits (trim a clip, cut audio, apply an adjustment), not just paint_image and transcribe

@@ -331,6 +331,11 @@ for f in tools_learn.TOOLS:
     TOOLS[f.__name__] = f
     globals()[f.__name__] = f
 
+import tools_mail_send  # noqa: E402  (mail sending: send_email, spliced from here for size)
+for f in tools_mail_send.TOOLS:
+    TOOLS[f.__name__] = f
+    globals()[f.__name__] = f
+
 import tools_routes  # noqa: E402  (the regex router: phrase table + text normalization, split for size)
 tools_routes.install(sys.modules[__name__])  # builds _ROUTES etc against this module, never `import tools` inside
 _ROUTES = tools_routes._ROUTES
