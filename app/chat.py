@@ -333,7 +333,7 @@ def chat():
     last_subject = None
     # commands ("set the volume to 30", "take a note buy milk") run through the harness: the tool call is shown, and anything that writes asks first
     session = harness.Session(confirm=harness._ask_yes, log=print)
-    print("Samantha (Turing project assistant). She answers questions and does things on this Mac, and asks before anything that writes. "
+    print("Samantha (Turing project assistant). She answers questions and does things on this " + ("Mac" if sys.platform == "darwin" else "computer") + ", and asks before anything that writes. "
           "Type /voice to talk out loud, /face to see her, Ctrl+C or 'exit' to quit.\n")
     face_window = None
     while True:
@@ -392,7 +392,7 @@ def tui():
         history = []
         topic_active = False
         last_subject = None
-        lines = ["Samantha (Turing project assistant). She also does things on this Mac and asks before anything that writes. Ctrl+C or type 'exit' to quit.", ""]
+        lines = ["Samantha (Turing project assistant). She also does things on this " + ("Mac" if sys.platform == "darwin" else "computer") + " and asks before anything that writes. Ctrl+C or type 'exit' to quit.", ""]
 
         def confirm(name, args):
             """Ask on the bottom line whether to run a tool that writes or sends."""
