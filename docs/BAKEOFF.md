@@ -371,3 +371,7 @@ Same recipe as v9 on training data where each phrase teaches one tool. In-kernel
 | heldout5 | 406 / 507 | 2 | 3 |
 
 Leaks are under the bar everywhere. The refusals left on the dev sets are mostly correct (a composed or mangled argument should not run: run_code with "10 + 20 + 30", an append_note that dropped a word, do_not_disturb "toggle", which the tool cannot do) or label conflicts (a downloads-folder question the data teaches as recent_downloads). Zero refused on a sealed set of several hundred phrasings is a hard bar for a guard that must also stop composed arguments; heldout4's 14 refused (3 percent) says the sealed read will not hit zero. heldout6 is not read yet.
+
+## heldout6 read (2026-10-04): v10 misses the v5 bar on refusals
+
+The one sealed read of heldout6 with Kaggle v10: 359 of 439 right, **8 past the guard (bar met)**, **16 right picks refused, 3.6 percent (bar was under 1 percent, not met)**, 23 asked which. The leak half of v5 holds on unseen phrasings; the refusal half does not, and it matches heldout4's 3 percent. v5.0.0 is not shipped. heldout6 is now seen, so it joins the dev sets, and the next candidate needs a fresh sealed heldout7 (written without looking at any model's misses). The work left is about refusals: the guard stops right picks whose argument was reshaped, and 23 more were turned into a question.
