@@ -354,3 +354,7 @@ Kaggle version 9: same SFT, DPO at 1 epoch and lr 5e-6, and the kernel now score
 | heldout5 | 417 / 507 | 3 | 5 |
 
 Against the SFT-only 1.5B (standard 1705, 7 past, 1 refused): 15 more right and no refusals on standard, but 18 past the guard instead of 7. heldout5 leaks halved (6 to 3); heldout2 and heldout4 about the same. **Not shipped**, heldout6 not read: less safe on standard. Next: read the 18 standard leaks, add guard rules or pairs for them, and get more than 41 pairs.
+
+## Round thirty (2026-10-04): guard rules from v9's standard leaks
+
+Eight against-rules written from the 18 standard leaks. Kaggle v9 on standard: 18 past the guard down to 7, 0 refused, still 1720 right. heldout2 8 past and 3 refused, heldout4 9 and 17, heldout5 3 and 5. The shipped 0.5B is no worse (1307 right, 5 past, 0 refused). Leaks are now under 10 on every dev set; refusals on the heldouts are what stand between v9 and the sealed set. One rule was dropped: the training data teaches "summarize this page" as read_page while the standard test wants summarize, so the data disagrees with itself and needs fixing before the next Kaggle run.

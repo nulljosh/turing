@@ -167,7 +167,7 @@ _AGAINST = {"say": r"\bset\b.*\bvoice\b|\bvoice\b.*\bset\b|morse|clock say|how (
             "weather": r"\bapp\b|\bon (?:mars|venus|jupiter|saturn|mercury|neptune|uranus|pluto|the moon)\b|can you believe|\bseems\b|perfect for|isn'?t it\b", 
             # "close the github tab" is close_tab, not quit_app. "extract the zip" is unzip_file, not zip_file.
             # "summarize my unread mail" is summarize, not unread_mail.
-            "quit_app": r"\btab\b", "zip_file": r"\bextract\b|\bunzip\b", "unread_mail": r"\bsummar",
+            "quit_app": r"\btab\b|\b(?:sound|volume|audio|noise)\b", "zip_file": r"\bextract\b|\bunzip\b", "unread_mail": r"\bsummar",
             # Round ten: open_app had zero _AGAINST, so any single shared word ("tests", the arg
             # itself, "finder") let it fire on a sentence that is really about a different tool.
             # These are phrases, not bare words, so "open mail"/"open finder"/"open tests" (real
@@ -212,7 +212,7 @@ _AGAINST = {"say": r"\bset\b.*\bvoice\b|\bvoice\b.*\bset\b|morse|clock say|how (
             "read_document": r"\btab\b|github\.com|\.com\b|\.org\b|\.io\b|clipboard|crunch|analy[sz]e",
             # Round eleven: weather has its own tool; "look up the weather" should never fall to a
             # generic web search.
-            "web_search": r"\bweather\b|\.(?:com|org|net|io|ca)\b|\bmy notes\b|\bnotes for\b|pull requests?|\bprs\b|bluetooth|\bnotes? (?:mentioning|about|for|with)\b|\bon the books\b|\bbooks today\b|who is this (?:artist|band)\b|\bwhat does the .+ (?:tab|page) (?:say|show)\b|search (youtube|spotify|google maps|amazon|github|wikipedia|reddit)|my shortcuts|pull up|shortcuts list|\bgo to .+? and search\b",  # round twenty-three: web_search blocks open_url/youtube contexts
+            "web_search": r"\bon (?:amazon|youtube|github|spotify|ebay)\b|\bweather\b|\.(?:com|org|net|io|ca)\b|\bmy notes\b|\bnotes for\b|pull requests?|\bprs\b|bluetooth|\bnotes? (?:mentioning|about|for|with)\b|\bon the books\b|\bbooks today\b|who is this (?:artist|band)\b|\bwhat does the .+ (?:tab|page) (?:say|show)\b|search (youtube|spotify|google maps|amazon|github|wikipedia|reddit)|my shortcuts|pull up|shortcuts list|\bgo to .+? and search\b",  # round twenty-three: web_search blocks open_url/youtube contexts
             # Round eleven: "translate 5 km to miles" is a unit conversion someone phrased with the
             # word "translate", not a language-translation command; convert_units still fires the
             # right tool for the plain "5 km to miles" shape, this only blocks the misleading verb.
@@ -229,14 +229,14 @@ _AGAINST = {"say": r"\bset\b.*\bvoice\b|\bvoice\b.*\bset\b|morse|clock say|how (
             # Round fifteen. A clock time is convert_time's (the mirror of its evidence above), so time_in and
             # date_math stand down on one; "how late is it" is time_in's.
             "time_in": r"\d\s*(?:am|pm)\b|\d:\d\d|\bnoon\b|\bmidnight\b",
-            "date_math": r"\buntil\b|\btill\b|\bsleeps?\b|\d\s*(?:am|pm)\b|\d:\d\d|\bnoon\b|\bmidnight\b|how late|time is it|\btil\b|how long|days to\b|count the days|restart|reboot",
+            "date_math": r"how far (?:away|off)|\buntil\b|\btill\b|\bsleeps?\b|\d\s*(?:am|pm)\b|\d:\d\d|\bnoon\b|\bmidnight\b|how late|time is it|\btil\b|how long|days to\b|count the days|restart|reboot",
             # "how do I say X in french" is translate; "I wanted to say thanks", "wondering out loud" are chat.
             "base64_encode": r"un-?base ?64|decode|what'?s this|\bdecode",
             "cpu_load": r"\bram\b|memory",
             "roll_dice": r"\bint(?:eger)?\b|random number",
             "read_file": r"\.(?:pdf|docx?|rtf|pages|epub)\b|\bfinder\b|\bopen and read\b|answer (?:a )?question",  # round twenty-three: block read_document phrases
             "read_page": r"\btab \d+\b|\b\d+(?:st|nd|rd|th) tab\b",
-            "base64_decode": r"\b(?:to|2|into) base ?64\b",
+            "base64_decode": r"\b(?:to|2|into) base ?64\b|^(?!.*(?:decod|from base|un-?base|plain ?text|back (?:to|into) text|[a-z0-9+/]{3,}={1,2}(?:\s|$)))",
             "running_apps": r"\bmcp\b|server",
             "summarize": r"feedback|rating|(?:needs|requires) (?:my )?attention",
             "calendar_today": r"\btomorrow\b|\btmrw?\b|\bgap\b|open slot|important|urgent",
@@ -255,7 +255,10 @@ _AGAINST = {"say": r"\bset\b.*\bvoice\b|\bvoice\b.*\bset\b|morse|clock say|how (
             "system_info": r"wi-?fi|\bip\b|address|loaded|\bcpu\b|\bram\b|memory|battery|disk|free space|power|charging",
             "free_when": r"free space|\bdisk\b|storage",
             "set_volume": r"\bvoice\b",
-            "music": r"disturb|\bproject\b|blocked|paused",  # round twenty-three: block project context confusion
+            "music": r"disturb|\bproject\b|blocked|paused|\b(?:tap|click)\b",
+            # Round thirty (Kaggle v9's standard leaks): a time of day asks when she is free, "what's in" an image asks her eyes, and a bare "what's on my screen" is read_screen's
+            "calendar_tomorrow": r"tomorrow (?:morning|afternoon|evening|night)", "image_info": r"what'?s in\b|what is in\b",
+            "screenshot": r"^(?!.*(?:shot|grab|captur|pic)).*what'?s on (?:the |my )?screen",  # round twenty-three: block project context confusion
             "open_url": r"\blog (?:me )?in(?:to)?\b|\bclick\b|\bcontent\b|\btext from\b|track down|\bskim\b|\btldr\b|report back|what'?s on|^search for\b|\bfolder\b",
             "timer": r"how many|\bin (?:seconds|minutes|hours)\b"}
 

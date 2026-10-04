@@ -1,5 +1,5 @@
 {
-  "version": "4.20.0",
+  "version": "4.20.1",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -86,6 +86,10 @@
       "app/tools_code.py": {
         "total": 7,
         "documented": 7
+      },
+      "app/tools_coder.py": {
+        "total": 8,
+        "documented": 8
       },
       "app/tools_dev.py": {
         "total": 11,
@@ -303,6 +307,10 @@
         "total": 15,
         "documented": 15
       },
+      "tests/test_coder.py": {
+        "total": 30,
+        "documented": 30
+      },
       "tests/test_dev.py": {
         "total": 55,
         "documented": 55
@@ -488,8 +496,8 @@
         "documented": 3
       },
       "training/kaggle_train.py": {
-        "total": 6,
-        "documented": 6
+        "total": 11,
+        "documented": 11
       },
       "training/parse_log.py": {
         "total": 1,
@@ -516,7 +524,7 @@
   "measured": {
     "tools": {
       "before": 0,
-      "after": 134
+      "after": 135
     },
     "actions_eval": "77/77",
     "knowledge_sweep": {
