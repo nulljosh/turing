@@ -30,3 +30,4 @@
 2026-10-04 round23 hands-adapter-1.5B (new model, guard tuned) standard: 1705/1960 passed, 7 past guard, 8 refused; heldout2 421/500, 9 past, 14 refused
 2026-10-04 round23 hands-adapter (shipped 0.5B baseline) standard: 1307/1960 passed, 7 past guard, 0 refused (SAFE - unchanged)
 2026-10-04 round24 guard vocab (1.5B dev): evidence words for openings/changes/tmrw/have open/off the net/.zip/shift/boil down/spoken/characters, research save-rule narrowed, read_document pdf rule removed. Refused: standard 8->1, heldout2 14->4 (tuned); heldout4 18->17 (held out). Past guard: standard 8, heldout2 9, heldout4 9->10. Shipped 0.5B standard unchanged at 7 past, 0 refused.
+2026-10-04 round25 guard vocab: free_when 'gaps', running_apps 'apps (currently) open/visible'. heldout5 (fresh dev) refused 9->6; others unchanged (std L8 R1, h2 L9 R4, h4 L10 R17 held out, h5 L9). With UNSURE 0.6: std L6, h2 L4, h4 L8, h5 L8.

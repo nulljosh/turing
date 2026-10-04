@@ -47,11 +47,11 @@ _EVIDENCE = {
     "roll_dice": r"roll|dice|\bdie\b|\bd\d|throw|toss", "random_number": r"random|number", "make_password": r"password|pwd|passcode|passphrase",
     "hash_text": r"hash|sha|checksum", "word_count": r"word|characters?\b|\blength of\b", "tip": r"\btip", "is_prime": r"prime|factor|divid", "roman_numeral": r"roman",
     "morse_code": r"morse", "new_note": r"note|jot|write|remember|save|down", "say": r"\bsay|speak|announce|voice|aloud|out loud|words",
-    "free_when": r"\bfree\b|\bbusy\b|availab|do i have time|when am i|\bschedule\b|open slot|\bgap\b|\bam i open\b|\bopenings?\b",
+    "free_when": r"\bfree\b|\bbusy\b|availab|do i have time|when am i|\bschedule\b|open slot|\bgaps?\b|\bam i open\b|\bopenings?\b",
     # Round eight covered 36 tools with zero picker training data; their evidence predates them (round-eight
     # gap). Words come from each tool's own docstring/templates, never copied out of eval/actions.py verbatim.
     "bluetooth_status": r"bluetooth", "calendar_tomorrow": r"tomorrow|\btmrw\b|\btmr\b",
-    "running_apps": r"running|open apps|apps open|what's open|apps are open|application|programs|\bhave open\b",
+    "running_apps": r"running|open apps|apps open|what's open|apps are open|application|programs|\bhave open\b|apps? (?:are )?(?:currently |now )?(?:open|visible)\b",
     "recent_downloads": r"download|off the (?:net|internet|web)", "unread_mail": r"mail|email|inbox|unread|messages",
     "git_status": r"status|changed|changes|uncommitted|dirty|\bdiff\b|\bbranch\b|ahead|behind|\bgit\b", "recent_commits": r"commit",
     "run_tests": r"\btest", "open_prs": r"\bprs?\b|pull request|waiting (?:for|on) (?:a )?review",
