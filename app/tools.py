@@ -322,6 +322,7 @@ repair = tools_registry.repair
 doc_pair = tools_util.doc_pair
 
 import tools_write  # noqa: E402  (phrase-routed only: each confirms itself with a diff, never a model's tool)
+import tools_coder  # noqa: E402  (phrase-routed only: code X in Y, no model pick)
 _WRITERS = {f.__name__: f for f in (tools_write.edit_last_draft, tools_write.edit_file, tools_write.write_code)}
 TOOLS.update(_WRITERS)
 globals().update(_WRITERS)
@@ -481,6 +482,9 @@ def do(query, log=None, confirm=None):
     edited = tools_write.route(_bare(query), log=log, confirm=confirm)  # ahead of _ACTION: "make it..." is never make_logo
     if edited:
         return edited
+    coded = tools_coder.route(_bare(query), log=log, confirm=confirm)  # "code X in Y", phrase-routed only
+    if coded:
+        return coded
     if _SCREEN_JOB.search(_bare(query)):
         from tools_screen_agent import screen_task
         return screen_task(query, log=log, confirm=confirm)
