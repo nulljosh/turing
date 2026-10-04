@@ -6,6 +6,8 @@
     <title>Turing</title>
     <meta name="theme-color" content="#000000">
     <link rel="icon" type="image/svg+xml" href="icon.svg">
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="apple-touch-icon" href="icon-192.png">
     <meta property="og:image" content="https://turing.heyitsmejosh.com/samantha-logo.png">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Turing">
@@ -60,6 +62,7 @@
       :root[data-theme="light"] .pill-dark{background:#151515;color:#fff}
       :root[data-theme="light"] .pill-light{background:#151515;color:#fff}
       .pill:hover{opacity:.85}
+      .pill[hidden]{display:none}
       .nav-links{display:flex;gap:4px;align-items:center}
       .nav-link{padding:8px 12px;border-radius:var(--r-pill);font-size:14px;color:var(--muted);text-decoration:none;min-height:40px;display:inline-flex;align-items:center}
       .nav-link:hover,.nav-link:focus-visible{color:var(--fg)}
@@ -334,6 +337,7 @@
         <div class="hero-cta">
           <a class="pill pill-light dl-main" href="https://github.com/nulljosh/turing/releases/download/mac-app/SamanthaGUI.zip" download>Download for Mac</a>
           <button type="button" class="pill pill-dark copy-install" aria-label="Copy the install command">Copy install command</button>
+          <button type="button" class="pill pill-dark install-app" hidden>Install app</button>
         </div>
         <div class="chips" role="group" aria-label="Try a feature">
           <button type="button" class="chip" data-q="paint the mona lisa">Paint</button>
@@ -485,8 +489,9 @@ python3 -m venv .venv &amp;&amp; ./.venv/bin/pip install mlx-lm
           <div class="hero-cta" style="margin:14px 0 0;justify-content:flex-start">
             <a class="pill pill-light dl-main" href="https://github.com/nulljosh/turing/releases/download/mac-app/SamanthaGUI.zip" download>Download for Mac</a>
             <button type="button" class="pill pill-dark copy-install">Copy install command</button>
+            <button type="button" class="pill pill-dark install-app" hidden>Install app</button>
           </div>
-          <p class="sub" style="margin-top:14px;font-size:14px"><b>Mac:</b> the app, everything she can do. <b>Windows and Linux:</b> chat and her tool picker over Ollama (GGUF); the parts that drive your screen and apps stay on the Mac.</p>
+          <p class="sub" style="margin-top:14px;font-size:14px"><b>Mac:</b> the app, everything she can do. <b>Windows, Linux and phones:</b> press Install app (Chrome or Edge) for the portable half of her, offline: math, time, conversions, text, memory. Or run her chat over Ollama (GGUF). The parts that drive your screen and apps stay on the Mac.</p>
           <p class="meta" style="margin-top:14px">
             <span>Latest: <b id="version">-</b></span>
             <span><a id="release-link" href="https://github.com/nulljosh/turing/releases">Release notes</a></span>
@@ -754,6 +759,13 @@ python3 -m venv .venv &amp;&amp; ./.venv/bin/pip install mlx-lm
 (function(){var u=navigator.userAgent,p=navigator.platform||"",label=null;
 if(/Android|iPhone|iPad/i.test(u))label="Get it on a computer";else if(/Win/i.test(p))label="Run on Windows";else if(/Linux|X11/i.test(p+u)&&!/Mac/i.test(p))label="Run on Linux";
 if(!label)return;document.querySelectorAll(".dl-main").forEach(function(a){a.textContent=label;a.href="https://github.com/nulljosh/turing#run-it";a.removeAttribute("download")})})();
+</script>
+<script>
+(function(){var ev=null,btns=document.querySelectorAll(".install-app");
+if("serviceWorker"in navigator)window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})});
+window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();ev=e;btns.forEach(function(b){b.hidden=false})});
+window.addEventListener("appinstalled",function(){btns.forEach(function(b){b.hidden=true})});
+btns.forEach(function(b){b.addEventListener("click",function(){if(ev){ev.prompt();ev=null;btns.forEach(function(x){x.hidden=true})}})})})();
 </script>
 <script>
 document.querySelectorAll(".copy-install").forEach(function(b){var t=b.textContent;b.addEventListener("click",function(){var c="git clone https://github.com/nulljosh/turing && cd turing && python3 -m venv .venv && ./.venv/bin/pip install mlx-lm && ./.venv/bin/python app/chat.py";
