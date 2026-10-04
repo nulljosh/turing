@@ -341,3 +341,16 @@ Retrained the picker with the shipped recipe on regenerated data (6 minutes). St
 ## Round twenty-eight (2026-10-04): DPO on the 1.5B collapsed to abstaining
 
 Kaggle version 8 trained the 1.5B SFT, then a DPO stage on the 41 teacher mistakes (2 epochs, lr 5e-5, beta 0.1). The pairs looked learned (prefers chosen on 38 of 41) but standard scored 151/1960 against 1705 for the SFT-only 1.5B: 0 wrong, 0 past the guard, 0 refused, and almost nothing picked. Too much pull, too few pairs: it learned to say nothing. Not shipped, other sets not read. Next: the trainer now saves the SFT-only model beside the DPO one, and DPO runs 1 epoch at lr 5e-6. 41 pairs is thin, so more pairs from live misses before another run.
+
+## Round twenty-nine (2026-10-04): gentle DPO holds up, but leaks more on standard
+
+Kaggle version 9: same SFT, DPO at 1 epoch and lr 5e-6, and the kernel now scores itself (SFT 97.5 percent, DPO 97.5 percent on 80 held rows, so no collapse).
+
+| Set | Right | Past the guard | Refused |
+|---|---|---|---|
+| standard | 1720 / 1960 | 18 | 0 |
+| heldout2 | 415 / 500 | 8 | 3 |
+| heldout4 | 353 / 455 | 9 | 16 |
+| heldout5 | 417 / 507 | 3 | 5 |
+
+Against the SFT-only 1.5B (standard 1705, 7 past, 1 refused): 15 more right and no refusals on standard, but 18 past the guard instead of 7. heldout5 leaks halved (6 to 3); heldout2 and heldout4 about the same. **Not shipped**, heldout6 not read: less safe on standard. Next: read the 18 standard leaks, add guard rules or pairs for them, and get more than 41 pairs.

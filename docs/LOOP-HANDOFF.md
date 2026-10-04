@@ -17,7 +17,7 @@ Round 22 (same recipe, fresh template data) was worse and less safe: 19 past the
 
 ## Next, in order
 
-1. **Kaggle v8 DPO scored and failed (2026-10-04):** standard 151/1960 vs 1705 for the SFT-only 1.5B, it learned to abstain. Not shipped, see BAKEOFF round twenty-eight. Trainer now saves the SFT-only model too and runs DPO at 1 epoch, lr 5e-6. Next: more preference pairs from live misses, rerun on Kaggle, or score the SFT-only 1.5B on dev sets for the router-off design.
+1. **Kaggle v9 (gentle DPO, self-scoring kernel) scored 2026-10-04:** standard 1720/1960 but 18 past the guard (SFT-only 1.5B: 7), heldout5 leaks 6 to 3, others flat. Not shipped, heldout6 sealed. See BAKEOFF rounds twenty-eight and twenty-nine. Next: read the 18 standard leaks (`eval/hands.py --model <mlx> --trained --verbose`), fix by guard rule or new preference pairs, grow pairs well past 41, rerun Kaggle. In zsh pass `--test file` as two words, `${t:+--test $t}` does not split.
 2. Once Kaggle finishes, fetch the trained adapter (uvx kaggle kernels output, see docs/KAGGLE.md).
 3. Score on standard, heldout2, heldout4, heldout5 (never read heldout6 until final candidate).
 4. If DPO clears 5.0 gate (under 10 wrong, 0 refused on heldout6), ship v5.0.0 with major-release docs pass (WHITEPAPER, landing, README, badge, LOOP-HANDOFF for v6).
