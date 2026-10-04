@@ -2,7 +2,10 @@
 
 This Mac cannot train a base bigger than about 0.5B (the 0.8B crashed it twice). A free Kaggle GPU can train a 1.5B, and the Mac only has to run the result. Kaggle gives about 30 GPU-hours a week with no card; Colab's free T4 is the backup.
 
-## On Kaggle
+## From the command line (what actually ran, 2026-10-03)
+One-time: kaggle.com, Settings, verify your phone (the GPU stays locked until you do; identity verification alone is not enough), then API Tokens, Create New Token, and save it to `~/.kaggle/access_token` (`chmod 600`). Then `uvx kaggle datasets create` for `samantha-hands` and `uvx kaggle kernels push` for a script kernel with the GPU on. Kaggle notebooks have no internet, so `kaggle_train.py` loads Qwen2.5-1.5B from the attached Kaggle model (`qwen-lm/qwen2.5/transformers/1.5b-instruct`) and exits at once if there is no GPU. Check status with `uvx kaggle kernels status`, fetch logs with `uvx kaggle kernels output`.
+
+## On Kaggle (by hand)
 1. On the Mac, zip `hands-data/train.jsonl` and `hands-data/valid.jsonl` (run `python3 training/gen_hands_data.py` first if they are old). They are made-up template rows, nothing private. If you add real feedback rows (`training/feedback_to_data.py`), read them before uploading: they are your own words.
 2. kaggle.com, Datasets, New Dataset, upload the zip, name it `samantha-hands`.
 3. Code, New Notebook, Add Input (your dataset), Settings, Accelerator: GPU T4 x2 or P100.

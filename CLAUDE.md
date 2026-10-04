@@ -50,6 +50,12 @@ Work happens on main, no side branches and no PRs for Joshua to handle. Before e
 ## Releases
 Releases cut themselves. Bump `VERSION` (patch for a fix, minor for a new ability, major when a whole roadmap family or phase completes: the files family's write half is 4.0.0), run `python3 scripts/stats.py` to refresh `web/stats.json`, and commit as `Release vX.Y.Z: what shipped`. When that lands on main and CI passes, `.github/workflows/release.yml` tags it and publishes the GitHub release. Nobody runs anything by hand. `./release.sh X.Y.Z "what shipped"` on the Mac still adds the full gate (her real model, the image tools through ImageMagick, the live page) and the site deploy, whenever the Mac is used. Never leave a day's work untagged: on 2026-09-21 76 commits piled up past v0.7.4 before anyone noticed.
 
+## Kaggle training
+Free GPU training runs from the CLI, no browser: see docs/KAGGLE.md. The phone must be verified on Kaggle or kernels stop with "No GPU". The token lives in `~/.kaggle/access_token` and must never be printed or committed.
+
+## Windows and Linux
+`install/install.sh` and `install/install.ps1` run chat and the picker over a GGUF with llama.cpp. CI runs `install.ps1` on a real Windows runner (`windows_install` job in test.yml). Joshua Tree also runs her as a ring-3 app that calls this repo's `/api/chat` and `/api/pick`.
+
 ## The Mac app download
 The landing's Download button points at `releases/download/mac-app/SamanthaGUI.zip` (a permanent release, so a new version tag never breaks it). After each release the CI cuts, run `./gui/package.sh` (Developer ID signed, notarized, stapled) then `gh release upload mac-app gui/dist/SamanthaGUI.zip --clobber`. The install command on the page is copied by `.copy-install`.
 

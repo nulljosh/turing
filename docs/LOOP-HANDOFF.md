@@ -1,6 +1,6 @@
-# Turing loop handoff (2026-10-02, loop stopped by Joshua)
+# Turing loop handoff (2026-10-03, night)
 
-**Loop status: stopped as of 2026-10-02.** Restart prompt below for when to resume.
+**Loop status: stopped as of 2026-10-02.** Tonight's one live job: a Kaggle GPU run (1.5B base, `joshuatrommel/samantha-hands-train`, kernel version 5) trains a bigger picker. When it finishes, fetch it with `uvx kaggle kernels output`, then follow docs/KAGGLE.md to convert and score it on standard and heldout2. Restart prompt below for when to resume.
 
 ## What the loop is
 
