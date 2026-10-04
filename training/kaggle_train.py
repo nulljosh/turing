@@ -6,11 +6,19 @@ samantha-hands. It LoRA-trains the base on the same chat rows the Mac uses (syst
 prompt so only the tool call is learned, merges the adapter into the base and writes OUT as one folder to download.
 Steps for the Mac side (convert, score, compare) are in docs/KAGGLE.md. Untested on a real GPU until Joshua runs it.
 Settings come from the environment: BASE, DATA, OUT, EPOCHS, MAXLEN. ponytail: plain Trainer, no quantization; a 1.5B fits a 16 GB card."""
+import glob
 import json
 import os
 
-BASE = os.environ.get("BASE", "Qwen/Qwen2.5-1.5B-Instruct")
-DATA = os.environ.get("DATA", "/kaggle/input/samantha-hands")
+
+def _found(name, default):
+    """The folder under /kaggle/input holding `name`, or default. Mounts move between Kaggle versions, and a notebook without internet must load the base from an attached Kaggle model (qwen-lm/qwen2.5/transformers/1.5b-instruct) instead of Hugging Face."""
+    hits = glob.glob(f"/kaggle/input/**/{name}", recursive=True)
+    return os.path.dirname(hits[0]) if hits else default
+
+
+BASE = os.environ.get("BASE") or _found("config.json", "Qwen/Qwen2.5-1.5B-Instruct")
+DATA = os.environ.get("DATA") or _found("train.jsonl", "/kaggle/input/samantha-hands")
 OUT = os.environ.get("OUT", "/kaggle/working/hands-merged")
 EPOCHS = float(os.environ.get("EPOCHS", "2"))
 MAXLEN = int(os.environ.get("MAXLEN", "512"))
