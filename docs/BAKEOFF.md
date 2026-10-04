@@ -358,3 +358,16 @@ Against the SFT-only 1.5B (standard 1705, 7 past, 1 refused): 15 more right and 
 ## Round thirty (2026-10-04): guard rules from v9's standard leaks
 
 Eight against-rules written from the 18 standard leaks. Kaggle v9 on standard: 18 past the guard down to 7, 0 refused, still 1720 right. heldout2 8 past and 3 refused, heldout4 9 and 17, heldout5 3 and 5. The shipped 0.5B is no worse (1307 right, 5 past, 0 refused). Leaks are now under 10 on every dev set; refusals on the heldouts are what stand between v9 and the sealed set. One rule was dropped: the training data teaches "summarize this page" as read_page while the standard test wants summarize, so the data disagrees with itself and needs fixing before the next Kaggle run.
+
+## Round thirty-three (2026-10-04): Kaggle v10 on the fixed data
+
+Same recipe as v9 on training data where each phrase teaches one tool. In-kernel: SFT 95.5 percent, DPO 97.5 percent on 200 held rows.
+
+| Set | Right | Past the guard | Refused |
+|---|---|---|---|
+| standard | 1705 / 1960 | 7 | 1 |
+| heldout2 | 416 / 500 | 7 | 1 |
+| heldout4 | 357 / 455 | 9 | 14 |
+| heldout5 | 406 / 507 | 2 | 3 |
+
+Leaks are under the bar everywhere. The refusals left on the dev sets are mostly correct (a composed or mangled argument should not run: run_code with "10 + 20 + 30", an append_note that dropped a word, do_not_disturb "toggle", which the tool cannot do) or label conflicts (a downloads-folder question the data teaches as recent_downloads). Zero refused on a sealed set of several hundred phrasings is a hard bar for a guard that must also stop composed arguments; heldout4's 14 refused (3 percent) says the sealed read will not hit zero. heldout6 is not read yet.
