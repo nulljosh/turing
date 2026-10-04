@@ -11,6 +11,7 @@ import tools_registry
 import untrusted
 
 HANDS_ADAPTER = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "hands-adapter")
+HANDS_MODEL = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "models", "samantha-hands-1.5b-mlx")  # the Kaggle-trained 1.5B, merged (docs/KAGGLE.md); wins over the 0.5B adapter when present
 HANDS_GGUF = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "models", "samantha-hands.gguf")
 HANDS_SYSTEM = 'You are Samantha\'s hands. Reply with one JSON tool call. If this is not a command, reply {"tool": null, "arg": ""}.'
 _hands = None
@@ -18,11 +19,13 @@ _hands_backend = None  # "mlx" or "llama_cpp", set once _hands loads
 
 
 def _load_hands():
-    """MLX when it's importable (Apple Silicon); otherwise llama-cpp-python
+    """MLX when it's importable (Apple Silicon), the merged 1.5B in models/ first, else the 0.5B plus hands-adapter; otherwise llama-cpp-python
     over the GGUF export (training/export_gguf.py), same prompt and decoding
     everywhere. Returns (backend, model, tok_or_none) or None when neither is here."""
     try:
         from mlx_lm import load
+        if os.path.isdir(HANDS_MODEL):
+            return "mlx", *load(HANDS_MODEL)
         if os.path.isdir(HANDS_ADAPTER):
             return "mlx", *load("mlx-community/Qwen2.5-0.5B-Instruct-4bit", adapter_path=HANDS_ADAPTER)
     except Exception:
