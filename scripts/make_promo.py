@@ -134,8 +134,8 @@ def build(webm, starts, clips, out_dir):
         inputs += ["-i", mp3]
         filters.append(f"[{i + 2}:a]adelay={int(start * 1000)}|{int(start * 1000)}[a{i}]")
     voice_mix = "".join(f"[a{i}]" for i in range(len(clips))) + f"amix=inputs={len(clips)}:normalize=0[voice]"
-    # the bed sits about 22 dB under her voice, fades in and out, and gets a little echo so it reads as a room, not a beep
-    bed_chain = f"[1:a]aecho=0.8:0.6:380:0.25,volume=0.16,afade=t=in:d=2,afade=t=out:st={total - 3:.2f}:d=3[bed]"
+    # the bed sits about 15 dB under her voice, fades in and out, and gets a little echo so it reads as a room, not a beep
+    bed_chain = f"[1:a]aecho=0.8:0.6:380:0.25,volume=0.34,afade=t=in:d=2,afade=t=out:st={total - 3:.2f}:d=3[bed]"
     mix = voice_mix + ";" + bed_chain + ";[voice][bed]amix=inputs=2:normalize=0:duration=longest[aout]"
     mp4 = os.path.join(out_dir, "promo.mp4")
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", *inputs, "-filter_complex", ";".join(filters + [mix]), "-map", "0:v", "-map", "[aout]",

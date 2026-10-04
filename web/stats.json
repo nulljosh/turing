@@ -1,5 +1,5 @@
 {
-  "version": "4.20.11",
+  "version": "4.20.12",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -184,8 +184,8 @@
         "documented": 13
       },
       "scripts/make_promo.py": {
-        "total": 6,
-        "documented": 6
+        "total": 7,
+        "documented": 7
       },
       "scripts/stats.py": {
         "total": 7,

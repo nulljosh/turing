@@ -1,5 +1,7 @@
 # Progress log
 
+- 2026-10-04: v4.20.12 🎉 The commercial is tighter and has sound: 83 seconds, her voice, a soft music bed under it, captions, and the new page on screen.
+  v4.20.12 · 135 tools · 681 tests · docs coverage 100% · laws all hold · biggest app/tools_util.py 649 · actions 231/231 · parity 231/231 · util_diff 261/261
 - 2026-10-04: v4.20.11 🎉 The landing page tells search and social the truth: a real title and description, a Twitter card, and a link preview that no longer says "from scratch" (she is a fine-tune). The chat box says "Ask her anything" and no longer cuts off on a phone.
   v4.20.11 · 135 tools · 681 tests · docs coverage 100% · laws all hold · biggest app/tools_util.py 649 · actions 231/231 · parity 231/231 · util_diff 261/261
 - 2026-10-04: v4.20.10 🎉 The commercial now covers all of it: after the live demo it shows what only a real Mac can do (research with sources, reading your screen, clicking for you), labelled as Mac-only, with the narration to match.
