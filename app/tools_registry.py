@@ -350,12 +350,23 @@ def _sound(tool, arg, query):
 
     if tool in ("find_in_document", "ask_document"):
         a, b = tools.doc_pair(arg)  # the same split the tools run
+        # Round twenty-six: the 1.5B sometimes folds the pair into one string ("the main topic of ~/x/article.pdf")
+        # instead of question<TAB>file. Recover the file from the string itself; both halves still have to be copied.
+        if not (a and b) and "\t" not in arg:
+            m = re.search(r"\S+\.\w{2,5}\b", arg)
+            if m:
+                a, b = (arg[:m.start()] + arg[m.end():]).strip(), m.group(0)
         return bool(a) and bool(b) and a.lower() in q_lower and b.lower() in q_lower
 
     # append_note is the same content<TAB>note-name shape, but round nine showed a wrapper phrasing
     # ("append call bob to the note todo") where the model folds the note name into the copied text
     # instead of splitting on tab. Recover the trailing "note <name>" / "to the <name> note" phrasing
     # from the sentence itself rather than trusting an unsplit argument.
+    # Round twenty-six: "roll 4 dice with 8 sides" is 4d8. She writes dice notation, so the guard checks its numbers, not the string.
+    if tool == "roll_dice":
+        m = re.fullmatch(r"(\d*)d(\d+)", arg.lower().strip())
+        return bool(m) and all(n in q_lower for n in m.groups() if n)
+
     if tool == "append_note":
         a, _, b = arg.partition("\t")
         if not b:
