@@ -28,7 +28,7 @@ Not data centres or training data: the gaps we can actually close. Each round pi
 
 ### Majors
 
-- **5.0, her own head.** Every tool picked by her own model, nothing through the exact router. Check: `eval/hands.py` scores 106 of 106 tools by wording, zero right picks blocked, and fewer than ten wrong picks slip past the guard, on a matched test set.
+- **5.0, her own head.** Every tool picked by her own model, nothing through the exact router. Measured 2026-10-04 with the 1.5B and the router off: 168 of 231 eval/actions.py commands right, 5 asked first, 19 wrong, 39 fell through; most of the misses are NOT_FOR_MODELS tools (click, type, press, ask_llm, see_screen, restyle) that Laws 1 and 2 keep phrase-routed on purpose. So "nothing through the router" conflicts with the laws as written. Proposed wording, for Joshua to decide before heldout6 is read: every tool a model is allowed to pick is picked by her own model; phrase-only tools stay on their exact routes by law. Check: `eval/hands.py` scores 106 of 106 tools by wording, zero right picks blocked, and fewer than ten wrong picks slip past the guard, on a matched test set.
 - **6.0, everywhere.** Notarized installer for a stranger's Mac. Windows and Linux get a real browser window, not just an API. MCP works both ways: other apps can borrow her hands, and she can be handed a server to use.
 - **7.0, remembers and comes to you.** A memory file she reads back into every answer. A morning brief pushed before you ask. Shortcuts automations she writes herself.
 - **8.0, learns from the big ones.** Frontier models teach her: distillation raises the picker and the answers together.

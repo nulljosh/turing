@@ -33,3 +33,4 @@
 2026-10-04 round25 guard vocab: free_when 'gaps', running_apps 'apps (currently) open/visible'. heldout5 (fresh dev) refused 9->6; others unchanged (std L8 R1, h2 L9 R4, h4 L10 R17 held out, h5 L9). With UNSURE 0.6: std L6, h2 L4, h4 L8, h5 L8.
 2026-10-04 round26 argument shape: ask_document/find_in_document recover a folded question+file, roll_dice checks dice numbers not the string. Refused: h2 4->3, h5 6->4, h4 17->16 (held out); leaks unchanged (std 8, h2 9, h4 10, h5 9; shipped 0.5B std 7).
 2026-10-04 round27 against rules by kind: say not for setting a voice, open_app not for shortcuts, summarize not for needs-attention, new_reminder not for marking. Leaks: h5 9->6, std 8->7; refused unchanged; h4 (held out) L10 R16; shipped 0.5B std 7.
+2026-10-04 router-off trial (1.5B, guard + UNSURE 0.6, eval/actions.py 231): 168 right, 5 asked first, 19 wrong, 39 fell through (mostly NOT_FOR_MODELS tools the picker is never allowed to choose).
