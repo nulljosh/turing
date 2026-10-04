@@ -51,7 +51,7 @@ STEPS = [
     ("convert 72 f to c", "22.22", None),
     ("sha256 of hello", "2cf24dba5fb0a30e", None),
     ("is 91 prime", "7 x 13", None),
-    ("how much disk space do i have", "real Mac", None),
+    ("how much disk space do i have", "stand-in Mac", None),
     ("paint the mona lisa as a mosaic", "mosaic", lambda p: p.wait_for_function("document.getElementById('paint-title').textContent === 'Mona Lisa'", timeout=8000) is not None),
     ("paint the eniac", "ENIAC", lambda p: p.wait_for_function("document.getElementById('paint-title').textContent === 'The ENIAC'", timeout=8000) is not None),
     ("dark mode", "Lights off.", lambda p: p.evaluate("document.documentElement.dataset.theme") == "dark"),
