@@ -48,7 +48,7 @@ def pad_batch(rows, pad_id):
 
 def encode(tok, messages):
     """One chat row to {input_ids, labels}, cut to MAXLEN. The prompt is everything up to the assistant turn."""
-    prompt = tok.apply_chat_template(messages[:-1], add_generation_prompt=True, tokenize=False)
+    prompt = tok.apply_chat_template(messages[:-1], add_generation_prompt=True, tokenize=False, enable_thinking=False)
     full = prompt + messages[-1]["content"] + tok.eos_token
     p, f = tok(prompt, add_special_tokens=False)["input_ids"], tok(full, add_special_tokens=False)["input_ids"]
     return {"input_ids": f[:MAXLEN], "labels": mask_prompt(p, f)[:MAXLEN]}
@@ -76,7 +76,7 @@ def score_slice(model, tok, rows, torch, n=SCORE_N):
     for row in rows[:n]:
         msgs = row["messages"]
         want = parse_tool(msgs[-1]["content"])
-        ids = tok(tok.apply_chat_template(msgs[:-1], add_generation_prompt=True, tokenize=False), add_special_tokens=False, return_tensors="pt")["input_ids"].to(model.device)
+        ids = tok(tok.apply_chat_template(msgs[:-1], add_generation_prompt=True, tokenize=False, enable_thinking=False), add_special_tokens=False, return_tensors="pt")["input_ids"].to(model.device)
         with torch.no_grad():
             out = model.generate(ids, max_new_tokens=48, do_sample=False, pad_token_id=tok.pad_token_id)
         right, total = right + (parse_tool(tok.decode(out[0][ids.shape[1]:], skip_special_tokens=True)) == want), total + 1
