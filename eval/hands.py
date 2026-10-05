@@ -101,8 +101,8 @@ def score_picks(picks, verbose=False):
         n[0] += ok
         n[1] += 1
         # The other half of the guard's job: a RIGHT pick it refuses is a command she cannot do.
-        if ok and tool and tool != "agent" and not tools._sound(picked_tool, picked_arg_raw, text):
-            if tools.needs_target(picked_tool, picked_arg_raw, text):
+        if ok and tool and tool != "agent" and not tools._sound(picked_tool, picked_arg, text):  # the repaired argument, as the live picker checks it
+            if tools.needs_target(picked_tool, picked_arg, text):
                 asked += 1
                 continue
             blocked += 1
@@ -111,7 +111,7 @@ def score_picks(picks, verbose=False):
         if not ok:
             wrong_tool += bool(picked_tool) and picked_tool != tool
             # what tools.do() would really run: a wrong pick that is also unsound never fires
-            fired += bool(picked_tool) and picked_tool not in (tool, "agent") and tools._sound(picked_tool, picked_arg_raw, text)
+            fired += bool(picked_tool) and picked_tool not in (tool, "agent") and tools._sound(picked_tool, picked_arg, text)
             if verbose and picked_tool != tool:
                 print(f"  PAST [{group}] {text[:80]!r}: picked {picked_tool}({picked_arg_raw!r}), want {tool}({arg!r})")
     return score, wrong_tool, fired, blocked, asked
@@ -161,6 +161,7 @@ def main():
     picks = []
     t0 = time.time()
     for group, text, tool, arg, exact in case_list:
+        sure = 1.0
         prompt = tok.apply_chat_template([{"role": "system", "content": system}, {"role": "user", "content": text}],
                                          add_generation_prompt=True, tokenize=False, enable_thinking=False)
         if constrain:
@@ -168,8 +169,12 @@ def main():
             proc = ToolNameConstraint(tok, tool_names)
             raw = PREFILL + generate(model, tok, prompt=prompt + PREFILL, max_tokens=48, verbose=False,
                                       logits_processors=[proc])
-        else:
-            raw = generate(model, tok, prompt=prompt, max_tokens=48, verbose=False)
+        else:  # the same call the live picker makes, so the dump can carry how sure she was of the tool name
+            import math
+            import tools_agent
+            from mlx_lm import stream_generate
+            pieces = [(r.text, math.exp(float(r.logprobs[r.token]))) for r in stream_generate(model, tok, prompt=prompt, max_tokens=48)]
+            raw, sure = "".join(p for p, _ in pieces), tools_agent._tool_confidence(pieces)
         found = re.search(r"\{.*?\}", re.sub(r"(?s)<think>.*?</think>", "", raw), re.S)
         try:
             got = json.loads(found.group(0)) if found else {}
@@ -181,7 +186,7 @@ def main():
 
         if dump_file:
             dump_file.write(json.dumps({"group": group, "text": text, "wanted_tool": tool, "wanted_arg": arg,
-                                        "exact": exact, "picked_tool": picked_tool, "picked_arg_raw": picked_arg_raw}) + "\n")
+                                        "exact": exact, "picked_tool": picked_tool, "picked_arg_raw": picked_arg_raw, "sure": round(sure, 4)}) + "\n")
             dump_file.flush()
 
     if dump_file:

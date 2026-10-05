@@ -275,7 +275,7 @@ def _sound(tool, arg, query):
         return False
     # Round twenty-one: "this code project", "that file" point at something; they never name it. needs_target asks.
     if re.match(r"(?:this|that|these|those)\b", arg.lower()) and \
-            any(tool in members for family, (_, members) in _TARGETS.items() if family != "text"):
+            any(tool in members for family, (_, members) in _TARGETS.items() if family in _POINTED):
         return False
     if tool in _AGAINST and re.search(_AGAINST[tool], q_lower):
         return False
@@ -503,9 +503,25 @@ _TARGETS = {
     "text": (r"(?:in|into|to) (?:french|spanish|german|italian|portuguese|dutch|japanese|chinese|korean|russian)\b|out loud|aloud|speak|translat|morse|\bwords?\b|reverse|backwards|shout|caps|base ?64|hash|passage|text|phrase|sentence",
              ("translate", "word_count", "morse_code", "reverse_text", "shout", "base64_encode", "base64_decode",
               "hash_text", "say")),
+    # Round thirty-five: the same "which one?" for a file to show in Finder, a reminder to tick off, a note to add to, and a
+    # switch never told on or off. Each still needs its own noun in the sentence (a review showed that dropping the noun makes
+    # small talk draw a question), and none of them loosens what _sound lets run.
+    "finder": (r"\bfinder\b", ("reveal_in_finder",)),
+    "reminder": (r"\breminders?\b|\bto-?dos?\b", ("complete_reminder",)),
+    "note": (r"\bnotes?\b", ("append_note",)),
+    "switch": (r"do not disturb|\bdnd\b|focus mode", ("do_not_disturb",)),
 }
+# an argument that only points ("this photo") is refused for these families; free text (a note's words, a reminder's name) may start with "this"
+_POINTED = ("image", "file", "app", "project", "finder")
+# what the sentence must say before she asks, where a tool's _EVIDENCE is too narrow to ask from (append_note's is the
+# singular "note", on purpose: the plural belongs to search_notes) or missing. Never used to decide what runs.
+_ASK_EVIDENCE = {"append_note": r"\b(?:add|append|put|jot|write)\b.*\bnotes?\b", "reveal_in_finder": r"\bfinder\b"}
+_SAYS_ON_OR_OFF = r"\bon\b|\boff\b|enable|disable|\bstart\b|\bstop\b|\benter\b|\bend\b|out of|put me in|activate"
 _ASK = {"app": "Which app? Name it, like Safari.", "project": "Which project? Name it, like nimble.", "image": "Which image? Name it, like ~/Desktop/photo.jpg.", "file": "Which file? Name it, like ~/Documents/report.pdf.",
-        "text": "Which words? Say them, like \"translate good morning to french\"."}
+        "text": "Which words? Say them, like \"translate good morning to french\".",
+        "finder": "Which file? Name it, like ~/Documents/report.pdf.", "reminder": "Which reminder? Say it like \"mark call mom as done\".",
+        "note": "Which note, and what should I add? Say it like \"add eggs to my groceries note\".",
+        "switch": "On or off? Say it like \"turn do not disturb on\"."}
 
 
 def needs_target(tool, arg, query):
@@ -518,15 +534,16 @@ def needs_target(tool, arg, query):
     vague = not re.search(r"~/|/\w|\b[\w-]+\.[a-z0-9]{2,4}\b", q_lower)
     if not _DEICTIC.search(q_lower) and not vague:
         return None
-
-        return None
-    if tool in _EVIDENCE and not re.search(_EVIDENCE[tool], q_lower):
+    evidence = _ASK_EVIDENCE.get(tool) or _EVIDENCE.get(tool)
+    if evidence and not re.search(evidence, q_lower):
         return None
     if tool in _AGAINST and re.search(_AGAINST[tool], q_lower):
         return None
     for family, (noun, members) in _TARGETS.items():
         if family == "text" and not _DEICTIC.search(q_lower):
             continue  # words to translate are never "vague": an unnamed phrase is just a bad copy
+        if family == "switch" and (re.search(_SAYS_ON_OR_OFF, q_lower) or re.match(r"(?:what|whats|what's|why|how|does|is|are|can you explain)\b", q_lower)):
+            continue  # it already says which way (the pick got it wrong: refuse), or it is a question about the feature
         if tool in members and re.search(noun, q_lower):
             return _ASK[family]
     return None
