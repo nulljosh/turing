@@ -3,13 +3,13 @@
     ./.venv/bin/python eval/misses.py /Volumes/LaCie/turing-v10/heldout8-picks.jsonl
 
 Lists wrong picks the guard lets through (leaks) and right picks it stops (refusals), each with why the
-guard stopped it (evidence cue missing, against cue hit, or the argument). Refused includes sentences that only point ("that file"), where a question is the right move; hands.py counts those apart. Sealed sets (heldout4,
+guard stopped it (evidence cue missing, against cue hit, or the argument). Rows go through hands.py's own score_picks one at a time, so the kinds match its bar exactly. Sealed sets (heldout4,
 heldout7) print counts per tool only, never their text, so they stay blind.
 """
 import collections, json, os, sys
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path[:0] = [os.path.join(REPO, "app")]
+sys.path[:0] = [os.path.join(REPO, "app"), os.path.join(REPO, "eval")]
 os.environ["SAMANTHA_HEADLESS"] = "1"
 import tools_registry as R  # noqa: E402
 
@@ -39,33 +39,36 @@ def why(tool, arg, text):
 
 
 def misses(path):
-    """(leaks, refusals): lists of (wanted, picked, text, arg, reason)."""
-    leaks, refused = [], []
+    """Each miss as hands.py scores it, row by row through its own score_picks (so the two never disagree):
+    (kind, wanted, picked, text, arg, reason, sure). kind is leak, refused, refused-points (a sentence that only
+    points, where a question would be right) or asked-named (asked although the sentence names its target)."""
+    import hands
+    out = []
     for line in open(path):
         r = json.loads(line)
-        want, got, arg, text = r["wanted_tool"], r["picked_tool"], r["picked_arg_raw"] or "", r["text"]
-        if not got:
-            continue
-        ok = R._sound(got, arg, text)
-        if got != want and ok:
-            leaks.append((want, got, text, arg, ""))
-        elif got == want and not ok:
-            refused.append((want, got, text, arg, why(got, arg, text)))
-    return leaks, refused
+        pick = (r["group"], r["text"], r["wanted_tool"], r["wanted_arg"], r["exact"], r["picked_tool"], r["picked_arg_raw"] or "")
+        _, _, fired, blocked, _, bar = hands.score_picks([pick])
+        got, text = r["picked_tool"], r["text"]
+        arg = R.repair(got, pick[6], text) if got else ""
+        kind = ("leak" if fired else "refused-points" if bar["points_refused"] else "refused" if blocked
+                else "asked-named" if bar["named_asked"] else None)
+        if kind:
+            out.append((kind, r["wanted_tool"], got, text, arg, why(got, arg, text) if kind != "leak" else "", r.get("sure")))
+    return out
 
 
 def main():
     """Print the misses for each dump named on the command line."""
     for path in sys.argv[1:]:
-        sealed = any(s in os.path.basename(path) for s in SEALED)
-        leaks, refused = misses(path)
-        print(f"== {os.path.basename(path)}: {len(leaks)} leaks, {len(refused)} refused")
-        for name, rows in (("leak", leaks), ("refused", refused)):
-            if sealed:
-                print(f"  {name} by tool:", dict(collections.Counter(r[1] for r in rows)))
-                continue
-            for want, got, text, arg, reason in rows:
-                print(f"  {name:7} {want} -> {got} | {text} | arg: {arg}" + (f" | {reason}" if reason else ""))
+        sealed = any(x in os.path.basename(path) for x in SEALED)
+        rows = misses(path)
+        print(f"== {os.path.basename(path)}:", dict(collections.Counter(r[0] for r in rows)))
+        if sealed:  # counts only: by kind and tool, by kind and reason
+            print("  ", dict(collections.Counter(f"{r[0]} {r[2]}" for r in rows)))
+            print("  ", dict(collections.Counter(f"{r[0]} {r[5]}" for r in rows if r[5])))
+            continue
+        for kind, want, got, text, arg, reason, sure in rows:
+            print(f"  {kind:14} {want} -> {got} | {text} | arg: {arg} | {reason} sure={sure}")
 
 
 if __name__ == "__main__":

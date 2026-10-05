@@ -60,7 +60,7 @@ _EVIDENCE = {
     "dark_mode": r"dark|\blight\b|appearance|theme", "do_not_disturb": r"disturb|\bdnd\b|focus|silence|quiet|notification",
     "zip_file": r"\bzip\b|compress", "unzip_file": r"unzip|extract|unpack|decompress|\.zip\b", "trash_file": r"trash|delete|throw away|get rid of",
     "copy_file": r"\bcopy\b|duplicate|\bcp\b", "move_file": r"\bmove\b|\bput\b.+\b(?:in|into|to)\b|\bshift\b|transfer|relocate|\bdrag\b|\bmv\b", "rename_file": r"rename|new name|call it|change the name|retitle|\bname\b|\bchange\s+\S+\.\w+\s+to\b",
-    "append_note": r"\bnotes?\b", "add_event": r"calend[ae]r|event|schedule|appt|appointment|\bbook (?:a |an |my )?(?:call|meeting|appointment)\b",
+    "append_note": r"\bnotes?\b|\bappend\b.+\bto (?:my|the) [\w ]{1,30}\b(?:log|list|journal)\b", "add_event": r"calend[ae]r|event|schedule|appt|appointment|\bbook (?:a |an |my )?(?:call|meeting|appointment)\b",
     "complete_reminder": r"remind|done|finish|complete|check off|\bmark\b|tick off|cross off", "list_reminders": r"reminder|\btasks\b|to-?dos?",
     "search_notes": r"\bnotes?\b", "needs_attention": r"attention|needs me|focus on|deal with|need to handle|urgent",
     "folder_size": r"\bbig\b|\bsize\b|\bspace\b|take up",
