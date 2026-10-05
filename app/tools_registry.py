@@ -72,7 +72,7 @@ _EVIDENCE = {
     # never required a word about the tool itself) passed the guard automatically. "make it bigger"
     # with no number is upscale_image, not resize_image; "crunch the numbers in X" is run_code,
     # not read_file's own words.
-    "resize_image": r"resize|resolution|\bsize\b|\d+\s*(?:px|pixels?|%|percent)|\bto \d{2,}|\d{3,}|scale|shrink|smaller",
+    "resize_image": r"resize|resolution|dimensions?|\bsize\b|\d+\s*(?:px|pixels?|%|percent)|\bto \d{2,}|\d{3,}|scale|shrink|smaller",
     "read_file": r"\bread\b|pull up|\bcat\b|\bshow\b|\bprint\b|display|\bsay\b|contents|written|inside|what'?s in",
     # Round eleven: convert_time and time_in kept swapping for each other. A specific clock time
     # (a digit with am/pm, an hour:minute, noon/midnight, or a named zone) is convert_time's own
@@ -98,7 +98,7 @@ _EVIDENCE = {
     "date_math": r"\bdays?\b|\bweeks?\b|\bmonths?\b|\byears?\b|\bdate\b|\bago\b|\bbefore\b|\bafter\b|from (?:now|today)|christmas|\d{4}-\d\d",
     "calculate": r"\d|plus|minus|times|divided|sqrt|square root|percent|squared|cubed|\bmath\b|calculat|\bpi\b",
     "shout": r"shout|caps|upper ?case|yell|loud|capital",
-    "flip_image": r"flip|mirror|upside",
+    "flip_image": r"flip|mirror|upside|reverse (?:the |this |that |my )?(?:image|photo|picture|pic)\b",
     "grayscale_image": r"gr[ae]y|black and white|b&w|desaturat|monochrome|colou?r",
     "enhance_image": r"enhance|sharpen|improve|clean up|better|fix|clear|crisp|quality|touch up|denoise|contrast|boost|brighten|\bpop\b",
     "new_reminder": r"remind|reminder|forget|remember|nudge|ping me|\btodo\b|to-do|\bdue\b|tell me to",
@@ -499,7 +499,7 @@ _TARGETS = {
                "crop_square", "remove_background", "enhance_image", "image_info", "paint_image")),
     "file": (r"\bfile|folder|\bdoc\b|document|\bpdf\b|\bzip\b|archive|video|audio|recording|rename|trash|\bmove\b|\bcopy\b",
              ("move_file", "copy_file", "rename_file", "trash_file", "zip_file", "unzip_file", "read_document",
-              "ask_document", "find_in_document", "read_file", "transcribe_video")),
+              "ask_document", "find_in_document", "read_file", "transcribe_video", "list_dir")),
     "app": (r"\bapp\b|program|window", ("quit_app",)),
     "project": (r"project|repo|folder", ("open_in_editor",)),
     "text": (r"(?:in|into|to) (?:french|spanish|german|italian|portuguese|dutch|japanese|chinese|korean|russian)\b|out loud|aloud|speak|translat|morse|\bwords?\b|reverse|backwards|shout|caps|base ?64|hash|passage|text|phrase|sentence",
