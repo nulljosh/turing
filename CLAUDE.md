@@ -14,6 +14,7 @@ ever ships as its own real model, gets a name of its own too, not a
   and `data/valid.jsonl` from the Obsidian wiki + fleet READMEs/roadmap.md/
   CLAUDE.md files. Never commit `data/` or `*-adapter/`, they're gitignored
   on purpose (derived from private notes, and just weights).
+- Her tool picker is the Kaggle-trained 1.5B (`app/tools_agent.py` `_hands_model`: `SAMANTHA_HANDS`, then `models/`, then Hugging Face's cache of trommatic/samantha-hands-1.5b-mlx, fetched in the background the first time; the 0.5B answers until it lands). Windows and Linux stay on the 0.5B GGUF (trommatic/samantha-hands-gguf). Keep both Hugging Face links in the README, the landing page and the whitepaper.
 - `ada-1-adapter/` (Qwen2.5-0.5B) is the real Samantha. A second base
   (Qwen3.5-0.8B, `ada-1b-adapter/`) was tried for Phase 3 comparison but
   pushed the machine into near-OOM twice and got paused. This Mac Mini

@@ -4,8 +4,8 @@
   text { font-family: -apple-system, Helvetica, Arial, sans-serif; fill: var(--ink); }
   line, polyline { stroke: var(--ink); fill: none; }
   .g { stroke-dasharray: 1 4; }
-</style><text x="50" y="11" font-size="10">Lines of real code</text><line x1="50" y1="26" x2="470" y2="26" class="g"/><text x="46" y="29" font-size="9" text-anchor="end">31007</text><line x1="50" y1="97" x2="470" y2="97" class="g"/><text x="46" y="100" font-size="9" text-anchor="end">15503</text>
+</style><text x="50" y="11" font-size="10">Lines of real code</text><line x1="50" y1="26" x2="470" y2="26" class="g"/><text x="46" y="29" font-size="9" text-anchor="end">31158</text><line x1="50" y1="96" x2="470" y2="96" class="g"/><text x="46" y="99" font-size="9" text-anchor="end">15579</text>
 <line x1="50" y1="26" x2="50" y2="166"/><line x1="50" y1="166" x2="470" y2="166"/>
-<polyline points="50,166 60,163 70,161 80,158 90,154 100,144 110,133 120,131 130,129 140,122 150,119 160,117 170,116 180,112 190,110 200,109 210,106 220,104 230,101 240,97 250,95 260,92 270,90 280,90 290,84 300,81 310,76 320,68 330,61 340,52 350,51 360,51 370,51 380,50 390,48 400,43 410,39 420,38 430,36 440,34 450,28 460,27 470,26" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="50,166 60,163 70,161 80,158 90,154 100,144 110,133 120,132 130,129 140,122 150,119 160,117 170,116 180,112 190,110 200,109 210,106 220,104 230,101 240,97 250,96 260,93 270,91 280,91 290,84 300,81 310,76 320,69 330,62 340,52 350,52 360,52 370,52 380,51 390,48 400,44 410,40 420,38 430,36 440,34 450,29 460,27 470,26" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
 <text x="50" y="182" font-size="10">Sep 13</text><text x="470" y="182" font-size="10" text-anchor="end">Oct 4</text>
-<text x="50" y="196" font-size="10" font-weight="600">31,007 lines &#183; 100% documented &#183; 583 commits since Sep 13 2026</text></svg>
+<text x="50" y="196" font-size="10" font-weight="600">31,158 lines &#183; 100% documented &#183; 584 commits since Sep 13 2026</text></svg>

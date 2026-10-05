@@ -1,5 +1,7 @@
 # Progress log
 
+- 2026-10-04: v5.0.0 🎉 Her own bigger head: a 1.5B model picks her tools on a Mac, and the weights are public on Hugging Face. It downloads once in the background on first use, and the 0.5B answers until it lands. Leaks are under 10 on every test set; about 5 percent of right commands are still left undone against a goal of under 2, the work for 5.1.
+  v5.0.0 · 135 tools · 690 tests · docs coverage 100% · laws all hold · biggest app/tools_util.py 649 · actions 231/231 · parity 231/231 · util_diff 261/261
 - 2026-10-04: v4.20.17 🎉 She finishes what she asks about: answer her "which file?" with a name and the command runs, through the same guard and the same yes. Her Mac app wears a new icon, her flower as a bold Liquid Glass symbol made in Icon Composer, with dark and tinted looks.
   v4.20.17 · 135 tools · 685 tests · docs coverage 100% · laws all hold · biggest app/tools_util.py 649 · actions 231/231 · parity 231/231 · util_diff 261/261
 - 2026-10-04: v4.20.16 🎉 The commercial is mixed like a real spot: the music stays up in the gaps and ducks under her voice, loudness set for the web, no clipping. 28 seconds.

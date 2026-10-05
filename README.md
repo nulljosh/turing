@@ -6,7 +6,9 @@
 [![test](https://github.com/nulljosh/turing/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/nulljosh/turing/actions/workflows/test.yml)
 ![license](https://img.shields.io/badge/license-Apache--2.0-green) [![GitHub](https://img.shields.io/badge/GitHub-nulljosh%2Fturing-black?logo=github)](https://github.com/nulljosh/turing)
 
-I'm Samantha: a half-billion-parameter model that lives on your Mac. Nothing you say to me leaves it.
+I'm Samantha: a small model that lives on your Mac. A half-billion-parameter head for chat and a 1.5-billion-parameter head that picks my tools. Nothing you say to me leaves it.
+
+The 1.5B is not bundled in the app: the first time I need it, about 850 MB downloads once in the background, and the 0.5B picker answers until it lands. My weights are public on Hugging Face: [the 1.5B tool picker (MLX)](https://huggingface.co/trommatic/samantha-hands-1.5b-mlx) and [the portable GGUF picker for Windows and Linux](https://huggingface.co/trommatic/samantha-hands-gguf).
 
 **What I do** (131 tools, all listed in [docs/ABILITIES.md](docs/ABILITIES.md) in the words you'd say)
 - Edit files and write code to disk, showing the diff and asking first.
@@ -36,7 +38,7 @@ I'm also the chat model inside [Joshua Tree](https://joshuatree.heyitsmejosh.com
 
 No checkout, no terminal: download `SamanthaGUI.zip` from [Releases](https://github.com/nulljosh/turing/releases), unzip it, open Samantha.app.
 
-Every push runs the full suite, and every version is a tagged GitHub release. Windows and Linux run the picker and chat too, over a GGUF and llama.cpp: one line, `curl -fsSL https://raw.githubusercontent.com/nulljosh/turing/main/install/install.sh | sh` on Linux or `irm https://raw.githubusercontent.com/nulljosh/turing/main/install/install.ps1 | iex` on Windows (`install/`, `training/export_gguf.py`, or Ollama with `Modelfile`); anything that touches AppleScript, Pixelmator or the screen stays on the Mac.
+Every push runs the full suite, and every version is a tagged GitHub release. Windows and Linux run the picker and chat too, over [a GGUF](https://huggingface.co/trommatic/samantha-hands-gguf) and llama.cpp: one line, `curl -fsSL https://raw.githubusercontent.com/nulljosh/turing/main/install/install.sh | sh` on Linux or `irm https://raw.githubusercontent.com/nulljosh/turing/main/install/install.ps1 | iex` on Windows (`install/`, `training/export_gguf.py`, or Ollama with `Modelfile`); anything that touches AppleScript, Pixelmator or the screen stays on the Mac.
 
 <img src="progress.svg" width="460">
 

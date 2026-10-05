@@ -6,6 +6,8 @@ tags: [gguf, tool-calling, llama.cpp, on-device]
 
 # Samantha hands (GGUF)
 
+This is the portable 0.5B picker for Windows and Linux. The 1.5B picker that Mac users get in Turing 5.0 is at [trommatic/samantha-hands-1.5b-mlx](https://huggingface.co/trommatic/samantha-hands-1.5b-mlx).
+
 Samantha's tool picker from [Turing](https://github.com/nulljosh/turing) v__VERSION__: a LoRA on Qwen2.5-0.5B-Instruct, fused and quantized to Q8_0 GGUF. Given a request in plain words, she picks which of her tools to run and with what arguments. Built and trained on one Mac Mini. Live demo: [turing.heyitsmejosh.com](https://turing.heyitsmejosh.com).
 
 ## Run it
@@ -17,7 +19,7 @@ Both install llama-cpp-python, download this file, and start her chat. The Windo
 ## Measured
 
 - 395 of 484 unseen test phrasings picked right.
-- On the sealed test set, 12 wrong picks still get past her guard and 11 right ones are refused. Her 5.0 goal is under 10 and none.
+- On two sets of sentences she never trained on, this picker lets 3 and 12 wrong picks past her guard and leaves 2.6 and 4.7 percent of right commands undone. The 1.5B picker lets under 10 past on every set and leaves 4 to 5 percent undone; the goal for 5.1 is under 2.
 - This GGUF agrees with the original MLX picker on 16 of 20 fixture prompts; the misses are ambiguous wordings.
 
 ## What she does (v__VERSION__)

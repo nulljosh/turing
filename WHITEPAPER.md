@@ -1,8 +1,8 @@
 # Turing Technical Whitepaper
 
-**v4.20.0** | October 2026
+**v5.0.0** | October 2026
 
-Turing builds small language models on one Mac. Its first model, Samantha, is a 0.5B model trained on your own writing. She will never out-think a frontier model. She does not try to. She runs on your Mac, costs nothing per question, keeps everything on the machine, and gets real work done with 131 exact tools. When a question is too hard for her, she borrows a bigger brain that also lives on the Mac. You can type to her or talk to her. She can see your screen, click in your apps, and research a topic with sources. She asks before anything that changes something.
+Turing builds small language models on one Mac. Its first model, Samantha, is a 0.5B chat model trained on your own writing, with a 1.5B head that picks her tools. Both are public on [Hugging Face](https://huggingface.co/trommatic/samantha-hands-1.5b-mlx). She will never out-think a frontier model. She does not try to. She runs on your Mac, costs nothing per question, keeps everything on the machine, and gets real work done with 131 exact tools. When a question is too hard for her, she borrows a bigger brain that also lives on the Mac. You can type to her or talk to her. She can see your screen, click in your apps, and research a topic with sources. She asks before anything that changes something.
 
 ## The core idea
 
@@ -11,7 +11,7 @@ A small model cannot hold facts without making them up. So Samantha does not try
 Every request goes down the same ladder, and the first rung that holds wins:
 
 1. **Exact routes.** "Set the volume to 30", "what's 15% of 80", "click Sign in". A recognisable command has one right answer, so no model is involved. Instant, and never wrong.
-2. **Her own picker.** A second 0.5B model, trained to turn loose wording into a tool call. A guard refuses any pick whose argument is not in your sentence.
+2. **Her own picker.** A 1.5B model ([on Hugging Face](https://huggingface.co/trommatic/samantha-hands-1.5b-mlx)), trained on a free Kaggle GPU to turn loose wording into a tool call. A guard refuses any pick whose argument is not in your sentence, and a pick she is unsure of asks first. On Windows and Linux the 0.5B picker stays, as a [GGUF](https://huggingface.co/trommatic/samantha-hands-gguf).
 3. **Her FAQ and your notes.** Questions about the project are answered from its own docs and from your notes (the brain RAG service).
 4. **The web, then her library.** Wikipedia and DuckDuckGo first. When the web has nothing or is down, her offline library: the lead of all 10,000 of Wikipedia's vital articles, plus your fieldbook of every science.
 5. **Her own words.** Only now does Samantha write an answer herself, and only from passages she was handed. If they do not hold the answer, she says "My notes don't cover that."

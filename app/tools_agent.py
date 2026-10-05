@@ -1,4 +1,4 @@
-"""Her hands' choices: pick() is her own 0.5B tool picker, _faq_knows() keeps questions about her away from it, and
+"""Her hands' choices: pick() is her own tool picker (the 1.5B, or the 0.5B until it is here), _faq_knows() keeps questions about her away from it, and
 agent() lets a local model drive her tools one call at a time for multi-step work. Split out of tools.py (law 8, file
 size); tools.py re-exports all of it, so nothing that imports it changes."""
 import json
@@ -12,24 +12,57 @@ import untrusted
 
 HANDS_ADAPTER = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "hands-adapter")
 HANDS_MODEL = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "models", "samantha-hands-1.5b-mlx")  # the Kaggle-trained 1.5B, merged (docs/KAGGLE.md); wins over the 0.5B adapter when present
+HANDS_REPO = "trommatic/samantha-hands-1.5b-mlx"  # the 1.5B on Hugging Face; Hugging Face's own cache keeps it after the first fetch
 HANDS_GGUF = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "models", "samantha-hands.gguf")
 HANDS_SYSTEM = 'You are Samantha\'s hands. Reply with one JSON tool call. If this is not a command, reply {"tool": null, "arg": ""}.'
 _hands = None
 _hands_backend = None  # "mlx" or "llama_cpp", set once _hands loads
 UNSURE = 0.6  # the 1.5B's lowest tool-name token probability under this asks first: on standard, heldout2 and heldout4 it turned 9 of 26 confident-looking wrong picks into questions for about 1 in 100 right ones (round 24)
+_fetching = False  # the 1.5B's background download has started
 _unsure_at = 0.0  # only the 1.5B is calibrated; the 0.5B adapter and the GGUF never ask on confidence
 
 
+def _hands_model():
+    """Where the 1.5B is on this Mac: SAMANTHA_HANDS, models/, or Hugging Face's cache. None when it is not here yet,
+    and then it starts fetching in the background, so the first command never waits on 850 MB: the 0.5B answers, and the 1.5B
+    takes over the next time she starts."""
+    if os.environ.get("SAMANTHA_HANDS"):
+        return os.environ["SAMANTHA_HANDS"] if os.path.isdir(os.environ["SAMANTHA_HANDS"]) else None
+    if os.path.isdir(HANDS_MODEL):
+        return HANDS_MODEL
+    try:
+        from huggingface_hub import snapshot_download
+    except ImportError:
+        return None
+    try:
+        folder = snapshot_download(HANDS_REPO, local_files_only=True)
+        if os.path.isfile(os.path.join(folder, "model.safetensors")):  # a half-downloaded folder has the small files but not the weights
+            return folder
+    except Exception:
+        pass
+    global _fetching
+    if not _fetching and not os.environ.get("SAMANTHA_HEADLESS"):  # tests and CI never download; one fetch per run
+        import threading
+        _fetching = True
+        threading.Thread(target=lambda: snapshot_download(HANDS_REPO), daemon=True).start()
+    return None
+
+
 def _load_hands():
-    """MLX when it's importable (Apple Silicon), the merged 1.5B in models/ first, else the 0.5B plus hands-adapter; otherwise llama-cpp-python
-    over the GGUF export (training/export_gguf.py), same prompt and decoding
-    everywhere. Returns (backend, model, tok_or_none) or None when neither is here."""
+    """MLX when it's importable (Apple Silicon): the 1.5B first (_hands_model), else the 0.5B plus hands-adapter, also when the
+    1.5B is broken or half there; otherwise llama-cpp-python over the GGUF export (training/export_gguf.py), same prompt and
+    decoding everywhere. Returns (backend, model, tok_or_none) or None when neither is here."""
     try:
         from mlx_lm import load
-        if os.path.isdir(HANDS_MODEL):
-            global _unsure_at
-            _unsure_at = UNSURE
-            return "mlx", *load(HANDS_MODEL)
+        big = _hands_model()
+        if big:
+            try:
+                loaded = load(big)
+                global _unsure_at
+                _unsure_at = UNSURE  # only once the 1.5B really loaded: the 0.5B is not calibrated to ask on confidence
+                return "mlx", *loaded
+            except Exception:
+                pass
         if os.path.isdir(HANDS_ADAPTER):
             return "mlx", *load("mlx-community/Qwen2.5-0.5B-Instruct-4bit", adapter_path=HANDS_ADAPTER)
     except Exception:
@@ -138,8 +171,8 @@ def agent(task, max_steps=6, log=None, confirm=None):
 
 
 def pick(query):
-    """Her own head for tool picking: the 0.5B with hands-adapter, trained by
-    gen_hands_data.py, scored by eval/hands.py. MLX on Apple Silicon, else
+    """Her own head for tool picking: the Kaggle 1.5B (_hands_model), or the 0.5B with hands-adapter until it is
+    here, trained from gen_hands_data.py, scored by eval/hands.py. MLX on Apple Silicon, else
     llama-cpp-python over the GGUF export so Windows and Linux get the same
     picker (_load_hands). Returns (tool, arg), ("agent", ""), or None when it
     is not a command, the pick is unsound, or neither backend is here. ("unsure", tool, arg) when the 1.5B was not
