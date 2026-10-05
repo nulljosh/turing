@@ -215,7 +215,7 @@ _SMALLTALK = (
     (re.compile(r"^(?:what can you do|what do you do|help|what are your (?:abilities|skills)|what can i ask you)[!.?]*$", re.I),
      lambda: abilities()),
     (re.compile(r"^(?:(?:so )?(?:who|what) are you|tell me about yourself|introduce yourself|describe yourself)(?: and what (?:can you do|do you do))?[!.?]*$", re.I),
-     lambda: "I'm Samantha, the assistant in the Turing project. A small model that runs on this Mac, answers from the project's own docs and says so when it does not know. " + abilities()),
+     lambda: "I'm Samantha, the assistant in the Turing project. A small model that runs on your own computer, answers from the project's own docs and says so when it does not know. " + abilities()),
     (re.compile(r"^(?:(?:please )?(?:write|give me|make) (?:me )?(?:a |an )?(?:short |quick )?(?:pitch|ad|sales pitch)(?: (?:for|selling|to sell) (?:yourself|you|samantha))?(?: to (?:a )?(?:stranger|customer|buyer))?"
                 r"|(?:sell|pitch) yourself(?: to me)?|why should i (?:use|get|choose) you)[!.?]*$", re.I), lambda: pitch()),
     (re.compile(r"^(?:list|show me|what are|tell me about|which are) (?:all )?(?:of )?your tools[!.?]*$|^tools[!.?]*$", re.I), lambda: tool_list()),
@@ -235,7 +235,7 @@ def abilities():
 def pitch():
     """Her own pitch, built from the live tool count and facts she can back up, never from a claim she cannot."""
     import tools
-    return (f"I'm Samantha, an assistant that lives on your Mac and gets things done. {len(tools.TOOLS)} tools: open apps, "
+    return (f"I'm Samantha, an assistant that lives on your computer (Mac, Windows or Linux) and gets things done. {len(tools.TOOLS)} tools: open apps, "
             "move and zip files, read your documents, set reminders, translate, edit pictures. My brain is a small 1.5B model "
             "that runs on your machine, so picking what to do never leaves it. I ask before I write or send anything, "
             "and when I do not know, I say so instead of making it up. Free, and open on Hugging Face.")
