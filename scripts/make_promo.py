@@ -40,7 +40,7 @@ SEGMENTS = [
 # (text, size px, color) lines for the card over a segment, by segment index
 CARDS = {
     4: [("research the history of the printing press", 34, "#151515"), ("what's on my screen", 34, "#151515"), ("click Sign in", 34, "#151515"), ("On a real Mac. She always asks first.", 22, "#666")],
-    5: [("Samantha", 64, "#151515"), ("A small AI that lives on your Mac.", 28, "#151515"), ("Free  \u00b7  Private  \u00b7  Runs on your Mac", 22, "#666"),
+    5: [("MARK", 0, ""), ("Samantha", 64, "#151515"), ("A small AI that lives on your Mac.", 28, "#151515"), ("Free  \u00b7  Private  \u00b7  Runs on your Mac", 22, "#666"),
         ("turing.heyitsmejosh.com", 34, "#151515"), ("Download the Mac app  \u00b7  Windows, Linux and phones install too", 22, "#666"),
         ("Open source  \u00b7  github.com/nulljosh/turing", 20, "#666")],
 }
@@ -77,12 +77,21 @@ def record(clips, out_dir):
         t0 = time.time()
         ctx = browser.new_context(viewport={"width": VW, "height": VH}, record_video_dir=out_dir, record_video_size={"width": W, "height": H}, color_scheme="light")
         page = ctx.new_page()
+        # the painting is a fixed batch per animation frame and finishes in under a second, too fast to read on video:
+        # while window.__slow is set, every animation frame waits 80 ms, so the 30,000 squares arrive over a few seconds
+        page.add_init_script("(() => { const raf = window.requestAnimationFrame.bind(window); window.requestAnimationFrame = cb => window.__slow ? raf(() => setTimeout(() => raf(cb), 80)) : raf(cb); })()")
         page.goto(URL)
+        # bigger type for a 1280 wide video; the layout and the painting are left alone
+        page.add_style_tag(content="#chat-transcript{font-size:19px!important;line-height:1.5!important}#chat-input{font-size:20px!important}.chat-tool-call{font-size:15px!important}.desk-bar{font-size:15px!important}#chat-send{font-size:18px!important}.hero .sub{font-size:20px!important}")
         page.wait_for_selector("#chat-input")
-        page.focus("#chat-input")  # a click would re-arm the page's idle reel, which then types over the script; typing stops it for good
+        page.wait_for_timeout(900)  # the page's idle reel starts on its own at 500 ms and is mid-sentence by now
+        page.focus("#chat-input")
+        page.keyboard.press("Shift")  # any key stops the reel for good; then wipe what it had typed
+        page.fill("#chat-input", "")
         page.wait_for_timeout(400)
         for idx, ((mp3, seconds), (line, prompts)) in enumerate(zip(clips, SEGMENTS)):
             seg_start = time.time()
+            page.evaluate("window.__slow = " + ("true" if idx == 0 else "false"))
             starts.append(seg_start - t0)
             for prompt in prompts:
                 seen = page.evaluate("document.querySelectorAll('#chat-transcript .chat-message').length")
@@ -96,9 +105,9 @@ def record(clips, out_dir):
                 page.wait_for_timeout(500)
             if idx in CARDS:
                 page.evaluate("""(lines) => { const d = document.createElement('div');
-                  d.style.cssText = 'position:fixed;inset:0;z-index:99;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;font-family:-apple-system,Helvetica,sans-serif;font-weight:600;text-align:center';
-                  d.innerHTML = lines.map(l => '<div style="font-size:' + l[1] + 'px;color:' + l[2] + '">' + l[0] + '</div>').join('');
-                  document.body.appendChild(d); }""", CARDS[idx])
+                  d.style.cssText = 'position:fixed;inset:0;z-index:99;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;font-family:-apple-system,Helvetica,sans-serif;font-weight:600;text-align:center;opacity:0;transition:opacity .7s ease';
+                  d.innerHTML = lines.map(l => l[0] === 'MARK' ? '<img src="/samantha-logo.png" alt="" width="132" height="132" style="border-radius:28px;margin-bottom:6px">' : '<div style="font-size:' + l[1] + 'px;color:' + l[2] + '">' + l[0] + '</div>').join('');
+                  document.body.appendChild(d); requestAnimationFrame(() => requestAnimationFrame(() => { d.style.opacity = 1; })); }""", CARDS[idx])
             spent = time.time() - seg_start
             page.wait_for_timeout(int(max(0, seconds + 0.7 - spent) * 1000))
         page.wait_for_timeout(2500)
@@ -142,7 +151,7 @@ def build(webm, starts, clips, out_dir):
     voice_mix = "".join(f"[a{i}]" for i in range(len(clips))) + f"amix=inputs={len(clips)}:normalize=0[voice]"
     # the bed sits about 15 dB under her voice, fades in and out, and gets a little echo so it reads as a room, not a beep
     bed_chain = f"[1:a]aecho=0.8:0.6:380:0.25,volume=0.34,afade=t=in:d=2,afade=t=out:st={total - 3:.2f}:d=3[bed]"
-    mix = voice_mix + ";" + bed_chain + ";[voice][bed]amix=inputs=2:normalize=0:duration=longest[aout]"
+    mix = voice_mix + ";" + bed_chain + ";[voice][bed]amix=inputs=2:normalize=0:duration=longest[mixed];[mixed]loudnorm=I=-16:TP=-1.5:LRA=11[aout]"
     mp4 = os.path.join(out_dir, "promo.mp4")
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", *inputs, "-filter_complex", ";".join(filters + [mix]), "-map", "0:v", "-map", "[aout]",
                     "-c:v", "libx264", "-crf", "30", "-preset", "slow", "-pix_fmt", "yuv420p", "-vf", "scale=1280:-2", "-c:a", "aac", "-b:a", "96k",

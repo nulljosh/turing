@@ -1,5 +1,7 @@
 # Progress log
 
+- 2026-10-04: v4.20.14 🎉 A better commercial: the Mona Lisa visibly builds square by square, bigger type you can read, cards that fade in, and an end card with her mark, the website, how to download and the source. 47 seconds, her voice, music and captions.
+  v4.20.14 · 135 tools · 681 tests · docs coverage 100% · laws all hold · biggest app/tools_util.py 649 · actions 231/231 · parity 231/231 · util_diff 261/261
 - 2026-10-04: v4.20.13 🎉 The commercial is cut to 43 seconds and moves faster: painting, her Mac, reminders, files, math, notes and words, then what only a real Mac can do, then an end card with her name, the website, how to download and the source.
   v4.20.13 · 135 tools · 681 tests · docs coverage 100% · laws all hold · biggest app/tools_util.py 649 · actions 231/231 · parity 231/231 · util_diff 261/261
 - 2026-10-04: v4.20.12 🎉 The commercial is tighter and has sound: 83 seconds, her voice, a soft music bed under it, captions, and the new page on screen.
