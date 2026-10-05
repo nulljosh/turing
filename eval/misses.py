@@ -54,6 +54,7 @@ def misses(path):
 
 
 def main():
+    """Print the misses for each dump named on the command line."""
     for path in sys.argv[1:]:
         sealed = any(s in os.path.basename(path) for s in SEALED)
         leaks, refused = misses(path)
