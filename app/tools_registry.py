@@ -43,7 +43,7 @@ _EVIDENCE = {
     "disk_space": r"disk|storage|space|drive|room|full", "uptime": r"\bup\b|uptime|restart|reboot|been on|running|booted|since boot",
     "current_tab": r"\btab\b|page|site|browser|chrome|safari|article|reading|looking at", "list_tabs": r"\btabs\b",
     "memory_usage": r"memory|\bram\b", "cpu_load": r"cpu|processor|load|busy|maxed|working|doing", "ip_address": r"\bip\b|address",
-    "wifi_name": r"wi-?fi|network", "system_info": r"system|\bmac\b|macos|chip|computer|specs|about this|\bos\b|version", "list_shortcuts": r"shortcut",
+    "wifi_name": r"wi-?fi|network|\bssid\b", "system_info": r"system|\bmac\b|macos|chip|computer|specs|about this|\bos\b|version", "list_shortcuts": r"shortcut",
     "flip_coin": r"coin|heads|tails", "make_uuid": r"uuid|guid|unique id", "time_in": r"time|clock|late", "days_until": r"\bday|sleeps|until|till|far away|count",
     "roll_dice": r"roll|dice|\bdie\b|\bd\d|throw|toss", "random_number": r"random|number", "make_password": r"password|pwd|passcode|passphrase",
     "hash_text": r"hash|sha|checksum", "word_count": r"word|characters?\b|\blength of\b", "tip": r"\btip", "is_prime": r"prime|factor|divid", "roman_numeral": r"roman",
@@ -52,15 +52,15 @@ _EVIDENCE = {
     # Round eight covered 36 tools with zero picker training data; their evidence predates them (round-eight
     # gap). Words come from each tool's own docstring/templates, never copied out of eval/actions.py verbatim.
     "bluetooth_status": r"bluetooth", "calendar_tomorrow": r"tomorrow|\btmrw\b|\btmr\b",
-    "running_apps": r"running|open apps|apps open|what's open|apps are open|application|programs|\bhave open\b|apps? (?:are )?(?:currently |now )?(?:open|visible)|visible apps\b",
+    "running_apps": r"running|active apps?|active programs|open apps|apps open|what's open|apps are open|application|programs|\bhave open\b|apps? (?:are )?(?:currently |now )?(?:open|visible)|visible apps\b",
     "recent_downloads": r"download|off the (?:net|internet|web)", "unread_mail": r"mail|email|inbox|unread|messages",
     "git_status": r"status|changed|changes|uncommitted|dirty|\bdiff\b|\bbranch\b|ahead|behind|\bgit\b", "recent_commits": r"commit",
     "run_tests": r"\btest", "open_prs": r"\bprs?\b|pull request|waiting (?:for|on) (?:a )?review",
     "open_in_editor": r"editor|vscode|vs code|in code|\bide\b|visual studio", "quit_app": r"quit|close|shut down|\bkill\b",
     "dark_mode": r"dark|\blight\b|appearance|theme", "do_not_disturb": r"disturb|\bdnd\b|focus|silence|quiet|notification",
     "zip_file": r"\bzip\b|compress", "unzip_file": r"unzip|extract|unpack|decompress|\.zip\b", "trash_file": r"trash|delete|throw away|get rid of",
-    "copy_file": r"\bcopy\b|duplicate|\bcp\b", "move_file": r"\bmove\b|\bshift\b|transfer|relocate|\bdrag\b|\bmv\b", "rename_file": r"rename|new name|call it|change the name|retitle|\bname\b",
-    "append_note": r"\bnote\b", "add_event": r"calend[ae]r|event|schedule|appt|appointment|\bbook (?:a |an |my )?(?:call|meeting|appointment)\b",
+    "copy_file": r"\bcopy\b|duplicate|\bcp\b", "move_file": r"\bmove\b|\bput\b.+\b(?:in|into|to)\b|\bshift\b|transfer|relocate|\bdrag\b|\bmv\b", "rename_file": r"rename|new name|call it|change the name|retitle|\bname\b|\bchange\s+\S+\.\w+\s+to\b",
+    "append_note": r"\bnotes?\b", "add_event": r"calend[ae]r|event|schedule|appt|appointment|\bbook (?:a |an |my )?(?:call|meeting|appointment)\b",
     "complete_reminder": r"remind|done|finish|complete|check off|\bmark\b|tick off|cross off", "list_reminders": r"reminder|\btasks\b|to-?dos?",
     "search_notes": r"\bnotes?\b", "needs_attention": r"attention|needs me|focus on|deal with|need to handle|urgent",
     "folder_size": r"\bbig\b|\bsize\b|\bspace\b|take up",
@@ -73,7 +73,7 @@ _EVIDENCE = {
     # with no number is upscale_image, not resize_image; "crunch the numbers in X" is run_code,
     # not read_file's own words.
     "resize_image": r"resize|resolution|\bsize\b|\d+\s*(?:px|pixels?|%|percent)|\bto \d{2,}|\d{3,}|scale|shrink|smaller",
-    "read_file": r"\bread\b|\bcat\b|\bshow\b|\bprint\b|display|\bsay\b|contents|written|inside|what'?s in",
+    "read_file": r"\bread\b|pull up|\bcat\b|\bshow\b|\bprint\b|display|\bsay\b|contents|written|inside|what'?s in",
     # Round eleven: convert_time and time_in kept swapping for each other. A specific clock time
     # (a digit with am/pm, an hour:minute, noon/midnight, or a named zone) is convert_time's own
     # territory; "how late is it in X"/"what time is it in X" with no clock time is time_in's.
@@ -368,6 +368,8 @@ def _sound(tool, arg, query):
     # from the sentence itself rather than trusting an unsplit argument.
     # Round twenty-six: "roll 4 dice with 8 sides" is 4d8. She writes dice notation, so the guard checks its numbers, not the string.
     if tool == "roll_dice":
+        if not arg.strip():
+            return not re.search(r"\d", q_lower)  # plain "roll a die": her default die, nothing to invent
         m = re.fullmatch(r"(\d*)d(\d+)", arg.lower().strip()) or re.fullmatch(r"(\d+)\s+(\d+)(?: sides?)?", arg.lower().strip())  # round 32: "10 12 sides"
         return bool(m) and all(n in q_lower for n in m.groups() if n)
 
@@ -400,7 +402,7 @@ def _sound(tool, arg, query):
             return bool(re.search(r"\bon\b|\bdark\b|enable", q_lower))
         return False
     if tool == "reveal_in_finder":  # round 32: the path she resolved ("~/Documents/Resume.pdf") need only end in the file named
-        return bool(arg) and os.path.basename(arg).lower() in q_lower and "finder" in q_lower
+        return bool(arg) and os.path.basename(arg).lower() in q_lower and ("finder" in q_lower or "reveal" in q_lower)
     if tool == "do_not_disturb":
         a = (arg.lower().split() or [""])[0]  # round twenty: "on for the next couple hours" is "on"
         if a == "off":
