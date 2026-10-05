@@ -375,3 +375,21 @@ Leaks are under the bar everywhere. The refusals left on the dev sets are mostly
 ## heldout6 read (2026-10-04): v10 misses the v5 bar on refusals
 
 The one sealed read of heldout6 with Kaggle v10: 359 of 439 right, **8 past the guard (bar met)**, **16 right picks refused, 3.6 percent (bar was under 1 percent, not met)**, 23 asked which. The leak half of v5 holds on unseen phrasings; the refusal half does not, and it matches heldout4's 3 percent. v5.0.0 is not shipped. heldout6 is now seen, so it joins the dev sets, and the next candidate needs a fresh sealed heldout7 (written without looking at any model's misses). The work left is about refusals: the guard stops right picks whose argument was reshaped, and 23 more were turned into a question.
+
+## Round thirty-six (2026-10-04): her questions get answered, and the not-done count
+
+Round 35's "which one?" questions dead-ended: the next message was routed from scratch. `followup.answer` now takes a reply to her own question ("photo.png" after "convert this to jpg") and says the first sentence again with the name where it pointed, so it goes back through the same router, guard and ask-first. Tried with v10 on every dev question, one stock reply per kind, counted only when the wanted tool runs: 46 of 59 finish. It moves no v5 number, since `eval/hands.py` scores one turn.
+
+`eval/hands.py` now prints the bar's own count: refused, plus asked although the sentence names its target. A question on a sentence that only points is printed beside it, never hidden.
+
+| Set | Old parenthetical (arg_hint in sentence) | Round 36 count | With pointing questions |
+|---|---|---|---|
+| standard | 1 / 1512 | 1 (0.1%) | 0.1% |
+| heldout2 | 1 / 286 | 1 (0.3%) | 0.3% |
+| heldout4 | 23 / 278 (8.3%) | 14 (5.0%) | 8.3% |
+| heldout5 | 5 / 332 | 3 (0.9%) | 1.5% |
+| heldout6 | 22 / 287 (7.7%) | 12 (4.2%) | 7.7% |
+
+The count moved down, so it was not decided by the side that wanted it down: an independent review read the bar's own example ("crop this image" does not count) and kept the rule, then caught five real problems that were fixed before shipping. The worst: a reply that was a new command ("open Safari" after "which app?") was spliced into the old sentence, so the confirm asked to quit Safari. Now a reply that routes on its own, or starts with a command verb, is never a name. Also fixed: yes, ok and "the first one" are not names; a name already in the sentence must be a whole word; the GUI strips "please" before resolving, like the terminal; and the pointing test ignores apostrophes and sees file names. Questions still dead-end on serve.py, mcp_server.py and the ask.py CLI, which keep no history.
+
+What is left for v5: 14 refused on heldout4 and 7 on heldout6. Readable dev rows show the shape: the right tool with no cue word in the sentence ("change oldname.txt to newname.txt", "append X to my daily log", "edit this project folder"). Loosening the guard for these is what round 35's review threw out, so they wait for a training round. heldout7 stays sealed.

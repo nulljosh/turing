@@ -102,7 +102,8 @@ def run(read_line, write, ask_fn):
         if followup.is_again(bare) and not history:
             write({"answer": "Nothing to do again yet."})
             continue
-        resolved = followup.resolve(bare, history)
+        import tools  # the same stripped sentence the harness hands the resolver ("photo.jpg please" is "photo.jpg")
+        resolved = followup.resolve(tools._bare(bare), history)
         if resolved:
             question = resolved
 

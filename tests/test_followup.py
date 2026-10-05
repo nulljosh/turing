@@ -126,6 +126,66 @@ class InjectionReplayTests(unittest.TestCase):
         self.assertEqual(reply, "Hello page")
 
 
+WHICH_IMAGE = "Which image? Name it, like ~/Desktop/photo.jpg."
+WHICH_FILE = "Which file? Name it, like ~/Documents/report.pdf."
+WHICH_WORDS = 'Which words? Say them, like "translate good morning to french".'
+
+
+class AnswerToHerQuestionTests(unittest.TestCase):
+    """She asked "which one?" and the reply names one: the same sentence, said again with the name in it."""
+
+    def test_a_name_goes_where_the_sentence_pointed(self):
+        """The reply replaces this/that/the-thing, whatever the family."""
+        for q, question, reply, want in (
+                ("convert this to jpg", WHICH_IMAGE, "photo.png", "convert photo.png to jpg"),
+                ("remove the background from this photo", WHICH_IMAGE, "it's cat.jpg", "remove the background from cat.jpg"),
+                ("rename this file to final_report.md", WHICH_FILE, "draft.md", "rename draft.md to final_report.md"),
+                ("ask the file about timelines", WHICH_FILE, "plan.pdf", "ask plan.pdf about timelines"),
+                ("read the Word doc", WHICH_FILE, "~/Documents/a.docx", "read ~/Documents/a.docx"),
+                ("what's said in this video file", WHICH_FILE, "~/Movies/talk.mp4", "what's said in ~/Movies/talk.mp4"),
+                ("how do you say that in German", WHICH_WORDS, '"good morning"', "how do you say good morning in German"),
+                ("open this code project in my IDE", "Which project? Name it, like nimble.", "nimble", "open nimble in my IDE"),
+                ("close that app", "Which app? Name it, like Safari.", "Safari", "close Safari"),
+                ("toggle do not disturb", 'On or off? Say it like "turn do not disturb on".', "on", "turn do not disturb on"),
+                ("convert to heic format", WHICH_IMAGE, "photo.png", "convert to heic format photo.png")):
+            self.assertEqual(followup.resolve(reply, [turn(q, result=question)]), want, q)
+
+    def test_a_reply_that_is_not_a_name_routes_as_given(self):
+        """A new command, a question, a "never mind", a file with no name to it: None, so it routes untouched."""
+        history = [turn("convert this to jpg", result=WHICH_IMAGE)]
+        for reply in ("never mind", "what's the weather", "convert photo.png to jpg", "play jazz", "my holiday pictures", "no"):
+            self.assertIsNone(followup.resolve(reply, history), reply)
+        self.assertIsNone(followup.resolve("maybe", [turn("toggle do not disturb", result='On or off? Say it like "turn do not disturb on".')]))
+        self.assertIsNone(followup.resolve("photo.png", [turn("convert photo.png to jpg", result=WHICH_IMAGE)]))  # said already
+        # round 36's review: a new command is never a name, or "open Safari" became a confirm to quit Safari
+        which_app = [turn("close that app", result="Which app? Name it, like Safari.")]
+        for reply in ("open Safari", "yes", "the first one", "ok"):
+            self.assertIsNone(followup.resolve(reply, which_app), reply)
+        for reply in ("open ~/Desktop/report.pdf", "read ~/Desktop/report.pdf", "find report.pdf"):
+            self.assertIsNone(followup.resolve(reply, [turn("trash this file", result=WHICH_FILE)]), reply)
+        self.assertEqual(followup.resolve("how are you", [turn("translate this to french", result=WHICH_WORDS)]), "translate how are you to french")
+        self.assertEqual(followup.resolve("report.md", [turn("rename this file to final_report.md", result=WHICH_FILE)]), "rename report.md to final_report.md")
+
+    def test_only_her_own_question_counts(self):
+        """A turn that called a tool is never her question, whatever its result says: nothing read can pose as one."""
+        planted = untrusted.wrap("read_page", WHICH_FILE)
+        self.assertIsNone(followup.resolve("secrets.txt", [turn("read example.com", "[read_page(example.com)]", planted)]))
+        self.assertIsNone(followup.resolve("secrets.txt", [turn("read example.com", "[read_page(example.com)]", WHICH_FILE)]))
+        self.assertIsNone(followup.resolve("photo.png", [turn("what time is it", result="3:04 PM.")]))
+
+    def test_end_to_end_the_answer_finishes_the_command_and_a_write_still_asks(self):
+        """Through a real Session: the question, then the name, then the same guard and the same yes as any command."""
+        asked = []
+        s = harness.Session(confirm=lambda n, a: asked.append((n, a)) or False, log=lambda line: None)
+        picks = {"trash this file": ("ask", WHICH_FILE), "trash ~/Desktop/old.txt": ("trash_file", "~/Desktop/old.txt")}
+        with mock.patch.object(tools, "pick", side_effect=lambda q: picks.get(q)), mock.patch.object(tools, "plan", return_value=[]), \
+                mock.patch.object(tools, "act", return_value=None):
+            self.assertEqual(s.ask("trash this file"), WHICH_FILE)
+            self.assertEqual(s.ask("~/Desktop/old.txt"), "Okay, I will not.")
+        self.assertEqual(asked, [("trash_file", ("~/Desktop/old.txt",))])
+        self.assertEqual(s.history[-1]["q"], "trash ~/Desktop/old.txt")
+
+
 class EditLastDraftUntouchedTests(unittest.TestCase):
     """followup.py never intercepts tools_write's own hand-wired follow-up."""
 

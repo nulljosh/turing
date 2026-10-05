@@ -1,5 +1,5 @@
-""""Do that again", "again for nimble", "same but for cadence", "what about tomorrow", "open it": she
-forgets the conversation less. resolve(query, history) rewrites a follow-up into the explicit thing the
+""""Do that again", "again for nimble", "same but for cadence", "what about tomorrow", "open it", and a name
+given in answer to her own "which file?": she forgets the conversation less. resolve(query, history) rewrites a follow-up into the explicit thing the
 user meant, as a plain sentence, so it goes back through the exact same router, the exact same WRITES
 confirm and the exact same law 9 refusal as anything typed outright. This module only rewrites what she
 is asked; it never decides to act and it never invents a tool call of its own.
@@ -25,6 +25,20 @@ import untrusted
 _AGAIN = re.compile(r"^(?:again|do (?:that|it) again|one more time|repeat that|same again|once more)$", re.I)
 _SWAP = re.compile(r"^(?:again for|same(?: thing)? for|same but for|now|what about|and) (.+)$", re.I)
 _POINT = re.compile(r"^(open|show|pull up|read|summari[sz]e) (?:it|that|that file|the file|this file)$", re.I)
+
+# Her own "Which image?" answered with a name ("photo.jpg"): the sentence she asked about, said again with the
+# name where it pointed. Built only from the user's two sentences; her question is matched by its fixed opening.
+_WHICH = re.compile(r"^(?:Which (app|project|image|file|words|reminder)\?|(On or off)\?)")
+_CANCEL = re.compile(r"^(?:never ?mind|cancel|no|nope|nah|nothing|none|stop|forget it|skip(?: it)?|yes|yeah|yep|ok|okay|sure|both|either|neither|all of them|the (?:first|second|third|last|other) one)(?:\s|$)", re.I)
+# a question is not a name, except as the words to translate or say ("how are you" in french)
+_QUESTION = re.compile(r"^(?:what|whats|what's|how|why|who|when|where|can|could|would|will|please|is|are|do|does)\b", re.I)
+_FILE_NAME = re.compile(r"(?:~|/)\S*|\b[\w-]+\.[a-z0-9]{2,5}\b", re.I)
+_THING = r"(?:image|photo|picture|pic|screenshot|file|folder|doc|document|pdf|zip|archive|video|recording|app|program|window|project|repo|text|sentence|phrase|passage|words?|line|reminder|task|to-?do)"
+_POINTED = re.compile(rf"\b(?:this|that|these|those|the)\s+(?:[\w-]+\s+)??{_THING}s?(?:\s+(?:file|folder|doc|document))?\b|\b(?:this|that|these|those)\b", re.I)
+_VERBS = {"open", "read", "show", "find", "move", "copy", "rename", "trash", "delete", "email", "send", "play", "remind", "build",
+          "run", "close", "quit", "translate", "zip", "unzip", "convert", "rotate", "crop", "resize", "make", "add", "append",
+          "search", "look", "check", "mark", "finish", "edit", "turn", "set", "go", "reveal", "summarize", "write", "draft"}
+_MOST_WORDS = {"app": 3, "project": 3, "image": 6, "file": 6, "words": 12, "reminder": 8}
 
 # Tools whose result is something she made herself, never text read from outside: safe to pull a path out
 # of for "open it"/"read it". A READING tool's result (untrusted.READING) is never eligible, whatever it says.
@@ -59,6 +73,37 @@ def _last_path(history):
             if m:
                 return m.group(1).rstrip(".,:;)")
     return None
+
+
+def answer(query, history):
+    """The last sentence said again with this reply where it pointed, when her last reply was her own "which one?"
+    and this reply names one ("photo.jpg" after "convert this to jpg" is "convert photo.jpg to jpg"). None when
+    she did not just ask, or the reply is not a name: a new command, a question, a "never mind"."""
+    last = (history or [{}])[-1]
+    which = _WHICH.match(last.get("result") or "")
+    if not which or last.get("calls"):
+        return None  # only her own question, which never has a call behind it
+    said = re.sub(r"^(?:it'?s|it is|use|the one (?:called|named)|called|named)\s+", "", query.strip().strip("\"'").rstrip("?.!"), flags=re.I).strip("\"'")
+    if not said or _CANCEL.match(said) or (which.group(1) != "words" and _QUESTION.match(said)):
+        return None
+    old_q = last.get("q") or ""
+    if not old_q:
+        return None
+    import tools  # here, not at the top: a reply that routes on its own ("open Safari") is a new command, never a name
+    if which.group(1) != "words" and len(said.split()) > 1 and tools.plan(said):
+        return None
+    if which.group(2):  # "On or off?"
+        return f"turn do not disturb {said.lower()}" if said.lower() in ("on", "off") else None
+    kind = which.group(1)
+    if len(said.split()) > 1 and said.split()[0].lower() in _VERBS:
+        return None  # "read ~/report.pdf", "find cat.jpg": a command of its own, even one the router leaves to the picker
+    if len(said.split()) > _MOST_WORDS[kind] or said.split()[0].lower() == old_q.split()[0].lower() or \
+            re.search(rf"(?<![\w.-]){re.escape(said)}(?![\w.-])", old_q, re.I):
+        return None  # too long to be a name, the whole command said again, or a name the sentence already had
+    if kind in ("image", "file") and not _FILE_NAME.search(said):
+        return None  # a file is named by its path or its name with an extension
+    m = _POINTED.search(old_q) or re.search(r"\bit\b", old_q, re.I)
+    return f"{old_q[:m.start()]}{said}{old_q[m.end():]}" if m else f"{old_q} {said}"
 
 
 def resolve(query, history):
@@ -99,7 +144,7 @@ def resolve(query, history):
         verb = m.group(1).lower()
         return f"read the file {path}" if verb in ("read", "summarize", "summarise") else f"reveal {path} in finder"
 
-    return None
+    return answer(bare, history)
 
 
 def demo():
@@ -140,6 +185,11 @@ def demo():
     assert resolve("do that again", h_read) == "read example.com"
     assert "trash" not in (resolve("do that again", h_read) or "")
     assert resolve("open it", h_read) is None  # read_page is a READING tool: no path is ever pulled from it
+
+    # Her own "which one?" answered with a name finishes the sentence she asked about; anything else routes as given.
+    h_which = [{"q": "convert this to jpg", "calls": [], "result": "Which image? Name it, like ~/Desktop/photo.jpg."}]
+    assert resolve("photo.png", h_which) == "convert photo.png to jpg"
+    assert resolve("never mind", h_which) is None and resolve("play jazz", h_which) is None
 
     print("followup ok")
 

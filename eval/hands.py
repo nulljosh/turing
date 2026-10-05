@@ -82,15 +82,20 @@ def test_file_cases(path):
 
 
 PREFILL = '{"tool": '
+_POINTS = re.compile(r"\b(?:this|that|these|those)\b")
 
 
 def score_picks(picks, verbose=False):
     """Score a list of picks (from model or cached) against guard rules.
-    Returns: score dict, wrong_tool count, fired count, blocked count, asked count.
+    Returns: score dict, wrong_tool count, fired count, blocked count, asked count, and a dict of the v5 bar's
+    counts: right (right tool picks), named_asked (asked although the sentence names the target) and wrong_asked
+    (a wrong pick that draws a question).
     A pick is (group, text, wanted_tool, wanted_arg, exact, picked_tool, picked_arg_before_repair).
     """
     score, wrong_tool, fired, blocked, asked = {}, 0, 0, 0, 0
+    bar = {"right": 0, "named_asked": 0, "points_asked": 0, "points_refused": 0, "wrong_asked": 0}
     for group, text, tool, arg, exact, picked_tool, picked_arg_raw in picks:
+        hint = (arg or "").lower()
         # Repair the argument (same as the model evaluation does)
         picked_arg = tools.repair(picked_tool, picked_arg_raw, text) if picked_tool else ""
         picked_arg_cmp = str(picked_arg or "").lower().strip()
@@ -101,20 +106,47 @@ def score_picks(picks, verbose=False):
         n[0] += ok
         n[1] += 1
         # The other half of the guard's job: a RIGHT pick it refuses is a command she cannot do.
+        bar["right"] += bool(ok and tool and tool != "agent")
         if ok and tool and tool != "agent" and not tools._sound(picked_tool, picked_arg, text):  # the repaired argument, as the live picker checks it
             if tools.needs_target(picked_tool, picked_arg, text):
                 asked += 1
+                if hint and hint in text.lower():  # the bar: a question counts when the sentence names its target, never when it only points
+                    bar["points_asked" if points(text) else "named_asked"] += 1
                 continue
             blocked += 1
+            bar["points_refused"] += points(text)
             if verbose:
                 print(f"  BLOCKED [{group}] {text[:80]!r}: right pick {tool}({picked_arg!r}) refused by the guard")
         if not ok:
             wrong_tool += bool(picked_tool) and picked_tool != tool
             # what tools.do() would really run: a wrong pick that is also unsound never fires
             fired += bool(picked_tool) and picked_tool not in (tool, "agent") and tools._sound(picked_tool, picked_arg, text)
+            bar["wrong_asked"] += bool(picked_tool) and picked_tool not in (tool, "agent") and bool(tools.needs_target(picked_tool, picked_arg, text))
             if verbose and picked_tool != tool:
                 print(f"  PAST [{group}] {text[:80]!r}: picked {picked_tool}({picked_arg_raw!r}), want {tool}({arg!r})")
-    return score, wrong_tool, fired, blocked, asked
+    return score, wrong_tool, fired, blocked, asked, bar
+
+
+def points(text):
+    """True when the sentence only points at its target: it says this, that, these or those outside quotes
+    ("convert this to jpg"). Kept here, apart from the guard's own rules, so a guard edit cannot move the count."""
+    t = text.lower()
+    if re.search(r"~/|/\w|\b[\w-]+\.[a-z0-9]{2,4}\b", t):
+        return False  # a path or a file name names the target, whatever else the sentence points at (the guard's own test)
+    return bool(_POINTS.search(re.sub(r"\"[^\"]*\"|(?<!\w)'[^']*'(?!\w)|\u201c[^\u201d]*\u201d|\u2018[^\u2019]*\u2019", " ", t)))
+
+
+def print_bar(blocked, bar):
+    """The v5 bar on its own line, ahead of the summary line that gate.sh and picker_round.sh read with tail -1.
+    Not done is refused, or asked although the sentence names its target. A question on a sentence that only
+    points is the right answer; it is printed beside the count and never hidden."""
+    done = blocked + bar["named_asked"]
+    pct = 100 * done / bar["right"] if bar["right"] else 0
+    loose = 100 * (done + bar["points_asked"]) / bar["right"] if bar["right"] else 0
+    print(f"not done: {done} of {bar['right']} right tool picks ({pct:.1f} percent): {blocked} refused "
+          f"({bar['points_refused']} on a sentence that only points), {bar['named_asked']} asked though the sentence names it. "
+          f"{bar['points_asked']} more asked on a sentence that only points ({loose:.1f} percent with those). "
+          f"{bar['wrong_asked']} wrong picks drew a question")
 
 
 def main():
@@ -136,10 +168,11 @@ def main():
                     all_picks.append((row["group"], row["text"], row["wanted_tool"], row["wanted_arg"],
                                       row["exact"], row["picked_tool"], row["picked_arg_raw"]))
         verbose = "--verbose" in sys.argv
-        score, wrong_tool, fired, blocked, asked = score_picks(all_picks, verbose=verbose)
+        score, wrong_tool, fired, blocked, asked, bar = score_picks(all_picks, verbose=verbose)
         total = sum(n[0] for n in score.values())
         for group, (p, n) in score.items():
             print(f"{group}: {p}/{n}")
+        print_bar(blocked, bar)
         print(f"{total}/{sum(n[1] for n in score.values())} passed, {wrong_tool} picked the wrong tool, {fired} of those get past the guard in tools.do(), {blocked} right picks refused by the guard, {asked} asked which")
         return
 
@@ -193,11 +226,12 @@ def main():
         dump_file.close()
 
     # Now score all picks
-    score, wrong_tool, fired, blocked, asked = score_picks(picks, verbose=verbose)
+    score, wrong_tool, fired, blocked, asked, bar = score_picks(picks, verbose=verbose)
 
     total = sum(n[0] for n in score.values())
     for group, (p, n) in score.items():
         print(f"{group}: {p}/{n}")
+    print_bar(blocked, bar)
     tag = (adapter or model_id) + (" constrained" if constrain else "")
     print(f"{total}/{sum(n[1] for n in score.values())} passed, {wrong_tool} picked the wrong tool, {fired} of those get past the guard in tools.do(), {blocked} right picks refused by the guard, {asked} asked which, {time.time() - t0:.0f}s, {tag}")
     minimum = _flag("--min")

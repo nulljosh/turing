@@ -1,5 +1,5 @@
 {
-  "version": "4.20.16",
+  "version": "4.20.17",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -36,8 +36,8 @@
         "documented": 8
       },
       "app/followup.py": {
-        "total": 5,
-        "documented": 5
+        "total": 6,
+        "documented": 6
       },
       "app/harness.py": {
         "total": 17,
@@ -252,8 +252,8 @@
         "documented": 1
       },
       "eval/hands.py": {
-        "total": 6,
-        "documented": 6
+        "total": 8,
+        "documented": 8
       },
       "eval/jt_chat.py": {
         "total": 4,
@@ -340,8 +340,8 @@
         "documented": 31
       },
       "tests/test_followup.py": {
-        "total": 25,
-        "documented": 25
+        "total": 30,
+        "documented": 30
       },
       "tests/test_gguf_parity.py": {
         "total": 1,

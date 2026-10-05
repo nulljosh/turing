@@ -1,5 +1,7 @@
 # Progress log
 
+- 2026-10-04: v4.20.17 🎉 She finishes what she asks about: answer her "which file?" with a name and the command runs, through the same guard and the same yes. Her Mac app wears a new icon, her flower as a bold Liquid Glass symbol made in Icon Composer, with dark and tinted looks.
+  v4.20.17 · 135 tools · 685 tests · docs coverage 100% · laws all hold · biggest app/tools_util.py 649 · actions 231/231 · parity 231/231 · util_diff 261/261
 - 2026-10-04: v4.20.16 🎉 The commercial is mixed like a real spot: the music stays up in the gaps and ducks under her voice, loudness set for the web, no clipping. 28 seconds.
   v4.20.16 · 135 tools · 681 tests · docs coverage 100% · laws all hold · biggest app/tools_util.py 649 · actions 231/231 · parity 231/231 · util_diff 261/261
 - 2026-10-04: v4.20.15 🎉 A punchier commercial: 30 seconds, five beats, bright minimal-pop music that builds into the end card, her voice, captions, and the painting building square by square.
