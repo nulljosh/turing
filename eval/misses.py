@@ -13,7 +13,7 @@ sys.path[:0] = [os.path.join(REPO, "app"), os.path.join(REPO, "eval")]
 os.environ["SAMANTHA_HEADLESS"] = "1"
 import tools_registry as R  # noqa: E402
 
-SEALED = ("heldout4", "heldout7", "heldout9", "heldout11")
+SEALED = ("heldout4", "heldout7", "heldout12")
 
 
 def _sound(tool, arg, text, ev=True, ag=True):
