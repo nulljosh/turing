@@ -184,10 +184,12 @@ def build(webm, starts, clips, out_dir):
     for i, ((mp3, _), start) in enumerate(zip(clips, starts)):
         inputs += ["-i", mp3]
         filters.append(f"[{i + 2}:a]adelay={int(start * 1000)}|{int(start * 1000)}[a{i}]")
-    voice_mix = "".join(f"[a{i}]" for i in range(len(clips))) + f"amix=inputs={len(clips)}:normalize=0[voice]"
+    voice_mix = "".join(f"[a{i}]" for i in range(len(clips))) + f"amix=inputs={len(clips)}:normalize=0[voice0];[voice0]asplit=2[voice][vkey]"
     # the bed sits about 15 dB under her voice, fades in and out, and gets a little echo so it reads as a room, not a beep
-    bed_chain = f"[1:a]aecho=0.8:0.6:380:0.25,volume=0.30,afade=t=in:d=2,afade=t=out:st={total - 3:.2f}:d=3[bed]"
-    mix = voice_mix + ";" + bed_chain + ";[voice][bed]amix=inputs=2:normalize=0:duration=longest[mixed];[mixed]loudnorm=I=-16:TP=-1.5:LRA=11[aout]"
+    bed_chain = f"[1:a]aecho=0.8:0.6:380:0.25,volume=0.75,afade=t=in:d=1,afade=t=out:st={total - 3:.2f}:d=3[bed]"
+    # the music stays up in the gaps and ducks under her voice, the way a spot is mixed: her words key a compressor on the bed
+    duck = "[bed][vkey]sidechaincompress=threshold=0.02:ratio=10:attack=15:release=500[ducked]"
+    mix = voice_mix + ";" + bed_chain + ";" + duck + ";[voice][ducked]amix=inputs=2:normalize=0:duration=longest[mixed];[mixed]loudnorm=I=-16:TP=-1.5:LRA=11[aout]"
     mp4 = os.path.join(out_dir, "promo.mp4")
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", *inputs, "-filter_complex", ";".join(filters + [mix]), "-map", "0:v", "-map", "[aout]",
                     "-c:v", "libx264", "-crf", "30", "-preset", "slow", "-pix_fmt", "yuv420p", "-vf", "scale=1280:-2", "-c:a", "aac", "-b:a", "96k",

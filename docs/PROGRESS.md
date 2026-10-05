@@ -1,5 +1,7 @@
 # Progress log
 
+- 2026-10-04: v4.20.16 🎉 The commercial is mixed like a real spot: the music stays up in the gaps and ducks under her voice, loudness set for the web, no clipping. 28 seconds.
+  v4.20.16 · 135 tools · 681 tests · docs coverage 100% · laws all hold · biggest app/tools_util.py 649 · actions 231/231 · parity 231/231 · util_diff 261/261
 - 2026-10-04: v4.20.15 🎉 A punchier commercial: 30 seconds, five beats, bright minimal-pop music that builds into the end card, her voice, captions, and the painting building square by square.
   v4.20.15 · 135 tools · 681 tests · docs coverage 100% · laws all hold · biggest app/tools_util.py 649 · actions 231/231 · parity 231/231 · util_diff 261/261
 - 2026-10-04: v4.20.14 🎉 A better commercial: the Mona Lisa visibly builds square by square, bigger type you can read, cards that fade in, and an end card with her mark, the website, how to download and the source. 47 seconds, her voice, music and captions.
