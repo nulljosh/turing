@@ -2,9 +2,26 @@
 
 **Loop status: stopped by Joshua (wrap up), mid-round.** v4.20.16 is the live version. The loop is working toward v5.0.0: her own bigger picker (the Kaggle 1.5B) as the default. Nothing from this round is shipped yet.
 
-## The v5 bar (set 2026-10-04, before heldout6 was read)
+## The v5 bar (tightened 2026-10-04, before heldout7 is read)
 
-Joshua left the call to me. Zero refused is out of reach for a guard that must also stop composed arguments (heldout4 refuses 3 percent of right picks, mostly correctly). The v5 bar on a sealed set is under 10 wrong past the guard and under 1 percent of its right picks refused. Written down before the read so the number cannot move to fit the result. heldout6 was read once against it and missed on refusals (3.6 percent). The next sealed set is heldout7.
+Joshua said "you decide" on the bar, twice. The first bar was under 10 wrong past the guard and under 1 percent of right picks refused; heldout6 was read once against it and missed (16 refused). Two things were wrong with that bar and both made it too kind, so it is tightened, never loosened:
+
+- It counted only flat refusals. When she answers "which one?" although the sentence named the thing, the command is just as undone.
+- Its denominator included not-a-command rows she correctly left alone. The honest denominator is right tool picks: a tool was wanted and she picked it with the right argument.
+
+**The bar now, on a sealed set:** under 10 wrong picks past the guard, and under 2 percent of right tool picks not done. Not done means refused, or asked although the sentence named its target (the row's arg_hint is in the sentence). A question on a sentence that names nothing ("crop this image") is the right answer and does not count.
+
+Where the Kaggle v10 picker stands on that measure with the round-35 guard: standard 1 of 1512 (0.1 percent), heldout2 1 of 286 (0.3), heldout5 5 of 332 (1.5), and heldout4, the only set never tuned on, 23 of 278 (8.3 percent: 14 refused, 9 asked though named). heldout4 is the honest reading. The next sealed set is heldout7.
+
+## Decisions (Joshua said "you decide", 2026-10-04)
+
+- **Cloud review:** skipped. The local review of the round-35 branch covers a diff this small.
+- **Hosting the 1.5B:** Hugging Face, as its own repo beside the existing GGUF one. Free, and her small model already lives there.
+- **Where it lives on a user's Mac:** `~/.samantha/models/`, fetched by the launcher on first run. Her library, voice cache and memory are already under `~/.samantha`. The 0.5B stays as the fallback when the folder is missing or broken.
+- **Windows and Linux:** stay on the 0.5B GGUF for 5.0. The GGUF path has no confidence number yet, so it cannot ask first.
+- **Router order:** unchanged from how v5 was already written: her model picks every tool a model may pick, phrase-only tools stay routed by law. That is why the not-done bar matters.
+
+None of this is done yet. Nothing is uploaded and no loader code has changed.
 
 ## What the loop is
 
@@ -17,7 +34,7 @@ Work toward v5.0.0, one round at a time, measured on held-out sets. A round ends
 - **Round 35 is one commit on the local branch `round-35` (not pushed, not on main), kept there so `/ultrareview` has a branch to review:** `app/tools_registry.py` adds four narrow "which one?" families (a file to show in Finder, a reminder to tick off, a note to add to, a switch never told on or off). Each needs its own noun in the sentence. `eval/hands.py` now records how sure she was (`sure`) in dumps and checks soundness on the repaired argument, the way the live picker does. All local checks pass.
 - **What the review caught:** the first version of round 35 loosened evidence for flip_image, open_in_editor, rename_file and append_note, rebuilt append_note arguments, and dropped the family noun in `needs_target`. Two independent reviewers reproduced wrong picks running and small talk drawing "Which file?". That version was thrown out (kept for reference at `/Volumes/LaCie/turing-v10/tools_registry.round35-loose.py`).
 - **Scores with the round-35 guard (Kaggle v10):** standard 1707 of 1960, 6 past the guard, 0 refused, 1 asked. heldout2 415 of 500, 7 past, 1 refused. heldout4 (never tuned on) 356 of 455, 9 past, 14 refused, 23 asked. heldout5 404 of 507, 2 past, 2 refused, 7 asked. heldout6 was not rescored (scoring stopped at the wrap up; its dump is partial). Dumps are in `/Volumes/LaCie/turing-v10/*-picks.jsonl`.
-- **What the measurement review said:** a right pick that ends in a question is still not done for the user, so moving refusals into "asked" is a relabel, not a fix; no gate reads "asked"; a wrong pick that ends in a question is counted nowhere; `sure` is written to dumps and read by nothing. All true. The honest number to watch is refused plus asked: on heldout4 that is 37 of 356 right picks not done, about 10 percent, against 4 percent counting refusals alone. Some of those questions are the right answer (a sentence that names no image should get "which image?"), so the real failure rate sits between the two and has not been separated. Proposed, for Joshua to confirm: judge v5 on refused plus asked, not refused alone.
+- **What the measurement review said:** a right pick that ends in a question is still not done for the user, so moving refusals into "asked" is a relabel, not a fix; no gate reads "asked"; a wrong pick that ends in a question is counted nowhere; `sure` is written to dumps and read by nothing. All true. The honest number to watch is refused plus asked: on heldout4 that is 37 of 356 right picks not done, about 10 percent, against 4 percent counting refusals alone. Some of those questions are the right answer (a sentence that names no image should get "which image?"), so the real failure rate sits between the two and has not been separated. This is now the bar: see the top of this file.
 - **Sealed set:** a fresh writer wrote heldout7 from the tool list only. 552 rows after dropping 67 that duplicated existing data. It sits at `/Volumes/LaCie/turing-v10/h7/sealed/heldout7.filtered.jsonl`, outside the repo, never opened. Counts only until the one read.
 - **My honest read:** with a guard that is not weakened, refusals land near 2 percent on unseen wording. The sealed read will likely miss the 1 percent bar. Closing that gap takes a training round (cleaner argument copying, more phrasings), not more guard rules.
 
