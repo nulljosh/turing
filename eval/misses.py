@@ -17,6 +17,7 @@ SEALED = ("heldout4", "heldout7")
 
 
 def _sound(tool, arg, text, ev=True, ag=True):
+    """The guard's verdict with its evidence or against cues switched off, restored after."""
     e, a = dict(R._EVIDENCE), dict(R._AGAINST)
     try:
         if not ev:
