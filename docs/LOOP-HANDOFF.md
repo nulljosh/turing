@@ -12,6 +12,8 @@ Work toward 6.0, one round at a time: integrate Joshua Tree tools and Pi hardwar
 - **Sealed sets:** heldout7, heldout9, heldout (619) are never read as text until now, heldout6, 8, 10 are dev sets (run 11 trained on 6 and 8). The 619-sentence set is now in use.
 - Weights and dumps: `/Volumes/LaCie/turing-v10`, `-v11`, `-v12`, `-v13` (each has fetch_and_score.sh). Rescore a dump with `./.venv/bin/python eval/hands.py --rescore <dump>`.
 
+- **Run 16 (heldout9 and 11 folded in) is not better than 5.1:** heldout12 372 of 414 right, 10.9 percent undone, 10 leaks (5.1: 364, 10.4, 11); heldout4 388 right, 6.8 percent undone, 9 leaks (5.1: 385, 5.9, 8). Not shipped. More sentences have plateaued; the misses are one or two each across about 28 tools, half missing cue words and half arguments. Next lever is guard and argument engineering, or Qwen3-1.7B (Apache) with a patched config (add rope_theta at the top of config.json before mlx convert). Sealed: heldout4, heldout7, heldout12.
+
 ## Next, in order
 
 1. Joshua Tree integration: she now answers questions about it; next are tools to spawn processes, call methods, poll status (driving its APIs from chat).
