@@ -1,0 +1,522 @@
+{"text": "status of my repo", "tool": "git_status", "arg_hint": ""}
+{"text": "prime factors of 60", "tool": "is_prime", "arg_hint": ""}
+{"text": "what does this do", "tool": "explain_codebase", "arg_hint": ""}
+{"text": "notify me in 1 hour", "tool": "timer", "arg_hint": ""}
+{"text": "encode as base64", "tool": "base64_encode", "arg_hint": ""}
+{"text": "whats the name of what im reading", "tool": "current_tab", "arg_hint": ""}
+{"text": "testing", "tool": "run_tests", "arg_hint": ""}
+{"text": "vocalize that", "tool": "say", "arg_hint": ""}
+{"text": "I'm not sure about that", "tool": null, "arg_hint": ""}
+{"text": "change to png format", "tool": "convert_image", "arg_hint": ""}
+{"text": "look something up", "tool": "research", "arg_hint": ""}
+{"text": "I need to concentrate", "tool": null, "arg_hint": ""}
+{"text": "switch to different tab", "tool": "switch_tab", "arg_hint": ""}
+{"text": "set timer 2 hours", "tool": "timer", "arg_hint": ""}
+{"text": "macos info", "tool": "system_info", "arg_hint": ""}
+{"text": "download history", "tool": "recent_downloads", "arg_hint": ""}
+{"text": "paint this photo artistically", "tool": "paint_image", "arg_hint": ""}
+{"text": "I wonder what happens", "tool": null, "arg_hint": ""}
+{"text": "my calendar now", "tool": "calendar_today", "arg_hint": ""}
+{"text": "file dimensions", "tool": "image_info", "arg_hint": ""}
+{"text": "cut to square shape", "tool": "crop_square", "arg_hint": ""}
+{"text": "1 liter to gallons", "tool": "convert_units", "arg_hint": ""}
+{"text": "fix the rotation", "tool": "rotate_image", "arg_hint": ""}
+{"text": "celsius 100 to fahrenheit", "tool": "convert_units", "arg_hint": ""}
+{"text": "draft a proposal", "tool": "write_document", "arg_hint": ""}
+{"text": "summary of project", "tool": "explain_codebase", "arg_hint": ""}
+{"text": "That's a weird question", "tool": null, "arg_hint": ""}
+{"text": "locate text in file", "tool": "find_in_document", "arg_hint": ""}
+{"text": "Maybe I should restart", "tool": null, "arg_hint": ""}
+{"text": "save result", "tool": "save_research", "arg_hint": ""}
+{"text": "That's too fast", "tool": null, "arg_hint": ""}
+{"text": "whats pending", "tool": "needs_attention", "arg_hint": ""}
+{"text": "turn 90 clockwise", "tool": "rotate_image", "arg_hint": ""}
+{"text": "Where did that go", "tool": null, "arg_hint": ""}
+{"text": "random coin flip", "tool": "flip_coin", "arg_hint": ""}
+{"text": "reveal file location", "tool": "reveal_in_finder", "arg_hint": ""}
+{"text": "1984 in roman numerals", "tool": "roman_numeral", "arg_hint": ""}
+{"text": "temperature in seattle", "tool": "weather", "arg_hint": ""}
+{"text": "search for pizza near me", "tool": "web_search", "arg_hint": ""}
+{"text": "compose document", "tool": "write_document", "arg_hint": ""}
+{"text": "This error is confusing", "tool": null, "arg_hint": ""}
+{"text": "title of this", "tool": "current_tab", "arg_hint": ""}
+{"text": "check off that item", "tool": "complete_reminder", "arg_hint": ""}
+{"text": "next open slot", "tool": "free_when", "arg_hint": ""}
+{"text": "show pr", "tool": "open_prs", "arg_hint": ""}
+{"text": "active apps", "tool": "running_apps", "arg_hint": ""}
+{"text": "pretty print please", "tool": "json_pretty", "arg_hint": ""}
+{"text": "what page am i on", "tool": "current_tab", "arg_hint": ""}
+{"text": "voice selection", "tool": "set_voice", "arg_hint": ""}
+{"text": "I need more coffee", "tool": null, "arg_hint": ""}
+{"text": "repository state", "tool": "git_status", "arg_hint": ""}
+{"text": "20 percent tip on 75", "tool": "tip", "arg_hint": ""}
+{"text": "When will it be done", "tool": null, "arg_hint": ""}
+{"text": "code editor open", "tool": "open_in_editor", "arg_hint": ""}
+{"text": "days to new years", "tool": "days_until", "arg_hint": ""}
+{"text": "define nebulous", "tool": "define_word", "arg_hint": ""}
+{"text": "speak good morning", "tool": "say", "arg_hint": ""}
+{"text": "am i available tonight", "tool": "free_when", "arg_hint": ""}
+{"text": "focus tab", "tool": "switch_tab", "arg_hint": ""}
+{"text": "get dimensions please", "tool": "image_info", "arg_hint": ""}
+{"text": "count the characters", "tool": "word_count", "arg_hint": ""}
+{"text": "make compressed version", "tool": "zip_file", "arg_hint": ""}
+{"text": "flip orientation", "tool": "rotate_image", "arg_hint": ""}
+{"text": "date 6 months from now", "tool": "date_math", "arg_hint": ""}
+{"text": "The internet connection is slow", "tool": null, "arg_hint": ""}
+{"text": "That's a valid point", "tool": null, "arg_hint": ""}
+{"text": "kill app", "tool": "quit_app", "arg_hint": ""}
+{"text": "I have way too many tabs", "tool": null, "arg_hint": ""}
+{"text": "show github please", "tool": "open_url", "arg_hint": ""}
+{"text": "fetch content plz", "tool": "read_page", "arg_hint": ""}
+{"text": "password 12 character", "tool": "make_password", "arg_hint": ""}
+{"text": "more details on that", "tool": "research_more", "arg_hint": ""}
+{"text": "bluetooth on or off", "tool": "bluetooth_status", "arg_hint": ""}
+{"text": "number 1 100", "tool": "random_number", "arg_hint": ""}
+{"text": "battery percent", "tool": "battery", "arg_hint": ""}
+{"text": "run code please", "tool": "run_code", "arg_hint": ""}
+{"text": "alert me to finish project", "tool": "new_reminder", "arg_hint": ""}
+{"text": "research topic", "tool": "research", "arg_hint": ""}
+{"text": "remove backdrop", "tool": "remove_background", "arg_hint": ""}
+{"text": "show shortcuts", "tool": "list_shortcuts", "arg_hint": ""}
+{"text": "square it", "tool": "crop_square", "arg_hint": ""}
+{"text": "condense this for me", "tool": "summarize", "arg_hint": ""}
+{"text": "9 in morning sydney to here", "tool": "convert_time", "arg_hint": ""}
+{"text": "locate my resume", "tool": "find_file", "arg_hint": ""}
+{"text": "roll for me", "tool": "roll_dice", "arg_hint": ""}
+{"text": "mono version", "tool": "grayscale_image", "arg_hint": ""}
+{"text": "reverse the string", "tool": "reverse_text", "arg_hint": ""}
+{"text": "generate strong passphrase", "tool": "make_password", "arg_hint": ""}
+{"text": "is 101 prime number", "tool": "is_prime", "arg_hint": ""}
+{"text": "I lost something", "tool": null, "arg_hint": ""}
+{"text": "dont forget to email them", "tool": "new_reminder", "arg_hint": ""}
+{"text": "save a note with my thoughts", "tool": "new_note", "arg_hint": ""}
+{"text": "alarm in 45 seconds", "tool": "timer", "arg_hint": ""}
+{"text": "make background clear on photo", "tool": "remove_background", "arg_hint": ""}
+{"text": "how long till christmas", "tool": "days_until", "arg_hint": ""}
+{"text": "My phone is out of storage", "tool": null, "arg_hint": ""}
+{"text": "run calculation", "tool": "run_code", "arg_hint": ""}
+{"text": "whats the current date", "tool": "current_date", "arg_hint": ""}
+{"text": "3x size please", "tool": "upscale_image", "arg_hint": ""}
+{"text": "100 minus 37", "tool": "calculate", "arg_hint": ""}
+{"text": "That's not possible", "tool": null, "arg_hint": ""}
+{"text": "light theme please", "tool": "dark_mode", "arg_hint": ""}
+{"text": "countdown 15 minutes", "tool": "timer", "arg_hint": ""}
+{"text": "remove that file", "tool": "trash_file", "arg_hint": ""}
+{"text": "give the gist", "tool": "summarize", "arg_hint": ""}
+{"text": "open tabs in browser", "tool": "list_tabs", "arg_hint": ""}
+{"text": "events this morning", "tool": "calendar_today", "arg_hint": ""}
+{"text": "show in the finder", "tool": "reveal_in_finder", "arg_hint": ""}
+{"text": "This didn't work right", "tool": null, "arg_hint": ""}
+{"text": "convert to german", "tool": "translate", "arg_hint": ""}
+{"text": "git check", "tool": "git_status", "arg_hint": ""}
+{"text": "append line to notes", "tool": "append_note", "arg_hint": ""}
+{"text": "That's not what I wanted", "tool": null, "arg_hint": ""}
+{"text": "how busy is processor", "tool": "cpu_load", "arg_hint": ""}
+{"text": "morse version please", "tool": "morse_code", "arg_hint": ""}
+{"text": "11pm pst what time in utc", "tool": "convert_time", "arg_hint": ""}
+{"text": "open ~/Documents/notes.txt", "tool": "read_file", "arg_hint": ""}
+{"text": "what is obfuscate", "tool": "define_word", "arg_hint": ""}
+{"text": "list all my tabs", "tool": "list_tabs", "arg_hint": ""}
+{"text": "jot down idea about app", "tool": "new_note", "arg_hint": ""}
+{"text": "show ~/Documents/report.pdf contents", "tool": "read_document", "arg_hint": ""}
+{"text": "ask the pdf something", "tool": "ask_document", "arg_hint": ""}
+{"text": "I need to update things", "tool": null, "arg_hint": ""}
+{"text": "convert to b64", "tool": "base64_encode", "arg_hint": ""}
+{"text": "how many words here", "tool": "word_count", "arg_hint": ""}
+{"text": "store research", "tool": "save_research", "arg_hint": ""}
+{"text": "speech to text from file", "tool": "transcribe_video", "arg_hint": ""}
+{"text": "I need a break badly", "tool": null, "arg_hint": ""}
+{"text": "base64 to text", "tool": "base64_decode", "arg_hint": ""}
+{"text": "bring github tab forward", "tool": "switch_tab", "arg_hint": ""}
+{"text": "What does that even mean", "tool": null, "arg_hint": ""}
+{"text": "what programs are open", "tool": "running_apps", "arg_hint": ""}
+{"text": "This is boring", "tool": null, "arg_hint": ""}
+{"text": "put file elsewhere", "tool": "move_file", "arg_hint": ""}
+{"text": "current wifi name", "tool": "wifi_name", "arg_hint": ""}
+{"text": "I forgot my password again", "tool": null, "arg_hint": ""}
+{"text": "any new emails from boss", "tool": "unread_mail", "arg_hint": ""}
+{"text": "search for keyword in pdf", "tool": "find_in_document", "arg_hint": ""}
+{"text": "new random uuid", "tool": "make_uuid", "arg_hint": ""}
+{"text": "ram currently in use", "tool": "memory_usage", "arg_hint": ""}
+{"text": "export the research", "tool": "save_research", "arg_hint": ""}
+{"text": "how big is downloads folder", "tool": "folder_size", "arg_hint": ""}
+{"text": "whats the hour in paris", "tool": "time_in", "arg_hint": ""}
+{"text": "skip to next", "tool": "music", "arg_hint": ""}
+{"text": "show browser tabs", "tool": "list_tabs", "arg_hint": ""}
+{"text": "write something", "tool": "write_document", "arg_hint": ""}
+{"text": "I'm stressed about deadlines", "tool": null, "arg_hint": ""}
+{"text": "how many pixels", "tool": "image_info", "arg_hint": ""}
+{"text": "zip it all up", "tool": "zip_file", "arg_hint": ""}
+{"text": "centered square crop", "tool": "crop_square", "arg_hint": ""}
+{"text": "calendar event please", "tool": "add_event", "arg_hint": ""}
+{"text": "compress this folder", "tool": "zip_file", "arg_hint": ""}
+{"text": "give me all the words on this page", "tool": "read_page", "arg_hint": ""}
+{"text": "mark task done", "tool": "complete_reminder", "arg_hint": ""}
+{"text": "expand on previous", "tool": "research_more", "arg_hint": ""}
+{"text": "codebase explanation", "tool": "explain_codebase", "arg_hint": ""}
+{"text": "darkness", "tool": "dark_mode", "arg_hint": ""}
+{"text": "extract from zip", "tool": "unzip_file", "arg_hint": ""}
+{"text": "get hash value", "tool": "hash_text", "arg_hint": ""}
+{"text": "I'm getting angry", "tool": null, "arg_hint": ""}
+{"text": "make a complex spiral", "tool": "make_logo", "arg_hint": ""}
+{"text": "heads or tails decision", "tool": "flip_coin", "arg_hint": ""}
+{"text": "unread count", "tool": "unread_mail", "arg_hint": ""}
+{"text": "git history", "tool": "recent_commits", "arg_hint": ""}
+{"text": "memory status check", "tool": "memory_usage", "arg_hint": ""}
+{"text": "draw a simple icon", "tool": "make_logo", "arg_hint": ""}
+{"text": "all available tools", "tool": "list_mcp_tools", "arg_hint": ""}
+{"text": "I love this song", "tool": null, "arg_hint": ""}
+{"text": "find notes about topic", "tool": "search_notes", "arg_hint": ""}
+{"text": "find in notes", "tool": "search_notes", "arg_hint": ""}
+{"text": "20 percent of 150", "tool": "calculate", "arg_hint": ""}
+{"text": "I should be sleeping", "tool": null, "arg_hint": ""}
+{"text": "voice choices", "tool": "list_voices", "arg_hint": ""}
+{"text": "I love my macbook", "tool": null, "arg_hint": ""}
+{"text": "open the zip", "tool": "unzip_file", "arg_hint": ""}
+{"text": "what time toronto", "tool": "time_in", "arg_hint": ""}
+{"text": "show all my tasks", "tool": "list_reminders", "arg_hint": ""}
+{"text": "22:00 berlin to pst", "tool": "convert_time", "arg_hint": ""}
+{"text": "can u open youtube", "tool": "open_url", "arg_hint": ""}
+{"text": "make picture bigger and sharper", "tool": "upscale_image", "arg_hint": ""}
+{"text": "read this aloud please", "tool": "say", "arg_hint": ""}
+{"text": "mirror the text", "tool": "reverse_text", "arg_hint": ""}
+{"text": "turn ~/Downloads/pic.jpg into art", "tool": "paint_image", "arg_hint": ""}
+{"text": "make it quieter", "tool": "set_volume", "arg_hint": ""}
+{"text": "change speaker voice", "tool": "set_voice", "arg_hint": ""}
+{"text": "make backup copy", "tool": "copy_file", "arg_hint": ""}
+{"text": "encode as dots dashes", "tool": "morse_code", "arg_hint": ""}
+{"text": "make uuid please", "tool": "make_uuid", "arg_hint": ""}
+{"text": "emails waiting", "tool": "unread_mail", "arg_hint": ""}
+{"text": "turn this to mandarin", "tool": "translate", "arg_hint": ""}
+{"text": "unpack the archive", "tool": "unzip_file", "arg_hint": ""}
+{"text": "make it look drawn", "tool": "paint_image", "arg_hint": ""}
+{"text": "delete the old backup", "tool": "trash_file", "arg_hint": ""}
+{"text": "roman form of 99", "tool": "roman_numeral", "arg_hint": ""}
+{"text": "My connection dropped", "tool": null, "arg_hint": ""}
+{"text": "add more to note", "tool": "append_note", "arg_hint": ""}
+{"text": "countdown to halloween", "tool": "days_until", "arg_hint": ""}
+{"text": "The image quality sucks", "tool": null, "arg_hint": ""}
+{"text": "edit in code editor", "tool": "open_in_editor", "arg_hint": ""}
+{"text": "edit the repo", "tool": "open_in_editor", "arg_hint": ""}
+{"text": "make it look better", "tool": "enhance_image", "arg_hint": ""}
+{"text": "analyze the spreadsheet", "tool": "run_code", "arg_hint": ""}
+{"text": "sha256 of my text", "tool": "hash_text", "arg_hint": ""}
+{"text": "whats the size of Desktop", "tool": "folder_size", "arg_hint": ""}
+{"text": "critical things", "tool": "needs_attention", "arg_hint": ""}
+{"text": "2d12 roll", "tool": "roll_dice", "arg_hint": ""}
+{"text": "I'm so confused", "tool": null, "arg_hint": ""}
+{"text": "uptime please", "tool": "uptime", "arg_hint": ""}
+{"text": "execute code snippet", "tool": "run_code", "arg_hint": ""}
+{"text": "math 5 times 12 plus 3", "tool": "calculate", "arg_hint": ""}
+{"text": "read what u see", "tool": "read_page", "arg_hint": ""}
+{"text": "grab whats on screen", "tool": "screenshot", "arg_hint": ""}
+{"text": "can u start the messenger app", "tool": "open_app", "arg_hint": ""}
+{"text": "find pdf files", "tool": "find_file", "arg_hint": ""}
+{"text": "since when running", "tool": "uptime", "arg_hint": ""}
+{"text": "convert 10 miles to kilometers", "tool": "convert_units", "arg_hint": ""}
+{"text": "remove all color", "tool": "grayscale_image", "arg_hint": ""}
+{"text": "This app keeps crashing", "tool": null, "arg_hint": ""}
+{"text": "pull requests status", "tool": "open_prs", "arg_hint": ""}
+{"text": "all caps version", "tool": "shout", "arg_hint": ""}
+{"text": "I don't have time", "tool": null, "arg_hint": ""}
+{"text": "read whats copied", "tool": "clipboard", "arg_hint": ""}
+{"text": "today date and day", "tool": "current_date", "arg_hint": ""}
+{"text": "I can't hear a thing", "tool": null, "arg_hint": ""}
+{"text": "I'm waiting for news", "tool": null, "arg_hint": ""}
+{"text": "Maybe I should fix that", "tool": null, "arg_hint": ""}
+{"text": "rain forecast", "tool": "weather", "arg_hint": ""}
+{"text": "roll 1d20", "tool": "roll_dice", "arg_hint": ""}
+{"text": "show my ratings", "tool": "feedback_summary", "arg_hint": ""}
+{"text": "convert to morse", "tool": "morse_code", "arg_hint": ""}
+{"text": "brief version pls", "tool": "summarize", "arg_hint": ""}
+{"text": "show me the current webpage title", "tool": "current_tab", "arg_hint": ""}
+{"text": "search notes for keyword", "tool": "search_notes", "arg_hint": ""}
+{"text": "research topic of space exploration", "tool": "research", "arg_hint": ""}
+{"text": "what voices", "tool": "list_voices", "arg_hint": ""}
+{"text": "The weather outside is nice", "tool": null, "arg_hint": ""}
+{"text": "make square version", "tool": "crop_square", "arg_hint": ""}
+{"text": "what is said in this video", "tool": "transcribe_video", "arg_hint": ""}
+{"text": "give random", "tool": "random_number", "arg_hint": ""}
+{"text": "call it something else", "tool": "rename_file", "arg_hint": ""}
+{"text": "I had a wonderful lunch", "tool": null, "arg_hint": ""}
+{"text": "ssid please", "tool": "wifi_name", "arg_hint": ""}
+{"text": "send to trash", "tool": "trash_file", "arg_hint": ""}
+{"text": "enlarge with quality", "tool": "upscale_image", "arg_hint": ""}
+{"text": "whats newest download", "tool": "recent_downloads", "arg_hint": ""}
+{"text": "image resolution", "tool": "image_info", "arg_hint": ""}
+{"text": "search within doc", "tool": "find_in_document", "arg_hint": ""}
+{"text": "That didn't go well", "tool": null, "arg_hint": ""}
+{"text": "create a logo", "tool": "make_logo", "arg_hint": ""}
+{"text": "read word document", "tool": "read_document", "arg_hint": ""}
+{"text": "hows the climate today", "tool": "weather", "arg_hint": ""}
+{"text": "get content of that file", "tool": "read_file", "arg_hint": ""}
+{"text": "show my ip please", "tool": "ip_address", "arg_hint": ""}
+{"text": "lesson on javascript", "tool": "teach_me", "arg_hint": ""}
+{"text": "move ~/Downloads/data.csv", "tool": "move_file", "arg_hint": ""}
+{"text": "voice to english accent", "tool": "set_voice", "arg_hint": ""}
+{"text": "show latest downloads", "tool": "recent_downloads", "arg_hint": ""}
+{"text": "current time sydney", "tool": "time_in", "arg_hint": ""}
+{"text": "shrink to 800", "tool": "resize_image", "arg_hint": ""}
+{"text": "My eyes hurt from staring", "tool": null, "arg_hint": ""}
+{"text": "whats sqrt of 64", "tool": "calculate", "arg_hint": ""}
+{"text": "I should clean up downloads", "tool": null, "arg_hint": ""}
+{"text": "what shortcuts exist", "tool": "list_shortcuts", "arg_hint": ""}
+{"text": "My computer is really slow", "tool": null, "arg_hint": ""}
+{"text": "locate note", "tool": "search_notes", "arg_hint": ""}
+{"text": "disk usage status", "tool": "disk_space", "arg_hint": ""}
+{"text": "cpu percent", "tool": "cpu_load", "arg_hint": ""}
+{"text": "list folder", "tool": "list_dir", "arg_hint": ""}
+{"text": "take me to x.com", "tool": "open_url", "arg_hint": ""}
+{"text": "turn the sound down", "tool": "set_volume", "arg_hint": ""}
+{"text": "show file location", "tool": "reveal_in_finder", "arg_hint": ""}
+{"text": "base64 string version", "tool": "base64_encode", "arg_hint": ""}
+{"text": "shift spreadsheet to folder", "tool": "move_file", "arg_hint": ""}
+{"text": "silence notifications", "tool": "do_not_disturb", "arg_hint": ""}
+{"text": "when is easter", "tool": "days_until", "arg_hint": ""}
+{"text": "My wifi keeps disconnecting", "tool": null, "arg_hint": ""}
+{"text": "The screen is too bright", "tool": null, "arg_hint": ""}
+{"text": "commit log", "tool": "recent_commits", "arg_hint": ""}
+{"text": "increase resolution on image", "tool": "upscale_image", "arg_hint": ""}
+{"text": "save as webp please", "tool": "convert_image", "arg_hint": ""}
+{"text": "rename to version2", "tool": "rename_file", "arg_hint": ""}
+{"text": "make it roman", "tool": "roman_numeral", "arg_hint": ""}
+{"text": "what is the ip", "tool": "ip_address", "arg_hint": ""}
+{"text": "chip processor type", "tool": "system_info", "arg_hint": ""}
+{"text": "throw the dice", "tool": "roll_dice", "arg_hint": ""}
+{"text": "whats open in chrome", "tool": "list_tabs", "arg_hint": ""}
+{"text": "make me a tldr", "tool": "summarize", "arg_hint": ""}
+{"text": "extract text from doc", "tool": "read_document", "arg_hint": ""}
+{"text": "this mac ip address", "tool": "ip_address", "arg_hint": ""}
+{"text": "That's really funny", "tool": null, "arg_hint": ""}
+{"text": "add to the note", "tool": "append_note", "arg_hint": ""}
+{"text": "mirror this image", "tool": "flip_image", "arg_hint": ""}
+{"text": "This reminds me of last summer", "tool": null, "arg_hint": ""}
+{"text": "my available shortcuts", "tool": "list_shortcuts", "arg_hint": ""}
+{"text": "The sound quality is bad", "tool": null, "arg_hint": ""}
+{"text": "whats urgent now", "tool": "needs_attention", "arg_hint": ""}
+{"text": "how much charge left", "tool": "battery", "arg_hint": ""}
+{"text": "check if 23 is prime", "tool": "is_prime", "arg_hint": ""}
+{"text": "It keeps failing", "tool": null, "arg_hint": ""}
+{"text": "This is way too much", "tool": null, "arg_hint": ""}
+{"text": "This is too difficult", "tool": null, "arg_hint": ""}
+{"text": "Why is everything difficult", "tool": null, "arg_hint": ""}
+{"text": "spell backwards", "tool": "reverse_text", "arg_hint": ""}
+{"text": "system details", "tool": "system_info", "arg_hint": ""}
+{"text": "convert video to text", "tool": "transcribe_video", "arg_hint": ""}
+{"text": "That movie was awful", "tool": null, "arg_hint": ""}
+{"text": "change filename to final", "tool": "rename_file", "arg_hint": ""}
+{"text": "This is taking forever", "tool": null, "arg_hint": ""}
+{"text": "mac specifications", "tool": "system_info", "arg_hint": ""}
+{"text": "My wrists hurt", "tool": null, "arg_hint": ""}
+{"text": "fix the contrast", "tool": "enhance_image", "arg_hint": ""}
+{"text": "folder space usage", "tool": "folder_size", "arg_hint": ""}
+{"text": "done with that", "tool": "complete_reminder", "arg_hint": ""}
+{"text": "note this down", "tool": "new_note", "arg_hint": ""}
+{"text": "uppercase please", "tool": "shout", "arg_hint": ""}
+{"text": "processor usage", "tool": "cpu_load", "arg_hint": ""}
+{"text": "list tasks", "tool": "list_reminders", "arg_hint": ""}
+{"text": "That makes no sense", "tool": null, "arg_hint": ""}
+{"text": "I wish it was the weekend", "tool": null, "arg_hint": ""}
+{"text": "The colors look off", "tool": null, "arg_hint": ""}
+{"text": "give me todays date", "tool": "current_date", "arg_hint": ""}
+{"text": "The picture looks fuzzy", "tool": null, "arg_hint": ""}
+{"text": "noon london in est", "tool": "convert_time", "arg_hint": ""}
+{"text": "Have you watched that new show", "tool": null, "arg_hint": ""}
+{"text": "recent changes", "tool": "recent_commits", "arg_hint": ""}
+{"text": "what date 3 weeks ago", "tool": "date_math", "arg_hint": ""}
+{"text": "dnd", "tool": "do_not_disturb", "arg_hint": ""}
+{"text": "flip text around", "tool": "reverse_text", "arg_hint": ""}
+{"text": "is bluetooth connected", "tool": "bluetooth_status", "arg_hint": ""}
+{"text": "I should test first", "tool": null, "arg_hint": ""}
+{"text": "whats booked for today", "tool": "calendar_today", "arg_hint": ""}
+{"text": "bluetooth state", "tool": "bluetooth_status", "arg_hint": ""}
+{"text": "tell me out loud", "tool": "say", "arg_hint": ""}
+{"text": "go to apple.com", "tool": "open_url", "arg_hint": ""}
+{"text": "I'm exhausted today", "tool": null, "arg_hint": ""}
+{"text": "answer question from document", "tool": "ask_document", "arg_hint": ""}
+{"text": "spanish please", "tool": "translate", "arg_hint": ""}
+{"text": "next day calendar", "tool": "calendar_tomorrow", "arg_hint": ""}
+{"text": "That's incorrect", "tool": null, "arg_hint": ""}
+{"text": "create a guid", "tool": "make_uuid", "arg_hint": ""}
+{"text": "volume 30", "tool": "set_volume", "arg_hint": ""}
+{"text": "I'm bored out of my mind", "tool": null, "arg_hint": ""}
+{"text": "decode from b64", "tool": "base64_decode", "arg_hint": ""}
+{"text": "check bluetooth devices", "tool": "bluetooth_status", "arg_hint": ""}
+{"text": "I need assistance", "tool": null, "arg_hint": ""}
+{"text": "write to note file", "tool": "append_note", "arg_hint": ""}
+{"text": "how hot outside", "tool": "weather", "arg_hint": ""}
+{"text": "hash this message", "tool": "hash_text", "arg_hint": ""}
+{"text": "available storage", "tool": "disk_space", "arg_hint": ""}
+{"text": "This is out of control", "tool": null, "arg_hint": ""}
+{"text": "when can i fit something in", "tool": "free_when", "arg_hint": ""}
+{"text": "fit to 1024", "tool": "resize_image", "arg_hint": ""}
+{"text": "show ~/Desktop/todo.md", "tool": "read_file", "arg_hint": ""}
+{"text": "open in vs code", "tool": "open_in_editor", "arg_hint": ""}
+{"text": "whats on schedule tomorrow", "tool": "calendar_tomorrow", "arg_hint": ""}
+{"text": "1 month after september 15", "tool": "date_math", "arg_hint": ""}
+{"text": "ss this", "tool": "screenshot", "arg_hint": ""}
+{"text": "whats in the downloads", "tool": "list_dir", "arg_hint": ""}
+{"text": "find phrase in document", "tool": "find_in_document", "arg_hint": ""}
+{"text": "query the document", "tool": "ask_document", "arg_hint": ""}
+{"text": "save findings to file", "tool": "save_research", "arg_hint": ""}
+{"text": "traducir al espa\u00f1ol", "tool": "translate", "arg_hint": ""}
+{"text": "teach topic", "tool": "teach_me", "arg_hint": ""}
+{"text": "decode the encoded", "tool": "base64_decode", "arg_hint": ""}
+{"text": "flip a coin please", "tool": "flip_coin", "arg_hint": ""}
+{"text": "feedback stats", "tool": "feedback_summary", "arg_hint": ""}
+{"text": "200 pounds to kilograms", "tool": "convert_units", "arg_hint": ""}
+{"text": "create secure password 20 chars", "tool": "make_password", "arg_hint": ""}
+{"text": "This is awesome", "tool": null, "arg_hint": ""}
+{"text": "show desktop contents", "tool": "list_dir", "arg_hint": ""}
+{"text": "My mouse is acting weird", "tool": null, "arg_hint": ""}
+{"text": "free time this weekend", "tool": "free_when", "arg_hint": ""}
+{"text": "coin toss", "tool": "flip_coin", "arg_hint": ""}
+{"text": "make smaller 512 pixels", "tool": "resize_image", "arg_hint": ""}
+{"text": "word count please", "tool": "word_count", "arg_hint": ""}
+{"text": "what network", "tool": "wifi_name", "arg_hint": ""}
+{"text": "which network am i on", "tool": "wifi_name", "arg_hint": ""}
+{"text": "Nothing ever works", "tool": null, "arg_hint": ""}
+{"text": "stop music", "tool": "music", "arg_hint": ""}
+{"text": "quiz me", "tool": "teach_me", "arg_hint": ""}
+{"text": "auto beautify this image", "tool": "enhance_image", "arg_hint": ""}
+{"text": "That costs too much", "tool": null, "arg_hint": ""}
+{"text": "deeper dive", "tool": "research_more", "arg_hint": ""}
+{"text": "This takes forever", "tool": null, "arg_hint": ""}
+{"text": "flip vertically", "tool": "flip_image", "arg_hint": ""}
+{"text": "prime or not", "tool": "is_prime", "arg_hint": ""}
+{"text": "Can you believe what happened", "tool": null, "arg_hint": ""}
+{"text": "decompress archive.zip", "tool": "unzip_file", "arg_hint": ""}
+{"text": "extract text from here", "tool": "read_page", "arg_hint": ""}
+{"text": "show clipboard contents", "tool": "clipboard", "arg_hint": ""}
+{"text": "This is taking way too long", "tool": null, "arg_hint": ""}
+{"text": "what does tab say", "tool": "read_tab", "arg_hint": ""}
+{"text": "incomplete todos", "tool": "list_reminders", "arg_hint": ""}
+{"text": "louder please", "tool": "set_volume", "arg_hint": ""}
+{"text": "load chrome browser", "tool": "open_app", "arg_hint": ""}
+{"text": "It's cold in here", "tool": null, "arg_hint": ""}
+{"text": "pull request list", "tool": "open_prs", "arg_hint": ""}
+{"text": "This is pretty cool", "tool": null, "arg_hint": ""}
+{"text": "how much free ram", "tool": "memory_usage", "arg_hint": ""}
+{"text": "open location in finder", "tool": "reveal_in_finder", "arg_hint": ""}
+{"text": "toss it", "tool": "trash_file", "arg_hint": ""}
+{"text": "what did i copy", "tool": "clipboard", "arg_hint": ""}
+{"text": "no colors", "tool": "grayscale_image", "arg_hint": ""}
+{"text": "reduce size", "tool": "resize_image", "arg_hint": ""}
+{"text": "redraw the picture", "tool": "paint_image", "arg_hint": ""}
+{"text": "hash code please", "tool": "hash_text", "arg_hint": ""}
+{"text": "convert 444 to roman", "tool": "roman_numeral", "arg_hint": ""}
+{"text": "I'm overcomplicating things", "tool": null, "arg_hint": ""}
+{"text": "I forgot to save the file", "tool": null, "arg_hint": ""}
+{"text": "what is main idea of this", "tool": "ask_document", "arg_hint": ""}
+{"text": "tell more", "tool": "research_more", "arg_hint": ""}
+{"text": "date 50 days forward", "tool": "date_math", "arg_hint": ""}
+{"text": "clone the file", "tool": "copy_file", "arg_hint": ""}
+{"text": "finish the reminder", "tool": "complete_reminder", "arg_hint": ""}
+{"text": "transparent background please", "tool": "remove_background", "arg_hint": ""}
+{"text": "transcribe the audio", "tool": "transcribe_video", "arg_hint": ""}
+{"text": "tomorrows calendar", "tool": "calendar_tomorrow", "arg_hint": ""}
+{"text": "toggle dark", "tool": "dark_mode", "arg_hint": ""}
+{"text": "I can't find it anywhere", "tool": null, "arg_hint": ""}
+{"text": "improve the photo colors", "tool": "enhance_image", "arg_hint": ""}
+{"text": "My battery drains quickly", "tool": null, "arg_hint": ""}
+{"text": "mcp server tools", "tool": "list_mcp_tools", "arg_hint": ""}
+{"text": "tips on 45 dollars", "tool": "tip", "arg_hint": ""}
+{"text": "convert to tiff", "tool": "convert_image", "arg_hint": ""}
+{"text": "my schedule right now", "tool": "calendar_today", "arg_hint": ""}
+{"text": "memory available", "tool": "memory_usage", "arg_hint": ""}
+{"text": "character count", "tool": "word_count", "arg_hint": ""}
+{"text": "find info on python", "tool": "research", "arg_hint": ""}
+{"text": "I'm so behind schedule", "tool": null, "arg_hint": ""}
+{"text": "resume playing", "tool": "music", "arg_hint": ""}
+{"text": "close the terminal", "tool": "quit_app", "arg_hint": ""}
+{"text": "how much drive left", "tool": "disk_space", "arg_hint": ""}
+{"text": "which apps running", "tool": "running_apps", "arg_hint": ""}
+{"text": "what am i holding", "tool": "clipboard", "arg_hint": ""}
+{"text": "open pr list", "tool": "open_prs", "arg_hint": ""}
+{"text": "make all capitals", "tool": "shout", "arg_hint": ""}
+{"text": "tomorrow events", "tool": "calendar_tomorrow", "arg_hint": ""}
+{"text": "plugged in or battery", "tool": "battery", "arg_hint": ""}
+{"text": "do i need to plug in", "tool": "battery", "arg_hint": ""}
+{"text": "local network ip", "tool": "ip_address", "arg_hint": ""}
+{"text": "I really should organize stuff", "tool": null, "arg_hint": ""}
+{"text": "reverse horizontally", "tool": "flip_image", "arg_hint": ""}
+{"text": "snap a picture of the display", "tool": "screenshot", "arg_hint": ""}
+{"text": "flip left to right", "tool": "flip_image", "arg_hint": ""}
+{"text": "copy to another spot", "tool": "copy_file", "arg_hint": ""}
+{"text": "run all unit tests", "tool": "run_tests", "arg_hint": ""}
+{"text": "voice list", "tool": "list_voices", "arg_hint": ""}
+{"text": "The text is too small", "tool": null, "arg_hint": ""}
+{"text": "meaning of benevolent", "tool": "define_word", "arg_hint": ""}
+{"text": "I can't believe it", "tool": null, "arg_hint": ""}
+{"text": "look up best running shoes", "tool": "web_search", "arg_hint": ""}
+{"text": "make it loud", "tool": "shout", "arg_hint": ""}
+{"text": "create zip archive", "tool": "zip_file", "arg_hint": ""}
+{"text": "list all shortcuts", "tool": "list_shortcuts", "arg_hint": ""}
+{"text": "launch the music player", "tool": "open_app", "arg_hint": ""}
+{"text": "This is consuming my day", "tool": null, "arg_hint": ""}
+{"text": "I'm tired of waiting", "tool": null, "arg_hint": ""}
+{"text": "I'm super excited", "tool": null, "arg_hint": ""}
+{"text": "turn off alerts", "tool": "do_not_disturb", "arg_hint": ""}
+{"text": "when was last boot", "tool": "uptime", "arg_hint": ""}
+{"text": "remind tomorrow at 10am", "tool": "new_reminder", "arg_hint": ""}
+{"text": "That tune is in my head", "tool": null, "arg_hint": ""}
+{"text": "hour in dubai", "tool": "time_in", "arg_hint": ""}
+{"text": "memo: remember to call", "tool": "new_note", "arg_hint": ""}
+{"text": "cut white background out", "tool": "remove_background", "arg_hint": ""}
+{"text": "show tool list", "tool": "list_mcp_tools", "arg_hint": ""}
+{"text": "I'm so hungry right now", "tool": null, "arg_hint": ""}
+{"text": "get document text", "tool": "read_document", "arg_hint": ""}
+{"text": "pick different voice", "tool": "set_voice", "arg_hint": ""}
+{"text": "relocate file to archive", "tool": "move_file", "arg_hint": ""}
+{"text": "extract text from tab", "tool": "read_tab", "arg_hint": ""}
+{"text": "The system is laggy", "tool": null, "arg_hint": ""}
+{"text": "read my list", "tool": "read_file", "arg_hint": ""}
+{"text": "I can't remember that", "tool": null, "arg_hint": ""}
+{"text": "make json readable", "tool": "json_pretty", "arg_hint": ""}
+{"text": "show new mail", "tool": "unread_mail", "arg_hint": ""}
+{"text": "The website won't load", "tool": null, "arg_hint": ""}
+{"text": "format this json nicely", "tool": "json_pretty", "arg_hint": ""}
+{"text": "I'm really angry about this", "tool": null, "arg_hint": ""}
+{"text": "jpg version", "tool": "convert_image", "arg_hint": ""}
+{"text": "put meeting on calendar friday", "tool": "add_event", "arg_hint": ""}
+{"text": "My room is a disaster", "tool": null, "arg_hint": ""}
+{"text": "schedule event", "tool": "add_event", "arg_hint": ""}
+{"text": "I really don't like this", "tool": null, "arg_hint": ""}
+{"text": "open up spotify for me", "tool": "open_app", "arg_hint": ""}
+{"text": "encode this base64", "tool": "base64_encode", "arg_hint": ""}
+{"text": "task to buy groceries tomorrow", "tool": "new_reminder", "arg_hint": ""}
+{"text": "make random password", "tool": "make_password", "arg_hint": ""}
+{"text": "storage used by Documents", "tool": "folder_size", "arg_hint": ""}
+{"text": "design app icon for me", "tool": "make_logo", "arg_hint": ""}
+{"text": "write email reply", "tool": "write_document", "arg_hint": ""}
+{"text": "free disk space check", "tool": "disk_space", "arg_hint": ""}
+{"text": "whats the weather in tokyo", "tool": "web_search", "arg_hint": ""}
+{"text": "indent the json", "tool": "json_pretty", "arg_hint": ""}
+{"text": "My disk is almost full", "tool": null, "arg_hint": ""}
+{"text": "open applications", "tool": "running_apps", "arg_hint": ""}
+{"text": "exit that application", "tool": "quit_app", "arg_hint": ""}
+{"text": "whats current song", "tool": "music", "arg_hint": ""}
+{"text": "explain the code", "tool": "explain_codebase", "arg_hint": ""}
+{"text": "new name for file", "tool": "rename_file", "arg_hint": ""}
+{"text": "duplicate this file", "tool": "copy_file", "arg_hint": ""}
+{"text": "make this black and white", "tool": "grayscale_image", "arg_hint": ""}
+{"text": "what files in my documents", "tool": "list_dir", "arg_hint": ""}
+{"text": "high priority items", "tool": "needs_attention", "arg_hint": ""}
+{"text": "I have no idea what to do", "tool": null, "arg_hint": ""}
+{"text": "That's strange", "tool": null, "arg_hint": ""}
+{"text": "where is spreadsheet", "tool": "find_file", "arg_hint": ""}
+{"text": "generate unique id", "tool": "make_uuid", "arg_hint": ""}
+{"text": "add to calendar", "tool": "add_event", "arg_hint": ""}
+{"text": "show last commits", "tool": "recent_commits", "arg_hint": ""}
+{"text": "learn something", "tool": "teach_me", "arg_hint": ""}
+{"text": "calculate gratuity 100 bill", "tool": "tip", "arg_hint": ""}
+{"text": "morse code for hello world", "tool": "morse_code", "arg_hint": ""}
+{"text": "search for report.docx", "tool": "find_file", "arg_hint": ""}
+{"text": "15 18 20 percent tips", "tool": "tip", "arg_hint": ""}
+{"text": "recent files i got", "tool": "recent_downloads", "arg_hint": ""}
+{"text": "That's not fair", "tool": null, "arg_hint": ""}
+{"text": "check git changes", "tool": "git_status", "arg_hint": ""}
+{"text": "This update is so annoying", "tool": null, "arg_hint": ""}
+{"text": "pick number between bounds", "tool": "random_number", "arg_hint": ""}
+{"text": "get tab content", "tool": "read_tab", "arg_hint": ""}
+{"text": "random 1 to 50", "tool": "random_number", "arg_hint": ""}
