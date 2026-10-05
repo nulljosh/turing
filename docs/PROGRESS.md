@@ -1,5 +1,7 @@
 # Progress log
 
+- 2026-10-04: v4.20.13 🎉 The commercial is cut to 43 seconds and moves faster: painting, her Mac, reminders, files, math, notes and words, then what only a real Mac can do, then an end card with her name, the website, how to download and the source.
+  v4.20.13 · 135 tools · 681 tests · docs coverage 100% · laws all hold · biggest app/tools_util.py 649 · actions 231/231 · parity 231/231 · util_diff 261/261
 - 2026-10-04: v4.20.12 🎉 The commercial is tighter and has sound: 83 seconds, her voice, a soft music bed under it, captions, and the new page on screen.
   v4.20.12 · 135 tools · 681 tests · docs coverage 100% · laws all hold · biggest app/tools_util.py 649 · actions 231/231 · parity 231/231 · util_diff 261/261
 - 2026-10-04: v4.20.11 🎉 The landing page tells search and social the truth: a real title and description, a Twitter card, and a link preview that no longer says "from scratch" (she is a fine-tune). The chat box says "Ask her anything" and no longer cuts off on a phone.

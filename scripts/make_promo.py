@@ -25,19 +25,25 @@ import voice  # noqa: E402
 
 URL = next((a for a in sys.argv[1:] if a.startswith("http")), "https://turing.heyitsmejosh.com")
 W, H = 1280, 720
+VW, VH = W, H  # the page is laid out at the recorded size: a smaller window squashes the painting
 # (what she says over it, [what is typed into the demo while she says it]); each segment lasts at least as long as its line
-# lines shown on a card over the last demo segment: the things the web stand-in cannot do, said plainly as Mac-only, never faked
-MAC_ONLY = ["research the history of the printing press", "what's on my screen", "click Sign in"]
+# Five beats, about 45 seconds. The last two put a plain card over the demo: what only a real Mac can do (said as Mac-only, never faked),
+# then her name, what she is, where to get her and how.
 SEGMENTS = [
-    ("This is Samantha. A small AI that lives on your Mac. Free, and private.", []),
-    ("She paints from thirty thousand squares. She draws anything you can name.", ["paint the mona lisa", "draw a lighthouse at dusk"]),
-    ("She runs your Mac. Volume, screenshots, your apps.", ["set the volume to 40", "take a screenshot"]),
-    ("She keeps your notes and reminders.", ["remind me to call mom tomorrow at 9"]),
-    ("She finds your files.", ["find budget.pdf"]),
-    ("She does the math and converts units.", ["what is 17*23", "convert 72 f to c"]),
-    ("Ask her anything. On a real Mac she researches with sources, reads your screen and clicks for you. She always asks first.", []),
-    ("Free. Private. Download her for Mac.", []),
+    ("Meet Samantha. A small AI that lives on your Mac. She paints from thirty thousand squares.", ["paint the mona lisa"]),
+    ("She runs your Mac, keeps your reminders and finds your files.", ["set the volume to 40", "remind me to call mom tomorrow at 9", "find budget.pdf"]),
+    ("She does the math.", ["what is 17*23", "convert 72 f to c"]),
+    ("She keeps your notes, defines words and counts the days.", ["write a note to buy milk", "define serendipity", "days until christmas"]),
+    ("On a real Mac she researches, reads your screen and clicks for you. She always asks first.", []),
+    ("Samantha. Free and private, on your Mac. Download her at turing dot heyitsmejosh dot com.", []),
 ]
+# (text, size px, color) lines for the card over a segment, by segment index
+CARDS = {
+    4: [("research the history of the printing press", 34, "#151515"), ("what's on my screen", 34, "#151515"), ("click Sign in", 34, "#151515"), ("On a real Mac. She always asks first.", 22, "#666")],
+    5: [("Samantha", 64, "#151515"), ("A small AI that lives on your Mac.", 28, "#151515"), ("Free  \u00b7  Private  \u00b7  Runs on your Mac", 22, "#666"),
+        ("turing.heyitsmejosh.com", 34, "#151515"), ("Download the Mac app  \u00b7  Windows, Linux and phones install too", 22, "#666"),
+        ("Open source  \u00b7  github.com/nulljosh/turing", 20, "#666")],
+}
 
 
 def clock(t):
@@ -69,33 +75,33 @@ def record(clips, out_dir):
     with sync_playwright() as p:
         browser = p.chromium.launch()
         t0 = time.time()
-        ctx = browser.new_context(viewport={"width": W, "height": H}, record_video_dir=out_dir, record_video_size={"width": W, "height": H}, color_scheme="light")
+        ctx = browser.new_context(viewport={"width": VW, "height": VH}, record_video_dir=out_dir, record_video_size={"width": W, "height": H}, color_scheme="light")
         page = ctx.new_page()
         page.goto(URL)
         page.wait_for_selector("#chat-input")
         page.focus("#chat-input")  # a click would re-arm the page's idle reel, which then types over the script; typing stops it for good
-        page.wait_for_timeout(1200)
-        for (mp3, seconds), (line, prompts) in zip(clips, SEGMENTS):
+        page.wait_for_timeout(400)
+        for idx, ((mp3, seconds), (line, prompts)) in enumerate(zip(clips, SEGMENTS)):
             seg_start = time.time()
             starts.append(seg_start - t0)
             for prompt in prompts:
                 seen = page.evaluate("document.querySelectorAll('#chat-transcript .chat-message').length")
                 page.fill("#chat-input", "")
-                page.type("#chat-input", prompt, delay=30)
+                page.type("#chat-input", prompt, delay=15)
                 page.press("#chat-input", "Enter")
-                for _ in range(48):
-                    page.wait_for_timeout(250)
+                for _ in range(120):
+                    page.wait_for_timeout(100)
                     if page.evaluate("document.querySelectorAll('#chat-transcript .chat-message').length") >= seen + 2:
                         break
-                page.wait_for_timeout(1200)
-            if line.startswith("Ask her anything"):
+                page.wait_for_timeout(500)
+            if idx in CARDS:
                 page.evaluate("""(lines) => { const d = document.createElement('div');
-                  d.style.cssText = 'position:fixed;inset:0;z-index:99;background:#fff;color:#151515;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;font:600 34px -apple-system,Helvetica,sans-serif;text-align:center';
-                  d.innerHTML = lines.map(l => '<div>' + l + '</div>').join('') + '<div style="font:500 22px -apple-system,Helvetica,sans-serif;color:#666;margin-top:14px">On a real Mac. She always asks first.</div>';
-                  document.body.appendChild(d); }""", MAC_ONLY)
+                  d.style.cssText = 'position:fixed;inset:0;z-index:99;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;font-family:-apple-system,Helvetica,sans-serif;font-weight:600;text-align:center';
+                  d.innerHTML = lines.map(l => '<div style="font-size:' + l[1] + 'px;color:' + l[2] + '">' + l[0] + '</div>').join('');
+                  document.body.appendChild(d); }""", CARDS[idx])
             spent = time.time() - seg_start
             page.wait_for_timeout(int(max(0, seconds + 0.7 - spent) * 1000))
-        page.wait_for_timeout(800)
+        page.wait_for_timeout(2500)
         ctx.close()
         browser.close()
     return glob.glob(os.path.join(out_dir, "*.webm"))[0], starts
@@ -148,7 +154,7 @@ def build(webm, starts, clips, out_dir):
         for (text, _), start, end in zip(SEGMENTS, starts, ends):
             f.write(f"{clock(start)} --> {clock(end - 0.05)}\n{text}\n\n")
     poster = os.path.join(out_dir, "promo-poster.jpg")
-    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-ss", str(starts[1] + 6), "-i", mp4, "-frames:v", "1", "-q:v", "4", poster], check=True)
+    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-ss", str(starts[0] + 5), "-i", mp4, "-frames:v", "1", "-q:v", "4", poster], check=True)
     return mp4, vtt, poster
 
 
