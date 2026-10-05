@@ -243,7 +243,7 @@ def speak(text):
     return barged
 
 
-def converse(listen=None, say=None, show=print, turns=None, wake=None):
+def converse(listen=None, say=None, show=print, turns=None, wake=None, confirm=None):
     """The voice loop: listen, show what was heard, answer through the harness and the answer chain, say it aloud.
     listen() returns one transcript; say(text) speaks; turns caps the loop (tests). wake, off by default, holds
     a wake word: every transcript that doesn't start with it is ignored instead of answered, same idle-until-named
@@ -263,7 +263,7 @@ def converse(listen=None, say=None, show=print, turns=None, wake=None):
 
     listen = listen or mic
     say = say or speak
-    session = harness.Session(confirm=harness._ask_yes, log=show)
+    session = harness.Session(confirm=confirm or harness._ask_yes, log=show)  # confirm: a robot with no keyboard asks out loud (robot.py)
     history, topic, subject, answered = [], False, None, 0
     show(f'Listening for "{wake}".' if wake else 'Listening. Say "goodbye" to stop.')
     while turns is None or turns > 0:

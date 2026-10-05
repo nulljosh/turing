@@ -208,7 +208,7 @@ def clock(query):
 
 _SMALLTALK = (
     (re.compile(r"^(?:hi|hello|hey|yo|hiya|good (?:morning|evening|afternoon))(?: there| samantha)?[!.?]*$", re.I),
-     lambda: "Hi. Ask me something, or tell me to do something on this Mac."),
+     lambda: "Hi. Ask me something, or tell me to do something on this computer."),
     (re.compile(r"^(?:how are you|how's it going|how are things)(?: doing| today)?[!.?]*$", re.I),
      lambda: "Running fine, and ready. What do you need?"),
     (re.compile(r"^(?:thanks|thank you|thx|cheers|ty)(?: so much| samantha)?[!.?]*$", re.I), lambda: "Any time."),
