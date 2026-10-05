@@ -46,7 +46,7 @@ def misses(path):
     out = []
     for line in open(path):
         r = json.loads(line)
-        pick = (r["group"], r["text"], r["wanted_tool"], r["wanted_arg"], r["exact"], r["picked_tool"], r["picked_arg_raw"] or "")
+        pick = (r["group"], r["text"], r["wanted_tool"], r["wanted_arg"], r["exact"], r["picked_tool"], r["picked_arg_raw"] or "", r.get("sure"))
         _, _, fired, blocked, _, bar = hands.score_picks([pick])
         got, text = r["picked_tool"], r["text"]
         arg = R.repair(got, pick[6], text) if got else ""
