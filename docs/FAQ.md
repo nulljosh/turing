@@ -167,3 +167,20 @@ Plain-text mode, the default. No flag means the ordinary line-by-line CLI (`app/
 ## Can Samantha be used from other apps, not just the terminal?
 
 Yes. `./.venv/bin/python app/serve.py` serves her over the OpenAI chat API shape on port 8127 (`POST /v1/chat/completions`, `GET /v1/models`), which is the one wire format most local-LLM tooling already speaks. Nimble needs no code changes at all: pick its Ollama engine and set the base URL to `http://localhost:8127`. A question Samantha declines comes back as the literal string `UNKNOWN`, which is Nimble's own signal to fall through to another engine rather than showing a refusal as if it were an answer. Run `./.venv/bin/python tests/test_nimble.py` to check the pipe still works; it starts the server itself, sends the exact request Nimble builds, and parses the reply the way Nimble does.
+
+## What is Joshua Tree?
+
+Joshua Tree is an operating system Joshua Trommel is building from nothing in C: its own bootloader, kernel, memory manager, filesystem, network stack, window system and typeface renderer, plus 25 native apps. No libc, no Linux underneath. It runs on a 32-bit Intel (i386) machine, and live in a browser tab at joshuatree.heyitsmejosh.com. It is free and open source under Apache 2.0, at github.com/nulljosh/joshuatree.
+
+## What apps does Joshua Tree have?
+
+25 native apps live in its Apps folder, and the dock pins a handful: the Apps folder, Files, Mail, Calendar, Notes, Reminders, Terminal, Chat, Weather, Stocks and Trash. Others include Curbfind (Craigslist deals), Keyrate (a typing test), Bookrank, Quotes and Plan.
+
+## How do I try Joshua Tree?
+
+Open joshuatree.heyitsmejosh.com in a browser, no install. To run it as the real OS on a PC, write the ISO from the GitHub releases to a USB stick and boot from it.
+
+## How does Samantha relate to Joshua Tree?
+
+Joshua Tree is the OS, Samantha is the assistant. Joshua Tree runs her as a normal app that talks to this repo's `/api/chat` and `/api/pick`. The long goal on the roadmap is for her to run inside it, with her picker's inference written in plain C and no borrowed runtime.
+

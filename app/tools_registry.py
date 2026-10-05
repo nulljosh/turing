@@ -238,7 +238,7 @@ _AGAINST = {"say": r"\bset\b.*\bvoice\b|\bvoice\b.*\bset\b|morse|clock say|how (
             "read_file": r"\.(?:pdf|docx?|rtf|pages|epub)\b|\bfinder\b|\bopen and read\b|answer (?:a )?question",  # round twenty-three: block read_document phrases
             "read_page": r"\btab \d+\b|\b\d+(?:st|nd|rd|th) tab\b",
             "base64_decode": r"\b(?:to|2|into) base ?64\b|^(?!.*(?:decod|from base|un-?base|plain ?text|back (?:to|into) text|[a-z0-9+/]{3,}={1,2}(?:\s|$)))",
-            "running_apps": r"\bmcp\b|server",
+            "running_apps": r"\bmcp\b|server|joshua ?tree",
             "summarize": r"feedback|rating|(?:needs|requires) (?:my )?attention",
             "calendar_today": r"\btomorrow\b|\btmrw?\b|\bgap\b|open slot|important|urgent",
             "current_tab": r"\bcontent|\btext\b|\bsay\b|on this page|\btab \d",
