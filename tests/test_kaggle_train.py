@@ -19,7 +19,7 @@ class Tok:
     """A stand-in tokenizer: one token per character, chat template is 'user:...|assistant:'."""
     eos_token = "!"
 
-    def apply_chat_template(self, messages, add_generation_prompt, tokenize):
+    def apply_chat_template(self, messages, add_generation_prompt, tokenize, **template_args):
         """Join message contents and end with the assistant marker."""
         return "|".join(m["content"] for m in messages) + "|assistant:"
 

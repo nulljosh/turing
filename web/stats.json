@@ -1,5 +1,5 @@
 {
-  "version": "5.0.0",
+  "version": "5.1.0",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -12,8 +12,8 @@
         "documented": 10
       },
       "app/ask_local.py": {
-        "total": 9,
-        "documented": 9
+        "total": 10,
+        "documented": 10
       },
       "app/ask_web.py": {
         "total": 11,
@@ -263,6 +263,10 @@
         "total": 4,
         "documented": 4
       },
+      "eval/misses.py": {
+        "total": 4,
+        "documented": 4
+      },
       "eval/run_eval.py": {
         "total": 1,
         "documented": 1
@@ -346,6 +350,10 @@
       "tests/test_gguf_parity.py": {
         "total": 1,
         "documented": 1
+      },
+      "tests/test_guard_probes.py": {
+        "total": 5,
+        "documented": 5
       },
       "tests/test_gui.py": {
         "total": 13,
@@ -475,6 +483,10 @@
         "total": 23,
         "documented": 23
       },
+      "training/dev_to_data.py": {
+        "total": 3,
+        "documented": 3
+      },
       "training/distill.py": {
         "total": 11,
         "documented": 11
@@ -482,6 +494,10 @@
       "training/export_gguf.py": {
         "total": 1,
         "documented": 1
+      },
+      "training/extra_to_data.py": {
+        "total": 3,
+        "documented": 3
       },
       "training/feedback_to_data.py": {
         "total": 7,

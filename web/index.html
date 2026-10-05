@@ -687,7 +687,7 @@ irm https://raw.githubusercontent.com/nulljosh/turing/main/install/install.ps1 |
         docsHtml += '</div></div>';
 
         var limitHtml = '<div class="limitations"><p class="limitations-title">Limitations</p>' +
-          '<p>Her own 1.5B picker chooses tools. It is not inside the app: the first time she needs it, about 850 MB downloads once in the background from Hugging Face, and until it lands the smaller 0.5B picker answers. On sentences she never trained on, fewer than 10 wrong picks get past the guard on every test set, but she still leaves 4 to 5 percent of right commands undone (refused, or asked a question the sentence already answered), where the goal is under 2; that is the work for 5.1. Multi-step work borrows a 1.7B, and planning around a failure an 8B. ' +
+          '<p>Her own 1.5B picker chooses tools. It is not inside the app: the first time she needs it, about 850 MB downloads once in the background from Hugging Face, and until it lands the smaller 0.5B picker answers. On 619 sentences she never trained on, version 5.1 picks the right tool for 351 (5.0 got 317) and the wrong tool for 79 (was 126). She still leaves about 4 percent of right commands undone on that set and 8 percent on messier phrasing (typos, voice dictation), where the goal is under 2, and 27 wrong picks still get past her guard. Multi-step work borrows a 1.7B, and planning around a failure an 8B. ' +
           'Knowledge is 62 of 65 with zero confidently wrong. ' +
           'Logos are dial choices from a fixed set; her mark she drew herself. ' +
           'The picker and chat now run on Windows and Linux too, through llama.cpp, and she is an app on Joshua Tree. The Mac tools stay on the Mac.</p></div>';
