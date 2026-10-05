@@ -246,7 +246,7 @@ _AGAINST = {"say": r"\bset\b.*\bvoice\b|\bvoice\b.*\bset\b|morse|clock say|how (
             "ask_document": r"\.(?:mp4|mov|m4a|mp3|wav)\b",
             "move_file": r"\b(?:the |to )trash\b",
             "rotate_image": r"mirror|\bflip",
-            "new_reminder": r"\bmark\b|^any reminders|what reminders|\breminders about\b",
+            "new_reminder": r"\bmark\b|reminds me of|^any reminders|what reminders|\breminders about\b",
             "research": r"you saved|saved as|\b(?:save|keep|store) (?:it|that|this|the research)\b",  # round twenty-three: research blocks save_research contexts
             "days_until": r"\b\d+ (?:days?|weeks?|months?|years?) (?:from|after|before|ago)\b",
             "battery": r"battery of",
@@ -256,7 +256,7 @@ _AGAINST = {"say": r"\bset\b.*\bvoice\b|\bvoice\b.*\bset\b|morse|clock say|how (
             "system_info": r"wi-?fi|\bip\b|address|loaded|\bcpu\b|^(?!.*\b(?:chip|specs)\b).*\b(?:ram|memory)\b|battery|disk|free space|power|charging",
             "free_when": r"free space|\bdisk\b|storage",
             "set_volume": r"\bvoice\b",
-            "music": r"disturb|\bproject\b|blocked|paused|\b(?:tap|click)\b",
+            "music": r"disturb|\bproject\b|skip (?:this|that) (?:part|step|section|bit|one for now)|blocked|paused|\b(?:tap|click)\b",
             # Round thirty (Kaggle v9's standard leaks): a time of day asks when she is free, "what's in" an image asks her eyes, and a bare "what's on my screen" is read_screen's
             "calendar_tomorrow": r"tomorrow (?:morning|afternoon|evening|night)", "image_info": r"what'?s in\b|what is in\b",
             "screenshot": r"^(?!.*(?:shot|grab|captur|pic)).*what'?s on (?:the |my )?screen",  # round twenty-three: block project context confusion
