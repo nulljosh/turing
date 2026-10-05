@@ -202,7 +202,7 @@ def pick(query):
     if not tool:
         return None
     arg = tools.repair(tool, arg, query)
-    if tools._sound(tool, arg, query):
+    if tools._sound(tool, arg, query, sure if _unsure_at else None):  # only the 1.5B's sureness is calibrated
         return ("unsure", tool, arg) if sure < _unsure_at else (tool, arg)
     ask = tools_registry.needs_target(tool, arg, query)
     return ("ask", ask) if ask else None  # round sixteen: "crop this image" asks which image, never guesses

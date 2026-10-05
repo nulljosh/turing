@@ -94,7 +94,8 @@ def score_picks(picks, verbose=False):
     """
     score, wrong_tool, fired, blocked, asked = {}, 0, 0, 0, 0
     bar = {"right": 0, "named_asked": 0, "points_asked": 0, "points_refused": 0, "wrong_asked": 0}
-    for group, text, tool, arg, exact, picked_tool, picked_arg_raw in picks:
+    for group, text, tool, arg, exact, picked_tool, picked_arg_raw, *rest in picks:
+        sure = rest[0] if rest else None  # how sure she was of the tool name; dumps carry it, the 0.5B and GGUF have none
         hint = (arg or "").lower()
         # Repair the argument (same as the model evaluation does)
         picked_arg = tools.repair(picked_tool, picked_arg_raw, text) if picked_tool else ""
@@ -107,7 +108,7 @@ def score_picks(picks, verbose=False):
         n[1] += 1
         # The other half of the guard's job: a RIGHT pick it refuses is a command she cannot do.
         bar["right"] += bool(ok and tool and tool != "agent")
-        if ok and tool and tool != "agent" and not tools._sound(picked_tool, picked_arg, text):  # the repaired argument, as the live picker checks it
+        if ok and tool and tool != "agent" and not tools._sound(picked_tool, picked_arg, text, sure):  # the repaired argument, as the live picker checks it
             if tools.needs_target(picked_tool, picked_arg, text):
                 asked += 1
                 if hint and hint in text.lower():  # the bar: a question counts when the sentence names its target, never when it only points
@@ -120,7 +121,7 @@ def score_picks(picks, verbose=False):
         if not ok:
             wrong_tool += bool(picked_tool) and picked_tool != tool
             # what tools.do() would really run: a wrong pick that is also unsound never fires
-            fired += bool(picked_tool) and picked_tool not in (tool, "agent") and tools._sound(picked_tool, picked_arg, text)
+            fired += bool(picked_tool) and picked_tool not in (tool, "agent") and tools._sound(picked_tool, picked_arg, text, sure)
             bar["wrong_asked"] += bool(picked_tool) and picked_tool not in (tool, "agent") and bool(tools.needs_target(picked_tool, picked_arg, text))
             if verbose and picked_tool != tool:
                 print(f"  PAST [{group}] {text[:80]!r}: picked {picked_tool}({picked_arg_raw!r}), want {tool}({arg!r})")
@@ -166,7 +167,7 @@ def main():
                 for line in f:
                     row = json.loads(line)
                     all_picks.append((row["group"], row["text"], row["wanted_tool"], row["wanted_arg"],
-                                      row["exact"], row["picked_tool"], row["picked_arg_raw"]))
+                                      row["exact"], row["picked_tool"], row["picked_arg_raw"], row.get("sure")))
         verbose = "--verbose" in sys.argv
         score, wrong_tool, fired, blocked, asked, bar = score_picks(all_picks, verbose=verbose)
         total = sum(n[0] for n in score.values())
@@ -215,7 +216,7 @@ def main():
             got = {}
         picked_tool = got.get("tool")
         picked_arg_raw = str(got.get("arg") or "").strip()
-        picks.append((group, text, tool, arg, exact, picked_tool, picked_arg_raw))
+        picks.append((group, text, tool, arg, exact, picked_tool, picked_arg_raw, sure if "--trained" in sys.argv else None))
 
         if dump_file:
             dump_file.write(json.dumps({"group": group, "text": text, "wanted_tool": tool, "wanted_arg": arg,

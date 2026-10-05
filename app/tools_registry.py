@@ -264,7 +264,10 @@ _AGAINST = {"say": r"\bset\b.*\bvoice\b|\bvoice\b.*\bset\b|morse|clock say|how (
             "timer": r"how many|\bin (?:seconds|minutes|hours)\b"}
 
 
-def _sound(tool, arg, query):
+SURE_SKIPS_CUES = 0.95  # calibrated on heldout10 (run 12): evidence-only stops at or above this were 11 right, 0 wrong
+
+
+def _sound(tool, arg, query, sure=None):
     """Is this pick safe to run? She was trained to copy her argument out of
     the sentence, never to compose one. So an argument that is not in the
     sentence is a guess, and a guess does not get to touch the Mac."""
@@ -272,7 +275,10 @@ def _sound(tool, arg, query):
     q_lower = query.lower()
 
     if tool in _EVIDENCE and not re.search(_EVIDENCE[tool], q_lower):
-        return False
+        # Round thirty-seven: a missing cue word stops a pick only when she is not sure. A very sure pick of a tool that
+        # changes nothing (not in WRITES) runs on its other checks; the cue list cannot name every way people ask.
+        if not (sure is not None and sure >= SURE_SKIPS_CUES and tool not in WRITES):
+            return False
     # Round twenty-one: "this code project", "that file" point at something; they never name it. needs_target asks.
     if re.match(r"(?:this|that|these|those)\b", arg.lower()) and \
             any(tool in members for family, (_, members) in _TARGETS.items() if family in _POINTED):

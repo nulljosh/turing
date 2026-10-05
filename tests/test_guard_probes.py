@@ -26,6 +26,14 @@ class GuardProbes(unittest.TestCase):
         for tool, arg, q in RUNS:
             self.assertTrue(R._sound(tool, R.repair(tool, arg, q), q), q)
 
+    def test_sureness_skips_cues_only_for_tools_that_change_nothing(self):
+        """A very sure pick runs without its cue word, unless the tool writes; a less sure one still needs the cue."""
+        q = "is it nippy out"
+        self.assertFalse(R._sound("weather", "", q))
+        self.assertTrue(R._sound("weather", "", q, 0.99))
+        self.assertFalse(R._sound("weather", "", q, 0.9))
+        self.assertFalse(R._sound("new_reminder", "buy milk", "ugh we are out of milk", 0.999))
+
 
 if __name__ == "__main__":
     unittest.main()
