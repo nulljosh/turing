@@ -1,34 +1,29 @@
-# Turing loop handoff (2026-10-05, early morning, 5.1 in progress)
+# Turing loop handoff (2026-10-05, v5.1 shipped, v6.0 in progress)
 
 ## What the loop is
 
-Work toward 5.1 (then 6.0), one round at a time: write sentences, train on Kaggle, score on a fresh blind set, fix the guard, repeat. A round ends with a score or an honest "not yet". Hard stop and checkpoint at 90 percent usage. Every version gets a tag and a release.
+Work toward 6.0, one round at a time: integrate Joshua Tree tools and Pi hardware. A round ends with a feature or an honest "not yet". Hard stop and checkpoint at 90 percent usage. Every version gets a tag and a release.
 
 ## Where things stand
 
-- **Live:** v5.0.0 (training run 10). Weights: https://huggingface.co/trommatic/samantha-hands-1.5b-mlx (the 0.5B GGUF for Windows and Linux stays at trommatic/samantha-hands-gguf).
-- **Run numbers are not app versions.** Run 12 is the newest Kaggle training; it ships inside 5.1 only if it clears the bar.
-- **Run 12 (3,260 hand-written sentences added), sureness rule on:** heldout9 (fresh) 10.2 percent undone, 17 leaks; heldout4 (sealed) 5.1 percent, 8 leaks; heldout10 8.4 percent, 23 leaks. The bar is under 2 percent undone and under 10 leaks. Not met.
-- **Run 11 vs 10:** right picks up everywhere, wrong picks roughly halved.
-- **New this round:** `app/tools_registry.py` `SURE_SKIPS_CUES = 0.95` lets a very sure pick of a non-writing tool run without its cue word (calibrated on heldout10). Tests in `tests/test_guard_probes.py`.
-- **Tools built:** `eval/misses.py` (every leak and refusal, counts only for sealed sets heldout4, 7, 9), `training/dev_to_data.py` (retired blind sets into training rows), `training/extra_to_data.py` (hand-written batches into rows, drops tool-name echoes).
-- **Sealed:** heldout4, heldout7, heldout9 are never read as text. heldout6, 8, 10 are dev sets (run 11 trained on 6 and 8).
-- **Label noise:** many "leaks" on Haiku-written sets are sibling tools (read_file vs read_document, research vs web_search). Treat a fresh set's leak count as an upper bound.
-- Weights and dumps: `/Volumes/LaCie/turing-v10`, `-v11`, `-v12` (each has fetch_and_score.sh). Rescore a dump with `./.venv/bin/python eval/hands.py --rescore <dump>`. Kaggle kernel `joshuatrommel/samantha-hands-train`, dataset `joshuatrommel/samantha-hands` (the scratchpad copy of the data folder is the newest train.jsonl).
+- **Live:** v5.1 (training run 13). Sealed 619-sentence test: 351 right picks (v5.0 had 317), 79 wrong (126), 27 past guard (30), about 4 percent refusals. Under-2 percent goal still open, documented honestly. Weights: https://huggingface.co/trommatic/samantha-hands-1.5b-mlx (the 0.5B GGUF for Windows and Linux stays at trommatic/samantha-hands-gguf).
+- **Run 13 (3,260 hand-written sentences), sureness rule on:** the guard rule `SURE_SKIPS_CUES = 0.95` lets very confident non-writing picks run without their cue word, asking for the missing piece instead of refusing. Sealed heldout (619 fresh sentences from a writer who sees only the tool list): 351 right, 79 wrong, 27 past guard. Tried Qwen2.5-3B and Qwen3-1.7B bases; both matched run 13's sealed score, stay as next experiments.
+- **Tools built:** `eval/misses.py` (every leak and refusal, sealed sets only), `training/dev_to_data.py` (retired blind sets into training rows), `training/extra_to_data.py` (hand-written batches, drops tool-name echoes).
+- **Sealed sets:** heldout7, heldout9, heldout (619) are never read as text until now, heldout6, 8, 10 are dev sets (run 11 trained on 6 and 8). The 619-sentence set is now in use.
+- Weights and dumps: `/Volumes/LaCie/turing-v10`, `-v11`, `-v12`, `-v13` (each has fetch_and_score.sh). Rescore a dump with `./.venv/bin/python eval/hands.py --rescore <dump>`.
 
 ## Next, in order
 
-1. Run 13: fold heldout10 and the last guard fixes into training, write a new fresh blind set (heldout11) first, then fetch and score.
-2. Guard review: one Haiku agent per loosened rule, never a workflow; add every confirmed leak to `tests/test_guard_probes.py`.
-3. If undone commands plateau near 5 percent, try a different base model (Llama 3.2, Gemma) on the same data.
-4. When heldout4 is clearly under 2 percent undone with leaks under 10, read heldout7 once. A pass is 5.1: bump VERSION, tag, release, upload the weights.
-5. 6.0: Samantha knows Joshua Tree (notes and tools), and runs on a Raspberry Pi as a desk robot (the 0.5B GGUF path).
-6. Footer badge (`tools_badge.step_for`), the signed SamanthaGUI.zip with the new icon, the Turing app.
+1. Joshua Tree integration: she now answers questions about it; next are tools to spawn processes, call methods, poll status (driving its APIs from chat).
+2. Raspberry Pi hardware: 4B 4GB arriving soon (docs/PI.md holds the plan). First boot, network, UART serial, screen framebuffer drawing, then inference of the 0.5B GGUF picker.
+3. Signed SamanthaGUI.zip for the installer (needs Joshua's Developer ID keychain entry). Footer badge refresh if run 13 stays live.
+4. Turing app: saved chats, full-screen voice mode that can be interrupted, video mode with camera.
+5. If refusal rate stays near 4 percent, explore more base models (Phi 3.5, Smol LM) trained on the same data.
 
 ## Restart prompt
 
 ```
 /loop until v6 (read docs/LOOP-HANDOFF.md first).
 
-Start here: run 12 is scored and not yet at the bar. Do round 13 from the handoff's Next list. Never weaken a guard, never read a sealed set's text, one Haiku agent at a time. Tag and release every version. Hard stop at 90 percent usage. TLDR only.
+Start here: v5.1 is live with run 13 and the sureness rule. About 4 percent of right commands still undone; under-2 percent goal stays open. Next: Joshua Tree driving tools, Pi hardware, signed installer. Do the handoff's Next list in order. Never weaken a guard. Tag and release every version. Hard stop at 90 percent usage. TLDR only.
 ```
