@@ -532,6 +532,13 @@ _ASK = {"app": "Which app? Name it, like Safari.", "project": "Which project? Na
         "switch": "On or off? Say it like \"turn do not disturb on\"."}
 
 
+# Tools that cannot run on nothing. When she picks one, the sentence says it plainly (its _EVIDENCE matched) and names no target,
+# she asks for the missing piece instead of refusing: "new event" asks what and when. Asking runs nothing, so no guard is loosened.
+_NEEDS_ARG = {"add_event": "What is the event, and when?", "folder_size": "Which folder?", "list_dir": "Which folder?",
+              "find_in_document": "What should I look for?", "date_math": "What dates, or how many days?",
+              "copy_file": "Which file, and where should the copy go?", "timer": "For how long?"}
+
+
 def needs_target(tool, arg, query):
     """The question to ask when a pick names the right kind of tool but the sentence only points ("this", "that")
     and the argument it would run on is a guess. None when the pick is sound, or not that shape."""
@@ -547,6 +554,8 @@ def needs_target(tool, arg, query):
         return None
     if tool in _AGAINST and re.search(_AGAINST[tool], q_lower):
         return None
+    if not arg.strip() and tool in _NEEDS_ARG:  # round thirty-seven: the tool is plainly meant but the sentence gives it nothing to work on
+        return _NEEDS_ARG[tool]
     for family, (noun, members) in _TARGETS.items():
         if family == "text" and not _DEICTIC.search(q_lower):
             continue  # words to translate are never "vague": an unnamed phrase is just a bad copy

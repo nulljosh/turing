@@ -34,6 +34,13 @@ class GuardProbes(unittest.TestCase):
         self.assertFalse(R._sound("weather", "", q, 0.9))
         self.assertFalse(R._sound("new_reminder", "buy milk", "ugh we are out of milk", 0.999))
 
+    def test_missing_argument_asks_instead_of_refusing(self):
+        """A plainly meant tool with nothing to work on asks for the piece; it never runs, and a sentence with no cue for the tool draws none."""
+        self.assertTrue(R.needs_target("add_event", "", "new event"))
+        self.assertTrue(R.needs_target("folder_size", "", "folder size"))
+        self.assertIsNone(R.needs_target("add_event", "", "what a great day"))  # no cue for the tool: no question
+        self.assertFalse(R._sound("add_event", "", "new event"))
+
 
 if __name__ == "__main__":
     unittest.main()
