@@ -467,7 +467,8 @@
     add_event: function (q) { return 'Added to the calendar: ' + String(q || 'dentist').replace(/^\s+|\s+$/g, '') + '.'; },
     unread_mail: function () { return '3 unread: Mom, Landlord, App Store Connect.'; },
     find_file: function (q) { return 'Found ~/Documents/' + String(q || 'budget.pdf').replace(/^\s+|\s+$/g, '') + '.'; },
-    folder_size: function (q) { return String(q || '~/Downloads') + ' is 1.8 GB.'; }
+    folder_size: function (q) { return String(q || '~/Downloads') + ' is 1.8 GB.'; },
+    jt_status: function () { return 'Joshua Tree 2.41.0: 1 open pull request, qemu not running.'; }
   };
   Object.keys(STANDIN).forEach(function (k) { var f = STANDIN[k]; TOOLS[k] = function () { var r = f.apply(null, arguments); return k === 'list_reminders' || k === 'add_event' ? r : r + ' (stand-in Mac)'; }; });
 
@@ -545,6 +546,7 @@
     web_search: function () { return 'Searching the web for you.'; },
     weather: function () { return 'Checking the weather live.'; },
     timer: function () { return 'Starting a timer on the stand-in Mac.'; },
+    jt_status: function () { return 'Looking at Joshua Tree: version, open pull requests, whether its test machine is up.'; },
     new_note: function () { return 'Writing a note. On a real Mac it asks first.'; },
     new_reminder: function () { return 'Adding a reminder. On a real Mac it asks first.'; },
     music: function () { return 'Driving the music player.'; },
@@ -676,7 +678,7 @@
     // pictures first: the part nobody has seen a 0.5B do
     'paint the mona lisa', 'draw a lighthouse at dusk', 'make me a complex logo for a surf school', 'paint the eniac', 'paint the last supper as a mosaic', 'draw a fox in the snow',
     // her Mac: apps, the web, sound, the screen
-    'open chrome and go to en.wikipedia.org/wiki/Alan_Turing', 'set the volume to 40', 'play some music', 'skip this song', 'take a screenshot', 'what apps are running', 'how much disk space is free', 'is bluetooth on', 'uptime',
+    'open chrome and go to en.wikipedia.org/wiki/Alan_Turing', 'set the volume to 40', 'play some music', 'skip this song', 'take a screenshot', 'what apps are running', 'joshua tree status', 'how much disk space is free', 'is bluetooth on', 'uptime',
     // notes, reminders, calendar, time
     'write a note to buy milk', 'remind me to call mom tomorrow at 9', 'list my reminders', 'what is on my calendar today', 'add dentist to my calendar tomorrow at 3', 'time in tokyo', 'days until christmas', 'set a timer for 1 minute',
     // files and documents

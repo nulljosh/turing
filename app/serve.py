@@ -35,7 +35,10 @@ def answer_for(question):
     """Get an answer from ask(), return UNKNOWN for declines or errors."""
     if not question:
         return "UNKNOWN", None
-    answer, sources = ask(question)
+    try:
+        answer, sources = ask(question)
+    except Exception:  # a dead model or a bad page is UNKNOWN to the caller, never a dropped connection
+        return "UNKNOWN", None
     answer = (answer or "").strip()
     if not answer or answer in DECLINES:
         return "UNKNOWN", None

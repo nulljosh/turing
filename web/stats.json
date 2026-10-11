@@ -1,5 +1,5 @@
 {
-  "version": "5.4.1",
+  "version": "5.4.2",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -462,6 +462,10 @@
       "tests/test_see.py": {
         "total": 27,
         "documented": 27
+      },
+      "tests/test_serve.py": {
+        "total": 11,
+        "documented": 11
       },
       "tests/test_system.py": {
         "total": 37,

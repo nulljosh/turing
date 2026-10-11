@@ -275,6 +275,8 @@ CASES = [
     ("run turing's tests", "run_tests", "turing"),
     ("open prs", "open_prs", ""),
     ("any open pull requests on sidewise", "open_prs", "sidewise"),
+    ("joshua tree status", "jt_status", ""),
+    ("how is joshua tree doing?", "jt_status", ""),
     ("open turing in the editor", "open_in_editor", "turing"),
     ("open the nimble repo in vs code", "open_in_editor", "nimble"),
     # these must still route where they always did, not get stolen by the new dev family

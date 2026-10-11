@@ -60,6 +60,8 @@ jobs:
       - run: python3 tests/test_system.py
       # the files family on scratch files in a temp home: move, copy, rename, zip, unzip, trash via a stood-in Finder
       - run: python3 tests/test_files.py
+      # the OpenAI-shaped endpoint on a real local port, ask() stood in
+      - run: python3 tests/test_serve.py
       - run: python3 tests/test_dev.py
       - run: python3 tests/test_tabs.py
       - run: python3 tests/test_memory.py
