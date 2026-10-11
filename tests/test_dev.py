@@ -351,6 +351,8 @@ class Routing(unittest.TestCase):
 
 
 class TestJtStatus(unittest.TestCase):
+    """jt_status: Joshua Tree's version, PR count and qemu state."""
+
     def test_reads_version_prs_and_qemu(self):
         """jt_status reports VERSION, the open PR count and qemu state, and the phrase routes to it."""
         with tempfile.TemporaryDirectory() as d:

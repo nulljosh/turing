@@ -1,5 +1,5 @@
 {
-  "version": "5.1.0",
+  "version": "5.2.0",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -59,6 +59,10 @@
         "total": 13,
         "documented": 13
       },
+      "app/robot.py": {
+        "total": 6,
+        "documented": 6
+      },
       "app/serve.py": {
         "total": 8,
         "documented": 8
@@ -92,8 +96,8 @@
         "documented": 8
       },
       "app/tools_dev.py": {
-        "total": 11,
-        "documented": 11
+        "total": 12,
+        "documented": 12
       },
       "app/tools_files.py": {
         "total": 16,
@@ -320,8 +324,8 @@
         "documented": 30
       },
       "tests/test_dev.py": {
-        "total": 55,
-        "documented": 55
+        "total": 57,
+        "documented": 57
       },
       "tests/test_distill.py": {
         "total": 10,
@@ -435,6 +439,10 @@
         "total": 30,
         "documented": 30
       },
+      "tests/test_robot.py": {
+        "total": 3,
+        "documented": 3
+      },
       "tests/test_run_code.py": {
         "total": 17,
         "documented": 17
@@ -544,7 +552,7 @@
   "measured": {
     "tools": {
       "before": 0,
-      "after": 135
+      "after": 136
     },
     "actions_eval": "77/77",
     "knowledge_sweep": {
