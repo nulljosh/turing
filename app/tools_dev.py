@@ -178,17 +178,37 @@ def jt_status(repo=""):
         rc, out = _run_timed(["gh", "pr", "list", "--limit", "50"], path, 20)
         if rc == 0:
             prs = str(len([l for l in out.splitlines() if l.strip()]))
-    up = _run_timed(["pgrep", "-f", "qemu-system-i386"], path, 5)[0] == 0
-    return f"Joshua Tree {version}: {prs} open PRs, qemu {'running' if up else 'not running'}."
+    state = "running (mine)" if _jt_pids() else ("running, not one I started" if _other_jt_running() else "not running")
+    return f"Joshua Tree {version}: {prs} open PRs, qemu {state}."
 
 
-_QEMU_PATTERN = r"qemu-system-i386.*(?:joshuatree|kernel\.elf)"  # only Joshua Tree's own machine, never another qemu
+_QEMU_PATTERN = r"^qemu-system-i386 .*(joshuatree|kernel\.elf)"  # any Joshua Tree qemu on this Mac, hers or not (status only). POSIX regex: pgrep has no (?:...)
+_JT_PIDFILE = os.path.expanduser("~/.samantha/jt-qemu.pid")  # the one qemu she started; she never touches another session's machine
 
 
 def _jt_pids():
-    """The pids of a running Joshua Tree qemu, if any."""
+    """The pid of the Joshua Tree qemu she started, if it is still alive: [pid] or []. Dogfood on 2026-10-11 taught this the
+    hard way: matching every qemu with kernel.elf on its command line stopped another session's CI machine."""
+    try:
+        with open(_JT_PIDFILE) as f:
+            pid = int(f.read().strip())
+    except (OSError, ValueError):
+        return []
+    rc, out = _run_timed(["ps", "-p", str(pid), "-o", "command="], _THIS_REPO, 5)
+    if rc == 0 and out.strip().startswith("qemu-system-i386"):
+        return [pid]
+    try:
+        os.remove(_JT_PIDFILE)  # dead or reused pid: forget it
+    except OSError:
+        pass
+    return []
+
+
+def _other_jt_running():
+    """True when a Joshua Tree qemu that is not hers is running (another session's checks, a hand-started one)."""
     rc, out = _run_timed(["pgrep", "-f", _QEMU_PATTERN], _THIS_REPO, 5)
-    return [int(p) for p in out.split() if p.isdigit()] if rc == 0 else []
+    others = {int(p) for p in out.split() if p.isdigit()} - set(_jt_pids()) if rc == 0 else set()
+    return bool(others)
 
 
 def jt_boot(mode=""):
@@ -209,7 +229,9 @@ def jt_boot(mode=""):
            "-serial", f"file:{log}", "-qmp", f"unix:{_JT_QMP},server,nowait"] + (["-drive", f"file={disk},format=raw,if=ide,index=0"] if os.path.isfile(disk) else [])
     if not HEADLESS:
         os.makedirs(os.path.dirname(log), exist_ok=True)
-        subprocess.Popen(cmd, cwd=path, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)
+        p = subprocess.Popen(cmd, cwd=path, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)
+        with open(_JT_PIDFILE, "w") as f:
+            f.write(str(p.pid))
     return f"Booting Joshua Tree headless; its serial log is {log}. Say 'stop joshua tree' to shut it down."
 
 
@@ -283,14 +305,15 @@ def jt_type(text):
 
 
 def jt_screenshot(mode=""):
-    """A picture of Joshua Tree's screen right now, saved as ~/.samantha/jt-screen.png (qemu's screendump over the
+    """A picture of Joshua Tree's screen right now, saved as ~/Pictures/jt-screen.png (qemu's screendump over the
     control socket, converted with ImageMagick when it is here, else left as a .ppm). Read only; nothing leaves the Mac."""
     if not _jt_pids():
         return "Joshua Tree is not running. Say 'boot joshua tree' first."
-    ppm = os.path.expanduser("~/.samantha/jt-screen.ppm")
+    ppm = os.path.expanduser("~/Pictures/jt-screen.ppm")  # a visible folder: her eyes refuse hidden ones like ~/.samantha
     png = ppm[:-4] + ".png"
     if HEADLESS:
         return f"Saved Joshua Tree's screen to {png}. Say \"what's in {png}\" and I will look at it."
+    os.makedirs(os.path.dirname(ppm), exist_ok=True)
     try:
         _qmp([{"execute": "screendump", "arguments": {"filename": ppm}}])
     except OSError:
@@ -331,10 +354,10 @@ def jt_log(lines="20"):
 
 
 def jt_stop(mode=""):
-    """Stop the Joshua Tree qemu that jt_boot started (SIGTERM to its own process only). Asks first."""
+    """Stop the Joshua Tree qemu that jt_boot started (SIGTERM to that one pid, never another session's machine). Asks first."""
     pids = _jt_pids()
     if not pids:
-        return "Joshua Tree is not running."
+        return "A Joshua Tree is running, but not one I started, so I will leave it alone." if _other_jt_running() else "Joshua Tree is not running."
     if not HEADLESS:
         import signal
         for pid in pids:
@@ -342,7 +365,11 @@ def jt_stop(mode=""):
                 os.kill(pid, signal.SIGTERM)
             except OSError:
                 pass
-    return f"Stopped Joshua Tree ({len(pids)} qemu process{'es' if len(pids) > 1 else ''})."
+        try:
+            os.remove(_JT_PIDFILE)
+        except OSError:
+            pass
+    return "Stopped Joshua Tree."
 
 
 # ---------- open in editor: classified like open_app, not a write ----------

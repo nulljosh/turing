@@ -473,7 +473,7 @@
     jt_stop: function () { return 'Stopped Joshua Tree (1 qemu process). On a real Mac this asks first.'; },
     jt_log: function () { return 'Joshua Tree 2.41.0 booting\\nnet: rtl8139 up, 10.0.2.15\\nfs: dotfiles mounted\\ndesktop ready'; },
     jt_type: function (q) { return 'Typed ' + JSON.stringify(String(q || '').replace(/\\n$/, '')) + ' into Joshua Tree' + (/\\n$/.test(String(q || '')) ? ' and pressed Return.' : '.') + ' On a real Mac this asks first.'; },
-    jt_screenshot: function () { return 'Saved Joshua Tree\\'s screen to ~/.samantha/jt-screen.png. Say "what\\'s in ~/.samantha/jt-screen.png" and she looks at it.'; },
+    jt_screenshot: function () { return 'Saved Joshua Tree\\'s screen to ~/Pictures/jt-screen.png. Say "what\\'s in ~/Pictures/jt-screen.png" and she looks at it.'; },
     jt_look: function () { return 'A desktop with a dock along the bottom: Apps, Files, Mail, Calendar, Notes, Reminders. A terminal window is open with a prompt. On a real Mac this asks first and her own eyes answer.'; }
   };
   Object.keys(STANDIN).forEach(function (k) { var f = STANDIN[k]; TOOLS[k] = function () { var r = f.apply(null, arguments); return k === 'list_reminders' || k === 'add_event' ? r : r + ' (stand-in Mac)'; }; });

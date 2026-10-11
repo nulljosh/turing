@@ -359,7 +359,7 @@ class TestJtStatus(unittest.TestCase):
             open(os.path.join(d, "VERSION"), "w").write("9.9.9\n")
             with mock.patch.object(tools_dev, "_repo", return_value=(d, None)), \
                     mock.patch.object(tools_dev.shutil, "which", return_value="/x/gh"), \
-                    mock.patch.object(tools_dev, "_run_timed", side_effect=[(0, "1 a\n2 b\n"), (1, "")]):
+                    mock.patch.object(tools_dev, "_run_timed", side_effect=[(0, "1 a\n2 b\n"), (1, "")]), mock.patch.object(tools_dev, "_jt_pids", return_value=[]):
                 self.assertEqual(tools_dev.jt_status(), "Joshua Tree 9.9.9: 2 open PRs, qemu not running.")
         self.assertTrue(any(r[0].match("joshua tree status") for r in tools_dev.ROUTES))
 
@@ -395,22 +395,48 @@ class TestJtBootStop(unittest.TestCase):
         with mock.patch.object(tools_dev.shutil, "which", return_value="/x/qemu"), mock.patch.object(tools_dev, "_jt_pids", return_value=[]):
             with mock.patch.object(tools_dev.subprocess, "Popen", side_effect=AssertionError("launched")):
                 self.assertIn("Booting Joshua Tree headless", tools_dev.jt_boot())
-            with mock.patch.object(tools_dev, "HEADLESS", False), mock.patch.object(tools_dev.subprocess, "Popen") as po, mock.patch.object(tools_dev.os, "makedirs"):
+            with mock.patch.object(tools_dev, "HEADLESS", False), mock.patch.object(tools_dev.subprocess, "Popen", return_value=mock.Mock(pid=4242)) as po, \
+                    mock.patch.object(tools_dev.os, "makedirs"), mock.patch.object(tools_dev, "_JT_PIDFILE", os.path.join(self.proj, "jt.pid")):
                 tools_dev.jt_boot()
+            self.assertEqual(open(os.path.join(self.proj, "jt.pid")).read(), "4242")
             cmd = po.call_args[0][0]
             self.assertEqual(cmd[:2], ["qemu-system-i386", "-kernel"])
             self.assertIn("-display", cmd)
             self.assertNotIn("-drive", cmd)  # no dotfiles.img in the fake checkout
             self.assertTrue(po.call_args[1]["start_new_session"])
 
+    def test_pids_are_only_hers(self):
+        """_jt_pids reads her pid file and checks the pid is still a qemu; a dead pid forgets the file; the status pattern stays POSIX."""
+        import re
+        self.assertNotIn("(?", tools_dev._QEMU_PATTERN)
+        self.assertTrue(re.search(tools_dev._QEMU_PATTERN, "qemu-system-i386 -kernel /Users/x/Documents/Code/joshuatree/kernel.elf -display none"))
+        self.assertFalse(re.search(tools_dev._QEMU_PATTERN, "/bin/zsh -c pgrep -f qemu-system-i386 joshuatree"))
+        with tempfile.TemporaryDirectory() as d, mock.patch.object(tools_dev, "_JT_PIDFILE", os.path.join(d, "jt.pid")):
+            self.assertEqual(tools_dev._jt_pids(), [])
+            with open(tools_dev._JT_PIDFILE, "w") as f:
+                f.write("4242")
+            with mock.patch.object(tools_dev, "_run_timed", return_value=(0, "qemu-system-i386 -kernel kernel.elf\n")):
+                self.assertEqual(tools_dev._jt_pids(), [4242])
+            with mock.patch.object(tools_dev, "_run_timed", return_value=(1, "")):
+                self.assertEqual(tools_dev._jt_pids(), [])
+            self.assertFalse(os.path.exists(tools_dev._JT_PIDFILE))
+        with mock.patch.object(tools_dev, "_jt_pids", return_value=[]), mock.patch.object(tools_dev, "_run_timed", return_value=(0, "777\n")):
+            self.assertTrue(tools_dev._other_jt_running())
+        with mock.patch.object(tools_dev, "_jt_pids", return_value=[777]), mock.patch.object(tools_dev, "_run_timed", return_value=(0, "777\n")):
+            self.assertFalse(tools_dev._other_jt_running())
+
     def test_stop(self):
         """Not running is a sentence; running pids get SIGTERM only when not headless."""
-        with mock.patch.object(tools_dev, "_jt_pids", return_value=[]):
+        with mock.patch.object(tools_dev, "_jt_pids", return_value=[]), mock.patch.object(tools_dev, "_other_jt_running", return_value=False):
             self.assertEqual(tools_dev.jt_stop(), "Joshua Tree is not running.")
-        with mock.patch.object(tools_dev, "_jt_pids", return_value=[41, 42]), mock.patch.object(tools_dev.os, "kill", side_effect=AssertionError("killed")):
-            self.assertEqual(tools_dev.jt_stop(), "Stopped Joshua Tree (2 qemu processes).")
-        with mock.patch.object(tools_dev, "_jt_pids", return_value=[41]), mock.patch.object(tools_dev, "HEADLESS", False), mock.patch.object(tools_dev.os, "kill") as kill:
-            self.assertEqual(tools_dev.jt_stop(), "Stopped Joshua Tree (1 qemu process).")
+        with mock.patch.object(tools_dev, "_jt_pids", return_value=[]), mock.patch.object(tools_dev, "_other_jt_running", return_value=True), \
+                mock.patch.object(tools_dev.os, "kill", side_effect=AssertionError("killed")):
+            self.assertIn("not one I started", tools_dev.jt_stop())
+        with mock.patch.object(tools_dev, "_jt_pids", return_value=[41]), mock.patch.object(tools_dev.os, "kill", side_effect=AssertionError("killed")):
+            self.assertEqual(tools_dev.jt_stop(), "Stopped Joshua Tree.")
+        with mock.patch.object(tools_dev, "_jt_pids", return_value=[41]), mock.patch.object(tools_dev, "HEADLESS", False), mock.patch.object(tools_dev.os, "kill") as kill, \
+                mock.patch.object(tools_dev.os, "remove"):
+            self.assertEqual(tools_dev.jt_stop(), "Stopped Joshua Tree.")
         self.assertEqual(kill.call_args[0][0], 41)
         for text, name in (("boot joshua tree", "jt_boot"), ("shut down jt", "jt_stop")):
             self.assertTrue(any(r[1] == name and r[0].match(text) for r in tools_dev.ROUTES), text)
@@ -490,7 +516,8 @@ class TestJtScreenshot(unittest.TestCase):
                 return [{"return": {}}]
             with mock.patch.object(tools_dev, "_jt_pids", return_value=[7]), mock.patch.object(tools_dev, "HEADLESS", False), \
                     mock.patch.object(tools_dev.os.path, "expanduser", return_value=ppm), mock.patch.object(tools_dev, "_qmp", side_effect=dump) as qmp, \
-                    mock.patch.object(tools_dev.shutil, "which", return_value="/x/magick"), mock.patch.object(tools_dev, "_run_timed", return_value=(0, "")) as run:
+                    mock.patch.object(tools_dev.shutil, "which", return_value="/x/magick"), mock.patch.object(tools_dev, "_run_timed", return_value=(0, "")) as run, \
+                    mock.patch.object(tools_dev.os, "makedirs"):
                 reply = tools_dev.jt_screenshot()
             self.assertEqual(qmp.call_args[0][0][0]["execute"], "screendump")
             self.assertEqual(run.call_args[0][0][:2], ["magick", ppm])
@@ -498,7 +525,7 @@ class TestJtScreenshot(unittest.TestCase):
             self.assertFalse(os.path.exists(ppm))
             with mock.patch.object(tools_dev, "_jt_pids", return_value=[7]), mock.patch.object(tools_dev, "HEADLESS", False), \
                     mock.patch.object(tools_dev.os.path, "expanduser", return_value=ppm), mock.patch.object(tools_dev, "_qmp", side_effect=dump), \
-                    mock.patch.object(tools_dev.shutil, "which", return_value=None):
+                    mock.patch.object(tools_dev.shutil, "which", return_value=None), mock.patch.object(tools_dev.os, "makedirs"):
                 self.assertIn("install ImageMagick", tools_dev.jt_screenshot())
             with mock.patch.object(tools_dev, "_jt_pids", return_value=[7]), mock.patch.object(tools_dev, "HEADLESS", False), \
                     mock.patch.object(tools_dev, "_qmp", side_effect=OSError("no socket")):

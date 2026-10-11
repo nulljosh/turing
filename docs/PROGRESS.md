@@ -1,5 +1,7 @@
 # Progress log
 
+- 2026-10-11: v5.10.1 Dogfooded the Joshua Tree family on a real headless boot and fixed what it found: the running check used a regex pgrep cannot read, so type, screenshot, look and stop all thought it was off; then it matched every Joshua Tree qemu on the Mac and stopped another session's CI machine. Now she records the pid of the one qemu she boots and only ever manages that; status says "running (mine)" or "running, not one I started". Screenshots land in ~/Pictures (her eyes refuse hidden folders). Verified: boot, type hello, screenshot, look (her eyes named the launchpad's apps), stop, with another session's two qemus untouched.
+  v5.10.1 · 142 tools · 773 tests · docs coverage 100% · laws all hold · biggest app/tools_util.py 649 · actions 246/246 · parity 246/246 · util_diff 261/261
 - 2026-10-11: v5.10.0 "What is Joshua Tree showing" screenshots it and looks with her own eyes in one go (jt_screenshot into see_image, the picture never leaves the Mac). Asks first, hidden from models like see_image. That completes the Joshua Tree family from chat: status, boot, type, serial log, screenshot, look, stop.
   v5.10.0 · 142 tools · 772 tests · docs coverage 100% · laws all hold · biggest app/tools_util.py 649 · actions 246/246 · parity 246/246 · util_diff 261/261
 - 2026-10-11: v5.9.0 "Screenshot Joshua Tree" saves its screen to ~/.samantha/jt-screen.png (qemu's screendump over the control socket, ImageMagick for the PNG), and "what's in ~/.samantha/jt-screen.png" then reads it with her own eyes. Read only. On the demo too.
