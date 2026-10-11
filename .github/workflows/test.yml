@@ -66,6 +66,8 @@ jobs:
       - run: python3 tests/test_ask_web.py
       # the answer chain end to end: brain, DuckDuckGo, Wikipedia, shelf, FAQ, tools and the generator stood in
       - run: python3 tests/test_ask.py
+      # exact local answers (arithmetic, units, clock, small talk) and the FAQ matcher's parsing, cache, cosine, extractors
+      - run: python3 tests/test_ask_local.py
       - run: python3 tests/test_dev.py
       - run: python3 tests/test_tabs.py
       - run: python3 tests/test_memory.py
