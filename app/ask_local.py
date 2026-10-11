@@ -30,6 +30,27 @@ _ARITH_PHRASES = (
 _ARITH_SAFE_CALL = re.compile(r"^[\d\s+\-*/().]*$")  # what is left once sqrt(...) itself is stripped out below
 
 
+_ONES = "zero one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen".split()
+_TENS = "_ _ twenty thirty forty fifty sixty seventy eighty ninety".split()
+_NUMWORD = "|".join(sorted(_ONES + _TENS[2:] + ["hundred", "thousand", "million"], key=len, reverse=True))
+_NUMRUN = re.compile(rf"\b(?:{_NUMWORD})(?:[\s-]+(?:and\s+)?(?:{_NUMWORD}))*\b", re.I)
+
+
+def words_to_digits(text):
+    """"ten plus twenty-five" -> "10 plus 25". Only runs of number words change; everything else is left alone, so the
+    arithmetic() whitelist below still rejects any sentence that is not purely numbers and operators."""
+    def run(m):
+        total = cur = 0
+        for w in re.split(r"[\s-]+", m.group(0).lower()):
+            if w == "and": continue
+            if w in _ONES: cur += _ONES.index(w)
+            elif w in _TENS: cur += _TENS.index(w) * 10
+            elif w == "hundred": cur = max(cur, 1) * 100
+            else: total += max(cur, 1) * (1000 if w == "thousand" else 1000000); cur = 0
+        return str(total + cur)
+    return _NUMRUN.sub(run, text)
+
+
 def arithmetic(query):
     """Answer plain arithmetic locally and exactly.
 
@@ -47,6 +68,7 @@ def arithmetic(query):
 
     expr = _QUESTION_PREFIX.sub("", query.strip().rstrip("?")).strip()
     expr = re.sub(r"^(?:what(?:'s|s|\s+is|\s+are)|how much is|calculate|compute)\s+", "", expr, flags=re.I).strip()  # "what's 17*23" fell through (dogfood, 5.10.2)
+    expr = words_to_digits(expr)  # "ten plus ten" reads like "10 plus 10"
     for pattern, symbol in _ARITH_WORDS:
         expr = re.sub(pattern, symbol, expr, flags=re.I)
     for pattern, replacement in _ARITH_PHRASES:  # square root of, X squared, X% of Y: unambiguous, safe to widen for

@@ -259,9 +259,29 @@
     try { var out = sum(); return i === t.length ? out : null; } catch (e) { return null; }
   }
 
+  // "ten plus twenty-five" -> "10 plus 25": only runs of number words change, so calc()'s whitelist still refuses anything else.
+  var ONES = "zero one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen".split(" ");
+  var TENS = "_ _ twenty thirty forty fifty sixty seventy eighty ninety".split(" ");
+  var NUMWORD = ONES.concat(TENS.slice(2), ["hundred", "thousand", "million"]).sort(function (a, b) { return b.length - a.length; }).join("|");
+  var NUMRUN = new RegExp("\\b(?:" + NUMWORD + ")(?:[\\s-]+(?:and\\s+)?(?:" + NUMWORD + "))*\\b", "g");
+  function wordsToDigits(text) {
+    return text.replace(NUMRUN, function (run) {
+      var total = 0, cur = 0;
+      run.split(/[\s-]+/).forEach(function (w) {
+        if (w === "and") return;
+        if (ONES.indexOf(w) >= 0) cur += ONES.indexOf(w);
+        else if (TENS.indexOf(w) >= 0) cur += TENS.indexOf(w) * 10;
+        else if (w === "hundred") cur = Math.max(cur, 1) * 100;
+        else { total += Math.max(cur, 1) * (w === "thousand" ? 1000 : 1000000); cur = 0; }
+      });
+      return String(total + cur);
+    });
+  }
+
   function exact(query) {
     var q = query.trim().toLowerCase().replace(/[?!.]+$/, "");
-    var expr = q.replace(/^(?:what(?:'s| is)|calculate|compute|how much is)\s+/, "");
+    var expr = q.replace(/^(?:what(?:'s|s| is)|calculate|compute|how much is)\s+/, "");
+    expr = wordsToDigits(expr);
     ARITH_WORDS.forEach(function (p) { expr = expr.replace(p[0], p[1]); });
     if (/^[\d\s+\-*\/().]+$/.test(expr) && /\d/.test(expr) && /[+\-*\/]/.test(expr)) {
       var v = calc(expr);
