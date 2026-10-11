@@ -1,4 +1,4 @@
-# Turing loop handoff (2026-10-05, v5.1 shipped, v6.0 in progress)
+# Turing loop handoff (2026-10-11, afternoon, v5.11.7 shipped, v6.0 in progress)
 
 ## What the loop is
 
@@ -40,12 +40,12 @@ Kaggle kernel version 22: run 20's data plus 125 targeted rows times three (unre
 
 Fresh dev set eval/heldout14.jsonl (291 sentences kept of a Haiku writer's 360 that saw only the tool list; dropped 46 that equal a training or eval phrasing and 23 that say a tool name). Run 20 scores 229 of 291, 15 wrong tool, 6 past the guard, 10 right picks refused by the guard. Dump kept at scratchpad only; rescore with `./.venv/bin/python eval/hands.py --model models/samantha-hands-1.5b-mlx --trained --test eval/heldout14.jsonl`. Leaks by tool (write rows for these): unread_mail (picked web_search), current_date (new_reminder), reveal_in_finder (find_file), list_tabs (current_tab), read_tab (say), jt_screenshot (jt_status). Refusals are guard evidence cues, not the model: open_url (bare site name), summarize, read_file, trash_file, write_document, git_status, run_tests, list_mcp_tools, rename_file, calculate with sqrt(). Widening a cue is allowed only with a matching _AGAINST check and a law-12 attack case. Run 22 = run 20 data (/Volumes/LaCie/turing-v20/data) plus a few hundred rows for those tools through training/extra_to_data.py, kernel /Volumes/LaCie/turing-v21/kernel. Ship only if heldout13 >= 325, heldout14 improves, sealed heldout4/12 not worse, leaks do not rise.
 
-## Next, in order (2026-10-11)
+## Next, in order (2026-10-11 afternoon)
 
-1. Run 18 verdict: ship only if heldout13 >= 334, standard past-guard <= 19, sealed heldout4/12 not worse. If it fails, run 19 = run 16 data plus the 441 rows with the summarize/agent label question settled first (read eval/hands.py's standard set labels for "tldr this page").
+1. Run 22 verdict: score it with `bash /Volumes/LaCie/turing-v22/fetch_and_score.sh` and heldout14 with `--test eval/heldout14.jsonl`. Ship only if it beats run 20 (229 of 291 on heldout14) and does not add sealed leaks on heldout4/12 or heldout13. Otherwise run 20 stays and the next lever is guard and argument work.
 2. Test slices by coverage hole: mcp_server (32), tools_mail_send (44), chat.py (48), tools_coder (49). One file per round, fix any bug it finds, patch release each.
 3. Landing demo: every new tool gets a route in web/samantha.js, a STANDIN answer in web/demo.js, a REEL or MORE phrase, and an actions.py case (jt_status is the template).
-4. Pi robot when the hardware is on the network. Joshua Tree boot/stop shipped in v5.5.0; jt_log ("what did joshua tree say") shipped in v5.7.0; jt_type shipped in v5.8.0 (keystrokes over qemu's QMP socket). jt_screenshot shipped in v5.9.0. jt_look shipped in v5.10.0; the Joshua Tree family from chat is complete (status, boot, type, log, screenshot, look, stop). Dogfooded 06:05 (v5.10.1): two real bugs found and fixed (pgrep regex, and stopping another session's qemu; she now tracks only the pid she booted). 6.0's list is done except the Pi (roadmap updated). Running JT's CI from chat is deferred while another session runs JT CI on this Mac (ci-lock). Loop work while 6.0 waits: teach the picker the jt_* phrasings (templates in gen_hands_data, then run 20), frontier gaps, the image-generation experiment when the Mac is quiet (chat.py covered by test_chat_loop.py, 45 to about 90). Lesson in memory: a tool that stops a process must own that process.
+4. Pi robot when the hardware is on the network. The Joshua Tree family from chat is complete (status, boot, type, log, screenshot, look, stop).
 5. Image-generation experiment (Qwen-Image-2.1-Turbo Q4 via stable-diffusion.cpp, weights on the LaCie, everything else closed).
 
 ## Next, in order (older)
@@ -61,5 +61,5 @@ Fresh dev set eval/heldout14.jsonl (291 sentences kept of a Haiku writer's 360 t
 ```
 /loop until v6 (read docs/LOOP-HANDOFF.md first).
 
-Start here: v5.1 live with run 13. Run 16 hit plateau; loop paused on training (misses long tail across 28 tools). Joshua has Pi today: app/robot.py on real hardware first, then Joshua Tree driving tools. Next: install.sh, robot.py, processes/methods/status from chat. Do the handoff's Next list in order. Never weaken a guard. Hard stop at 90 percent usage. TLDR only.
+Start here: v5.11.7 live on run 20 picker. Run 21 rejected, run 22 in flight on Kaggle (/Volumes/LaCie/turing-v22). First: score run 22 on heldout13, heldout4/12 and heldout14, ship only if it beats run 20 with no more sealed leaks. Then the Next list in order. Never weaken a guard. Hard stop at 90 percent usage. TLDR only.
 ```
