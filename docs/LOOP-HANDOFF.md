@@ -13,6 +13,12 @@ Work toward 6.0, one round at a time: integrate Joshua Tree tools and Pi hardwar
 - **Training plateau:** Run 16 (heldout9 and 11 folded in) is not better than v5.1. Heldout12: 372 of 414 right, 10.9 percent undone (v5.1: 364, 10.4); heldout4: 388 right, 6.8 percent (v5.1: 385, 5.9). Not shipped. More sentences stopped paying; misses are a long tail across about 28 tools (roughly half missing cue words, half arguments). Loop paused. Next lever: guard tuning, argument engineering, or Qwen3-1.7B (Apache, needs rope_theta config patch).
 - Weights and dumps: `/Volumes/LaCie/turing-v10`, `-v11`, `-v12`, `-v13`, `-v16` (each has fetch_and_score.sh). Rescore with `./.venv/bin/python eval/hands.py --rescore <dump>`.
 
+## 2026-10-11 night loop (running)
+
+- Shipped today: v5.2.0 jt_status, v5.3.0 saved chats in the Mac app, v5.4.0 interrupt her (new message or "shh" stops her talking). Signed app re-uploaded.
+- heldout13 (360 fresh dev sentences, writer saw only the tool list; arg hints trimmed where the label was the whole tail): live run-13 picker 310/360, 2 past guard, 6 refused. Real gaps: morse_code, shout, word_count, define_word, current_date, write_document drafts, teach_me, find_in_document, and inventing tools that do not exist (book_flight, send_text) for null requests.
+- Run 17 (in progress): run 16's Kaggle data (/Volumes/LaCie/turing-v17/data, 12,673 rows) plus a targeted Haiku batch (scratchpad batch17.jsonl through training/extra_to_data.py) for those tools and 100 null requests. Ship only if it beats run 13 on heldout13 and does not get worse on sealed heldout4/12 (counts only).
+
 ## 2026-10-11 pickup
 
 Frontier check: Qwen4 unreleased; Qwen-Image-2.1-Turbo (Oct 9) is real but needs 12 to 16 GB here (see roadmap). Qwen3.5 small bases (0.8B/2B/4B) exist on Kaggle (qwen-lm/qwen-3-5) but are a hybrid multimodal architecture: needs a transformers version that supports it and an MLX converter check, and every other base tied run 13, so it is parked as a low-odds experiment. Guard cues widened for days_until, needs_attention, feedback_summary (dev refusals down 4, no new leaks). The rename "tab bug" was a model garble, not code; the guard is right to refuse it. Dev sets 6/8 are trained on, so they overstate; a fresh labeled dev set is still the missing piece.
