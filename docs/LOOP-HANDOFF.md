@@ -28,9 +28,9 @@ Work toward 6.0, one round at a time: integrate Joshua Tree tools and Pi hardwar
 
 Frontier check: Qwen4 unreleased; Qwen-Image-2.1-Turbo (Oct 9) is real but needs 12 to 16 GB here (see roadmap). Qwen3.5 small bases (0.8B/2B/4B) exist on Kaggle (qwen-lm/qwen-3-5) but are a hybrid multimodal architecture: needs a transformers version that supports it and an MLX converter check, and every other base tied run 13, so it is parked as a low-odds experiment. Guard cues widened for days_until, needs_attention, feedback_summary (dev refusals down 4, no new leaks). The rename "tab bug" was a model garble, not code; the guard is right to refuse it. Dev sets 6/8 are trained on, so they overstate; a fresh labeled dev set is still the missing piece.
 
-## Run 21 in flight (started 2026-10-11 12:30)
+## Run 21 (2026-10-11 13:40): rejected
 
-Kaggle kernel version 21 trains run 20's data plus 84 new rows (tip gratuity wording, running_apps, add_event shorthand, zip_file, light years, morse, roman, coins, dice, days_until, time_in, word_count, number-word sums, ten near-miss non-commands). Files in /Volumes/LaCie/turing-v21 (extra21.jsonl, data, kernel, fetch_and_score.sh). When the kernel is COMPLETE run `bash /Volumes/LaCie/turing-v21/fetch_and_score.sh > /Volumes/LaCie/turing-v21/score.out`. Run 20 bar: heldout13 325 (1 past), heldout4 385 (7 past, 11 refused), heldout12 375 (13 past, 28 refused), standard 1859/2032 with 20 past the guard. Ship only on a margin over run 20 on sealed sets with no more leaks; otherwise add a rejection to docs/BAKEOFF.md and keep run 20. A batch this small is probably inside run-to-run noise, so expect a rejection.
+Worse on heldout13 (324 vs 325), heldout4 leaks 11 vs 7, heldout12 364 vs 375. Run 20 stays live. Details in docs/BAKEOFF.md. Files kept in /Volumes/LaCie/turing-v21.
 
 ## Next, in order (2026-10-11)
 

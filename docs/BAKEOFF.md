@@ -432,3 +432,16 @@ Run 19's data plus 304 template rows for jt_status, jt_boot, jt_stop, jt_log, jt
 | heldout12 (sealed, 414) | 373, 12, 27 | 375, 13, 28 |
 
 Equal or better on every set and it knows a family it could not route at all. Shipped. The standard bar of 10 (run 13 re-picked) is still not met; the honest line is that runs 19 and 20 trade a few templated leaks for far fewer wrong picks on sealed sentences.
+
+## Run 21 (2026-10-11): rejected, run 20 stays
+
+Run 20's data plus 84 new rows from a hand-written batch (gratuity wording for tips, running apps slang, calendar shorthand, zip wording, light years, morse, roman numerals, coins, dice, countdowns, time zones, letter counts, number-word sums, ten near-miss non-commands). Same kernel, same settings.
+
+| Set | run 20 | run 21 |
+|---|---|---|
+| standard | 1859 of 2032, 20 past the guard | 1833 of 2046, 13 past |
+| heldout13 (dev, 360) | 325, 1 past, 3 refused | 324, 2, 6 |
+| heldout4 (sealed, 455) | 385, 7 past, 11 refused | 389, 11, 7 |
+| heldout12 (sealed, 414) | 375, 13 past, 28 refused | 364, 14, 27 |
+
+Fewer leaks on templated phrasings, but more leaks on both sealed sets and eleven fewer right on heldout12. 84 rows in 13,500 is inside run-to-run noise, as expected. Not shipped. The next run needs a real margin: a fresh dev set to find gaps, then a few hundred rows, not a few dozen.
