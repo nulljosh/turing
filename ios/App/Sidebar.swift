@@ -46,6 +46,30 @@ struct Sidebar: View {
     }
 }
 
+/// Her models on the phone: not here yet, downloading, ready, or what went wrong.
+struct ModelRow: View {
+    @Environment(Store.self) private var store
+
+    var body: some View {
+        switch store.model.state {
+        case .idle:
+            Button("Download her models (about 2 GB, once)") { Task { await store.model.load() } }.foregroundStyle(Theme.accent)
+        case .downloading(let f):
+            VStack(alignment: .leading, spacing: 6) {
+                Text("Downloading, \(Int(f * 100))%").font(Theme.body)
+                ProgressView(value: f).tint(Theme.accent)
+            }
+        case .ready:
+            Label("Ready. Her picker and a 1.5B instruct model run on this phone.", systemImage: "checkmark.circle").foregroundStyle(Theme.ink)
+        case .failed(let why):
+            VStack(alignment: .leading, spacing: 6) {
+                Text(why).font(Theme.small).foregroundStyle(Theme.muted)
+                Button("Try again") { Task { await store.model.load() } }.foregroundStyle(Theme.accent)
+            }
+        }
+    }
+}
+
 /// Pairing: the Mac's address and the secret from the bridge's terminal line, and a button that pings it.
 struct SettingsView: View {
     @Environment(Store.self) private var store
@@ -56,19 +80,22 @@ struct SettingsView: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section("Your Mac") {
+                Section("On this phone") {
+                    ModelRow()
+                }
+                Section("Your Mac (optional)") {
                     TextField("Host (the Mac's address)", text: $pairing.host).textInputAutocapitalization(.never).autocorrectionDisabled()
-                    TextField("Port", value: $pairing.port, format: .number).keyboardType(.numberPad)
+                    TextField("Port", value: $pairing.port, format: .number.grouping(.never)).keyboardType(.numberPad)
                     SecureField("Pairing token", text: $pairing.token)
                 }
                 Section {
                     Button("Test connection") { test() }.foregroundStyle(Theme.accent)
                     if !status.isEmpty { Text(status).font(Theme.small).foregroundStyle(Theme.muted) }
                 } footer: {
-                    Text("On the Mac, run app/phone_bridge.py --lan. It prints a samantha://pair link: open it on this phone, or copy the host and token here. Everything stays on your network.")
+                    Text("Tools that read a real Mac (its disk, Wi-Fi, Finder, Shortcuts, its bigger model) run there once it is paired. On the Mac, run app/phone_bridge.py --lan. It prints a samantha://pair link: open it on this phone, or copy the host and token here. Everything stays on your network.")
                 }
                 Section {
-                    Toggle("Rehearse without a Mac", isOn: Binding(get: { store.useMock }, set: { store.useMock = $0 }))
+                    Toggle("Rehearse with a stand-in Mac", isOn: Binding(get: { store.useMock }, set: { store.useMock = $0 }))
                 }
             }
             .scrollContentBackground(.hidden)

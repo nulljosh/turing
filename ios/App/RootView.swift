@@ -58,6 +58,7 @@ struct TopBar: View {
 }
 
 struct HomeView: View {
+    @Environment(Store.self) private var store
     private var greeting: String {
         let hour = Calendar.current.component(.hour, from: Date())
         switch hour {
@@ -72,7 +73,8 @@ struct HomeView: View {
             Spacer()
             Mark(size: 72)
             Text(greeting).font(Theme.greeting).foregroundStyle(Theme.ink)
-            Text("Ask me anything. I run on this phone.").font(Theme.body).foregroundStyle(Theme.muted)
+            Text(store.model.isReady ? "Ask me anything. I run on this phone." : "Ask me anything. My exact tools work now; download my models in Settings for the rest.")
+                .font(Theme.body).foregroundStyle(Theme.muted).multilineTextAlignment(.center)
             Spacer()
             Spacer()
         }

@@ -21,7 +21,7 @@ enum BridgeEvent: Equatable {
 }
 
 enum BridgeError: LocalizedError {
-    case notPaired, unauthorized, busy, http(Int), noAnswer
+    case notPaired, unauthorized, busy, http(Int), noAnswer, noModel
 
     var errorDescription: String? {
         switch self {
@@ -30,6 +30,7 @@ enum BridgeError: LocalizedError {
         case .busy: return "She is still on the last question."
         case .http(let code): return "Your Mac answered with an error (\(code))."
         case .noAnswer: return "The connection dropped before she answered."
+        case .noModel: return "My models are not on this phone yet. Download them in Settings."
         }
     }
 }

@@ -25,7 +25,10 @@ struct Chat: Identifiable, Codable, Equatable {
 
 enum ChatStore {
     static var folder: URL {
-        let docs = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        // ponytail: screenshot runs (--mock) get a fresh folder per launch so Recents never shows last run's chats
+        let docs = ProcessInfo.processInfo.arguments.contains("--mock")
+            ? FileManager.default.temporaryDirectory.appendingPathComponent("mock-\(ProcessInfo.processInfo.processIdentifier)")
+            : FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
         let dir = docs.appendingPathComponent("chats", isDirectory: true)
         try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
         return dir
