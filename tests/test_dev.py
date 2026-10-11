@@ -350,5 +350,17 @@ class Routing(unittest.TestCase):
             self.assertEqual(tools.do("what's running", confirm=lambda n, a: True), "Finder, Safari")
 
 
+class TestJtStatus(unittest.TestCase):
+    def test_reads_version_prs_and_qemu(self):
+        """jt_status reports VERSION, the open PR count and qemu state, and the phrase routes to it."""
+        with tempfile.TemporaryDirectory() as d:
+            open(os.path.join(d, "VERSION"), "w").write("9.9.9\n")
+            with mock.patch.object(tools_dev, "_repo", return_value=(d, None)), \
+                    mock.patch.object(tools_dev.shutil, "which", return_value="/x/gh"), \
+                    mock.patch.object(tools_dev, "_run_timed", side_effect=[(0, "1 a\n2 b\n"), (1, "")]):
+                self.assertEqual(tools_dev.jt_status(), "Joshua Tree 9.9.9: 2 open PRs, qemu not running.")
+        self.assertTrue(any(r[0].match("joshua tree status") for r in tools_dev.ROUTES))
+
+
 if __name__ == "__main__":
     unittest.main()

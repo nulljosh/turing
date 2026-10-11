@@ -160,6 +160,28 @@ def open_prs(repo=""):
     return out if out else f"No open pull requests for {os.path.basename(path)}."
 
 
+# ---------- Joshua Tree: version, open PRs, and whether a QEMU is running: read only ----------
+
+def jt_status(repo=""):
+    """One line on Joshua Tree: its VERSION file, how many PRs are open, and whether a qemu is running now.
+    Read only; each part says so plainly when it cannot be read."""
+    path, err = _repo(repo or "joshuatree")
+    if err:
+        return err
+    try:
+        with open(os.path.join(path, "VERSION")) as f:
+            version = f.read().strip()
+    except OSError:
+        version = "unknown"
+    prs = "unknown"
+    if shutil.which("gh"):
+        rc, out = _run_timed(["gh", "pr", "list", "--limit", "50"], path, 20)
+        if rc == 0:
+            prs = str(len([l for l in out.splitlines() if l.strip()]))
+    up = _run_timed(["pgrep", "-f", "qemu-system-i386"], path, 5)[0] == 0
+    return f"Joshua Tree {version}: {prs} open PRs, qemu {'running' if up else 'not running'}."
+
+
 # ---------- open in editor: classified like open_app, not a write ----------
 
 def open_in_editor(repo=""):
@@ -184,7 +206,7 @@ def open_in_editor(repo=""):
     return f"Opened {name} in the editor."
 
 
-TOOLS = (git_status, recent_commits, run_tests, open_prs, open_in_editor)
+TOOLS = (git_status, recent_commits, run_tests, open_prs, open_in_editor, jt_status)
 
 # (pattern, tool name, what to hand it), same shape as tools_organizer.ROUTES and tools_system.ROUTES. tools.py
 # splices these in ahead of the base router, alongside organizer's and system's: "run the tests" and "open prs"
@@ -206,6 +228,8 @@ ROUTES = (
     (re.compile(r"^open prs$|^open pull requests$", _I), "open_prs", lambda m: ""),
     (re.compile(r"^(?:any )?open (?:pull requests|prs) (?:on|for|in) (.+?)\??$", _I),
      "open_prs", lambda m: m.group(1)),
+
+    (re.compile(r"^(?:joshua ?tree|jt) status$|^how(?:'s| is) joshua ?tree(?: doing)?\??$", _I), "jt_status", lambda m: ""),
 
     (re.compile(r"^open (?:the )?(.+?)(?: repo)? in (?:the editor|vs ?code)$", _I),
      "open_in_editor", lambda m: m.group(1)),
