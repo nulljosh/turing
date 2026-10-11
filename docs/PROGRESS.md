@@ -1,5 +1,7 @@
 # Progress log
 
+- 2026-10-12: v5.4.3 Her guard now wants a page word before read_page runs (page, article, text, a URL, and so on): a 0.2-sure pick of it on "anything on the books today" used to run. No extra refusals on five dev sets. The training templates stop disagreeing with themselves: "tldr this page" and "the gist of this tab" are summarize, not agent, which was behind most of run 17 and 18's extra standard leaks. Run 18 not shipped (heldout13 324, standard 41 past the guard).
+  v5.4.3 · 136 tools · 715 tests · docs coverage 100% · laws all hold · biggest app/tools_util.py 649 · actions 233/233 · parity 233/233 · util_diff 261/261
 - 2026-10-12: v5.4.2 The OpenAI-shaped endpoint (app/serve.py) answers UNKNOWN when her answer chain crashes, instead of dropping the connection on the caller. Found by its first test, which drives a real local port end to end. serve.py coverage 0 to 97.
   v5.4.2 · 136 tools · 715 tests · docs coverage 100% · laws all hold · biggest app/tools_util.py 649 · actions 231/231 · parity 231/231 · util_diff 261/261
 - 2026-10-12: v5.4.1 Unzipping a folder she zipped no longer nests it one level deeper (box.zip comes back as box/, not box/box/). Found by the first test of the files family, which now runs every move, copy, rename, zip and unzip on scratch files in a temp home. Line coverage of app/ measured for the first time: 76 percent overall; tools_files 17 to 59.

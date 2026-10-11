@@ -323,9 +323,9 @@ SPEC = [
     ("save_research", ["save it to {}", "save the research to {}"], ["save that brief to {}"], FILES, None),
     ("run_code", ["stats on {}", "chart {}", "average of the price column in {}", "break down the numbers in {}", "analyze {}"],
      ["plot {}", "crunch the numbers in {}"], CSVS, None),
-    ("summarize", ["summarize this page", "summarize the current page"], ["give me a summary of this page"], NONE, ""),
+    ("summarize", ["summarize this page", "summarize the current page"], ["give me a summary of this page", "tldr this page", "give me the gist of this tab"], NONE, ""),
     ("summarize", ["summarize {}", "give me a summary of {}"], ["summarize the document {}"], FILES, None),
-    ("summarize", ["summarize {}", "what's happening on {}"], ["give me the gist of {}"], SITES, None),
+    ("summarize", ["summarize {}", "what's happening on {}"], ["give me the gist of {}", "tldr {}"], SITES, None),
     ("summarize", ["summarize my unread mail"], ["summarize my unread mail"], NONE, "mail"),
     ("transcribe_video", ["transcribe {}", "transcribe the video {}", "what is said in {}"],
      ["what's said in {}", "transcribe the audio {}"], VIDEOS, None),
@@ -362,11 +362,11 @@ SPEC = [
     ("agent", ["poke around {} and tell me what's up", "go to {} and summarize it", "open {} and tell me the top story",
                "read {} and tell me what's new", "check {} and tell me if anything is interesting",
                "look at {} then give me the gist", "what's on {}", "what's new on {}"],
-     ["skim {} for me and report back", "dig through {} and find something good", "tldr {}"], SITES, ""),
+     ["skim {} for me and report back", "dig through {} and find something good"], SITES, ""),
     ("agent", ["read this page and summarize it",  # "summarize this page" is summarize's and "what does this page say" is read_page's (the router agrees): one phrase, one tool
                "take a screenshot and then tell me my battery", "open notes and read my clipboard",
                "search for mlx lora and summarize what you find", "go to github then tell me what tab is open"],
-     ["tldr this page", "open safari and then tell me what's playing", "give me the gist of this tab"], NONE, ""),
+     ["open safari and then tell me what's playing"], NONE, ""),  # "tldr this page" and "the gist of this tab" are summarize's (round 18 data fix)
 ]
 
 LEADS = (["", "", "", "", "", "", "hey ", "please ", "can you ", "could you ", "yo ", "ok ", "samantha ", "hey samantha, ", "i need you to ",
