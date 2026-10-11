@@ -22,7 +22,8 @@ def _cache_load():
     global _http_cache
     if _http_cache is None:
         try:
-            _http_cache = json.load(open(HTTP_CACHE))
+            with open(HTTP_CACHE) as f:
+                _http_cache = json.load(f)
         except Exception:
             _http_cache = {}
     return _http_cache
@@ -43,7 +44,8 @@ def _cache_put(url, body):
     cache = _cache_load()
     cache[hashlib.sha256(url.encode()).hexdigest()] = {"t": time.time(), "body": body}
     try:
-        json.dump(cache, open(HTTP_CACHE, "w"))
+        with open(HTTP_CACHE, "w") as f:
+            json.dump(cache, f)
     except OSError:
         pass  # a read-only checkout still works, it just refetches
 
