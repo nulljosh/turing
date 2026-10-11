@@ -6,7 +6,7 @@ Work toward 6.0, one round at a time: integrate Joshua Tree tools and Pi hardwar
 
 ## Where things stand
 
-- **Live:** v5.6 (training run 19, shipped 2026-10-11; run 13 was v5.1). Sealed 619-sentence test: 351 right picks (v5.0 had 317), 79 wrong (126), 27 past guard (30), about 4 percent refusals. Under-2 percent goal still open, documented honestly. Weights: https://huggingface.co/trommatic/samantha-hands-1.5b-mlx (the 0.5B GGUF for Windows and Linux stays at trommatic/samantha-hands-gguf).
+- **Live:** v5.11 (training run 20, shipped 2026-10-11 08:10; run 19 was v5.6, run 13 v5.1). Sealed 619-sentence test: 351 right picks (v5.0 had 317), 79 wrong (126), 27 past guard (30), about 4 percent refusals. Under-2 percent goal still open, documented honestly. Weights: https://huggingface.co/trommatic/samantha-hands-1.5b-mlx (the 0.5B GGUF for Windows and Linux stays at trommatic/samantha-hands-gguf).
 - **Run 13 (3,260 hand-written sentences), sureness rule on:** the guard rule `SURE_SKIPS_CUES = 0.95` lets very confident non-writing picks run without their cue word, asking for the missing piece instead of refusing. Sealed heldout (619 fresh sentences from a writer who sees only the tool list): 351 right, 79 wrong, 27 past guard. Tried Qwen2.5-3B and Qwen3-1.7B bases; both matched run 13's sealed score, stay as next experiments.
 - **Tools built:** `eval/misses.py` (every leak and refusal, sealed sets only), `training/dev_to_data.py` (retired blind sets into training rows), `training/extra_to_data.py` (hand-written batches, drops tool-name echoes).
 - **Sealed sets:** heldout4, heldout7, heldout9, heldout12 (414 fresh sentences) are never read as text. Heldout6, 8, 10, 11 are dev sets (run 11 trained on 6 and 8).
