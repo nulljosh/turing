@@ -3,7 +3,7 @@ main = "worker.js"
 compatibility_date = "2025-07-01"
 
 workers_dev = false
-routes = [{ pattern = "turing.heyitsmejosh.com", custom_domain = true }]
+routes = [{ pattern = "turing.heyitsmejosh.com", custom_domain = true }, { pattern = "turing.jaybulb.com", custom_domain = true }]
 
 [assets]
 directory = "web"
