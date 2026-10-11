@@ -1,5 +1,7 @@
 # Progress log
 
+- 2026-10-11: v5.3.0 The Mac app remembers: your chat is saved after every answer and comes back when you reopen the app, and File > New Chat (Cmd-N) files the old chat away under ~/.samantha/chats and starts a clean one. Everything stays on the Mac.
+  v5.3.0 · 136 tools · 697 tests · docs coverage 100% · laws all hold · biggest app/tools_util.py 649 · actions 231/231 · parity 231/231 · util_diff 261/261
 - 2026-10-11: v5.2.0 She can look at Joshua Tree: say "Joshua Tree status" and she reports its version, open pull requests and whether its test machine (qemu) is running, read only. The guard also accepts a few more ways of asking for three read-only tools (days until, what needs attention, how am I doing, what was said in a recording), which cut right picks being refused on the dev sets by 5 without one new leak; sealed scores unchanged. Training has plateaued (other bases tied), so this round was guard and tools, not weights.
   v5.2.0 · 136 tools · 697 tests · docs coverage 100% · laws all hold · biggest app/tools_util.py 649 · actions 231/231 · parity 231/231 · util_diff 261/261
 - 2026-10-05: v5.1.0 A sharper head: training run 13 on 3,260 new hand-written messy sentences, plus a guard that lets a very sure pick of a non-writing tool run without its cue word and asks for the missing piece instead of refusing. On 619 sealed sentences: 351 right picks (5.0: 317), 79 wrong (126), 27 past the guard (30), 4.0 percent undone. The under-2 percent goal is still open.

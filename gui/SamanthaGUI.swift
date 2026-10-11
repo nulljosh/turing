@@ -50,9 +50,24 @@ func yesLine(_ yes: Bool) -> String {
     return String(data: data, encoding: .utf8)! + "\n"
 }
 
+/// Where the chat is kept between launches, and where "New Chat" files the old one away.
+let chatDir = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent(".samantha")
+
+/// The transcript as JSON at `file`. Failure is silent: a chat that cannot be saved is still a chat.
+func saveChat(_ lines: [String], to file: URL) {
+    try? FileManager.default.createDirectory(at: file.deletingLastPathComponent(), withIntermediateDirectories: true)
+    if let data = try? JSONEncoder().encode(lines) { try? data.write(to: file, options: .atomic) }
+}
+
+/// The lines saved at `file`, or none.
+func loadChat(from file: URL) -> [String] {
+    guard let data = try? Data(contentsOf: file), let lines = try? JSONDecoder().decode([String].self, from: data) else { return [] }
+    return lines
+}
+
 @MainActor
 final class Samantha: ObservableObject {
-    @Published var transcript: [String] = []
+    @Published var transcript: [String] = loadChat(from: chatDir.appendingPathComponent("chat.json"))
     @Published var busy = false
     @Published var pending: (name: String, args: [String], note: String)?
     @Published var status = "Starting…"
@@ -127,6 +142,7 @@ final class Samantha: ObservableObject {
         case .answer(let text):
             transcript.append("Samantha: \(text)")
             busy = false
+            saveChat(transcript, to: chatDir.appendingPathComponent("chat.json"))
         }
     }
 
@@ -136,6 +152,15 @@ final class Samantha: ObservableObject {
         transcript.append("You: \(text)")
         busy = true
         stdin.write(askLine(text).data(using: .utf8)!)
+    }
+
+    /// File > New Chat: the current chat is kept as chats/<time>.json, then the window starts empty.
+    func newChat() {
+        guard !busy, !transcript.isEmpty else { return }
+        let stamp = ISO8601DateFormatter().string(from: Date()).replacingOccurrences(of: ":", with: "-")
+        saveChat(transcript, to: chatDir.appendingPathComponent("chats/\(stamp).json"))
+        transcript = []
+        try? FileManager.default.removeItem(at: chatDir.appendingPathComponent("chat.json"))
     }
 
     /// The Voice and Face buttons: the same /voice and /face switches the terminal chat understands.
@@ -346,6 +371,10 @@ func runSelfCheck() -> Never {
     precondition(parseLine("not json") == nil)
     precondition(askLine("hi") == "{\"ask\":\"hi\"}\n")
     precondition(yesLine(true) == "{\"yes\":true}\n")
+    let tmp = FileManager.default.temporaryDirectory.appendingPathComponent("samantha-chat-check/chat.json")
+    saveChat(["You: hi", "Samantha: hello"], to: tmp)
+    precondition(loadChat(from: tmp) == ["You: hi", "Samantha: hello"])
+    precondition(loadChat(from: tmp.deletingLastPathComponent().appendingPathComponent("none.json")).isEmpty)
     print("SamanthaGUI ok")
     exit(0)
 }
@@ -361,6 +390,7 @@ struct SamanthaGUIApp: App {
     var body: some Scene {
         WindowGroup("Samantha") { ChatView(samantha: samantha) }
             .commands {
+                CommandGroup(replacing: .newItem) { Button("New Chat") { samantha.newChat() }.keyboardShortcut("n") }
                 CommandMenu("Customize") {
                     Button("Change voice...") { samantha.customize = .voice }
                     Button("Change look...") { samantha.customize = .look }
