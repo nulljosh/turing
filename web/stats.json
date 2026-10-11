@@ -1,7 +1,7 @@
 {
-  "version": "5.11.5",
+  "version": "5.11.6",
   "docs_coverage": {
-    "percent": 99,
+    "percent": 100,
     "files": {
       "app/ask.py": {
         "total": 7,
@@ -13,7 +13,7 @@
       },
       "app/ask_local.py": {
         "total": 12,
-        "documented": 11
+        "documented": 12
       },
       "app/ask_web.py": {
         "total": 11,
