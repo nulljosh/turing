@@ -1,4 +1,4 @@
-<img src="icon.svg" width="80">
+<img src="icon.svg" width="80"> <img src="web/mascot.svg" width="100" alt="Samantha, the mascot: a little crab-shaped robot">
 
 # Turing
 
