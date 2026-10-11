@@ -18,7 +18,7 @@ The 1.5B is not bundled in the app: the first time I need it, about 850 MB downl
 - Teach math from grade school through pre-calc 12 (`eval/sixth_grade_math.mjs`, `eval/precalc_math.mjs`).
 - Learn from you: say "good" or "wrong" after anything I do. Say "do that again" and I follow along. Give me a job with steps and I show the plan first.
 - Cut me off: with voice on, anything new you send stops me mid-sentence, and "shh" just silences me. The Mac app keeps your chat between launches (Cmd-N starts a new one).
-- Drive Joshua Tree: "Joshua Tree status" gives its version, open pull requests and whether its test machine is running; "boot Joshua Tree" and "stop Joshua Tree" start and stop it headless, asking first; "what did Joshua Tree say" reads its serial log.
+- Drive Joshua Tree: "Joshua Tree status" gives its version, open pull requests and whether its test machine is running; "boot Joshua Tree" and "stop Joshua Tree" start and stop it headless, asking first; "what did Joshua Tree say" reads its serial log; "type ls into Joshua Tree and press enter" sends it real keystrokes.
 - Stay on a long job: "work on cleaning up my downloads". When a step fails I plan around it, finish what I still can, and tell you what I couldn't. If you say "trash this file" without naming it, I ask which one.
 
 **How I behave**

@@ -471,7 +471,8 @@
     jt_status: function () { return 'Joshua Tree 2.41.0: 1 open pull request, qemu not running.'; },
     jt_boot: function () { return 'Booting Joshua Tree headless; its serial log is ~/.samantha/jt-serial.log. On a real Mac this asks first.'; },
     jt_stop: function () { return 'Stopped Joshua Tree (1 qemu process). On a real Mac this asks first.'; },
-    jt_log: function () { return 'Joshua Tree 2.41.0 booting\\nnet: rtl8139 up, 10.0.2.15\\nfs: dotfiles mounted\\ndesktop ready'; }
+    jt_log: function () { return 'Joshua Tree 2.41.0 booting\\nnet: rtl8139 up, 10.0.2.15\\nfs: dotfiles mounted\\ndesktop ready'; },
+    jt_type: function (q) { return 'Typed ' + JSON.stringify(String(q || '').replace(/\\n$/, '')) + ' into Joshua Tree' + (/\\n$/.test(String(q || '')) ? ' and pressed Return.' : '.') + ' On a real Mac this asks first.'; }
   };
   Object.keys(STANDIN).forEach(function (k) { var f = STANDIN[k]; TOOLS[k] = function () { var r = f.apply(null, arguments); return k === 'list_reminders' || k === 'add_event' ? r : r + ' (stand-in Mac)'; }; });
 
@@ -553,6 +554,7 @@
     jt_boot: function () { return 'Booting Joshua Tree in qemu, no window. On a real Mac it asks first.'; },
     jt_stop: function () { return 'Stopping Joshua Tree. On a real Mac it asks first.'; },
     jt_log: function () { return 'Reading the last lines of Joshua Tree\\'s serial log.'; },
+    jt_type: function () { return 'Typing into Joshua Tree key by key. On a real Mac it asks first.'; },
     new_note: function () { return 'Writing a note. On a real Mac it asks first.'; },
     new_reminder: function () { return 'Adding a reminder. On a real Mac it asks first.'; },
     music: function () { return 'Driving the music player.'; },
@@ -698,7 +700,7 @@
     // images, her page, and back to the start
     'grayscale cat.png', 'scroll to the results', 'reset the page'];
   // more phrasings for the input's autocomplete only. The reel stays short.
-  var MORE = ['boot joshua tree', 'what did joshua tree say', 'stop joshua tree', 'what are my reminders', 'search notes for eggs', 'what apps are running', 'turn on dark mode', 'git status', 'recent commits', 'take a note pick up milk', 'set a timer for 1 minute', 'open chrome and go to github.com', 'change the title to Hello there', 'draw a robot reading a book', 'draw a sailboat on a calm lake', 'imagine a city on the moon', 'do a barrel roll', 'tip on 45', 'roman numerals for 2026', 'sha256 of turing', 'base64 encode hello', 'morse sos', 'flip a coin', 'generate a strong password',
+  var MORE = ['boot joshua tree', 'what did joshua tree say', 'type ls into joshua tree and press enter', 'stop joshua tree', 'what are my reminders', 'search notes for eggs', 'what apps are running', 'turn on dark mode', 'git status', 'recent commits', 'take a note pick up milk', 'set a timer for 1 minute', 'open chrome and go to github.com', 'change the title to Hello there', 'draw a robot reading a book', 'draw a sailboat on a calm lake', 'imagine a city on the moon', 'do a barrel roll', 'tip on 45', 'roman numerals for 2026', 'sha256 of turing', 'base64 encode hello', 'morse sos', 'flip a coin', 'generate a strong password',
               'make a uuid', 'random number between 1 and 100', 'count words in the quick brown fox', 'reverse the text hello', 'what day is it',
               'convert 5 km to miles', 'calculate 15% of 80', 'factor 84', 'time in london', 'days until halloween', 'how much disk space do i have', 'edit notes.md: make it shorter', 'write a python script that prints the date to today.py'];
   var reelAt = 0;

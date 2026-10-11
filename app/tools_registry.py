@@ -34,7 +34,7 @@ NOT_FOR_MODELS = {"ask_llm", "see_screen", "see_image", "see_camera", "click_tex
 WRITES = {"ask_llm", "see_screen", "see_image", "see_camera", "click_text", "type_text", "press_key", "ask_screen", "read_screen", "remember", "forget", "close_tab", "call_mcp_tool", "new_note", "new_reminder", "make_logo", "paint_image", "run_shortcut", "copy_to_clipboard", "sleep_display", "save_research", "write_document", "run_code", "code",
           "remove_background", "upscale_image", "enhance_image", "grayscale_image", "rotate_image", "flip_image",
           "resize_image", "crop_square", "convert_image", "move_file", "copy_file", "rename_file", "zip_file", "unzip_file", "trash_file",
-          "complete_reminder", "add_event", "append_note", "quit_app", "do_not_disturb", "run_tests", "set_voice", "restyle", "keep_look", "send_email", "jt_boot", "jt_stop"}
+          "complete_reminder", "add_event", "append_note", "quit_app", "do_not_disturb", "run_tests", "set_voice", "restyle", "keep_look", "send_email", "jt_boot", "jt_stop", "jt_type"}
 
 
 # A pick with no argument to check (disk_space, uptime...) or a loose one needs evidence in the sentence: some word that

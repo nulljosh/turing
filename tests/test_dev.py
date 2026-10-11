@@ -433,5 +433,45 @@ class TestJtLog(unittest.TestCase):
         self.assertTrue(any(r[1] == "jt_log" and r[0].match("what did joshua tree say") for r in tools_dev.ROUTES))
 
 
+class TestJtType(unittest.TestCase):
+    """jt_type: characters to qemu key names, the not-running and headless paths, the real send, the routes."""
+
+    def test_keys_for(self):
+        """Letters, capitals, digits, punctuation, Return; a character no key makes is None."""
+        self.assertEqual(tools_dev._keys_for("Hi 1.\n"), [["shift", "h"], ["i"], ["spc"], ["1"], ["dot"], ["ret"]])
+        self.assertEqual(tools_dev._keys_for("a:b?"), [["a"], ["shift", "semicolon"], ["b"], ["shift", "slash"]])
+        self.assertEqual(tools_dev._keys_for("\u00e9"), [None])
+
+    def test_type_paths(self):
+        """Empty text, not running, headless (nothing sent), the real send (one send-key per character), a dead socket."""
+        self.assertIn("Say what to type", tools_dev.jt_type(""))
+        with mock.patch.object(tools_dev, "_jt_pids", return_value=[]):
+            self.assertIn("not running", tools_dev.jt_type("ls"))
+        with mock.patch.object(tools_dev, "_jt_pids", return_value=[7]), mock.patch.object(tools_dev, "_qmp", side_effect=AssertionError("sent")):
+            self.assertEqual(tools_dev.jt_type("ls\n"), "Typed 'ls' into Joshua Tree and pressed Return.")
+        with mock.patch.object(tools_dev, "_jt_pids", return_value=[7]), mock.patch.object(tools_dev, "HEADLESS", False), \
+                mock.patch.object(tools_dev, "_qmp", return_value=[{"return": {}}]) as qmp, mock.patch("time.sleep"):
+            reply = tools_dev.jt_type("a\u00e9B")
+        self.assertEqual(qmp.call_count, 2)
+        self.assertEqual(qmp.call_args_list[1][0][0][0]["arguments"]["keys"], [{"type": "qcode", "data": "shift"}, {"type": "qcode", "data": "b"}])
+        self.assertIn("Skipped", reply)
+        with mock.patch.object(tools_dev, "_jt_pids", return_value=[7]), mock.patch.object(tools_dev, "HEADLESS", False), \
+                mock.patch.object(tools_dev, "_qmp", side_effect=OSError("no socket")):
+            self.assertIn("not answering", tools_dev.jt_type("ls"))
+
+    def test_routes(self):
+        """The phrases hand jt_type the text, with Return appended when asked."""
+        def route(text):
+            """(tool, arg) for the first matching dev route."""
+            for pat, name, arg in tools_dev.ROUTES:
+                m = pat.match(text)
+                if m:
+                    return name, arg(m)
+            return None, None
+        self.assertEqual(route("type ls into joshua tree"), ("jt_type", "ls"))
+        self.assertEqual(route("type make run into jt and press enter"), ("jt_type", "make run\n"))
+        self.assertEqual(route("press enter in joshua tree"), ("jt_type", "\n"))
+
+
 if __name__ == "__main__":
     unittest.main()

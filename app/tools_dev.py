@@ -206,11 +206,80 @@ def jt_boot(mode=""):
         return "Joshua Tree is already running. Say 'stop joshua tree' first."
     log = os.path.expanduser("~/.samantha/jt-serial.log")
     cmd = ["qemu-system-i386", "-kernel", kernel, "-display", "none", "-rtc", "base=localtime", "-net", "nic,model=rtl8139", "-net", "user",
-           "-serial", f"file:{log}"] + (["-drive", f"file={disk},format=raw,if=ide,index=0"] if os.path.isfile(disk) else [])
+           "-serial", f"file:{log}", "-qmp", f"unix:{_JT_QMP},server,nowait"] + (["-drive", f"file={disk},format=raw,if=ide,index=0"] if os.path.isfile(disk) else [])
     if not HEADLESS:
         os.makedirs(os.path.dirname(log), exist_ok=True)
         subprocess.Popen(cmd, cwd=path, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)
     return f"Booting Joshua Tree headless; its serial log is {log}. Say 'stop joshua tree' to shut it down."
+
+
+_JT_QMP = os.path.expanduser("~/.samantha/jt-qmp.sock")  # qemu's control socket, opened by jt_boot, typed into by jt_type
+# send-key takes qemu key names, not characters (tools/qa_demo_drive.py in joshuatree learned this the hard way: "." arrived as nothing)
+_QCODE = {" ": "spc", ".": "dot", "-": "minus", "/": "slash", ",": "comma", "\n": "ret", "\t": "tab", ";": "semicolon", "'": "apostrophe",
+          "=": "equal", "[": "bracket_left", "]": "bracket_right", "\\": "backslash", "`": "grave_accent"}
+_SHIFTED = {"!": "1", "@": "2", "#": "3", "$": "4", "%": "5", "^": "6", "&": "7", "*": "8", "(": "9", ")": "0", "_": "minus", "+": "equal",
+            ":": "semicolon", '"': "apostrophe", "<": "comma", ">": "dot", "?": "slash", "{": "bracket_left", "}": "bracket_right", "|": "backslash", "~": "grave_accent"}
+
+
+def _keys_for(text):
+    """Each character as the qemu key names that type it, or None for one no key makes."""
+    out = []
+    for ch in text:
+        if ch.isalpha() and ch.isascii():
+            out.append(["shift", ch.lower()] if ch.isupper() else [ch])
+        elif ch.isdigit():
+            out.append([ch])
+        elif ch in _QCODE:
+            out.append([_QCODE[ch]])
+        elif ch in _SHIFTED:
+            out.append(["shift", _SHIFTED[ch]])
+        else:
+            out.append(None)
+    return out
+
+
+def _qmp(commands):
+    """Send qemu control commands over jt_boot's socket, one reply each. Raises OSError when it is not there."""
+    import json, socket
+    s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)  # a unix socket, so nothing listens on a TCP port
+    s.settimeout(5)
+    s.connect(_JT_QMP)
+    f = s.makefile("rw")
+    f.readline()  # the greeting
+    replies = []
+    for command in [{"execute": "qmp_capabilities"}] + commands:
+        f.write(json.dumps(command) + "\n")
+        f.flush()
+        while True:
+            reply = json.loads(f.readline() or "{}")
+            if "return" in reply or "error" in reply:
+                replies.append(reply)
+                break
+    s.close()
+    return replies[1:]
+
+
+def jt_type(text):
+    """Type text into the running Joshua Tree, key by key over qemu's control socket; a trailing newline presses Return.
+    Characters no key makes are skipped and named. Asks first."""
+    if not text:
+        return "Say what to type, like 'type ls into joshua tree'."
+    if not _jt_pids():
+        return "Joshua Tree is not running. Say 'boot joshua tree' first."
+    keys = _keys_for(text)
+    skipped = sorted({ch for ch, k in zip(text, keys) if k is None})
+    shown = text.rstrip("\n").replace("\n", " ")
+    if not HEADLESS:
+        import time
+        try:
+            for k in keys:
+                if k:
+                    _qmp([{"execute": "send-key", "arguments": {"keys": [{"type": "qcode", "data": q} for q in k]}}])
+                    time.sleep(0.05)
+        except OSError:
+            return "Joshua Tree's control socket is not answering; it may still be booting. Try again in a moment."
+    done = f"Typed {shown!r} into Joshua Tree" + (" and pressed Return." if text.endswith("\n") else ".")
+    return done + (f" Skipped {''.join(skipped)!r}: no key makes it." if skipped else "")
 
 
 def jt_log(lines="20"):
@@ -266,7 +335,7 @@ def open_in_editor(repo=""):
     return f"Opened {name} in the editor."
 
 
-TOOLS = (git_status, recent_commits, run_tests, open_prs, open_in_editor, jt_status, jt_boot, jt_stop, jt_log)
+TOOLS = (git_status, recent_commits, run_tests, open_prs, open_in_editor, jt_status, jt_boot, jt_stop, jt_log, jt_type)
 
 # (pattern, tool name, what to hand it), same shape as tools_organizer.ROUTES and tools_system.ROUTES. tools.py
 # splices these in ahead of the base router, alongside organizer's and system's: "run the tests" and "open prs"
@@ -293,6 +362,8 @@ ROUTES = (
     (re.compile(r"^(?:boot|start|launch|run|fire up) (?:up )?(?:joshua ?tree|jt)(?: headless)?$", _I), "jt_boot", lambda m: ""),
     (re.compile(r"^(?:stop|shut ?down|halt|kill) (?:joshua ?tree|jt)$", _I), "jt_stop", lambda m: ""),
     (re.compile(r"^(?:what (?:did|does|is) (?:joshua ?tree|jt) say(?:ing)?|(?:joshua ?tree|jt) (?:serial )?log|show (?:me )?(?:the )?(?:joshua ?tree|jt) (?:serial )?log)\??$", _I), "jt_log", lambda m: ""),
+    (re.compile(r"^type (.+?) (?:into|in|to) (?:joshua ?tree|jt)((?: (?:and|then) (?:press |hit )?(?:enter|return))?)$", _I), "jt_type", lambda m: m.group(1) + ("\n" if m.group(2) else "")),
+    (re.compile(r"^(?:press|hit) (?:enter|return) (?:in|on) (?:joshua ?tree|jt)$", _I), "jt_type", lambda m: "\n"),
 
     (re.compile(r"^open (?:the )?(.+?)(?: repo)? in (?:the editor|vs ?code)$", _I),
      "open_in_editor", lambda m: m.group(1)),
