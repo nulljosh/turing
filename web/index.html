@@ -60,18 +60,10 @@
       /* Top nav: wordmark left, dark pill + white pill right. */
       .nav{position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;
         padding:18px 20px;background:color-mix(in srgb, var(--bg) 82%, transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
-      .mascot{display:block;width:92px;height:70px;overflow:visible}
-      .mascot.sm{width:26px;height:20px}
-      .m-fg{fill:var(--fg)}.m-bg{fill:var(--bg)}.m-acc{fill:#b5502c}
-      .m-line{stroke:var(--fg);stroke-width:4;stroke-linecap:round;fill:none}.m-line-acc{stroke:#b5502c;stroke-width:5;stroke-linecap:round;fill:none}
+      .mascot{display:block;width:112px;height:112px;border-radius:50%}
+      .mascot.sm{width:28px;height:28px}
       .nav-mark{display:inline-flex;align-items:center;gap:8px}
-      .hero-mascot{display:flex;justify-content:center;margin:0 0 14px}
-      @media (prefers-reduced-motion:no-preference){
-        .mascot:not(.sm) .m-eyes{transform-box:fill-box;transform-origin:center;animation:m-blink 6s infinite}
-        .mascot:not(.sm) .m-dot{animation:m-dots 1.6s ease-in-out infinite;animation-delay:calc(var(--i) * .18s)}
-      }
-      @keyframes m-blink{0%,94%,100%{transform:scaleY(1)}97%{transform:scaleY(.1)}}
-      @keyframes m-dots{0%,100%{opacity:1}50%{opacity:.3}}
+      .hero-mascot{display:flex;justify-content:center;margin:0 0 20px}
       .nav-mark{font-size:15px;font-weight:600;letter-spacing:-0.01em;color:var(--fg);text-decoration:none}
       .nav-actions{display:flex;gap:12px;align-items:center}
       .pill{display:inline-flex;align-items:center;justify-content:center;padding:9px 18px;border-radius:var(--r-pill);
@@ -349,7 +341,7 @@
     </script>
 
     <nav class="nav">
-      <a class="nav-mark" href="#content"><svg class="mascot sm" viewBox="-2 4 124 94" aria-hidden="true"><path class="m-line" d="M60 28V15"/><circle class="m-fg" cx="60" cy="11" r="5"/><path class="m-line" d="M24 44H15M96 44h9"/><circle class="m-fg" cx="12" cy="44" r="6"/><circle class="m-fg" cx="108" cy="44" r="6"/><rect class="m-acc" x="36" y="84" width="16" height="10" rx="3"/><rect class="m-acc" x="68" y="84" width="16" height="10" rx="3"/><path class="m-line-acc" d="M4 70H9"/><rect class="m-acc" x="10" y="62" width="12" height="16" rx="3"/><rect class="m-bg" x="16" y="66" width="7" height="8" rx="2"/><path class="m-line-acc" d="M116 70H111"/><rect class="m-acc" x="98" y="62" width="12" height="16" rx="3"/><rect class="m-bg" x="98" y="66" width="7" height="8" rx="2"/><rect class="m-acc" x="22" y="28" width="76" height="58" rx="14"/><circle class="m-bg" cx="30" cy="35" r="1.6"/><circle class="m-bg" cx="90" cy="35" r="1.6"/><rect class="m-fg" x="32" y="39" width="56" height="24" rx="9"/><g class="m-eyes"><circle class="m-bg" cx="48" cy="51" r="5"/><circle class="m-bg" cx="72" cy="51" r="5"/></g><circle class="m-dot m-fg" style="--i:0" cx="53" cy="73" r="2.4"/><circle class="m-dot m-fg" style="--i:1" cx="60" cy="75" r="2.4"/><circle class="m-dot m-fg" style="--i:2" cx="67" cy="73" r="2.4"/></svg>Turing</a>
+      <a class="nav-mark" href="#content"><img class="mascot sm" src="mascot.svg" alt="" width="28" height="28">Turing</a>
       <div class="nav-actions">
         <div class="nav-links">
           <a href="#run" class="nav-link">Download</a>
@@ -364,7 +356,7 @@
 
     <div class="wrap">
       <header class="hero">
-        <div class="hero-mascot"><svg class="mascot" viewBox="-2 4 124 94" role="img" aria-label="Samantha, a little terracotta robot with an antenna, pigtail bobbles, a visor with two eyes, grippers and a three-dot smile"><path class="m-line" d="M60 28V15"/><circle class="m-fg" cx="60" cy="11" r="5"/><path class="m-line" d="M24 44H15M96 44h9"/><circle class="m-fg" cx="12" cy="44" r="6"/><circle class="m-fg" cx="108" cy="44" r="6"/><rect class="m-acc" x="36" y="84" width="16" height="10" rx="3"/><rect class="m-acc" x="68" y="84" width="16" height="10" rx="3"/><path class="m-line-acc" d="M4 70H9"/><rect class="m-acc" x="10" y="62" width="12" height="16" rx="3"/><rect class="m-bg" x="16" y="66" width="7" height="8" rx="2"/><path class="m-line-acc" d="M116 70H111"/><rect class="m-acc" x="98" y="62" width="12" height="16" rx="3"/><rect class="m-bg" x="98" y="66" width="7" height="8" rx="2"/><rect class="m-acc" x="22" y="28" width="76" height="58" rx="14"/><circle class="m-bg" cx="30" cy="35" r="1.6"/><circle class="m-bg" cx="90" cy="35" r="1.6"/><rect class="m-fg" x="32" y="39" width="56" height="24" rx="9"/><g class="m-eyes"><circle class="m-bg" cx="48" cy="51" r="5"/><circle class="m-bg" cx="72" cy="51" r="5"/></g><circle class="m-dot m-fg" style="--i:0" cx="53" cy="73" r="2.4"/><circle class="m-dot m-fg" style="--i:1" cx="60" cy="75" r="2.4"/><circle class="m-dot m-fg" style="--i:2" cx="67" cy="73" r="2.4"/></svg></div>
+        <div class="hero-mascot"><img class="mascot" src="mascot.svg" alt="Samantha" width="112" height="112"></div>
         <h1>Meet Samantha.</h1>
         <p class="sub">A small AI that lives on your Mac. Free, private, and it runs itself through everything she can do while you watch.</p>
         <div class="hero-cta">
