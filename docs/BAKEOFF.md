@@ -445,3 +445,17 @@ Run 20's data plus 84 new rows from a hand-written batch (gratuity wording for t
 | heldout12 (sealed, 414) | 375, 13 past, 28 refused | 364, 14, 27 |
 
 Fewer leaks on templated phrasings, but more leaks on both sealed sets and eleven fewer right on heldout12. 84 rows in 13,500 is inside run-to-run noise, as expected. Not shipped. The next run needs a real margin: a fresh dev set to find gaps, then a few hundred rows, not a few dozen.
+
+## Run 22 (2026-10-11): rejected, run 20 stays
+
+Run 20's data plus 125 targeted rows repeated three times for the six tools run 20 leaked on the fresh heldout14 set (unread_mail, current_date, reveal_in_finder, list_tabs, read_tab, jt_screenshot) and six near-miss non-commands. Same kernel, same settings. Scored under the v5.11.8 guard; run 20's numbers below are its dumps rescored under that same guard.
+
+| Set | run 20 | run 22 |
+|---|---|---|
+| standard | 1859 of 2032, 20 past the guard | 1838 of 2046, 18 past |
+| heldout13 (dev, 360) | 325, 1 past, 3 refused | 331, 0, 5 |
+| heldout14 (dev, 291) | 229, 6 past, 3 refused | 235, 6, 5 |
+| heldout4 (sealed, 455) | 385, 7 past, 11 refused | 389, 9, 12 |
+| heldout12 (sealed, 414) | 375, 13 past, 28 refused | 366, 10, 24 |
+
+Better on both fresh dev sets (331 and 235, with zero leaks on heldout13) and one fewer leak over the sealed pair (19 against 20), but nine fewer right picks on heldout12 and two more leaks on heldout4. The bar asks for the sealed sets to be no worse on both counts, so it does not ship. The targeted rows did teach the six tools; the cost landed elsewhere on heldout12. Next: look at which heldout12 tools lost ground (counts per tool only, the set stays sealed) and balance the batch before run 23.
