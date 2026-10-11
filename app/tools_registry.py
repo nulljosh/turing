@@ -58,7 +58,7 @@ _EVIDENCE = {
     "run_tests": r"\btest|\bsuite\b|\bpasses\b|\bpassing\b", "open_prs": r"\bprs?\b|pull request|waiting (?:for|on) (?:a )?review",
     "open_in_editor": r"editor|vscode|vs code|in code|\bide\b|visual studio", "quit_app": r"quit|close|shut down|\bkill\b",
     "dark_mode": r"dark|\blight\b|appearance|theme", "do_not_disturb": r"disturb|\bdnd\b|focus|silence|quiet|notification",
-    "zip_file": r"\bzip\b|compress", "unzip_file": r"unzip|extract|unpack|decompress|\.zip\b", "trash_file": r"trash|delete|throw away|get rid of",
+    "zip_file": r"\bzip\b|compress", "unzip_file": r"unzip|extract|unpack|decompress|\.zip\b", "trash_file": r"trash|delete|throw away|get rid of|\bbin (?:the |this |that |my )?(?:file|folder|directory|[~/])",
     "copy_file": r"\bcopy\b|duplicate|\bcp\b", "move_file": r"\bmove\b|\bput\s+(?:\S+\.\w+|~/\S+)\s+(?:in|into)\b|\bshift\b|transfer|relocate|\bdrag\b|\bmv\b", "rename_file": r"rename|new name|call it|change the name|retitle|\bname\b|\bchange\s+\S+\.\w+\s+to\s+\S+\.\w+",
     "append_note": r"\bnotes?\b|\bappend\b.+\bto (?:my|the) [\w ]{1,30}\b(?:log|list|journal)\b", "add_event": r"calend[ae]r|event|schedule|appt|appointment|\bbook (?:a |an |my )?(?:call|meeting|appointment)\b",
     "complete_reminder": r"remind|done|finish|complete|check off|\bmark\b|tick off|cross off", "list_reminders": r"reminder|\btasks\b|to-?dos?",
@@ -197,7 +197,7 @@ _AGAINST = {"say": r"\bset\b.*\bvoice\b|\bvoice\b.*\bset\b|morse|clock say|how (
             # "times"/"plus" to symbols), so calculate() failing that copied arg is a real bug, not a
             # style choice. A file extension or a unit word (convert_units'/run_code's own vocabulary)
             # is the same shape: not arithmetic, a different tool's job.
-            "calculate": r"\bwhat'?s\b(?!.*%)|\bwhat is\b(?!.*%)|celsius|fahrenheit|kilomet|\bkm\b|\bmiles?\b|\bpounds?\b|\bkg\b|\bfactor|\bprime|\bcode\b|\bexecute\b|script|average"
+            "calculate": r"\bwhat'?s\b(?!.*(?:%|sqrt\())|\bwhat is\b(?!.*(?:%|sqrt\())|celsius|fahrenheit|kilomet|\bkm\b|\bmiles?\b|\bpounds?\b|\bkg\b|\bfactor|\bprime|\bcode\b|\bexecute\b|script|average"
                          r"|inches|centimet|\bmeters?\b|gallons|liters|\.csv\b|\.py\b|\.js\b|\btips?\b",
             # Round eleven: recent_downloads owns "what's in my downloads folder"; list_dir's own
             # templates never say "downloads folder", only a literal path or a generic "the folder".
