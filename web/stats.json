@@ -1,5 +1,5 @@
 {
-  "version": "5.10.1",
+  "version": "5.10.2",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -326,6 +326,10 @@
       "tests/test_chat.py": {
         "total": 27,
         "documented": 27
+      },
+      "tests/test_chat_loop.py": {
+        "total": 16,
+        "documented": 16
       },
       "tests/test_chat_pipe.py": {
         "total": 17,

@@ -27,6 +27,10 @@ class Arithmetic(unittest.TestCase):
         self.assertIn("divide by zero", ask_local.arithmetic("what is 1/0"))
         self.assertIsNone(ask_local.arithmetic("what is 7"))
         self.assertEqual(ask_local.arithmetic("calculate 15% of 80"), "((15)/100)*(80) = 12")
+        self.assertEqual(ask_local.arithmetic("what's 17*23"), "17*23 = 391")
+        self.assertEqual(ask_local.arithmetic("whats 2+2"), "2+2 = 4")
+        self.assertEqual(ask_local.arithmetic("What's 17 times 23?"), "17 * 23 = 391")
+        self.assertEqual(ask_local.arithmetic("how much is 9*9"), "9*9 = 81")
 
     def test_nothing_but_numbers_runs(self):
         """Names, strings, attribute calls and keyword arguments are all refused before any evaluation."""

@@ -46,7 +46,7 @@ def arithmetic(query):
     import ast
 
     expr = _QUESTION_PREFIX.sub("", query.strip().rstrip("?")).strip()
-    expr = re.sub(r"^(?:what\s+(?:is|are)|calculate|compute)\s+", "", expr, flags=re.I).strip()
+    expr = re.sub(r"^(?:what(?:'s|s|\s+is|\s+are)|how much is|calculate|compute)\s+", "", expr, flags=re.I).strip()  # "what's 17*23" fell through (dogfood, 5.10.2)
     for pattern, symbol in _ARITH_WORDS:
         expr = re.sub(pattern, symbol, expr, flags=re.I)
     for pattern, replacement in _ARITH_PHRASES:  # square root of, X squared, X% of Y: unambiguous, safe to widen for
