@@ -184,7 +184,18 @@ export const joshuaTalk = q => {
 // history but this only ever answers the newest user message. A question that names
 // Joshua Tree, or points at "this"/"here", never falls through to the general web
 // pipeline: declining is honest, a stray Wikipedia hit on the wrong "1.0.1" is not.
+// One right answer, so no model and no lookup: sums, roots, percents and unit conversions, short and spoken
+// ("10 plus 10 is 20."). The clock is left out on purpose: the Worker's is not the visitor's.
+const spoken = e => e.replace(/(?<=[\d)])([+*\/-])(?=[\d(])/g, (_, op) => ` ${{ "+": "plus", "*": "times", "/": "divided by", "-": "minus" }[op]} `).replace(/ = /, " is ").replace(/(?<![.!?])$/, ".");
+export const exactAnswer = q => {
+  if (/\b(?:time|date|day|today)\b/i.test(q)) return null;
+  const e = globalThis.Samantha && globalThis.Samantha.exact(q);
+  return e ? spoken(e) : null;
+};
+
 async function chatAnswer(env, question, persona) {
+  const exact = exactAnswer(question);
+  if (exact) return exact;
   if (persona === "joshua") {
     const j = joshuaTalk(question);
     if (j) return j;

@@ -282,10 +282,16 @@
     var q = query.trim().toLowerCase().replace(/[?!.]+$/, "");
     var expr = q.replace(/^(?:what(?:'s|s| is)|calculate|compute|how much is)\s+/, "");
     expr = wordsToDigits(expr);
+    var N = "(-?\\d+(?:\\.\\d+)?)", m;   // the idioms with one right answer, said the way a person would say them
+    if ((m = new RegExp("^(?:the )?square root of " + N + "$").exec(expr)) && +m[1] >= 0) return "The square root of " + m[1] + " is " + tidy(Math.sqrt(+m[1])) + ".";
+    if ((m = new RegExp("^(?:the )?cube root of " + N + "$").exec(expr))) return "The cube root of " + m[1] + " is " + tidy(Math.cbrt(+m[1])) + ".";
+    if ((m = new RegExp("^" + N + " (squared|cubed)$").exec(expr))) return m[1] + " " + m[2] + " is " + tidy(Math.pow(+m[1], m[2] === "squared" ? 2 : 3)) + ".";
+    if ((m = new RegExp("^" + N + " to the power of " + N + "$").exec(expr)) && isFinite(Math.pow(+m[1], +m[2]))) return m[1] + " to the power of " + m[2] + " is " + tidy(Math.pow(+m[1], +m[2])) + ".";
+    if ((m = new RegExp("^" + N + "\\s*(?:%|percent) of " + N + "$").exec(expr))) return m[1] + "% of " + m[2] + " is " + tidy(+m[1] / 100 * +m[2]) + ".";
     ARITH_WORDS.forEach(function (p) { expr = expr.replace(p[0], p[1]); });
     if (/^[\d\s+\-*\/().]+$/.test(expr) && /\d/.test(expr) && /[+\-*\/]/.test(expr)) {
       var v = calc(expr);
-      if (v !== null && isFinite(v)) return expr.replace(/\s+/g, "") + " = " + tidy(v);
+      if (v !== null && isFinite(v)) return expr.replace(/\s+/g, "") + " = " + tidy(v);   // the Worker's `spoken` rewrites this for a voice
     }
     var c = /^(?:convert |what(?:'s| is) )?(-?\d+(?:\.\d+)?)\s*(?:degrees? )?([a-z]+)\s+(?:to|in|into)\s+([a-z]+)$/.exec(q);
     if (c) {
