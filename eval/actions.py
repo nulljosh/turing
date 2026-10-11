@@ -275,6 +275,7 @@ CASES = [
     ("run turing's tests", "run_tests", "turing"),
     ("open prs", "open_prs", ""),
     ("any open pull requests on sidewise", "open_prs", "sidewise"),
+    ("pretty print {\"a\": 1}", "json_pretty", "{\"a\": 1}"),
     ("joshua tree status", "jt_status", ""),
     ("how is joshua tree doing?", "jt_status", ""),
     ("boot joshua tree", "jt_boot", ""),

@@ -150,6 +150,7 @@ class Reader(unittest.TestCase):
         self.assertTrue(ask_web._is_definition_of("who is marie curie", "Marie Curie"))
         self.assertTrue(ask_web._is_definition_of("what is mercury", "Mercury (planet)"))
         self.assertFalse(ask_web._is_definition_of("who invented the telephone", "Telephone"))
+        self.assertFalse(ask_web._is_definition_of("why is the sky blue", "Sky blue"))  # a why question wants a reason, not a colour
 
     def page(self, extract):
         """http_json stood in with one Wikipedia extract."""

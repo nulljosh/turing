@@ -155,7 +155,9 @@ def current_tab():
     """Title and URL of the tab Chrome is showing right now."""
     out = _run(["osascript", "-e",
                 f'tell application "{BROWSER}" to get (title of active tab of front window) & "\n" & (URL of active tab of front window)'])
-    return out or "Chrome has no window open."
+    if not out or "execution error" in out or "Invalid index" in out:  # Chrome running with no window: AppleScript's error, not a tab
+        return "Chrome has no window open."
+    return out
 
 
 def read_page(target=""):

@@ -558,6 +558,7 @@ ROUTES = (
     (re.compile(r"^(?:shout|uppercase)[: ]+(.+)$", _I), "shout", lambda m: m.group(1)),
     (re.compile(r"^morse(?: code)?(?: for| of)?[: ]+(.+)$", _I), "morse_code", lambda m: m.group(1)),
     (re.compile(r"^(?:pretty ?print|format|prettify) json[: ]+(.+)$", _I), "json_pretty", lambda m: m.group(1)),
+    (re.compile(r"^(?:pretty ?print|prettify|tidy)(?: (?:this|the))?[: ]+([\[{].*)$", _I), "json_pretty", lambda m: m.group(1)),  # "pretty print {...}": the braces say json
     (re.compile(r"^is (-?\d+) (?:a )?prime$|^(?:prime factors of|factor|factorize) (-?\d+)$", _I), "is_prime", lambda m: m.group(1) or m.group(2)),
     (re.compile(r"^roman numerals? (?:for |of )?(-?\d+)$|^(-?\d+) in roman numerals$", _I), "roman_numeral", lambda m: m.group(1) or m.group(2)),
     (re.compile(r"^(?:(?:what(?:'s| is) )?(?:the |a )?tip on|tip(?: for)?) (-?\$?-?\d+(?:\.\d+)?)$", _I), "tip", lambda m: m.group(1)),

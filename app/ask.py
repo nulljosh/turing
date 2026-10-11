@@ -329,7 +329,9 @@ def ask(question):
         # the encyclopedia try, and only admit defeat if it has nothing.
         if holder_source is UNREACHABLE:
             gk_answer, gk_source = general_knowledge(question, skip_officeholder=True)
-            if gk_answer:
+            # the encyclopedia's page for the office describes the office, never who holds it now: with Wikidata
+            # down that is a confident wrong answer, so it is the one case to decline (dogfood, 5.10.3)
+            if gk_answer and not re.match(r"Wikipedia: (?:Prime Minister|President|King|Queen|Chancellor|Governor|Mayor|Premier|Pope|Monarch|Emperor|First Minister|Taoiseach)\b", str(gk_source)):
                 return gk_answer, [gk_source]
             return LOOKUP_FAILED, []
 

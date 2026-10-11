@@ -777,6 +777,7 @@
     [/^(?:shout|uppercase)[: ]+(.+)$/i, function (m) { return ["shout", m[1]]; }],
     [/^morse(?: code)?(?: for| of)?[: ]+(.+)$/i, function (m) { return ["morse_code", m[1]]; }],
     [/^(?:pretty ?print|format|prettify) json[: ]+(.+)$/i, function (m) { return ["json_pretty", m[1]]; }],
+    [/^(?:pretty ?print|prettify|tidy)(?: (?:this|the))?[: ]+([\[{].*)$/i, function (m) { return ["json_pretty", m[1]]; }],
     [/^is (-?\d+) (?:a )?prime$|^(?:prime factors of|factor|factorize) (-?\d+)$/i, function (m) { return ["is_prime", (m[1] || m[2])]; }],
     [/^roman numerals? (?:for |of )?(-?\d+)$|^(-?\d+) in roman numerals$/i, function (m) { return ["roman_numeral", (m[1] || m[2])]; }],
     [/^(?:(?:what(?:'s| is) )?(?:the |a )?tip on|tip(?: for)?) (-?\$?-?\d+(?:\.\d+)?)$/i, function (m) { return ["tip", m[1]]; }],

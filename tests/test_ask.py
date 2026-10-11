@@ -216,6 +216,9 @@ class Chain(unittest.TestCase):
             self.assertTrue(gk.call_args[1]["skip_officeholder"])
             gk.return_value = (None, None)
             self.assertEqual(ask.ask("who is steve jobs"), (ask.LOOKUP_FAILED, []))
+        with mock.patch.object(ask, "current_officeholder", return_value=(None, ask.UNREACHABLE)), \
+                mock.patch.object(ask, "general_knowledge", return_value=("The prime minister of Canada is the head of government.", "Wikipedia: Prime Minister of Canada")):
+            self.assertEqual(ask.ask("who is the prime minister of canada"), (ask.LOOKUP_FAILED, []))  # the office page is not the holder
         with mock.patch.object(ask, "general_knowledge", return_value=(None, ask.UNREACHABLE)):
             self.assertEqual(ask.ask("what causes tides"), (ask.NETWORK_DOWN, []))
         with mock.patch.object(ask, "general_knowledge", return_value=(None, None)):

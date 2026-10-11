@@ -235,6 +235,10 @@ def _is_definition_of(query, title):
     # Equal, not contained. "what do bees make" sits inside the title "Bees
     # Make Honey" and that page is a band, not a definition of anything asked.
     # A bracket on the title only says which one: "Mercury (planet)".
+    # And a why/how/when/where question never wants a definition: "why is the sky blue" matched the page "Sky blue"
+    # (a colour) word for word and came back as a paint chart (dogfood, 5.10.3).
+    if re.match(r"(?:why|how|when|where)\b", query.strip(), re.I):
+        return False
     asked = set(_keywords(normalize_query(query)))
     return bool(asked) and asked == set(_keywords(re.sub(r"\s*\([^)]*\)", "", title)))
 
