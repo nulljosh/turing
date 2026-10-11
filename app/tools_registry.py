@@ -63,6 +63,8 @@ _EVIDENCE = {
     "append_note": r"\bnotes?\b|\bappend\b.+\bto (?:my|the) [\w ]{1,30}\b(?:log|list|journal)\b", "add_event": r"calend[ae]r|event|schedule|appt|appointment|\bbook (?:a |an |my )?(?:call|meeting|appointment)\b",
     "complete_reminder": r"remind|done|finish|complete|check off|\bmark\b|tick off|cross off", "list_reminders": r"reminder|\btasks\b|to-?dos?",
     "read_page": r"\bpage\b|\barticle\b|\bstory\b|\btext\b|\bcontent\b|\bread\b|\bsays?\b|\bsaying\b|\blooking at\b|\btab\b|\bsite\b|\bwebsite\b|\burl\b|\bfetch\b|https?://|\bwww\.|\.(?:com|org|net|io|ca)\b",  # round 18: read_page had no cue, so a 0.2-sure pick ran
+    "jt_status": r"joshua ?tree|\bjt\b", "jt_boot": r"joshua ?tree|\bjt\b", "jt_stop": r"joshua ?tree|\bjt\b", "jt_log": r"joshua ?tree|\bjt\b",
+    "jt_screenshot": r"joshua ?tree|\bjt\b", "jt_type": r"joshua ?tree|\bjt\b", "jt_look": r"joshua ?tree|\bjt\b",  # 5.10: every jt tool needs its name said
     "search_notes": r"\bnotes?\b", "needs_attention": r"attention|needs me|focus on|deal with|need to handle|urgent|status|pending|important|needs doing|overview|priorit",
     "folder_size": r"\bbig\b|\bsize\b|\bspace\b|take up",
     "research": r"research|deep dive|look into|dig into|investigate|brief on|info(?:rmation)? on|look up|read up|info(?:rmation)? about", "research_more": r"\bmore\b|deeper|expand|further|continue|again",
