@@ -303,6 +303,19 @@ def jt_screenshot(mode=""):
     return f"Saved Joshua Tree's screen to {ppm} (install ImageMagick for a PNG)."
 
 
+def jt_look(question=""):
+    """Screenshot Joshua Tree and look at it with her own eyes: jt_screenshot, then see_image on that PNG with your
+    question (or "what is on this screen"). Asks first, and the picture never leaves the Mac."""
+    if HEADLESS:
+        return "Would screenshot Joshua Tree and look at it." if _jt_pids() else "Joshua Tree is not running. Say 'boot joshua tree' first."
+    saved = jt_screenshot()
+    m = re.search(r"to (\S+\.png)", saved)
+    if not m:
+        return saved
+    import tools_see
+    return tools_see.see_image(f"{question.strip() or 'What is on this screen? Answer in two sentences.'}\t{m.group(1)}")
+
+
 def jt_log(lines="20"):
     """The last lines of Joshua Tree's serial log (~/.samantha/jt-serial.log, written by jt_boot). Read only."""
     log = os.path.expanduser("~/.samantha/jt-serial.log")
@@ -356,7 +369,7 @@ def open_in_editor(repo=""):
     return f"Opened {name} in the editor."
 
 
-TOOLS = (git_status, recent_commits, run_tests, open_prs, open_in_editor, jt_status, jt_boot, jt_stop, jt_log, jt_type, jt_screenshot)
+TOOLS = (git_status, recent_commits, run_tests, open_prs, open_in_editor, jt_status, jt_boot, jt_stop, jt_log, jt_type, jt_screenshot, jt_look)
 
 # (pattern, tool name, what to hand it), same shape as tools_organizer.ROUTES and tools_system.ROUTES. tools.py
 # splices these in ahead of the base router, alongside organizer's and system's: "run the tests" and "open prs"
@@ -386,6 +399,7 @@ ROUTES = (
     (re.compile(r"^type (.+?) (?:into|in|to) (?:joshua ?tree|jt)((?: (?:and|then) (?:press |hit )?(?:enter|return))?)$", _I), "jt_type", lambda m: m.group(1) + ("\n" if m.group(2) else "")),
     (re.compile(r"^(?:press|hit) (?:enter|return) (?:in|on) (?:joshua ?tree|jt)$", _I), "jt_type", lambda m: "\n"),
     (re.compile(r"^(?:(?:take |grab )?(?:a )?screenshot (?:of )?(?:joshua ?tree|jt)(?:'s screen)?|what(?:'s| is| does) (?:on )?(?:joshua ?tree|jt)(?:'s)? screen(?: look like| showing)?)\??$", _I), "jt_screenshot", lambda m: ""),
+    (re.compile(r"^(?:what(?:'s| is) (?:joshua ?tree|jt) showing|look at (?:joshua ?tree|jt)(?:'s screen)?|what do you see (?:on|in) (?:joshua ?tree|jt)|describe (?:joshua ?tree|jt)(?:'s screen)?)\??$", _I), "jt_look", lambda m: ""),
 
     (re.compile(r"^open (?:the )?(.+?)(?: repo)? in (?:the editor|vs ?code)$", _I),
      "open_in_editor", lambda m: m.group(1)),

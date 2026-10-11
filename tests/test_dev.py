@@ -506,5 +506,25 @@ class TestJtScreenshot(unittest.TestCase):
         self.assertTrue(any(r[1] == "jt_screenshot" and r[0].match("what's on joshua tree's screen?") for r in tools_dev.ROUTES))
 
 
+class TestJtLook(unittest.TestCase):
+    """jt_look: screenshot then see_image on the PNG, with each stop short."""
+
+    def test_paths(self):
+        """Headless says what it would do; a failed screenshot is passed through; a saved PNG goes to see_image with the question."""
+        with mock.patch.object(tools_dev, "_jt_pids", return_value=[]):
+            self.assertIn("not running", tools_dev.jt_look())
+        with mock.patch.object(tools_dev, "_jt_pids", return_value=[7]):
+            self.assertIn("Would screenshot", tools_dev.jt_look())
+        import tools_see
+        with mock.patch.object(tools_dev, "HEADLESS", False), mock.patch.object(tools_dev, "jt_screenshot", return_value="qemu did not write the screen dump."), \
+                mock.patch.object(tools_see, "see_image", side_effect=AssertionError("looked")):
+            self.assertEqual(tools_dev.jt_look(), "qemu did not write the screen dump.")
+        with mock.patch.object(tools_dev, "HEADLESS", False), mock.patch.object(tools_dev, "jt_screenshot", return_value="Saved Joshua Tree's screen to /x/jt-screen.png. Say so."), \
+                mock.patch.object(tools_see, "see_image", return_value="A desktop with a dock.") as see:
+            self.assertEqual(tools_dev.jt_look("is a terminal open"), "A desktop with a dock.")
+        self.assertEqual(see.call_args[0][0], "is a terminal open\t/x/jt-screen.png")
+        self.assertTrue(any(r[1] == "jt_look" and r[0].match("what is joshua tree showing") for r in tools_dev.ROUTES))
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -1,5 +1,7 @@
 # Progress log
 
+- 2026-10-11: v5.10.0 "What is Joshua Tree showing" screenshots it and looks with her own eyes in one go (jt_screenshot into see_image, the picture never leaves the Mac). Asks first, hidden from models like see_image. That completes the Joshua Tree family from chat: status, boot, type, serial log, screenshot, look, stop.
+  v5.10.0 · 142 tools · 772 tests · docs coverage 100% · laws all hold · biggest app/tools_util.py 649 · actions 246/246 · parity 246/246 · util_diff 261/261
 - 2026-10-11: v5.9.0 "Screenshot Joshua Tree" saves its screen to ~/.samantha/jt-screen.png (qemu's screendump over the control socket, ImageMagick for the PNG), and "what's in ~/.samantha/jt-screen.png" then reads it with her own eyes. Read only. On the demo too.
   v5.9.0 · 141 tools · 771 tests · docs coverage 100% · laws all hold · biggest app/tools_util.py 649 · actions 244/244 · parity 244/244 · util_diff 261/261
 - 2026-10-11: v5.8.0 She types into Joshua Tree: "type ls into Joshua Tree and press enter" sends real keystrokes one key at a time over qemu's control socket (jt_boot now opens it), capitals and punctuation included, and names any character no key makes. Asks first. Law 12 scenario added so an injected command can never ride in. On the demo too.

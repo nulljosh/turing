@@ -1,5 +1,5 @@
 {
-  "version": "5.9.0",
+  "version": "5.10.0",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -96,8 +96,8 @@
         "documented": 8
       },
       "app/tools_dev.py": {
-        "total": 20,
-        "documented": 20
+        "total": 21,
+        "documented": 21
       },
       "app/tools_files.py": {
         "total": 16,
@@ -336,8 +336,8 @@
         "documented": 47
       },
       "tests/test_dev.py": {
-        "total": 73,
-        "documented": 73
+        "total": 75,
+        "documented": 75
       },
       "tests/test_distill.py": {
         "total": 10,
@@ -572,7 +572,7 @@
   "measured": {
     "tools": {
       "before": 0,
-      "after": 141
+      "after": 142
     },
     "actions_eval": "77/77",
     "knowledge_sweep": {

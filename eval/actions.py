@@ -288,6 +288,8 @@ CASES = [
     ("press enter in joshua tree", "jt_type", "\n"),
     ("screenshot joshua tree", "jt_screenshot", ""),
     ("what's on joshua tree's screen?", "jt_screenshot", ""),
+    ("what is joshua tree showing", "jt_look", ""),
+    ("look at joshua tree", "jt_look", ""),
     ("open turing in the editor", "open_in_editor", "turing"),
     ("open the nimble repo in vs code", "open_in_editor", "nimble"),
     # these must still route where they always did, not get stolen by the new dev family
