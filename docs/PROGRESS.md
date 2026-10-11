@@ -1,5 +1,7 @@
 # Progress log
 
+- 2026-10-12: v5.4.1 Unzipping a folder she zipped no longer nests it one level deeper (box.zip comes back as box/, not box/box/). Found by the first test of the files family, which now runs every move, copy, rename, zip and unzip on scratch files in a temp home. Line coverage of app/ measured for the first time: 76 percent overall; tools_files 17 to 59.
+  v5.4.1 · 136 tools · 709 tests · docs coverage 100% · laws all hold · biggest app/tools_util.py 649 · actions 231/231 · parity 231/231 · util_diff 261/261
 - 2026-10-11: v5.4.0 You can cut her off: with voice on, anything new you send stops her mid-sentence, and "stop", "shh" or "be quiet" just silences her. A new reply also never talks over the last one.
   v5.4.0 · 136 tools · 699 tests · docs coverage 100% · laws all hold · biggest app/tools_util.py 649 · actions 231/231 · parity 231/231 · util_diff 261/261
 - 2026-10-11: v5.3.0 The Mac app remembers: your chat is saved after every answer and comes back when you reopen the app, and File > New Chat (Cmd-N) files the old chat away under ~/.samantha/chats and starts a clean one. Everything stays on the Mac.

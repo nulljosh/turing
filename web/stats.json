@@ -1,5 +1,5 @@
 {
-  "version": "5.4.0",
+  "version": "5.4.1",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -346,6 +346,10 @@
       "tests/test_feedback.py": {
         "total": 31,
         "documented": 31
+      },
+      "tests/test_files.py": {
+        "total": 15,
+        "documented": 15
       },
       "tests/test_followup.py": {
         "total": 30,

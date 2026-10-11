@@ -1,6 +1,7 @@
-"""Samantha's file tools, read only: find a file by name (Spotlight), the newest downloads, how big a folder is.
-Everything stays inside the home folder and skips hidden files, same rule as read_document. The write half of the
-family (move, rename, zip, trash) is not here yet; each of those asks first when it lands.
+"""Samantha's file tools. Reads: find a file by name (Spotlight), the newest downloads, how big a folder is.
+Writes: move, copy, rename, zip, unzip, trash (Finder's Trash, never a hard delete), each asking first.
+Everything stays inside the home folder and skips hidden files, same rule as read_document. tests/test_files.py
+runs the write half on scratch files in a temp home.
 """
 import os
 import re
@@ -218,7 +219,12 @@ def unzip_file(path):
     if os.path.exists(out):
         return f"{_short(out)} already exists."
     if not HEADLESS:
-        shutil.unpack_archive(full, out, "zip")
+        import zipfile
+        with zipfile.ZipFile(full) as z:
+            tops = {n.split("/", 1)[0] for n in z.namelist() if n.strip("/")}
+        # a zip that wraps one folder of the same name (zip_file's own shape, Finder's too) unpacks beside itself, so
+        # box.zip comes back as box/, not box/box/; anything else lands inside a folder of the zip's name
+        shutil.unpack_archive(full, os.path.dirname(full) if tops == {os.path.basename(out)} else out, "zip")
     return f"Unzipped to {_short(out)}."
 
 

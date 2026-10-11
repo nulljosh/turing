@@ -58,6 +58,8 @@ jobs:
       - run: python3 tests/test_needs_me.py
       - run: python3 tests/test_organizer.py
       - run: python3 tests/test_system.py
+      # the files family on scratch files in a temp home: move, copy, rename, zip, unzip, trash via a stood-in Finder
+      - run: python3 tests/test_files.py
       - run: python3 tests/test_dev.py
       - run: python3 tests/test_tabs.py
       - run: python3 tests/test_memory.py
