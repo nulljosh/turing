@@ -44,6 +44,8 @@ Every push runs the full suite, and every version is a tagged GitHub release. Wi
 
 <img src="progress.svg" width="460">
 
+<img src="architecture.svg" width="640">
+
 ## Layout
 
 `app/` code, `scripts/` helpers, `tests/` and `eval/` checks, `training/` training, `docs/` docs. Run commands from the repo root.

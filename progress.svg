@@ -1,11 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="480" height="200" viewBox="0 0 480 200"><style>
+<svg xmlns="http://www.w3.org/2000/svg" width="468" height="200" viewBox="0 0 468 200"><style>
   :root { --ink: #111111; }
   @media (prefers-color-scheme: dark) { :root { --ink: #ececec; } }
   text { font-family: -apple-system, Helvetica, Arial, sans-serif; fill: var(--ink); }
   line, polyline { stroke: var(--ink); fill: none; }
   .g { stroke-dasharray: 1 4; }
-</style><text x="50" y="11" font-size="10">Lines of real code</text><line x1="50" y1="26" x2="470" y2="26" class="g"/><text x="46" y="29" font-size="9" text-anchor="end">31786</text><line x1="50" y1="96" x2="470" y2="96" class="g"/><text x="46" y="99" font-size="9" text-anchor="end">15893</text>
-<line x1="50" y1="26" x2="50" y2="166"/><line x1="50" y1="166" x2="470" y2="166"/>
-<polyline points="50,166 60,163 70,161 80,157 90,153 101,142 111,133 121,131 131,127 142,121 152,119 162,117 172,114 183,112 193,110 203,107 213,106 224,102 234,99 244,95 254,93 265,92 275,89 285,84 295,81 306,73 316,67 326,56 336,54 347,54 357,54 367,53 377,50 388,45 398,42 408,40 418,38 429,35 439,31 449,28 459,27 470,26" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
-<text x="50" y="182" font-size="10">Sep 13</text><text x="470" y="182" font-size="10" text-anchor="end">Oct 11</text>
-<text x="50" y="196" font-size="10" font-weight="600">31,786 lines &#183; 100% documented &#183; 627 commits since Sep 13 2026</text></svg>
+</style><text x="38" y="11" font-size="10">Commits</text><line x1="38" y1="26" x2="458" y2="26" class="g"/><text x="34" y="29" font-size="9" text-anchor="end">628</text><line x1="38" y1="96" x2="458" y2="96" class="g"/><text x="34" y="99" font-size="9" text-anchor="end">314</text>
+<line x1="38" y1="26" x2="38" y2="166"/><line x1="38" y1="166" x2="458" y2="166"/>
+<polyline points="38,166 48,163 58,160 68,156 78,153 88,150 98,146 108,143 118,140 128,136 138,133 148,129 158,126 168,123 178,119 188,116 198,113 208,109 218,106 228,103 238,99 248,96 258,93 268,89 278,86 288,83 298,79 308,76 318,73 328,69 338,66 348,63 358,59 368,56 378,53 388,49 398,46 408,43 418,39 428,36 438,33 448,29 458,26" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="38" y="182" font-size="10">Sep 13</text><text x="458" y="182" font-size="10" text-anchor="end">Oct 11</text>
+<text x="38" y="196" font-size="10" font-weight="600">628 commits &#183; 100% documented &#183; since Sep 13 2026</text></svg>
