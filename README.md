@@ -10,13 +10,15 @@ I'm Samantha: a small model that lives on your Mac. A half-billion-parameter hea
 
 The 1.5B is not bundled in the app: the first time I need it, about 850 MB downloads once in the background, and the 0.5B picker answers until it lands. My weights are public on Hugging Face: [the 1.5B tool picker (MLX)](https://huggingface.co/trommatic/samantha-hands-1.5b-mlx) and [the portable GGUF picker for Windows and Linux](https://huggingface.co/trommatic/samantha-hands-gguf).
 
-**What I do** (131 tools, all listed in [docs/ABILITIES.md](docs/ABILITIES.md) in the words you'd say)
+**What I do** (136 tools, all listed in [docs/ABILITIES.md](docs/ABILITIES.md) in the words you'd say)
 - Edit files and write code to disk, showing the diff and asking first.
 - Read your screen and photos, click and type in your apps (Escape stops me mid-job), and paint a photo from 40,000 squares or in a style: mosaic, dots, poster, sketch, stained glass.
 - Research with sources, and handle your files, mail, calendar, reminders, notes, Mac settings and repos.
 - Borrow a bigger local model for summaries and translation.
 - Teach math from grade school through pre-calc 12 (`eval/sixth_grade_math.mjs`, `eval/precalc_math.mjs`).
 - Learn from you: say "good" or "wrong" after anything I do. Say "do that again" and I follow along. Give me a job with steps and I show the plan first.
+- Cut me off: with voice on, anything new you send stops me mid-sentence, and "shh" just silences me. The Mac app keeps your chat between launches (Cmd-N starts a new one).
+- Look at Joshua Tree: "Joshua Tree status" gives its version, open pull requests and whether its test machine is running.
 - Stay on a long job: "work on cleaning up my downloads". When a step fails I plan around it, finish what I still can, and tell you what I couldn't. If you say "trash this file" without naming it, I ask which one.
 
 **How I behave**
@@ -36,7 +38,7 @@ I'm also the chat model inside [Joshua Tree](https://joshuatree.heyitsmejosh.com
 ./gate.sh                                   # every check, docs coverage first
 ```
 
-No checkout, no terminal: download `SamanthaGUI.zip` from [Releases](https://github.com/nulljosh/turing/releases), unzip it, open Samantha.app.
+No checkout, no terminal: download `SamanthaGUI.zip` from [Releases](https://github.com/nulljosh/turing/releases), unzip it, open Samantha.app. It remembers your chat between launches.
 
 Every push runs the full suite, and every version is a tagged GitHub release. Windows and Linux run the picker and chat too, over [a GGUF](https://huggingface.co/trommatic/samantha-hands-gguf) and llama.cpp: one line, `curl -fsSL https://raw.githubusercontent.com/nulljosh/turing/main/install/install.sh | sh` on Linux or `irm https://raw.githubusercontent.com/nulljosh/turing/main/install/install.ps1 | iex` on Windows (`install/`, `training/export_gguf.py`, or Ollama with `Modelfile`); anything that touches AppleScript, Pixelmator or the screen stays on the Mac.
 

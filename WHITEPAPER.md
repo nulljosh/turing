@@ -28,7 +28,9 @@ Then a teacher. Claude writes practice questions and answers from real passages 
 
 ## What she can do
 
-- **Talk.** `python3 app/chat.py --voice`. Whisper on the Mac turns speech into text, she answers, and she says it out loud.
+- **Talk.** `python3 app/chat.py --voice`. Whisper on the Mac turns speech into text, she answers, and she says it out loud. Anything new you send cuts her off, and "shh" silences her.
+- **Remembers.** The Mac app saves the chat after every answer and brings it back on launch; Cmd-N starts a new one.
+- **Joshua Tree.** "Joshua Tree status" reads the OS's version, open pull requests and whether its test machine is running.
 - **See.** "Look at my screen and tell me what's wrong with this chart." A 3B vision model on the Mac looks and answers. The same model reads one frame from the Mac's own camera ("what am I holding"), deleted right after.
 - **Act on screen.** "Click Sign in", "type hello", "press return". She reads the screen to find what you named, and asks before every step.
 - **Research.** "Research the history of the printing press." She reads several sources and writes a short brief with a source after every sentence. A sentence she cannot back up is cut.

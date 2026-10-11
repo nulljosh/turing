@@ -9,6 +9,8 @@ Every ability, in the words you say. Anything that writes, sends or looks at you
 - **Change her look.** "Change your look: ginger with glasses", "make yourself a redhead": a new portrait, about 5 cents, kept aside until you say "keep that look", which renders her new idle and talking loops for about $1.40. Both ask first and say the price. Setup: docs/VOICE-AND-FACE.md.
 - **Transcribe.** "Transcribe the video ~/Desktop/clip.mp4": the words out of any video or audio file in your home folder, same Whisper pipeline.
 
+- **Cut her off.** With voice on, anything new you send stops her mid-sentence; "shh", "stop" or "be quiet" just silences her. The Mac app saves the chat after every answer and restores it on launch; Cmd-N (File > New Chat) files it under ~/.samantha/chats and starts clean.
+
 ## See
 
 - **Look.** "Look at my screen and tell me what's wrong with this chart", "what's in ~/Desktop/cat.png": a local vision model answers. Asks first.
@@ -56,8 +58,10 @@ Every ability, in the words you say. Anything that writes, sends or looks at you
 - **Plug in.** She speaks MCP both ways: any assistant can use her tools, and she can call another server's tools when you name it.
 - **Safe with what she reads.** A page, an email, a document, a note, the screen, another server's tool: none of it can pick or trigger a tool on its own. Only your own words do that, law 9. Even inside a multi-step job, a write her own model proposed still has to trace back to what you actually asked before it ever reaches your yes, law 12. On screen that means a planted "Delete account" or "Install now" button is refused unless you asked to delete or install something.
 
+- **Joshua Tree.** "Joshua Tree status" gives the OS's VERSION, how many pull requests are open and whether a qemu is running. Read only, exact phrases only until the picker is retrained on it.
+
 ## Limits, plainly
 
-Her own picker knows 77 of 106 tools by wording; the rest route through exact matches. Multi-step work borrows a small local model (qwen3:1.7b through Ollama). She never calls another MCP server on her own. She cannot reason like a frontier model and does not try; see `roadmap.md` for what is next and `docs/LAWS.md` for what she will never do.
+Her own picker knows 83 of 136 tools by wording; the rest route through exact matches. Multi-step work borrows a small local model (qwen3:1.7b through Ollama). She never calls another MCP server on her own. She cannot reason like a frontier model and does not try; see `roadmap.md` for what is next and `docs/LAWS.md` for what she will never do.
 
 Windows and Linux now run the picker and chat: `training/export_gguf.py` fuses hands-adapter into the base model and quantizes it to GGUF, `Modelfile` turns that into an Ollama model (`ollama create samantha -f Modelfile`), and `app/serve.py`'s Ollama-compatible `/api/chat` is reachable from there with no MLX and no Mac. `app/tools_agent.py`'s `pick()` uses MLX when it's importable and falls back to llama-cpp-python over that same GGUF otherwise, same prompt, same stop token, same decoding. Everything that touches the Mac itself stays Mac-only regardless of backend: AppleScript (Music, Notes, Reminders, Calendar, Mail, Finder), the screen (see_screen, click, type), and the camera. Image tools run on ImageMagick, so they are not on that list. A phone is its own build-out, not covered here; see `roadmap.md`.
