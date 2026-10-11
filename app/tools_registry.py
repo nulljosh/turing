@@ -44,7 +44,7 @@ _EVIDENCE = {
     "current_tab": r"\btab\b|page|site|browser|chrome|safari|article|reading|looking at", "list_tabs": r"\btabs\b",
     "memory_usage": r"memory|\bram\b", "cpu_load": r"cpu|processor|load|busy|maxed|working|doing", "ip_address": r"\bip\b|address",
     "wifi_name": r"wi-?fi|network|\bssid\b", "system_info": r"system|\bmac\b|macos|chip|computer|specs|about this|\bos\b|version", "list_shortcuts": r"shortcut",
-    "flip_coin": r"coin|heads|tails", "make_uuid": r"uuid|guid|unique id", "time_in": r"time|clock|late", "days_until": r"\bday|sleeps|until|till|far away|count",
+    "flip_coin": r"coin|heads|tails", "make_uuid": r"uuid|guid|unique id", "time_in": r"time|clock|late", "days_until": r"\bday|sleeps|until|till|far away|count|from now|when(?:\'s| is)",
     "roll_dice": r"roll|dice|\bdie\b|\bd\d|throw|toss", "random_number": r"random|number", "make_password": r"password|pwd|passcode|passphrase",
     "hash_text": r"hash|sha|checksum", "word_count": r"word|characters?\b|\blength of\b", "tip": r"\btip", "is_prime": r"prime|factor|divid", "roman_numeral": r"roman",
     "morse_code": r"morse", "new_note": r"note|jot|write|remember|save|down", "say": r"\bsay|speak|announce|voice|aloud|out loud|words",
@@ -62,7 +62,7 @@ _EVIDENCE = {
     "copy_file": r"\bcopy\b|duplicate|\bcp\b", "move_file": r"\bmove\b|\bput\s+(?:\S+\.\w+|~/\S+)\s+(?:in|into)\b|\bshift\b|transfer|relocate|\bdrag\b|\bmv\b", "rename_file": r"rename|new name|call it|change the name|retitle|\bname\b|\bchange\s+\S+\.\w+\s+to\s+\S+\.\w+",
     "append_note": r"\bnotes?\b|\bappend\b.+\bto (?:my|the) [\w ]{1,30}\b(?:log|list|journal)\b", "add_event": r"calend[ae]r|event|schedule|appt|appointment|\bbook (?:a |an |my )?(?:call|meeting|appointment)\b",
     "complete_reminder": r"remind|done|finish|complete|check off|\bmark\b|tick off|cross off", "list_reminders": r"reminder|\btasks\b|to-?dos?",
-    "search_notes": r"\bnotes?\b", "needs_attention": r"attention|needs me|focus on|deal with|need to handle|urgent",
+    "search_notes": r"\bnotes?\b", "needs_attention": r"attention|needs me|focus on|deal with|need to handle|urgent|status|pending|important|needs doing|overview|priorit",
     "folder_size": r"\bbig\b|\bsize\b|\bspace\b|take up",
     "research": r"research|deep dive|look into|dig into|investigate|brief on|info(?:rmation)? on|look up|read up|info(?:rmation)? about", "research_more": r"\bmore\b|deeper|expand|further|continue|again",
     "summarize": r"summar|boil (?:it )?down|condense", "transcribe_video": r"\bwrite (?:\w+ )?down\b|transcribe|spoken|\bsays? in\b|said in|captions|subtitles",
@@ -84,7 +84,7 @@ _EVIDENCE = {
     # own docstring/ABILITIES.md line, not copied from any held-out or test phrasing.
     "calendar_today": r"today|schedule|agenda|calendar|what's on|plans today|my day|happening today",
     "current_date": r"\bdate\b|what day|today's date|which day",
-    "feedback_summary": r"feedback|rating|rate you|how am i rating|thumbs|track record|how'?m i doing",
+    "feedback_summary": r"feedback|rating|rate you|how am i rating|thumbs|track record|how(?:'?m| am) i doing",
     "list_mcp_tools": r"\bmcp\b|other (?:server|assistant)s?|server'?s? tools|other tools",
     "screenshot": r"screenshot|screen ?shot|screen ?grab|screencap|picture of (?:the |my )?screen|capture (?:the |my )?screen|pic of|what'?s (?:showing|on (?:the |my )?screen)"
                   r"|grab (?:the |my )?screen|snap (?:the |my )?screen",
