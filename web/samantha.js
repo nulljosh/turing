@@ -265,6 +265,7 @@
   var NUMWORD = ONES.concat(TENS.slice(2), ["hundred", "thousand", "million"]).sort(function (a, b) { return b.length - a.length; }).join("|");
   var NUMRUN = new RegExp("\\b(?:" + NUMWORD + ")(?:[\\s-]+(?:and\\s+)?(?:" + NUMWORD + "))*\\b", "g");
   function wordsToDigits(text) {
+    text = text.replace(/\ba (hundred|thousand|million)\b/g, "one $1");   // "a hundred" is one hundred
     return text.replace(NUMRUN, function (run) {
       var total = 0, cur = 0;
       run.split(/[\s-]+/).forEach(function (w) {
@@ -287,10 +288,12 @@
     if ((m = new RegExp("^(?:the )?cube root of " + N + "$").exec(expr))) return "The cube root of " + m[1] + " is " + tidy(Math.cbrt(+m[1])) + ".";
     if ((m = new RegExp("^" + N + " (squared|cubed)$").exec(expr))) return m[1] + " " + m[2] + " is " + tidy(Math.pow(+m[1], m[2] === "squared" ? 2 : 3)) + ".";
     if ((m = new RegExp("^" + N + " to the power of " + N + "$").exec(expr)) && isFinite(Math.pow(+m[1], +m[2]))) return m[1] + " to the power of " + m[2] + " is " + tidy(Math.pow(+m[1], +m[2])) + ".";
+    if ((m = new RegExp("^(half|a third|a quarter) of " + N + "$").exec(expr))) return m[1].replace(/^h/, "H").replace(/^a /, "A ") + " of " + m[2] + " is " + tidy(+m[2] / { half: 2, "a third": 3, "a quarter": 4 }[m[1]]) + ".";
     if ((m = new RegExp("^" + N + "\\s*(?:%|percent) of " + N + "$").exec(expr))) return m[1] + "% of " + m[2] + " is " + tidy(+m[1] / 100 * +m[2]) + ".";
     ARITH_WORDS.forEach(function (p) { expr = expr.replace(p[0], p[1]); });
     if (/^[\d\s+\-*\/().]+$/.test(expr) && /\d/.test(expr) && /[+\-*\/]/.test(expr)) {
       var v = calc(expr);
+      if (v !== null && !isFinite(v)) return "You can't divide by zero.";
       if (v !== null && isFinite(v)) return expr.replace(/\s+/g, "") + " = " + tidy(v);   // the Worker's `spoken` rewrites this for a voice
     }
     var c = /^(?:convert |what(?:'s| is) )?(-?\d+(?:\.\d+)?)\s*(?:degrees? )?([a-z]+)\s+(?:to|in|into)\s+([a-z]+)$/.exec(q);

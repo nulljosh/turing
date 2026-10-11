@@ -49,6 +49,7 @@ def words_to_digits(text):
             elif w == "hundred": cur = max(cur, 1) * 100
             else: total += max(cur, 1) * (1000 if w == "thousand" else 1000000); cur = 0
         return str(total + cur)
+    text = re.sub(r"\ba (hundred|thousand|million)\b", r"one \1", text, flags=re.I)  # "a hundred" is one hundred
     return _NUMRUN.sub(run, text)
 
 
