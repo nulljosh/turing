@@ -473,5 +473,38 @@ class TestJtType(unittest.TestCase):
         self.assertEqual(route("press enter in joshua tree"), ("jt_type", "\n"))
 
 
+class TestJtScreenshot(unittest.TestCase):
+    """jt_screenshot: not running, headless, the real dump with and without ImageMagick, a dead socket."""
+
+    def test_paths(self):
+        """Each stop and the two real outcomes."""
+        with mock.patch.object(tools_dev, "_jt_pids", return_value=[]):
+            self.assertIn("not running", tools_dev.jt_screenshot())
+        with mock.patch.object(tools_dev, "_jt_pids", return_value=[7]), mock.patch.object(tools_dev, "_qmp", side_effect=AssertionError("sent")):
+            self.assertIn("jt-screen.png", tools_dev.jt_screenshot())
+        with tempfile.TemporaryDirectory() as d:
+            ppm = os.path.join(d, "jt-screen.ppm")
+            def dump(cmds):
+                """Stand-in qemu: writes the ppm the command names."""
+                open(cmds[0]["arguments"]["filename"], "w").close()
+                return [{"return": {}}]
+            with mock.patch.object(tools_dev, "_jt_pids", return_value=[7]), mock.patch.object(tools_dev, "HEADLESS", False), \
+                    mock.patch.object(tools_dev.os.path, "expanduser", return_value=ppm), mock.patch.object(tools_dev, "_qmp", side_effect=dump) as qmp, \
+                    mock.patch.object(tools_dev.shutil, "which", return_value="/x/magick"), mock.patch.object(tools_dev, "_run_timed", return_value=(0, "")) as run:
+                reply = tools_dev.jt_screenshot()
+            self.assertEqual(qmp.call_args[0][0][0]["execute"], "screendump")
+            self.assertEqual(run.call_args[0][0][:2], ["magick", ppm])
+            self.assertIn("jt-screen.png", reply)
+            self.assertFalse(os.path.exists(ppm))
+            with mock.patch.object(tools_dev, "_jt_pids", return_value=[7]), mock.patch.object(tools_dev, "HEADLESS", False), \
+                    mock.patch.object(tools_dev.os.path, "expanduser", return_value=ppm), mock.patch.object(tools_dev, "_qmp", side_effect=dump), \
+                    mock.patch.object(tools_dev.shutil, "which", return_value=None):
+                self.assertIn("install ImageMagick", tools_dev.jt_screenshot())
+            with mock.patch.object(tools_dev, "_jt_pids", return_value=[7]), mock.patch.object(tools_dev, "HEADLESS", False), \
+                    mock.patch.object(tools_dev, "_qmp", side_effect=OSError("no socket")):
+                self.assertIn("not answering", tools_dev.jt_screenshot())
+        self.assertTrue(any(r[1] == "jt_screenshot" and r[0].match("what's on joshua tree's screen?") for r in tools_dev.ROUTES))
+
+
 if __name__ == "__main__":
     unittest.main()

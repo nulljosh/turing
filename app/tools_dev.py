@@ -282,6 +282,27 @@ def jt_type(text):
     return done + (f" Skipped {''.join(skipped)!r}: no key makes it." if skipped else "")
 
 
+def jt_screenshot(mode=""):
+    """A picture of Joshua Tree's screen right now, saved as ~/.samantha/jt-screen.png (qemu's screendump over the
+    control socket, converted with ImageMagick when it is here, else left as a .ppm). Read only; nothing leaves the Mac."""
+    if not _jt_pids():
+        return "Joshua Tree is not running. Say 'boot joshua tree' first."
+    ppm = os.path.expanduser("~/.samantha/jt-screen.ppm")
+    png = ppm[:-4] + ".png"
+    if HEADLESS:
+        return f"Saved Joshua Tree's screen to {png}. Say \"what's in {png}\" and I will look at it."
+    try:
+        _qmp([{"execute": "screendump", "arguments": {"filename": ppm}}])
+    except OSError:
+        return "Joshua Tree's control socket is not answering; it may still be booting. Try again in a moment."
+    if not os.path.isfile(ppm):
+        return "qemu did not write the screen dump."
+    if shutil.which("magick") and _run_timed(["magick", ppm, png], os.path.dirname(ppm), 30)[0] == 0:
+        os.remove(ppm)
+        return f"Saved Joshua Tree's screen to {png}. Say \"what's in {png}\" and I will look at it."
+    return f"Saved Joshua Tree's screen to {ppm} (install ImageMagick for a PNG)."
+
+
 def jt_log(lines="20"):
     """The last lines of Joshua Tree's serial log (~/.samantha/jt-serial.log, written by jt_boot). Read only."""
     log = os.path.expanduser("~/.samantha/jt-serial.log")
@@ -335,7 +356,7 @@ def open_in_editor(repo=""):
     return f"Opened {name} in the editor."
 
 
-TOOLS = (git_status, recent_commits, run_tests, open_prs, open_in_editor, jt_status, jt_boot, jt_stop, jt_log, jt_type)
+TOOLS = (git_status, recent_commits, run_tests, open_prs, open_in_editor, jt_status, jt_boot, jt_stop, jt_log, jt_type, jt_screenshot)
 
 # (pattern, tool name, what to hand it), same shape as tools_organizer.ROUTES and tools_system.ROUTES. tools.py
 # splices these in ahead of the base router, alongside organizer's and system's: "run the tests" and "open prs"
@@ -364,6 +385,7 @@ ROUTES = (
     (re.compile(r"^(?:what (?:did|does|is) (?:joshua ?tree|jt) say(?:ing)?|(?:joshua ?tree|jt) (?:serial )?log|show (?:me )?(?:the )?(?:joshua ?tree|jt) (?:serial )?log)\??$", _I), "jt_log", lambda m: ""),
     (re.compile(r"^type (.+?) (?:into|in|to) (?:joshua ?tree|jt)((?: (?:and|then) (?:press |hit )?(?:enter|return))?)$", _I), "jt_type", lambda m: m.group(1) + ("\n" if m.group(2) else "")),
     (re.compile(r"^(?:press|hit) (?:enter|return) (?:in|on) (?:joshua ?tree|jt)$", _I), "jt_type", lambda m: "\n"),
+    (re.compile(r"^(?:(?:take |grab )?(?:a )?screenshot (?:of )?(?:joshua ?tree|jt)(?:'s screen)?|what(?:'s| is| does) (?:on )?(?:joshua ?tree|jt)(?:'s)? screen(?: look like| showing)?)\??$", _I), "jt_screenshot", lambda m: ""),
 
     (re.compile(r"^open (?:the )?(.+?)(?: repo)? in (?:the editor|vs ?code)$", _I),
      "open_in_editor", lambda m: m.group(1)),

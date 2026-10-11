@@ -1,6 +1,6 @@
 # Turing Technical Whitepaper
 
-**v5.8.0** | October 2026
+**v5.9.0** | October 2026
 
 Turing builds small language models on one Mac. Its first model, Samantha, is a 0.5B chat model trained on your own writing, with a 1.5B head that picks her tools. Both are public on [Hugging Face](https://huggingface.co/trommatic/samantha-hands-1.5b-mlx). She will never out-think a frontier model. She does not try to. She runs on your Mac, costs nothing per question, keeps everything on the machine, and gets real work done with 131 exact tools. When a question is too hard for her, she borrows a bigger brain that also lives on the Mac. You can type to her or talk to her. She can see your screen, click in your apps, and research a topic with sources. She asks before anything that changes something.
 
@@ -30,7 +30,7 @@ Then a teacher. Claude writes practice questions and answers from real passages 
 
 - **Talk.** `python3 app/chat.py --voice`. Whisper on the Mac turns speech into text, she answers, and she says it out loud. Anything new you send cuts her off, and "shh" silences her.
 - **Remembers.** The Mac app saves the chat after every answer and brings it back on launch; Cmd-N starts a new one.
-- **Joshua Tree.** "Joshua Tree status" reads the OS's version, open pull requests and whether its test machine is running; "boot" and "stop Joshua Tree" start and stop it headless, asking first; "what did Joshua Tree say" reads its serial log; "type ls into Joshua Tree" sends it keystrokes, asking first.
+- **Joshua Tree.** "Joshua Tree status" reads the OS's version, open pull requests and whether its test machine is running; "boot" and "stop Joshua Tree" start and stop it headless, asking first; "what did Joshua Tree say" reads its serial log; "type ls into Joshua Tree" sends it keystrokes, asking first; "screenshot Joshua Tree" saves its screen for her eyes.
 - **See.** "Look at my screen and tell me what's wrong with this chart." A 3B vision model on the Mac looks and answers. The same model reads one frame from the Mac's own camera ("what am I holding"), deleted right after.
 - **Act on screen.** "Click Sign in", "type hello", "press return". She reads the screen to find what you named, and asks before every step.
 - **Research.** "Research the history of the printing press." She reads several sources and writes a short brief with a source after every sentence. A sentence she cannot back up is cut.

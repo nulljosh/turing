@@ -1,5 +1,7 @@
 # Progress log
 
+- 2026-10-11: v5.9.0 "Screenshot Joshua Tree" saves its screen to ~/.samantha/jt-screen.png (qemu's screendump over the control socket, ImageMagick for the PNG), and "what's in ~/.samantha/jt-screen.png" then reads it with her own eyes. Read only. On the demo too.
+  v5.9.0 · 141 tools · 771 tests · docs coverage 100% · laws all hold · biggest app/tools_util.py 649 · actions 244/244 · parity 244/244 · util_diff 261/261
 - 2026-10-11: v5.8.0 She types into Joshua Tree: "type ls into Joshua Tree and press enter" sends real keystrokes one key at a time over qemu's control socket (jt_boot now opens it), capitals and punctuation included, and names any character no key makes. Asks first. Law 12 scenario added so an injected command can never ride in. On the demo too.
   v5.8.0 · 140 tools · 770 tests · docs coverage 100% · laws all hold · biggest app/tools_util.py 649 · actions 242/242 · parity 242/242 · util_diff 261/261
 - 2026-10-11: v5.7.0 "What did Joshua Tree say" reads the last lines of the serial log jt_boot writes, so a headless boot can be watched from chat. Read only. On the demo too. The Mac app download rebuilt with tonight's loader and tools.
