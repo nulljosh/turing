@@ -265,7 +265,7 @@ def general_knowledge(query, skip_officeholder=False, hands=True):
 # reasoning as "project": there's no other model this CLI could mean.
 def is_project_question(question):
     """Return True if question contains project keywords or is scoped to Turing."""
-    q = question.lower()
+    q = strip_vocative(question.lower())  # "hey samantha, how's it going" is you talking to her, not about her (dogfood 5.11.14)
     # ponytail: the one name that collides with the repo. "who was alan turing"
     # got the project FAQ. If a second collision ever shows up, make it a list.
     if "alan turing" in q:

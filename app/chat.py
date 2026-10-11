@@ -265,6 +265,17 @@ def answer_turn(question, history, topic_active, last_subject=None, on_text=None
         if extracted:
             answer = extracted
             answered_from_project = True
+        elif not is_project_question(question):
+            # only the sticky topic put this here and the notes have nothing: it is an outside question after all
+            # (dogfood 5.11.14: "hey samantha, how's it going" latched the topic, then dinner plans got "my notes don't cover that")
+            topic_active = False
+            gk_answer, gk_source = general_knowledge(question) if is_question(question) else (None, None)
+            if gk_answer:
+                answer = gk_answer
+            else:
+                import tools_llm
+                llm = tools_llm.fallback(question)
+                answer = f"{llm[0]}\n(Answered by {llm[1]} on this Mac.)" if llm else (NETWORK_DOWN if gk_source is UNREACHABLE else OUT_OF_SCOPE)
         else:
             context = "\n\n---\n\n".join(r["text"][:800] for r in results)
             prompt = build_prompt(history, context, question, memory_context(question))

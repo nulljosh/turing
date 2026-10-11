@@ -148,5 +148,18 @@ class Faq(unittest.TestCase):
             self.assertIsNone(ask_faq.try_extract("what colour is the sky", [{"text": "blue"}]))
 
 
+class Vocative(unittest.TestCase):
+    """Her name as an address is not a project keyword and does not hide a greeting (dogfood 5.11.14)."""
+    def test_greeting_with_her_name(self):
+        """"hey samantha, how's it going" is small talk, and "what is samantha" is still about the project."""
+        import ask
+        self.assertEqual(ask_local.strip_vocative("hey samantha, how's it going"), "how's it going")
+        self.assertEqual(ask_local.strip_vocative("what's the time, samantha"), "what's the time")
+        self.assertEqual(ask_local.strip_vocative("what is samantha"), "what is samantha")
+        self.assertIsNotNone(ask.local_answer("hey samantha, how's it going")[0])
+        self.assertFalse(ask.is_project_question("hey samantha, how's it going"))
+        self.assertTrue(ask.is_project_question("samantha, what is turing"))
+
+
 if __name__ == "__main__":
     unittest.main()

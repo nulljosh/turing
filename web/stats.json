@@ -1,5 +1,5 @@
 {
-  "version": "5.11.13",
+  "version": "5.11.14",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -12,8 +12,8 @@
         "documented": 10
       },
       "app/ask_local.py": {
-        "total": 12,
-        "documented": 12
+        "total": 13,
+        "documented": 13
       },
       "app/ask_web.py": {
         "total": 11,
@@ -316,8 +316,8 @@
         "documented": 28
       },
       "tests/test_ask_local.py": {
-        "total": 17,
-        "documented": 17
+        "total": 19,
+        "documented": 19
       },
       "tests/test_ask_web.py": {
         "total": 24,

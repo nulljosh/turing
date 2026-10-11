@@ -132,6 +132,8 @@ def search_url(query):
 def web_search(query):
     """Open a web search in Chrome for Joshua. A question ("how tall is everest") is also answered, with its source, from
     the same lookup her questions use; anything else returns no results to you. To learn what a page says, use read_page."""
+    if not query.strip():  # the picker sometimes hands an empty query ("what happened in the news today"); never open a blank search (dogfood 5.11.14)
+        return "Search for what? Give me a few words."
     _run(["open", "-a", BROWSER, search_url(query)])
     opened = f"Searching for {query!r} in Chrome."
     answer = search_answer(query)

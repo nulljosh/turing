@@ -230,6 +230,15 @@ def clock(query):
     return None
 
 
+# her name as an address, at the start ("hey samantha, ...", "samantha, ...") or after a comma at the end ("..., samantha")
+_VOCATIVE = re.compile(r"^(?:(?:hey|hi|hello|ok|okay|yo)[, ]+)?samantha[,!]+\s*|,\s*samantha[.!?]*$", re.I)
+
+
+def strip_vocative(text):
+    """The same words without her name as an address, so a greeting or a question to her is read for itself."""
+    return _VOCATIVE.sub("", text).strip()
+
+
 _SMALLTALK = (
     (re.compile(r"^(?:hi|hello|hey|yo|hiya|good (?:morning|evening|afternoon))(?: there| samantha)?[!.?]*$", re.I),
      lambda: "Hi. Ask me something, or tell me to do something on this computer."),
@@ -274,5 +283,5 @@ def tool_list():
 def small_talk(query):
     """A greeting, a thanks, or "what can you do": a fixed, honest reply, no model and no lookup.
     Anchored to the whole message, so "hey calculate 8 + 8" and "help me find a file" still reach the tools."""
-    q = query.strip()
+    q = strip_vocative(query.strip())
     return next((reply() for pattern, reply in _SMALLTALK if pattern.match(q)), None)
