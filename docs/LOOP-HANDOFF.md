@@ -1,4 +1,4 @@
-# Turing loop handoff (2026-10-11, afternoon, v5.11.7 shipped, v6.0 in progress)
+# Turing loop handoff (2026-10-11, late afternoon, v5.11.12 shipped, v6.0 in progress)
 
 ## What the loop is
 
@@ -61,5 +61,5 @@ Kaggle kernel version 23: run 20's data, run 22's 119 targeted rows twice, 156 h
 ```
 /loop until v6 (read docs/LOOP-HANDOFF.md first).
 
-Start here: v5.11.7 live on run 20 picker. Run 21 rejected, run 22 in flight on Kaggle (/Volumes/LaCie/turing-v22). First: score run 22 on heldout13, heldout4/12 and heldout14, ship only if it beats run 20 with no more sealed leaks. Then the Next list in order. Never weaken a guard. Hard stop at 90 percent usage. TLDR only.
+Start here: v5.11.12 live on run 20 picker. Run 22 rejected on the bakeoff (better on both dev sets, worse on sealed heldout12), run 23 in flight on Kaggle (/Volumes/LaCie/turing-v23). First: score run 23 on heldout13, heldout4/12 and heldout14, ship only if it beats run 20 with no more sealed leaks. Then the Next list in order. Never weaken a guard. Hard stop at 90 percent usage. TLDR only.
 ```
