@@ -34,3 +34,4 @@ ada-1b-adapter
 hands-adapter
 voice-adapter
 .dev.vars
+.coverage

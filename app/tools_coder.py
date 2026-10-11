@@ -198,8 +198,9 @@ def route(query, log=None, confirm=None):
     if not diffs:
         return "No changes to make."
 
-    # Step 5: Ask for confirmation (gate, same as write_code)
-    if os.environ.get("SAMANTHA_HEADLESS") != "1" and confirm is None:
+    # Step 5: Ask for confirmation (gate, same as write_code). No way to ask means no write, headless or not:
+    # calling a missing confirm used to crash here instead.
+    if confirm is None:
         return f"Plan:\n{plan}\n\nChanges:\n{diffs[0][:200]}...\n\n(Needs confirmation)"
 
     if not confirm("code", (diffs[0][:100] + "...",)):

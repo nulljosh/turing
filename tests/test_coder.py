@@ -135,8 +135,8 @@ class HeadlessMode(unittest.TestCase):
                 mock.patch("os.path.expanduser", side_effect=lambda p: p.replace("~", home)), \
                 mock.patch("tools_coder._plan", return_value="Add dark mode"), \
                 mock.patch("tools_coder._edits", return_value=("--- app.py\nprint()\n---", [("app.py", "print()")])), \
-                mock.patch("tools_dev._repo", return_value=(proj, None)), \
-                mock.patch("tools_dev._shell", return_value=""):
+                mock.patch("tools_coder._repo", return_value=(proj, None)), \
+                mock.patch("tools_coder._shell", return_value=""):
             # In headless, route won't write even on confirm=lambda: True
             result = tools_coder.route("code dark mode in test", confirm=lambda n, a: True)
             # Should get past model steps but won't write in pure headless
@@ -169,7 +169,7 @@ class FullFlow(unittest.TestCase):
 
         with mock.patch("tools_coder._plan", return_value="Add dark mode support"), \
                 mock.patch("tools_coder._edits", return_value=(edit_reply, [("app.py", "print('new')\n")])), \
-                mock.patch("os.environ.get", side_effect=lambda k, d=None: "1" if k == "SAMANTHA_HEADLESS" else d):
+                mock.patch("tools_coder._repo", return_value=(self.proj, None)):
             # route will show plan and diffs, then need confirmation
             # But in headless, confirmation is bypassed and write doesn't happen
             result = tools_coder.route("code dark mode in test", confirm=lambda n, a: False)
@@ -184,7 +184,7 @@ class FullFlow(unittest.TestCase):
         with mock.patch("tools_coder._plan", return_value="Add dark mode support"), \
                 mock.patch("tools_coder._edits", return_value=(edit_reply, [("app.py", "print('new')\n")])), \
                 mock.patch("os.environ.get", side_effect=lambda k, d=None: None if k == "SAMANTHA_HEADLESS" else d), \
-                mock.patch("tools_dev._shell", return_value=""):  # mock git status
+                mock.patch("tools_coder._shell", return_value=""):  # mock git status
             result = tools_coder.route("code dark mode in test", confirm=lambda n, a: True)
             # Should complete flow and write
             self.assertIsNotNone(result)
@@ -200,6 +200,128 @@ class NotInModelsMenu(unittest.TestCase):
     def test_in_writes(self):
         """'code' is in WRITES."""
         self.assertIn("code", tools.WRITES)
+
+
+class Helpers(unittest.TestCase):
+    """_read_head, _gather_context, _plan and _edits with the model and git stood in."""
+
+    def setUp(self):
+        """A temp project with a README and two files."""
+        self.proj = tempfile.mkdtemp()
+        for name, body in (("README.md", "# Demo\nline2\n"), ("app.py", "print('old')\n"), (".env", "SECRET=1\n")):
+            with open(os.path.join(self.proj, name), "w") as f:
+                f.write(body)
+
+    def tearDown(self):
+        """Remove the temp project."""
+        import shutil
+        shutil.rmtree(self.proj, ignore_errors=True)
+
+    def test_read_head_caps_lines_and_survives_a_missing_file(self):
+        """The first N lines come back; a missing path is an empty string."""
+        self.assertEqual(tools_coder._read_head(os.path.join(self.proj, "README.md"), lines=1), "# Demo")
+        self.assertEqual(tools_coder._read_head(os.path.join(self.proj, "nope.txt")), "")
+
+    def test_gather_context_has_readme_status_and_files(self):
+        """README head, git status and the visible file list, hidden files left out."""
+        with mock.patch("tools_coder._shell", return_value="## main"):
+            ctx = tools_coder._gather_context(self.proj, "x")
+        self.assertIn("README:\n# Demo", ctx)
+        self.assertIn("Status:\n## main", ctx)
+        self.assertIn("Files: README.md, app.py", ctx)
+        self.assertNotIn(".env", ctx)
+
+    def test_plan_shapes(self):
+        """No reply, a reply without the model's sign-off, a could-not reply: None. A real reply: the plan text."""
+        import tools_llm
+        for reply in (None, "plan with no sign-off", "I could not reach a model.\n(Answered by x)"):
+            with mock.patch.object(tools_llm, "ask_llm", return_value=reply), mock.patch("tools_coder._shell", return_value=""):
+                self.assertIsNone(tools_coder._plan(self.proj, "dark mode"))
+        with mock.patch.object(tools_llm, "ask_llm", return_value="Change app.py.\n(Answered by Qwen)") as ask, mock.patch("tools_coder._shell", return_value=""):
+            self.assertEqual(tools_coder._plan(self.proj, "dark mode"), "Change app.py.")
+        self.assertIn("dark mode", ask.call_args[0][0])
+
+    def test_edits_parse_blocks_and_show_only_safe_files(self):
+        """The prompt shows app.py but never .env; blocks come back parsed; a bad reply is (None, [])."""
+        import tools_llm
+        with mock.patch.object(tools_llm, "ask_llm", return_value="--- app.py\nprint('new')\n---\n(Answered by Qwen)") as ask:
+            text, edits = tools_coder._edits(self.proj, "x", "plan")
+        self.assertEqual(edits, [("app.py", "print('new')")])
+        self.assertIn("app.py:\nprint('old')", ask.call_args[0][0])
+        self.assertNotIn("SECRET", ask.call_args[0][0])
+        with mock.patch.object(tools_llm, "ask_llm", return_value="The local model is down.\n(Answered by x)"):
+            self.assertEqual(tools_coder._edits(self.proj, "x", "plan"), (None, []))
+
+
+class RouteBranches(unittest.TestCase):
+    """Every way route() stops short, plus the test-runner step, on a temp project with the model stood in."""
+
+    def setUp(self):
+        """A temp project with one committed-looking file, _repo pinned to it, plan stood in."""
+        self.proj = tempfile.mkdtemp()
+        self.app = os.path.join(self.proj, "app.py")
+        with open(self.app, "w") as f:
+            f.write("print('old')\n")
+        self.patches = [mock.patch("tools_coder._repo", return_value=(self.proj, None)),
+                        mock.patch("tools_coder._plan", return_value="Change app.py.")]
+        for p in self.patches:
+            p.start()
+
+    def tearDown(self):
+        """Undo patches, remove the project."""
+        import shutil
+        for p in self.patches:
+            p.stop()
+        shutil.rmtree(self.proj, ignore_errors=True)
+
+    def run_with(self, edits, shell="", confirm=lambda n, a: True, reply="raw"):
+        """route() with these edits and this git/test shell output."""
+        runner = lambda argv, *a, **k: shell if argv[0] in ("python3", "npm") else ("" if "status" in argv else shell)  # git status is clean unless the test says so
+        with mock.patch("tools_coder._edits", return_value=(reply, edits)), mock.patch("tools_coder._shell", side_effect=runner):
+            return tools_coder.route("code x in demo", confirm=confirm)
+
+    def test_first_no_runs_nothing(self):
+        """A no at the first ask stops before the project is even read."""
+        with mock.patch("tools_coder._plan", side_effect=AssertionError("read")):
+            self.assertEqual(tools_coder.route("code x in demo", confirm=lambda n, a: False), "Okay, I will not.")
+
+    def test_model_not_ready(self):
+        """No plan, no edits, or edits in the wrong shape each end with a plain sentence."""
+        with mock.patch("tools_coder._plan", return_value=None):
+            self.assertIn("Could not plan", tools_coder.route("code x in demo"))
+        self.assertIn("Could not generate", self.run_with([], reply=None))
+        self.assertIn("expected format", self.run_with([]))
+
+    def test_too_many_unsafe_and_dirty_files(self):
+        """Four files, a path outside the project, a credential file, and an uncommitted file are each refused."""
+        self.assertIn("Too many files", self.run_with([(f"f{i}.py", "x") for i in range(4)]))
+        self.assertIn("outside project or protected", self.run_with([("../evil.py", "x")]))
+        self.assertIn("outside project or protected", self.run_with([(".env", "x")]))
+        with mock.patch("tools_coder._edits", return_value=("raw", [("app.py", "print('new')")])), mock.patch("tools_coder._shell", return_value=" M app.py"):
+            self.assertIn("uncommitted changes", tools_coder.route("code x in demo", confirm=lambda n, a: True))
+        self.assertEqual(open(self.app).read(), "print('old')\n")
+
+    def test_no_diff_and_no_confirm(self):
+        """Identical content is "No changes"; with no way to ask, the plan and diff come back and nothing is written."""
+        self.assertEqual(self.run_with([("app.py", "print('old')")]), "No changes to make.")
+        reply = self.run_with([("app.py", "print('new')")], confirm=None)
+        self.assertIn("(Needs confirmation)", reply)
+        self.assertIn("-print('old')", reply)
+        self.assertEqual(open(self.app).read(), "print('old')\n")
+
+    def test_tests_run_after_the_write(self):
+        """With a tests/ folder the runner's output decides: a fail names the undo, a pass is reported."""
+        os.mkdir(os.path.join(self.proj, "tests"))
+        reply = self.run_with([("app.py", "print('new')")], shell="1 failed")
+        self.assertIn("Tests failed", reply)
+        self.assertIn("Undo: git checkout -- " + self.app, reply)
+        reply = self.run_with([("app.py", "print('newer')")], shell="3 passed")
+        self.assertEqual(reply, "Wrote 1 file(s). 3 passed")
+        self.assertEqual(open(self.app).read(), "print('newer')")
+
+    def test_code_wrapper(self):
+        """code() hands the phrase to route() and explains the shape when it does not match."""
+        self.assertIn("Say it like", tools_coder.code("make it blue"))
 
 
 if __name__ == "__main__":

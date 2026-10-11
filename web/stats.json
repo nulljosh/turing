@@ -1,5 +1,5 @@
 {
-  "version": "5.4.3",
+  "version": "5.4.4",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -320,8 +320,8 @@
         "documented": 17
       },
       "tests/test_coder.py": {
-        "total": 30,
-        "documented": 30
+        "total": 47,
+        "documented": 47
       },
       "tests/test_dev.py": {
         "total": 57,
@@ -404,8 +404,8 @@
         "documented": 21
       },
       "tests/test_mail_send.py": {
-        "total": 18,
-        "documented": 18
+        "total": 26,
+        "documented": 26
       },
       "tests/test_mcp.py": {
         "total": 12,
