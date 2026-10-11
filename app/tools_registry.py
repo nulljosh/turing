@@ -65,7 +65,7 @@ _EVIDENCE = {
     "search_notes": r"\bnotes?\b", "needs_attention": r"attention|needs me|focus on|deal with|need to handle|urgent|status|pending|important|needs doing|overview|priorit",
     "folder_size": r"\bbig\b|\bsize\b|\bspace\b|take up",
     "research": r"research|deep dive|look into|dig into|investigate|brief on|info(?:rmation)? on|look up|read up|info(?:rmation)? about", "research_more": r"\bmore\b|deeper|expand|further|continue|again",
-    "summarize": r"summar|boil (?:it )?down|condense", "transcribe_video": r"\bwrite (?:\w+ )?down\b|transcribe|spoken|\bsays? in\b|said in|captions|subtitles",
+    "summarize": r"summar|boil (?:it )?down|condense", "transcribe_video": r"\bwrite (?:\w+ )?down\b|transcribe|spoken|\bsays? in\b|said in|captions|subtitles|what (?:was|is) said|what does (?:the |this )?(?:audio|video|clip) say",
     "translate": r"translat|how (?:do|would|can|should) (?:you|i) say|\b(?:in|into|to) (?:french|spanish|german|italian|portuguese|dutch|japanese|chinese|mandarin|korean|russian|arabic|hindi)\b", "write_document": r"draft|write (?:a |an )?(?:doc|document|email|memo|file)|compose",
     # Round ten: resize_image and read_file had no evidence at all, so any wrong pick with its
     # argument copied verbatim (list_dir/read_file's own guard, or resize_image's default check,
