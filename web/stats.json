@@ -1,5 +1,5 @@
 {
-  "version": "5.3.0",
+  "version": "5.4.0",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -180,8 +180,8 @@
         "documented": 10
       },
       "app/voice.py": {
-        "total": 16,
-        "documented": 16
+        "total": 17,
+        "documented": 17
       },
       "scripts/gen_jt_docs.py": {
         "total": 13,
@@ -316,8 +316,8 @@
         "documented": 27
       },
       "tests/test_chat_pipe.py": {
-        "total": 15,
-        "documented": 15
+        "total": 17,
+        "documented": 17
       },
       "tests/test_coder.py": {
         "total": 30,
@@ -480,8 +480,8 @@
         "documented": 25
       },
       "tests/test_voice.py": {
-        "total": 25,
-        "documented": 25
+        "total": 27,
+        "documented": 27
       },
       "tests/test_voice_eleven.py": {
         "total": 7,

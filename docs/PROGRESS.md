@@ -1,5 +1,7 @@
 # Progress log
 
+- 2026-10-11: v5.4.0 You can cut her off: with voice on, anything new you send stops her mid-sentence, and "stop", "shh" or "be quiet" just silences her. A new reply also never talks over the last one.
+  v5.4.0 · 136 tools · 699 tests · docs coverage 100% · laws all hold · biggest app/tools_util.py 649 · actions 231/231 · parity 231/231 · util_diff 261/261
 - 2026-10-11: v5.3.0 The Mac app remembers: your chat is saved after every answer and comes back when you reopen the app, and File > New Chat (Cmd-N) files the old chat away under ~/.samantha/chats and starts a clean one. Everything stays on the Mac.
   v5.3.0 · 136 tools · 697 tests · docs coverage 100% · laws all hold · biggest app/tools_util.py 649 · actions 231/231 · parity 231/231 · util_diff 261/261
 - 2026-10-11: v5.2.0 She can look at Joshua Tree: say "Joshua Tree status" and she reports its version, open pull requests and whether its test machine (qemu) is running, read only. The guard also accepts a few more ways of asking for three read-only tools (days until, what needs attention, how am I doing, what was said in a recording), which cut right picks being refused on the dev sets by 5 without one new leak; sealed scores unchanged. Training has plateaued (other bases tied), so this round was guard and tools, not weights.

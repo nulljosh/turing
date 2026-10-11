@@ -17,6 +17,7 @@ Protocol, one JSON object per line, unbuffered stdin/stdout:
     python3 app/chat_pipe.py --check    # a fake terminal drives one full turn and one confirm, no model needed
 """
 import json
+import re
 import sys
 
 import feedback
@@ -43,6 +44,9 @@ def switch(which, modes):
         return f"No face yet: make one with the character-creator skill into {face.CHARACTER}."
     modes["face"] = face.start()
     return "Face on." if modes["face"] else "Her face is already open in another window."
+
+
+HUSH = re.compile(r"^(?:stop|stop talking|shh+|hush|quiet|be quiet|enough)[.!]?$", re.I)
 
 
 def _say_aloud(text):
@@ -82,6 +86,12 @@ def run(read_line, write, ask_fn):
             continue
 
         bare = question.strip()
+        if modes["voice"]:
+            import voice
+            voice.hush()  # anything new from you cuts her off mid-sentence
+            if isinstance(bare, str) and HUSH.match(bare):
+                write({"answer": "Okay."})
+                continue
         which = SWITCHES.get(bare.lower()) if isinstance(bare, str) else None
         if which:
             said = switch(which, modes)

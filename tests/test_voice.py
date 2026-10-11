@@ -154,5 +154,17 @@ class Live(unittest.TestCase):
         self.assertTrue("2 plus 2" in text or "two plus two" in text, text)
 
 
+class Hush(unittest.TestCase):
+    """hush() cuts off the one process speaking now, and is a no-op when she is quiet."""
+
+    def test_hush_kills_what_is_speaking(self):
+        """A live process is killed and hush says so; a second hush finds nothing."""
+        p = subprocess.Popen(["sleep", "5"])
+        voice._talking[:] = [p]
+        self.assertTrue(voice.hush())
+        self.assertIsNotNone(p.wait(timeout=5))
+        self.assertFalse(voice.hush())
+
+
 if __name__ == "__main__":
     unittest.main()

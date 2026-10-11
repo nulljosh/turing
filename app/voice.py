@@ -201,6 +201,19 @@ def _mouth(proc, steps, face, step=MOUTH_STEP):
         time.sleep(step / 2)
 
 
+_talking = []  # the one say/afplay process speaking right now, so hush() can cut it off from another thread
+
+
+def hush():
+    """Stop whatever she is saying right now. True when something was cut off."""
+    procs, _talking[:] = list(_talking), []
+    for p in procs:
+        if p.poll() is None:
+            p.kill()
+            return True
+    return False
+
+
 def speak(text):
     """Speak text aloud with `say`; while it's talking, watch the mic in small chunks and kill `say` the moment
     a real run of loud sound shows up, so a real interruption drops straight back into listening. Returns True
@@ -212,7 +225,9 @@ def speak(text):
     import face
     face.set_state("talk")
     cmd = speaker(text[:500])
+    hush()  # one voice at a time: a new reply cuts off the last one
     proc = subprocess.Popen(cmd)
+    _talking.append(proc)
     steps = envelope(cmd[1]) if cmd[0] == "afplay" else None
     if steps:
         import threading

@@ -98,5 +98,19 @@ class Live(unittest.TestCase):
             p.terminate()
 
 
+class Interrupt(unittest.TestCase):
+    """Voice on: anything new cuts her off, and "stop" only silences her."""
+
+    def test_stop_hushes_without_asking_anything(self):
+        """With voice on, "shh" answers Okay, hushes her, and never reaches ask_fn."""
+        from unittest import mock
+        import voice
+        with mock.patch.object(voice, "hush") as hush, mock.patch.object(chat_pipe, "_say_aloud"):
+            got = drive([json.dumps({"ask": "/voice"}), json.dumps({"ask": "shh"})],
+                        lambda q, log, confirm: self.fail("asked"))
+        self.assertEqual(got[-1], {"answer": "Okay."})
+        self.assertTrue(hush.called)
+
+
 if __name__ == "__main__":
     unittest.main()
