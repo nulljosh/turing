@@ -112,9 +112,12 @@ def convert_units(text):
 
 # ---------- chance ----------
 
-def flip_coin():
-    """Flip a coin."""
-    return random.choice(("Heads.", "Tails."))
+def flip_coin(count=""):
+    """Flip a coin, or a few: "3" gives three results."""
+    n = int(count) if str(count).strip().isdigit() else {"two": 2, "three": 3, "four": 4, "five": 5}.get(str(count).strip().lower(), 1)
+    n = max(1, min(n, 20))
+    flips = [random.choice(("Heads", "Tails")) for _ in range(n)]
+    return ", ".join(flips) + "."
 
 
 def roll_dice(spec="1d6"):
@@ -190,7 +193,12 @@ _MORSE = dict(zip("abcdefghijklmnopqrstuvwxyz0123456789",
 
 
 def morse_code(text):
-    """Write some text in morse code. Letters and digits only."""
+    """Write some text in morse code, or read morse (dots and dashes, a slash between words) back into text."""
+    t = text.strip()
+    if t and re.fullmatch(r"[.\-/ ]+", t):  # dogfood 5.11.3: "what does ... --- ... mean" had no way back
+        back = {v: k for k, v in _MORSE.items()}
+        words = [" ".join(back.get(c, "?") for c in w.split()) for w in re.split(r"\s*/\s*|\s{3,}", t) if w.strip()]
+        return " ".join("".join(w.split()) for w in words).upper() or "Nothing there to translate."
     return " ".join(_MORSE[c] for c in text.lower() if c in _MORSE) or "Nothing there to translate."
 
 
@@ -217,9 +225,16 @@ def is_prime(number):
     return f"{number} is prime." if len(factors) == 1 else f"{number} is not prime: {' x '.join(map(str, factors))}."
 
 
+_ROMAN = {"m": 1000, "d": 500, "c": 100, "l": 50, "x": 10, "v": 5, "i": 1}
+
+
 def roman_numeral(number):
-    """Write a number from 1 to 3999 in roman numerals."""
-    if not str(number).strip().isdigit() or not 1 <= int(number) <= 3999:
+    """Write a number from 1 to 3999 in roman numerals, or read a roman numeral (MCMXCIX) back as a number."""
+    s = str(number).strip().lower()
+    if s and re.fullmatch(r"[mdclxvi]+", s):  # dogfood 5.11.3: "what is MCMXCIX in numbers"
+        total = sum(-_ROMAN[a] if _ROMAN[a] < _ROMAN[b] else _ROMAN[a] for a, b in zip(s, s[1:] + "i"))
+        return str(total) if 1 <= total <= 3999 and roman_numeral(str(total)).lower() == s else "That is not a roman numeral I can read."
+    if not s.isdigit() or not 1 <= int(s) <= 3999:
         return "Roman numerals run from 1 to 3999."
     n, out = int(number), ""
     for value, sym in ((1000, "M"), (900, "CM"), (500, "D"), (400, "CD"), (100, "C"), (90, "XC"), (50, "L"),
@@ -229,11 +244,12 @@ def roman_numeral(number):
 
 
 def tip(amount):
-    """Work out 15, 18 and 20 percent tips on a bill."""
-    try:
-        bill = float(str(amount).replace("$", ""))
-    except ValueError:
-        return "Give me the bill amount."
+    """Work out 15, 18 and 20 percent tips on a bill, or one rate: "82.50 at 18%"."""
+    m = re.fullmatch(r"\$?\s*(-?\d+(?:\.\d+)?)(?:\s+at\s+(\d+(?:\.\d+)?)\s*%?)?", str(amount).strip())
+    bill = float(m.group(1)) if m else float("nan")
     if not math.isfinite(bill) or bill < 0:
         return "Give me the bill amount."
+    if m.group(2):
+        p = float(m.group(2))
+        return f"Tip on {bill:.2f} at {p:g}% is {bill * p / 100:.2f}."
     return f"Tip on {bill:.2f}: " + ", ".join(f"{p}% is {bill * p / 100:.2f}" for p in (15, 18, 20)) + "."

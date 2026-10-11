@@ -364,6 +364,7 @@ TOOLS = (ask_llm, calculate, convert_units, define_word, time_in, convert_time, 
          copy_to_clipboard, sleep_display, reveal_in_finder, list_shortcuts, run_shortcut, list_mcp_tools, call_mcp_tool, list_tabs, switch_tab, close_tab, read_tab, remember, recall, forget, read_screen, read_document, find_in_document, ask_document, ask_screen, click_text, type_text, press_key, see_screen, see_image, see_camera, research, research_more, save_research, write_document, transcribe_video, run_code)
 
 _I = re.I
+_UNIT_WORDS = "|".join(sorted(set(_UNIT_ALIASES) | set(_LENGTH) | set(_MASS) | set(_VOLUME) | set(_TIME) | set(_TEMPS), key=len, reverse=True))  # every unit the converter knows, longest first
 # (pattern, tool name, what to hand it). Names, not functions: tools.py looks each one up at call time.
 ROUTES = (
     # only by name: "ask qwen ...", "llama, ...", "ask claude ..." (the harness asks before handing it over)
@@ -400,8 +401,9 @@ ROUTES = (
     (re.compile(r"^(?:convert )?(-?\d+) (?:to|in|into) roman(?: numerals?)?$", _I), "roman_numeral", lambda m: m.group(1)),
     (re.compile(r"^convert (.+)$", _I), "convert_units", lambda m: m.group(1)),
     (re.compile(r"^(?:what(?:'s| is) )?(-?\d+(?:\.\d+)?\s*[a-z°]+\s+(?:to|in|into|as)\s+[a-z°]+)\??$", _I), "convert_units", lambda m: m.group(1)),  # "5 feet in cm"
-    (re.compile(r"^(how many [a-z°]+ (?:are |is )?(?:there )?in (?:a |an |one )?[a-z°]+)\??$", _I), "convert_units", lambda m: m.group(1)),  # "how many ounces in a pound"
-    (re.compile(r"^how many ([a-z°]+) (?:is|are) (-?\d+(?:\.\d+)?) ([a-z°]+)\??$", _I), "convert_units", lambda m: f"{m.group(2)} {m.group(3)} to {m.group(1)}"),  # "how many km is 26.2 miles"
+    (re.compile(r"^(how many (?:" + _UNIT_WORDS + r") (?:are |is )?(?:there )?in (?:a |an |one )?(?:" + _UNIT_WORDS + r"))\??$", _I), "convert_units", lambda m: m.group(1)),  # "how many ounces in a pound", units only: "letters in mississippi" is not one
+    (re.compile(r"^how many (" + _UNIT_WORDS + r") (?:is|are) (-?\d+(?:\.\d+)?) (" + _UNIT_WORDS + r")\??$", _I), "convert_units", lambda m: f"{m.group(2)} {m.group(3)} to {m.group(1)}"),  # "how many km is 26.2 miles"
+    (re.compile(r"^how many (?:letters|characters|chars) (?:are )?(?:there )?in (.+?)\??$", _I), "word_count", lambda m: m.group(1)),
     (re.compile(r"^(?:what(?:'s| is) )?(?:the )?((?:square root|sqrt) of .+)$", _I), "calculate", lambda m: m.group(1)),
     (re.compile(r"^(?:define|look up|dictionary)[: ]+(?:the word )?[\"']?([\w' -]+?)[\"']?(?: in the dictionary)?$|^(?:what(?:'s| is) )?the (?:definition|dictionary meaning) of [\"']?([\w' -]+?)[\"']?$", _I), "define_word", lambda m: m.group(1) or m.group(2)),
     (re.compile(r"^what time is it in (.+)$|^(?:what(?:'s| is) )?(?:the )?time in (.+)$", _I), "time_in", lambda m: m.group(1) or m.group(2)),
@@ -415,7 +417,9 @@ ROUTES = (
     (re.compile(r"^(?:what )?day of (?:the )?week (?:is|was|will be|for) (.+)$|^what day (?:is|was|will be) ((?:\w+ \d{1,2}(?:st|nd|rd|th)?,? \d{3,4})|(?:\d{1,2} \w+ \d{3,4})|\d{4}-\d{2}-\d{2})$", _I),
      "date_math", lambda m: "weekday " + (m.group(1) or m.group(2))),
     (re.compile(r"^(?:flip|toss) a coin$", _I), "flip_coin", lambda m: ""),
+    (re.compile(r"^(?:flip|toss) (\d+|two|three|four|five) coins$", _I), "flip_coin", lambda m: m.group(1)),
     (re.compile(r"^roll (?:a |an )?(\d*d\d+)$", _I), "roll_dice", lambda m: m.group(1)),
+    (re.compile(r"^roll (two|three|four|2|3|4) (?:dice|d(\d+)s?)$", _I), "roll_dice", lambda m: {"two": "2", "three": "3", "four": "4"}.get(m.group(1), m.group(1)) + "d" + (m.group(2) or "6")),
     (re.compile(r"^roll (?:a |the )?(?:dice|die)$", _I), "roll_dice", lambda m: "1d6"),
     (re.compile(r"^(?:pick |give me |generate )?(?:a )?random number(?: (?:between|from) (.+))?$", _I), "random_number", lambda m: m.group(1) or ""),
     (re.compile(r"^(?:generate|make|create|give me)(?: me)? (?:a |an )?(?:strong |secure |random )?password(?:(?: of| with)? (\d+)(?: char\w*)?)?$", _I), "make_password", lambda m: m.group(1) or "16"),
@@ -425,13 +429,15 @@ ROUTES = (
     (re.compile(r"^base64 decode[: ]+(.+)$", _I), "base64_decode", lambda m: m.group(1)),
     (re.compile(r"^(?:count (?:the )?words in|word count(?: of)?|how many words (?:are )?(?:there )?in)[: ]+(.+?)\??$", _I), "word_count", lambda m: m.group(1)),
     (re.compile(r"^reverse(?: the)? (?:text|words?|string)[: ]+(.+)$|^reverse: (.+)$", _I), "reverse_text", lambda m: (m.group(1) or m.group(2))),
-    (re.compile(r"^(?:shout|uppercase)[: ]+(.+)$", _I), "shout", lambda m: m.group(1)),
+    (re.compile(r"^(?:shout|uppercase)(?: this)?[: ]+(.+)$", _I), "shout", lambda m: m.group(1)),
     (re.compile(r"^morse(?: code)?(?: for| of)?[: ]+(.+)$", _I), "morse_code", lambda m: m.group(1)),
+    (re.compile(r"^what does ([.\-/ ]+?) (?:mean|say)(?: in morse(?: code)?)?\??$|^(?:decode|read|translate) (?:this |the )?morse(?: code)?[: ]+(.+)$", _I), "morse_code", lambda m: m.group(1) or m.group(2)),
     (re.compile(r"^(?:pretty ?print|format|prettify) json[: ]+(.+)$", _I), "json_pretty", lambda m: m.group(1)),
     (re.compile(r"^(?:pretty ?print|prettify|tidy)(?: (?:this|the))?[: ]+([\[{].*)$", _I), "json_pretty", lambda m: m.group(1)),  # "pretty print {...}": the braces say json
     (re.compile(r"^is (-?\d+) (?:a )?prime$|^(?:prime factors of|factor|factorize) (-?\d+)$", _I), "is_prime", lambda m: m.group(1) or m.group(2)),
     (re.compile(r"^roman numerals? (?:for |of )?(-?\d+)$|^(-?\d+) in roman numerals$", _I), "roman_numeral", lambda m: m.group(1) or m.group(2)),
-    (re.compile(r"^(?:(?:what(?:'s| is) )?(?:the |a )?tip on|tip(?: for)?) (-?\$?-?\d+(?:\.\d+)?)$", _I), "tip", lambda m: m.group(1)),
+    (re.compile(r"^what(?:'s| is) ([mdclxvi]+) (?:in (?:numbers|arabic|decimal)|as a number)\??$", _I), "roman_numeral", lambda m: m.group(1)),
+    (re.compile(r"^(?:(?:what(?:'s| is) )?(?:the |a )?tip on|tip(?: for)?) (-?\$?-?\d+(?:\.\d+)?(?: at \d+(?:\.\d+)?%?)?)\??$", _I), "tip", lambda m: m.group(1)),
     (re.compile(r"^(?:check )?disk space$|^how much (?:disk |storage )?space (?:do i have|is (?:left|free))(?: left)?$|^how much storage (?:do i have|is left)$", _I), "disk_space", lambda m: ""),
     (re.compile(r"^how long has (?:my mac|this mac|it) been (?:on|up|running)$|^uptime$", _I), "uptime", lambda m: ""),
     (re.compile(r"^(?:how much )?(?:ram|memory)(?: (?:do i have|is free|is left|am i using))?$|^(?:ram|memory) usage$", _I), "memory_usage", lambda m: ""),
@@ -492,6 +498,10 @@ def demo():
     assert convert_units("how many seconds in a day") == "1 day is 86400 s." and "cannot convert" in convert_units("how many bananas in a crate")
     assert "in NYC" in time_in("nyc right now") and "in London" in time_in("london at the moment"), time_in("nyc right now")
     assert date_math("what's the date in 30 days").startswith("30 days from now is ") and date_math("10 days ago").endswith("."), date_math("in 30 days")
+    assert morse_code("... --- ...") == "SOS" and morse_code(".... .. / - .... . .-. .") == "HI THERE", morse_code("... --- ...")
+    assert roman_numeral("MCMXCIX") == "1999" and roman_numeral("iiii") == "That is not a roman numeral I can read."
+    assert tip("$82.50 at 18%") == "Tip on 82.50 at 18% is 14.85." and tip("45") == "Tip on 45.00: 15% is 6.75, 18% is 8.10, 20% is 9.00."
+    assert flip_coin("3").count(", ") == 2 and flip_coin() in ("Heads.", "Tails.")
     assert "January 1" in days_until("new year's") and "January 1, 2027" in days_until("2027") and "Sunday" not in date_math("weekday dec 25")[:0]
     _wc = os.path.join(os.path.dirname(os.path.abspath(__file__)), "wc-demo.txt")  # a real file inside home on a Mac and on CI: the path counts the file, not itself
     with open(_wc, "w") as f:

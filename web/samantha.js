@@ -382,6 +382,8 @@
     minutes: "min", mins: "min", hour: "h", hours: "h", hr: "h", hrs: "h", days: "day", weeks: "week",
     celsius: "c", centigrade: "c", fahrenheit: "f", kelvin: "k", "°c": "c", "°f": "f"
   };
+  var UNIT_WORDS = Object.keys(ALIAS).concat(Object.keys(LENGTH), Object.keys(MASS), Object.keys(VOLUME), Object.keys(TIME), ["c", "f", "k"])
+    .filter(function (w, i, a) { return a.indexOf(w) === i; }).sort(function (a, b) { return b.length - a.length; }).map(function (w) { return w.replace(/[°]/g, "\\$&"); }).join("|");
   U.convert_units = function (text) {
     var t = text.toLowerCase().trim().replace(/\?$/, "").trim();
     var m = /^\s*(-?\d+(?:\.\d+)?)\s*([a-z°]+)\s+(?:to|in|into|as)\s+([a-z°]+)\s*$/.exec(t), n, a, b;
@@ -584,7 +586,14 @@
   };
 
   function rnd(lo, hi) { return lo + Math.floor(Math.random() * (hi - lo + 1)); }
-  U.flip_coin = function () { return Math.random() < 0.5 ? "Heads." : "Tails."; };
+  U.flip_coin = function (count) {
+    var c = String(count || "").trim().toLowerCase(), words = { two: 2, three: 3, four: 4, five: 5 };
+    var n = /^\d+$/.test(c) ? parseInt(c, 10) : (words[c] || 1);
+    n = Math.max(1, Math.min(n, 20));
+    var flips = [];
+    for (var i = 0; i < n; i++) flips.push(Math.random() < 0.5 ? "Heads" : "Tails");
+    return flips.join(", ") + ".";
+  };
   U.roll_dice = function (spec) {
     var m = /^(\d*)d(\d+)$/.exec((spec || "1d6").toLowerCase().trim() || "1d6");
     if (!m) return 'Say it like "2d6" or "d20".';
@@ -633,6 +642,15 @@
                 "----- .---- ..--- ...-- ....- ..... -.... --... ---.. ----.").split(" ")[i];
   });
   U.morse_code = function (text) {
+    var t = text.trim();
+    if (t && /^[.\-/ ]+$/.test(t)) {
+      var back = {};
+      Object.keys(MORSE).forEach(function (k) { back[MORSE[k]] = k; });
+      var words = t.split(/\s*\/\s*|\s{3,}/).filter(function (w) { return w.trim(); }).map(function (w) {
+        return w.trim().split(/\s+/).map(function (c) { return back[c] || "?"; }).join("");
+      });
+      return words.join(" ").toUpperCase() || "Nothing there to translate.";
+    }
     var out = text.toLowerCase().split("").filter(function (c) { return MORSE[c]; }).map(function (c) { return MORSE[c]; }).join(" ");
     return out || "Nothing there to translate.";
   };
@@ -647,16 +665,24 @@
     if (n > 1) factors.push(n);
     return factors.length === 1 ? s + " is prime." : s + " is not prime: " + factors.join(" x ") + ".";
   };
+  var ROMAN = { m: 1000, d: 500, c: 100, l: 50, x: 10, v: 5, i: 1 };
   U.roman_numeral = function (number) {
     var s = String(number).trim();
+    if (s && /^[mdclxvi]+$/i.test(s)) {
+      var lo = s.toLowerCase(), total = 0;
+      for (var i = 0; i < lo.length; i++) { var a = ROMAN[lo[i]], b = i + 1 < lo.length ? ROMAN[lo[i + 1]] : 1; total += a < b ? -a : a; }
+      return total >= 1 && total <= 3999 && U.roman_numeral(String(total)).toLowerCase() === lo ? String(total) : "That is not a roman numeral I can read.";
+    }
     if (!/^\d+$/.test(s) || +s < 1 || +s > 3999) return "Roman numerals run from 1 to 3999.";
     var n = +s, out = "", table = [[1000, "M"], [900, "CM"], [500, "D"], [400, "CD"], [100, "C"], [90, "XC"], [50, "L"], [40, "XL"], [10, "X"], [9, "IX"], [5, "V"], [4, "IV"], [1, "I"]];
     table.forEach(function (row) { while (n >= row[0]) { out += row[1]; n -= row[0]; } });
     return out;
   };
   U.tip = function (amount) {
-    var bill = parseFloat(String(amount).replace("$", ""));
+    var m = /^\$?\s*(-?\d+(?:\.\d+)?)(?:\s+at\s+(\d+(?:\.\d+)?)\s*%?)?$/.exec(String(amount).trim());
+    var bill = m ? parseFloat(m[1]) : NaN;
     if (!isFinite(bill) || bill < 0) return "Give me the bill amount.";
+    if (m[2]) { var p = parseFloat(m[2]); return "Tip on " + bill.toFixed(2) + " at " + String(p) + "% is " + (bill * p / 100).toFixed(2) + "."; }
     return "Tip on " + bill.toFixed(2) + ": " + [15, 18, 20].map(function (p) { return p + "% is " + (bill * p / 100).toFixed(2); }).join(", ") + ".";
   };
   // memory across visits: the same three tools as tools_util.py, kept in this browser's localStorage instead of a file
@@ -779,8 +805,9 @@
     [/^(?:convert )?(-?\d+) (?:to|in|into) roman(?: numerals?)?$/i, function (m) { return ["roman_numeral", m[1]]; }],
     [/^convert (.+)$/i, function (m) { return ["convert_units", m[1]]; }],
     [/^(?:what(?:'s| is) )?(-?\d+(?:\.\d+)?\s*[a-z°]+\s+(?:to|in|into|as)\s+[a-z°]+)\??$/i, function (m) { return ["convert_units", m[1]]; }],
-    [/^(how many [a-z°]+ (?:are |is )?(?:there )?in (?:a |an |one )?[a-z°]+)\??$/i, function (m) { return ["convert_units", m[1]]; }],
-    [/^how many ([a-z°]+) (?:is|are) (-?\d+(?:\.\d+)?) ([a-z°]+)\??$/i, function (m) { return ["convert_units", m[2] + " " + m[3] + " to " + m[1]]; }],
+    [new RegExp("^(how many (?:" + UNIT_WORDS + ") (?:are |is )?(?:there )?in (?:a |an |one )?(?:" + UNIT_WORDS + "))\\??$", "i"), function (m) { return ["convert_units", m[1]]; }],
+    [new RegExp("^how many (" + UNIT_WORDS + ") (?:is|are) (-?\\d+(?:\\.\\d+)?) (" + UNIT_WORDS + ")\\??$", "i"), function (m) { return ["convert_units", m[2] + " " + m[3] + " to " + m[1]]; }],
+    [/^how many (?:letters|characters|chars) (?:are )?(?:there )?in (.+?)\??$/i, function (m) { return ["word_count", m[1]]; }],
     [/^(?:what(?:'s| is) )?(?:the )?((?:square root|sqrt) of .+)$/i, function (m) { return ["calculate", m[1]]; }],
     [/^(?:define|look up|dictionary)[: ]+(?:the word )?["']?([\w' -]+?)["']?(?: in the dictionary)?$|^(?:what(?:'s| is) )?the (?:definition|dictionary meaning) of ["']?([\w' -]+?)["']?$/i, function (m) { return ["define_word", (m[1] || m[2])]; }],
     [/^what time is it in (.+)$|^(?:what(?:'s| is) )?(?:the )?time in (.+)$/i, function (m) { return ["time_in", (m[1] || m[2])]; }],
@@ -794,7 +821,9 @@
     [/^(?:what )?day of (?:the )?week (?:is|was|will be|for) (.+)$|^what day (?:is|was|will be) ((?:\w+ \d{1,2}(?:st|nd|rd|th)?,? \d{3,4})|(?:\d{1,2} \w+ \d{3,4})|\d{4}-\d{2}-\d{2})$/i,
      function (m) { return ["date_math", "weekday " + (m[1] || m[2])]; }],
     [/^(?:flip|toss) a coin$/i, function (m) { return ["flip_coin", ""]; }],
+    [/^(?:flip|toss) (\d+|two|three|four|five) coins$/i, function (m) { return ["flip_coin", m[1]]; }],
     [/^roll (?:a |an )?(\d*d\d+)$/i, function (m) { return ["roll_dice", m[1]]; }],
+    [/^roll (two|three|four|2|3|4) (?:dice|d(\d+)s?)$/i, function (m) { return ["roll_dice", ({ two: "2", three: "3", four: "4" }[m[1]] || m[1]) + "d" + (m[2] || "6")]; }],
     [/^roll (?:a |the )?(?:dice|die)$/i, function (m) { return ["roll_dice", "1d6"]; }],
     [/^(?:pick |give me |generate )?(?:a )?random number(?: (?:between|from) (.+))?$/i, function (m) { return ["random_number", (m[1] || "")]; }],
     [/^(?:generate|make|create|give me)(?: me)? (?:a |an )?(?:strong |secure |random )?password(?:(?: of| with)? (\d+)(?: char\w*)?)?$/i, function (m) { return ["make_password", (m[1] || "16")]; }],
@@ -804,13 +833,15 @@
     [/^base64 decode[: ]+(.+)$/i, function (m) { return ["base64_decode", m[1]]; }],
     [/^(?:count (?:the )?words in|word count(?: of)?|how many words (?:are )?(?:there )?in)[: ]+(.+?)\??$/i, function (m) { return ["word_count", m[1]]; }],
     [/^reverse(?: the)? (?:text|words?|string)[: ]+(.+)$|^reverse: (.+)$/i, function (m) { return ["reverse_text", ((m[1] || m[2]))]; }],
-    [/^(?:shout|uppercase)[: ]+(.+)$/i, function (m) { return ["shout", m[1]]; }],
+    [/^(?:shout|uppercase)(?: this)?[: ]+(.+)$/i, function (m) { return ["shout", m[1]]; }],
     [/^morse(?: code)?(?: for| of)?[: ]+(.+)$/i, function (m) { return ["morse_code", m[1]]; }],
+    [/^what does ([.\-/ ]+?) (?:mean|say)(?: in morse(?: code)?)?\??$|^(?:decode|read|translate) (?:this |the )?morse(?: code)?[: ]+(.+)$/i, function (m) { return ["morse_code", (m[1] || m[2])]; }],
     [/^(?:pretty ?print|format|prettify) json[: ]+(.+)$/i, function (m) { return ["json_pretty", m[1]]; }],
     [/^(?:pretty ?print|prettify|tidy)(?: (?:this|the))?[: ]+([\[{].*)$/i, function (m) { return ["json_pretty", m[1]]; }],
     [/^is (-?\d+) (?:a )?prime$|^(?:prime factors of|factor|factorize) (-?\d+)$/i, function (m) { return ["is_prime", (m[1] || m[2])]; }],
     [/^roman numerals? (?:for |of )?(-?\d+)$|^(-?\d+) in roman numerals$/i, function (m) { return ["roman_numeral", (m[1] || m[2])]; }],
-    [/^(?:(?:what(?:'s| is) )?(?:the |a )?tip on|tip(?: for)?) (-?\$?-?\d+(?:\.\d+)?)$/i, function (m) { return ["tip", m[1]]; }],
+    [/^what(?:'s| is) ([mdclxvi]+) (?:in (?:numbers|arabic|decimal)|as a number)\??$/i, function (m) { return ["roman_numeral", m[1]]; }],
+    [/^(?:(?:what(?:'s| is) )?(?:the |a )?tip on|tip(?: for)?) (-?\$?-?\d+(?:\.\d+)?(?: at \d+(?:\.\d+)?%?)?)\??$/i, function (m) { return ["tip", m[1]]; }],
     [/^(?:check )?disk space$|^how much (?:disk |storage )?space (?:do i have|is (?:left|free))(?: left)?$|^how much storage (?:do i have|is left)$/i, function (m) { return ["disk_space", ""]; }],
     [/^how long has (?:my mac|this mac|it) been (?:on|up|running)$|^uptime$/i, function (m) { return ["uptime", ""]; }],
     [/^(?:how much )?(?:ram|memory)(?: (?:do i have|is free|is left|am i using))?$|^(?:ram|memory) usage$/i, function (m) { return ["memory_usage", ""]; }],
