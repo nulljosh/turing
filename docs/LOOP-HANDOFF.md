@@ -17,7 +17,7 @@ Work toward 6.0, one round at a time: integrate Joshua Tree tools and Pi hardwar
 
 - Shipped today: v5.2.0 jt_status, v5.3.0 saved chats in the Mac app, v5.4.0 interrupt her (new message or "shh" stops her talking). Signed app re-uploaded.
 - heldout13 (360 fresh dev sentences, writer saw only the tool list; arg hints trimmed where the label was the whole tail): live run-13 picker 310/360, 2 past guard, 6 refused. Real gaps: morse_code, shout, word_count, define_word, current_date, write_document drafts, teach_me, find_in_document, and inventing tools that do not exist (book_flight, send_text) for null requests.
-- Run 17 (in progress): run 16's Kaggle data (/Volumes/LaCie/turing-v17/data, 12,673 rows) plus a targeted Haiku batch (scratchpad batch17.jsonl through training/extra_to_data.py) for those tools and 100 null requests. Ship only if it beats run 13 on heldout13 and does not get worse on sealed heldout4/12 (counts only).
+- Run 17 (in progress): run 16's Kaggle data (/Volumes/LaCie/turing-v17/data, 12,673 rows) plus a targeted Haiku batch (scratchpad batch17.jsonl through training/extra_to_data.py) for those tools and 100 null requests. Ship only if it beats run 13 on heldout13 and does not get worse on sealed heldout4/12 (counts only). Pushed as Kaggle kernel version 17 at about 01:40 on 2026-10-12. Resume: read /Volumes/LaCie/turing-v17/score.out; if empty, run /Volumes/LaCie/turing-v17/fetch_and_score.sh. Run 13 baselines: heldout13 310/360, 2 past, 6 refused; heldout4 385/455, 8 past, 17 refused; heldout12 364/414, 11 past, 28 refused.
 
 ## 2026-10-11 pickup
 
