@@ -129,5 +129,61 @@ class SendEmailClassification(unittest.TestCase):
         self.assertIn("send_email", tools.TOOLS)
 
 
+class RealSendPath(unittest.TestCase):
+    """The Contacts lookup and the Mail send with osascript stood in: zero, one, many matches, and the argv shape."""
+
+    def setUp(self):
+        """Headless off for the module, so _app is reached and can be stood in."""
+        import tools_mail_send as M
+        self.M = M
+        self.p = mock.patch.object(M, "HEADLESS", False)
+        self.p.start()
+
+    def tearDown(self):
+        """Headless back on."""
+        self.p.stop()
+
+    def test_app_runs_osascript_with_argv(self):
+        """Text rides in argv after the script, stdout wins, stderr is the fallback; headless never runs anything."""
+        fake = mock.Mock(stdout="ok\n", stderr="")
+        with mock.patch.object(self.M.subprocess, "run", return_value=fake) as run:
+            self.assertEqual(self.M._app("tell x", "a b", "c"), "ok")
+        self.assertEqual(run.call_args[0][0], ["osascript", "-e", "tell x", "a b", "c"])
+        with mock.patch.object(self.M.subprocess, "run", return_value=mock.Mock(stdout="", stderr="err")):
+            self.assertEqual(self.M._app("x"), "err")
+        with mock.patch.object(self.M, "HEADLESS", True), mock.patch.object(self.M.subprocess, "run", side_effect=AssertionError("ran")):
+            self.assertEqual(self.M._app("x"), "")
+
+    def test_no_match_and_zero_count(self):
+        """An empty lookup and a lookup that counts zero both say so and never send."""
+        for found in ("", "0"):
+            with mock.patch.object(self.M, "_app", return_value=found) as app:
+                self.assertIn("couldn't find", self.M.send_email("mom\tI am late"))
+            self.assertEqual(app.call_count, 1)
+
+    def test_many_matches_ask_which(self):
+        """Two contacts list both and ask which, and nothing is sent."""
+        with mock.patch.object(self.M, "_app", return_value="Mom Smith <mom@x.com>\nMom Jones <mj@x.com>\n2") as app:
+            reply = self.M.send_email("mom\tI am late")
+        self.assertIn("Which one?", reply)
+        self.assertIn("Mom Jones", reply)
+        self.assertEqual(app.call_count, 1)
+
+    def test_one_match_sends_with_a_five_word_subject(self):
+        """One contact: the send script gets the address, a subject of the first five words, and the whole message."""
+        msg = "I am running late for dinner tonight sorry"
+        with mock.patch.object(self.M, "_app", side_effect=["Mom <mom@x.com>\n1", ""]) as app:
+            reply = self.M.send_email(f"mom\t{msg}")
+        self.assertEqual(app.call_count, 2)
+        self.assertEqual(app.call_args_list[1][0], (self.M._SEND_EMAIL, "Mom <mom@x.com>", "I am running late for", msg))
+        self.assertEqual(reply, "Emailed Mom: I am running late for...")
+
+    def test_result_without_a_count_line_still_sends(self):
+        """A lookup that returns only the contact line counts it as one and sends."""
+        with mock.patch.object(self.M, "_app", side_effect=["Dad <dad@x.com>", ""]) as app:
+            self.assertIn("Emailed Dad", self.M.send_email("dad\thi there"))
+        self.assertEqual(app.call_count, 2)
+
+
 if __name__ == "__main__":
     unittest.main()
