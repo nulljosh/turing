@@ -26,7 +26,15 @@ Work toward 6.0, one round at a time: integrate Joshua Tree tools and Pi hardwar
 
 Frontier check: Qwen4 unreleased; Qwen-Image-2.1-Turbo (Oct 9) is real but needs 12 to 16 GB here (see roadmap). Qwen3.5 small bases (0.8B/2B/4B) exist on Kaggle (qwen-lm/qwen-3-5) but are a hybrid multimodal architecture: needs a transformers version that supports it and an MLX converter check, and every other base tied run 13, so it is parked as a low-odds experiment. Guard cues widened for days_until, needs_attention, feedback_summary (dev refusals down 4, no new leaks). The rename "tab bug" was a model garble, not code; the guard is right to refuse it. Dev sets 6/8 are trained on, so they overstate; a fresh labeled dev set is still the missing piece.
 
-## Next, in order
+## Next, in order (2026-10-12)
+
+1. Run 18 verdict: ship only if heldout13 >= 334, standard past-guard <= 19, sealed heldout4/12 not worse. If it fails, run 19 = run 16 data plus the 441 rows with the summarize/agent label question settled first (read eval/hands.py's standard set labels for "tldr this page").
+2. Test slices by coverage hole: mcp_server (32), tools_mail_send (44), chat.py (48), tools_coder (49). One file per round, fix any bug it finds, patch release each.
+3. Landing demo: every new tool gets a route in web/samantha.js, a STANDIN answer in web/demo.js, a REEL or MORE phrase, and an actions.py case (jt_status is the template).
+4. Pi robot when the hardware is on the network. Joshua Tree boot/stop from chat (asks first).
+5. Image-generation experiment (Qwen-Image-2.1-Turbo Q4 via stable-diffusion.cpp, weights on the LaCie, everything else closed).
+
+## Next, in order (older)
 
 1. Raspberry Pi hardware (arriving today): app/robot.py on real Pi first boot. Network, UART serial, screen framebuffer drawing, then 0.5B GGUF picker inference. app/install.sh, then python3 app/robot.py.
 2. Joshua Tree driving tools: spawn processes, call methods, poll status from chat (replacing FAQ asks with real tool calls).
