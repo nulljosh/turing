@@ -6,8 +6,10 @@ cd "$(dirname "$0")"
 APP=build/SamanthaGUI.app
 rm -rf "$APP" && mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 # her flower as a Liquid Glass icon (Samantha.icon, made in Icon Composer); actool also writes the .icns older macOS reads
-xcrun actool Samantha.icon --compile "$APP/Contents/Resources" --app-icon Samantha --platform macosx --target-device mac \
-  --minimum-deployment-target 13.0 --output-partial-info-plist "$APP/Contents/Resources/icon.plist" >/dev/null 2>&1 || echo "no actool: built without her icon"
+# actool wants absolute output paths: with relative ones it writes nothing and says nothing (the dist app shipped without an icon until 2026-10-11)
+xcrun actool "$PWD/Samantha.icon" --compile "$PWD/$APP/Contents/Resources" --app-icon Samantha --platform macosx --target-device mac \
+  --minimum-deployment-target 13.0 --output-partial-info-plist "$PWD/$APP/Contents/Resources/icon.plist" >/dev/null 2>&1 || echo "no actool: built without her icon"
+[ -f "$APP/Contents/Resources/Samantha.icns" ] || echo "warning: her icon did not compile"
 rm -f "$APP/Contents/Resources/icon.plist"
 swiftc -O -parse-as-library SamanthaGUI.swift -o "$APP/Contents/MacOS/SamanthaGUI"
 cat > "$APP/Contents/Info.plist" <<PLIST

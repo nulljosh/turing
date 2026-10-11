@@ -473,7 +473,7 @@
     jt_stop: function () { return 'Stopped Joshua Tree (1 qemu process). On a real Mac this asks first.'; },
     jt_log: function () { return 'Joshua Tree 2.41.0 booting\\nnet: rtl8139 up, 10.0.2.15\\nfs: dotfiles mounted\\ndesktop ready'; },
     jt_type: function (q) { return 'Typed ' + JSON.stringify(String(q || '').replace(/\\n$/, '')) + ' into Joshua Tree' + (/\\n$/.test(String(q || '')) ? ' and pressed Return.' : '.') + ' On a real Mac this asks first.'; },
-    jt_screenshot: function () { return 'Saved Joshua Tree\\'s screen to ~/Pictures/jt-screen.png. Say "what\\'s in ~/Pictures/jt-screen.png" and she looks at it.'; },
+    jt_screenshot: function () { return "Saved Joshua Tree's screen to ~/Pictures/jt-screen.png. Say \"what's in ~/Pictures/jt-screen.png\" and she looks at it."; },
     jt_look: function () { return 'A desktop with a dock along the bottom: Apps, Files, Mail, Calendar, Notes, Reminders. A terminal window is open with a prompt. On a real Mac this asks first and her own eyes answer.'; }
   };
   Object.keys(STANDIN).forEach(function (k) { var f = STANDIN[k]; TOOLS[k] = function () { var r = f.apply(null, arguments); return k === 'list_reminders' || k === 'add_event' ? r : r + ' (stand-in Mac)'; }; });
@@ -555,9 +555,9 @@
     jt_status: function () { return 'Looking at Joshua Tree: version, open pull requests, whether its test machine is up.'; },
     jt_boot: function () { return 'Booting Joshua Tree in qemu, no window. On a real Mac it asks first.'; },
     jt_stop: function () { return 'Stopping Joshua Tree. On a real Mac it asks first.'; },
-    jt_log: function () { return 'Reading the last lines of Joshua Tree\\'s serial log.'; },
+    jt_log: function () { return 'Reading the last lines of Joshua Tree\'s serial log.'; },
     jt_type: function () { return 'Typing into Joshua Tree key by key. On a real Mac it asks first.'; },
-    jt_screenshot: function () { return 'Asking qemu for a picture of Joshua Tree\\'s screen.'; },
+    jt_screenshot: function () { return 'Asking qemu for a picture of Joshua Tree\'s screen.'; },
     jt_look: function () { return 'Screenshotting Joshua Tree, then looking at it. On a real Mac it asks first.'; },
     new_note: function () { return 'Writing a note. On a real Mac it asks first.'; },
     new_reminder: function () { return 'Adding a reminder. On a real Mac it asks first.'; },

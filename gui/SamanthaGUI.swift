@@ -249,6 +249,7 @@ private struct ConfirmBar: View {
 struct ChatView: View {
     @ObservedObject var samantha: Samantha
     @State private var text = ""
+    @FocusState private var fieldFocused: Bool  // a disabled field drops focus; it comes back when she is done (QA 2026-10-11)
     private var inputDisabled: Bool { samantha.busy || samantha.pending != nil }
 
     var body: some View {
@@ -314,7 +315,10 @@ struct ChatView: View {
         HStack {
             TextField("Talk to Samantha", text: $text)
                 .textFieldStyle(.roundedBorder).disabled(inputDisabled)
+                .focused($fieldFocused)
                 .onSubmit(submit)
+                .onAppear { fieldFocused = true }
+                .onChange(of: inputDisabled) { _, disabled in if !disabled { fieldFocused = true } }
             Button("Send", action: submit).disabled(text.isEmpty || inputDisabled)
         }.padding(10)
     }

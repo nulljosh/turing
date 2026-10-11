@@ -33,6 +33,8 @@ cp "$ROOT"/app/*.py "$APP/Contents/Resources/app/app/"
 cp "$ROOT/requirements.txt" "$ROOT/VERSION" "$APP/Contents/Resources/app/"
 cp "$ROOT/docs/FAQ.md" "$APP/Contents/Resources/app/docs/"
 cp launcher.sh "$APP/Contents/Resources/launcher.sh"
+# her icon, compiled by build.sh from Samantha.icon (Assets.car for the Liquid Glass icon, the .icns for older macOS)
+cp "$DEV_APP"/Contents/Resources/Assets.car "$DEV_APP"/Contents/Resources/Samantha.icns "$APP/Contents/Resources/" 2>/dev/null || echo "warning: packaging without her icon"
 chmod +x "$APP/Contents/Resources/launcher.sh"
 
 cat > "$APP/Contents/Info.plist" <<PLIST
@@ -41,6 +43,8 @@ cat > "$APP/Contents/Info.plist" <<PLIST
 <plist version="1.0"><dict>
 <key>CFBundleIdentifier</key><string>com.heyitsmejosh.samantha.gui</string>
 <key>CFBundleName</key><string>Samantha</string>
+<key>CFBundleIconName</key><string>Samantha</string>
+<key>CFBundleIconFile</key><string>Samantha</string>
 <key>CFBundleExecutable</key><string>SamanthaGUI</string>
 <key>CFBundlePackageType</key><string>APPL</string>
 <key>CFBundleShortVersionString</key><string>$(cat "$ROOT/VERSION" 2>/dev/null || echo 1.0)</string>
