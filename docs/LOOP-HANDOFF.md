@@ -32,6 +32,10 @@ Frontier check: Qwen4 unreleased; Qwen-Image-2.1-Turbo (Oct 9) is real but needs
 
 Worse on heldout13 (324 vs 325), heldout4 leaks 11 vs 7, heldout12 364 vs 375. Run 20 stays live. Details in docs/BAKEOFF.md. Files kept in /Volumes/LaCie/turing-v21.
 
+## Run 22 in flight (started 13:55)
+
+Kaggle kernel version 22: run 20's data plus 125 targeted rows times three (unread_mail, current_date, reveal_in_finder, list_tabs, read_tab, jt_screenshot, six near-miss non-commands). Files in /Volumes/LaCie/turing-v22. When COMPLETE run `bash /Volumes/LaCie/turing-v22/fetch_and_score.sh > /Volumes/LaCie/turing-v22/score.out 2>&1`, then also score heldout14 with `--test eval/heldout14.jsonl`. Bar: heldout13 >= 325, heldout14 above run 20's 229 of 291 with no more than 6 past the guard, heldout4 385/7 past, heldout12 375/13 past, standard 1859 with 20 past. Otherwise document the rejection and keep run 20.
+
 ## Run 22 plan (2026-10-11 14:00)
 
 Fresh dev set eval/heldout14.jsonl (291 sentences kept of a Haiku writer's 360 that saw only the tool list; dropped 46 that equal a training or eval phrasing and 23 that say a tool name). Run 20 scores 229 of 291, 15 wrong tool, 6 past the guard, 10 right picks refused by the guard. Dump kept at scratchpad only; rescore with `./.venv/bin/python eval/hands.py --model models/samantha-hands-1.5b-mlx --trained --test eval/heldout14.jsonl`. Leaks by tool (write rows for these): unread_mail (picked web_search), current_date (new_reminder), reveal_in_finder (find_file), list_tabs (current_tab), read_tab (say), jt_screenshot (jt_status). Refusals are guard evidence cues, not the model: open_url (bare site name), summarize, read_file, trash_file, write_document, git_status, run_tests, list_mcp_tools, rename_file, calculate with sqrt(). Widening a cue is allowed only with a matching _AGAINST check and a law-12 attack case. Run 22 = run 20 data (/Volumes/LaCie/turing-v20/data) plus a few hundred rows for those tools through training/extra_to_data.py, kernel /Volumes/LaCie/turing-v21/kernel. Ship only if heldout13 >= 325, heldout14 improves, sealed heldout4/12 not worse, leaks do not rise.
