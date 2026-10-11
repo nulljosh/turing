@@ -305,7 +305,7 @@
       if (u && UNIT_NAME[to] === UNIT_NAME[u[0]]) return c[1] + " " + from + " = " + tidy(n * u[1]) + " " + u[0];
     }
     var now = new Date();
-    if (/^what(?:'s| is) the time|^what time is it|^(?:current )?time$/.test(q)) return "It's " + now.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }).replace(/\.$/, "") + ".";
+    if (/^what(?:'s| is) the time(?: now)?$|^what time is it(?: (?:right )?now)?$|^(?:current )?time$/.test(q)) return "It's " + now.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }).replace(/\.$/, "") + ".";
     if (/^what(?:'s| is) (?:the |today's )?date|^what day is it|^what(?:'s| is) today/.test(q)) return "It's " + now.toLocaleDateString([], { weekday: "long", month: "long", day: "numeric", year: "numeric" }) + ".";
     return null;
   }

@@ -52,7 +52,10 @@ final class Store {
 
     /// One turn: your line goes in, her answer lands as a message.
     func send(_ text: String) {
+        // The iOS keyboard curls quotes ("what’s 15% of 240"); her router and the Mac expect straight ones.
         let line = text.trimmingCharacters(in: .whitespacesAndNewlines)
+            .replacingOccurrences(of: "[‘’]", with: "'", options: .regularExpression)
+            .replacingOccurrences(of: "[“”]", with: "\"", options: .regularExpression)
         guard !line.isEmpty, !busy else { return }
         current.messages.append(Message(role: .user, text: line))
         if current.messages.count == 1 { current.retitle() }
@@ -75,7 +78,7 @@ final class Store {
             if macPaired { await askMac(line) } else { reply("That one needs your Mac. Pair it in Settings and ask again.", model: nil) }
             return
         case .none:
-            break
+            if let quick = twins.exact(line) { reply(quick, model: nil); return }
         }
         if model.isReady {
             await askPhone(line)

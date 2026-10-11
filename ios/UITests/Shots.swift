@@ -16,7 +16,8 @@ final class Shots: XCTestCase {
         let app = XCUIApplication()
         app.launchArguments = ["--mock"]
         app.launch()
-        sleep(1)
+        shot("splash")
+        sleep(2)
         shot("home")
 
         let field = app.textViews.firstMatch.exists ? app.textViews.firstMatch : app.textFields.firstMatch
@@ -28,6 +29,16 @@ final class Shots: XCTestCase {
         shot("working")
         sleep(2)
         shot("chat")
+
+        // A run of her exact tools (answered on the phone) and one plain question (the stand-in Mac answers it).
+        for (i, q) in ["flip 3 coins", "what's 15% of 240", "how many days until christmas", "convert 5 miles to km",
+                       "reverse the word samantha", "write a haiku about rain"].enumerated() {
+            field.tap()
+            field.typeText(q)
+            app.buttons["Send"].tap()
+            sleep(2)
+            shot("q\(i + 1)")
+        }
 
         app.buttons["Chats"].tap()
         sleep(1)

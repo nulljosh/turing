@@ -44,7 +44,7 @@ struct MessageRow: View {
                     .font(Theme.body).lineSpacing(Theme.bodyLine).foregroundStyle(Theme.ink)
                     .textSelection(.enabled)
                 if let model = message.model {
-                    Text("Answered by \(model) on your Mac").font(Theme.small).foregroundStyle(Theme.muted)
+                    Text("Answered by \(model)").font(Theme.small).foregroundStyle(Theme.muted)
                 }
                 if isLast {
                     HStack(spacing: 18) {

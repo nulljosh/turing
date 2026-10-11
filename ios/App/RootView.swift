@@ -5,10 +5,15 @@ struct RootView: View {
     @Environment(Store.self) private var store
     @State private var drawer = false
     @State private var settings = false
+    @State private var splash = true
 
     var body: some View {
         @Bindable var store = store
         ZStack(alignment: .leading) {
+            if splash {
+                Splash().zIndex(2).transition(.opacity)
+                    .task { try? await Task.sleep(for: .seconds(1.8)); withAnimation(.easeOut(duration: 0.4)) { splash = false } }
+            }
             VStack(spacing: 0) {
                 TopBar(onMenu: { hideKeyboard(); withAnimation(.easeOut(duration: 0.22)) { drawer = true } }, onNew: { store.newChat() })
                 if store.current.messages.isEmpty { HomeView() } else { ChatView() }
@@ -28,6 +33,21 @@ struct RootView: View {
         .alert("Could not reach your Mac", isPresented: Binding(get: { store.error != nil }, set: { if !$0 { store.error = nil } })) {
             Button("OK") { store.error = nil }
         } message: { Text(store.error ?? "") }
+    }
+}
+
+/// Her mark and her name for a second while the app comes up.
+struct Splash: View {
+    var body: some View {
+        VStack(spacing: 14) {
+            Mark(size: 112)
+            Text("Samantha").font(.system(size: 30, weight: .semibold))
+            Text("Runs on this phone.").font(.subheadline).foregroundStyle(.secondary)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Theme.paper)
+        .ignoresSafeArea()
+        .accessibilityIdentifier("splash")
     }
 }
 

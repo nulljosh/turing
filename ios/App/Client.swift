@@ -126,9 +126,12 @@ struct MockClient: BridgeClient {
                     continuation.finish()
                     return
                 }
-                continuation.yield(.working("time_in(tokyo)"))
-                try? await Task.sleep(for: .milliseconds(700))
-                continuation.yield(.answer("It is 7:27 AM on Monday in Tokyo."))
+                continuation.yield(.working("thinking"))
+                try? await Task.sleep(for: .milliseconds(900))
+                let answer = text.lowercased().contains("haiku")
+                    ? "Rain on the window,\nthe kettle hums its one note,\nevening settles in."
+                    : "I am the stand-in Mac, so that one gets a stand-in answer. Pair a real Mac for the real thing."
+                continuation.yield(.answer(answer + " (Answered by Qwen3.5-9B on this Mac.)"))
                 continuation.finish()
             }
         }

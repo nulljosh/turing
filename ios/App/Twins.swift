@@ -33,6 +33,13 @@ final class Twins {
         return .tool(tool, r.forProperty("arg")?.toString() ?? "")
     }
 
+    /// The quick exact answers that need no tool call (arithmetic, "15% of 240", unit sums, the local time), or nil.
+    func exact(_ text: String) -> String? {
+        guard let a = samantha?.invokeMethod("exact", withArguments: [text]), !a.isNull, !a.isUndefined else { return nil }
+        let s = a.toString() ?? ""
+        return s.isEmpty || s == "undefined" ? nil : s
+    }
+
     /// True when the JavaScript twin of this tool exists and runs without a Mac.
     func runsHere(_ tool: String) -> Bool {
         guard !needsMac.contains(tool), let fn = samantha?.forProperty("util")?.forProperty(tool) else { return false }
