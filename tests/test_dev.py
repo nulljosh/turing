@@ -364,5 +364,57 @@ class TestJtStatus(unittest.TestCase):
         self.assertTrue(any(r[0].match("joshua tree status") for r in tools_dev.ROUTES))
 
 
+class TestJtBootStop(unittest.TestCase):
+    """jt_boot and jt_stop: headless never launches or kills; the real path launches qemu detached and signals only its own pids."""
+
+    def setUp(self):
+        """A fake joshuatree checkout with a kernel, _repo pinned to it."""
+        self.proj = tempfile.mkdtemp()
+        open(os.path.join(self.proj, "kernel.elf"), "w").close()
+        self.p = mock.patch.object(tools_dev, "_repo", return_value=(self.proj, None))
+        self.p.start()
+
+    def tearDown(self):
+        """Undo."""
+        self.p.stop()
+        shutil.rmtree(self.proj, ignore_errors=True)
+
+    def test_boot_refusals(self):
+        """No kernel, no qemu, or already running: a sentence each, nothing launched."""
+        with mock.patch.object(tools_dev.subprocess, "Popen", side_effect=AssertionError("launched")):
+            os.remove(os.path.join(self.proj, "kernel.elf"))
+            self.assertIn("no kernel.elf", tools_dev.jt_boot())
+            open(os.path.join(self.proj, "kernel.elf"), "w").close()
+            with mock.patch.object(tools_dev.shutil, "which", return_value=None):
+                self.assertIn("not installed", tools_dev.jt_boot())
+            with mock.patch.object(tools_dev.shutil, "which", return_value="/x/qemu"), mock.patch.object(tools_dev, "_jt_pids", return_value=[42]):
+                self.assertIn("already running", tools_dev.jt_boot())
+
+    def test_boot_headless_and_real(self):
+        """Headless answers without launching; for real, qemu starts detached with no display and a serial log."""
+        with mock.patch.object(tools_dev.shutil, "which", return_value="/x/qemu"), mock.patch.object(tools_dev, "_jt_pids", return_value=[]):
+            with mock.patch.object(tools_dev.subprocess, "Popen", side_effect=AssertionError("launched")):
+                self.assertIn("Booting Joshua Tree headless", tools_dev.jt_boot())
+            with mock.patch.object(tools_dev, "HEADLESS", False), mock.patch.object(tools_dev.subprocess, "Popen") as po, mock.patch.object(tools_dev.os, "makedirs"):
+                tools_dev.jt_boot()
+            cmd = po.call_args[0][0]
+            self.assertEqual(cmd[:2], ["qemu-system-i386", "-kernel"])
+            self.assertIn("-display", cmd)
+            self.assertNotIn("-drive", cmd)  # no dotfiles.img in the fake checkout
+            self.assertTrue(po.call_args[1]["start_new_session"])
+
+    def test_stop(self):
+        """Not running is a sentence; running pids get SIGTERM only when not headless."""
+        with mock.patch.object(tools_dev, "_jt_pids", return_value=[]):
+            self.assertEqual(tools_dev.jt_stop(), "Joshua Tree is not running.")
+        with mock.patch.object(tools_dev, "_jt_pids", return_value=[41, 42]), mock.patch.object(tools_dev.os, "kill", side_effect=AssertionError("killed")):
+            self.assertEqual(tools_dev.jt_stop(), "Stopped Joshua Tree (2 qemu processes).")
+        with mock.patch.object(tools_dev, "_jt_pids", return_value=[41]), mock.patch.object(tools_dev, "HEADLESS", False), mock.patch.object(tools_dev.os, "kill") as kill:
+            self.assertEqual(tools_dev.jt_stop(), "Stopped Joshua Tree (1 qemu process).")
+        self.assertEqual(kill.call_args[0][0], 41)
+        for text, name in (("boot joshua tree", "jt_boot"), ("shut down jt", "jt_stop")):
+            self.assertTrue(any(r[1] == name and r[0].match(text) for r in tools_dev.ROUTES), text)
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -182,6 +182,52 @@ def jt_status(repo=""):
     return f"Joshua Tree {version}: {prs} open PRs, qemu {'running' if up else 'not running'}."
 
 
+_QEMU_PATTERN = r"qemu-system-i386.*(?:joshuatree|kernel\.elf)"  # only Joshua Tree's own machine, never another qemu
+
+
+def _jt_pids():
+    """The pids of a running Joshua Tree qemu, if any."""
+    rc, out = _run_timed(["pgrep", "-f", _QEMU_PATTERN], _THIS_REPO, 5)
+    return [int(p) for p in out.split() if p.isdigit()] if rc == 0 else []
+
+
+def jt_boot(mode=""):
+    """Boot Joshua Tree headless in qemu (its own kernel.elf and dotfiles.img, no window, serial log at
+    ~/.samantha/jt-serial.log). Refuses when it is already running or not built. Asks first."""
+    path, err = _repo("joshuatree")
+    if err:
+        return err
+    kernel, disk = os.path.join(path, "kernel.elf"), os.path.join(path, "dotfiles.img")
+    if not os.path.isfile(kernel):
+        return "Joshua Tree has no kernel.elf built yet: run make in it first."
+    if not shutil.which("qemu-system-i386"):
+        return "qemu is not installed (brew install qemu), so I cannot boot Joshua Tree."
+    if _jt_pids():
+        return "Joshua Tree is already running. Say 'stop joshua tree' first."
+    log = os.path.expanduser("~/.samantha/jt-serial.log")
+    cmd = ["qemu-system-i386", "-kernel", kernel, "-display", "none", "-rtc", "base=localtime", "-net", "nic,model=rtl8139", "-net", "user",
+           "-serial", f"file:{log}"] + (["-drive", f"file={disk},format=raw,if=ide,index=0"] if os.path.isfile(disk) else [])
+    if not HEADLESS:
+        os.makedirs(os.path.dirname(log), exist_ok=True)
+        subprocess.Popen(cmd, cwd=path, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)
+    return f"Booting Joshua Tree headless; its serial log is {log}. Say 'stop joshua tree' to shut it down."
+
+
+def jt_stop(mode=""):
+    """Stop the Joshua Tree qemu that jt_boot started (SIGTERM to its own process only). Asks first."""
+    pids = _jt_pids()
+    if not pids:
+        return "Joshua Tree is not running."
+    if not HEADLESS:
+        import signal
+        for pid in pids:
+            try:
+                os.kill(pid, signal.SIGTERM)
+            except OSError:
+                pass
+    return f"Stopped Joshua Tree ({len(pids)} qemu process{'es' if len(pids) > 1 else ''})."
+
+
 # ---------- open in editor: classified like open_app, not a write ----------
 
 def open_in_editor(repo=""):
@@ -206,7 +252,7 @@ def open_in_editor(repo=""):
     return f"Opened {name} in the editor."
 
 
-TOOLS = (git_status, recent_commits, run_tests, open_prs, open_in_editor, jt_status)
+TOOLS = (git_status, recent_commits, run_tests, open_prs, open_in_editor, jt_status, jt_boot, jt_stop)
 
 # (pattern, tool name, what to hand it), same shape as tools_organizer.ROUTES and tools_system.ROUTES. tools.py
 # splices these in ahead of the base router, alongside organizer's and system's: "run the tests" and "open prs"
@@ -230,6 +276,8 @@ ROUTES = (
      "open_prs", lambda m: m.group(1)),
 
     (re.compile(r"^(?:joshua ?tree|jt) status$|^how(?:'s| is) joshua ?tree(?: doing)?\??$", _I), "jt_status", lambda m: ""),
+    (re.compile(r"^(?:boot|start|launch|run|fire up) (?:up )?(?:joshua ?tree|jt)(?: headless)?$", _I), "jt_boot", lambda m: ""),
+    (re.compile(r"^(?:stop|shut ?down|halt|kill) (?:joshua ?tree|jt)$", _I), "jt_stop", lambda m: ""),
 
     (re.compile(r"^open (?:the )?(.+?)(?: repo)? in (?:the editor|vs ?code)$", _I),
      "open_in_editor", lambda m: m.group(1)),

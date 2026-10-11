@@ -1,5 +1,5 @@
 {
-  "version": "5.4.4",
+  "version": "5.5.0",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -96,8 +96,8 @@
         "documented": 8
       },
       "app/tools_dev.py": {
-        "total": 12,
-        "documented": 12
+        "total": 15,
+        "documented": 15
       },
       "app/tools_files.py": {
         "total": 16,
@@ -303,6 +303,18 @@
         "total": 1,
         "documented": 1
       },
+      "tests/test_ask.py": {
+        "total": 28,
+        "documented": 28
+      },
+      "tests/test_ask_local.py": {
+        "total": 16,
+        "documented": 16
+      },
+      "tests/test_ask_web.py": {
+        "total": 24,
+        "documented": 24
+      },
       "tests/test_badge.py": {
         "total": 11,
         "documented": 11
@@ -324,8 +336,8 @@
         "documented": 47
       },
       "tests/test_dev.py": {
-        "total": 57,
-        "documented": 57
+        "total": 63,
+        "documented": 63
       },
       "tests/test_distill.py": {
         "total": 10,
@@ -560,7 +572,7 @@
   "measured": {
     "tools": {
       "before": 0,
-      "after": 136
+      "after": 138
     },
     "actions_eval": "77/77",
     "knowledge_sweep": {
