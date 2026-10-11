@@ -13,6 +13,10 @@ Work toward 6.0, one round at a time: integrate Joshua Tree tools and Pi hardwar
 - **Training plateau:** Run 16 (heldout9 and 11 folded in) is not better than v5.1. Heldout12: 372 of 414 right, 10.9 percent undone (v5.1: 364, 10.4); heldout4: 388 right, 6.8 percent (v5.1: 385, 5.9). Not shipped. More sentences stopped paying; misses are a long tail across about 28 tools (roughly half missing cue words, half arguments). Loop paused. Next lever: guard tuning, argument engineering, or Qwen3-1.7B (Apache, needs rope_theta config patch).
 - Weights and dumps: `/Volumes/LaCie/turing-v10`, `-v11`, `-v12`, `-v13`, `-v16` (each has fetch_and_score.sh). Rescore with `./.venv/bin/python eval/hands.py --rescore <dump>`.
 
+## 2026-10-11 pickup
+
+Frontier check: Qwen4 unreleased; Qwen-Image-2.1-Turbo (Oct 9) is real but needs 12 to 16 GB here (see roadmap). Qwen3.5 small bases (0.8B/2B/4B) exist on Kaggle (qwen-lm/qwen-3-5) but are a hybrid multimodal architecture: needs a transformers version that supports it and an MLX converter check, and every other base tied run 13, so it is parked as a low-odds experiment. Guard cues widened for days_until, needs_attention, feedback_summary (dev refusals down 4, no new leaks). The rename "tab bug" was a model garble, not code; the guard is right to refuse it. Dev sets 6/8 are trained on, so they overstate; a fresh labeled dev set is still the missing piece.
+
 ## Next, in order
 
 1. Raspberry Pi hardware (arriving today): app/robot.py on real Pi first boot. Network, UART serial, screen framebuffer drawing, then 0.5B GGUF picker inference. app/install.sh, then python3 app/robot.py.
