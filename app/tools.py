@@ -35,7 +35,7 @@ SITES = {
     "hacker news": "https://news.ycombinator.com", "hn": "https://news.ycombinator.com",
     "github": "https://github.com", "youtube": "https://youtube.com",
     "gmail": "https://mail.google.com", "reddit": "https://reddit.com",
-    "twitter": "https://x.com", "x": "https://x.com",
+    "twitter": "https://x.com", "x": "https://x.com", "bbc": "https://www.bbc.com",
 }
 
 

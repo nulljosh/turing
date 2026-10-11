@@ -9,9 +9,17 @@ os.environ["SAMANTHA_HEADLESS"] = "1"
 import tools_registry as R  # noqa: E402
 
 STOPPED = [("rename_file", "photo.heic\tjpg", "change photo.heic to jpg"), ("roll_dice", "", "toss a coin"),
-           ("move_file", "file.pdf\tfolder", "put the file to my folder")]
+           ("move_file", "file.pdf\tfolder", "put the file to my folder"),
+           ("run_tests", "", "pass the salt please"), ("summarize", "the cat", "sum of the cat")]
 RUNS = [("roll_dice", "", "Give me a dice roll"), ("move_file", "photo.jpg\tPictures", "Put photo.jpg in Pictures for me"),
-        ("rename_file", "file.txt\tupdated_file.txt", "Change file.txt to updated_file.txt"), ("wifi_name", "", "Tell me the SSID")]
+        ("rename_file", "file.txt\tupdated_file.txt", "Change file.txt to updated_file.txt"), ("wifi_name", "", "Tell me the SSID"),
+        # heldout14 (2026-10-11): right picks the evidence cues were widened for
+        ("summarize", "the wired piece about chips", "can u sum up the wired piece about chips"),
+        ("read_file", "~/Documents/notes.txt", "open up ~/Documents/notes.txt and tell me what it says"),
+        ("list_mcp_tools", "", "show me the connectors you have access to"),
+        ("write_document", "a doc about our onboarding flow", "write me a doc about our onboarding flow"),
+        ("git_status", "the turing repo", "what did i change in the turing repo"),
+        ("run_tests", "plaintxt", "does the plaintxt suite pass")]
 
 
 class GuardProbes(unittest.TestCase):

@@ -54,8 +54,8 @@ _EVIDENCE = {
     "bluetooth_status": r"bluetooth", "calendar_tomorrow": r"tomorrow|\btmrw\b|\btmr\b",
     "running_apps": r"running|active apps?|active programs|open apps|apps open|what's open|apps are open|application|programs|\bhave open\b|apps? (?:are )?(?:currently |now )?(?:open|visible)|visible apps\b",
     "recent_downloads": r"download|off the (?:net|internet|web)", "unread_mail": r"mail|email|inbox|unread|messages",
-    "git_status": r"status|changed|changes|uncommitted|dirty|\bdiff\b|\bbranch\b|ahead|behind|\bgit\b", "recent_commits": r"commit",
-    "run_tests": r"\btest", "open_prs": r"\bprs?\b|pull request|waiting (?:for|on) (?:a )?review",
+    "git_status": r"status|\bchange\b|changed|changes|uncommitted|dirty|\bdiff\b|\bbranch\b|ahead|behind|\bgit\b", "recent_commits": r"commit",
+    "run_tests": r"\btest|\bsuite\b|\bpasses\b|\bpassing\b", "open_prs": r"\bprs?\b|pull request|waiting (?:for|on) (?:a )?review",
     "open_in_editor": r"editor|vscode|vs code|in code|\bide\b|visual studio", "quit_app": r"quit|close|shut down|\bkill\b",
     "dark_mode": r"dark|\blight\b|appearance|theme", "do_not_disturb": r"disturb|\bdnd\b|focus|silence|quiet|notification",
     "zip_file": r"\bzip\b|compress", "unzip_file": r"unzip|extract|unpack|decompress|\.zip\b", "trash_file": r"trash|delete|throw away|get rid of",
@@ -68,15 +68,15 @@ _EVIDENCE = {
     "search_notes": r"\bnotes?\b", "needs_attention": r"attention|needs me|focus on|deal with|need to handle|urgent|status|pending|important|needs doing|overview|priorit",
     "folder_size": r"\bbig\b|\bsize\b|\bspace\b|take up",
     "research": r"research|deep dive|look into|dig into|investigate|brief on|info(?:rmation)? on|look up|read up|info(?:rmation)? about", "research_more": r"\bmore\b|deeper|expand|further|continue|again",
-    "summarize": r"summar|boil (?:it )?down|condense", "transcribe_video": r"\bwrite (?:\w+ )?down\b|transcribe|spoken|\bsays? in\b|said in|captions|subtitles|what (?:was|is) said|what does (?:the |this )?(?:audio|video|clip) say",
-    "translate": r"translat|how (?:do|would|can|should) (?:you|i) say|\b(?:in|into|to) (?:french|spanish|german|italian|portuguese|dutch|japanese|chinese|mandarin|korean|russian|arabic|hindi)\b", "write_document": r"draft|write (?:a |an )?(?:doc|document|email|memo|file)|compose",
+    "summarize": r"summar|boil (?:it )?down|condense|\bsum(?:med)? (?:\w+ )?up\b", "transcribe_video": r"\bwrite (?:\w+ )?down\b|transcribe|spoken|\bsays? in\b|said in|captions|subtitles|what (?:was|is) said|what does (?:the |this )?(?:audio|video|clip) say",
+    "translate": r"translat|how (?:do|would|can|should) (?:you|i) say|\b(?:in|into|to) (?:french|spanish|german|italian|portuguese|dutch|japanese|chinese|mandarin|korean|russian|arabic|hindi)\b", "write_document": r"draft|write (?:me |us )?(?:a |an )?(?:doc|document|email|memo|file)|compose",
     # Round ten: resize_image and read_file had no evidence at all, so any wrong pick with its
     # argument copied verbatim (list_dir/read_file's own guard, or resize_image's default check,
     # never required a word about the tool itself) passed the guard automatically. "make it bigger"
     # with no number is upscale_image, not resize_image; "crunch the numbers in X" is run_code,
     # not read_file's own words.
     "resize_image": r"resize|resolution|dimensions?|\bsize\b|\d+\s*(?:px|pixels?|%|percent)|\bto \d{2,}|\d{3,}|scale|shrink|smaller",
-    "read_file": r"\bread\b|pull up|\bcat\b|\bshow\b|\bprint\b|display|\bsay\b|contents|written|inside|what'?s in",
+    "read_file": r"\bread\b|\bsays\b|pull up|\bcat\b|\bshow\b|\bprint\b|display|\bsay\b|contents|written|inside|what'?s in",
     # Round eleven: convert_time and time_in kept swapping for each other. A specific clock time
     # (a digit with am/pm, an hour:minute, noon/midnight, or a named zone) is convert_time's own
     # territory; "how late is it in X"/"what time is it in X" with no clock time is time_in's.
@@ -88,7 +88,7 @@ _EVIDENCE = {
     "calendar_today": r"today|schedule|agenda|calendar|what's on|plans today|my day|happening today",
     "current_date": r"\bdate\b|what day|today's date|which day",
     "feedback_summary": r"feedback|rating|rate you|how am i rating|thumbs|track record|how(?:'?m| am) i doing",
-    "list_mcp_tools": r"\bmcp\b|other (?:server|assistant)s?|server'?s? tools|other tools",
+    "list_mcp_tools": r"\bmcp\b|\bconnectors?\b|other (?:server|assistant)s?|server'?s? tools|other tools",
     "screenshot": r"screenshot|screen ?shot|screen ?grab|screencap|picture of (?:the |my )?screen|capture (?:the |my )?screen|pic of|what'?s (?:showing|on (?:the |my )?screen)"
                   r"|grab (?:the |my )?screen|snap (?:the |my )?screen",
     "clipboard": r"clipboard|copied|\bcopy\b|pasteboard",
