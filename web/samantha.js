@@ -259,13 +259,42 @@
     try { var out = sum(); return i === t.length ? out : null; } catch (e) { return null; }
   }
 
+  // "ten plus twenty-five" -> "10 plus 25": only runs of number words change, so calc()'s whitelist still refuses anything else.
+  var ONES = "zero one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen".split(" ");
+  var TENS = "_ _ twenty thirty forty fifty sixty seventy eighty ninety".split(" ");
+  var NUMWORD = ONES.concat(TENS.slice(2), ["hundred", "thousand", "million"]).sort(function (a, b) { return b.length - a.length; }).join("|");
+  var NUMRUN = new RegExp("\\b(?:" + NUMWORD + ")(?:[\\s-]+(?:and\\s+)?(?:" + NUMWORD + "))*\\b", "g");
+  function wordsToDigits(text) {
+    text = text.replace(/\ba (hundred|thousand|million)\b/g, "one $1");   // "a hundred" is one hundred
+    return text.replace(NUMRUN, function (run) {
+      var total = 0, cur = 0;
+      run.split(/[\s-]+/).forEach(function (w) {
+        if (w === "and") return;
+        if (ONES.indexOf(w) >= 0) cur += ONES.indexOf(w);
+        else if (TENS.indexOf(w) >= 0) cur += TENS.indexOf(w) * 10;
+        else if (w === "hundred") cur = Math.max(cur, 1) * 100;
+        else { total += Math.max(cur, 1) * (w === "thousand" ? 1000 : 1000000); cur = 0; }
+      });
+      return String(total + cur);
+    });
+  }
+
   function exact(query) {
     var q = query.trim().toLowerCase().replace(/[?!.]+$/, "");
-    var expr = q.replace(/^(?:what(?:'s| is)|calculate|compute|how much is)\s+/, "");
+    var expr = q.replace(/^(?:what(?:'s|s| is)|calculate|compute|how much is)\s+/, "");
+    expr = wordsToDigits(expr);
+    var N = "(-?\\d+(?:\\.\\d+)?)", m;   // the idioms with one right answer, said the way a person would say them
+    if ((m = new RegExp("^(?:the )?square root of " + N + "$").exec(expr)) && +m[1] >= 0) return "The square root of " + m[1] + " is " + tidy(Math.sqrt(+m[1])) + ".";
+    if ((m = new RegExp("^(?:the )?cube root of " + N + "$").exec(expr))) return "The cube root of " + m[1] + " is " + tidy(Math.cbrt(+m[1])) + ".";
+    if ((m = new RegExp("^" + N + " (squared|cubed)$").exec(expr))) return m[1] + " " + m[2] + " is " + tidy(Math.pow(+m[1], m[2] === "squared" ? 2 : 3)) + ".";
+    if ((m = new RegExp("^" + N + " to the power of " + N + "$").exec(expr)) && isFinite(Math.pow(+m[1], +m[2]))) return m[1] + " to the power of " + m[2] + " is " + tidy(Math.pow(+m[1], +m[2])) + ".";
+    if ((m = new RegExp("^(half|a third|a quarter) of " + N + "$").exec(expr))) return m[1].replace(/^h/, "H").replace(/^a /, "A ") + " of " + m[2] + " is " + tidy(+m[2] / { half: 2, "a third": 3, "a quarter": 4 }[m[1]]) + ".";
+    if ((m = new RegExp("^" + N + "\\s*(?:%|percent) of " + N + "$").exec(expr))) return m[1] + "% of " + m[2] + " is " + tidy(+m[1] / 100 * +m[2]) + ".";
     ARITH_WORDS.forEach(function (p) { expr = expr.replace(p[0], p[1]); });
     if (/^[\d\s+\-*\/().]+$/.test(expr) && /\d/.test(expr) && /[+\-*\/]/.test(expr)) {
       var v = calc(expr);
-      if (v !== null && isFinite(v)) return expr.replace(/\s+/g, "") + " = " + tidy(v);
+      if (v !== null && !isFinite(v)) return "You can't divide by zero.";
+      if (v !== null && isFinite(v)) return expr.replace(/\s+/g, "") + " = " + tidy(v);   // the Worker's `spoken` rewrites this for a voice
     }
     var c = /^(?:convert |what(?:'s| is) )?(-?\d+(?:\.\d+)?)\s*(?:degrees? )?([a-z]+)\s+(?:to|in|into)\s+([a-z]+)$/.exec(q);
     if (c) {

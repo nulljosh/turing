@@ -124,7 +124,7 @@ class GeneralKnowledge(unittest.TestCase):
     def test_duckduckgo_fields(self):
         """An Answer is taken as is; an abstract counts only when the heading is the thing asked."""
         with web(duckduckgo={"Answer": "42"}):
-            self.assertEqual(ask.general_knowledge("what is six times seven"), ("42", "DuckDuckGo"))
+            self.assertEqual(ask.general_knowledge("what is the answer to life the universe and everything"), ("42", "DuckDuckGo"))  # not "six times seven": that is arithmetic now, answered locally
         with web(duckduckgo={"AbstractText": "Marie Curie was a physicist.", "AbstractSource": "Wikipedia", "Heading": "Marie Curie"}):
             self.assertEqual(ask.general_knowledge("who is marie curie"), ("Marie Curie was a physicist.", "Wikipedia"))
         with web(duckduckgo={"AbstractText": "A telephone is a device.", "Heading": "Telephone"}, **{"list=search": {}}):

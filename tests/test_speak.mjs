@@ -1,5 +1,5 @@
 // /api/speak's kernel format: 16-bit signed PCM from ElevenLabs becomes 8-bit unsigned, silence at 128.
-import { pcm16ToPcm8, smallTalk, paceJoshua } from "../worker.js";
+import { pcm16ToPcm8, smallTalk, paceJoshua, exactAnswer } from "../worker.js";
 const b = new ArrayBuffer(8), v = new DataView(b);
 [0, 32767, -32768, 256].forEach((x, i) => v.setInt16(i * 2, x, true));
 const out = Array.from(pcm16ToPcm8(b));
@@ -56,3 +56,11 @@ for (const [a, want] of [
 console.log("PASS: Joshua speaks as himself");
 expect("paceJoshua", paceJoshua("Sure. This is it, live. Watch."), "Sure... This is it... live... Watch.");
 console.log("PASS: Joshua's voice gets a beat after sentences and commas");
+
+// one right answer: said short, the way a person says it, digits or words, never a lesson and never "I couldn't find anything"
+for (const [q, want] of [["10+10", "10 plus 10 is 20."], ["what is ten plus ten", "10 plus 10 is 20."], ["whats twelve times three", "12 times 3 is 36."],
+                         ["100/4", "100 divided by 4 is 25."], ["25% of 80", "25% of 80 is 20."], ["square root of 81", "The square root of 81 is 9."],
+                         ["convert 10 miles to km", "10 miles is 16.0934 km."], ["what's a hundred minus one", "100 minus 1 is 99."], ["what is half of forty", "Half of 40 is 20."], ["what is 1/0", "You can't divide by zero."], ["what time is it", null], ["what is the capital of France", null]]) {
+  if (exactAnswer(q) !== want) { console.log("FAIL exact", q, exactAnswer(q)); process.exit(1); }
+}
+console.log("PASS: exact answers");

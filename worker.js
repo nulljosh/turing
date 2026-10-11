@@ -109,6 +109,7 @@ const SMALLTALK = [
   [/^(?:hi|hello|hey|yo|hiya|good (?:morning|evening|afternoon))(?: there| samantha)?[!.?]*$/i, "Hi. Ask me anything about Joshua Tree, or anything else."],
   [/^(?:how are you|how's it going|how are things)(?: doing| today)?[!.?]*$/i, "Running fine, and ready. What do you need?"],
   [/^(?:thanks|thank you|thx|cheers|ty)(?: so much| samantha)?[!.?]*$/i, "Any time."],
+  [/^(?:what(?:'s| is) your name|who is samantha|what is samantha|are you samantha)[!.?]*$/i, "I'm Samantha, the assistant inside Joshua Tree."],
   [/^(?:tell me a joke|got a joke\??|say something funny|make me laugh)[!.?]*$/i, "Why do programmers prefer dark mode? Because light attracts bugs."],
   [/^(?:who are you|what are you|what can you do|what do you do|help)[!.?]*$/i, "I'm Samantha, a small model. Here in Joshua Tree I answer questions and have hands too: say remind me to..., note..., open notes, weather, or what's on today. On a Mac I can do more."],
 ];
@@ -128,6 +129,9 @@ export const smallTalk = q => {
 // national park and a real U2 album, so a false miss here would answer confidently
 // wrong instead of just honestly declining.
 const NEVER_LEAVE_JT = /\bjoshua\s*tree\b|\b(?:this|here)\b/i;
+// "it" in a question about a thing that runs, has or is built of something is the OS she is inside ("does it run on a
+// Pi", "what language is it written in"), never the clock ("what time is it") or the weather ("is it raining").
+const IT_MEANS_JT = /\b(?:does|can|will|could) it (?:run|have|support|play|work|cost|do)\b|\bis it (?:free|open source|written|made|built|safe|fast|linux)\b|\bwritten in\b|\bwho (?:made|built|wrote) it\b/i;
 
 // Portfolio mode (heyitsmejosh.com boots Joshua Tree with "portfolio" on the command
 // line) is Joshua's own site, and the face on screen is his, so the chat answers as him.
@@ -184,7 +188,18 @@ export const joshuaTalk = q => {
 // history but this only ever answers the newest user message. A question that names
 // Joshua Tree, or points at "this"/"here", never falls through to the general web
 // pipeline: declining is honest, a stray Wikipedia hit on the wrong "1.0.1" is not.
+// One right answer, so no model and no lookup: sums, roots, percents and unit conversions, short and spoken
+// ("10 plus 10 is 20."). The clock is left out on purpose: the Worker's is not the visitor's.
+const spoken = e => e.replace(/(?<=[\d)])([+*\/-])(?=[\d(])/g, (_, op) => ` ${{ "+": "plus", "*": "times", "/": "divided by", "-": "minus" }[op]} `).replace(/ = /, " is ").replace(/(?<![.!?])$/, ".");
+export const exactAnswer = q => {
+  if (/\b(?:time|date|day|today)\b/i.test(q)) return null;
+  const e = globalThis.Samantha && globalThis.Samantha.exact(q);
+  return e ? spoken(e) : null;
+};
+
 async function chatAnswer(env, question, persona) {
+  const exact = exactAnswer(question);
+  if (exact) return exact;
   if (persona === "joshua") {
     const j = joshuaTalk(question);
     if (j) return j;
@@ -193,10 +208,11 @@ async function chatAnswer(env, question, persona) {
   }
   const small = smallTalk(question);
   if (small) return small;
-  const spelled = question.replace(/\bthis\b/gi, "Joshua Tree").replace(/\bhere\b/gi, "in Joshua Tree");
+  let spelled = question.replace(/\bthis\b/gi, "Joshua Tree").replace(/\bhere\b/gi, "in Joshua Tree");
+  if (IT_MEANS_JT.test(question)) spelled = spelled.replace(/\bit\b/gi, "Joshua Tree");
   const jt = (await readJtDocs(env, question)) || (spelled !== question && await readJtDocs(env, spelled));
   if (jt) return jt;
-  if (NEVER_LEAVE_JT.test(question)) return DECLINE;
+  if (NEVER_LEAVE_JT.test(question) || IT_MEANS_JT.test(question)) return DECLINE;
   return (await ask(env, question)).answer;
 }
 

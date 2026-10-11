@@ -26,6 +26,15 @@ class Arithmetic(unittest.TestCase):
         self.assertEqual(ask_local.arithmetic("2 ** 3"), "2 ** 3 = 8")
         self.assertIn("divide by zero", ask_local.arithmetic("what is 1/0"))
         self.assertIsNone(ask_local.arithmetic("what is 7"))
+
+    def test_number_words_read_like_digits(self):
+        """"ten plus ten" answers like "10 plus 10"; a sentence that is not all numbers and operators still falls through."""
+        self.assertEqual(ask_local.arithmetic("what is ten plus ten"), "10 + 10 = 20")
+        self.assertEqual(ask_local.arithmetic("whats twenty-five minus nine"), "25 - 9 = 16")
+        self.assertEqual(ask_local.arithmetic("how much is one hundred and five divided by five"), "105 / 5 = 21")
+        self.assertEqual(ask_local.arithmetic("what is the square root of sixteen"), "sqrt(16) = 4")
+        self.assertIsNone(ask_local.arithmetic("who is the first one"))
+        self.assertIsNone(ask_local.arithmetic("what is ten"))
         self.assertEqual(ask_local.arithmetic("calculate 15% of 80"), "((15)/100)*(80) = 12")
         self.assertEqual(ask_local.arithmetic("what's 17*23"), "17*23 = 391")
         self.assertEqual(ask_local.arithmetic("whats 2+2"), "2+2 = 4")
