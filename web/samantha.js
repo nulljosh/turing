@@ -855,7 +855,7 @@
 
   // the dev family, same tools as tools_dev.py: git status, recent commits, run tests, open prs, open in the
   // editor. The stand-in Mac has no repos on disk, no git, no gh and no editor to open.
-  ["git_status", "recent_commits", "run_tests", "open_prs", "open_in_editor", "jt_status", "jt_boot", "jt_stop"]
+  ["git_status", "recent_commits", "run_tests", "open_prs", "open_in_editor", "jt_status", "jt_boot", "jt_stop", "jt_log"]
     .forEach(function (name) { U[name] = function () { return REAL_MAC; }; U.NEEDS_MAC.push(name); });
   // dev's own phrasings go in FRONT of every route above, same reason as organizer's and system's: "run the
   // tests" and "open prs" would otherwise fall through to nothing, or agent().
@@ -875,6 +875,7 @@
     [/^(?:joshua ?tree|jt) status$|^how(?:'s| is) joshua ?tree(?: doing)?\??$/i, function () { return ["jt_status", ""]; }],
     [/^(?:boot|start|launch|run|fire up) (?:up )?(?:joshua ?tree|jt)(?: headless)?$/i, function () { return ["jt_boot", ""]; }],
     [/^(?:stop|shut ?down|halt|kill) (?:joshua ?tree|jt)$/i, function () { return ["jt_stop", ""]; }],
+    [/^(?:what (?:did|does|is) (?:joshua ?tree|jt) say(?:ing)?|(?:joshua ?tree|jt) (?:serial )?log|show (?:me )?(?:the )?(?:joshua ?tree|jt) (?:serial )?log)\??$/i, function () { return ["jt_log", ""]; }],
     [/^open (?:the )?(.+?)(?: repo)? in (?:the editor|vs ?code)$/i, function (m) { return ["open_in_editor", m[1]]; }]
   ].concat(ROUTES);
 

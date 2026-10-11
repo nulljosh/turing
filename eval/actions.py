@@ -281,6 +281,8 @@ CASES = [
     ("fire up jt headless", "jt_boot", ""),
     ("stop joshua tree", "jt_stop", ""),
     ("shut down joshua tree", "jt_stop", ""),
+    ("what did joshua tree say", "jt_log", ""),
+    ("jt log", "jt_log", ""),
     ("open turing in the editor", "open_in_editor", "turing"),
     ("open the nimble repo in vs code", "open_in_editor", "nimble"),
     # these must still route where they always did, not get stolen by the new dev family

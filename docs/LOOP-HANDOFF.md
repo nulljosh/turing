@@ -33,7 +33,7 @@ Frontier check: Qwen4 unreleased; Qwen-Image-2.1-Turbo (Oct 9) is real but needs
 1. Run 18 verdict: ship only if heldout13 >= 334, standard past-guard <= 19, sealed heldout4/12 not worse. If it fails, run 19 = run 16 data plus the 441 rows with the summarize/agent label question settled first (read eval/hands.py's standard set labels for "tldr this page").
 2. Test slices by coverage hole: mcp_server (32), tools_mail_send (44), chat.py (48), tools_coder (49). One file per round, fix any bug it finds, patch release each.
 3. Landing demo: every new tool gets a route in web/samantha.js, a STANDIN answer in web/demo.js, a REEL or MORE phrase, and an actions.py case (jt_status is the template).
-4. Pi robot when the hardware is on the network. Joshua Tree boot/stop shipped in v5.5.0; next JT driving tools: read the serial log ("what did joshua tree say"), type into it over the relay, poll a build.
+4. Pi robot when the hardware is on the network. Joshua Tree boot/stop shipped in v5.5.0; jt_log ("what did joshua tree say") shipped in v5.7.0; next JT driving tools: type into it over the relay, poll a build, run its CI from chat.
 5. Image-generation experiment (Qwen-Image-2.1-Turbo Q4 via stable-diffusion.cpp, weights on the LaCie, everything else closed).
 
 ## Next, in order (older)

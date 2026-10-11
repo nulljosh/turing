@@ -213,6 +213,20 @@ def jt_boot(mode=""):
     return f"Booting Joshua Tree headless; its serial log is {log}. Say 'stop joshua tree' to shut it down."
 
 
+def jt_log(lines="20"):
+    """The last lines of Joshua Tree's serial log (~/.samantha/jt-serial.log, written by jt_boot). Read only."""
+    log = os.path.expanduser("~/.samantha/jt-serial.log")
+    try:
+        with open(log, errors="replace") as f:
+            tail = [l.rstrip() for l in f.read().splitlines() if l.strip()]
+    except OSError:
+        return "Joshua Tree has not written a serial log yet. Say 'boot joshua tree' first."
+    if not tail:
+        return "Joshua Tree's serial log is empty so far."
+    n = int(lines) if str(lines).strip().isdigit() else 20
+    return "\n".join(tail[-max(1, min(n, 200)):])
+
+
 def jt_stop(mode=""):
     """Stop the Joshua Tree qemu that jt_boot started (SIGTERM to its own process only). Asks first."""
     pids = _jt_pids()
@@ -252,7 +266,7 @@ def open_in_editor(repo=""):
     return f"Opened {name} in the editor."
 
 
-TOOLS = (git_status, recent_commits, run_tests, open_prs, open_in_editor, jt_status, jt_boot, jt_stop)
+TOOLS = (git_status, recent_commits, run_tests, open_prs, open_in_editor, jt_status, jt_boot, jt_stop, jt_log)
 
 # (pattern, tool name, what to hand it), same shape as tools_organizer.ROUTES and tools_system.ROUTES. tools.py
 # splices these in ahead of the base router, alongside organizer's and system's: "run the tests" and "open prs"
@@ -278,6 +292,7 @@ ROUTES = (
     (re.compile(r"^(?:joshua ?tree|jt) status$|^how(?:'s| is) joshua ?tree(?: doing)?\??$", _I), "jt_status", lambda m: ""),
     (re.compile(r"^(?:boot|start|launch|run|fire up) (?:up )?(?:joshua ?tree|jt)(?: headless)?$", _I), "jt_boot", lambda m: ""),
     (re.compile(r"^(?:stop|shut ?down|halt|kill) (?:joshua ?tree|jt)$", _I), "jt_stop", lambda m: ""),
+    (re.compile(r"^(?:what (?:did|does|is) (?:joshua ?tree|jt) say(?:ing)?|(?:joshua ?tree|jt) (?:serial )?log|show (?:me )?(?:the )?(?:joshua ?tree|jt) (?:serial )?log)\??$", _I), "jt_log", lambda m: ""),
 
     (re.compile(r"^open (?:the )?(.+?)(?: repo)? in (?:the editor|vs ?code)$", _I),
      "open_in_editor", lambda m: m.group(1)),

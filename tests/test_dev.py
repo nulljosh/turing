@@ -416,5 +416,22 @@ class TestJtBootStop(unittest.TestCase):
             self.assertTrue(any(r[1] == name and r[0].match(text) for r in tools_dev.ROUTES), text)
 
 
+class TestJtLog(unittest.TestCase):
+    """jt_log: the tail of the serial log, a sentence when there is none, the line count capped."""
+
+    def test_log(self):
+        """No file, an empty file, and a file with lines (last N, blank lines dropped)."""
+        with tempfile.TemporaryDirectory() as d, mock.patch.object(tools_dev.os.path, "expanduser", return_value=os.path.join(d, "jt-serial.log")):
+            self.assertIn("not written a serial log", tools_dev.jt_log())
+            open(os.path.join(d, "jt-serial.log"), "w").close()
+            self.assertIn("empty", tools_dev.jt_log())
+            with open(os.path.join(d, "jt-serial.log"), "w") as f:
+                f.write("\n".join(f"line {i}" for i in range(30)) + "\n\n")
+            self.assertEqual(tools_dev.jt_log("3"), "line 27\nline 28\nline 29")
+            self.assertEqual(len(tools_dev.jt_log().splitlines()), 20)
+            self.assertEqual(len(tools_dev.jt_log("x").splitlines()), 20)
+        self.assertTrue(any(r[1] == "jt_log" and r[0].match("what did joshua tree say") for r in tools_dev.ROUTES))
+
+
 if __name__ == "__main__":
     unittest.main()

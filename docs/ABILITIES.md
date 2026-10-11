@@ -58,7 +58,7 @@ Every ability, in the words you say. Anything that writes, sends or looks at you
 - **Plug in.** She speaks MCP both ways: any assistant can use her tools, and she can call another server's tools when you name it.
 - **Safe with what she reads.** A page, an email, a document, a note, the screen, another server's tool: none of it can pick or trigger a tool on its own. Only your own words do that, law 9. Even inside a multi-step job, a write her own model proposed still has to trace back to what you actually asked before it ever reaches your yes, law 12. On screen that means a planted "Delete account" or "Install now" button is refused unless you asked to delete or install something.
 
-- **Joshua Tree.** "Joshua Tree status" gives the OS's VERSION, how many pull requests are open and whether a qemu is running (read only). "Boot Joshua Tree" starts its kernel headless in qemu with the serial log at ~/.samantha/jt-serial.log, and "stop Joshua Tree" sends that one qemu a SIGTERM; both ask first. Exact phrases only until the picker is retrained on them.
+- **Joshua Tree.** "Joshua Tree status" gives the OS's VERSION, how many pull requests are open and whether a qemu is running (read only). "Boot Joshua Tree" starts its kernel headless in qemu with the serial log at ~/.samantha/jt-serial.log, and "stop Joshua Tree" sends that one qemu a SIGTERM; both ask first. "What did Joshua Tree say" reads the last lines of that serial log. Exact phrases only until the picker is retrained on them.
 
 ## Limits, plainly
 
