@@ -29,6 +29,15 @@ FALLBACK_APPS = {
     "terminal": "Terminal is the same shell the machine boots into, just running in a window.",
     "weather": "Weather pulls a live forecast from Open-Meteo by IP geolocation, shown in the menu bar and in its own app.",
     "keyrate": "Keyrate is a real native typing test: a word list, a live input loop, your words-per-minute.",
+    # ARCHITECTURE.md describes these by their file format, which tells a visitor nothing.
+    "mail": "Mail reads and sends email.",
+    "calendar": "Calendar shows the month and the events on each day.",
+    "reminders": "Reminders is a to-do list you can tick off.",
+    "contacts": "Contacts keeps names, numbers and emails.",
+    "samantha": "Samantha is the assistant you are talking to: ask a question, or ask her to open an app.",
+    "search": "Search finds files as you type.",
+    "music": "Music plays the songs you own, MP3 or WAV, from Files.",
+    "hamurapi": "Hamurapi is the 1968 game Hamurabi, rebuilt with a living city.",
 }
 
 
@@ -72,7 +81,7 @@ def overview_section():
     readme = read("README.md")
     whitepaper = read("docs/WHITEPAPER.md")
     tagline = ""
-    m = re.search(r"\n(A desktop built from nothing.*?)\n", readme)
+    m = re.search(r"\n(A (?:whole computer|desktop)[ ,]+built .*?)\n", readme)
     if m:
         tagline = plain(m.group(1))
     why = ""
@@ -97,22 +106,23 @@ def version_section():
         "(major.minor.patch): minor for a new capability, patch for a fix. Try it live in a "
         "browser at joshuatree.heyitsmejosh.com, no install. To run it as the real OS on a "
         "PC, write the ISO from GitHub Releases to a USB stick and boot from it. "
-        "Joshua Tree is a kernel for a 32-bit Intel (i386) machine, written from nothing: "
+        "It also runs on a real Raspberry Pi 4 from an SD card (an ARM64 build): the desktop at "
+        "1080p, a USB keyboard, Wi-Fi, sound, its own SD card for files, and Samantha. "
+        "Joshua Tree is written from nothing, for 32-bit Intel PCs (i386) and the Pi: "
         "its own bootloader, memory manager, filesystem, network stack, window system and "
-        "typeface renderer, no Linux or any other OS underneath it."
+        "typeface renderer, no Linux or any other OS underneath it. It is written in C, with a little assembly."
     )
     return section("Version and booting it", body)
 
 
 def limits_section():
-    """What is deliberately not in 1.0 (Wi-Fi, Bluetooth, language), from docs/roadmap.md."""
-    roadmap = read("docs/roadmap.md")
-    m = re.search(r"Decided for 1\.0,.*?accessibility floor\.", roadmap, re.S)
-    decided = plain(m.group(0)) if m else ""
+    """What it runs on and what is not done yet."""
     body = (
-        "Joshua Tree has no Wi-Fi and no Bluetooth; it only has wired networking. "
-        f"{decided} There is no cloud in the loop: the Chat app talks to a local language "
-        "model over this kernel's own network stack, plain HTTP, no TLS built yet."
+        "On a PC it uses wired networking; on the Raspberry Pi it joins Wi-Fi itself, and a "
+        "Bluetooth mouse is being added. It speaks HTTPS with its own TLS. "
+        "Samantha, the assistant inside it, answers from Turing, Joshua's own model, through a "
+        "small relay on his Mac, with no cloud API key. Not done yet: many windows at once on "
+        "the Pi, and most desktop apps still need their own Pi port."
     )
     return section("What it does not do", body)
 
@@ -129,10 +139,10 @@ def apps_section():
     kernel = read("kernel/kernel.c")
     arch = read("docs/ARCHITECTURE.md")
 
-    labels_m = re.search(r'GUI_LABELS\[GUI_APP_COUNT\]\s*=\s*\{(.*?)\};', kernel)
-    labels = re.findall(r'"([^"]+)"', labels_m.group(1)) if labels_m else []
+    labels_m = re.search(r'const struct app APPS\[GUI_APP_COUNT\]\s*=\s*\{(.*?)\n\};', kernel, re.S)  # the app registry
+    labels = [n for _, n in re.findall(r'/\*\s*(\d+)\s*\*/\s*\{"([^"]+)"', labels_m.group(1))] if labels_m else []
 
-    dock_m = re.search(r'GUI_DOCK_DEFAULT\[GUI_ICON_COUNT\]\s*=\s*\{(.*?)\};', kernel)
+    dock_m = re.search(r'#define GUI_DOCK_DEFAULT_ORDER\s*\{(.*?)\}', read("kernel/gui_paint.h"))
     dock_ids = re.findall(r'GUI_APPS_FOLDER|GUI_TRASH|\d+', dock_m.group(1)) if dock_m else []
 
     def dock_name(token):
@@ -144,9 +154,9 @@ def apps_section():
         return labels[int(token)]
 
     dock = [dock_name(t) for t in dock_ids if t]
-    real_apps = [n for n in labels if n not in ("Apps", "Trash")]
+    real_apps = [n for n in labels if n not in ("Apps", "Trash", "Portfolio")]  # Portfolio is his private site, not in the public build
 
-    apps_md = arch.split("## Apps", 1)[-1].split("\n## ", 1)[0]
+    apps_md = arch.split("## The apps", 1)[-1].split("\n## ", 1)[0]
     descriptions = {}
     for para in re.split(r"\n\s*\n", apps_md):
         para = para.strip()
@@ -159,7 +169,7 @@ def apps_section():
             descriptions.setdefault(name.lower(), clause(desc))
     descriptions.update(FALLBACK_APPS)
 
-    lines = [f"All {len(real_apps)} apps live in the Apps folder; the dock pins a handful of them: " +
+    lines = ["Every app lives in the Apps folder; the dock pins a handful of them: " +
              ", ".join(dock) + "."]
     for name in real_apps:
         d = descriptions.get(name.lower())
