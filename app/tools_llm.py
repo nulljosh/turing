@@ -8,6 +8,7 @@ SAMANTHA_BIG_MODEL and SAMANTHA_OLLAMA_MODEL pick the default models.
 import json
 import os
 import re
+import sys
 import urllib.error
 import urllib.request
 
@@ -56,6 +57,35 @@ def _ask_ollama(messages, model):
     """Ollama's chat: (text, cut)."""
     reply = _post(OLLAMA_CHAT, {"model": model, "stream": False, "think": False, "messages": messages})
     return reply.get("message", {}).get("content", ""), reply.get("done_reason") == "length"
+
+
+def fallback(question):
+    """(answer, model) from the biggest model on this Mac when her own chain has nothing: code questions, explanations,
+    anything a page does not cover. None when no local server is up (one quick probe, no waiting on a dead port),
+    when the model fails, or when SAMANTHA_NO_LLM is set (tests and evals, so a decline stays a decline). A model
+    that is up but out of memory says so, because "I could not find anything" would be the wrong reason."""
+    if os.environ.get("SAMANTHA_NO_LLM"):
+        return None
+    why = None
+    for ask, model, probe in ((_ask_omlx, MODEL, OMLX + "/v1/models"), (_ask_ollama, OLLAMA_MODEL, OLLAMA + "/api/tags")):
+        if _get(probe) is None:
+            continue
+        try:
+            text, cut = ask([{"role": "system", "content": SYSTEM}, {"role": "user", "content": question}], model)
+        except urllib.error.HTTPError as e:
+            body = e.read()[:300].decode("utf-8", "replace")
+            sys.stderr.write(f"local model {model}: HTTP {e.code}: {body}\n")  # the chat shows a short reason, the log the whole one
+            if "memory" in body.lower():
+                why = (f"The big model on this Mac ({model}) is out of memory right now, so I cannot answer that. "
+                       "Close something heavy and ask again.", model)
+            continue
+        except (urllib.error.URLError, OSError, KeyError, IndexError, ValueError, TimeoutError) as e:
+            sys.stderr.write(f"local model {model}: {type(e).__name__}: {e}\n")
+            continue
+        text = re.sub(r"(?s)<think>.*?</think>", "", text).strip()
+        if text:
+            return text + (" (It hit its length limit, so this is cut short.)" if cut else ""), model
+    return why
 
 
 def installed():

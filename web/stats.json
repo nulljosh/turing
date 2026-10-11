@@ -1,5 +1,5 @@
 {
-  "version": "5.11.12",
+  "version": "5.11.13",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -54,6 +54,10 @@
       "app/mcp_server.py": {
         "total": 4,
         "documented": 4
+      },
+      "app/phone_bridge.py": {
+        "total": 21,
+        "documented": 21
       },
       "app/planner.py": {
         "total": 13,
@@ -120,8 +124,8 @@
         "documented": 3
       },
       "app/tools_llm.py": {
-        "total": 6,
-        "documented": 6
+        "total": 7,
+        "documented": 7
       },
       "app/tools_logo.py": {
         "total": 29,
@@ -450,6 +454,10 @@
       "tests/test_organizer.py": {
         "total": 32,
         "documented": 32
+      },
+      "tests/test_phone_bridge.py": {
+        "total": 15,
+        "documented": 15
       },
       "tests/test_planner.py": {
         "total": 44,

@@ -16,7 +16,8 @@ import difflib, hashlib, html, json, math, os, re, subprocess, sys, time, urllib
 # it and every question looked like a change of subject.
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(REPO, "app"))
-import library  # noqa: E402  (her offline library, the last stop in general_knowledge)
+import library  # noqa: E402
+import tools_llm  # noqa: E402  (the biggest model on this Mac answers what her own chain cannot)  (her offline library, the last stop in general_knowledge)
 
 BRAIN_ENV = os.path.expanduser("~/Documents/Code/brain/.env.local")
 BRAIN_URL = "https://brain.heyitsmejosh.com/api/search"
@@ -358,6 +359,11 @@ def ask(question):
     # immediately, "asdkjfhaskdjfh" came back as garbled half-Chinese text
     # through the API while chat.py declined it cleanly.
     if not is_project_question(question):
+        # not about the project and nothing found: the biggest model on this Mac gets it (code, explanations, jokes),
+        # named in the source so the answer is never passed off as hers. No local server up means the honest decline.
+        llm = tools_llm.fallback(question)
+        if llm:
+            return llm[0], [f"{llm[1]} on this Mac"]
         return OUT_OF_SCOPE, []
     context = "\n\n---\n\n".join(r["text"][:800] for r in results)
     prompt = f"{SYSTEM}\n\nContext:\n{context}\n\nQuestion: {question}"

@@ -221,8 +221,11 @@ class Chain(unittest.TestCase):
             self.assertEqual(ask.ask("who is the prime minister of canada"), (ask.LOOKUP_FAILED, []))  # the office page is not the holder
         with mock.patch.object(ask, "general_knowledge", return_value=(None, ask.UNREACHABLE)):
             self.assertEqual(ask.ask("what causes tides"), (ask.NETWORK_DOWN, []))
-        with mock.patch.object(ask, "general_knowledge", return_value=(None, None)):
+        with mock.patch.object(ask, "general_knowledge", return_value=(None, None)), mock.patch.object(ask.tools_llm, "fallback", return_value=None):
             self.assertEqual(ask.ask("what causes tides"), (ask.OUT_OF_SCOPE, []))
+        # with a big model on this Mac, nothing found is its question, and the source names it
+        with mock.patch.object(ask, "general_knowledge", return_value=(None, None)), mock.patch.object(ask.tools_llm, "fallback", return_value=("The moon pulls the sea.", "qwen")):
+            self.assertEqual(ask.ask("what causes tides"), ("The moon pulls the sea.", ["qwen on this Mac"]))
 
     def test_project_question_extracts_then_generates_and_caches(self):
         """A project question answers from retrieval when a passage fits, else the generator runs once and is cached."""

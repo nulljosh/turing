@@ -143,7 +143,7 @@ _I = re.I
 ROUTES = (
     (re.compile(r"^(?:explain|walk me through) (?:the |this )?codebase(?: (?:of|for) (.+?))?(?:\s+to me)?$", _I),
      "explain_codebase", lambda m: m.group(1) or ""),
-    (re.compile(r"^explain (?:the |this )?([a-z0-9 _-]+)(?: codebase)?$", _I),
+    (re.compile(r"^explain (?:the |this )?([a-z0-9_-]+(?: [a-z0-9_-]+)?)(?: codebase)?$", _I),
      "explain_codebase", lambda m: m.group(1)),
     (re.compile(r"^(?:teach me|give me a lesson on|teach me about) (.+)$", _I),
      "teach_me", lambda m: m.group(1)),

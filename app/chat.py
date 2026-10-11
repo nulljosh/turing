@@ -254,8 +254,11 @@ def answer_turn(question, history, topic_active, last_subject=None, on_text=None
         # answer to an outside question. Confirmed live: "what is teh
         # capitol of frnace" (typo'd, so no source could match it) came back
         # "the Turing project", and a bare "why" produced invented detail
-        # about a nonexistent model. Saying so is the honest option.
-        answer = OUT_OF_SCOPE
+        # about a nonexistent model. Saying so is the honest option, unless a bigger model on this Mac can take
+        # it (code, explanations, jokes): same fallback as ask.py, and the answer names the model.
+        import tools_llm
+        llm = tools_llm.fallback(question)
+        answer = f"{llm[0]}\n(Answered by {llm[1]} on this Mac.)" if llm else OUT_OF_SCOPE
     else:
         results = search(question)
         extracted = try_extract(question, results)

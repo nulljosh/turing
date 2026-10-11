@@ -14,7 +14,7 @@ The 1.5B is not bundled in the app: the first time I need it, about 850 MB downl
 - Edit files and write code to disk, showing the diff and asking first.
 - Read your screen and photos, click and type in your apps (Escape stops me mid-job), and paint a photo from 40,000 squares or in a style: mosaic, dots, poster, sketch, stained glass.
 - Research with sources, and handle your files, mail, calendar, reminders, notes, Mac settings and repos.
-- Borrow a bigger local model for summaries and translation.
+- Borrow a bigger local model for summaries, translation, code questions and anything my own sources cannot answer, and say which model answered.
 - Teach math from grade school through pre-calc 12 (`eval/sixth_grade_math.mjs`, `eval/precalc_math.mjs`).
 - Learn from you: say "good" or "wrong" after anything I do. Say "do that again" and I follow along. Give me a job with steps and I show the plan first.
 - Cut me off: with voice on, anything new you send stops me mid-sentence, and "shh" just silences me. The Mac app keeps your chat between launches (Cmd-N starts a new one).
