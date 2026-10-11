@@ -49,7 +49,14 @@ def _eval(node):
 
 def calculate(expression):
     """Work out an arithmetic expression. Takes + - * / // % **, parentheses, sqrt, pi, and "15% of 80"."""
-    text = expression.lower().replace("x", "*").replace("^", "**").replace(",", "").strip()
+    text = expression.lower().replace(",", "").strip().rstrip("?").strip()
+    # spoken shapes first (dogfood 5.11.2: "square root of 2" could not be worked out): root, squared, cubed, powers, percent
+    text = re.sub(r"^(?:what(?:'s| is) )?(?:the )?(?:square root|sqrt) of (.+)$", r"sqrt(\1)", text)
+    text = re.sub(r"^(.+?) squared$", r"(\1)**2", text)
+    text = re.sub(r"^(.+?) cubed$", r"(\1)**3", text)
+    text = re.sub(r"^(.+?) (?:to the power of|to the) (.+?)(?:th|st|nd|rd)?(?: power)?$", r"(\1)**(\2)", text)
+    text = re.sub(r"^(.+?) percent of (.+)$", r"\1% of \2", text)
+    text = text.replace("x", "*").replace("^", "**")
     m = re.fullmatch(r"(\d+(?:\.\d+)?)\s*% of (\d+(?:\.\d+)?)", text)
     if m:
         return f"{_num(float(m.group(1)) * float(m.group(2)) / 100)}"
@@ -82,10 +89,16 @@ _TEMPS = ("c", "f", "k")
 
 def convert_units(text):
     """Convert a quantity between units of length, weight, volume, time or temperature, like "5 km to miles"."""
-    m = re.fullmatch(r"\s*(-?\d+(?:\.\d+)?)\s*([a-z°]+)\s+(?:to|in|into)\s+([a-z°]+)\s*", text.lower())
-    if not m:
-        return 'Say it like "5 km to miles".'
-    n, a, b = float(m.group(1)), m.group(2), m.group(3)
+    t = text.lower().strip().rstrip("?").strip()
+    m = re.fullmatch(r"\s*(-?\d+(?:\.\d+)?)\s*([a-z°]+)\s+(?:to|in|into|as)\s+([a-z°]+)\s*", t)
+    if m:
+        n, a, b = float(m.group(1)), m.group(2), m.group(3)
+    else:  # "how many ounces in a pound": one of the second unit, in the first (dogfood 5.11.2)
+        m = re.fullmatch(r"(?:how many )?([a-z°]+) (?:are |is )?(?:there )?in (?:a |an |one )?([a-z°]+)", t)
+        if not m:
+            return 'Say it like "5 km to miles".'
+        n, a, b = 1.0, m.group(2), m.group(1)
+        m = type("M", (), {"group": staticmethod(lambda i, _a=a, _b=b: {2: _a, 3: _b}[i])})  # the not-convertible sentence below names the units as typed
     a, b = _UNIT_ALIASES.get(a, a), _UNIT_ALIASES.get(b, b)
     if a in _TEMPS and b in _TEMPS:
         c = n if a == "c" else (n - 32) * 5 / 9 if a == "f" else n - 273.15

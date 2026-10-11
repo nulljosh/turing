@@ -351,7 +351,12 @@
     return out;
   }
   U.calculate = function (expression) {
-    var text = expression.toLowerCase().replace(/x/g, "*").replace(/\^/g, "**").replace(/,/g, "").trim();
+    var text = expression.toLowerCase().replace(/,/g, "").trim().replace(/\?$/, "").trim();
+    text = text.replace(/^(?:what(?:'s| is) )?(?:the )?(?:square root|sqrt) of (.+)$/, "sqrt($1)");
+    text = text.replace(/^(.+?) squared$/, "($1)**2").replace(/^(.+?) cubed$/, "($1)**3");
+    text = text.replace(/^(.+?) (?:to the power of|to the) (.+?)(?:th|st|nd|rd)?(?: power)?$/, "($1)**($2)");
+    text = text.replace(/^(.+?) percent of (.+)$/, "$1% of $2");
+    text = text.replace(/x/g, "*").replace(/\^/g, "**");
     var m = /^(\d+(?:\.\d+)?)\s*% of (\d+(?:\.\d+)?)$/.exec(text);
     if (m) return num(parseFloat(m[1]) * parseFloat(m[2]) / 100);
     try {
@@ -378,9 +383,16 @@
     celsius: "c", centigrade: "c", fahrenheit: "f", kelvin: "k", "°c": "c", "°f": "f"
   };
   U.convert_units = function (text) {
-    var m = /^\s*(-?\d+(?:\.\d+)?)\s*([a-z°]+)\s+(?:to|in|into)\s+([a-z°]+)\s*$/.exec(text.toLowerCase());
-    if (!m) return 'Say it like "5 km to miles".';
-    var n = parseFloat(m[1]), a = ALIAS[m[2]] || m[2], b = ALIAS[m[3]] || m[3], temps = ["c", "f", "k"];
+    var t = text.toLowerCase().trim().replace(/\?$/, "").trim();
+    var m = /^\s*(-?\d+(?:\.\d+)?)\s*([a-z°]+)\s+(?:to|in|into|as)\s+([a-z°]+)\s*$/.exec(t), n, a, b;
+    if (m) { n = parseFloat(m[1]); a = m[2]; b = m[3]; }
+    else {
+      m = /^(?:how many )?([a-z°]+) (?:are |is )?(?:there )?in (?:a |an |one )?([a-z°]+)$/.exec(t);
+      if (!m) return 'Say it like "5 km to miles".';
+      n = 1; a = m[2]; b = m[1]; m = [m[0], "1", a, b];
+    }
+    a = ALIAS[a] || a; b = ALIAS[b] || b;
+    var temps = ["c", "f", "k"];
     if (temps.indexOf(a) >= 0 && temps.indexOf(b) >= 0) {
       var c = a === "c" ? n : a === "f" ? (n - 32) * 5 / 9 : n - 273.15;
       var out = b === "c" ? c : b === "f" ? c * 9 / 5 + 32 : c + 273.15;
@@ -416,14 +428,18 @@
     if (!w) return 'Define what? Say it like "define serendipity".';
     return WORDS[w] ? w + ", " + WORDS[w] : "On your Mac I read its own dictionary. This page only knows a few words, like serendipity or laconic.";
   };
+  var ZONE_SHORT = { nyc: "America/New_York", "new york city": "America/New_York", la: "America/Los_Angeles", sf: "America/Los_Angeles",
+    "san francisco": "America/Los_Angeles", dc: "America/New_York", washington: "America/New_York", "washington dc": "America/New_York" };
   U.time_in = function (place) {
-    var key = (place || "").toLowerCase().trim();
+    var key = (place || "").toLowerCase().trim().replace(/\s*\b(?:right now|right|now|currently|at the moment|today|please)\b\s*$/, "").trim();
+    key = key.replace(/^(?:the|in)\s+/, "").replace(/^[ ?.,]+|[ ?.,]+$/g, "");
     if (!key) return "It is " + clock() + ".";
-    var zone = ZONES[key] || place.trim().replace(/ /g, "_");
+    var zone = ZONES[key] || ZONE_SHORT[key] || key.replace(/ /g, "_");
+    var shown = key.length <= 3 ? key.toUpperCase() : key.replace(/\b\w/g, function (c) { return c.toUpperCase(); });
     try {
       var day = new Date().toLocaleDateString("en-US", { weekday: "long", timeZone: zone });
-      return "It is " + clock(zone) + " on " + day + " in " + place.trim().replace(/\b\w/g, function (c) { return c.toUpperCase(); }) + ".";
-    } catch (e) { return "I do not know the time zone for " + place.trim() + "."; }
+      return "It is " + clock(zone) + " on " + day + " in " + shown + ".";
+    } catch (e) { return "I do not know the time zone for " + key + "."; }
   };
   // convert_time: same grammar and words as util_dates.convert_time. Zone math is Intl only, no library.
   var TZ_ABBR = { pst: "America/Los_Angeles", pdt: "America/Los_Angeles", pt: "America/Los_Angeles", pacific: "America/Los_Angeles",
@@ -478,7 +494,8 @@
   var HOLIDAYS = { christmas: [12, 25], "new year": [1, 1], "new years": [1, 1], halloween: [10, 31], "canada day": [7, 1],
                    "valentines day": [2, 14], "valentine's day": [2, 14] };
   U.days_until = function (target) {
-    var key = target.toLowerCase().trim(), now = new Date(), y = now.getFullYear();
+    var key = target.toLowerCase().trim().replace(/'|^the |\s+day$/g, "").replace(/^[ ?.]+|[ ?.]+$/g, ""), now = new Date(), y = now.getFullYear();
+    if (/^\d{4}$/.test(key)) key = key + "-01-01";
     var today = Date.UTC(y, now.getMonth(), now.getDate()), d;
     if (HOLIDAYS[key]) {
       d = Date.UTC(y, HOLIDAYS[key][0] - 1, HOLIDAYS[key][1]);
@@ -520,6 +537,11 @@
     if (t.length === 1 && (m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(t[0]))) return mkday(+m[1], +m[2], +m[3]);
     if (t.length === 3 && MONTHS[t[0]] && /^\d+$/.test(t[1]) && /^\d+$/.test(t[2])) return mkday(+t[2], MONTHS[t[0]], +t[1]);
     if (t.length === 3 && MONTHS[t[1]] && /^\d+$/.test(t[0]) && /^\d+$/.test(t[2])) return mkday(+t[2], MONTHS[t[1]], +t[0]);
+    if (t.length === 2 && ((MONTHS[t[0]] && /^\d+$/.test(t[1])) || (MONTHS[t[1]] && /^\d+$/.test(t[0])))) {
+      var mo = MONTHS[t[0]] ? MONTHS[t[0]] : MONTHS[t[1]], dd = MONTHS[t[0]] ? +t[1] : +t[0];
+      var nx = mkday(now.getUTCFullYear(), mo, dd);
+      return nx >= today ? nx : mkday(now.getUTCFullYear() + 1, mo, dd);
+    }
     return null;
   }
   function shiftDay(d, n, unit) {
@@ -532,7 +554,9 @@
   function longDate(d) { var x = new Date(d); return MONTH_NAMES[x.getUTCMonth()] + " " + x.getUTCDate() + ", " + x.getUTCFullYear(); }
   function sayDay(d) { return DAY_NAMES[new Date(d).getUTCDay()] + ", " + longDate(d); }
   U.date_math = function (question) {
-    var q = String(question).trim().toLowerCase(), m, d;
+    var q = String(question).trim().toLowerCase().replace(/\?$/, "").trim(), m, d;
+    q = q.replace(/^(?:what(?:'s| is| was| will)(?: be)? )?(?:the )?date (?:is |be |was )?/, "");
+    q = q.replace(/^in ((?:\d{1,6}|a|an|one|two|three|four|five|six|seven|eight|nine|ten) (?:day|week|month|year)s?)$/, "$1 from now");
     var bad = 'Say it like "100 days from now", "weekday July 4 1976" or "between 2026-01-01 and 2026-12-25".';
     var range = "That date is out of range: I can do years 1 to 9999.";
     if ((m = /^(\d{1,6}|a|an|one|two|three|four|five|six|seven|eight|nine|ten) (day|week|month|year)s? (from|after|before|ago)(?: (.+))?$/.exec(q))) {
@@ -754,10 +778,16 @@
     [/^(?:calc(?:ulate)?|compute|work out|math)[: ]+(.+)$/i, function (m) { return ["calculate", m[1]]; }],
     [/^(?:convert )?(-?\d+) (?:to|in|into) roman(?: numerals?)?$/i, function (m) { return ["roman_numeral", m[1]]; }],
     [/^convert (.+)$/i, function (m) { return ["convert_units", m[1]]; }],
+    [/^(?:what(?:'s| is) )?(-?\d+(?:\.\d+)?\s*[a-z°]+\s+(?:to|in|into|as)\s+[a-z°]+)\??$/i, function (m) { return ["convert_units", m[1]]; }],
+    [/^(how many [a-z°]+ (?:are |is )?(?:there )?in (?:a |an |one )?[a-z°]+)\??$/i, function (m) { return ["convert_units", m[1]]; }],
+    [/^how many ([a-z°]+) (?:is|are) (-?\d+(?:\.\d+)?) ([a-z°]+)\??$/i, function (m) { return ["convert_units", m[2] + " " + m[3] + " to " + m[1]]; }],
+    [/^(?:what(?:'s| is) )?(?:the )?((?:square root|sqrt) of .+)$/i, function (m) { return ["calculate", m[1]]; }],
     [/^(?:define|look up|dictionary)[: ]+(?:the word )?["']?([\w' -]+?)["']?(?: in the dictionary)?$|^(?:what(?:'s| is) )?the (?:definition|dictionary meaning) of ["']?([\w' -]+?)["']?$/i, function (m) { return ["define_word", (m[1] || m[2])]; }],
     [/^what time is it in (.+)$|^(?:what(?:'s| is) )?(?:the )?time in (.+)$/i, function (m) { return ["time_in", (m[1] || m[2])]; }],
     [/^what(?:'s| is)(?: the)? date(?: today)?$|^what day is it(?: today)?$|^today'?s date$/i, function (m) { return ["current_date", ""]; }],
     [/^(?:how many )?days? between (.+?) and (.+)$/i, function (m) { return ["date_math", "between " + m[1] + " and " + m[2]]; }],
+    [/^(?:what(?:'s| is| will be) )?(?:the )?date (?:in|after) ((?:\d{1,6}|a|an|one|two|three|four|five|six|seven|eight|nine|ten) (?:day|week|month|year)s?)\??$/i, function (m) { return ["date_math", m[1] + " from now"]; }],
+    [/^what (?:was|is) the date ((?:\d{1,6}|a|an|one|two|three|four|five|six|seven|eight|nine|ten) (?:day|week|month|year)s?) ago\??$/i, function (m) { return ["date_math", m[1] + " ago"]; }],
     [/^(?:how many )?days? (?:until|till|to) (.+)$|^how long (?:until|till) (.+)$/i, function (m) { return ["days_until", (m[1] || m[2])]; }],
     [/^(?:what(?:'s| is)(?: the date)? |what day is |when is |what date is )?((?:\d{1,6}|a|an|one|two|three|four|five|six|seven|eight|nine|ten) (?:day|week|month|year)s? (?:from(?: .+)?|ago|after .+|before .+))$/i,
      function (m) { return ["date_math", m[1]]; }],

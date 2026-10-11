@@ -399,10 +399,16 @@ ROUTES = (
     (re.compile(r"^(?:calc(?:ulate)?|compute|work out|math)[: ]+(.+)$", _I), "calculate", lambda m: m.group(1)),
     (re.compile(r"^(?:convert )?(-?\d+) (?:to|in|into) roman(?: numerals?)?$", _I), "roman_numeral", lambda m: m.group(1)),
     (re.compile(r"^convert (.+)$", _I), "convert_units", lambda m: m.group(1)),
+    (re.compile(r"^(?:what(?:'s| is) )?(-?\d+(?:\.\d+)?\s*[a-z°]+\s+(?:to|in|into|as)\s+[a-z°]+)\??$", _I), "convert_units", lambda m: m.group(1)),  # "5 feet in cm"
+    (re.compile(r"^(how many [a-z°]+ (?:are |is )?(?:there )?in (?:a |an |one )?[a-z°]+)\??$", _I), "convert_units", lambda m: m.group(1)),  # "how many ounces in a pound"
+    (re.compile(r"^how many ([a-z°]+) (?:is|are) (-?\d+(?:\.\d+)?) ([a-z°]+)\??$", _I), "convert_units", lambda m: f"{m.group(2)} {m.group(3)} to {m.group(1)}"),  # "how many km is 26.2 miles"
+    (re.compile(r"^(?:what(?:'s| is) )?(?:the )?((?:square root|sqrt) of .+)$", _I), "calculate", lambda m: m.group(1)),
     (re.compile(r"^(?:define|look up|dictionary)[: ]+(?:the word )?[\"']?([\w' -]+?)[\"']?(?: in the dictionary)?$|^(?:what(?:'s| is) )?the (?:definition|dictionary meaning) of [\"']?([\w' -]+?)[\"']?$", _I), "define_word", lambda m: m.group(1) or m.group(2)),
     (re.compile(r"^what time is it in (.+)$|^(?:what(?:'s| is) )?(?:the )?time in (.+)$", _I), "time_in", lambda m: m.group(1) or m.group(2)),
     (re.compile(r"^what(?:'s| is)(?: the)? date(?: today)?$|^what day is it(?: today)?$|^today'?s date$", _I), "current_date", lambda m: ""),
     (re.compile(r"^(?:how many )?days? between (.+?) and (.+)$", _I), "date_math", lambda m: f"between {m.group(1)} and {m.group(2)}"),
+    (re.compile(r"^(?:what(?:'s| is| will be) )?(?:the )?date (?:in|after) ((?:\d{1,6}|a|an|one|two|three|four|five|six|seven|eight|nine|ten) (?:day|week|month|year)s?)\??$", _I), "date_math", lambda m: f"{m.group(1)} from now"),
+    (re.compile(r"^what (?:was|is) the date ((?:\d{1,6}|a|an|one|two|three|four|five|six|seven|eight|nine|ten) (?:day|week|month|year)s?) ago\??$", _I), "date_math", lambda m: f"{m.group(1)} ago"),
     (re.compile(r"^(?:how many )?days? (?:until|till|to) (.+)$|^how long (?:until|till) (.+)$", _I), "days_until", lambda m: m.group(1) or m.group(2)),
     (re.compile(r"^(?:what(?:'s| is)(?: the date)? |what day is |when is |what date is )?((?:\d{1,6}|a|an|one|two|three|four|five|six|seven|eight|nine|ten) (?:day|week|month|year)s? (?:from(?: .+)?|ago|after .+|before .+))$", _I),
      "date_math", lambda m: m.group(1)),
@@ -481,6 +487,12 @@ def demo():
     assert len(make_uuid()) == 36 and hash_text("hello").startswith("2cf24dba")
     assert base64_encode("hi there") == "aGkgdGhlcmU=" and base64_decode("aGkgdGhlcmU=") == "hi there" and "not valid" in base64_decode("%%%")
     assert word_count("one two three") == "3 words, 13 characters." and word_count("hi") == "1 word, 2 characters."
+    assert calculate("square root of 16") == "4" and calculate("3 squared") == "9" and calculate("2 to the power of 10") == "1024", calculate("square root of 16")
+    assert convert_units("5 feet in cm") == "5 ft is 152.4 cm." and convert_units("how many ounces in a pound") == "1 lb is 16 oz.", convert_units("5 feet in cm")
+    assert convert_units("how many seconds in a day") == "1 day is 86400 s." and "cannot convert" in convert_units("how many bananas in a crate")
+    assert "in NYC" in time_in("nyc right now") and "in London" in time_in("london at the moment"), time_in("nyc right now")
+    assert date_math("what's the date in 30 days").startswith("30 days from now is ") and date_math("10 days ago").endswith("."), date_math("in 30 days")
+    assert "January 1" in days_until("new year's") and "January 1, 2027" in days_until("2027") and "Sunday" not in date_math("weekday dec 25")[:0]
     _wc = os.path.join(os.path.dirname(os.path.abspath(__file__)), "wc-demo.txt")  # a real file inside home on a Mac and on CI: the path counts the file, not itself
     with open(_wc, "w") as f:
         f.write("one two three four")

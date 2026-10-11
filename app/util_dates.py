@@ -16,16 +16,23 @@ _ZONES = {"tokyo": "Asia/Tokyo", "london": "Europe/London", "paris": "Europe/Par
           "mexico city": "America/Mexico_City", "auckland": "Pacific/Auckland", "honolulu": "Pacific/Honolulu"}
 
 
+_ZONE_SHORT = {"nyc": "America/New_York", "new york city": "America/New_York", "la": "America/Los_Angeles", "sf": "America/Los_Angeles",
+               "san francisco": "America/Los_Angeles", "dc": "America/New_York", "washington": "America/New_York", "washington dc": "America/New_York"}
+
+
 def time_in(place=""):
-    """The current time in a city (Tokyo, London, New York...), or here when no city is given."""
-    key = place.lower().strip()
+    """The current time in a city (Tokyo, London, New York, NYC, LA...), or here when no city is given. Trailing filler
+    ("right now", "at the moment") is ignored: dogfood 5.11.2 found "london right now" asked for a zone called "london right"."""
+    key = re.sub(r"\s*\b(?:right now|right|now|currently|at the moment|today|please)\b\s*$", "", place.lower().strip()).strip()
+    key = re.sub(r"^(?:the|in)\s+", "", key).strip(" ?.,")
     if not key:
         return datetime.now().strftime("It is %-I:%M %p.")
     try:
-        zone = ZoneInfo(_ZONES.get(key, place.strip().replace(" ", "_")))
+        zone = ZoneInfo(_ZONES.get(key) or _ZONE_SHORT.get(key) or key.replace(" ", "_"))
     except Exception:
-        return f"I do not know the time zone for {place.strip()}."
-    return datetime.now(zone).strftime(f"It is %-I:%M %p on %A in {place.strip().title()}.")
+        return f"I do not know the time zone for {key}."
+    shown = key.upper() if len(key) <= 3 else key.title()
+    return datetime.now(zone).strftime(f"It is %-I:%M %p on %A in {shown}.")
 
 
 # what people type for a zone. Pacific, Mountain, Central and Eastern follow daylight time: "3pm PST" in July means
@@ -101,8 +108,10 @@ _HOLIDAYS = {"christmas": (12, 25), "new year": (1, 1), "new years": (1, 1), "ha
 
 def days_until(target):
     """How many days from today until a date (2026-12-25) or a holiday (christmas, halloween, new year)."""
-    key, today = target.lower().strip(), date.today()
+    key, today = re.sub(r"'|^the |\s+day$", "", target.lower().strip()).strip(" ?."), date.today()  # "new year's day" is "new years"
     try:
+        if re.fullmatch(r"\d{4}", key):  # a bare year is its first day
+            key = f"{key}-01-01"
         if key in _HOLIDAYS:
             d = date(today.year, *_HOLIDAYS[key])
             d = d if d >= today else date(today.year + 1, *_HOLIDAYS[key])
@@ -140,6 +149,10 @@ def _day(text):
             return date(int(t[2]), _MONTHS[t[0]], int(t[1]))
         if len(t) == 3 and t[1] in _MONTHS and t[0].isdigit() and t[2].isdigit():
             return date(int(t[2]), _MONTHS[t[1]], int(t[0]))
+        if len(t) == 2 and (t[0] in _MONTHS and t[1].isdigit() or t[1] in _MONTHS and t[0].isdigit()):  # "dec 25": its next date
+            month, day = (_MONTHS[t[0]], int(t[1])) if t[0] in _MONTHS else (_MONTHS[t[1]], int(t[0]))
+            d = date(today.year, month, day)
+            return d if d >= today else date(today.year + 1, month, day)
     except (ValueError, OverflowError):
         return None
     return None
@@ -172,7 +185,10 @@ def _say(d):
 def date_math(question):
     """Dates worked out exactly. Takes "100 days from now", "3 weeks ago", "2 months after 2026-01-31",
     "weekday July 4 1976" or "between 2026-01-01 and christmas"."""
-    q = question.strip().lower()
+    q = question.strip().lower().rstrip("?").strip()
+    # "what's the date in 30 days", "the date 10 days ago": the question words come off, "in N days" is "N days from now"
+    q = re.sub(r"^(?:what(?:'s| is| was| will)(?: be)? )?(?:the )?date (?:is |be |was )?", "", q)
+    q = re.sub(r"^in ((?:\d{1,6}|a|an|one|two|three|four|five|six|seven|eight|nine|ten) (?:day|week|month|year)s?)$", r"\1 from now", q)
     bad = 'Say it like "100 days from now", "weekday July 4 1976" or "between 2026-01-01 and 2026-12-25".'
     try:
         m = re.fullmatch(r"(\d{1,6}|a|an|one|two|three|four|five|six|seven|eight|nine|ten) (day|week|month|year)s? (from|after|before|ago)(?: (.+))?", q)

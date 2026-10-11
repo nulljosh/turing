@@ -26,6 +26,8 @@ FIXED = [
     "calculate __import__('os')", "calculate 1,000 * 3", "calculate 3 x 4", "calculate 7 / 2", "calculate 2 +", "calculate ((2)", "calculate abs(-5)",
     "convert 5 km to miles", "convert 212 f to c", "convert 0 c to k", "convert 1 lb to oz", "convert 1 mile to feet", "convert 2 hours to minutes",
     "convert 3 cups to ml", "convert 5 km to kg", "convert nonsense", "convert 100 celsius to fahrenheit", "convert -40 f to c", "convert 1 gallon to liters",
+    "5 feet in cm", "what's 0 kelvin in celsius", "how many ounces in a pound", "how many seconds in a day", "how many km is 26.2 miles", "how many bananas in a crate",
+    "square root of 2", "what's the square root of 16", "calculate 3 squared", "calculate 2 to the power of 10", "calculate 20 percent of 50",
     "sha256 of hello", "hash hello world", "hash: turing",
     "base64 encode hi there", "base64 decode aGkgdGhlcmU=", "base64 decode %%%", "base64 encode café", "base64 decode Y2Fmw6k=",
     "count words in one two three", "word count of hi", "word count: a  b   c",

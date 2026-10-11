@@ -4,8 +4,8 @@
   text { font-family: -apple-system, Helvetica, Arial, sans-serif; fill: var(--ink); }
   line, polyline { stroke: var(--ink); fill: none; }
   .g { stroke-dasharray: 1 4; }
-</style><text x="38" y="11" font-size="10">Commits</text><line x1="38" y1="26" x2="458" y2="26" class="g"/><text x="34" y="29" font-size="9" text-anchor="end">654</text><line x1="38" y1="96" x2="458" y2="96" class="g"/><text x="34" y="99" font-size="9" text-anchor="end">327</text>
+</style><text x="38" y="11" font-size="10">Commits</text><line x1="38" y1="26" x2="458" y2="26" class="g"/><text x="34" y="29" font-size="9" text-anchor="end">655</text><line x1="38" y1="97" x2="458" y2="97" class="g"/><text x="34" y="100" font-size="9" text-anchor="end">327</text>
 <line x1="38" y1="26" x2="38" y2="166"/><line x1="38" y1="166" x2="458" y2="166"/>
-<polyline points="38,166 48,163 58,159 68,156 78,153 89,149 99,146 109,142 119,139 130,135 140,132 150,129 160,125 171,122 181,118 191,115 201,111 212,108 222,105 232,101 242,98 253,94 263,91 273,88 283,84 294,81 304,77 314,74 324,70 335,67 345,64 355,60 365,57 376,53 386,50 396,46 406,43 417,40 427,36 437,33 447,29 458,26" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="38,166 48,163 58,159 68,156 78,153 89,149 99,146 109,142 119,139 130,136 140,132 150,129 160,125 171,122 181,118 191,115 201,112 212,108 222,105 232,101 242,98 253,94 263,91 273,88 283,84 294,81 304,77 314,74 324,71 335,67 345,64 355,60 365,57 376,53 386,50 396,47 406,43 417,40 427,36 437,33 447,29 458,26" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
 <text x="38" y="182" font-size="10">Sep 13</text><text x="458" y="182" font-size="10" text-anchor="end">Oct 11</text>
-<text x="38" y="196" font-size="10" font-weight="600">654 commits &#183; 100% documented &#183; since Sep 13 2026</text></svg>
+<text x="38" y="196" font-size="10" font-weight="600">655 commits &#183; 100% documented &#183; since Sep 13 2026</text></svg>
