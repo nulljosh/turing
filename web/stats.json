@@ -1,5 +1,5 @@
 {
-  "version": "5.5.0",
+  "version": "5.6.0",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -72,8 +72,8 @@
         "documented": 32
       },
       "app/tools_agent.py": {
-        "total": 7,
-        "documented": 7
+        "total": 9,
+        "documented": 9
       },
       "app/tools_apps.py": {
         "total": 14,
@@ -492,8 +492,8 @@
         "documented": 25
       },
       "tests/test_unsure.py": {
-        "total": 13,
-        "documented": 13
+        "total": 14,
+        "documented": 14
       },
       "tests/test_untrusted.py": {
         "total": 25,

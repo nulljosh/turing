@@ -92,5 +92,25 @@ class LoaderTests(unittest.TestCase):
             tools_agent._hands_model()
         thread.assert_not_called()
 
+    def test_an_older_cached_run_is_used_and_refetched_once(self):
+        """A cached folder with an old RUN marker still answers, and one background fetch starts; a current one starts none."""
+        import tempfile
+        with tempfile.TemporaryDirectory() as folder, mock.patch.dict(os.environ, {"SAMANTHA_HEADLESS": ""}), \
+                mock.patch.object(tools_agent, "_fetching", False), mock.patch.object(tools_agent.os.path, "isdir", return_value=False), \
+                mock.patch("huggingface_hub.snapshot_download", return_value=folder), mock.patch("threading.Thread") as thread:
+            os.environ.pop("SAMANTHA_HEADLESS")
+            open(os.path.join(folder, "model.safetensors"), "w").close()
+            with open(os.path.join(folder, "RUN"), "w") as f:
+                f.write("13\n")
+            self.assertEqual(tools_agent._hands_model(), folder)
+            self.assertEqual(tools_agent._hands_model(), folder)
+            self.assertEqual(thread.call_count, 1)
+            with open(os.path.join(folder, "RUN"), "w") as f:
+                f.write(tools_agent.HANDS_RUN)
+            tools_agent._fetching = False
+            self.assertEqual(tools_agent._hands_model(), folder)
+        self.assertEqual(thread.call_count, 1)
+
+
 if __name__ == "__main__":
     unittest.main()

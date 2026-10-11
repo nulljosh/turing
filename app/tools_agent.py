@@ -13,6 +13,7 @@ import untrusted
 HANDS_ADAPTER = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "hands-adapter")
 HANDS_MODEL = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "models", "samantha-hands-1.5b-mlx")  # the Kaggle-trained 1.5B, merged (docs/KAGGLE.md); wins over the 0.5B adapter when present
 HANDS_REPO = "trommatic/samantha-hands-1.5b-mlx"  # the 1.5B on Hugging Face; Hugging Face's own cache keeps it after the first fetch
+HANDS_RUN = "19"  # the training run this version ships; a cached folder with an older RUN file gets refetched in the background
 HANDS_GGUF = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "models", "samantha-hands.gguf")
 HANDS_SYSTEM = 'You are Samantha\'s hands. Reply with one JSON tool call. If this is not a command, reply {"tool": null, "arg": ""}.'
 _hands = None
@@ -34,18 +35,35 @@ def _hands_model():
         from huggingface_hub import snapshot_download
     except ImportError:
         return None
+    global _fetching
     try:
         folder = snapshot_download(HANDS_REPO, local_files_only=True)
         if os.path.isfile(os.path.join(folder, "model.safetensors")):  # a half-downloaded folder has the small files but not the weights
+            if _cached_run(folder) != HANDS_RUN and not _fetching and not os.environ.get("SAMANTHA_HEADLESS"):
+                _fetch_in_background(snapshot_download)  # an older run keeps answering; the new one takes over next start
             return folder
     except Exception:
         pass
-    global _fetching
     if not _fetching and not os.environ.get("SAMANTHA_HEADLESS"):  # tests and CI never download; one fetch per run
-        import threading
-        _fetching = True
-        threading.Thread(target=lambda: snapshot_download(HANDS_REPO), daemon=True).start()
+        _fetch_in_background(snapshot_download)
     return None
+
+
+def _cached_run(folder):
+    """The RUN marker a downloaded folder carries ("19"), or "" for one from before the marker existed."""
+    try:
+        with open(os.path.join(folder, "RUN")) as f:
+            return f.read().strip()
+    except OSError:
+        return ""
+
+
+def _fetch_in_background(snapshot_download):
+    """Start the one background fetch of the 1.5B this process will make."""
+    import threading
+    global _fetching
+    _fetching = True
+    threading.Thread(target=lambda: snapshot_download(HANDS_REPO), daemon=True).start()
 
 
 def _load_hands():

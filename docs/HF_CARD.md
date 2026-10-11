@@ -19,7 +19,7 @@ Both install llama-cpp-python, download this file, and start her chat. The Windo
 ## Measured
 
 - 395 of 484 unseen test phrasings picked right.
-- On 619 sentences she never trained on, this picker (version 5.1) picks the right tool for 351 and the wrong tool for 79, where 5.0 got 317 and 126. 27 wrong picks get past her guard, and 11 of 273 right commands (4.0 percent) are left undone. On messier test sentences (typos, voice dictation) about 8 percent are left undone. The goal is under 2 percent, and that is the next work.
+- On 869 sealed sentences she never trained on (two sets nobody tuned to), version 5.6 picks the right tool for 801 (5.1: 788) and the wrong tool for 39 (53); 19 wrong picks get past her guard (same as 5.1) and 40 right picks are refused (45). On 360 fresh messy phrasings, 323 right (5.1: 310). About 5 percent of right commands are still left undone against a goal of under 2. (Training run 19; 5.1 was run 13.) Older line kept for the record: 619 sealed sentences, 5.1 picked 351 right and 79 wrong, 5.0 317 and 126; 27 past the guard, and 11 of 273 right commands (4.0 percent) are left undone. On messier test sentences (typos, voice dictation) about 8 percent are left undone. The goal is under 2 percent, and that is the next work.
 - This GGUF agrees with the original MLX picker on 16 of 20 fixture prompts; the misses are ambiguous wordings.
 
 ## What she does (v__VERSION__)

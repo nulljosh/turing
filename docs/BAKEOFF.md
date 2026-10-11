@@ -401,3 +401,18 @@ The Kaggle v10 picker (Qwen2.5-1.5B, SFT then a gentle DPO stage, 4-bit MLX, 850
 Against the 0.5B picker it replaces, per sentence, on the two sets nobody tuned to: heldout4 does 54 commands the 0.5B misses and loses 18 (net 36 more); heldout6 does 61 and loses 12 (net 49 more). Wrong picks past the guard are under 10 on every set (standard 6, heldout2 7, heldout4 9, heldout5 2, heldout6 8). 3.5x the weights for 85 more commands in 894.
 
 **The bar was missed and v5 shipped anyway, on Joshua's call.** Right commands left undone: heldout4 5.0 percent, heldout6 4.2 percent, against a goal of under 2. heldout7, the sealed set, was not read: reading it with a known miss would have spent it. It stays sealed for 5.1. The footer badge was not refreshed for this major (the step rule would have drawn fewer motifs than 4.20 has); that is 5.1's first small job.
+
+## v5.6.0 (2026-10-11): training run 19 ships
+
+Three Kaggle runs overnight on run 16's data (12,673 rows) plus 441 targeted rows written for the tools a fresh 360-sentence dev set (heldout13, writer saw only the tool list) caught her missing: morse, shout, word_count, define_word, current_date, write_document drafts, teach_me, find_in_document, and 100 requests no tool covers (she had been inventing book_flight and send_text for those).
+
+| Run | What changed | heldout13 (dev, 360) | heldout4 (sealed, 455) | heldout12 (sealed, 414) | standard past guard |
+|---|---|---|---|---|---|
+| 13 (v5.1) | baseline | 310 right, 2 past, 6 refused | 385, 8, 17 | 364, 11, 28 | 19 |
+| 17 | + 441 rows twice | 334, 0, 6 | 395, 9, 14 | 370, 11, 28 | 31 (rejected) |
+| 18 | + 441 rows once | 324, 2, 4 | 377, 10, 9 | partial | 45 (rejected) |
+| 19 | + 441 rows once, labels fixed | 323, 1, 3 | 380, 7, 13 | 373, 12, 27 | 19 (fresh sample) |
+
+Most of run 17 and 18's extra standard leaks were one label contradiction: the templates taught "tldr this page" and "give me the gist of this tab" as agent while teaching "give me the gist of {site}" as summarize, and the standard set scored them as agent. Fixed in gen_hands_data (v5.4.3) and patched in the Kaggle rows for run 19. The standard set is a fresh sample since the fix, so run 13's 19 and run 19's 19 are on different sentences.
+
+Run 19 against run 13 on the two sealed sets together: right tool 801 against 788, wrong tool 39 against 53, past the guard 19 against 19, refused 40 against 45, right picks that ran 753 against 749. Fewer wrong picks, the same leak count, fewer refusals. heldout4's right picks that ran dropped by 5 (380 against 385) while its right tool choices rose (424 against 421): the difference is arguments the guard did not accept, not wrong tools. Shipped as v5.6.0. Run-to-run noise is large (17, 18 and 19 differ mostly by weighting and seed and spread 19 to 45 on the standard set), so a future run only ships on a margin, never a point.
