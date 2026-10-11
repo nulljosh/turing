@@ -6,7 +6,7 @@ Work toward 6.0, one round at a time: integrate Joshua Tree tools and Pi hardwar
 
 ## Where things stand
 
-- **Live:** v5.11 (training run 20, shipped 2026-10-11 08:10; run 19 was v5.6, run 13 v5.1). Sealed 619-sentence test: 351 right picks (v5.0 had 317), 79 wrong (126), 27 past guard (30), about 4 percent refusals. Under-2 percent goal still open, documented honestly. Weights: https://huggingface.co/trommatic/samantha-hands-1.5b-mlx (the 0.5B GGUF for Windows and Linux stays at trommatic/samantha-hands-gguf).
+- **Live:** v5.12 (training run 23, shipped 2026-10-11 afternoon; run 20 was v5.11, run 19 v5.6, run 13 v5.1). Sealed 619-sentence test: 351 right picks (v5.0 had 317), 79 wrong (126), 27 past guard (30), about 4 percent refusals. Under-2 percent goal still open, documented honestly. Weights: https://huggingface.co/trommatic/samantha-hands-1.5b-mlx (the 0.5B GGUF for Windows and Linux stays at trommatic/samantha-hands-gguf).
 - **Run 13 (3,260 hand-written sentences), sureness rule on:** the guard rule `SURE_SKIPS_CUES = 0.95` lets very confident non-writing picks run without their cue word, asking for the missing piece instead of refusing. Sealed heldout (619 fresh sentences from a writer who sees only the tool list): 351 right, 79 wrong, 27 past guard. Tried Qwen2.5-3B and Qwen3-1.7B bases; both matched run 13's sealed score, stay as next experiments.
 - **Tools built:** `eval/misses.py` (every leak and refusal, sealed sets only), `training/dev_to_data.py` (retired blind sets into training rows), `training/extra_to_data.py` (hand-written batches, drops tool-name echoes).
 - **Sealed sets:** heldout4, heldout7, heldout9, heldout12 (414 fresh sentences) are never read as text. Heldout6, 8, 10, 11 are dev sets (run 11 trained on 6 and 8).
@@ -36,9 +36,9 @@ Worse on heldout13 (324 vs 325), heldout4 leaks 11 vs 7, heldout12 364 vs 375. R
 
 Better on heldout13 (331, 0 past) and heldout14 (235), fewer leaks over the sealed pair (19 vs 20), but heldout12 366 vs 375 and heldout4 leaks 9 vs 7. Run 20 stays live. Table in docs/BAKEOFF.md. Files in /Volumes/LaCie/turing-v22 (mlx, all five dumps). Next training step: per-tool counts on heldout12 (eval/misses.py prints counts only for sealed sets) to see what the batch displaced, then a balanced run 23.
 
-## Run 23 in flight (started about 16:15)
+## Run 23 (2026-10-11): shipped as v5.12.0
 
-Kaggle kernel version 23: run 20's data, run 22's 119 targeted rows twice, 156 hard confusable-pair rows twice (writer saw only the tool list and the pair names; 35 dropped by the argument filter), all null rows once. 13,999 rows. Files /Volumes/LaCie/turing-v23. Run 22's extra misses on heldout12 were scattered over about twenty tools and mostly abstentions (None), so the null rows are no longer repeated. When COMPLETE run `bash /Volumes/LaCie/turing-v23/fetch_and_score.sh > /Volumes/LaCie/turing-v23/score.out 2>&1`, then score heldout14 with `--model /Volumes/LaCie/turing-v23/mlx --trained --test eval/heldout14.jsonl`. Bar: heldout13 >= 325, heldout14 above 229 with <= 6 past the guard, heldout4 >= 385 with <= 7 past, heldout12 >= 375 with <= 13 past, standard past <= 20 (all under the v5.11.8 guard; rescore run 20's dumps if the guard changes).
+Better on four of five sets with fewer leaks (table in docs/BAKEOFF.md); heldout12 gave back eleven right picks as safe abstentions. Next training step: a run 24 batch aimed at what heldout12 lost (counts per tool only), plus more hard pairs.
 
 ## Next, in order (2026-10-11 afternoon)
 

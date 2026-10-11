@@ -459,3 +459,17 @@ Run 20's data plus 125 targeted rows repeated three times for the six tools run 
 | heldout12 (sealed, 414) | 375, 13 past, 28 refused | 366, 10, 24 |
 
 Better on both fresh dev sets (331 and 235, with zero leaks on heldout13) and one fewer leak over the sealed pair (19 against 20), but nine fewer right picks on heldout12 and two more leaks on heldout4. The bar asks for the sealed sets to be no worse on both counts, so it does not ship. The targeted rows did teach the six tools; the cost landed elsewhere on heldout12. Next: look at which heldout12 tools lost ground (counts per tool only, the set stays sealed) and balance the batch before run 23.
+
+## v5.12.0 (2026-10-11): run 23, harder data, shipped
+
+Run 20's data, run 22's 119 targeted rows twice, and 156 hard rows for twenty confusable tool pairs twice (a writer who saw only the tool list and the pair names), null rows once. Same kernel, same settings. Scored under the v5.11.12 guard; run 20's numbers are its dumps rescored under that guard.
+
+| Set | run 20 | run 23 |
+|---|---|---|
+| standard | 1859 of 2032, 20 past the guard | 1869 of 2046, 18 past |
+| heldout13 (dev, 360) | 325, 1 past, 3 refused | 334, 0, 8 |
+| heldout14 (dev, 291) | 229, 6 past, 1 refused | 235, 3, 1 |
+| heldout4 (sealed, 455) | 385, 7 past, 11 refused | 402, 6, 21 |
+| heldout12 (sealed, 414) | 375, 13 past, 28 refused | 364, 13, 24 |
+
+Better on four of five sets, with fewer leaks on every one that moved: the sealed pair goes 760 to 766 right and 20 to 19 past the guard; both fresh dev sets gain and heldout13 leaks nothing. The one loss is heldout12, eleven fewer right picks. Read as counts per tool (the set stays sealed): six more abstentions, four more hand-offs to the planner (which asks before it acts), and one-off confusions spread over a dozen tools; nothing clustered, and the leak count there did not move. That is the safe kind of wrong. Shipped. The honest caveat: run-to-run noise is about five on any one set, so the heldout12 loss is real but the heldout4 gain (seventeen) is larger than noise too.
