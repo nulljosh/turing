@@ -314,7 +314,7 @@ class RouteBranches(unittest.TestCase):
         os.mkdir(os.path.join(self.proj, "tests"))
         reply = self.run_with([("app.py", "print('new')")], shell="1 failed")
         self.assertIn("Tests failed", reply)
-        self.assertIn("Undo: git checkout -- " + self.app, reply)
+        self.assertIn("Undo: git checkout -- " + os.path.realpath(self.app), reply)
         reply = self.run_with([("app.py", "print('newer')")], shell="3 passed")
         self.assertEqual(reply, "Wrote 1 file(s). 3 passed")
         self.assertEqual(open(self.app).read(), "print('newer')")
