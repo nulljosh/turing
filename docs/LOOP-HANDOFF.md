@@ -36,6 +36,10 @@ Worse on heldout13 (324 vs 325), heldout4 leaks 11 vs 7, heldout12 364 vs 375. R
 
 Better on heldout13 (331, 0 past) and heldout14 (235), fewer leaks over the sealed pair (19 vs 20), but heldout12 366 vs 375 and heldout4 leaks 9 vs 7. Run 20 stays live. Table in docs/BAKEOFF.md. Files in /Volumes/LaCie/turing-v22 (mlx, all five dumps). Next training step: per-tool counts on heldout12 (eval/misses.py prints counts only for sealed sets) to see what the batch displaced, then a balanced run 23.
 
+## Run 23 in flight (started about 16:15)
+
+Kaggle kernel version 23: run 20's data, run 22's 119 targeted rows twice, 156 hard confusable-pair rows twice (writer saw only the tool list and the pair names; 35 dropped by the argument filter), all null rows once. 13,999 rows. Files /Volumes/LaCie/turing-v23. Run 22's extra misses on heldout12 were scattered over about twenty tools and mostly abstentions (None), so the null rows are no longer repeated. When COMPLETE run `bash /Volumes/LaCie/turing-v23/fetch_and_score.sh > /Volumes/LaCie/turing-v23/score.out 2>&1`, then score heldout14 with `--model /Volumes/LaCie/turing-v23/mlx --trained --test eval/heldout14.jsonl`. Bar: heldout13 >= 325, heldout14 above 229 with <= 6 past the guard, heldout4 >= 385 with <= 7 past, heldout12 >= 375 with <= 13 past, standard past <= 20 (all under the v5.11.8 guard; rescore run 20's dumps if the guard changes).
+
 ## Next, in order (2026-10-11 afternoon)
 
 1. Run 22 verdict: score it with `bash /Volumes/LaCie/turing-v22/fetch_and_score.sh` and heldout14 with `--test eval/heldout14.jsonl`. Ship only if it beats run 20 (229 of 291 on heldout14) and does not add sealed leaks on heldout4/12 or heldout13. Otherwise run 20 stays and the next lever is guard and argument work.
