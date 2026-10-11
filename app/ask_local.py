@@ -40,6 +40,7 @@ def words_to_digits(text):
     """"ten plus twenty-five" -> "10 plus 25". Only runs of number words change; everything else is left alone, so the
     arithmetic() whitelist below still rejects any sentence that is not purely numbers and operators."""
     def run(m):
+        """One run of number words, read left to right like a person says them."""
         total = cur = 0
         for w in re.split(r"[\s-]+", m.group(0).lower()):
             if w == "and": continue
