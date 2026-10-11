@@ -276,6 +276,7 @@ CASES = [
     ("open prs", "open_prs", ""),
     ("any open pull requests on sidewise", "open_prs", "sidewise"),
     ("pretty print {\"a\": 1}", "json_pretty", "{\"a\": 1}"),
+    ("how many words are in ~/Documents/essay.md?", "word_count", "~/Documents/essay.md"),
     ("joshua tree status", "jt_status", ""),
     ("how is joshua tree doing?", "jt_status", ""),
     ("boot joshua tree", "jt_boot", ""),

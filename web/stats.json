@@ -1,5 +1,5 @@
 {
-  "version": "5.11.0",
+  "version": "5.11.1",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -99,6 +99,10 @@
         "total": 22,
         "documented": 22
       },
+      "app/tools_docs.py": {
+        "total": 11,
+        "documented": 11
+      },
       "app/tools_files.py": {
         "total": 16,
         "documented": 16
@@ -156,8 +160,8 @@
         "documented": 7
       },
       "app/tools_util.py": {
-        "total": 36,
-        "documented": 36
+        "total": 27,
+        "documented": 27
       },
       "app/tools_write.py": {
         "total": 8,

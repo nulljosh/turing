@@ -772,7 +772,7 @@
     [/^sha-?256(?: of)?[: ]+(.+)$|^hash(?: of|:) (.+)$/i, function (m) { return ["hash_text", ((m[1] || m[2]))]; }],
     [/^base64 encode[: ]+(.+)$/i, function (m) { return ["base64_encode", m[1]]; }],
     [/^base64 decode[: ]+(.+)$/i, function (m) { return ["base64_decode", m[1]]; }],
-    [/^(?:count (?:the )?words in|word count(?: of)?)[: ]+(.+)$/i, function (m) { return ["word_count", m[1]]; }],
+    [/^(?:count (?:the )?words in|word count(?: of)?|how many words (?:are )?(?:there )?in)[: ]+(.+?)\??$/i, function (m) { return ["word_count", m[1]]; }],
     [/^reverse(?: the)? (?:text|words?|string)[: ]+(.+)$|^reverse: (.+)$/i, function (m) { return ["reverse_text", ((m[1] || m[2]))]; }],
     [/^(?:shout|uppercase)[: ]+(.+)$/i, function (m) { return ["shout", m[1]]; }],
     [/^morse(?: code)?(?: for| of)?[: ]+(.+)$/i, function (m) { return ["morse_code", m[1]]; }],
