@@ -28,7 +28,7 @@ FIXED = [
     "convert 3 cups to ml", "convert 5 km to kg", "convert nonsense", "convert 100 celsius to fahrenheit", "convert -40 f to c", "convert 1 gallon to liters",
     "5 feet in cm", "what's 0 kelvin in celsius", "how many ounces in a pound", "how many seconds in a day", "how many km is 26.2 miles", "how many bananas in a crate",
     "square root of 2", "what's the square root of 16", "calculate 3 squared", "calculate 2 to the power of 10", "calculate 20 percent of 50",
-    "uppercase this: hello", "morse ... --- ...", "what does .... .. / - .... . .-. . mean in morse", "decode morse ..-.",
+    "uppercase this: hello", "morse ... --- ...", "what does .... .. / - .... . .-. . mean in morse", "decode morse ..-.", "... --- ...", ".... .. / - .... . .-. .", "how many km in a light year", "2 light years in miles", "1 lightyear to km",
     "how many letters in mississippi", "what is MCMXCIX in numbers", "what's iiii as a number", "roman numeral for 1999", "tip on $82.50 at 18%", "tip on 45", "what's the tip on 100 at 20",
     "sha256 of hello", "hash hello world", "hash: turing",
     "base64 encode hi there", "base64 decode aGkgdGhlcmU=", "base64 decode %%%", "base64 encode café", "base64 decode Y2Fmw6k=",

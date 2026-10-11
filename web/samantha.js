@@ -116,8 +116,11 @@
   var LEAD = /^(?:(?:hey|ok|okay|yo|samantha|please|now|just)[, ]+)*(?:(?:can|could|would|will) you (?:please )?|i (?:want|need|would like|'d like) (?:you )?to |let's |go ahead and )?(?:please )?/i;
   var TAIL = /(?:[, ]+(?:please|for me|real quick|now|thanks|thank you))+$/i;
 
+  var RAW_MORSE = /^[.\-]+(?:[ /]+[.\-]+)+$/;  // "... --- ..." ends in dots that are letters
   function bare(query) {
-    return query.normalize("NFKC").replace(/[\x00-\x1f\x7f\u200b-\u200f\u202a-\u202e\u2060-\u2069\ufeff]/g, "").trim().replace(/[.!?]+$/, "")
+    var q = query.normalize("NFKC").replace(/[\x00-\x1f\x7f\u200b-\u200f\u202a-\u202e\u2060-\u2069\ufeff]/g, "").trim();
+    if (!RAW_MORSE.test(q)) q = q.replace(/[.!?]+$/, "");
+    return q
       .replace(/\b(what|how|where|who)s\b/gi, "$1's").replace(/(?:[,;]?\s+(?:and then|and|then))+$/i, "").replace(LEAD, "").replace(TAIL, "").trim();
   }
 
@@ -369,23 +372,23 @@
     }
   };
 
-  var LENGTH = { mm: 0.001, cm: 0.01, m: 1, km: 1000, "in": 0.0254, ft: 0.3048, yd: 0.9144, mi: 1609.344 };
+  var LENGTH = { mm: 0.001, cm: 0.01, m: 1, km: 1000, "in": 0.0254, ft: 0.3048, yd: 0.9144, mi: 1609.344, ly: 9460730472580800 };
   var MASS = { g: 0.001, kg: 1, lb: 0.45359237, oz: 0.028349523125 };
   var VOLUME = { ml: 0.001, l: 1, cup: 0.2365882365, gal: 3.785411784 };
   var TIME = { s: 1, min: 60, h: 3600, day: 86400, week: 604800 };
   var ALIAS = {
     millimeter: "mm", millimeters: "mm", centimeter: "cm", centimeters: "cm", meter: "m", meters: "m", metre: "m", metres: "m",
     kilometer: "km", kilometers: "km", kilometre: "km", kilometres: "km", inch: "in", inches: "in", foot: "ft", feet: "ft",
-    yard: "yd", yards: "yd", mile: "mi", miles: "mi", gram: "g", grams: "g", kilogram: "kg", kilograms: "kg", kilo: "kg", kilos: "kg",
+    yard: "yd", yards: "yd", mile: "mi", miles: "mi", lightyear: "ly", lightyears: "ly", gram: "g", grams: "g", kilogram: "kg", kilograms: "kg", kilo: "kg", kilos: "kg",
     pound: "lb", pounds: "lb", lbs: "lb", ounce: "oz", ounces: "oz", milliliter: "ml", milliliters: "ml", liter: "l", liters: "l",
     litre: "l", litres: "l", cups: "cup", gallon: "gal", gallons: "gal", second: "s", seconds: "s", sec: "s", minute: "min",
     minutes: "min", mins: "min", hour: "h", hours: "h", hr: "h", hrs: "h", days: "day", weeks: "week",
     celsius: "c", centigrade: "c", fahrenheit: "f", kelvin: "k", "°c": "c", "°f": "f"
   };
-  var UNIT_WORDS = Object.keys(ALIAS).concat(Object.keys(LENGTH), Object.keys(MASS), Object.keys(VOLUME), Object.keys(TIME), ["c", "f", "k"])
+  var UNIT_WORDS = "light[ -]years?|" + Object.keys(ALIAS).concat(Object.keys(LENGTH), Object.keys(MASS), Object.keys(VOLUME), Object.keys(TIME), ["c", "f", "k"])
     .filter(function (w, i, a) { return a.indexOf(w) === i; }).sort(function (a, b) { return b.length - a.length; }).map(function (w) { return w.replace(/[°]/g, "\\$&"); }).join("|");
   U.convert_units = function (text) {
-    var t = text.toLowerCase().trim().replace(/\?$/, "").trim();
+    var t = text.toLowerCase().trim().replace(/\?$/, "").trim().replace(/\blight[ -]years?\b/g, "lightyear");
     var m = /^\s*(-?\d+(?:\.\d+)?)\s*([a-z°]+)\s+(?:to|in|into|as)\s+([a-z°]+)\s*$/.exec(t), n, a, b;
     if (m) { n = parseFloat(m[1]); a = m[2]; b = m[3]; }
     else {
@@ -804,7 +807,7 @@
     [/^(?:calc(?:ulate)?|compute|work out|math)[: ]+(.+)$/i, function (m) { return ["calculate", m[1]]; }],
     [/^(?:convert )?(-?\d+) (?:to|in|into) roman(?: numerals?)?$/i, function (m) { return ["roman_numeral", m[1]]; }],
     [/^convert (.+)$/i, function (m) { return ["convert_units", m[1]]; }],
-    [/^(?:what(?:'s| is) )?(-?\d+(?:\.\d+)?\s*[a-z°]+\s+(?:to|in|into|as)\s+[a-z°]+)\??$/i, function (m) { return ["convert_units", m[1]]; }],
+    [/^(?:what(?:'s| is) )?(-?\d+(?:\.\d+)?\s*(?:light[ -]years?|[a-z°]+)\s+(?:to|in|into|as)\s+(?:light[ -]years?|[a-z°]+))\??$/i, function (m) { return ["convert_units", m[1]]; }],
     [new RegExp("^(how many (?:" + UNIT_WORDS + ") (?:are |is )?(?:there )?in (?:a |an |one )?(?:" + UNIT_WORDS + "))\\??$", "i"), function (m) { return ["convert_units", m[1]]; }],
     [new RegExp("^how many (" + UNIT_WORDS + ") (?:is|are) (-?\\d+(?:\\.\\d+)?) (" + UNIT_WORDS + ")\\??$", "i"), function (m) { return ["convert_units", m[2] + " " + m[3] + " to " + m[1]]; }],
     [/^how many (?:letters|characters|chars) (?:are )?(?:there )?in (.+?)\??$/i, function (m) { return ["word_count", m[1]]; }],
@@ -835,6 +838,7 @@
     [/^reverse(?: the)? (?:text|words?|string)[: ]+(.+)$|^reverse: (.+)$/i, function (m) { return ["reverse_text", ((m[1] || m[2]))]; }],
     [/^(?:shout|uppercase)(?: this)?[: ]+(.+)$/i, function (m) { return ["shout", m[1]]; }],
     [/^morse(?: code)?(?: for| of)?[: ]+(.+)$/i, function (m) { return ["morse_code", m[1]]; }],
+    [/^([.\-]+(?:[ /]+[.\-]+)+)$/, function (m) { return ["morse_code", m[1]]; }],
     [/^what does ([.\-/ ]+?) (?:mean|say)(?: in morse(?: code)?)?\??$|^(?:decode|read|translate) (?:this |the )?morse(?: code)?[: ]+(.+)$/i, function (m) { return ["morse_code", (m[1] || m[2])]; }],
     [/^(?:pretty ?print|format|prettify) json[: ]+(.+)$/i, function (m) { return ["json_pretty", m[1]]; }],
     [/^(?:pretty ?print|prettify|tidy)(?: (?:this|the))?[: ]+([\[{].*)$/i, function (m) { return ["json_pretty", m[1]]; }],

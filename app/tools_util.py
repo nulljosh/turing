@@ -364,7 +364,7 @@ TOOLS = (ask_llm, calculate, convert_units, define_word, time_in, convert_time, 
          copy_to_clipboard, sleep_display, reveal_in_finder, list_shortcuts, run_shortcut, list_mcp_tools, call_mcp_tool, list_tabs, switch_tab, close_tab, read_tab, remember, recall, forget, read_screen, read_document, find_in_document, ask_document, ask_screen, click_text, type_text, press_key, see_screen, see_image, see_camera, research, research_more, save_research, write_document, transcribe_video, run_code)
 
 _I = re.I
-_UNIT_WORDS = "|".join(sorted(set(_UNIT_ALIASES) | set(_LENGTH) | set(_MASS) | set(_VOLUME) | set(_TIME) | set(_TEMPS), key=len, reverse=True))  # every unit the converter knows, longest first
+_UNIT_WORDS = "light[ -]years?|" + "|".join(sorted(set(_UNIT_ALIASES) | set(_LENGTH) | set(_MASS) | set(_VOLUME) | set(_TIME) | set(_TEMPS), key=len, reverse=True))  # every unit the converter knows, longest first
 # (pattern, tool name, what to hand it). Names, not functions: tools.py looks each one up at call time.
 ROUTES = (
     # only by name: "ask qwen ...", "llama, ...", "ask claude ..." (the harness asks before handing it over)
@@ -400,7 +400,7 @@ ROUTES = (
     (re.compile(r"^(?:calc(?:ulate)?|compute|work out|math)[: ]+(.+)$", _I), "calculate", lambda m: m.group(1)),
     (re.compile(r"^(?:convert )?(-?\d+) (?:to|in|into) roman(?: numerals?)?$", _I), "roman_numeral", lambda m: m.group(1)),
     (re.compile(r"^convert (.+)$", _I), "convert_units", lambda m: m.group(1)),
-    (re.compile(r"^(?:what(?:'s| is) )?(-?\d+(?:\.\d+)?\s*[a-z°]+\s+(?:to|in|into|as)\s+[a-z°]+)\??$", _I), "convert_units", lambda m: m.group(1)),  # "5 feet in cm"
+    (re.compile(r"^(?:what(?:'s| is) )?(-?\d+(?:\.\d+)?\s*(?:light[ -]years?|[a-z°]+)\s+(?:to|in|into|as)\s+(?:light[ -]years?|[a-z°]+))\??$", _I), "convert_units", lambda m: m.group(1)),  # "5 feet in cm", "2 light years in miles"
     (re.compile(r"^(how many (?:" + _UNIT_WORDS + r") (?:are |is )?(?:there )?in (?:a |an |one )?(?:" + _UNIT_WORDS + r"))\??$", _I), "convert_units", lambda m: m.group(1)),  # "how many ounces in a pound", units only: "letters in mississippi" is not one
     (re.compile(r"^how many (" + _UNIT_WORDS + r") (?:is|are) (-?\d+(?:\.\d+)?) (" + _UNIT_WORDS + r")\??$", _I), "convert_units", lambda m: f"{m.group(2)} {m.group(3)} to {m.group(1)}"),  # "how many km is 26.2 miles"
     (re.compile(r"^how many (?:letters|characters|chars) (?:are )?(?:there )?in (.+?)\??$", _I), "word_count", lambda m: m.group(1)),
@@ -431,6 +431,7 @@ ROUTES = (
     (re.compile(r"^reverse(?: the)? (?:text|words?|string)[: ]+(.+)$|^reverse: (.+)$", _I), "reverse_text", lambda m: (m.group(1) or m.group(2))),
     (re.compile(r"^(?:shout|uppercase)(?: this)?[: ]+(.+)$", _I), "shout", lambda m: m.group(1)),
     (re.compile(r"^morse(?: code)?(?: for| of)?[: ]+(.+)$", _I), "morse_code", lambda m: m.group(1)),
+    (re.compile(r"^([.\-]+(?:[ /]+[.\-]+)+)$"), "morse_code", lambda m: m.group(1)),  # dots and dashes on their own are morse (_bare keeps their last dots)
     (re.compile(r"^what does ([.\-/ ]+?) (?:mean|say)(?: in morse(?: code)?)?\??$|^(?:decode|read|translate) (?:this |the )?morse(?: code)?[: ]+(.+)$", _I), "morse_code", lambda m: m.group(1) or m.group(2)),
     (re.compile(r"^(?:pretty ?print|format|prettify) json[: ]+(.+)$", _I), "json_pretty", lambda m: m.group(1)),
     (re.compile(r"^(?:pretty ?print|prettify|tidy)(?: (?:this|the))?[: ]+([\[{].*)$", _I), "json_pretty", lambda m: m.group(1)),  # "pretty print {...}": the braces say json
@@ -535,6 +536,7 @@ def demo():
     assert hit("average of the price column in nope.csv").startswith("Name a CSV") and hit("plot column price of nope.csv").startswith("Name a CSV")
     assert hit("convert 2026 to roman numerals") == "MMXXVI" and hit("1999 in roman numerals") == "MCMXCIX"
     assert hit("read this tab") is not None and hit("read the github tab") is not None
+    assert hit("... --- ...") == "SOS" and hit("how many km in a light year") == "1 ly is 9460730472580.8 km." and hit("2 light years in miles").startswith("2 ly is ")
     assert hit("hash browns are good") is None and hit("reverse psychology") is None and hit("reverse the text abc") == "cba" and hit("hash: hello").startswith("2cf2")
     print("tools_util ok")
 

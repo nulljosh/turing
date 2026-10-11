@@ -70,14 +70,14 @@ def calculate(expression):
         return "Cannot work that out: I only do plain arithmetic."
 
 
-_LENGTH = {"mm": .001, "cm": .01, "m": 1, "km": 1000, "in": .0254, "ft": .3048, "yd": .9144, "mi": 1609.344}
+_LENGTH = {"mm": .001, "cm": .01, "m": 1, "km": 1000, "in": .0254, "ft": .3048, "yd": .9144, "mi": 1609.344, "ly": 9460730472580800.0}
 _MASS = {"g": .001, "kg": 1, "lb": .45359237, "oz": .028349523125}
 _VOLUME = {"ml": .001, "l": 1, "cup": .2365882365, "gal": 3.785411784}
 _TIME = {"s": 1, "min": 60, "h": 3600, "day": 86400, "week": 604800}
 _UNIT_ALIASES = {
     "millimeter": "mm", "millimeters": "mm", "centimeter": "cm", "centimeters": "cm", "meter": "m", "meters": "m",
     "metre": "m", "metres": "m", "kilometer": "km", "kilometers": "km", "kilometre": "km", "kilometres": "km",
-    "inch": "in", "inches": "in", "foot": "ft", "feet": "ft", "yard": "yd", "yards": "yd", "mile": "mi", "miles": "mi",
+    "inch": "in", "inches": "in", "foot": "ft", "feet": "ft", "yard": "yd", "yards": "yd", "mile": "mi", "miles": "mi", "lightyear": "ly", "lightyears": "ly",
     "gram": "g", "grams": "g", "kilogram": "kg", "kilograms": "kg", "kilo": "kg", "kilos": "kg", "pound": "lb", "pounds": "lb",
     "lbs": "lb", "ounce": "oz", "ounces": "oz", "milliliter": "ml", "milliliters": "ml", "liter": "l", "liters": "l",
     "litre": "l", "litres": "l", "cups": "cup", "gallon": "gal", "gallons": "gal",
@@ -89,7 +89,7 @@ _TEMPS = ("c", "f", "k")
 
 def convert_units(text):
     """Convert a quantity between units of length, weight, volume, time or temperature, like "5 km to miles"."""
-    t = text.lower().strip().rstrip("?").strip()
+    t = re.sub(r"\blight[ -]years?\b", "lightyear", text.lower().strip().rstrip("?").strip())  # one word, so "1 light year to km" parses like the rest
     m = re.fullmatch(r"\s*(-?\d+(?:\.\d+)?)\s*([a-z°]+)\s+(?:to|in|into|as)\s+([a-z°]+)\s*", t)
     if m:
         n, a, b = float(m.group(1)), m.group(2), m.group(3)

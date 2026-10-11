@@ -153,9 +153,13 @@ _DANGLING = re.compile(r"(?:[,;]?\s+(?:and then|and|then))+$", re.I)  # "open yo
 _CONTRACT = re.compile(r"\b(what|how|where|who)s\b", re.I)  # people type "whats the weather", the routes say "what's"
 
 
+_RAW_MORSE = re.compile(r"[.\-]+(?:[ /]+[.\-]+)+")
+
+
 def _bare(query):
     """Strip politeness markers (please, can you, etc.) from a command."""
-    q = _INVISIBLE.sub("", unicodedata.normalize("NFKC", query)).strip().rstrip(".!?")
+    q = _INVISIBLE.sub("", unicodedata.normalize("NFKC", query)).strip()
+    q = q if _RAW_MORSE.fullmatch(q) else q.rstrip(".!?")  # "... --- ..." ends in dots that are letters
     q = _DANGLING.sub("", _CONTRACT.sub(r"\1's", q))
     return _TAIL.sub("", _LEAD.sub("", q, count=1)).strip()
 
