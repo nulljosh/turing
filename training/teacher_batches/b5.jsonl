@@ -1,0 +1,135 @@
+{"text": "summarize this youtube video", "tool": "summarize", "arg": "youtube"}
+{"text": "give me the gist of this youtube page", "tool": "summarize", "arg": "youtube"}
+{"text": "tldr the youtube video im on", "tool": "summarize", "arg": "youtube"}
+{"text": "sum up the video i have open on youtube", "tool": "summarize", "arg": "youtube"}
+{"text": "short summary of this youtube tab", "tool": "summarize", "arg": "youtube"}
+{"text": "summarize this page", "tool": "summarize", "arg": ""}
+{"text": "give me a tldr of the page im on", "tool": "summarize", "arg": ""}
+{"text": "sum up this article", "tool": "summarize", "arg": ""}
+{"text": "whats this page about in a few lines", "tool": "summarize", "arg": ""}
+{"text": "short summary of the current tab", "tool": "summarize", "arg": ""}
+{"text": "switch to my github tab", "tool": "switch_tab", "arg": "github"}
+{"text": "go to the github tab", "tool": "switch_tab", "arg": "github"}
+{"text": "bring up the tab with github", "tool": "switch_tab", "arg": "github"}
+{"text": "jump to github in my browser", "tool": "switch_tab", "arg": "github"}
+{"text": "show me the github tab", "tool": "switch_tab", "arg": "github"}
+{"text": "tell me about this mac", "tool": "system_info", "arg": ""}
+{"text": "what computer is this", "tool": "system_info", "arg": ""}
+{"text": "system specs please", "tool": "system_info", "arg": ""}
+{"text": "which mac and macos version am i on", "tool": "system_info", "arg": ""}
+{"text": "about this mac", "tool": "system_info", "arg": ""}
+{"text": "what time is it in tokyo", "tool": "time_in", "arg": "tokyo"}
+{"text": "current time in tokyo", "tool": "time_in", "arg": "tokyo"}
+{"text": "tokyo time right now", "tool": "time_in", "arg": "tokyo"}
+{"text": "whats the clock say in tokyo", "tool": "time_in", "arg": "tokyo"}
+{"text": "time in tokyo?", "tool": "time_in", "arg": "tokyo"}
+{"text": "whats the time in london", "tool": "time_in", "arg": "london"}
+{"text": "london time please", "tool": "time_in", "arg": "london"}
+{"text": "how late is it in london right now", "tool": "time_in", "arg": "london"}
+{"text": "what time is it over in london", "tool": "time_in", "arg": "london"}
+{"text": "current london time", "tool": "time_in", "arg": "london"}
+{"text": "set a timer for ten minutes", "tool": "timer", "arg": "ten minutes"}
+{"text": "start a 10 minute timer", "tool": "timer", "arg": "ten minutes"}
+{"text": "timer 10 min", "tool": "timer", "arg": "ten minutes"}
+{"text": "count down ten minutes for me", "tool": "timer", "arg": "ten minutes"}
+{"text": "wake me in ten minutes", "tool": "timer", "arg": "ten minutes"}
+{"text": "timer for 45 seconds", "tool": "timer", "arg": "45 seconds"}
+{"text": "set a 45 second timer", "tool": "timer", "arg": "45 seconds"}
+{"text": "count down 45 secs", "tool": "timer", "arg": "45 seconds"}
+{"text": "start a quick 45 second timer", "tool": "timer", "arg": "45 seconds"}
+{"text": "45 second countdown", "tool": "timer", "arg": "45 seconds"}
+{"text": "whats a tip on 64.50", "tool": "tip", "arg": "64.50"}
+{"text": "how much should i tip on a 64.50 bill", "tool": "tip", "arg": "64.50"}
+{"text": "tip for 64.50 please", "tool": "tip", "arg": "64.50"}
+{"text": "calculate the tip on 64.50", "tool": "tip", "arg": "64.50"}
+{"text": "bill is 64.50, what do i leave", "tool": "tip", "arg": "64.50"}
+{"text": "transcribe interview.mov in movies", "tool": "transcribe_video", "arg": "~/Movies/interview.mov"}
+{"text": "get the words out of ~/Movies/interview.mov", "tool": "transcribe_video", "arg": "~/Movies/interview.mov"}
+{"text": "write out what is said in my interview video", "tool": "transcribe_video", "arg": "~/Movies/interview.mov"}
+{"text": "make a transcript of interview.mov", "tool": "transcribe_video", "arg": "~/Movies/interview.mov"}
+{"text": "speech to text on ~/Movies/interview.mov", "tool": "transcribe_video", "arg": "~/Movies/interview.mov"}
+{"text": "translate good night to spanish", "tool": "translate", "arg": "good night\tspanish"}
+{"text": "how do you say good night in spanish", "tool": "translate", "arg": "good night\tspanish"}
+{"text": "good night in spanish please", "tool": "translate", "arg": "good night\tspanish"}
+{"text": "put good night into spanish", "tool": "translate", "arg": "good night\tspanish"}
+{"text": "what is good night in spanish", "tool": "translate", "arg": "good night\tspanish"}
+{"text": "translate where is the station into french", "tool": "translate", "arg": "where is the station\tfrench"}
+{"text": "how do i ask where the station is in french", "tool": "translate", "arg": "where is the station\tfrench"}
+{"text": "french for where is the station", "tool": "translate", "arg": "where is the station\tfrench"}
+{"text": "say where is the station in french", "tool": "translate", "arg": "where is the station\tfrench"}
+{"text": "convert where is the station to french", "tool": "translate", "arg": "where is the station\tfrench"}
+{"text": "trash old-draft.txt on my desktop", "tool": "trash_file", "arg": "~/Desktop/old-draft.txt"}
+{"text": "move ~/Desktop/old-draft.txt to the trash", "tool": "trash_file", "arg": "~/Desktop/old-draft.txt"}
+{"text": "throw away old-draft.txt from the desktop", "tool": "trash_file", "arg": "~/Desktop/old-draft.txt"}
+{"text": "delete my desktop old-draft.txt", "tool": "trash_file", "arg": "~/Desktop/old-draft.txt"}
+{"text": "get rid of ~/Desktop/old-draft.txt", "tool": "trash_file", "arg": "~/Desktop/old-draft.txt"}
+{"text": "do i have unread email", "tool": "unread_mail", "arg": ""}
+{"text": "how many unread emails", "tool": "unread_mail", "arg": ""}
+{"text": "check my mail", "tool": "unread_mail", "arg": ""}
+{"text": "anything new in my inbox", "tool": "unread_mail", "arg": ""}
+{"text": "whats unread in mail", "tool": "unread_mail", "arg": ""}
+{"text": "unzip archive.zip in downloads", "tool": "unzip_file", "arg": "~/Downloads/archive.zip"}
+{"text": "extract ~/Downloads/archive.zip", "tool": "unzip_file", "arg": "~/Downloads/archive.zip"}
+{"text": "open up the archive zip from my downloads", "tool": "unzip_file", "arg": "~/Downloads/archive.zip"}
+{"text": "decompress archive.zip please", "tool": "unzip_file", "arg": "~/Downloads/archive.zip"}
+{"text": "unpack ~/Downloads/archive.zip", "tool": "unzip_file", "arg": "~/Downloads/archive.zip"}
+{"text": "upscale old-photo.jpg in pictures", "tool": "upscale_image", "arg": "~/Pictures/old-photo.jpg"}
+{"text": "make ~/Pictures/old-photo.jpg bigger and sharper", "tool": "upscale_image", "arg": "~/Pictures/old-photo.jpg"}
+{"text": "enlarge my old photo", "tool": "upscale_image", "arg": "~/Pictures/old-photo.jpg"}
+{"text": "blow up old-photo.jpg to a higher resolution", "tool": "upscale_image", "arg": "~/Pictures/old-photo.jpg"}
+{"text": "increase the resolution of old-photo.jpg", "tool": "upscale_image", "arg": "~/Pictures/old-photo.jpg"}
+{"text": "how long has my mac been on", "tool": "uptime", "arg": ""}
+{"text": "whats my uptime", "tool": "uptime", "arg": ""}
+{"text": "when did i last restart", "tool": "uptime", "arg": ""}
+{"text": "time since last reboot", "tool": "uptime", "arg": ""}
+{"text": "uptime please", "tool": "uptime", "arg": ""}
+{"text": "whats the weather in toronto", "tool": "weather", "arg": "toronto"}
+{"text": "how is the weather in toronto today", "tool": "weather", "arg": "toronto"}
+{"text": "is it raining in toronto", "tool": "weather", "arg": "toronto"}
+{"text": "toronto forecast please", "tool": "weather", "arg": "toronto"}
+{"text": "check the weather for toronto", "tool": "weather", "arg": "toronto"}
+{"text": "whats the weather like", "tool": "weather", "arg": ""}
+{"text": "do i need an umbrella today", "tool": "weather", "arg": ""}
+{"text": "how hot is it outside", "tool": "weather", "arg": ""}
+{"text": "weather today please", "tool": "weather", "arg": ""}
+{"text": "is it going to rain", "tool": "weather", "arg": ""}
+{"text": "search the web for best pizza dough recipe", "tool": "web_search", "arg": "best pizza dough recipe"}
+{"text": "google best pizza dough recipe", "tool": "web_search", "arg": "best pizza dough recipe"}
+{"text": "look up the best pizza dough recipe online", "tool": "web_search", "arg": "best pizza dough recipe"}
+{"text": "find me a pizza dough recipe on the web", "tool": "web_search", "arg": "best pizza dough recipe"}
+{"text": "search: best pizza dough recipe", "tool": "web_search", "arg": "best pizza dough recipe"}
+{"text": "search for rust vs go for cli tools", "tool": "web_search", "arg": "rust vs go for cli tools"}
+{"text": "look up rust versus go for command line tools", "tool": "web_search", "arg": "rust vs go for cli tools"}
+{"text": "google rust vs go for cli tools", "tool": "web_search", "arg": "rust vs go for cli tools"}
+{"text": "whats the web say about rust vs go for cli tools", "tool": "web_search", "arg": "rust vs go for cli tools"}
+{"text": "find articles comparing rust and go for cli tools", "tool": "web_search", "arg": "rust vs go for cli tools"}
+{"text": "what wifi am i on", "tool": "wifi_name", "arg": ""}
+{"text": "whats the name of my wifi network", "tool": "wifi_name", "arg": ""}
+{"text": "which network am i connected to", "tool": "wifi_name", "arg": ""}
+{"text": "wifi name?", "tool": "wifi_name", "arg": ""}
+{"text": "what ssid am i using", "tool": "wifi_name", "arg": ""}
+{"text": "how many words in the quick brown fox jumps over the lazy dog", "tool": "word_count", "arg": "the quick brown fox jumps over the lazy dog"}
+{"text": "count the words: the quick brown fox jumps over the lazy dog", "tool": "word_count", "arg": "the quick brown fox jumps over the lazy dog"}
+{"text": "word count for the quick brown fox jumps over the lazy dog", "tool": "word_count", "arg": "the quick brown fox jumps over the lazy dog"}
+{"text": "how long is this in words: the quick brown fox jumps over the lazy dog", "tool": "word_count", "arg": "the quick brown fox jumps over the lazy dog"}
+{"text": "count words in the quick brown fox jumps over the lazy dog", "tool": "word_count", "arg": "the quick brown fox jumps over the lazy dog"}
+{"text": "zip up my project folder in documents", "tool": "zip_file", "arg": "~/Documents/project"}
+{"text": "compress ~/Documents/project into a zip", "tool": "zip_file", "arg": "~/Documents/project"}
+{"text": "make a zip of the project folder", "tool": "zip_file", "arg": "~/Documents/project"}
+{"text": "archive ~/Documents/project as a zip file", "tool": "zip_file", "arg": "~/Documents/project"}
+{"text": "zip the documents project directory", "tool": "zip_file", "arg": "~/Documents/project"}
+{"text": "explain the nimble codebase", "tool": "explain_codebase", "arg": "nimble"}
+{"text": "walk me through how nimble is built", "tool": "explain_codebase", "arg": "nimble"}
+{"text": "give me a tour of the nimble repo", "tool": "explain_codebase", "arg": "nimble"}
+{"text": "how is the nimble project organized", "tool": "explain_codebase", "arg": "nimble"}
+{"text": "what does the code in nimble do", "tool": "explain_codebase", "arg": "nimble"}
+{"text": "teach me about tides", "tool": "teach_me", "arg": "tides"}
+{"text": "give me a quick lesson on tides", "tool": "teach_me", "arg": "tides"}
+{"text": "i want to learn how tides work, quiz me", "tool": "teach_me", "arg": "tides"}
+{"text": "explain tides and test me after", "tool": "teach_me", "arg": "tides"}
+{"text": "lesson on tides please", "tool": "teach_me", "arg": "tides"}
+{"text": "run some code on sales.csv", "tool": "run_code", "arg": "sales.csv"}
+{"text": "crunch the numbers in sales.csv", "tool": "run_code", "arg": "sales.csv"}
+{"text": "write a script to analyze sales.csv", "tool": "run_code", "arg": "sales.csv"}
+{"text": "analyze sales.csv with python", "tool": "run_code", "arg": "sales.csv"}
+{"text": "stats on my sales csv", "tool": "run_code", "arg": "sales.csv"}
