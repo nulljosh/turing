@@ -142,9 +142,10 @@ final class Samantha: ObservableObject {
     private func apply(_ msg: PipeMessage) {
         switch msg {
         case .working(let text):
+            // first-run setup ("Setting up Samantha, about two minutes...") is the empty screen's progress, not a chat line
+            if text.hasPrefix("Setting up") { status = text; return }
             transcript.append("  [\(text)]")
-            // first-run setup ("Setting up Samantha, about two minutes...") reads in the status line; a tool name does not
-            status = text.hasPrefix("Setting up") ? text : "Ready"
+            status = "Ready"
         case .confirm(let name, let args, let note): pending = (name, args, note)
         case .mode(let voice, let face):
             voiceOn = voice
@@ -339,7 +340,7 @@ struct ChatView: View {
             Divider()
             inputBar
             // Only while something is worth saying: setup, or a stopped process. "Ready" says nothing, so it shows nothing.
-            if samantha.status != "Ready" { Text(samantha.status).font(.caption2).foregroundStyle(.tertiary).padding(.bottom, 6) }
+            if samantha.status != "Ready" && !samantha.status.hasPrefix("Setting up") { Text(samantha.status).font(.caption2).foregroundStyle(.tertiary).padding(.bottom, 6) }
         }
         .frame(minWidth: 420, minHeight: 480)
         .toolbar {
@@ -363,7 +364,12 @@ struct ChatView: View {
         return VStack(spacing: 12) {
             Image(nsImage: NSApp.applicationIconImage).resizable().interpolation(.high).frame(width: 72, height: 72)
             Text(hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening").font(.title2.weight(.semibold))
-            Text("Ask me anything, or tell me to do something on this Mac.").foregroundStyle(.secondary)
+            if samantha.status.hasPrefix("Setting up") {
+                ProgressView().controlSize(.small)
+                Text(samantha.status).foregroundStyle(.secondary)
+            } else {
+                Text("Ask me anything, or tell me to do something on this Mac.").foregroundStyle(.secondary)
+            }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
