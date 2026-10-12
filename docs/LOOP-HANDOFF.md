@@ -18,7 +18,12 @@ A major ships only when its roadmap family is finished and checked: the badge st
 
 **7.0, remembers and comes to you. Shipped 2026-10-12.** Left over for Joshua: the iPhone reading the iCloud copy needs an iCloud entitlement and a signed build.
 
-**8.0, learns from the big ones.** Distillation raises the picker and the answers together. Training runs on Kaggle (docs/KAGGLE.md), 20 minutes of GPU per run; run 24 toward heldout12. Ship only if the sealed counts improve (right picks up, wrong past the guard down), read as numbers.
+**8.0, learns from the big ones.** Distillation: a frontier model writes the hard cases and she learns them. The bar, set before any run so it cannot be bent after: on the sealed heldout12, read once as counts, right picks go above run 19's 801 of 869 pooled rate, right picks refused fall below 2 percent (run 19: 40 of 869, 4.6 percent), and wrong picks past the guard stay at or under 19. Slices, one per wake, sealed sets never read as text:
+1. Find the refusals on the dev sets (eval/hands.py on dev only) and group them by cause.
+2. Teacher data: write hard, messy rows for those causes in this session (the frontier teacher), 100 to 150 per wake, never copying any test phrasing, into training/ as a new pool.
+3. Round 24 on Kaggle (docs/KAGGLE.md, 1.5B, in-kernel SFT then gentle DPO), then eval/picker_round.sh against dev sets; reject any run that leaks more.
+4. Read heldout12 once, as counts. If the bar is met: ship the picker, whitepaper, HF card with `--model`, 8.0.0. If not, say so and keep the rounds going; never move the bar.
+Check the free memory before any local model run and never run two at once.
 
 **9.0, in your pocket.** The iPhone as a thin client to the Mac over his own network, voice first. Needs a signed device build and the Yeti mic (the Mac mini has none). Joshua-gated.
 
