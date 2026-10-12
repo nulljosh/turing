@@ -68,8 +68,8 @@
         "documented": 6
       },
       "app/serve.py": {
-        "total": 8,
-        "documented": 8
+        "total": 9,
+        "documented": 9
       },
       "app/tools.py": {
         "total": 32,
@@ -492,8 +492,8 @@
         "documented": 27
       },
       "tests/test_serve.py": {
-        "total": 11,
-        "documented": 11
+        "total": 14,
+        "documented": 14
       },
       "tests/test_system.py": {
         "total": 37,
