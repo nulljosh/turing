@@ -183,6 +183,7 @@ Once she is trained, `app/ask.py` and `app/chat.py` handle questions. Before ans
 | `web/index.html` | Landing page. Loss chart, training status, painter demo, project roadmap. |
 | `web/brand.html` | The brand kit as a page: mascot, colors, Samantha Sans specimen, shapes, voice. Same tokens as the landing, no script. |
 | `docs/BRAND.md` | The brand kit in words, for GitHub. |
+| `docs/STORE.md` | The App Store plan at $1: what the listing leads with, the answers Apple asks for, what blocks the Mac and the iPhone, and the order of work. Nothing in it is submitted. |
 | `web/badge.svg` | Footer badge, engraved-style, white on black: Samantha in profile inside an ornate oval frame with SAMANTHA/TURING ribbons, and since 4.8 a starfield of constellations around her that grows at every minor version. Built by `app/tools_badge.py`, never hand-edited. |
 | `install/install.sh` | One-line Linux install: clones the repo to ~/samantha, builds a venv, installs llama-cpp-python (prebuilt CPU wheel), downloads her GGUF tool picker from the `portable` release, starts chat. |
 | `install/install.ps1` | The same one-line install for Windows PowerShell. |
