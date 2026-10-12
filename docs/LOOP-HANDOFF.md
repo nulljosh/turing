@@ -24,6 +24,7 @@ A major ships only when its roadmap family is finished and checked: the badge st
 3. (Running since 2026-10-12 08:05) Round 24 is kernel version 24 of joshuatrommel/samantha-hands-train, on dataset joshuatrommel/samantha-hands with the run 23 rows plus 432 teacher rows (454 passed the filter, 22 were repeats). Check `uvx kaggle kernels status joshuatrommel/samantha-hands-train`, then `kernels output` into the scratchpad, `mlx_lm.convert`, and score. Round 24 on Kaggle (docs/KAGGLE.md, 1.5B, in-kernel SFT then gentle DPO), then eval/picker_round.sh against dev sets; reject any run that leaks more.
 4. Read heldout12 once, as counts. If the bar is met: ship the picker, whitepaper, HF card with `--model`, 8.0.0. If not, say so and keep the rounds going; never move the bar.
 Check the free memory before any local model run and never run two at once.
+Anything over a gigabyte (Kaggle outputs are about 6 GB, merged models 3 GB) goes to /Volumes/LaCie/turing-scratch, never the internal disk, which is at about 11 GB free. Only the converted 844 MB MLX picker may land on the internal disk, and only to be scored.
 
 **9.0, in your pocket.** The iPhone as a thin client to the Mac over his own network, voice first. Needs a signed device build and the Yeti mic (the Mac mini has none). Joshua-gated.
 
