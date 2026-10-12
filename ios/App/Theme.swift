@@ -11,11 +11,11 @@ enum Theme {
     static let field = Color(light: 0xFFFFFF, dark: 0x282624)
     static let accent = Color(red: 0xB5 / 255, green: 0x50 / 255, blue: 0x2C / 255)
 
-    static let body = Font.system(size: 17)
+    static let body = Typeface.sized(17)
     static let bodyLine: CGFloat = 5
-    static let title = Font.system(size: 17, weight: .semibold)
-    static let greeting = Font.system(size: 28, weight: .semibold)
-    static let small = Font.system(size: 13)
+    static let title = Typeface.sized(17, weight: .semibold)
+    static let greeting = Typeface.sized(28, weight: .semibold, relativeTo: .title)
+    static let small = Typeface.sized(13, relativeTo: .footnote)
 }
 
 /// Puts text on the clipboard, on either platform.

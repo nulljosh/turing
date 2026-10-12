@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preload" href="fonts/SamanthaSans-Regular.woff2" as="font" type="font/woff2" crossorigin>
     <title>Turing: Samantha, a small AI that lives on your Mac</title>
     <meta name="description" content="Samantha is a small, free, private AI that runs on your Mac. She paints, runs your apps, keeps notes and reminders, finds files, does the math and researches. Try her right on the page.">
     <link rel="canonical" href="https://turing.heyitsmejosh.com/">
@@ -51,9 +52,13 @@
       @keyframes roll{to{transform:rotate(360deg)}}
       section.lit{animation:lit 1.6s ease-out}
       @keyframes lit{0%,60%{outline:3px solid var(--fg);outline-offset:8px}100%{outline:3px solid transparent;outline-offset:8px}}
+      @font-face{font-family:"Samantha Sans";font-weight:400;font-display:swap;src:url(fonts/SamanthaSans-Regular.woff2) format("woff2")}
+      @font-face{font-family:"Samantha Sans";font-weight:500;font-display:swap;src:url(fonts/SamanthaSans-Medium.woff2) format("woff2")}
+      @font-face{font-family:"Samantha Sans";font-weight:600;font-display:swap;src:url(fonts/SamanthaSans-Semibold.woff2) format("woff2")}
       *{box-sizing:border-box}
+      button,input,select,textarea{font-family:inherit}
       html{background:var(--bg)}
-      body{margin:0;background:var(--bg);color:var(--fg);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",Helvetica,Arial,sans-serif;
+      body{margin:0;background:var(--bg);color:var(--fg);font-family:"Samantha Sans",-apple-system,BlinkMacSystemFont,"SF Pro Text",Helvetica,Arial,sans-serif;
         line-height:1.6;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;font-feature-settings:"kern","liga";overflow-x:hidden}
       h1,h2,h3{font-weight:500}
       b,strong{font-weight:600}

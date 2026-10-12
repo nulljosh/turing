@@ -214,7 +214,7 @@ private struct MessageRow: View {
         } else if isYou {
             HStack {
                 Spacer(minLength: 40)
-                Text(body_).font(.body).padding(.horizontal, 12).padding(.vertical, 8)
+                Text(body_).font(Typeface.font(.body)).padding(.horizontal, 12).padding(.vertical, 8)
                     .background(Color.accentColor.opacity(0.18))
                     .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
             }
@@ -227,11 +227,11 @@ private struct MessageRow: View {
                     if let lang = seg.lang {
                         CodeBlock(code: seg.text, lang: lang)
                     } else {
-                        Text(inlineMarkdown(seg.text)).font(.body).textSelection(.enabled)
+                        Text(inlineMarkdown(seg.text)).font(Typeface.font(.body)).textSelection(.enabled)
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
                 }
-                if let model { Text("Answered by \(model) on this Mac").font(.caption).foregroundStyle(.secondary) }
+                if let model { Text("Answered by \(model) on this Mac").font(Typeface.font(.caption)).foregroundStyle(.secondary) }
             }
             .padding(.horizontal, 12).padding(.vertical, 8)
         }
@@ -255,7 +255,7 @@ private struct CodeBlock: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             HStack {
-                Text(lang.isEmpty ? "code" : lang).font(.caption).foregroundStyle(.secondary)
+                Text(lang.isEmpty ? "code" : lang).font(Typeface.font(.caption)).foregroundStyle(.secondary)
                 Spacer()
                 Button {
                     NSPasteboard.general.clearContents()
@@ -263,7 +263,7 @@ private struct CodeBlock: View {
                     copied = true
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { copied = false }
                 } label: {
-                    Label(copied ? "Copied" : "Copy", systemImage: copied ? "checkmark" : "doc.on.doc").font(.caption)
+                    Label(copied ? "Copied" : "Copy", systemImage: copied ? "checkmark" : "doc.on.doc").font(Typeface.font(.caption))
                 }
                 .buttonStyle(.borderless).help("Copy this code")
             }
@@ -313,8 +313,8 @@ private struct ConfirmBar: View {
     var body: some View {
         HStack {
             VStack(alignment: .leading, spacing: 2) {
-                Text("Run \(pending.name)(\(pending.args.joined(separator: ", ")))?").font(.callout)
-                if !pending.note.isEmpty { Text(pending.note).font(.caption).foregroundStyle(.secondary) }
+                Text("Run \(pending.name)(\(pending.args.joined(separator: ", ")))?").font(Typeface.font(.callout))
+                if !pending.note.isEmpty { Text(pending.note).font(Typeface.font(.caption)).foregroundStyle(.secondary) }
             }
             Spacer()
             Button("No") { reply(false) }.keyboardShortcut(.cancelAction)
@@ -340,9 +340,10 @@ struct ChatView: View {
             Divider()
             inputBar
             // Only while something is worth saying: setup, or a stopped process. "Ready" says nothing, so it shows nothing.
-            if samantha.status != "Ready" && !samantha.status.hasPrefix("Setting up") { Text(samantha.status).font(.caption2).foregroundStyle(.tertiary).padding(.bottom, 6) }
+            if samantha.status != "Ready" && !samantha.status.hasPrefix("Setting up") { Text(samantha.status).font(Typeface.font(.caption2)).foregroundStyle(.tertiary).padding(.bottom, 6) }
         }
         .frame(minWidth: 420, minHeight: 480)
+        .font(Typeface.font(.body))
         .toolbar {
             ToolbarItemGroup {
                 Toggle(isOn: Binding(get: { samantha.voiceOn }, set: { _ in samantha.toggle("voice") })) {
@@ -363,7 +364,7 @@ struct ChatView: View {
         let hour = Calendar.current.component(.hour, from: Date())
         return VStack(spacing: 12) {
             Image(nsImage: NSApp.applicationIconImage).resizable().interpolation(.high).frame(width: 72, height: 72)
-            Text(hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening").font(.title2.weight(.semibold))
+            Text(hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening").font(Typeface.font(.title2, weight: .semibold))
             if samantha.status.hasPrefix("Setting up") {
                 ProgressView().controlSize(.small)
                 Text(samantha.status).foregroundStyle(.secondary)
@@ -429,10 +430,10 @@ private struct CustomizeSheet: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text(kind == .voice ? "Change her voice" : "Change her look").font(.headline)
+            Text(kind == .voice ? "Change her voice" : "Change her look").font(Typeface.font(.headline, weight: .semibold))
             Text(kind == .voice ? "A premade ElevenLabs voice by name, like George."
                                 : "Describe it, like ginger with glasses. A new portrait costs a few cents; keeping it costs about $1.40.")
-                .font(.caption).foregroundStyle(.secondary)
+                .font(Typeface.font(.caption)).foregroundStyle(.secondary)
             TextField(kind == .voice ? "Voice name" : "Describe the look", text: $text).textFieldStyle(.roundedBorder).onSubmit(go)
             HStack {
                 if kind == .voice { Button("What voices?") { samantha.send("what voices do you have"); dismiss() } }
@@ -454,6 +455,7 @@ private struct CustomizeSheet: View {
 /// No process, no model: prove the pure parsing and encoding, the exact same way PaintBar's --check works.
 func runSelfCheck() -> Never {
     precondition(highlightSelfTest(), "code colors (gui/Highlight.swift) failed its self-test")
+    precondition(Typeface.available, "Samantha Sans did not load: the fonts are missing from the app's Resources/Fonts")
     precondition(parseLine("{\"answer\": \"hi\"}") == .answer("hi"))
     precondition(parseLine("{\"working\": \"open_app(chrome)\"}") == .working("open_app(chrome)"))
     if case .confirm(let name, let args, let note)? = parseLine("{\"confirm\": {\"name\": \"new_note\", \"args\": [\"buy milk\"]}}") {
@@ -487,6 +489,7 @@ struct SamanthaGUIApp: App {
     @StateObject private var samantha = Samantha()
 
     init() {
+        Typeface.register()
         if CommandLine.arguments.contains("--check") { runSelfCheck() }
     }
 

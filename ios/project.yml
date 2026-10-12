@@ -29,6 +29,12 @@ targets:
       - path: App
       # the code colors and the reply splitter, one file for the Mac app and this one
       - path: ../gui/Highlight.swift
+      # her typeface: the registration and the text styles, one file for the Mac app and this one
+      - path: ../gui/Typeface.swift
+      # Samantha Sans, three weights, registered at launch (scripts/gen_font.py draws them)
+      - path: ../web/fonts
+        includes: ["*.ttf"]
+        buildPhase: resources
       # her router and the 49 exact tools, the same file the landing page and the Mac parity check run
       - path: ../web/samantha.js
         buildPhase: resources

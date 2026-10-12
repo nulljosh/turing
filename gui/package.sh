@@ -33,6 +33,7 @@ cp "$ROOT"/app/*.py "$APP/Contents/Resources/app/app/"
 cp "$ROOT/requirements.txt" "$ROOT/VERSION" "$APP/Contents/Resources/app/"
 cp "$ROOT/docs/FAQ.md" "$APP/Contents/Resources/app/docs/"
 cp launcher.sh "$APP/Contents/Resources/launcher.sh"
+mkdir -p "$APP/Contents/Resources/Fonts" && cp "$DEV_APP"/Contents/Resources/Fonts/*.ttf "$APP/Contents/Resources/Fonts/"
 # her icon, compiled by build.sh from Samantha.icon (Assets.car for the Liquid Glass icon, the .icns for older macOS)
 cp "$DEV_APP"/Contents/Resources/Assets.car "$DEV_APP"/Contents/Resources/Samantha.icns "$APP/Contents/Resources/" 2>/dev/null || echo "warning: packaging without her icon"
 chmod +x "$APP/Contents/Resources/launcher.sh"

@@ -11,7 +11,8 @@ xcrun actool "$PWD/Samantha.icon" --compile "$PWD/$APP/Contents/Resources" --app
   --minimum-deployment-target 13.0 --output-partial-info-plist "$PWD/$APP/Contents/Resources/icon.plist" >/dev/null 2>&1 || echo "no actool: built without her icon"
 [ -f "$APP/Contents/Resources/Samantha.icns" ] || echo "warning: her icon did not compile"
 rm -f "$APP/Contents/Resources/icon.plist"
-swiftc -O -parse-as-library SamanthaGUI.swift Highlight.swift -o "$APP/Contents/MacOS/SamanthaGUI"
+mkdir -p "$APP/Contents/Resources/Fonts" && cp ../web/fonts/*.ttf "$APP/Contents/Resources/Fonts/"
+swiftc -O -parse-as-library SamanthaGUI.swift Highlight.swift Typeface.swift -o "$APP/Contents/MacOS/SamanthaGUI"
 cat > "$APP/Contents/Info.plist" <<PLIST
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">

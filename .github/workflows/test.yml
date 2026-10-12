@@ -20,6 +20,8 @@ jobs:
           python-version: "3.12"
       - run: python3 tests/test_layout.py
       - run: python3 tests/test_chat.py
+      # her typeface: drawn from one table of constraints, the same bytes every build, tabular figures, no look-alikes
+      - run: pip install fonttools==4.66.1 brotli skia-pathops==0.9.2 && python3 scripts/gen_font.py --check
       # her hands: the Pixelmator driver's own unit tests, no app needed
       - run: cd pixelmator && python3 -m unittest
       # her image tools: unit tests for the image processing tools, mocked

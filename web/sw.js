@@ -1,7 +1,7 @@
 /* Offline shell for the installed app. Network first so a deploy is never stale, cache as the fallback.
    The API, the promo video and anything cross-origin are left alone. */
-var CACHE = "samantha-shell-v1";
-var SHELL = ["/", "index.html", "samantha.js", "highlight.js", "demo.js", "paint.js", "faq.json", "stats.json", "status.json", "icon.svg", "mascot.svg", "icon-192.png", "icon-512.png"];
+var CACHE = "samantha-shell-v2";
+var SHELL = ["/", "index.html", "samantha.js", "highlight.js", "demo.js", "paint.js", "faq.json", "stats.json", "status.json", "icon.svg", "mascot.svg", "icon-192.png", "icon-512.png", "fonts/SamanthaSans-Regular.woff2", "fonts/SamanthaSans-Medium.woff2", "fonts/SamanthaSans-Semibold.woff2"];
 self.addEventListener("install", function (e) { e.waitUntil(caches.open(CACHE).then(function (c) { return c.addAll(SHELL); }).then(function () { return self.skipWaiting(); })); });
 self.addEventListener("activate", function (e) {
   e.waitUntil(caches.keys().then(function (ks) { return Promise.all(ks.filter(function (k) { return k !== CACHE; }).map(function (k) { return caches.delete(k); })); }).then(function () { return self.clients.claim(); }));

@@ -1,5 +1,5 @@
 {
-  "version": "5.13.1",
+  "version": "5.14.0",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -190,6 +190,22 @@
       "app/voice.py": {
         "total": 17,
         "documented": 17
+      },
+      "scripts/font_caps.py": {
+        "total": 38,
+        "documented": 38
+      },
+      "scripts/font_glyphs.py": {
+        "total": 36,
+        "documented": 36
+      },
+      "scripts/font_marks.py": {
+        "total": 34,
+        "documented": 34
+      },
+      "scripts/gen_font.py": {
+        "total": 11,
+        "documented": 11
       },
       "scripts/gen_jt_docs.py": {
         "total": 13,

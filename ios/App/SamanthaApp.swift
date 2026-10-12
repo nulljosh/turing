@@ -5,9 +5,12 @@ import SwiftUI
 struct SamanthaApp: App {
     @State private var store = Store()
 
+    init() { Typeface.register() }
+
     var body: some Scene {
         WindowGroup {
             RootView()
+                .font(Theme.body)
                 .environment(store)
                 .onOpenURL { url in
                     if let p = Pairing.from(url: url) { store.pairing = p; p.save() }
