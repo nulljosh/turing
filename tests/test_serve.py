@@ -105,5 +105,26 @@ class Main(unittest.TestCase):
         cls.assert_called_once_with(("127.0.0.1", 9999), serve.Handler)
 
 
+class PiAnswerTest(unittest.TestCase):
+    """pi_answer(): a Joshua Tree Pi's save request gets code plus [[save NAME]], its result report ends the loop."""
+
+    def test_save_request(self):
+        """The 8.3 name comes out uppercased after the code; no model or no fence means nothing is saved."""
+        code = ("Here it is.\n```c\nint main(void) { return 0; }\n```\nCompile with cc.", "Qwen")
+        with mock.patch("tools_llm.fallback", return_value=code) as fb:
+            got = serve.pi_answer("write hello world in C and save it as hello.c")
+        self.assertTrue(got.endswith("\n[[save HELLO.C]]") and "```c" in got, got)
+        self.assertNotIn("hello.c", fb.call_args[0][0])
+        with mock.patch("tools_llm.fallback", return_value=None):
+            self.assertIn("nothing was saved", serve.pi_answer("write a python script, save it to fib.py"))
+        self.assertIsNone(serve.pi_answer("what is joshua tree"))
+        self.assertIsNone(serve.pi_answer("save it as a surprise"))
+
+    def test_pi_results_end_the_loop(self):
+        """What the Pi's actions printed comes back as a turn; she answers it in one word, with no new action."""
+        self.assertEqual(serve.pi_answer("The Pi ran your actions. Results:\nsave HELLO.C: saved\n"), "Saved.")
+        self.assertEqual(serve.pi_answer("The Pi ran your actions. Results:\nstatus: ip 1.2.3.4\n"), "Done.")
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -20,7 +20,7 @@ Declines map to "UNKNOWN", which is Nimble's own signal for "this engine
 had nothing", so it falls through to another engine instead of showing the
 user a refusal sentence.
 """
-import json, os, sys, time
+import json, os, re, sys, time
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -43,6 +43,30 @@ def answer_for(question):
     if not answer or answer in DECLINES:
         return "UNKNOWN", None
     return answer, sources
+
+
+# "write hello world in C and save it as hello.c": the 8.3 name a Joshua Tree Pi can store (its [[save NAME]] action)
+_SAVE_AS = re.compile(r"\s*,?\s*(?:and\s+)?(?:save|put|store|write)\s+(?:it\s+|that\s+)?(?:as|to|in(?:to)?)\s+"
+                      r"(?:a\s+file\s+(?:called|named)\s+)?([A-Za-z0-9_-]{1,8}\.[A-Za-z0-9]{1,3})\b", re.I)
+PI_RESULTS = "The Pi ran your actions."  # Joshua Tree's agent loop sends what the actions printed as the next turn
+
+
+def pi_answer(question):
+    """A Joshua Tree Pi's question through its relay (tools/claude-relay/relay.py --turing). A request to save code
+    under a name gets code from the biggest model on this Mac and ends with [[save NAME]], so the Pi writes JT/NAME
+    (the Pi only saves a name the person typed). The Pi's report back after its actions ends the loop. None: not a
+    Pi request, answer as usual."""
+    if question.startswith(PI_RESULTS):
+        return "Saved." if "save" in question and "saved" in question else "Done."
+    m = _SAVE_AS.search(question)
+    if not m:
+        return None
+    import tools_llm
+    asked = _SAVE_AS.sub("", question).strip() or question
+    llm = tools_llm.fallback(asked + " Reply with one fenced code block holding the whole file, then one short line.")
+    if not llm or not llm[1] or "```" not in llm[0]:
+        return "I could not write that code right now, so nothing was saved."
+    return f"{llm[0].strip()}\n[[save {m[1].upper()}]]"
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -100,7 +124,8 @@ class Handler(BaseHTTPRequestHandler):
             if message.get("role") == "user":
                 question = (message.get("content") or "").strip()
 
-        answer, sources = answer_for(question)
+        pi = pi_answer(question)
+        answer, sources = (pi, None) if pi else answer_for(question)
         self._send({
             "id": f"samantha-{int(time.time() * 1000)}",
             "object": "chat.completion",
