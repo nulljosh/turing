@@ -35,7 +35,10 @@ SYSTEM = (
 
 
 def brain_token():
-    """Load the brain API token from .env.local, or None if not found."""
+    """Load the brain API token from .env.local, or None if not found. None without a look in the packaged app: that
+    path is Joshua's own checkout, and touching ~/Documents makes macOS ask a stranger for folder access."""
+    if os.environ.get("SAMANTHA_PACKAGED"):
+        return None
     try:
         for line in open(BRAIN_ENV):
             if line.strip().startswith("BRAIN_TOKEN"):

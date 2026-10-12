@@ -68,29 +68,6 @@ struct MessageRow: View {
     }
 }
 
-/// A reply split on its ``` fences. `lang` is nil for prose, the fence's language ("" when unnamed) for code.
-/// A fence left open (a reply cut short) still counts as code. Markdown headers become plain bold lines.
-/// The same split as the Mac app's gui/SamanthaGUI.swift.
-func replySegments(_ text: String) -> [(lang: String?, text: String)] {
-    text.components(separatedBy: "```").enumerated().compactMap { i, part in
-        if i % 2 == 1 {
-            let lines = part.split(separator: "\n", maxSplits: 1, omittingEmptySubsequences: false)
-            let first = lines.first.map(String.init) ?? ""
-            let isLang = !first.contains(" ") && first.count < 16
-            let code = (isLang && lines.count > 1 ? String(lines[1]) : part).trimmingCharacters(in: .newlines)
-            return code.isEmpty ? nil : (isLang ? first : "", code)
-        }
-        let prose = part.replacingOccurrences(of: #"(?m)^#{1,6}\s+(.+)$"#, with: "**$1**", options: .regularExpression)
-            .trimmingCharacters(in: .whitespacesAndNewlines)
-        return prose.isEmpty ? nil : (nil, prose)
-    }
-}
-
-/// Bold, italics and `code` inside a sentence, keeping her line breaks.
-func inlineMarkdown(_ s: String) -> AttributedString {
-    (try? AttributedString(markdown: s, options: .init(interpretedSyntax: .inlineOnlyPreservingWhitespace))) ?? AttributedString(s)
-}
-
 /// One code block: monospaced, scrolls sideways instead of wrapping, with a Copy button that says Copied.
 struct CodeBlock: View {
     let code: String
@@ -114,7 +91,7 @@ struct CodeBlock: View {
             .padding(.horizontal, 12).padding(.vertical, 8)
             Divider().overlay(Theme.line)
             ScrollView(.horizontal, showsIndicators: false) {
-                Text(code).font(.system(size: 14, design: .monospaced)).foregroundStyle(Theme.ink)
+                Text(highlight(code, lang: lang)).font(.system(size: 14, design: .monospaced)).foregroundStyle(Theme.ink)
                     .textSelection(.enabled).fixedSize(horizontal: true, vertical: false).padding(12)
             }
         }

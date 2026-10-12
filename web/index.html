@@ -43,9 +43,10 @@
       /* Design system: pure black, one neutral accent (ember, now gray) used sparingly for text/decor only. */
       :root{--bg:#000000;--fg:#f2f2f2;--muted:#9a9a9a;--line:#2a2a2a;--accent:#f2f2f2;--ember:#b8b8b8;--ember-ink:#f2f2f2;
         --hero-bg:#0a0a0a;--card-bg:#0d0d0d;
+        --tk-k:#7aa7ff;--tk-s:#6fcf8e;--tk-n:#ff8a80;--tk-c:#a0a0a0;
         --r-sm:6px;--r-md:10px;--r-pill:999px;--s-1:8px;--s-2:16px;--s-3:24px;--s-4:40px;--s-5:64px}
       :root{color-scheme:dark}
-      :root[data-theme="light"]{color-scheme:light;--bg:#ffffff;--fg:#151515;--muted:#666;--line:#e4e4e4;--accent:#151515;--ember:#151515;--ember-ink:#151515;--hero-bg:#f4f4f4;--card-bg:#fafafa}
+      :root[data-theme="light"]{color-scheme:light;--bg:#ffffff;--fg:#151515;--muted:#666;--line:#e4e4e4;--accent:#151515;--ember:#151515;--ember-ink:#151515;--hero-bg:#f4f4f4;--card-bg:#fafafa;--tk-k:#0b57d0;--tk-s:#1a7f37;--tk-n:#b3261e;--tk-c:#6b6b6b}
       .wrap.roll{animation:roll 1.1s ease-in-out}
       @keyframes roll{to{transform:rotate(360deg)}}
       section.lit{animation:lit 1.6s ease-out}
@@ -281,6 +282,7 @@
       .chat-code pre{margin:0;padding:12px 64px 12px 12px;font:13px/1.5 ui-monospace,Menlo,monospace;white-space:pre;overflow-x:auto}
       .chat-copy{position:absolute;top:6px;right:6px;min-height:28px;padding:0 10px;font:12px inherit;font-family:inherit;color:var(--muted);background:var(--bg);border:1px solid var(--line);border-radius:var(--r-sm);cursor:pointer}
       .chat-copy:hover,.chat-copy:focus-visible{color:var(--fg)}
+      .tk-k{color:var(--tk-k)}.tk-s{color:var(--tk-s)}.tk-n{color:var(--tk-n)}.tk-c{color:var(--tk-c)}
       .chat-logo svg{width:160px;height:160px}
       @media (max-width: 500px) {
         .stat-tiles{grid-template-columns:repeat(3,1fr);gap:8px}
@@ -780,6 +782,7 @@ function done(){b.textContent="Copied";setTimeout(function(){b.textContent=t},18
 if(navigator.clipboard)navigator.clipboard.writeText(c).then(done,done);else done()})});
 </script>
     <script src="samantha.js"></script>
+    <script src="highlight.js"></script>
     <script src="demo.js"></script>
   <script src="paint.js" defer></script>
 </body>

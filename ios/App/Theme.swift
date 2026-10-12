@@ -18,24 +18,6 @@ enum Theme {
     static let small = Font.system(size: 13)
 }
 
-extension Color {
-    /// One color for each appearance, from two hex values.
-    init(light: UInt32, dark: UInt32) {
-        func rgb(_ v: UInt32) -> (CGFloat, CGFloat, CGFloat) { (CGFloat((v >> 16) & 0xFF) / 255, CGFloat((v >> 8) & 0xFF) / 255, CGFloat(v & 0xFF) / 255) }
-        #if os(iOS)
-        self.init(uiColor: UIColor { trait in
-            let (r, g, b) = rgb(trait.userInterfaceStyle == .dark ? dark : light)
-            return UIColor(red: r, green: g, blue: b, alpha: 1)
-        })
-        #else
-        self.init(nsColor: NSColor(name: nil) { look in
-            let (r, g, b) = rgb(look.bestMatch(from: [.aqua, .darkAqua]) == .darkAqua ? dark : light)
-            return NSColor(srgbRed: r, green: g, blue: b, alpha: 1)
-        })
-        #endif
-    }
-}
-
 /// Puts text on the clipboard, on either platform.
 func copyToClipboard(_ text: String) {
     #if os(iOS)

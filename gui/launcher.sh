@@ -35,4 +35,6 @@ fi
 # Her weights live next to her env, never in a shared cache that may sit on an external drive
 # (a removable volume makes macOS stop the app with a permission prompt mid-answer).
 export HF_HUB_CACHE="${HF_HUB_CACHE:-$APPSUP/models}"
+# The packaged app never reads the developer's own folders (~/Documents/Code): no brain token, no fieldbook.
+export SAMANTHA_PACKAGED=1
 exec "$VENV/bin/python3" -u "$RESOURCES/app/app/chat_pipe.py"

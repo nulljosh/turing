@@ -510,13 +510,13 @@
       body.textContent = '';
       t.split('```').forEach(function (part, k) {
         if (k % 2 === 0) { if (part.replace(/^\n+|\n+$/g, '')) body.appendChild(document.createTextNode(part.replace(/^\n+|\n+$/g, ''))); return; }
-        var src = part.replace(/^[\w+-]*\n/, '').replace(/\n$/, ''), box = el('div', 'chat-code');
+        var fence = part.match(/^([\w+-]*)\n/), src = part.replace(/^[\w+-]*\n/, '').replace(/\n$/, ''), box = el('div', 'chat-code');
         var btn = el('button', 'chat-copy', 'Copy'); btn.type = 'button'; btn.setAttribute('aria-label', 'Copy this code');
         btn.onclick = function () {
           var done = function () { btn.textContent = 'Copied'; setTimeout(function () { btn.textContent = 'Copy'; }, 1500); };
           if (navigator.clipboard) navigator.clipboard.writeText(src).then(done, done); else done();
         };
-        box.appendChild(btn); box.appendChild(el('pre', '', src)); body.appendChild(box);
+        var pre = el('pre', ''); Highlight.paint(pre, src, fence ? fence[1] : ''); box.appendChild(btn); box.appendChild(pre); body.appendChild(box);
       });
     }
     (function type() {

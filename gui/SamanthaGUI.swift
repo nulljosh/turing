@@ -226,28 +226,6 @@ func splitModelLabel(_ s: String) -> (String, String?) {
     return (String(s[..<m.lowerBound]), model)
 }
 
-/// A reply split on its ``` fences. `lang` is nil for prose, the fence's language ("" when unnamed) for code.
-/// A fence left open (a reply cut short) still counts as code. Markdown headers become plain bold lines.
-func replySegments(_ text: String) -> [(lang: String?, text: String)] {
-    text.components(separatedBy: "```").enumerated().compactMap { i, part in
-        if i % 2 == 1 {
-            let lines = part.split(separator: "\n", maxSplits: 1, omittingEmptySubsequences: false)
-            let first = lines.first.map(String.init) ?? ""
-            let isLang = !first.contains(" ") && first.count < 16
-            let code = (isLang && lines.count > 1 ? String(lines[1]) : part).trimmingCharacters(in: .newlines)
-            return code.isEmpty ? nil : (isLang ? first : "", code)
-        }
-        let prose = part.replacingOccurrences(of: #"(?m)^#{1,6}\s+(.+)$"#, with: "**$1**", options: .regularExpression)
-            .trimmingCharacters(in: .whitespacesAndNewlines)
-        return prose.isEmpty ? nil : (nil, prose)
-    }
-}
-
-/// Bold, italics and `code` inside a sentence, keeping her line breaks.
-func inlineMarkdown(_ s: String) -> AttributedString {
-    (try? AttributedString(markdown: s, options: .init(interpretedSyntax: .inlineOnlyPreservingWhitespace))) ?? AttributedString(s)
-}
-
 /// One code block: monospaced, selectable, scrolls sideways instead of wrapping, with a Copy button that says Copied.
 private struct CodeBlock: View {
     let code: String
@@ -272,7 +250,7 @@ private struct CodeBlock: View {
             .padding(.horizontal, 10).padding(.vertical, 6)
             Divider()
             ScrollView(.horizontal, showsIndicators: false) {
-                Text(code).font(.system(.callout, design: .monospaced)).textSelection(.enabled)
+                Text(highlight(code, lang: lang)).font(.system(.callout, design: .monospaced)).textSelection(.enabled)
                     .fixedSize(horizontal: true, vertical: false).padding(10)
             }
         }
@@ -450,6 +428,7 @@ private struct CustomizeSheet: View {
 
 /// No process, no model: prove the pure parsing and encoding, the exact same way PaintBar's --check works.
 func runSelfCheck() -> Never {
+    precondition(highlightSelfTest(), "code colors (gui/Highlight.swift) failed its self-test")
     precondition(parseLine("{\"answer\": \"hi\"}") == .answer("hi"))
     precondition(parseLine("{\"working\": \"open_app(chrome)\"}") == .working("open_app(chrome)"))
     if case .confirm(let name, let args, let note)? = parseLine("{\"confirm\": {\"name\": \"new_note\", \"args\": [\"buy milk\"]}}") {

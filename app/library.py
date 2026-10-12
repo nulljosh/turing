@@ -90,7 +90,7 @@ def fetch(titles=None, log=print):
     db = _db(create=True)
     db.execute("DELETE FROM pages")
     saved = 0
-    if os.path.exists(FIELDBOOK):
+    if not os.environ.get("SAMANTHA_PACKAGED") and os.path.exists(FIELDBOOK):  # Joshua's checkout; the packaged app never looks in ~/Documents
         with open(FIELDBOOK) as f:
             fields = json.load(f)
         db.executemany("INSERT INTO pages VALUES (?, ?, ?)",
