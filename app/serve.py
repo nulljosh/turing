@@ -139,7 +139,8 @@ class Handler(BaseHTTPRequestHandler):
             if message.get("role") == "user":
                 question = (message.get("content") or "").strip()
 
-        pi = pi_answer(question)
+        system = " ".join((m.get("content") or "") for m in payload.get("messages", []) if m.get("role") == "system")
+        pi = pi_answer(question) if "inside Joshua Tree" in system else None   # Nimble's own file words never become Pi actions
         answer, sources = (pi, None) if pi else answer_for(question)
         self._send({
             "id": f"samantha-{int(time.time() * 1000)}",

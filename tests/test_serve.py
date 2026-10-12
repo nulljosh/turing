@@ -73,6 +73,16 @@ class Endpoint(unittest.TestCase):
         self.assertEqual(body["turing_sources"], ["wiki:Paris"])
         self.assertEqual(body["model"], "samantha")
 
+    def test_pi_actions_only_for_the_pi(self):
+        """A Joshua Tree system prompt gets the [[save]] answer; the same words from any other caller (Nimble) never do."""
+        pi_sys = {"role": "system", "content": "You are Samantha, the assistant inside Joshua Tree."}
+        ask = {"role": "user", "content": "read notes.md"}
+        _, _, body = self.call("/v1/chat/completions", {"messages": [pi_sys, ask]})
+        self.assertIn("[[read NOTES.MD]]", body["choices"][0]["message"]["content"])
+        with mock.patch.object(serve, "ask", return_value=("Not found.", [])):
+            _, _, body = self.call("/v1/chat/completions", {"messages": [ask]})
+        self.assertEqual(body["choices"][0]["message"]["content"], "Not found.")
+
     def test_declines_empty_and_errors_are_unknown(self):
         """A decline sentence, an empty answer, no question at all, and a crash inside ask() all read UNKNOWN."""
         for ret in [(serve.OUT_OF_SCOPE, None), ("", None), ("   ", [])]:

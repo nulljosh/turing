@@ -492,8 +492,8 @@
         "documented": 27
       },
       "tests/test_serve.py": {
-        "total": 15,
-        "documented": 15
+        "total": 16,
+        "documented": 16
       },
       "tests/test_system.py": {
         "total": 37,
