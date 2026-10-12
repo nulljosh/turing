@@ -1,32 +1,60 @@
-# Turing loop handoff (2026-10-11, evening)
+# Turing loop handoff (2026-10-12, early morning)
 
 ## What the loop is
 
-A `/loop` that QAs the three things people see, one at a time: the iOS app in the simulator, the Mac app, and the website demo. Each run records a video, grades it, fixes what the video shows, and repeats until every part grades A+.
+A self-paced `/loop` that climbs the roadmap one earned major at a time: 7.0, 8.0, 9.0, 10.0. It runs inside a Claude Code session, wakes every 20 to 30 minutes, ships one small slice per wake, and goes quiet when there is nothing safe to do. It never uses cron, launchd or a cloud routine. The Mac stays awake because Amphetamine is holding it.
 
-A round ends with a fix shipped or an honest "not yet" for that part. Every shipped fix gets a version tag and a release. Hard stop and checkpoint at 90 percent usage.
+A major ships only when its roadmap family is finished and checked: the badge step, the whitepaper, the Hugging Face card. A number is never bumped to hit a target. 10.0 inside a week is a stretch goal, not a promise: 7.0 and 8.0 are realistic, 9.0 and 10.0 are each a week or more of work.
 
 ## Where things stand
 
-- **Live:** v5.14.0 adds Samantha Sans, her own typeface, on the site and in the Mac and iPhone apps. Before it, v5.12.3 added code blocks with a Copy button in the Mac app, on the phone and on the landing, makes the phone app build for Mac, and fixes model labels.
-- **Shipped earlier today, from v5.11.4 on:** the live demo on the landing page is back (it had been dead since v5.9.0, a syntax error in its script); the Mac app keeps focus, ships its icon and keeps her weights in its own Application Support folder; a time-zone bug on the landing page is fixed; training run 23 became the hands picker (v5.12.0); the landing shows her flat mascot icon; the phone bridge takes signed requests; the iPhone app runs her exact tools in JavaScriptCore and loads her models with MLX Swift on the phone, with the Mac optional; the iPhone app has a splash screen.
-- **Picker:** training run 23, shipped as v5.12.0. Sealed 619-sentence test: 351 right picks (v5.0 had 317), 79 wrong (126), 27 past the guard (30), about 4 percent refusals. The under-2-percent refusal goal is still open. Weights: https://huggingface.co/trommatic/samantha-hands-1.5b-mlx. The 0.5B GGUF for Windows and Linux stays at trommatic/samantha-hands-gguf.
-- **Grades so far:** the iOS simulator walkthrough of eight questions graded A-. The landing demo recorded 8/8. No part has an A+ grade yet.
-- **Sealed sets** are read as counts only. Never tune on their misses.
-- **Working tree:** the loop's current round has uncommitted edits in progress across `app/`, `gui/`, `ios/`, `web/`, `.github/workflows/test.yml` and `docs/ARCHITECTURE.md`. None of it is part of a release yet. Commit only by exact path, and only after that round's checks pass.
-- **Blocked:** the image model test waits for 10 GB free memory. Qwen-Image-2.1-Turbo needs 12 to 16 GB on this Mac.
+- **Live:** v6.0.0. Samantha is an app on Joshua Tree on a real Raspberry Pi 4; "write hello world in c and save it as hello.c" wrote JT/HELLO.C on the board. v5.14.0 gave her Samantha Sans. The brand kit is docs/BRAND.md and /brand.html, the site icons are the mascot.
+- **Joshua Tree PR 537** (list and read the card) is a draft behind main and needs a rebase by the Joshua Tree session. Do not touch it from here.
+- **Pi shell:** the console should boot to zsh or bash with Samantha as a command (docs/PI.md). It changes the words Joshua tests with, so it waits for a go-ahead and lives in the Joshua Tree repo on a branch with a PR.
+- **Disk:** about 12 GB free. Other sessions' builds eat it; only clean what this session made.
+- **Sealed sets** heldout4, heldout7 and heldout12 are read as counts only, never as text.
 
-## Next, in order
+## The ladder
 
-1. iOS QA: record the simulator walkthrough (at least 30 seconds, 5 to 10 questions), grade it, fix what the video shows, and repeat until A+.
-2. Mac QA: same loop for the Mac app, now with the Copy buttons in place.
-3. Website QA: record the landing demo, grade it, fix what it shows, and repeat until A+.
-4. Profiles with Sign in with Apple.
-5. iOS hands: Reminders and Calendar.
-6. Store submission at $1, once each app grades A.
+**7.0, remembers and comes to you.** Memory read-back (4.19) and the Mac morning brief (5.13.0) are done. Left:
+1. Audit memory across the Mac app, the iPhone app and the web demo; list the gaps; fix the smallest.
+2. A Shortcut she writes herself: she drafts it, shows the steps in chat, and only on a yes saves the file and opens it, so Apple's own sheet is the final yes. Never on a timer. New tool, so it needs the route, the JS twin, the util_diff case, the laws entry and the ARCHITECTURE row.
+3. Profile and memory in his own iCloud Drive folder, nothing of ours in a cloud. Start with the Mac (plain files under iCloud Drive); iPhone needs an iCloud entitlement and a signed build, which is Joshua's. Sign in with Apple only if a slice truly needs an identity.
+4. When all three land: badge step, whitepaper, HF card, celebrate, 7.0.0.
+
+**8.0, learns from the big ones.** Distillation raises the picker and the answers together. Training runs on Kaggle (docs/KAGGLE.md), 20 minutes of GPU per run; run 24 toward heldout12. Ship only if the sealed counts improve (right picks up, wrong past the guard down), read as numbers.
+
+**9.0, in your pocket.** The iPhone as a thin client to the Mac over his own network, voice first. Needs a signed device build and the Yeti mic (the Mac mini has none). Joshua-gated.
+
+**10.0, her own home.** Her picker in freestanding C on the Joshua Tree kernel, checked in QEMU with the network off. Joshua Tree repo, branches and PRs, draft until ci-local is green.
+
+## Pace and stops
+
+- Usage is read at the top of every wake with `~/.claude/scripts/usage.sh`. Weekly resets Saturday 22:00. At 59 percent on Monday morning, the budget to the 90 percent stop is about 5 points a day.
+- Under 80 percent weekly: a wake every 20 to 30 minutes, one slice per wake.
+- 80 to 89 percent: one wake an hour, CI fixes and checks only.
+- 90 percent: run `/checkpoint` and stop. Never past it.
+- One Haiku subagent at a time, never a fan-out, and only for a slice that is code. Main session plans and merges.
+- A wake with nothing to do says so in one line and sleeps longer. Nothing is invented to look busy.
+
+## Every wake
+
+1. `git pull --rebase`, then `gh run list`: any red check is fixed before anything else.
+2. Read the usage line and pick the pace above.
+3. Take the next ladder item. Build it in the smallest slice that ships.
+4. Gate every push on exit codes: `scratchpad/gate.sh` style, the full CI set, with `./.venv/bin/python` (the shell's python3 is 3.9). Write python output to a file, never through grep.
+5. Commit by exact path, push, then check every workflow run (test, release, deploy) and the live `/stats.json`.
+6. One line to Joshua only when something shipped, broke, or needs him.
+
+## Needs Joshua
+
+- Clicking any macOS permission prompt (she never does).
+- The Pi shell flip, and a Pi re-test after it.
+- iCloud entitlement, signed device build, App Store submission at $1 (name through the asc-name-creator skill, privacy URL, age rating, review notes).
+- Anything that spends money or posts publicly.
 
 ## Restart prompt
 
 ```
-/loop until a+ : record a video of QAing the iOS app (simulator), the Mac app and the website demo, grade it, fix what it shows, repeat until every part grades A+. The iOS video must be at least 30 seconds long and walk 5-10 questions.
+/loop until v10, then keep going toward v100, overnight and all week: read docs/LOOP-HANDOFF.md first and follow its ladder, pace and wake steps. Versions are earned: a major only when a roadmap family or phase completes, never bumped to hit a number. Gate every push on exit codes. Hard stop and /checkpoint at 90 percent usage. Never weaken a guard, never kill a process she did not start.
 ```
