@@ -25,3 +25,7 @@ A small desk robot you talk to. A Pi 5 (8 GB) with a microphone and a speaker ru
 ## First test when the Pi arrives
 
 `./install/install.sh`, then `./samantha`, then ask "what time is it" and "what is Joshua Tree". If both work, the voice loop is next.
+
+## Next: the shell is a shell, she is a command
+
+Joshua's call (2026-10-11, after trying her at the Pi's terminal): the console should boot to a real shell, zsh or bash, not to Samantha. Samantha becomes a command you run from that shell (a CLI, `samantha "what is ten plus ten"` or an interactive `samantha`), and she is also an app with her own window. Today the `Samantha $` prompt is the default console on Joshua Tree; this flips it. Lives in the Joshua Tree repo (arch/arm64 console and shell), on a branch with a PR.
