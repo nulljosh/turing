@@ -1,0 +1,135 @@
+{"text": "whats in my documents folder", "tool": "list_dir", "arg": "~/Documents"}
+{"text": "show me the files in documents", "tool": "list_dir", "arg": "~/Documents"}
+{"text": "ls ~/Documents", "tool": "list_dir", "arg": "~/Documents"}
+{"text": "list everything in ~/Documents", "tool": "list_dir", "arg": "~/Documents"}
+{"text": "what do i have in the documents directory", "tool": "list_dir", "arg": "~/Documents"}
+{"text": "open up the taxes folder inside downloads and list it", "tool": "list_dir", "arg": "~/Downloads/taxes"}
+{"text": "what files are in ~/Downloads/taxes", "tool": "list_dir", "arg": "~/Downloads/taxes"}
+{"text": "show me whats in downloads/taxes", "tool": "list_dir", "arg": "~/Downloads/taxes"}
+{"text": "list the contents of my taxes folder in downloads", "tool": "list_dir", "arg": "~/Downloads/taxes"}
+{"text": "peek inside ~/Downloads/taxes", "tool": "list_dir", "arg": "~/Downloads/taxes"}
+{"text": "what are my reminders", "tool": "list_reminders", "arg": ""}
+{"text": "show me my to-do reminders", "tool": "list_reminders", "arg": ""}
+{"text": "anything due on my reminders list", "tool": "list_reminders", "arg": ""}
+{"text": "read my reminders", "tool": "list_reminders", "arg": ""}
+{"text": "what do i still have to do reminders wise", "tool": "list_reminders", "arg": ""}
+{"text": "what shortcuts do i have", "tool": "list_shortcuts", "arg": ""}
+{"text": "list my apple shortcuts", "tool": "list_shortcuts", "arg": ""}
+{"text": "show me all my shortcuts", "tool": "list_shortcuts", "arg": ""}
+{"text": "which shortcuts are installed", "tool": "list_shortcuts", "arg": ""}
+{"text": "name my shortcuts", "tool": "list_shortcuts", "arg": ""}
+{"text": "what tabs do i have open", "tool": "list_tabs", "arg": ""}
+{"text": "list my browser tabs", "tool": "list_tabs", "arg": ""}
+{"text": "show every open tab in safari", "tool": "list_tabs", "arg": ""}
+{"text": "which tabs are open right now", "tool": "list_tabs", "arg": ""}
+{"text": "name all my open tabs", "tool": "list_tabs", "arg": ""}
+{"text": "design a logo for a surf shop called wavecrest", "tool": "make_logo", "arg": "a surf shop called wavecrest"}
+{"text": "make me a logo for wavecrest surf shop", "tool": "make_logo", "arg": "a surf shop called wavecrest"}
+{"text": "i need a logo for my surf shop, wavecrest", "tool": "make_logo", "arg": "a surf shop called wavecrest"}
+{"text": "draw an icon for a surf business named wavecrest", "tool": "make_logo", "arg": "a surf shop called wavecrest"}
+{"text": "logo for wavecrest, its a surf shop", "tool": "make_logo", "arg": "a surf shop called wavecrest"}
+{"text": "make a logo for my dog walking business", "tool": "make_logo", "arg": "my dog walking business"}
+{"text": "can you design an icon for my dog walking company", "tool": "make_logo", "arg": "my dog walking business"}
+{"text": "logo please, its for dog walking", "tool": "make_logo", "arg": "my dog walking business"}
+{"text": "create a simple logo for a dog walking service", "tool": "make_logo", "arg": "my dog walking business"}
+{"text": "i want an app icon for my dog walking business", "tool": "make_logo", "arg": "my dog walking business"}
+{"text": "make me a strong password", "tool": "make_password", "arg": ""}
+{"text": "generate a random password", "tool": "make_password", "arg": ""}
+{"text": "give me a secure password", "tool": "make_password", "arg": ""}
+{"text": "i need a new password, make one up", "tool": "make_password", "arg": ""}
+{"text": "create a password i can use", "tool": "make_password", "arg": ""}
+{"text": "generate a uuid", "tool": "make_uuid", "arg": ""}
+{"text": "make me a random uuid", "tool": "make_uuid", "arg": ""}
+{"text": "new uuid please", "tool": "make_uuid", "arg": ""}
+{"text": "give me a unique id", "tool": "make_uuid", "arg": ""}
+{"text": "create a guid", "tool": "make_uuid", "arg": ""}
+{"text": "how much ram am i using", "tool": "memory_usage", "arg": ""}
+{"text": "whats my memory pressure", "tool": "memory_usage", "arg": ""}
+{"text": "is my mac low on memory", "tool": "memory_usage", "arg": ""}
+{"text": "memory usage check", "tool": "memory_usage", "arg": ""}
+{"text": "how much memory is free", "tool": "memory_usage", "arg": ""}
+{"text": "say hello in morse code", "tool": "morse_code", "arg": "hello"}
+{"text": "convert hello to morse", "tool": "morse_code", "arg": "hello"}
+{"text": "what is hello in morse", "tool": "morse_code", "arg": "hello"}
+{"text": "morse for hello", "tool": "morse_code", "arg": "hello"}
+{"text": "translate the word hello into morse code", "tool": "morse_code", "arg": "hello"}
+{"text": "sos in morse", "tool": "morse_code", "arg": "sos"}
+{"text": "how do you write sos in morse code", "tool": "morse_code", "arg": "sos"}
+{"text": "morse code for sos please", "tool": "morse_code", "arg": "sos"}
+{"text": "encode sos as morse", "tool": "morse_code", "arg": "sos"}
+{"text": "dots and dashes for sos", "tool": "morse_code", "arg": "sos"}
+{"text": "move photo.jpg from downloads to pictures", "tool": "move_file", "arg": "~/Downloads/photo.jpg\t~/Pictures"}
+{"text": "put ~/Downloads/photo.jpg in my pictures folder", "tool": "move_file", "arg": "~/Downloads/photo.jpg\t~/Pictures"}
+{"text": "shift photo.jpg out of downloads into pictures", "tool": "move_file", "arg": "~/Downloads/photo.jpg\t~/Pictures"}
+{"text": "relocate the downloads photo.jpg to ~/Pictures", "tool": "move_file", "arg": "~/Downloads/photo.jpg\t~/Pictures"}
+{"text": "send photo.jpg from downloads over to pictures", "tool": "move_file", "arg": "~/Downloads/photo.jpg\t~/Pictures"}
+{"text": "play some music", "tool": "music", "arg": "play"}
+{"text": "start the music", "tool": "music", "arg": "play"}
+{"text": "hit play on music", "tool": "music", "arg": "play"}
+{"text": "play my music", "tool": "music", "arg": "play"}
+{"text": "resume the music please", "tool": "music", "arg": "play"}
+{"text": "pause the music", "tool": "music", "arg": "pause"}
+{"text": "stop the music for a sec", "tool": "music", "arg": "pause"}
+{"text": "hold the music", "tool": "music", "arg": "pause"}
+{"text": "pause it", "tool": "music", "arg": "pause"}
+{"text": "pause whatever music is playing", "tool": "music", "arg": "pause"}
+{"text": "skip this song", "tool": "music", "arg": "next"}
+{"text": "next track please", "tool": "music", "arg": "next"}
+{"text": "play the next song", "tool": "music", "arg": "next"}
+{"text": "skip ahead one song", "tool": "music", "arg": "next"}
+{"text": "go to the next track", "tool": "music", "arg": "next"}
+{"text": "what needs me today", "tool": "needs_attention", "arg": ""}
+{"text": "anything i should deal with", "tool": "needs_attention", "arg": ""}
+{"text": "what needs my attention", "tool": "needs_attention", "arg": ""}
+{"text": "whats urgent for me right now", "tool": "needs_attention", "arg": ""}
+{"text": "what do i need to handle", "tool": "needs_attention", "arg": ""}
+{"text": "note that my parking spot is level 3 row b", "tool": "new_note", "arg": "parking spot is level 3 row b"}
+{"text": "save a note: parking spot level 3 row b", "tool": "new_note", "arg": "parking spot is level 3 row b"}
+{"text": "jot down parking spot is level 3 row b", "tool": "new_note", "arg": "parking spot is level 3 row b"}
+{"text": "make a note saying my parking spot is level 3 row b", "tool": "new_note", "arg": "parking spot is level 3 row b"}
+{"text": "write a quick note, parking spot level 3 row b", "tool": "new_note", "arg": "parking spot is level 3 row b"}
+{"text": "remind me to renew my passport", "tool": "new_reminder", "arg": "renew passport"}
+{"text": "add a reminder to renew passport", "tool": "new_reminder", "arg": "renew passport"}
+{"text": "reminder: renew passport", "tool": "new_reminder", "arg": "renew passport"}
+{"text": "set a reminder for me to renew my passport", "tool": "new_reminder", "arg": "renew passport"}
+{"text": "dont let me forget to renew my passport", "tool": "new_reminder", "arg": "renew passport"}
+{"text": "remind me to call the landlord at 5pm", "tool": "new_reminder", "arg": "call the landlord at 5pm"}
+{"text": "set a reminder to call the landlord at 5 pm", "tool": "new_reminder", "arg": "call the landlord at 5pm"}
+{"text": "reminder at 5pm: call the landlord", "tool": "new_reminder", "arg": "call the landlord at 5pm"}
+{"text": "ping me at 5pm to call the landlord", "tool": "new_reminder", "arg": "call the landlord at 5pm"}
+{"text": "add reminder call the landlord 5pm today", "tool": "new_reminder", "arg": "call the landlord at 5pm"}
+{"text": "open spotify", "tool": "open_app", "arg": "spotify"}
+{"text": "launch spotify", "tool": "open_app", "arg": "spotify"}
+{"text": "start up spotify for me", "tool": "open_app", "arg": "spotify"}
+{"text": "can you open the spotify app", "tool": "open_app", "arg": "spotify"}
+{"text": "fire up spotify", "tool": "open_app", "arg": "spotify"}
+{"text": "open notes", "tool": "open_app", "arg": "notes"}
+{"text": "launch the notes app", "tool": "open_app", "arg": "notes"}
+{"text": "pull up notes", "tool": "open_app", "arg": "notes"}
+{"text": "start notes", "tool": "open_app", "arg": "notes"}
+{"text": "can you open apple notes", "tool": "open_app", "arg": "notes"}
+{"text": "open terminal", "tool": "open_app", "arg": "terminal"}
+{"text": "launch terminal please", "tool": "open_app", "arg": "terminal"}
+{"text": "start a terminal", "tool": "open_app", "arg": "terminal"}
+{"text": "bring up the terminal app", "tool": "open_app", "arg": "terminal"}
+{"text": "open a terminal window", "tool": "open_app", "arg": "terminal"}
+{"text": "open turing in my editor", "tool": "open_in_editor", "arg": "turing"}
+{"text": "open the turing project in the code editor", "tool": "open_in_editor", "arg": "turing"}
+{"text": "pull up turing in vs code", "tool": "open_in_editor", "arg": "turing"}
+{"text": "edit the turing repo", "tool": "open_in_editor", "arg": "turing"}
+{"text": "launch my editor on turing", "tool": "open_in_editor", "arg": "turing"}
+{"text": "what prs are open on nimble", "tool": "open_prs", "arg": "nimble"}
+{"text": "open pull requests for nimble", "tool": "open_prs", "arg": "nimble"}
+{"text": "any open prs in the nimble repo", "tool": "open_prs", "arg": "nimble"}
+{"text": "show nimble pull requests", "tool": "open_prs", "arg": "nimble"}
+{"text": "are there prs waiting on nimble", "tool": "open_prs", "arg": "nimble"}
+{"text": "go to wikipedia.org", "tool": "open_url", "arg": "wikipedia.org"}
+{"text": "open wikipedia.org in the browser", "tool": "open_url", "arg": "wikipedia.org"}
+{"text": "take me to wikipedia", "tool": "open_url", "arg": "wikipedia.org"}
+{"text": "browse to wikipedia.org", "tool": "open_url", "arg": "wikipedia.org"}
+{"text": "pull up wikipedia.org", "tool": "open_url", "arg": "wikipedia.org"}
+{"text": "open hacker news", "tool": "open_url", "arg": "news.ycombinator.com"}
+{"text": "go to news.ycombinator.com", "tool": "open_url", "arg": "news.ycombinator.com"}
+{"text": "take me to hacker news", "tool": "open_url", "arg": "news.ycombinator.com"}
+{"text": "pull up news.ycombinator.com", "tool": "open_url", "arg": "news.ycombinator.com"}
+{"text": "browse to hacker news", "tool": "open_url", "arg": "news.ycombinator.com"}

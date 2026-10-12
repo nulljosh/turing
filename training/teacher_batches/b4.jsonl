@@ -1,0 +1,140 @@
+{"text": "paint harbor.jpg in pictures out of squares", "tool": "paint_image", "arg": "~/Pictures/harbor.jpg"}
+{"text": "turn ~/Pictures/harbor.jpg into a painting", "tool": "paint_image", "arg": "~/Pictures/harbor.jpg"}
+{"text": "do the square painting on my harbor photo", "tool": "paint_image", "arg": "~/Pictures/harbor.jpg"}
+{"text": "make a painting from harbor.jpg", "tool": "paint_image", "arg": "~/Pictures/harbor.jpg"}
+{"text": "paint my harbor picture", "tool": "paint_image", "arg": "~/Pictures/harbor.jpg"}
+{"text": "quit slack", "tool": "quit_app", "arg": "slack"}
+{"text": "close slack for me", "tool": "quit_app", "arg": "slack"}
+{"text": "shut down the slack app", "tool": "quit_app", "arg": "slack"}
+{"text": "kill slack its frozen", "tool": "quit_app", "arg": "slack"}
+{"text": "exit slack please", "tool": "quit_app", "arg": "slack"}
+{"text": "quit safari", "tool": "quit_app", "arg": "safari"}
+{"text": "close the safari app", "tool": "quit_app", "arg": "safari"}
+{"text": "shut safari down", "tool": "quit_app", "arg": "safari"}
+{"text": "force safari to quit", "tool": "quit_app", "arg": "safari"}
+{"text": "exit out of safari", "tool": "quit_app", "arg": "safari"}
+{"text": "pick a number between 1 and 50", "tool": "random_number", "arg": "between 1 and 50"}
+{"text": "give me a random number from 1 to 50", "tool": "random_number", "arg": "between 1 and 50"}
+{"text": "random number 1-50", "tool": "random_number", "arg": "between 1 and 50"}
+{"text": "choose a number between one and fifty", "tool": "random_number", "arg": "between 1 and 50"}
+{"text": "roll me a number from 1 to 50", "tool": "random_number", "arg": "between 1 and 50"}
+{"text": "read me the contract pdf in documents", "tool": "read_document", "arg": "~/Documents/contract.pdf"}
+{"text": "whats in ~/Documents/contract.pdf", "tool": "read_document", "arg": "~/Documents/contract.pdf"}
+{"text": "open and read contract.pdf from documents", "tool": "read_document", "arg": "~/Documents/contract.pdf"}
+{"text": "show the text of my contract pdf", "tool": "read_document", "arg": "~/Documents/contract.pdf"}
+{"text": "read ~/Documents/contract.pdf", "tool": "read_document", "arg": "~/Documents/contract.pdf"}
+{"text": "read ideas.txt on my desktop", "tool": "read_file", "arg": "~/Desktop/ideas.txt"}
+{"text": "whats in ~/Desktop/ideas.txt", "tool": "read_file", "arg": "~/Desktop/ideas.txt"}
+{"text": "show me ideas.txt from the desktop", "tool": "read_file", "arg": "~/Desktop/ideas.txt"}
+{"text": "cat the ideas file on my desktop", "tool": "read_file", "arg": "~/Desktop/ideas.txt"}
+{"text": "print the contents of ideas.txt on desktop", "tool": "read_file", "arg": "~/Desktop/ideas.txt"}
+{"text": "read me this page", "tool": "read_page", "arg": ""}
+{"text": "whats on the page im looking at", "tool": "read_page", "arg": ""}
+{"text": "read the current webpage", "tool": "read_page", "arg": ""}
+{"text": "give me the text of this tab", "tool": "read_page", "arg": ""}
+{"text": "pull the text off this page", "tool": "read_page", "arg": ""}
+{"text": "read my mail tab", "tool": "read_tab", "arg": "mail"}
+{"text": "whats on the tab called mail", "tool": "read_tab", "arg": "mail"}
+{"text": "show me the text in the mail tab", "tool": "read_tab", "arg": "mail"}
+{"text": "read what the mail tab says", "tool": "read_tab", "arg": "mail"}
+{"text": "open the mail tab and read it", "tool": "read_tab", "arg": "mail"}
+{"text": "whats been committed to turing lately", "tool": "recent_commits", "arg": "turing"}
+{"text": "show recent commits on turing", "tool": "recent_commits", "arg": "turing"}
+{"text": "last few commits in the turing repo", "tool": "recent_commits", "arg": "turing"}
+{"text": "what changed in turing recently", "tool": "recent_commits", "arg": "turing"}
+{"text": "turing commit history please", "tool": "recent_commits", "arg": "turing"}
+{"text": "what did i download recently", "tool": "recent_downloads", "arg": ""}
+{"text": "show my latest downloads", "tool": "recent_downloads", "arg": ""}
+{"text": "whats new in my downloads folder", "tool": "recent_downloads", "arg": ""}
+{"text": "recent downloads please", "tool": "recent_downloads", "arg": ""}
+{"text": "anything i grabbed in the last day", "tool": "recent_downloads", "arg": ""}
+{"text": "remove the background from product.png in pictures", "tool": "remove_background", "arg": "~/Pictures/product.png"}
+{"text": "cut out the background of ~/Pictures/product.png", "tool": "remove_background", "arg": "~/Pictures/product.png"}
+{"text": "make the background of my product photo transparent", "tool": "remove_background", "arg": "~/Pictures/product.png"}
+{"text": "erase the background on product.png", "tool": "remove_background", "arg": "~/Pictures/product.png"}
+{"text": "background remover on ~/Pictures/product.png", "tool": "remove_background", "arg": "~/Pictures/product.png"}
+{"text": "rename draft.txt on my desktop to final.txt", "tool": "rename_file", "arg": "~/Desktop/draft.txt\tfinal.txt"}
+{"text": "change the name of ~/Desktop/draft.txt to final.txt", "tool": "rename_file", "arg": "~/Desktop/draft.txt\tfinal.txt"}
+{"text": "call my desktop draft.txt final.txt instead", "tool": "rename_file", "arg": "~/Desktop/draft.txt\tfinal.txt"}
+{"text": "rename the file draft.txt to final.txt on the desktop", "tool": "rename_file", "arg": "~/Desktop/draft.txt\tfinal.txt"}
+{"text": "give ~/Desktop/draft.txt the new name final.txt", "tool": "rename_file", "arg": "~/Desktop/draft.txt\tfinal.txt"}
+{"text": "research how tides work", "tool": "research", "arg": "how do tides work"}
+{"text": "do some research on how tides work", "tool": "research", "arg": "how do tides work"}
+{"text": "dig into how tides work for me", "tool": "research", "arg": "how do tides work"}
+{"text": "write me a brief on how tides work", "tool": "research", "arg": "how do tides work"}
+{"text": "look up and summarize how tides work with sources", "tool": "research", "arg": "how do tides work"}
+{"text": "resize hero.jpg to 800 wide", "tool": "resize_image", "arg": "~/Pictures/hero.jpg to 800"}
+{"text": "make ~/Pictures/hero.jpg 800 pixels wide", "tool": "resize_image", "arg": "~/Pictures/hero.jpg to 800"}
+{"text": "shrink hero.jpg in pictures down to 800", "tool": "resize_image", "arg": "~/Pictures/hero.jpg to 800"}
+{"text": "scale my hero image to 800px", "tool": "resize_image", "arg": "~/Pictures/hero.jpg to 800"}
+{"text": "change hero.jpg to 800 across", "tool": "resize_image", "arg": "~/Pictures/hero.jpg to 800"}
+{"text": "show budget.xlsx in finder", "tool": "reveal_in_finder", "arg": "~/Documents/budget.xlsx"}
+{"text": "reveal ~/Documents/budget.xlsx", "tool": "reveal_in_finder", "arg": "~/Documents/budget.xlsx"}
+{"text": "open finder at my budget spreadsheet", "tool": "reveal_in_finder", "arg": "~/Documents/budget.xlsx"}
+{"text": "find budget.xlsx in finder for me", "tool": "reveal_in_finder", "arg": "~/Documents/budget.xlsx"}
+{"text": "highlight budget.xlsx in the documents folder", "tool": "reveal_in_finder", "arg": "~/Documents/budget.xlsx"}
+{"text": "reverse the word stressed", "tool": "reverse_text", "arg": "stressed"}
+{"text": "spell stressed backwards", "tool": "reverse_text", "arg": "stressed"}
+{"text": "stressed backwards please", "tool": "reverse_text", "arg": "stressed"}
+{"text": "flip the text stressed around", "tool": "reverse_text", "arg": "stressed"}
+{"text": "write stressed in reverse", "tool": "reverse_text", "arg": "stressed"}
+{"text": "roll two six sided dice", "tool": "roll_dice", "arg": "2d6"}
+{"text": "roll 2d6", "tool": "roll_dice", "arg": "2d6"}
+{"text": "throw a couple of dice", "tool": "roll_dice", "arg": "2d6"}
+{"text": "roll a pair of dice", "tool": "roll_dice", "arg": "2d6"}
+{"text": "give me 2d6", "tool": "roll_dice", "arg": "2d6"}
+{"text": "roll a d20", "tool": "roll_dice", "arg": "1d20"}
+{"text": "roll one twenty sided die", "tool": "roll_dice", "arg": "1d20"}
+{"text": "d20 roll", "tool": "roll_dice", "arg": "1d20"}
+{"text": "throw a 20 sided dice", "tool": "roll_dice", "arg": "1d20"}
+{"text": "roll 1d20 for me", "tool": "roll_dice", "arg": "1d20"}
+{"text": "what is 2026 in roman numerals", "tool": "roman_numeral", "arg": "2026"}
+{"text": "convert 2026 to roman", "tool": "roman_numeral", "arg": "2026"}
+{"text": "2026 as a roman numeral", "tool": "roman_numeral", "arg": "2026"}
+{"text": "roman numeral for 2026", "tool": "roman_numeral", "arg": "2026"}
+{"text": "write 2026 in roman numerals", "tool": "roman_numeral", "arg": "2026"}
+{"text": "rotate scan.jpg 90 degrees", "tool": "rotate_image", "arg": "~/Pictures/scan.jpg by 90"}
+{"text": "turn ~/Pictures/scan.jpg a quarter turn", "tool": "rotate_image", "arg": "~/Pictures/scan.jpg by 90"}
+{"text": "rotate my scan photo by 90", "tool": "rotate_image", "arg": "~/Pictures/scan.jpg by 90"}
+{"text": "spin scan.jpg ninety degrees", "tool": "rotate_image", "arg": "~/Pictures/scan.jpg by 90"}
+{"text": "scan.jpg is sideways, rotate it 90", "tool": "rotate_image", "arg": "~/Pictures/scan.jpg by 90"}
+{"text": "run the tests for turing", "tool": "run_tests", "arg": "turing"}
+{"text": "test the turing repo", "tool": "run_tests", "arg": "turing"}
+{"text": "run turing's test suite", "tool": "run_tests", "arg": "turing"}
+{"text": "kick off tests in turing", "tool": "run_tests", "arg": "turing"}
+{"text": "do the turing tests pass", "tool": "run_tests", "arg": "turing"}
+{"text": "what apps are running", "tool": "running_apps", "arg": ""}
+{"text": "which apps do i have open", "tool": "running_apps", "arg": ""}
+{"text": "list the open applications", "tool": "running_apps", "arg": ""}
+{"text": "whats running on my mac right now", "tool": "running_apps", "arg": ""}
+{"text": "show me running programs", "tool": "running_apps", "arg": ""}
+{"text": "say dinner is ready out loud", "tool": "say", "arg": "dinner is ready"}
+{"text": "speak dinner is ready", "tool": "say", "arg": "dinner is ready"}
+{"text": "read this aloud: dinner is ready", "tool": "say", "arg": "dinner is ready"}
+{"text": "announce dinner is ready", "tool": "say", "arg": "dinner is ready"}
+{"text": "tell me out loud that dinner is ready", "tool": "say", "arg": "dinner is ready"}
+{"text": "take a screenshot", "tool": "screenshot", "arg": ""}
+{"text": "grab my screen", "tool": "screenshot", "arg": ""}
+{"text": "screenshot please", "tool": "screenshot", "arg": ""}
+{"text": "capture the screen", "tool": "screenshot", "arg": ""}
+{"text": "snap my display", "tool": "screenshot", "arg": ""}
+{"text": "search my notes for passport", "tool": "search_notes", "arg": "passport"}
+{"text": "find passport in my notes", "tool": "search_notes", "arg": "passport"}
+{"text": "look through notes for passport", "tool": "search_notes", "arg": "passport"}
+{"text": "do any of my notes mention passport", "tool": "search_notes", "arg": "passport"}
+{"text": "notes search: passport", "tool": "search_notes", "arg": "passport"}
+{"text": "set the volume to 30", "tool": "set_volume", "arg": "30"}
+{"text": "turn the volume to thirty percent", "tool": "set_volume", "arg": "30"}
+{"text": "volume 30 please", "tool": "set_volume", "arg": "30"}
+{"text": "make it quieter, 30", "tool": "set_volume", "arg": "30"}
+{"text": "change the sound level to 30", "tool": "set_volume", "arg": "30"}
+{"text": "max out the volume", "tool": "set_volume", "arg": "100"}
+{"text": "turn the volume all the way up", "tool": "set_volume", "arg": "100"}
+{"text": "set volume to 100", "tool": "set_volume", "arg": "100"}
+{"text": "crank it to full volume", "tool": "set_volume", "arg": "100"}
+{"text": "volume to the maximum", "tool": "set_volume", "arg": "100"}
+{"text": "shout good news", "tool": "shout", "arg": "good news"}
+{"text": "say good news in all caps", "tool": "shout", "arg": "good news"}
+{"text": "make good news uppercase", "tool": "shout", "arg": "good news"}
+{"text": "yell good news", "tool": "shout", "arg": "good news"}
+{"text": "capitalize good news", "tool": "shout", "arg": "good news"}
