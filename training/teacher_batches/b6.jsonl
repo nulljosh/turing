@@ -1,0 +1,139 @@
+{"text": "which tab am i on", "tool": "current_tab", "arg": ""}
+{"text": "what site is chrome on right now", "tool": "current_tab", "arg": ""}
+{"text": "whats the title and url of this tab", "tool": "current_tab", "arg": ""}
+{"text": "tell me what page chrome is showing", "tool": "current_tab", "arg": ""}
+{"text": "what am i looking at in the browser, just the url", "tool": "current_tab", "arg": ""}
+{"text": "which page is up front in chrome", "tool": "current_tab", "arg": ""}
+{"text": "whats the address of the tab im on", "tool": "current_tab", "arg": ""}
+{"text": "name the site in my front tab", "tool": "current_tab", "arg": ""}
+{"text": "what tabs do i have open", "tool": "list_tabs", "arg": ""}
+{"text": "list my chrome tabs", "tool": "list_tabs", "arg": ""}
+{"text": "how many tabs are open and what are they", "tool": "list_tabs", "arg": ""}
+{"text": "show every tab i have open", "tool": "list_tabs", "arg": ""}
+{"text": "give me my open tabs", "tool": "list_tabs", "arg": ""}
+{"text": "whats open in my browser", "tool": "list_tabs", "arg": ""}
+{"text": "which tabs are open right now", "tool": "list_tabs", "arg": ""}
+{"text": "show me all my browser tabs", "tool": "list_tabs", "arg": ""}
+{"text": "read the front tab, its a js site", "tool": "read_tab", "arg": ""}
+{"text": "what does my front chrome tab actually say", "tool": "read_tab", "arg": ""}
+{"text": "pull the rendered text from the tab up front", "tool": "read_tab", "arg": ""}
+{"text": "read the tab in front of me, its a web app", "tool": "read_tab", "arg": ""}
+{"text": "whats the text on my active chrome tab", "tool": "read_tab", "arg": ""}
+{"text": "grab the text of the front tab", "tool": "read_tab", "arg": ""}
+{"text": "tell me what the page in my front tab says, it loads with javascript", "tool": "read_tab", "arg": ""}
+{"text": "read out the active tab", "tool": "read_tab", "arg": ""}
+{"text": "read my docs tab", "tool": "read_tab", "arg": "docs"}
+{"text": "whats written in the docs tab", "tool": "read_tab", "arg": "docs"}
+{"text": "get the text from my docs tab in chrome", "tool": "read_tab", "arg": "docs"}
+{"text": "read what the docs tab says", "tool": "read_tab", "arg": "docs"}
+{"text": "show the text of the tab called docs", "tool": "read_tab", "arg": "docs"}
+{"text": "read the github tab", "tool": "read_tab", "arg": "github"}
+{"text": "whats on my github tab", "tool": "read_tab", "arg": "github"}
+{"text": "pull the text off the github tab", "tool": "read_tab", "arg": "github"}
+{"text": "read what my github tab says", "tool": "read_tab", "arg": "github"}
+{"text": "read my calendar tab", "tool": "read_tab", "arg": "calendar"}
+{"text": "whats showing in the calendar tab", "tool": "read_tab", "arg": "calendar"}
+{"text": "get the text from the calendar tab", "tool": "read_tab", "arg": "calendar"}
+{"text": "read example.com", "tool": "read_page", "arg": "https://example.com"}
+{"text": "fetch example.com and read it out", "tool": "read_page", "arg": "https://example.com"}
+{"text": "whats on example.com", "tool": "read_page", "arg": "https://example.com"}
+{"text": "go to example.com and tell me what it says", "tool": "read_page", "arg": "https://example.com"}
+{"text": "grab the text from example.com", "tool": "read_page", "arg": "https://example.com"}
+{"text": "read hacker news for me", "tool": "read_page", "arg": "https://news.ycombinator.com"}
+{"text": "whats on hacker news", "tool": "read_page", "arg": "https://news.ycombinator.com"}
+{"text": "grab the text of hacker news", "tool": "read_page", "arg": "https://news.ycombinator.com"}
+{"text": "tell me whats on the hacker news front page", "tool": "read_page", "arg": "https://news.ycombinator.com"}
+{"text": "fetch hacker news", "tool": "read_page", "arg": "https://news.ycombinator.com"}
+{"text": "tell me whats on linkedin.com", "tool": "read_page", "arg": "https://linkedin.com"}
+{"text": "read linkedin.com", "tool": "read_page", "arg": "https://linkedin.com"}
+{"text": "fetch linkedin.com and say whats there", "tool": "read_page", "arg": "https://linkedin.com"}
+{"text": "check what nimble.heyitsmejosh.com says", "tool": "read_page", "arg": "https://nimble.heyitsmejosh.com"}
+{"text": "read nimble.heyitsmejosh.com", "tool": "read_page", "arg": "https://nimble.heyitsmejosh.com"}
+{"text": "whats on nimble.heyitsmejosh.com", "tool": "read_page", "arg": "https://nimble.heyitsmejosh.com"}
+{"text": "open nimble.heyitsmejosh.com and read it to me", "tool": "read_page", "arg": "https://nimble.heyitsmejosh.com"}
+{"text": "read wikipedia.org", "tool": "read_page", "arg": "https://wikipedia.org"}
+{"text": "whats on wikipedia.org", "tool": "read_page", "arg": "https://wikipedia.org"}
+{"text": "fetch wikipedia.org and tell me whats there", "tool": "read_page", "arg": "https://wikipedia.org"}
+{"text": "read the bbc news page", "tool": "read_page", "arg": "https://bbc.com/news"}
+{"text": "whats on bbc.com/news", "tool": "read_page", "arg": "https://bbc.com/news"}
+{"text": "fetch bbc.com/news and read it", "tool": "read_page", "arg": "https://bbc.com/news"}
+{"text": "whats inside notes.md", "tool": "read_file", "arg": "~/Documents/notes.md"}
+{"text": "show me notes.md", "tool": "read_file", "arg": "~/Documents/notes.md"}
+{"text": "read my notes.md file", "tool": "read_file", "arg": "~/Documents/notes.md"}
+{"text": "print notes.md", "tool": "read_file", "arg": "~/Documents/notes.md"}
+{"text": "cat notes.md", "tool": "read_file", "arg": "~/Documents/notes.md"}
+{"text": "show contents of readme.md", "tool": "read_file", "arg": "~/Documents/readme.md"}
+{"text": "read readme.md", "tool": "read_file", "arg": "~/Documents/readme.md"}
+{"text": "whats in readme.md", "tool": "read_file", "arg": "~/Documents/readme.md"}
+{"text": "open readme.md and read it", "tool": "read_file", "arg": "~/Documents/readme.md"}
+{"text": "how do i view settings.json", "tool": "read_file", "arg": "~/Documents/settings.json"}
+{"text": "show me settings.json", "tool": "read_file", "arg": "~/Documents/settings.json"}
+{"text": "whats inside settings.json", "tool": "read_file", "arg": "~/Documents/settings.json"}
+{"text": "read my settings.json file", "tool": "read_file", "arg": "~/Documents/settings.json"}
+{"text": "see the text in ~/Downloads/notes.txt", "tool": "read_file", "arg": "~/Downloads/notes.txt"}
+{"text": "read notes.txt in downloads", "tool": "read_file", "arg": "~/Downloads/notes.txt"}
+{"text": "whats inside the notes.txt in downloads", "tool": "read_file", "arg": "~/Downloads/notes.txt"}
+{"text": "show me the text file notes.txt from downloads", "tool": "read_file", "arg": "~/Downloads/notes.txt"}
+{"text": "read todo.txt", "tool": "read_file", "arg": "~/Documents/todo.txt"}
+{"text": "whats in todo.txt", "tool": "read_file", "arg": "~/Documents/todo.txt"}
+{"text": "show me my todo.txt", "tool": "read_file", "arg": "~/Documents/todo.txt"}
+{"text": "read config.yaml", "tool": "read_file", "arg": "~/Documents/config.yaml"}
+{"text": "show me config.yaml", "tool": "read_file", "arg": "~/Documents/config.yaml"}
+{"text": "whats in my config.yaml", "tool": "read_file", "arg": "~/Documents/config.yaml"}
+{"text": "whats in resume.docx", "tool": "read_document", "arg": "~/Documents/resume.docx"}
+{"text": "read resume.docx", "tool": "read_document", "arg": "~/Documents/resume.docx"}
+{"text": "show me the text of my resume docx", "tool": "read_document", "arg": "~/Documents/resume.docx"}
+{"text": "open resume.docx and read it to me", "tool": "read_document", "arg": "~/Documents/resume.docx"}
+{"text": "read report.pdf", "tool": "read_document", "arg": "~/Documents/report.pdf"}
+{"text": "show me report.pdf", "tool": "read_document", "arg": "~/Documents/report.pdf"}
+{"text": "whats in the report pdf", "tool": "read_document", "arg": "~/Documents/report.pdf"}
+{"text": "read the pdf called report", "tool": "read_document", "arg": "~/Documents/report.pdf"}
+{"text": "report.pdf, read it to me", "tool": "read_document", "arg": "~/Documents/report.pdf"}
+{"text": "read the contract file in my downloads folder", "tool": "read_document", "arg": "~/Downloads/contract.pdf"}
+{"text": "read contract.pdf from downloads", "tool": "read_document", "arg": "~/Downloads/contract.pdf"}
+{"text": "show me the contract pdf in downloads", "tool": "read_document", "arg": "~/Downloads/contract.pdf"}
+{"text": "whats in the downloads contract pdf", "tool": "read_document", "arg": "~/Downloads/contract.pdf"}
+{"text": "show me the word doc proposal", "tool": "read_document", "arg": "~/Documents/proposal.docx"}
+{"text": "read the proposal word document", "tool": "read_document", "arg": "~/Documents/proposal.docx"}
+{"text": "whats in proposal.docx", "tool": "read_document", "arg": "~/Documents/proposal.docx"}
+{"text": "read invoice.pdf", "tool": "read_document", "arg": "~/Documents/invoice.pdf"}
+{"text": "whats on the invoice pdf", "tool": "read_document", "arg": "~/Documents/invoice.pdf"}
+{"text": "show me the text of the invoice pdf", "tool": "read_document", "arg": "~/Documents/invoice.pdf"}
+{"text": "what does the contract say about termination clauses", "tool": "ask_document", "arg": "what does it say about termination\t~/Documents/contract.pdf"}
+{"text": "check contract.pdf for what it says about termination", "tool": "ask_document", "arg": "what does it say about termination\t~/Documents/contract.pdf"}
+{"text": "per contract.pdf what are the termination terms", "tool": "ask_document", "arg": "what does it say about termination\t~/Documents/contract.pdf"}
+{"text": "does my lease mention parking", "tool": "ask_document", "arg": "does it mention parking\t~/Documents/lease.pdf"}
+{"text": "what does lease.pdf say about parking", "tool": "ask_document", "arg": "does it mention parking\t~/Documents/lease.pdf"}
+{"text": "according to lease.pdf is parking included", "tool": "ask_document", "arg": "does it mention parking\t~/Documents/lease.pdf"}
+{"text": "what is the total on invoice.pdf", "tool": "ask_document", "arg": "what is the total\t~/Documents/invoice.pdf"}
+{"text": "according to the invoice pdf whats the total due", "tool": "ask_document", "arg": "what is the total\t~/Documents/invoice.pdf"}
+{"text": "how much does invoice.pdf say i owe", "tool": "ask_document", "arg": "what is the total\t~/Documents/invoice.pdf"}
+{"text": "what dates does resume.docx list for my last job", "tool": "ask_document", "arg": "what are the dates\t~/Documents/resume.docx"}
+{"text": "per my resume docx when did i start at my last job", "tool": "ask_document", "arg": "what are the dates\t~/Documents/resume.docx"}
+{"text": "draft an email to the team about the release", "tool": "write_document", "arg": "an email to the team about the release"}
+{"text": "write an email to the team about the release", "tool": "write_document", "arg": "an email to the team about the release"}
+{"text": "write a short email telling the team about the release", "tool": "write_document", "arg": "an email to the team about the release"}
+{"text": "compose an email for the team about the release", "tool": "write_document", "arg": "an email to the team about the release"}
+{"text": "write up a doc about our q3 plans", "tool": "write_document", "arg": "a doc about our q3 plans"}
+{"text": "draft a document about our q3 plans", "tool": "write_document", "arg": "a doc about our q3 plans"}
+{"text": "write me a doc on our q3 plans", "tool": "write_document", "arg": "a doc about our q3 plans"}
+{"text": "make a document laying out the q3 plans", "tool": "write_document", "arg": "a doc about our q3 plans"}
+{"text": "write a proposal for a new project called website redesign", "tool": "write_document", "arg": "a proposal for a website redesign project"}
+{"text": "draft a proposal for a website redesign", "tool": "write_document", "arg": "a proposal for a website redesign project"}
+{"text": "write me a proposal for the website redesign", "tool": "write_document", "arg": "a proposal for a website redesign project"}
+{"text": "draft a letter about a performance review", "tool": "write_document", "arg": "a letter about a performance review"}
+{"text": "write a letter about my performance review", "tool": "write_document", "arg": "a letter about a performance review"}
+{"text": "compose a letter for a performance review", "tool": "write_document", "arg": "a letter about a performance review"}
+{"text": "write up the meeting minutes from today", "tool": "write_document", "arg": "meeting minutes from today"}
+{"text": "draft the minutes for todays meeting", "tool": "write_document", "arg": "meeting minutes from today"}
+{"text": "make a doc of todays meeting minutes", "tool": "write_document", "arg": "meeting minutes from today"}
+{"text": "write meeting minutes for today", "tool": "write_document", "arg": "meeting minutes from today"}
+{"text": "draft a memo about the new office hours", "tool": "write_document", "arg": "a memo about the new office hours"}
+{"text": "write a memo on the new office hours", "tool": "write_document", "arg": "a memo about the new office hours"}
+{"text": "compose a memo about office hours", "tool": "write_document", "arg": "a memo about the new office hours"}
+{"text": "jot down a note about tomorrows meeting", "tool": "new_note", "arg": "tomorrow's meeting"}
+{"text": "make a quick note: tomorrows meeting", "tool": "new_note", "arg": "tomorrow's meeting"}
+{"text": "note to self, tomorrows meeting", "tool": "new_note", "arg": "tomorrow's meeting"}
+{"text": "go through my downloads and sort them by type, then tell me what you did", "tool": "agent", "arg": ""}
+{"text": "plan my week from my calendar and reminders and draft a schedule", "tool": "agent", "arg": ""}
+{"text": "research three laptops, compare them, and write up a table", "tool": "agent", "arg": ""}

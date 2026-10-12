@@ -21,6 +21,7 @@ def _found(name, default):
 BASE = os.environ.get("BASE") or _found("config.json", "Qwen/Qwen2.5-1.5B-Instruct")
 DATA = os.environ.get("DATA") or _found("train.jsonl", "/kaggle/input/samantha-hands")
 OUT = os.environ.get("OUT", "/kaggle/working/hands-merged")
+SEED = 7  # round 26 reruns round 25's data on a second seed (42 gave r25) to measure how much a retrain moves on its own
 EPOCHS = float(os.environ.get("EPOCHS", "2"))
 MAXLEN = int(os.environ.get("MAXLEN", "512"))
 SCORE_N = int(os.environ.get("SCORE_N", "200"))  # rows scored in-kernel after each stage
@@ -113,7 +114,7 @@ def main():
     model = get_peft_model(model, LoraConfig(r=16, lora_alpha=32, lora_dropout=0.05, target_modules="all-linear", task_type="CAUSAL_LM"))
     args = TrainingArguments(output_dir="/kaggle/working/run", num_train_epochs=EPOCHS, per_device_train_batch_size=8,
                              gradient_accumulation_steps=2, learning_rate=1e-4, lr_scheduler_type="cosine", warmup_steps=30,
-                             fp16=True, logging_steps=25, eval_strategy="epoch", save_strategy="no", report_to=[], remove_unused_columns=False)
+                             fp16=True, logging_steps=25, eval_strategy="epoch", save_strategy="no", report_to=[], remove_unused_columns=False, seed=SEED)
     Trainer(model=model, args=args, train_dataset=train, eval_dataset=valid, data_collator=lambda rows: {k: torch.tensor(v) for k, v in pad_batch(rows, tok.pad_token_id).items()}).train()
     merged = model.merge_and_unload()
     pairs_path = os.path.join(DATA, "pairs.jsonl")
