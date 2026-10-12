@@ -363,7 +363,7 @@ def ask(question):
         # named in the source so the answer is never passed off as hers. No local server up means the honest decline.
         llm = tools_llm.fallback(question)
         if llm:
-            return llm[0], [f"{llm[1]} on this Mac"]
+            return llm[0], [f"{llm[1]} on this Mac"] if llm[1] else []
         return OUT_OF_SCOPE, []
     context = "\n\n---\n\n".join(r["text"][:800] for r in results)
     prompt = f"{SYSTEM}\n\nContext:\n{context}\n\nQuestion: {question}"

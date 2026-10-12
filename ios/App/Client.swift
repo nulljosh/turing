@@ -130,6 +130,8 @@ struct MockClient: BridgeClient {
                 try? await Task.sleep(for: .milliseconds(900))
                 let answer = text.lowercased().contains("haiku")
                     ? "Rain on the window,\nthe kettle hums its one note,\nevening settles in."
+                    : text.lowercased().contains("python")
+                    ? "Here is one that uses a slice:\n```python\ndef reverse_string(text):\n    return text[::-1]\n```\nCall it as reverse_string(\"hello\") to get \"olleh\"."
                     : "I am the stand-in Mac, so that one gets a stand-in answer. Pair a real Mac for the real thing."
                 continuation.yield(.answer(answer + " (Answered by Qwen3.5-9B on this Mac.)"))
                 continuation.finish()

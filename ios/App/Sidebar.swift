@@ -84,8 +84,15 @@ struct SettingsView: View {
                     ModelRow()
                 }
                 Section("Your Mac (optional)") {
-                    TextField("Host (the Mac's address)", text: $pairing.host).textInputAutocapitalization(.never).autocorrectionDisabled()
-                    TextField("Port", value: $pairing.port, format: .number.grouping(.never)).keyboardType(.numberPad)
+                    TextField("Host (the Mac's address)", text: $pairing.host)
+                        #if os(iOS)
+                        .textInputAutocapitalization(.never)
+                        #endif
+                        .autocorrectionDisabled()
+                    TextField("Port", value: $pairing.port, format: .number.grouping(.never))
+                        #if os(iOS)
+                        .keyboardType(.numberPad)
+                        #endif
                     SecureField("Pairing token", text: $pairing.token)
                 }
                 Section {
@@ -94,15 +101,20 @@ struct SettingsView: View {
                 } footer: {
                     Text("Tools that read a real Mac (its disk, Wi-Fi, Finder, Shortcuts, its bigger model) run there once it is paired. On the Mac, run app/phone_bridge.py --lan. It prints a samantha://pair link: open it on this phone, or copy the host and token here. Everything stays on your network.")
                 }
+                #if DEBUG
+                // Scripted answers for screenshots and rehearsal only; never in a store build.
                 Section {
                     Toggle("Rehearse with a stand-in Mac", isOn: Binding(get: { store.useMock }, set: { store.useMock = $0 }))
                 }
+                #endif
             }
             .scrollContentBackground(.hidden)
             .background(Theme.paper)
             .tint(Theme.accent)
             .navigationTitle("Settings")
+            #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
+            #endif
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) { Button("Done") { pairing.save(); store.pairing = pairing; dismiss() } }
             }

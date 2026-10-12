@@ -494,7 +494,9 @@
     transcript.scrollTop = transcript.scrollHeight;
   }
   function say(_, calls, text, extra, done) {
-    text = String(text || '').slice(0, 1200); // no upstream gets to fill the transcript
+    text = String(text || '').replace(/^#{1,6} .*\n+/gm, '');  // the 3B likes a markdown header; a chat reply has none
+    var code = text.indexOf('```') >= 0;
+    text = text.slice(0, code ? 2400 : 1200); // no upstream gets to fill the transcript
     var d = el('div', 'chat-message');
     (calls || []).forEach(function (c) { d.appendChild(el('div', 'chat-tool-call', c)); });
     var body = el('div', 'chat-message-content');
@@ -502,9 +504,24 @@
     d.appendChild(body);
     transcript.appendChild(d);
     var i = 0;
+    // Model text goes in as text nodes only, never innerHTML. Every ``` fence becomes a code box with a Copy button,
+    // the same as the Mac and iPhone apps; a fence left open by the length cap still renders as code.
+    function fill(t) {
+      body.textContent = '';
+      t.split('```').forEach(function (part, k) {
+        if (k % 2 === 0) { if (part.replace(/^\n+|\n+$/g, '')) body.appendChild(document.createTextNode(part.replace(/^\n+|\n+$/g, ''))); return; }
+        var src = part.replace(/^[\w+-]*\n/, '').replace(/\n$/, ''), box = el('div', 'chat-code');
+        var btn = el('button', 'chat-copy', 'Copy'); btn.type = 'button'; btn.setAttribute('aria-label', 'Copy this code');
+        btn.onclick = function () {
+          var done = function () { btn.textContent = 'Copied'; setTimeout(function () { btn.textContent = 'Copy'; }, 1500); };
+          if (navigator.clipboard) navigator.clipboard.writeText(src).then(done, done); else done();
+        };
+        box.appendChild(btn); box.appendChild(el('pre', '', src)); body.appendChild(box);
+      });
+    }
     (function type() {
-      i = typing ? Math.min(text.length, i + 3) : text.length;
-      body.textContent = text.slice(0, i);
+      i = typing ? Math.min(text.length, i + (code ? 8 : 3)) : text.length;
+      fill(text.slice(0, i));
       transcript.scrollTop = transcript.scrollHeight;
       if (i < text.length) return setTimeout(type, typing);
       if (extra && extra.node) { var pic = el('div', 'chat-logo'); pic.appendChild(extra.node); d.appendChild(pic); }
@@ -701,6 +718,9 @@
     'what is 17*23', 'convert 72 f to c', 'is 91 prime', 'roll 2d6', 'flip a coin', 'make a password',
     // knowledge and research
     "what's the weather in tokyo", 'who painted the mona lisa', 'who invented the telephone', 'research how lora works',
+    // code: the big model writes it, it lands as a code box with a Copy button
+    'write a python function that reverses a string', 'write a C function that reverses a string in place',
+    'write a Swift function that checks whether a string is a palindrome', 'write a JavaScript function that debounces another function',
     // images, her page, and back to the start
     'grayscale cat.png', 'scroll to the results', 'reset the page'];
   // more phrasings for the input's autocomplete only. The reel stays short.

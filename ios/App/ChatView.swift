@@ -40,15 +40,22 @@ struct MessageRow: View {
             }
         } else {
             VStack(alignment: .leading, spacing: 8) {
-                Text(message.text)
-                    .font(Theme.body).lineSpacing(Theme.bodyLine).foregroundStyle(Theme.ink)
-                    .textSelection(.enabled)
+                // Prose with inline Markdown; every ``` fence becomes a code block with its own Copy button.
+                ForEach(Array(replySegments(message.text).enumerated()), id: \.offset) { _, seg in
+                    if let lang = seg.lang {
+                        CodeBlock(code: seg.text, lang: lang)
+                    } else {
+                        Text(inlineMarkdown(seg.text))
+                            .font(Theme.body).lineSpacing(Theme.bodyLine).foregroundStyle(Theme.ink)
+                            .textSelection(.enabled)
+                    }
+                }
                 if let model = message.model {
                     Text("Answered by \(model)").font(Theme.small).foregroundStyle(Theme.muted)
                 }
                 if isLast {
                     HStack(spacing: 18) {
-                        Button { UIPasteboard.general.string = message.text } label: { Image(systemName: "doc.on.doc") }
+                        Button { copyToClipboard(message.text) } label: { Image(systemName: "doc.on.doc") }
                             .accessibilityLabel("Copy")
                         Button { store.retry() } label: { Image(systemName: "arrow.clockwise") }
                             .accessibilityLabel("Retry")
@@ -58,6 +65,62 @@ struct MessageRow: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }
+    }
+}
+
+/// A reply split on its ``` fences. `lang` is nil for prose, the fence's language ("" when unnamed) for code.
+/// A fence left open (a reply cut short) still counts as code. Markdown headers become plain bold lines.
+/// The same split as the Mac app's gui/SamanthaGUI.swift.
+func replySegments(_ text: String) -> [(lang: String?, text: String)] {
+    text.components(separatedBy: "```").enumerated().compactMap { i, part in
+        if i % 2 == 1 {
+            let lines = part.split(separator: "\n", maxSplits: 1, omittingEmptySubsequences: false)
+            let first = lines.first.map(String.init) ?? ""
+            let isLang = !first.contains(" ") && first.count < 16
+            let code = (isLang && lines.count > 1 ? String(lines[1]) : part).trimmingCharacters(in: .newlines)
+            return code.isEmpty ? nil : (isLang ? first : "", code)
+        }
+        let prose = part.replacingOccurrences(of: #"(?m)^#{1,6}\s+(.+)$"#, with: "**$1**", options: .regularExpression)
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        return prose.isEmpty ? nil : (nil, prose)
+    }
+}
+
+/// Bold, italics and `code` inside a sentence, keeping her line breaks.
+func inlineMarkdown(_ s: String) -> AttributedString {
+    (try? AttributedString(markdown: s, options: .init(interpretedSyntax: .inlineOnlyPreservingWhitespace))) ?? AttributedString(s)
+}
+
+/// One code block: monospaced, scrolls sideways instead of wrapping, with a Copy button that says Copied.
+struct CodeBlock: View {
+    let code: String
+    let lang: String
+    @State private var copied = false
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            HStack {
+                Text(lang.isEmpty ? "code" : lang).font(Theme.small).foregroundStyle(Theme.muted)
+                Spacer()
+                Button {
+                    copyToClipboard(code)
+                    copied = true
+                    Task { try? await Task.sleep(for: .seconds(1.5)); copied = false }
+                } label: {
+                    Label(copied ? "Copied" : "Copy", systemImage: copied ? "checkmark" : "doc.on.doc").font(Theme.small)
+                }
+                .buttonStyle(.plain).foregroundStyle(Theme.muted).accessibilityLabel("Copy code")
+            }
+            .padding(.horizontal, 12).padding(.vertical, 8)
+            Divider().overlay(Theme.line)
+            ScrollView(.horizontal, showsIndicators: false) {
+                Text(code).font(.system(size: 14, design: .monospaced)).foregroundStyle(Theme.ink)
+                    .textSelection(.enabled).fixedSize(horizontal: true, vertical: false).padding(12)
+            }
+        }
+        .background(Theme.field)
+        .overlay(RoundedRectangle(cornerRadius: 12, style: .continuous).stroke(Theme.line))
+        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
     }
 }
 

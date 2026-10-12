@@ -18,7 +18,7 @@ final class LocalModel {
     static let chatID = "mlx-community/Qwen2.5-1.5B-Instruct-4bit"
     /// The exact prompt app/tools_agent.py sends the picker.
     static let handsSystem = "You are Samantha's hands. Reply with one JSON tool call. If this is not a command, reply {\"tool\": null, \"arg\": \"\"}."
-    static let chatSystem = "You are Samantha, a small assistant that runs on this phone. Answer in plain language and briefly: a few sentences unless the question truly needs more, code when code is asked for. No markdown headers. If you are not sure, say so instead of guessing."
+    static let chatSystem = "You are Samantha, a small assistant that runs on this phone. Answer in plain language and briefly: a few sentences unless the question truly needs more, code when code is asked for, in a ``` fence that names the language. No markdown headers. If you are not sure, say so instead of guessing."
 
     var state: State = .idle
     private var hands: ModelContainer?

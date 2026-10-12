@@ -1,5 +1,5 @@
 {
-  "version": "5.12.2",
+  "version": "5.12.3",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -124,8 +124,8 @@
         "documented": 3
       },
       "app/tools_llm.py": {
-        "total": 7,
-        "documented": 7
+        "total": 8,
+        "documented": 8
       },
       "app/tools_logo.py": {
         "total": 29,

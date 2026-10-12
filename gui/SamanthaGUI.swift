@@ -134,7 +134,8 @@ final class Samantha: ObservableObject {
         switch msg {
         case .working(let text):
             transcript.append("  [\(text)]")
-            status = text  // first-run setup ("Setting up Samantha, about two minutes...") reads here, plainly
+            // first-run setup ("Setting up Samantha, about two minutes...") reads in the status line; a tool name does not
+            status = text.hasPrefix("Setting up") ? text : "Ready"
         case .confirm(let name, let args, let note): pending = (name, args, note)
         case .mode(let voice, let face):
             voiceOn = voice
@@ -186,18 +187,98 @@ private struct MessageRow: View {
 
     var body: some View {
         if isWorking {
-            Text(line.trimmingCharacters(in: .whitespaces))
+            // "time_in(tokyo)", quietly, no brackets: what she is doing, not a log line
+            Text(line.trimmingCharacters(in: CharacterSet(charactersIn: " []")))
                 .font(.caption.monospaced()).foregroundStyle(.tertiary)
                 .frame(maxWidth: .infinity, alignment: .leading)
-        } else {
+        } else if isYou {
             HStack {
-                if isYou { Spacer(minLength: 40) }
-                Text(body_).font(.body).foregroundStyle(.primary).padding(.horizontal, 12).padding(.vertical, 8)
-                    .background(isYou ? Color.accentColor.opacity(0.18) : Color(nsColor: .controlBackgroundColor))
+                Spacer(minLength: 40)
+                Text(body_).font(.body).padding(.horizontal, 12).padding(.vertical, 8)
+                    .background(Color.accentColor.opacity(0.18))
                     .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
-                if !isYou { Spacer(minLength: 40) }
+            }
+        } else {
+            // Her replies: prose with inline Markdown, every fenced block as real code with its own Copy button,
+            // and "(Answered by X on this Mac.)" as a small line under the reply instead of a sentence inside it.
+            let (text, model) = splitModelLabel(body_)
+            VStack(alignment: .leading, spacing: 10) {
+                ForEach(Array(replySegments(text).enumerated()), id: \.offset) { _, seg in
+                    if let lang = seg.lang {
+                        CodeBlock(code: seg.text, lang: lang)
+                    } else {
+                        Text(inlineMarkdown(seg.text)).font(.body).textSelection(.enabled)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+                if let model { Text("Answered by \(model) on this Mac").font(.caption).foregroundStyle(.secondary) }
+            }
+            .padding(.horizontal, 12).padding(.vertical, 8)
+        }
+    }
+}
+
+/// (reply, model) from a reply that ends in "(Answered by X on this Mac.)" or "(... on this Mac, not by me.)".
+func splitModelLabel(_ s: String) -> (String, String?) {
+    guard let m = s.range(of: #"\s*\(Answered by (.+?) on this Mac(?:, not by me)?\.\)\s*$"#, options: .regularExpression) else { return (s, nil) }
+    let tag = String(s[m]).trimmingCharacters(in: .whitespacesAndNewlines)
+    let model = tag.replacingOccurrences(of: #"^\(Answered by |\s+on this Mac.*$"#, with: "", options: .regularExpression)
+    return (String(s[..<m.lowerBound]), model)
+}
+
+/// A reply split on its ``` fences. `lang` is nil for prose, the fence's language ("" when unnamed) for code.
+/// A fence left open (a reply cut short) still counts as code. Markdown headers become plain bold lines.
+func replySegments(_ text: String) -> [(lang: String?, text: String)] {
+    text.components(separatedBy: "```").enumerated().compactMap { i, part in
+        if i % 2 == 1 {
+            let lines = part.split(separator: "\n", maxSplits: 1, omittingEmptySubsequences: false)
+            let first = lines.first.map(String.init) ?? ""
+            let isLang = !first.contains(" ") && first.count < 16
+            let code = (isLang && lines.count > 1 ? String(lines[1]) : part).trimmingCharacters(in: .newlines)
+            return code.isEmpty ? nil : (isLang ? first : "", code)
+        }
+        let prose = part.replacingOccurrences(of: #"(?m)^#{1,6}\s+(.+)$"#, with: "**$1**", options: .regularExpression)
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        return prose.isEmpty ? nil : (nil, prose)
+    }
+}
+
+/// Bold, italics and `code` inside a sentence, keeping her line breaks.
+func inlineMarkdown(_ s: String) -> AttributedString {
+    (try? AttributedString(markdown: s, options: .init(interpretedSyntax: .inlineOnlyPreservingWhitespace))) ?? AttributedString(s)
+}
+
+/// One code block: monospaced, selectable, scrolls sideways instead of wrapping, with a Copy button that says Copied.
+private struct CodeBlock: View {
+    let code: String
+    let lang: String
+    @State private var copied = false
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            HStack {
+                Text(lang.isEmpty ? "code" : lang).font(.caption).foregroundStyle(.secondary)
+                Spacer()
+                Button {
+                    NSPasteboard.general.clearContents()
+                    NSPasteboard.general.setString(code, forType: .string)
+                    copied = true
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { copied = false }
+                } label: {
+                    Label(copied ? "Copied" : "Copy", systemImage: copied ? "checkmark" : "doc.on.doc").font(.caption)
+                }
+                .buttonStyle(.borderless).help("Copy this code")
+            }
+            .padding(.horizontal, 10).padding(.vertical, 6)
+            Divider()
+            ScrollView(.horizontal, showsIndicators: false) {
+                Text(code).font(.system(.callout, design: .monospaced)).textSelection(.enabled)
+                    .fixedSize(horizontal: true, vertical: false).padding(10)
             }
         }
+        .background(Color(nsColor: .textBackgroundColor))
+        .overlay(RoundedRectangle(cornerRadius: 10, style: .continuous).stroke(Color(nsColor: .separatorColor)))
+        .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
     }
 }
 
@@ -254,13 +335,14 @@ struct ChatView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            transcriptView
+            if samantha.transcript.isEmpty && !samantha.busy { emptyState } else { transcriptView }
             if let pending = samantha.pending {
                 ConfirmBar(pending: pending, reply: samantha.reply)
             }
             Divider()
             inputBar
-            Text(samantha.status).font(.caption2).foregroundStyle(.tertiary).padding(.bottom, 6)
+            // Only while something is worth saying: setup, or a stopped process. "Ready" says nothing, so it shows nothing.
+            if samantha.status != "Ready" { Text(samantha.status).font(.caption2).foregroundStyle(.tertiary).padding(.bottom, 6) }
         }
         .frame(minWidth: 420, minHeight: 480)
         .toolbar {
@@ -276,6 +358,17 @@ struct ChatView: View {
         .sheet(item: $samantha.customize) { kind in CustomizeSheet(kind: kind, samantha: samantha) }
         .animation(.spring(duration: 0.35), value: samantha.pending == nil)
         .onAppear { samantha.start() }
+    }
+
+    /// A fresh chat: her icon and a greeting for the time of day, the same first screen as the phone.
+    private var emptyState: some View {
+        let hour = Calendar.current.component(.hour, from: Date())
+        return VStack(spacing: 12) {
+            Image(nsImage: NSApp.applicationIconImage).resizable().interpolation(.high).frame(width: 72, height: 72)
+            Text(hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening").font(.title2.weight(.semibold))
+            Text("Ask me anything, or tell me to do something on this Mac.").foregroundStyle(.secondary)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     private var transcriptView: some View {

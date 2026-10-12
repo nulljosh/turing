@@ -28,6 +28,9 @@ cat > "$APP/Contents/Info.plist" <<PLIST
 <key>ChatPipePath</key><string>$(cd .. && pwd)/app/chat_pipe.py</string>
 </dict></plist>
 PLIST
-codesign --force --sign - "$APP" >/dev/null 2>&1 || true
+# Sign with the Mac's own developer certificate when there is one: an ad hoc signature changes on every build, so macOS
+# asks "access files in your Documents folder?" again after each rebuild. A stable identity means one Allow sticks.
+IDENTITY=$(security find-identity -v -p codesigning 2>/dev/null | grep -E '"(Developer ID Application|Apple Development)' | head -1 | sed -E 's/.*"(.*)"/\1/')
+codesign --force --sign "${IDENTITY:--}" "$APP" >/dev/null 2>&1 || codesign --force --sign - "$APP" >/dev/null 2>&1 || true
 "$APP/Contents/MacOS/SamanthaGUI" --check
 echo "built $APP"

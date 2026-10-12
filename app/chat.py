@@ -258,7 +258,7 @@ def answer_turn(question, history, topic_active, last_subject=None, on_text=None
         # it (code, explanations, jokes): same fallback as ask.py, and the answer names the model.
         import tools_llm
         llm = tools_llm.fallback(question)
-        answer = f"{llm[0]}\n(Answered by {llm[1]} on this Mac.)" if llm else OUT_OF_SCOPE
+        answer = tools_llm.labelled(llm) if llm else OUT_OF_SCOPE
     else:
         results = search(question)
         extracted = try_extract(question, results)
@@ -275,7 +275,7 @@ def answer_turn(question, history, topic_active, last_subject=None, on_text=None
             else:
                 import tools_llm
                 llm = tools_llm.fallback(question)
-                answer = f"{llm[0]}\n(Answered by {llm[1]} on this Mac.)" if llm else (NETWORK_DOWN if gk_source is UNREACHABLE else OUT_OF_SCOPE)
+                answer = tools_llm.labelled(llm) if llm else (NETWORK_DOWN if gk_source is UNREACHABLE else OUT_OF_SCOPE)
         else:
             context = "\n\n---\n\n".join(r["text"][:800] for r in results)
             prompt = build_prompt(history, context, question, memory_context(question))

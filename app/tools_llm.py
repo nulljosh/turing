@@ -26,7 +26,8 @@ NAMES = (r"claude|chatgpt|gpt(?:-?\d[\w.]*)?|gemini|(?:an? |the )?(?:llm|(?:bigg
          r"|qwen[\w.:-]*|llama[\w.:-]*|mistral[\w.:-]*|gemma[\w.:-]*|phi[\w.:-]*|deepseek[\w.:-]*")
 SYSTEM = ("You are answering one question for Samantha, a small assistant that runs on her user's Mac and asked you because "
           "the question needs more than she can do. Answer in plain language and briefly: a few sentences unless the question "
-          "truly needs more. No markdown headers. If you are not sure, say so instead of guessing.")
+          "truly needs more. No markdown headers. Any code goes in a ``` fence that names the language, with a sentence "
+          "before it and nothing but the code inside. If you are not sure, say so instead of guessing.")
 
 
 def _post(url, body):
@@ -77,7 +78,7 @@ def fallback(question):
             sys.stderr.write(f"local model {model}: HTTP {e.code}: {body}\n")  # the chat shows a short reason, the log the whole one
             if "memory" in body.lower():
                 why = (f"The big model on this Mac ({model}) is out of memory right now, so I cannot answer that. "
-                       "Close something heavy and ask again.", model)
+                       "Close something heavy and ask again.", None)  # no model answered, so no "Answered by" label
             continue
         except (urllib.error.URLError, OSError, KeyError, IndexError, ValueError, TimeoutError) as e:
             sys.stderr.write(f"local model {model}: {type(e).__name__}: {e}\n")
@@ -86,6 +87,13 @@ def fallback(question):
         if text:
             return text + (" (It hit its length limit, so this is cut short.)" if cut else ""), model
     return why
+
+
+def labelled(llm):
+    """The chat line for a fallback result: the answer with its "(Answered by X on this Mac.)" tag, or the bare
+    message when no model answered (out of memory), so an error is never signed by a model."""
+    text, model = llm
+    return f"{text}\n(Answered by {model} on this Mac.)" if model else text
 
 
 def installed():

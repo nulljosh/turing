@@ -53,7 +53,9 @@ struct Splash: View {
 
 /// Drops the keyboard before a drawer or a sheet covers it.
 func hideKeyboard() {
+    #if os(iOS)
     UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    #endif
 }
 
 struct TopBar: View {
@@ -111,9 +113,7 @@ struct Composer: View {
 
     var body: some View {
         HStack(alignment: .bottom, spacing: 8) {
-            Button {} label: { Image(systemName: "plus").font(.system(size: 18, weight: .medium)).foregroundStyle(Theme.ink) }
-                .frame(width: 36, height: 36)
-                .accessibilityLabel("Add")
+            // No plus button until it does something (attachments come with her eyes); a dead control is worse than none.
             TextField("Ask Samantha", text: $text, axis: .vertical)
                 .font(Theme.body)
                 .lineLimit(1...6)

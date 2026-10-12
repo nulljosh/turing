@@ -27,7 +27,11 @@ final class Store {
     var pendingConfirm: (name: String, args: [String], note: String?)? = nil
     var busy = false
     var error: String? = nil
+    #if DEBUG
     var useMock = ProcessInfo.processInfo.arguments.contains("--mock")
+    #else
+    var useMock = false  // the scripted stand-in never ships
+    #endif
 
     private var bridge: BridgeClient { useMock ? MockClient() : RealClient(pairing: pairing) }
     private var macPaired: Bool { useMock || pairing.isSet }
