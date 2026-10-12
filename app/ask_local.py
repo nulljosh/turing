@@ -53,6 +53,22 @@ def words_to_digits(text):
     return _NUMRUN.sub(run, text)
 
 
+_N = r"(-?\d+(?:\.\d+)?)"
+
+
+def _idiom(expr):
+    """The idioms with one right answer, said back the way web/samantha.js exact() says them, or None."""
+    if (m := re.fullmatch(rf"(?:the )?square root of {_N}", expr)) and float(m[1]) >= 0:
+        return f"The square root of {m[1]} is {_tidy(math.sqrt(float(m[1])))}."
+    if m := re.fullmatch(rf"{_N} (squared|cubed)", expr):
+        return f"{m[1]} {m[2]} is {_tidy(float(m[1]) ** (2 if m[2] == 'squared' else 3))}."
+    if m := re.fullmatch(rf"(half|a third|a quarter) of {_N}", expr):
+        return f"{m[1][0].upper() + m[1][1:]} of {m[2]} is {_tidy(float(m[2]) / {'half': 2, 'a third': 3, 'a quarter': 4}[m[1]])}."
+    if m := re.fullmatch(rf"{_N}\s*(?:%|percent) of {_N}", expr):
+        return f"{m[1]}% of {m[2]} is {_tidy(float(m[1]) / 100 * float(m[2]))}."
+    return None
+
+
 def arithmetic(query):
     """Answer plain arithmetic locally and exactly.
 
@@ -71,6 +87,9 @@ def arithmetic(query):
     expr = _QUESTION_PREFIX.sub("", query.strip().rstrip("?")).strip()
     expr = re.sub(r"^(?:what(?:'s|s|\s+is|\s+are)|how much is|calculate|compute)\s+", "", expr, flags=re.I).strip()  # "what's 17*23" fell through (dogfood, 5.10.2)
     expr = words_to_digits(expr)  # "ten plus ten" reads like "10 plus 10"
+    said = _idiom(expr.lower())  # "15% of 240" answers in a sentence, the site's exact() word for word
+    if said:
+        return said
     for pattern, symbol in _ARITH_WORDS:
         expr = re.sub(pattern, symbol, expr, flags=re.I)
     for pattern, replacement in _ARITH_PHRASES:  # square root of, X squared, X% of Y: unambiguous, safe to widen for
