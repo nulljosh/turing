@@ -1,6 +1,6 @@
 # Samantha brand kit
 
-One page for the look. The source of truth stays where it lives (tokens in `web/index.html`, rules in `CLAUDE.md`); this points at all of it.
+One page for the look. The visual version is `web/brand.html`, live at /brand.html on the site. The source of truth stays where it lives (tokens in `web/index.html`, rules in `CLAUDE.md`); this points at all of it.
 
 ## Logos
 | Use | File |

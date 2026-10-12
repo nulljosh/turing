@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="mascot.svg">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="color-scheme" content="light dark">
+<title>Samantha Brand Kit</title>
+<style>
+@font-face{font-family:"Samantha Sans";font-weight:400;font-display:swap;src:url(fonts/SamanthaSans-Regular.woff2) format("woff2")}
+@font-face{font-family:"Samantha Sans";font-weight:500;font-display:swap;src:url(fonts/SamanthaSans-Medium.woff2) format("woff2")}
+@font-face{font-family:"Samantha Sans";font-weight:600;font-display:swap;src:url(fonts/SamanthaSans-Semibold.woff2) format("woff2")}
+/* one column, true black or white, the landing page's own tokens; the only color is hers, in the mascot */
+:root{--bg:#ffffff;--fg:#151515;--muted:#666666;--line:#e4e4e4;--card:#fafafa;--r-sm:6px;--r-md:10px;--r-pill:999px;--s-1:8px;--s-2:16px;--s-3:24px;--s-4:40px;--s-5:64px;
+--sans:"Samantha Sans",-apple-system,"Helvetica Neue",Helvetica,Arial,sans-serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#000000;--fg:#f2f2f2;--muted:#9a9a9a;--line:#2a2a2a;--card:#0d0d0d;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#000000;--fg:#f2f2f2;--muted:#9a9a9a;--line:#2a2a2a;--card:#0d0d0d;color-scheme:dark}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:17px;line-height:1.5;padding-inline:var(--s-2);padding-block:var(--s-5)}
+main{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:var(--s-5)}
+h1{font-size:clamp(40px,9vw,72px);font-weight:600;line-height:1.02;margin:0;text-wrap:balance;letter-spacing:-.01em}
+h2{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin:0 0 var(--s-2)}
+p{margin:0;max-width:62ch} .muted{color:var(--muted)}
+section{border-top:1px solid var(--line);padding-top:var(--s-3)}
+.head{display:flex;gap:var(--s-3);align-items:center;flex-wrap:wrap}
+.head img{width:112px;height:112px;border-radius:50%}
+.logos{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:var(--s-2)}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:var(--r-md);padding:var(--s-3);display:flex;flex-direction:column;gap:var(--s-1);align-items:flex-start;min-width:0}
+.tile img{width:96px;height:96px} .tile b{font-weight:600} .tile span{font-size:14px;color:var(--muted)}
+.sw{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:var(--s-2)}
+.sw div{border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden;font-size:14px;min-width:0}
+.sw i{display:block;height:64px} .sw p{padding:var(--s-1) 12px;line-height:1.35}
+.sw code{font-family:inherit;font-variant-numeric:tabular-nums;font-size:13px;color:var(--muted)}
+.a{font-size:clamp(56px,14vw,112px);font-weight:600;line-height:1;letter-spacing:-.01em;overflow-wrap:anywhere}
+.w{display:flex;flex-direction:column;gap:6px;font-size:28px}
+.w span:nth-child(1){font-weight:400} .w span:nth-child(2){font-weight:500} .w span:nth-child(3){font-weight:600}
+.num{font-size:32px;font-variant-numeric:tabular-nums;line-height:1.3}
+.shape{display:flex;gap:var(--s-2);align-items:center;flex-wrap:wrap}
+.pill{border:1px solid var(--line);padding:9px 18px;border-radius:var(--r-pill)} .box{border:1px solid var(--line);padding:9px 18px;border-radius:var(--r-md)} .sm{border:1px solid var(--line);padding:9px 18px;border-radius:var(--r-sm)}
+.send{background:var(--fg);color:var(--bg);border-radius:var(--r-pill);padding:9px 22px;font-weight:500}
+ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px} .no li{color:var(--muted)}
+</style>
+</head>
+<body>
+<main id="main">
+<div class="head"><img alt="Samantha's mascot" src="mascot.svg"><div><h1>Samantha</h1><p class="muted">Brand kit. Black, white, one typeface, her face.</p></div></div>
+
+<section><h2>Logos</h2><div class="logos">
+<div class="tile"><img alt="Mascot" src="mascot.svg"><b>Mascot</b><span>Her portrait as a flat icon. Copper hair, round glasses, freckles. Nav, hero, and the face on the Mac and iPhone app icon.</span></div>
+</div><p class="muted" style="margin-top:var(--s-2)">App icons are drawn in the icon composer, mascot face over her hair and shoulders. The engraved SAMANTHA / TURING medallion stays in the repo as history. No text inside any icon.</p></section>
+
+<section><h2>Color</h2><div class="sw">
+<div><i style="background:#000"></i><p><b>Black</b><br><code>#000000</code> bg, dark</p></div>
+<div><i style="background:#f2f2f2"></i><p><b>Ink</b><br><code>#f2f2f2</code> text, dark</p></div>
+<div><i style="background:#fff"></i><p><b>White</b><br><code>#ffffff</code> bg, light</p></div>
+<div><i style="background:#151515"></i><p><b>Ink</b><br><code>#151515</code> text, light</p></div>
+<div><i style="background:#b8b8b8"></i><p><b>Ember</b><br><code>#b8b8b8</code> dark accent</p></div>
+<div><i style="background:#9a9a9a"></i><p><b>Muted</b><br><code>#9a9a9a</code> / <code>#666666</code></p></div>
+</div><p class="muted" style="margin-top:var(--s-2)">Color belongs to her, in the mascot. The interface stays neutral. No gradients, no second accent.</p></section>
+
+<section><h2>Typeface</h2><p class="a">Samantha Sans</p>
+<div class="w" style="margin-top:var(--s-2)"><span>Regular 400, quiet and clear</span><span>Medium 500, a little firmer</span><span>Semibold 600, for headings</span></div>
+<p class="num" style="margin-top:var(--s-2)">0123456789<br>9876543210</p>
+<p class="muted">Figures share one width, so columns never jitter. I, l, 1, O and 0 all look different, so a password she prints reads clearly. Sans-serif only in the interface. Code blocks keep their own monospace.</p></section>
+
+<section><h2>Shape and space</h2><div class="shape"><span class="send">Send</span><span class="pill">Pill 999</span><span class="box">Card 10</span><span class="sm">Small 6</span></div>
+<p class="muted" style="margin-top:var(--s-2)">Spacing steps: 8, 16, 24, 40, 64. Buttons and inputs are pills. Send is solid text color on the page color.</p></section>
+
+<section><h2>Voice</h2><ul><li>Short, plain, direct.</li><li>Say what she did, not how she is built.</li><li>Lead with on-device and tools.</li><li>No em dashes, no emojis.</li></ul></section>
+
+<section><h2>Never</h2><ul class="no"><li>Yellow, orange, teal or purple in the interface</li><li>Gradients, glows, or a second accent</li><li>Monospace in the interface</li><li>Text inside an icon</li></ul></section>
+</main>
+</body>
+</html>
