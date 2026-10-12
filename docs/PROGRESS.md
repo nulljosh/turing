@@ -1,5 +1,11 @@
 # Progress log
 
+- 2026-10-11: v6.0.0 🎉 Samantha is an app on Joshua Tree, on a real Raspberry Pi 4. Ask her at `Samantha $` and the answer comes from your Mac over your own network; "write hello world in c and save it as hello.c" writes JT/HELLO.C to the Pi's SD card and she says Saved. She only saves under a name you typed, and the landing footer logo is her mascot now. Shown on the board by Joshua tonight.
+  v6.0.0 · 143 tools · 796 tests · docs coverage 100% · laws all hold · biggest eval/gen_heldout2.py 647 · actions 263/263 · parity 263/263 · util_diff 288/288
+
+- 2026-10-11: v5.14.0 Samantha has her own typeface. Samantha Sans, proportional, drawn from one stem width and one rounded shape, in three weights, with figures that line up in columns. It is on the site and in the Mac and iPhone apps, built by scripts/gen_font.py.
+  v5.14.0 · 143 tools · 794 tests · docs coverage 100% · laws all hold · biggest eval/gen_heldout2.py 647 · actions 263/263 · parity 263/263 · util_diff 288/288
+
 - 2026-10-11: v5.13.1 First launch looks like a first launch. While the Mac app sets itself up it shows a small spinner and "Setting up Samantha, about two minutes..." under her greeting, in the middle, instead of a grey line at the bottom and a bracketed chat row.
   v5.13.1 · 143 tools · 794 tests · docs coverage 100% · laws all hold · biggest eval/gen_heldout2.py 647 · actions 263/263 · parity 263/263 · util_diff 288/288
 - 2026-10-11: v5.13.0 She comes to you: the morning brief. Say "good morning" or "morning brief" and she gives the day and date, then what needs you (unread mail, today's calendar, due reminders). The Mac app asks for it by itself the first time it opens each morning, her own line under the greeting, once a day. The first 7.0 slice; the brief lands before you type.
