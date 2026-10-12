@@ -1,6 +1,6 @@
 # Samantha on a Raspberry Pi (the desk robot)
 
-Status: planned, untested. The Pi is not here yet; nothing below has run on one.
+Status: the Pi is here and runs Joshua Tree, and Samantha is an app on it (Joshua Tree 2.47.0 asks this repo's serve.py through its TLS relay). That is the 6.0 path. Everything below is the older plan for plain Linux on a Pi, optional and untested.
 
 ## The idea
 
