@@ -258,6 +258,15 @@ def needs_attention():
     return reply.rsplit("\n(Answered by", 1)[0]
 
 
+def morning_brief():
+    """"Morning brief", "good morning": the day and date, then what needs you (needs_attention's three lines). The
+    Mac app asks for this itself the first time it opens each morning, so the brief is there before you type (7.0:
+    she comes to you)."""
+    from datetime import date
+    today = date.today()
+    return f"{today:%A, %B} {today.day}. {needs_attention()}"
+
+
 # ---------- am I free: the calendar's open gaps for a day or the week, not just today's list ----------
 
 _RANGE = '''on run argv

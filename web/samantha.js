@@ -70,6 +70,7 @@
     [/^(?:is there |do i have )?anything from (.+?) in my (?:mail|email|inbox)(?: today)?\??$|^(?:mail|email) from (.+?)(?: today)?\??$/i,
      function (m) { return ["unread_mail", m[1] || m[2]]; }],
     [/^what needs (?:my attention|me)$/i, function () { return ["needs_attention", ""]; }],
+    [/^(?:good morning|(?:my )?morning brief)$/i, function () { return ["morning_brief", ""]; }],
     [/^(?:am i free|when am i free|how free am i|do i have (?:any )?time)(?:\s+(.+))?$/i, function (m) { return ["free_when", m[1] || ""]; }],
     [/^(?:make|design|draw|create|build)(?: me)? (?:a |an )?((?:(?:complex|intricate|detailed|elaborate|ornate|fancy|crazy|insane|original|wordless|abstract|textless) )*)(?:logo|icon)(?: for| of)? (.+)$/i, function (m) { return ["make_logo", (m[1] || "") + m[2]]; }],
     [/^(?:(?:show me |tell me )?what(?:'s| is) (?:on|in) (?:my |the )?clipboard|(?:read|show)(?: me)? (?:my |the )?clipboard)\b/i, function () { return ["clipboard", ""]; }],

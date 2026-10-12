@@ -268,7 +268,7 @@ def say(text):
     return f"Saying: {text[:80]}"
 
 
-from tools_apps import music, weather, timer, duration, new_note, new_reminder, calendar_today, unread_mail, needs_attention, free_when, _MUSIC  # noqa: E402,F401
+from tools_apps import music, weather, timer, duration, new_note, new_reminder, calendar_today, unread_mail, needs_attention, morning_brief, free_when, _MUSIC  # noqa: E402,F401
 
 
 HOME = os.path.realpath(os.path.expanduser("~"))
@@ -308,7 +308,7 @@ from tools_logo import _logo_layers, _complex_layers, _bloom_layers, _LOGO_SCHEM
 
 TOOLS = {f.__name__: f for f in (open_app, open_url, web_search, current_tab, read_page, summarize, translate, screenshot,
                                      clipboard, set_volume, battery, say, list_dir, read_file, make_logo, paint_image,
-                                     music, weather, timer, new_note, new_reminder, calendar_today, unread_mail, needs_attention, free_when,
+                                     music, weather, timer, new_note, new_reminder, calendar_today, unread_mail, needs_attention, morning_brief, free_when,
                                      remove_background, upscale_image, enhance_image, grayscale_image, rotate_image, flip_image, resize_image, crop_square, convert_image, image_info,
                                      find_file, recent_downloads, folder_size, move_file, copy_file, rename_file, zip_file, unzip_file, trash_file)}
 TOOLS.update({f.__name__: f for f in tools_util.TOOLS})

@@ -60,6 +60,15 @@ func saveChat(_ lines: [String], to file: URL) {
 }
 
 /// The lines saved at `file`, or none.
+func dayKey(_ date: Date) -> String {
+    let d = Calendar.current.dateComponents([.year, .month, .day], from: date)
+    return "\(d.year!)-\(d.month!)-\(d.day!)"
+}
+/// A brief is due before noon on a day that has not had one.
+func briefDue(now: Date, lastDay: String?) -> Bool {
+    Calendar.current.component(.hour, from: now) < 12 && lastDay != dayKey(now)
+}
+
 func loadChat(from file: URL) -> [String] {
     guard let data = try? Data(contentsOf: file), let lines = try? JSONDecoder().decode([String].self, from: data) else { return [] }
     return lines
@@ -153,6 +162,16 @@ final class Samantha: ObservableObject {
         transcript.append("You: \(text)")
         busy = true
         stdin.write(askLine(text).data(using: .utf8)!)
+    }
+
+    /// 7.0, she comes to you: the first time she opens each morning she asks herself for the morning brief (the
+    /// date, then what needs you), so it is on screen before you type. Her own line, no "You:" above it. Once a
+    /// day, mornings only; the day is kept in UserDefaults so a relaunch does not repeat it.
+    func morningBrief(now: Date = Date()) {
+        guard briefDue(now: now, lastDay: UserDefaults.standard.string(forKey: "briefDay")), !busy, let stdin else { return }
+        UserDefaults.standard.set(dayKey(now), forKey: "briefDay")
+        busy = true
+        stdin.write(askLine("morning brief").data(using: .utf8)!)
     }
 
     /// File > New Chat: the current chat is kept as chats/<time>.json, then the window starts empty.
@@ -335,7 +354,7 @@ struct ChatView: View {
         }
         .sheet(item: $samantha.customize) { kind in CustomizeSheet(kind: kind, samantha: samantha) }
         .animation(.spring(duration: 0.35), value: samantha.pending == nil)
-        .onAppear { samantha.start() }
+        .onAppear { samantha.start(); samantha.morningBrief() }
     }
 
     /// A fresh chat: her icon and a greeting for the time of day, the same first screen as the phone.
@@ -451,6 +470,8 @@ func runSelfCheck() -> Never {
     saveChat(["You: hi", "Samantha: hello"], to: tmp)
     precondition(loadChat(from: tmp) == ["You: hi", "Samantha: hello"])
     precondition(loadChat(from: tmp.deletingLastPathComponent().appendingPathComponent("none.json")).isEmpty)
+    let nine = Calendar.current.date(bySettingHour: 9, minute: 0, second: 0, of: Date())!, three = Calendar.current.date(bySettingHour: 15, minute: 0, second: 0, of: Date())!
+    precondition(briefDue(now: nine, lastDay: nil) && briefDue(now: nine, lastDay: "2020-1-1") && !briefDue(now: nine, lastDay: dayKey(nine)) && !briefDue(now: three, lastDay: nil))
     print("SamanthaGUI ok")
     exit(0)
 }

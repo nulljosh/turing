@@ -60,6 +60,17 @@ class NeedsAttention(unittest.TestCase):
         self.assertEqual(tools.plan("what needs my attention"), [("needs_attention", ())])
         self.assertEqual(tools.plan("what needs me"), [("needs_attention", ())])
 
+    def test_morning_brief(self):
+        """"Good morning" and "morning brief" route to morning_brief: today's day and date, then needs_attention."""
+        self.assertEqual(tools.plan("good morning"), [("morning_brief", ())])
+        self.assertEqual(tools.plan("morning brief"), [("morning_brief", ())])
+        from datetime import date
+        with mock.patch.object(tools_apps, "needs_attention", return_value="Nothing needs your attention."):
+            brief = tools_apps.morning_brief()
+        today = date.today()
+        self.assertEqual(brief, f"{today:%A, %B} {today.day}. Nothing needs your attention.")
+        self.assertNotIn("morning_brief", tools.WRITES)
+
     def test_read_only(self):
         """No write, no confirm: it is never in WRITES or NOT_FOR_MODELS."""
         self.assertNotIn("needs_attention", tools.WRITES)

@@ -31,7 +31,7 @@ READ_ONLY = {"define_word", "research", "research_more", "teach_me", "explain_co
              "base64_encode", "base64_decode", "word_count", "reverse_text", "shout", "morse_code", "json_pretty", "is_prime", "roman_numeral",
              "tip", "read_document", "find_in_document", "ask_document", "list_mcp_tools", "list_tabs", "switch_tab", "read_tab", "disk_space", "uptime", "memory_usage", "cpu_load", "ip_address", "wifi_name", "system_info", "list_shortcuts",
              "reveal_in_finder", "transcribe_video", "unread_mail", "summarize", "translate", "find_file", "recent_downloads", "folder_size",
-             "needs_attention", "free_when", "list_reminders", "calendar_tomorrow", "search_notes",
+             "needs_attention", "morning_brief", "free_when", "list_reminders", "calendar_tomorrow", "search_notes",
              "dark_mode", "running_apps", "bluetooth_status",
              "git_status", "recent_commits", "open_prs", "jt_status", "jt_log", "jt_screenshot", "open_in_editor", "list_voices"}
 # Tools whose side effect nobody sees coming. They never reach a model or MCP, whatever tools.NOT_FOR_MODELS says today.

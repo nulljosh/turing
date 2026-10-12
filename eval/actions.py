@@ -202,6 +202,8 @@ CASES = [
     ("email from amazon", "unread_mail", "amazon"),
     ("what needs my attention", "needs_attention", None),
     ("what needs me", "needs_attention", None),
+    ("good morning", "morning_brief", None),
+    ("morning brief", "morning_brief", None),
     ("am i free", "free_when", None),
     ("am i free thursday afternoon", "free_when", "thursday afternoon"),
     ("when am i free this week", "free_when", "this week"),

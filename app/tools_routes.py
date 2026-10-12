@@ -57,6 +57,7 @@ def install(t):
         (re.compile(r"^(?:is there |do i have )?anything from (.+?) in my (?:mail|email|inbox)(?: today)?\??$|^(?:mail|email) from (.+?)(?: today)?\??$", re.I),
          lambda m: t.unread_mail(m.group(1) or m.group(2))),
         (re.compile(r"^what needs (?:my attention|me)$", re.I), lambda m: t.needs_attention()),
+        (re.compile(r"^(?:good morning|(?:my )?morning brief)$", re.I), lambda m: t.morning_brief()),
         (re.compile(r"^(?:am i free|when am i free|how free am i|do i have (?:any )?time)(?:\s+(.+))?$", re.I), lambda m: t.free_when(m.group(1) or "")),
         (re.compile(r"^(?:make|design|draw|create|build)(?: me)? (?:a |an )?((?:(?:complex|intricate|detailed|elaborate|ornate|fancy|crazy|insane|original|wordless|abstract|textless) )*)(?:logo|icon)(?: for| of)? (.+)$", re.I), lambda m: t.make_logo((m.group(1) or "") + m.group(2))),
         (re.compile(r"^(?:paint|repaint)(?: me)? (?:a picture of |a painting of |the (?:image|photo|picture) (?:at )?)?(\S+\.(?:jpe?g|png|heic|webp|tiff?)(?:\s+(?:as|in|like)\s+(?:a |an )?[a-z -]+?)?)$", re.I), lambda m: t.paint_image(m.group(1))),
