@@ -5,7 +5,7 @@ One page for the look. The source of truth stays where it lives (tokens in `web/
 ## Logos
 | Use | File |
 |-----|------|
-| The mark: crab-shaped robot girl, flat two-tone terracotta, never a grin, hands or hair | `web/mascot.svg`, `art/mark.svg` |
+| The mascot: her portrait as a flat icon (copper hair, round glasses, freckles), friendly, never smug | `web/mascot.svg` |
 | App icon: her flower, rebuilt byte for byte by `tools_logo.icon_svg()`, mark 70 to 80 percent of the tile | `web/icon.svg`, `web/samantha-logo.png` |
 | Medallion: engraved SAMANTHA / TURING, kept for the record, the footer uses the mascot from 6.0 | `web/badge.svg`, `art/badge-source.svg` |
 
@@ -20,7 +20,7 @@ Every app icon goes through the icon composer skill. Never put text in an icon.
 | `--line` | #2a2a2a | #e4e4e4 |
 | `--ember` (decor) | #b8b8b8 | #151515 |
 
-Terracotta #b5502c appears only on the iOS Send and Yes buttons and in the mascot. Banned: yellow, orange, teal, purple, gradients, a second accent. Send is neutral on the web: solid text color on the page color.
+Color belongs to the mascot. Terracotta #b5502c appears only on the iOS Send and Yes buttons. Banned: yellow, orange, teal, purple, gradients, a second accent. Send is neutral on the web: solid text color on the page color.
 
 ## Type
 Samantha Sans, proportional, three weights (Regular 400, Medium 500, Semibold 600), built by `scripts/gen_font.py` into `web/fonts`. Sans-serif only in the UI, no monospace UI; code blocks stay monospace. Figures are tabular. The apps register it through `gui/Typeface.swift` and fall back to the system font.
