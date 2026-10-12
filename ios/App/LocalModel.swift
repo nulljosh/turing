@@ -56,10 +56,11 @@ final class LocalModel {
     }
 
     /// The instruct model's answer, streamed as it is written.
-    func answer(_ text: String) -> AsyncThrowingStream<String, Error> {
+    func answer(_ text: String, memory: [String] = []) -> AsyncThrowingStream<String, Error> {
         guard let chat else {
             return AsyncThrowingStream { $0.finish(throwing: BridgeError.noModel) }
         }
-        return ChatSession(chat, instructions: Self.chatSystem).streamResponse(to: text)
+        let known = memory.isEmpty ? "" : " The person told you these things, use them only if they help: " + memory.joined(separator: " ")
+        return ChatSession(chat, instructions: Self.chatSystem + known).streamResponse(to: text)
     }
 }

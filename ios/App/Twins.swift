@@ -12,6 +12,11 @@ final class Twins {
 
     private init() {
         ctx.exceptionHandler = { _, e in NSLog("samantha.js: \(e?.toString() ?? "?")") }
+        // JavaScriptCore has no localStorage, so "remember that my dog is Biscuit" would say Remembered and keep nothing.
+        // Her memory file on the phone is this one key, in the phone's own storage and nowhere else.
+        let store: @convention(block) (String) -> Any = { UserDefaults.standard.string(forKey: "memory." + $0) ?? NSNull() }
+        let put: @convention(block) (String, String) -> Void = { UserDefaults.standard.set($1, forKey: "memory." + $0) }
+        ctx.setObject(["getItem": store, "setItem": put], forKeyedSubscript: "localStorage" as NSString)
         if let url = Bundle.main.url(forResource: "samantha", withExtension: "js"), let src = try? String(contentsOf: url, encoding: .utf8) {
             ctx.evaluateScript(src)
         }
@@ -38,6 +43,11 @@ final class Twins {
         guard let a = samantha?.invokeMethod("exact", withArguments: [text]), !a.isNull, !a.isUndefined else { return nil }
         let s = a.toString() ?? ""
         return s.isEmpty || s == "undefined" ? nil : s
+    }
+
+    /// The remembered facts that bear on a question, up to three, to hand the on-phone model (the Mac does the same in chat.py).
+    func memoryContext(_ question: String) -> [String] {
+        (samantha?.invokeMethod("memoryContext", withArguments: [question])?.toArray() as? [String]) ?? []
     }
 
     /// True when the JavaScript twin of this tool exists and runs without a Mac.

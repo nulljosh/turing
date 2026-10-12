@@ -113,7 +113,7 @@ final class Store {
             var text = ""
             let message = Message(role: .assistant, text: "")
             current.messages.append(message)
-            for try await piece in model.answer(line) {
+            for try await piece in model.answer(line, memory: Twins.shared.memoryContext(line)) {
                 text += piece
                 if let i = current.messages.firstIndex(where: { $0.id == message.id }) { current.messages[i].text = text }
             }

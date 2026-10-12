@@ -1,5 +1,5 @@
 {
-  "version": "6.1.0",
+  "version": "6.1.1",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -456,8 +456,8 @@
         "documented": 12
       },
       "tests/test_memory.py": {
-        "total": 14,
-        "documented": 14
+        "total": 15,
+        "documented": 15
       },
       "tests/test_needs_me.py": {
         "total": 17,

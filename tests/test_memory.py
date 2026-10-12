@@ -102,5 +102,26 @@ class MemoryTests(unittest.TestCase):
         self.assertEqual(u.memory_context("my dog biscuit"), [])
 
 
+    def test_the_phone_twin_reads_facts_back_like_the_mac(self):
+        """web/samantha.js's memoryContext (what the iPhone hands its on-phone model) picks the same fact the Mac's memory_context
+        does for the same question, and nothing for an unrelated one. Needs node; skipped without it."""
+        import shutil
+        import subprocess
+        if not shutil.which("node"):
+            self.skipTest("no node")
+        js = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "web", "samantha.js")
+        script = ("const s={};globalThis.localStorage={getItem:k=>s[k]??null,setItem:(k,v)=>{s[k]=v;}};require(process.argv[1]);"
+                  "const S=globalThis.Samantha;S.util.remember('my dog is called Biscuit');S.util.remember('the wifi password is hunter2');"
+                  "console.log(JSON.stringify([S.memoryContext('what is my dog called'),S.memoryContext('what is the weather')]));")
+        got = subprocess.run(["node", "-e", script, js], capture_output=True, text=True, check=True).stdout.strip()
+        self.assertEqual(got, '[["my dog is called Biscuit"],[]]')
+        u.remember("my dog is called Biscuit")
+        os.environ.pop("SAMANTHA_HEADLESS")
+        try:
+            self.assertEqual(u.memory_context("what is my dog called"), ["my dog is called Biscuit"])
+        finally:
+            os.environ["SAMANTHA_HEADLESS"] = "1"
+
+
 if __name__ == "__main__":
     unittest.main()

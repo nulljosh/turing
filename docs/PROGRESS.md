@@ -1,5 +1,8 @@
 # Progress log
 
+- 2026-10-12: v6.1.1 The iPhone remembers for real. On the phone, "remember that my dog is called Biscuit" said Remembered and kept nothing, because the phone has no browser storage. It now keeps the fact in the phone's own storage, and her on-phone model reads the facts that fit your question back into its answer, the way the Mac does.
+  v6.1.1 · 144 tools · 802 tests · docs coverage 100% · laws all hold · biggest eval/gen_heldout2.py 647 · actions 264/264 · parity 264/264 · util_diff 288/288
+
 - 2026-10-12: v6.1.0 She writes Shortcuts. "Make a shortcut that says good morning" lists the steps, asks first, then builds a real Shortcut from four simple actions (say, notify, open a link, volume), signs it, saves it to Downloads and opens it, so the Shortcuts app asks you to add it. She never runs it or schedules it, and no model can pick the tool. Part of 7.0, the part that sits well with your rule of nothing running behind your back.
   v6.1.0 · 144 tools · 801 tests · docs coverage 100% · laws all hold · biggest eval/gen_heldout2.py 647 · actions 264/264 · parity 264/264 · util_diff 288/288
 

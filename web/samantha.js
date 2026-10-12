@@ -745,6 +745,14 @@
     saveFacts(all.filter(function (f) { return hit.indexOf(f) < 0; }));
     return "Forgot " + hit.length + " thing" + (hit.length === 1 ? "" : "s") + ".";
   };
+  // the facts that bear on a question, to read back into a model's answer (util_words.memory_context): up to three that share a
+  // real word with it. The iPhone app asks for this before its on-phone model answers; the public page never calls it.
+  var COMMON = {}; "the and you are was what who when where why how does did can could would should with for this that have has had not but his her its your our from about tell please".split(" ").forEach(function (w) { COMMON[w] = 1; });
+  function memoryContext(question) {
+    var want = words(question); Object.keys(COMMON).forEach(function (w) { delete want[w]; });
+    return facts().map(function (f, i) { var fw = words(f); Object.keys(COMMON).forEach(function (w) { delete fw[w]; }); return [overlap(want, fw), i, f]; })
+      .filter(function (t) { return t[0]; }).sort(function (a, b) { return b[0] - a[0] || b[1] - a[1]; }).slice(0, 3).map(function (t) { return t[2]; });
+  }
   // the ten that read or touch a real Mac. The stand-in Mac on this page has no disk, network or clipboard to show.
   var REAL_MAC = "That one reads your real Mac, and this stand-in has no disk, memory or network. Run her on a Mac and it answers.";
   ["disk_space", "uptime", "memory_usage", "cpu_load", "ip_address", "wifi_name", "system_info", "copy_to_clipboard", "sleep_display", "reveal_in_finder", "list_shortcuts", "run_shortcut", "list_mcp_tools", "call_mcp_tool", "list_tabs", "switch_tab", "close_tab", "read_tab", "read_screen", "read_document", "find_in_document", "ask_document", "ask_screen", "transcribe_video", "unread_mail", "find_file", "recent_downloads", "folder_size", "move_file", "copy_file", "rename_file", "zip_file", "unzip_file", "trash_file"]
@@ -993,6 +1001,6 @@
   ].concat(ROUTES);
 
   root.Samantha = { route: route, chain: chain, exact: exact, bare: bare, urlOf: urlOf, appMatch: appMatch, APPS: APPS, SITES: SITES,
-                    stem: stem, keywords: keywords, isProject: isProject,
+                    stem: stem, keywords: keywords, isProject: isProject, memoryContext: memoryContext,
                     pageRoute: pageRoute, section: section, sound: sound, duration: duration, COLORS: COLORS, util: U };
 })(typeof globalThis !== "undefined" ? globalThis : this);
