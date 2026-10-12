@@ -51,6 +51,8 @@ _SAVE_AS = re.compile(r"\s*,?\s*(?:and\s+)?(?:save|put|store|write)\s+(?:it\s+|t
 # "make a file called todo.txt that says buy milk": the words themselves, no model needed
 _MAKE_FILE = re.compile(r"^(?:please\s+)?(?:create|make|write)\s+(?:a\s+)?(?:new\s+)?(?:text\s+)?file\s+(?:called\s+|named\s+)?"
                         r"([A-Za-z0-9_-]{1,8}\.[A-Za-z0-9]{1,3})\s+(?:that\s+says|saying|with|containing)\s+(.+)$", re.I | re.S)
+_LIST_FILES = re.compile(r"^(?:ls|list(?: the)? files|(?:what|which) files (?:are |do i have )?(?:on|in) (?:the pi|my card|the card|jt|joshua tree)\??|what(?:'s| is) on (?:the pi|my card))$", re.I)
+_READ_FILE = re.compile(r"^(?:read|show|cat|open|what(?:'s| is) in)\s+(?:me\s+)?(?:the file\s+)?([A-Za-z0-9_-]{1,8}\.[A-Za-z0-9]{1,3})\??$", re.I)
 PI_RESULTS = "The Pi ran your actions."  # Joshua Tree's agent loop sends what the actions printed as the next turn
 
 
@@ -60,7 +62,14 @@ def pi_answer(question):
     (the Pi only saves a name the person typed). The Pi's report back after its actions ends the loop. None: not a
     Pi request, answer as usual."""
     if question.startswith(PI_RESULTS):
+        body = question[len(PI_RESULTS):].replace("Results:", "", 1).strip()
+        if re.match(r"^(?:list|read \S+): ", body):   # what the Pi listed or read is the answer; hand it back as it came
+            return re.sub(r"^(?:list|read \S+): ", "", body, count=1).strip()[:1100] or "Done."
         return "Saved." if "save" in question and "saved" in question else "Done."
+    if _LIST_FILES.match(question.strip()):
+        return "Looking at the card.\n[[list]]"
+    if (rd := _READ_FILE.match(question.strip())):
+        return f"Reading {rd[1].upper()}.\n[[read {rd[1].upper()}]]"
     made = _MAKE_FILE.match(question)
     if made:
         return f"Here is {made[1]}.\n```\n{made[2].strip()}\n```\n[[save {made[1].upper()}]]"

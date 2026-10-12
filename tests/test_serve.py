@@ -122,6 +122,15 @@ class PiAnswerTest(unittest.TestCase):
         self.assertEqual(serve.pi_answer("make a file called todo.txt that says buy milk"),
                          "Here is todo.txt.\n```\nbuy milk\n```\n[[save TODO.TXT]]")
 
+    def test_list_and_read(self):
+        """"What files are on the Pi" lists, "read hello.c" reads, and what the Pi prints comes back as the answer."""
+        self.assertEqual(serve.pi_answer("what files are on the pi"), "Looking at the card.\n[[list]]")
+        self.assertEqual(serve.pi_answer("ls"), "Looking at the card.\n[[list]]")
+        self.assertEqual(serve.pi_answer("read hello.c"), "Reading HELLO.C.\n[[read HELLO.C]]")
+        self.assertIsNone(serve.pi_answer("read a book"))
+        self.assertEqual(serve.pi_answer("The Pi ran your actions. Results:\nlist: HELLO.C 62\nTODO.TXT 9\n"), "HELLO.C 62\nTODO.TXT 9")
+        self.assertEqual(serve.pi_answer("The Pi ran your actions. Results:\nread HELLO.C: int main(void) {}\n"), "int main(void) {}")
+
     def test_pi_results_end_the_loop(self):
         """What the Pi's actions printed comes back as a turn; she answers it in one word, with no new action."""
         self.assertEqual(serve.pi_answer("The Pi ran your actions. Results:\nsave HELLO.C: saved\n"), "Saved.")
