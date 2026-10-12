@@ -1,5 +1,8 @@
 # Progress log
 
+- 2026-10-12: v6.1.0 She writes Shortcuts. "Make a shortcut that says good morning" lists the steps, asks first, then builds a real Shortcut from four simple actions (say, notify, open a link, volume), signs it, saves it to Downloads and opens it, so the Shortcuts app asks you to add it. She never runs it or schedules it, and no model can pick the tool. Part of 7.0, the part that sits well with your rule of nothing running behind your back.
+  v6.1.0 · 144 tools · 801 tests · docs coverage 100% · laws all hold · biggest eval/gen_heldout2.py 647 · actions 264/264 · parity 264/264 · util_diff 288/288
+
 - 2026-10-11: v6.0.0 🎉 Samantha is an app on Joshua Tree, on a real Raspberry Pi 4. Ask her at `Samantha $` and the answer comes from your Mac over your own network; "write hello world in c and save it as hello.c" writes JT/HELLO.C to the Pi's SD card and she says Saved. She only saves under a name you typed, and the landing footer logo is her mascot now. Shown on the board by Joshua tonight.
   v6.0.0 · 143 tools · 796 tests · docs coverage 100% · laws all hold · biggest eval/gen_heldout2.py 647 · actions 263/263 · parity 263/263 · util_diff 288/288
 

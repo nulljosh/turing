@@ -1,6 +1,6 @@
 # Turing Technical Whitepaper
 
-**v6.0.0** | October 2026
+**v6.1.0** | October 2026
 
 Turing builds small language models on one Mac. Its first model, Samantha, is a 0.5B chat model trained on your own writing, with a 1.5B head that picks her tools. Both are public on [Hugging Face](https://huggingface.co/trommatic/samantha-hands-1.5b-mlx). She will never out-think a frontier model. She does not try to. She runs on your Mac, costs nothing per question, keeps everything on the machine, and gets real work done with 131 exact tools. When a question is too hard for her, she borrows a bigger brain that also lives on the Mac. You can type to her or talk to her. She can see your screen, click in your apps, and research a topic with sources. She asks before anything that changes something.
 
@@ -32,6 +32,7 @@ Then a teacher. Claude writes practice questions and answers from real passages 
 - **Remembers.** The Mac app saves the chat after every answer and brings it back on launch; Cmd-N starts a new one.
 - **Her own typeface.** The landing page, the Mac app and the iPhone app set their words in Samantha Sans, a face drawn here from one stem width and one gentle oval, spaced by rule, with figures that line up in columns and an I, an l and a 1 that never look alike. It is built by `scripts/gen_font.py`, and a check fails if two builds ever differ.
 - **Joshua Tree.** "Joshua Tree status" reads the OS's version, open pull requests and whether its test machine is running; "boot" and "stop Joshua Tree" start and stop it headless, asking first; "what did Joshua Tree say" reads its serial log; "type ls into Joshua Tree" sends it keystrokes, asking first; "screenshot Joshua Tree" saves its screen for her eyes, and "what is Joshua Tree showing" looks in one go.
+- **Shortcuts she writes.** "Make a shortcut that says good morning" shows the steps, asks first, then saves a Shortcut you add yourself in the Shortcuts app. Four simple actions only (say, notify, open a link, volume), and she never runs or schedules it.
 - **On a Raspberry Pi.** She is an app on Joshua Tree, the operating system built here from nothing, running on a real Pi 4. Ask at `Samantha $` and her answer comes from your Mac over your own network. "Write hello world in C and save it as hello.c" writes the code to the Pi's SD card, and `cat JT/HELLO.C` shows it. She only saves under a name you typed.
 - **See.** "Look at my screen and tell me what's wrong with this chart." A 3B vision model on the Mac looks and answers. The same model reads one frame from the Mac's own camera ("what am I holding"), deleted right after.
 - **Act on screen.** "Click Sign in", "type hello", "press return". She reads the screen to find what you named, and asks before every step.

@@ -930,7 +930,7 @@
 
   // the system family, same tools as tools_system.py: dark mode, running apps, quit, do not disturb, bluetooth.
   // The stand-in Mac has no System Events, no Shortcuts and no real Bluetooth radio to read.
-  ["dark_mode", "running_apps", "quit_app", "do_not_disturb", "bluetooth_status"]
+  ["dark_mode", "running_apps", "quit_app", "do_not_disturb", "bluetooth_status", "make_shortcut"]
     .forEach(function (name) { U[name] = function () { return REAL_MAC; }; U.NEEDS_MAC.push(name); });
   // system's own phrasings go in FRONT of every route above, same reason as organizer's: "close the app slack"
   // would otherwise fall through to nothing, and "what apps are running" would fall through to agent().
@@ -941,6 +941,7 @@
     [/^(?:what apps are running|list open apps|what(?:'s| is) running|show(?: me)? (?:my )?open apps|what apps do i have open)\??$/i,
      function () { return ["running_apps", ""]; }],
     [/^(?:quit|kill) (.+)$|^close the app (.+)$/i, function (m) { return ["quit_app", m[1] || m[2]]; }],
+    [/^((?:make|create|build|write) (?:me )?a shortcut\b.+)$/i, function (m) { return ["make_shortcut", m[1]]; }],
     [/^turn on (?:do not disturb|dnd|focus)$|^(?:do not disturb|dnd|focus) on$|^enable (?:do not disturb|dnd|focus)$/i,
      function () { return ["do_not_disturb", "on"]; }],
     [/^turn off (?:do not disturb|dnd|focus)$|^(?:do not disturb|dnd|focus) off$|^disable (?:do not disturb|dnd|focus)$/i,

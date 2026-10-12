@@ -1,5 +1,5 @@
 {
-  "version": "6.0.0",
+  "version": "6.1.0",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -158,6 +158,10 @@
       "app/tools_see.py": {
         "total": 9,
         "documented": 9
+      },
+      "app/tools_shortcut.py": {
+        "total": 4,
+        "documented": 4
       },
       "app/tools_system.py": {
         "total": 7,
@@ -511,6 +515,10 @@
         "total": 16,
         "documented": 16
       },
+      "tests/test_shortcut.py": {
+        "total": 6,
+        "documented": 6
+      },
       "tests/test_system.py": {
         "total": 37,
         "documented": 37
@@ -604,7 +612,7 @@
   "measured": {
     "tools": {
       "before": 0,
-      "after": 143
+      "after": 144
     },
     "actions_eval": "77/77",
     "knowledge_sweep": {

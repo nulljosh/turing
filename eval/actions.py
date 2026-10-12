@@ -257,6 +257,7 @@ CASES = [
     ("what apps are running", "running_apps", ""),
     ("list open apps", "running_apps", ""),
     ("quit spotify", "quit_app", "spotify"),
+    ("make a shortcut that says good morning", "make_shortcut", "make a shortcut that says good morning"),
     ("close the app slack", "quit_app", "slack"),
     ("turn on do not disturb", "do_not_disturb", "on"),
     ("turn off focus", "do_not_disturb", "off"),
