@@ -8,22 +8,22 @@ A round ends with a fix shipped or an honest "not yet" for that part. Every ship
 
 ## Where things stand
 
-- **Live:** v5.12.2. Shipped today from v5.11.4 on: the live demo on the landing page is back (it had been dead since v5.9.0, a syntax error in its script); the Mac app keeps focus and ships its icon and keeps her weights in its own Application Support folder; a time-zone bug on the landing page is fixed; the landing shows her flat mascot icon; the phone bridge takes signed requests; the iPhone app runs her exact tools in JavaScriptCore and loads her models with MLX Swift on the phone, with the Mac optional; the iPhone app has a splash screen.
+- **Live:** v5.12.3, released 2026-10-12 00:31 UTC (tag and GitHub release). v5.12.3 adds code blocks with a Copy button in the Mac app, on the phone and on the landing, makes the phone app build for Mac, and fixes model labels.
+- **Shipped earlier today, from v5.11.4 on:** the live demo on the landing page is back (it had been dead since v5.9.0, a syntax error in its script); the Mac app keeps focus, ships its icon and keeps her weights in its own Application Support folder; a time-zone bug on the landing page is fixed; training run 23 became the hands picker (v5.12.0); the landing shows her flat mascot icon; the phone bridge takes signed requests; the iPhone app runs her exact tools in JavaScriptCore and loads her models with MLX Swift on the phone, with the Mac optional; the iPhone app has a splash screen.
 - **Picker:** training run 23, shipped as v5.12.0. Sealed 619-sentence test: 351 right picks (v5.0 had 317), 79 wrong (126), 27 past the guard (30), about 4 percent refusals. The under-2-percent refusal goal is still open. Weights: https://huggingface.co/trommatic/samantha-hands-1.5b-mlx. The 0.5B GGUF for Windows and Linux stays at trommatic/samantha-hands-gguf.
-- **Grades so far:** the iOS simulator walkthrough of eight questions graded A-. The landing demo recorded 8/8. The Mac app has no A+ grade yet.
+- **Grades so far:** the iOS simulator walkthrough of eight questions graded A-. The landing demo recorded 8/8. No part has an A+ grade yet.
 - **Sealed sets** are read as counts only. Never tune on their misses.
-- **Uncommitted in the working tree** (work in progress from the loop, not part of any release yet): `app/ask.py`, `app/chat.py`, `app/tools_llm.py`, `gui/SamanthaGUI.swift` (code blocks with a Copy button), and the iOS files under `ios/App/`. Commit only by exact path, and only after that round's checks pass.
+- **Working tree:** the loop's current round has uncommitted edits in progress across `app/`, `gui/`, `ios/`, `web/`, `.github/workflows/test.yml` and `docs/ARCHITECTURE.md`. None of it is part of a release yet. Commit only by exact path, and only after that round's checks pass.
 - **Blocked:** the image model test waits for 10 GB free memory. Qwen-Image-2.1-Turbo needs 12 to 16 GB on this Mac.
 
 ## Next, in order
 
 1. iOS QA: record the simulator walkthrough (at least 30 seconds, 5 to 10 questions), grade it, fix what the video shows, and repeat until A+.
-2. Mac QA: same loop for the Mac app. Commit the Copy-button work by path once its checks pass.
+2. Mac QA: same loop for the Mac app, now with the Copy buttons in place.
 3. Website QA: record the landing demo, grade it, fix what it shows, and repeat until A+.
-4. iOS app builds for macOS too (`supportedDestinations` in the xcodegen project).
-5. Profiles with Sign in with Apple.
-6. iOS hands: Reminders and Calendar.
-7. Store submission at $1, once each app grades A.
+4. Profiles with Sign in with Apple.
+5. iOS hands: Reminders and Calendar.
+6. Store submission at $1, once each app grades A.
 
 ## Restart prompt
 
