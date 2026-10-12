@@ -1,0 +1,135 @@
+{"text": "pencil in the dentist for next thursday at 3", "tool": "add_event", "arg": "dentist"}
+{"text": "can you stick a dentist visit on my calendar friday morning", "tool": "add_event", "arg": "dentist"}
+{"text": "put dentist on the cal for the 14th", "tool": "add_event", "arg": "dentist"}
+{"text": "schedule my dentist checkup tomorrow 10am please", "tool": "add_event", "arg": "dentist"}
+{"text": "dentist, thursday 3pm, add it to the calendar", "tool": "add_event", "arg": "dentist"}
+{"text": "throw coffee with maya on friday's calendar", "tool": "add_event", "arg": "coffee with maya"}
+{"text": "calendar: coffee with maya sat noon", "tool": "add_event", "arg": "coffee with maya"}
+{"text": "add a calendar entry for coffee with maya at 4 tomorrow", "tool": "add_event", "arg": "coffee with maya"}
+{"text": "block off time for coffee with maya on monday", "tool": "add_event", "arg": "coffee with maya"}
+{"text": "remember coffee with maya on my calendar, wednesday 9am", "tool": "add_event", "arg": "coffee with maya"}
+{"text": "add buy oat milk to my shopping note", "tool": "append_note", "arg": "buy oat milk\tshopping"}
+{"text": "tack oat milk onto the shopping list note", "tool": "append_note", "arg": "buy oat milk\tshopping"}
+{"text": "shopping note: also oat milk", "tool": "append_note", "arg": "buy oat milk\tshopping"}
+{"text": "append oat milk to the note called shopping", "tool": "append_note", "arg": "buy oat milk\tshopping"}
+{"text": "put oat milk at the bottom of my shopping note", "tool": "append_note", "arg": "buy oat milk\tshopping"}
+{"text": "add call mom sunday to the todo note", "tool": "append_note", "arg": "call mom sunday\ttodo"}
+{"text": "todo note needs one more thing: call mom sunday", "tool": "append_note", "arg": "call mom sunday\ttodo"}
+{"text": "jot call mom sunday under my todo note too", "tool": "append_note", "arg": "call mom sunday\ttodo"}
+{"text": "stick call mom sunday on the end of the todo note", "tool": "append_note", "arg": "call mom sunday\ttodo"}
+{"text": "also write call mom sunday in todo", "tool": "append_note", "arg": "call mom sunday\ttodo"}
+{"text": "when is rent due according to lease.pdf in documents", "tool": "ask_document", "arg": "when is rent due\t~/Documents/lease.pdf"}
+{"text": "what does lease.pdf say about rent due dates", "tool": "ask_document", "arg": "when is rent due\t~/Documents/lease.pdf"}
+{"text": "check ~/Documents/lease.pdf and tell me when rent is due", "tool": "ask_document", "arg": "when is rent due\t~/Documents/lease.pdf"}
+{"text": "ask my lease pdf when rent is due", "tool": "ask_document", "arg": "when is rent due\t~/Documents/lease.pdf"}
+{"text": "in the lease document, what day is rent due", "tool": "ask_document", "arg": "when is rent due\t~/Documents/lease.pdf"}
+{"text": "whats the total on invoice.pdf on my desktop", "tool": "ask_document", "arg": "what is the total\t~/Desktop/invoice.pdf"}
+{"text": "read the invoice on the desktop and give me the total", "tool": "ask_document", "arg": "what is the total\t~/Desktop/invoice.pdf"}
+{"text": "how much does ~/Desktop/invoice.pdf add up to", "tool": "ask_document", "arg": "what is the total\t~/Desktop/invoice.pdf"}
+{"text": "ask invoice.pdf for the total amount", "tool": "ask_document", "arg": "what is the total\t~/Desktop/invoice.pdf"}
+{"text": "invoice.pdf, what is the total due", "tool": "ask_document", "arg": "what is the total\t~/Desktop/invoice.pdf"}
+{"text": "decode this base64: aGk gdGhlcmU=", "tool": "base64_decode", "arg": "aGk gdGhlcmU="}
+{"text": "what does aGk gdGhlcmU= say when you decode it", "tool": "base64_decode", "arg": "aGk gdGhlcmU="}
+{"text": "turn the base64 string aGk gdGhlcmU= back into text", "tool": "base64_decode", "arg": "aGk gdGhlcmU="}
+{"text": "base64 decode aGk gdGhlcmU= for me", "tool": "base64_decode", "arg": "aGk gdGhlcmU="}
+{"text": "unbase64 aGk gdGhlcmU=", "tool": "base64_decode", "arg": "aGk gdGhlcmU="}
+{"text": "base64 encode good morning", "tool": "base64_encode", "arg": "good morning"}
+{"text": "encode good morning as base64", "tool": "base64_encode", "arg": "good morning"}
+{"text": "make good morning into base64", "tool": "base64_encode", "arg": "good morning"}
+{"text": "what is good morning in base64", "tool": "base64_encode", "arg": "good morning"}
+{"text": "convert the text good morning to base64", "tool": "base64_encode", "arg": "good morning"}
+{"text": "how much juice is left", "tool": "battery", "arg": ""}
+{"text": "whats my battery at", "tool": "battery", "arg": ""}
+{"text": "is my mac about to die", "tool": "battery", "arg": ""}
+{"text": "battery level pls", "tool": "battery", "arg": ""}
+{"text": "how charged am i", "tool": "battery", "arg": ""}
+{"text": "is bluetooth on", "tool": "bluetooth_status", "arg": ""}
+{"text": "what bluetooth devices are connected", "tool": "bluetooth_status", "arg": ""}
+{"text": "check my bluetooth", "tool": "bluetooth_status", "arg": ""}
+{"text": "is my airpods connected over bluetooth", "tool": "bluetooth_status", "arg": ""}
+{"text": "bluetooth state?", "tool": "bluetooth_status", "arg": ""}
+{"text": "whats 18 times 24", "tool": "calculate", "arg": "18*24"}
+{"text": "quick math: 18*24", "tool": "calculate", "arg": "18*24"}
+{"text": "multiply 18 by 24", "tool": "calculate", "arg": "18*24"}
+{"text": "18 x 24 = ?", "tool": "calculate", "arg": "18*24"}
+{"text": "can you work out 18 times 24", "tool": "calculate", "arg": "18*24"}
+{"text": "what is 120 plus 80 all divided by 4", "tool": "calculate", "arg": "(120+80)/4"}
+{"text": "calc (120+80)/4", "tool": "calculate", "arg": "(120+80)/4"}
+{"text": "add 120 and 80 then divide by four", "tool": "calculate", "arg": "(120+80)/4"}
+{"text": "work out (120+80)/4 for me", "tool": "calculate", "arg": "(120+80)/4"}
+{"text": "(120 + 80) / 4 =", "tool": "calculate", "arg": "(120+80)/4"}
+{"text": "whats on my calendar today", "tool": "calendar_today", "arg": ""}
+{"text": "do i have meetings today", "tool": "calendar_today", "arg": ""}
+{"text": "anything scheduled for today", "tool": "calendar_today", "arg": ""}
+{"text": "show me todays events", "tool": "calendar_today", "arg": ""}
+{"text": "what am i doing today calendar wise", "tool": "calendar_today", "arg": ""}
+{"text": "whats on tomorrow", "tool": "calendar_tomorrow", "arg": ""}
+{"text": "anything on my calendar tomorrow", "tool": "calendar_tomorrow", "arg": ""}
+{"text": "do i have plans tomorrow", "tool": "calendar_tomorrow", "arg": ""}
+{"text": "tomorrows schedule please", "tool": "calendar_tomorrow", "arg": ""}
+{"text": "what meetings do i have tomorrow", "tool": "calendar_tomorrow", "arg": ""}
+{"text": "whats on my clipboard", "tool": "clipboard", "arg": ""}
+{"text": "read me what i copied", "tool": "clipboard", "arg": ""}
+{"text": "what did i just copy", "tool": "clipboard", "arg": ""}
+{"text": "show the clipboard", "tool": "clipboard", "arg": ""}
+{"text": "paste preview: whats in my clipboard", "tool": "clipboard", "arg": ""}
+{"text": "mark the dry cleaning reminder as done", "tool": "complete_reminder", "arg": "pick up dry cleaning"}
+{"text": "check off pick up dry cleaning", "tool": "complete_reminder", "arg": "pick up dry cleaning"}
+{"text": "i picked up the dry cleaning, tick it off the reminders", "tool": "complete_reminder", "arg": "pick up dry cleaning"}
+{"text": "complete my dry cleaning reminder", "tool": "complete_reminder", "arg": "pick up dry cleaning"}
+{"text": "done with the pick up dry cleaning reminder", "tool": "complete_reminder", "arg": "pick up dry cleaning"}
+{"text": "turn cat.heic in pictures into a jpg", "tool": "convert_image", "arg": "~/Pictures/cat.heic to jpg"}
+{"text": "convert ~/Pictures/cat.heic to jpg", "tool": "convert_image", "arg": "~/Pictures/cat.heic to jpg"}
+{"text": "make a jpeg copy of my cat.heic photo", "tool": "convert_image", "arg": "~/Pictures/cat.heic to jpg"}
+{"text": "change cat.heic to jpg format", "tool": "convert_image", "arg": "~/Pictures/cat.heic to jpg"}
+{"text": "save cat.heic from pictures as a jpg", "tool": "convert_image", "arg": "~/Pictures/cat.heic to jpg"}
+{"text": "whats 9am eastern in london", "tool": "convert_time", "arg": "9am est in london"}
+{"text": "9 am est is what time in london", "tool": "convert_time", "arg": "9am est in london"}
+{"text": "convert 9am est to london time", "tool": "convert_time", "arg": "9am est in london"}
+{"text": "when it's 9am in new york what time is it in london", "tool": "convert_time", "arg": "9am est in london"}
+{"text": "london time for 9am est", "tool": "convert_time", "arg": "9am est in london"}
+{"text": "how many km is 5 miles", "tool": "convert_units", "arg": "5 miles to km"}
+{"text": "convert 5 miles into kilometers", "tool": "convert_units", "arg": "5 miles to km"}
+{"text": "5mi in km?", "tool": "convert_units", "arg": "5 miles to km"}
+{"text": "5 miles equals how many kilometers", "tool": "convert_units", "arg": "5 miles to km"}
+{"text": "miles to km: 5", "tool": "convert_units", "arg": "5 miles to km"}
+{"text": "180 pounds in kilos", "tool": "convert_units", "arg": "180 lb to kg"}
+{"text": "how heavy is 180 lb in kg", "tool": "convert_units", "arg": "180 lb to kg"}
+{"text": "convert 180 lbs to kg", "tool": "convert_units", "arg": "180 lb to kg"}
+{"text": "whats 180 pounds in kg", "tool": "convert_units", "arg": "180 lb to kg"}
+{"text": "180 lb = ? kg", "tool": "convert_units", "arg": "180 lb to kg"}
+{"text": "copy notes.txt from my desktop into documents", "tool": "copy_file", "arg": "~/Desktop/notes.txt\t~/Documents"}
+{"text": "duplicate ~/Desktop/notes.txt to the documents folder", "tool": "copy_file", "arg": "~/Desktop/notes.txt\t~/Documents"}
+{"text": "make a copy of desktop notes.txt in ~/Documents", "tool": "copy_file", "arg": "~/Desktop/notes.txt\t~/Documents"}
+{"text": "put a copy of notes.txt in documents please", "tool": "copy_file", "arg": "~/Desktop/notes.txt\t~/Documents"}
+{"text": "copy my desktop notes.txt over to documents", "tool": "copy_file", "arg": "~/Desktop/notes.txt\t~/Documents"}
+{"text": "how hard is my cpu working", "tool": "cpu_load", "arg": ""}
+{"text": "whats the cpu usage", "tool": "cpu_load", "arg": ""}
+{"text": "is my mac slammed right now", "tool": "cpu_load", "arg": ""}
+{"text": "cpu load?", "tool": "cpu_load", "arg": ""}
+{"text": "how busy is the processor", "tool": "cpu_load", "arg": ""}
+{"text": "crop me.jpg in pictures to a square", "tool": "crop_square", "arg": "~/Pictures/me.jpg"}
+{"text": "make ~/Pictures/me.jpg square", "tool": "crop_square", "arg": "~/Pictures/me.jpg"}
+{"text": "square crop my me.jpg photo", "tool": "crop_square", "arg": "~/Pictures/me.jpg"}
+{"text": "trim me.jpg into a square for my profile", "tool": "crop_square", "arg": "~/Pictures/me.jpg"}
+{"text": "center crop me.jpg to 1:1", "tool": "crop_square", "arg": "~/Pictures/me.jpg"}
+{"text": "whats todays date", "tool": "current_date", "arg": ""}
+{"text": "what day is it", "tool": "current_date", "arg": ""}
+{"text": "tell me the date", "tool": "current_date", "arg": ""}
+{"text": "what is the date today", "tool": "current_date", "arg": ""}
+{"text": "today is what day of the month", "tool": "current_date", "arg": ""}
+{"text": "what page am i on", "tool": "current_tab", "arg": ""}
+{"text": "whats the url of this tab", "tool": "current_tab", "arg": ""}
+{"text": "which tab is open right now", "tool": "current_tab", "arg": ""}
+{"text": "tell me about the tab im on", "tool": "current_tab", "arg": ""}
+{"text": "current page title and link", "tool": "current_tab", "arg": ""}
+{"text": "switch my mac to dark mode", "tool": "dark_mode", "arg": "on"}
+{"text": "go dark please", "tool": "dark_mode", "arg": "on"}
+{"text": "enable dark appearance", "tool": "dark_mode", "arg": "on"}
+{"text": "make everything dark", "tool": "dark_mode", "arg": "on"}
+{"text": "flip to dark mode", "tool": "dark_mode", "arg": "on"}
+{"text": "turn dark mode off", "tool": "dark_mode", "arg": "off"}
+{"text": "back to light mode", "tool": "dark_mode", "arg": "off"}
+{"text": "switch to the light appearance", "tool": "dark_mode", "arg": "off"}
+{"text": "disable dark mode", "tool": "dark_mode", "arg": "off"}
+{"text": "lights on, light mode please", "tool": "dark_mode", "arg": "off"}

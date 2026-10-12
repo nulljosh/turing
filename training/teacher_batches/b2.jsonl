@@ -1,0 +1,135 @@
+{"text": "what date is three weeks after nov 2 2026", "tool": "date_math", "arg": "3 weeks after 2026-11-02"}
+{"text": "3 weeks from 2026-11-02 is when", "tool": "date_math", "arg": "3 weeks after 2026-11-02"}
+{"text": "add 3 weeks to 2026-11-02", "tool": "date_math", "arg": "3 weeks after 2026-11-02"}
+{"text": "if today were 2026-11-02, what's the date in 3 weeks", "tool": "date_math", "arg": "3 weeks after 2026-11-02"}
+{"text": "date math: 2026-11-02 plus 3 weeks", "tool": "date_math", "arg": "3 weeks after 2026-11-02"}
+{"text": "what was the date 90 days before march 1 2027", "tool": "date_math", "arg": "90 days before 2027-03-01"}
+{"text": "go back 90 days from 2027-03-01", "tool": "date_math", "arg": "90 days before 2027-03-01"}
+{"text": "90 days prior to 2027-03-01 is what day", "tool": "date_math", "arg": "90 days before 2027-03-01"}
+{"text": "subtract 90 days from 2027-03-01", "tool": "date_math", "arg": "90 days before 2027-03-01"}
+{"text": "date 90 days before 2027-03-01?", "tool": "date_math", "arg": "90 days before 2027-03-01"}
+{"text": "how many days till christmas", "tool": "days_until", "arg": "2026-12-25"}
+{"text": "days left until dec 25", "tool": "days_until", "arg": "2026-12-25"}
+{"text": "countdown to 2026-12-25 in days", "tool": "days_until", "arg": "2026-12-25"}
+{"text": "how long until christmas day", "tool": "days_until", "arg": "2026-12-25"}
+{"text": "how many sleeps til 2026-12-25", "tool": "days_until", "arg": "2026-12-25"}
+{"text": "what does ephemeral mean", "tool": "define_word", "arg": "ephemeral"}
+{"text": "define ephemeral", "tool": "define_word", "arg": "ephemeral"}
+{"text": "meaning of the word ephemeral", "tool": "define_word", "arg": "ephemeral"}
+{"text": "can you tell me what ephemeral means", "tool": "define_word", "arg": "ephemeral"}
+{"text": "ephemeral definition pls", "tool": "define_word", "arg": "ephemeral"}
+{"text": "how much storage do i have left", "tool": "disk_space", "arg": ""}
+{"text": "whats my free disk space", "tool": "disk_space", "arg": ""}
+{"text": "is my drive almost full", "tool": "disk_space", "arg": ""}
+{"text": "how many gigs are free on this mac", "tool": "disk_space", "arg": ""}
+{"text": "disk space check", "tool": "disk_space", "arg": ""}
+{"text": "turn on dnd", "tool": "do_not_disturb", "arg": "on"}
+{"text": "silence notifications for a while", "tool": "do_not_disturb", "arg": "on"}
+{"text": "put me in focus mode", "tool": "do_not_disturb", "arg": "on"}
+{"text": "i need quiet, do not disturb on", "tool": "do_not_disturb", "arg": "on"}
+{"text": "enable focus", "tool": "do_not_disturb", "arg": "on"}
+{"text": "turn off do not disturb", "tool": "do_not_disturb", "arg": "off"}
+{"text": "end focus mode", "tool": "do_not_disturb", "arg": "off"}
+{"text": "let notifications through again", "tool": "do_not_disturb", "arg": "off"}
+{"text": "dnd off please", "tool": "do_not_disturb", "arg": "off"}
+{"text": "disable focus", "tool": "do_not_disturb", "arg": "off"}
+{"text": "make dusk.jpg in pictures look better", "tool": "enhance_image", "arg": "~/Pictures/dusk.jpg"}
+{"text": "auto enhance ~/Pictures/dusk.jpg", "tool": "enhance_image", "arg": "~/Pictures/dusk.jpg"}
+{"text": "touch up my dusk photo", "tool": "enhance_image", "arg": "~/Pictures/dusk.jpg"}
+{"text": "improve the lighting on dusk.jpg", "tool": "enhance_image", "arg": "~/Pictures/dusk.jpg"}
+{"text": "fix up dusk.jpg for me", "tool": "enhance_image", "arg": "~/Pictures/dusk.jpg"}
+{"text": "where is my tax return file", "tool": "find_file", "arg": "tax return"}
+{"text": "find the tax return", "tool": "find_file", "arg": "tax return"}
+{"text": "search my mac for tax return", "tool": "find_file", "arg": "tax return"}
+{"text": "i lost my tax return, locate it", "tool": "find_file", "arg": "tax return"}
+{"text": "look for a file called tax return", "tool": "find_file", "arg": "tax return"}
+{"text": "find the word warranty in manual.pdf in documents", "tool": "find_in_document", "arg": "warranty\t~/Documents/manual.pdf"}
+{"text": "search ~/Documents/manual.pdf for warranty", "tool": "find_in_document", "arg": "warranty\t~/Documents/manual.pdf"}
+{"text": "where does the manual mention warranty", "tool": "find_in_document", "arg": "warranty\t~/Documents/manual.pdf"}
+{"text": "look up warranty inside my manual pdf", "tool": "find_in_document", "arg": "warranty\t~/Documents/manual.pdf"}
+{"text": "does manual.pdf say anything about warranty", "tool": "find_in_document", "arg": "warranty\t~/Documents/manual.pdf"}
+{"text": "flip a coin", "tool": "flip_coin", "arg": ""}
+{"text": "heads or tails", "tool": "flip_coin", "arg": ""}
+{"text": "toss a coin for me", "tool": "flip_coin", "arg": ""}
+{"text": "coin flip please", "tool": "flip_coin", "arg": ""}
+{"text": "settle this with a coin toss", "tool": "flip_coin", "arg": ""}
+{"text": "mirror selfie.jpg in pictures", "tool": "flip_image", "arg": "~/Pictures/selfie.jpg"}
+{"text": "flip my selfie horizontally", "tool": "flip_image", "arg": "~/Pictures/selfie.jpg"}
+{"text": "flip ~/Pictures/selfie.jpg", "tool": "flip_image", "arg": "~/Pictures/selfie.jpg"}
+{"text": "make a mirror image of selfie.jpg", "tool": "flip_image", "arg": "~/Pictures/selfie.jpg"}
+{"text": "reverse selfie.jpg left to right", "tool": "flip_image", "arg": "~/Pictures/selfie.jpg"}
+{"text": "how big is my movies folder", "tool": "folder_size", "arg": "~/Movies"}
+{"text": "how much space does ~/Movies take", "tool": "folder_size", "arg": "~/Movies"}
+{"text": "size of the movies folder", "tool": "folder_size", "arg": "~/Movies"}
+{"text": "whats eating space in movies", "tool": "folder_size", "arg": "~/Movies"}
+{"text": "check how large my movies directory is", "tool": "folder_size", "arg": "~/Movies"}
+{"text": "when am i free", "tool": "free_when", "arg": ""}
+{"text": "find me a gap in my calendar", "tool": "free_when", "arg": ""}
+{"text": "when do i have time open this week", "tool": "free_when", "arg": ""}
+{"text": "whens my next free slot", "tool": "free_when", "arg": ""}
+{"text": "what times am i open", "tool": "free_when", "arg": ""}
+{"text": "whats changed in turing", "tool": "git_status", "arg": "turing"}
+{"text": "git status for the turing repo", "tool": "git_status", "arg": "turing"}
+{"text": "any uncommitted stuff in turing", "tool": "git_status", "arg": "turing"}
+{"text": "check turing for local changes", "tool": "git_status", "arg": "turing"}
+{"text": "is the turing repo clean", "tool": "git_status", "arg": "turing"}
+{"text": "make street.jpg black and white", "tool": "grayscale_image", "arg": "~/Pictures/street.jpg"}
+{"text": "turn ~/Pictures/street.jpg grayscale", "tool": "grayscale_image", "arg": "~/Pictures/street.jpg"}
+{"text": "desaturate my street photo", "tool": "grayscale_image", "arg": "~/Pictures/street.jpg"}
+{"text": "black and white version of street.jpg please", "tool": "grayscale_image", "arg": "~/Pictures/street.jpg"}
+{"text": "convert street.jpg in pictures to greyscale", "tool": "grayscale_image", "arg": "~/Pictures/street.jpg"}
+{"text": "sha hash of hello world", "tool": "hash_text", "arg": "hello world"}
+{"text": "hash the text hello world", "tool": "hash_text", "arg": "hello world"}
+{"text": "what is the hash for hello world", "tool": "hash_text", "arg": "hello world"}
+{"text": "checksum hello world", "tool": "hash_text", "arg": "hello world"}
+{"text": "give me a sha256 of hello world", "tool": "hash_text", "arg": "hello world"}
+{"text": "how big is banner.png in pictures", "tool": "image_info", "arg": "~/Pictures/banner.png"}
+{"text": "what are the dimensions of ~/Pictures/banner.png", "tool": "image_info", "arg": "~/Pictures/banner.png"}
+{"text": "image info for my banner png", "tool": "image_info", "arg": "~/Pictures/banner.png"}
+{"text": "tell me the resolution of banner.png", "tool": "image_info", "arg": "~/Pictures/banner.png"}
+{"text": "size and format of banner.png", "tool": "image_info", "arg": "~/Pictures/banner.png"}
+{"text": "whats my ip", "tool": "ip_address", "arg": ""}
+{"text": "what is my local ip address", "tool": "ip_address", "arg": ""}
+{"text": "ip address please", "tool": "ip_address", "arg": ""}
+{"text": "tell me my mac's ip", "tool": "ip_address", "arg": ""}
+{"text": "what ip am i on", "tool": "ip_address", "arg": ""}
+{"text": "is 97 prime", "tool": "is_prime", "arg": "97"}
+{"text": "check if 97 is a prime number", "tool": "is_prime", "arg": "97"}
+{"text": "prime or not: 97", "tool": "is_prime", "arg": "97"}
+{"text": "97 prime?", "tool": "is_prime", "arg": "97"}
+{"text": "tell me whether 97 is prime", "tool": "is_prime", "arg": "97"}
+{"text": "is 221 a prime", "tool": "is_prime", "arg": "221"}
+{"text": "is 221 prime or composite", "tool": "is_prime", "arg": "221"}
+{"text": "prime check 221", "tool": "is_prime", "arg": "221"}
+{"text": "can 221 be divided evenly by anything", "tool": "is_prime", "arg": "221"}
+{"text": "221, prime?", "tool": "is_prime", "arg": "221"}
+{"text": "pretty print {\"name\":\"ada\",\"age\":36}", "tool": "json_pretty", "arg": "{\"name\":\"ada\",\"age\":36}"}
+{"text": "format this json {\"name\":\"ada\",\"age\":36}", "tool": "json_pretty", "arg": "{\"name\":\"ada\",\"age\":36}"}
+{"text": "clean up this json: {\"name\":\"ada\",\"age\":36}", "tool": "json_pretty", "arg": "{\"name\":\"ada\",\"age\":36}"}
+{"text": "make {\"name\":\"ada\",\"age\":36} readable", "tool": "json_pretty", "arg": "{\"name\":\"ada\",\"age\":36}"}
+{"text": "indent this json for me {\"name\":\"ada\",\"age\":36}", "tool": "json_pretty", "arg": "{\"name\":\"ada\",\"age\":36}"}
+{"text": "start joshua tree", "tool": "jt_boot", "arg": ""}
+{"text": "boot up the os", "tool": "jt_boot", "arg": ""}
+{"text": "fire up joshua tree in qemu", "tool": "jt_boot", "arg": ""}
+{"text": "launch joshua tree", "tool": "jt_boot", "arg": ""}
+{"text": "can you boot joshua tree", "tool": "jt_boot", "arg": ""}
+{"text": "what did joshua tree print", "tool": "jt_log", "arg": ""}
+{"text": "show the joshua tree serial log", "tool": "jt_log", "arg": ""}
+{"text": "read the last lines from joshua tree", "tool": "jt_log", "arg": ""}
+{"text": "joshua tree console output", "tool": "jt_log", "arg": ""}
+{"text": "whats joshua tree saying", "tool": "jt_log", "arg": ""}
+{"text": "screenshot joshua tree", "tool": "jt_screenshot", "arg": ""}
+{"text": "grab joshua tree's screen", "tool": "jt_screenshot", "arg": ""}
+{"text": "take a picture of what joshua tree is showing", "tool": "jt_screenshot", "arg": ""}
+{"text": "save joshua tree's display to a file", "tool": "jt_screenshot", "arg": ""}
+{"text": "capture the joshua tree window", "tool": "jt_screenshot", "arg": ""}
+{"text": "is joshua tree running", "tool": "jt_status", "arg": ""}
+{"text": "joshua tree status", "tool": "jt_status", "arg": ""}
+{"text": "whats the version of joshua tree and is it up", "tool": "jt_status", "arg": ""}
+{"text": "are there open prs on joshua tree and is it booted", "tool": "jt_status", "arg": ""}
+{"text": "check on joshua tree", "tool": "jt_status", "arg": ""}
+{"text": "shut down joshua tree", "tool": "jt_stop", "arg": ""}
+{"text": "stop the joshua tree vm", "tool": "jt_stop", "arg": ""}
+{"text": "kill joshua tree please", "tool": "jt_stop", "arg": ""}
+{"text": "turn off joshua tree", "tool": "jt_stop", "arg": ""}
+{"text": "power off joshua tree", "tool": "jt_stop", "arg": ""}
