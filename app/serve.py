@@ -48,6 +48,9 @@ def answer_for(question):
 # "write hello world in C and save it as hello.c": the 8.3 name a Joshua Tree Pi can store (its [[save NAME]] action)
 _SAVE_AS = re.compile(r"\s*,?\s*(?:and\s+)?(?:save|put|store|write)\s+(?:it\s+|that\s+)?(?:as|to|in(?:to)?)\s+"
                       r"(?:a\s+file\s+(?:called|named)\s+)?([A-Za-z0-9_-]{1,8}\.[A-Za-z0-9]{1,3})\b", re.I)
+# "make a file called todo.txt that says buy milk": the words themselves, no model needed
+_MAKE_FILE = re.compile(r"^(?:please\s+)?(?:create|make|write)\s+(?:a\s+)?(?:new\s+)?(?:text\s+)?file\s+(?:called\s+|named\s+)?"
+                        r"([A-Za-z0-9_-]{1,8}\.[A-Za-z0-9]{1,3})\s+(?:that\s+says|saying|with|containing)\s+(.+)$", re.I | re.S)
 PI_RESULTS = "The Pi ran your actions."  # Joshua Tree's agent loop sends what the actions printed as the next turn
 
 
@@ -58,12 +61,15 @@ def pi_answer(question):
     Pi request, answer as usual."""
     if question.startswith(PI_RESULTS):
         return "Saved." if "save" in question and "saved" in question else "Done."
+    made = _MAKE_FILE.match(question)
+    if made:
+        return f"Here is {made[1]}.\n```\n{made[2].strip()}\n```\n[[save {made[1].upper()}]]"
     m = _SAVE_AS.search(question)
     if not m:
         return None
     import tools_llm
     asked = _SAVE_AS.sub("", question).strip() or question
-    llm = tools_llm.fallback(asked + " Reply with one fenced code block holding the whole file, then one short line.")
+    llm = tools_llm.fallback(asked + " Reply with one fenced code block holding the whole file, then one short line. Do not name a file.")
     if not llm or not llm[1] or "```" not in llm[0]:
         return "I could not write that code right now, so nothing was saved."
     return f"{llm[0].strip()}\n[[save {m[1].upper()}]]"

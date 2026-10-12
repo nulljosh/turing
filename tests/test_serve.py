@@ -119,6 +119,8 @@ class PiAnswerTest(unittest.TestCase):
             self.assertIn("nothing was saved", serve.pi_answer("write a python script, save it to fib.py"))
         self.assertIsNone(serve.pi_answer("what is joshua tree"))
         self.assertIsNone(serve.pi_answer("save it as a surprise"))
+        self.assertEqual(serve.pi_answer("make a file called todo.txt that says buy milk"),
+                         "Here is todo.txt.\n```\nbuy milk\n```\n[[save TODO.TXT]]")
 
     def test_pi_results_end_the_loop(self):
         """What the Pi's actions printed comes back as a turn; she answers it in one word, with no new action."""
