@@ -30,8 +30,18 @@ def define_word(word):
 
 
 def _memory_path():
-    """Where her memory lives: ~/.samantha/memory.json, or SAMANTHA_MEMORY (the tests use it)."""
-    return os.path.expanduser(os.environ.get("SAMANTHA_MEMORY", "~/.samantha/memory.json"))
+    """Where her memory lives: SAMANTHA_MEMORY (the tests use it), else the place ~/.samantha/memory-location names (the
+    iCloud Drive folder, only after the person asked for it: app/tools_profile.py), else ~/.samantha/memory.json."""
+    if os.environ.get("SAMANTHA_MEMORY"):
+        return os.path.expanduser(os.environ["SAMANTHA_MEMORY"])
+    try:
+        with open(os.path.expanduser("~/.samantha/memory-location")) as f:
+            where = f.read().strip()
+        if where.startswith("/") and where.endswith("memory.json"):
+            return where
+    except OSError:
+        pass
+    return os.path.expanduser("~/.samantha/memory.json")
 
 
 def _facts():

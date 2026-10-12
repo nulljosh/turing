@@ -1,5 +1,8 @@
 # Progress log
 
+- 2026-10-12: v7.0.0 🎉 She remembers and comes to you. Her memory is read back into answers on the Mac and the phone, the Mac greets you with a morning brief, she writes Shortcuts you add yourself, and on request she keeps her memory in your own iCloud Drive ("keep my memory in iCloud"), merged so no fact is lost. Nothing runs on a timer behind your back and nothing of ours sits in a cloud. The phone reading the iCloud copy waits on a signed build.
+  v7.0.0 · 145 tools · 806 tests · docs coverage 100% · laws all hold · biggest eval/gen_heldout2.py 647 · actions 266/266 · parity 266/266 · util_diff 288/288
+
 - 2026-10-12: v6.1.1 The iPhone remembers for real. On the phone, "remember that my dog is called Biscuit" said Remembered and kept nothing, because the phone has no browser storage. It now keeps the fact in the phone's own storage, and her on-phone model reads the facts that fit your question back into its answer, the way the Mac does.
   v6.1.1 · 144 tools · 802 tests · docs coverage 100% · laws all hold · biggest eval/gen_heldout2.py 647 · actions 264/264 · parity 264/264 · util_diff 288/288
 

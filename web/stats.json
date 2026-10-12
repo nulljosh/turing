@@ -1,5 +1,5 @@
 {
-  "version": "6.1.1",
+  "version": "7.0.0",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -138,6 +138,10 @@
       "app/tools_organizer.py": {
         "total": 7,
         "documented": 7
+      },
+      "app/tools_profile.py": {
+        "total": 5,
+        "documented": 5
       },
       "app/tools_registry.py": {
         "total": 5,
@@ -483,6 +487,10 @@
         "total": 44,
         "documented": 44
       },
+      "tests/test_profile.py": {
+        "total": 7,
+        "documented": 7
+      },
       "tests/test_reader.py": {
         "total": 13,
         "documented": 13
@@ -612,7 +620,7 @@
   "measured": {
     "tools": {
       "before": 0,
-      "after": 144
+      "after": 145
     },
     "actions_eval": "77/77",
     "knowledge_sweep": {

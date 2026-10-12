@@ -1,6 +1,6 @@
 # Turing Technical Whitepaper
 
-**v6.1.1** | October 2026
+**v7.0.0** | October 2026
 
 Turing builds small language models on one Mac. Its first model, Samantha, is a 0.5B chat model trained on your own writing, with a 1.5B head that picks her tools. Both are public on [Hugging Face](https://huggingface.co/trommatic/samantha-hands-1.5b-mlx). She will never out-think a frontier model. She does not try to. She runs on your Mac, costs nothing per question, keeps everything on the machine, and gets real work done with 131 exact tools. When a question is too hard for her, she borrows a bigger brain that also lives on the Mac. You can type to her or talk to her. She can see your screen, click in your apps, and research a topic with sources. She asks before anything that changes something.
 
@@ -29,7 +29,7 @@ Then a teacher. Claude writes practice questions and answers from real passages 
 ## What she can do
 
 - **Talk.** `python3 app/chat.py --voice`. Whisper on the Mac turns speech into text, she answers, and she says it out loud. Anything new you send cuts her off, and "shh" silences her.
-- **Remembers.** The Mac app saves the chat after every answer and brings it back on launch; Cmd-N starts a new one.
+- **Remembers.** The Mac app saves the chat after every answer and brings it back on launch; Cmd-N starts a new one. Her memory file is plain JSON the facts you told her; she reads the ones that fit your question back into her answers on the Mac and on the phone, and "keep my memory in iCloud" moves it into your own iCloud Drive, merged, and "keep my memory on this Mac" brings it back. A morning brief is waiting the first time you open the Mac app each day.
 - **Her own typeface.** The landing page, the Mac app and the iPhone app set their words in Samantha Sans, a face drawn here from one stem width and one gentle oval, spaced by rule, with figures that line up in columns and an I, an l and a 1 that never look alike. It is built by `scripts/gen_font.py`, and a check fails if two builds ever differ.
 - **Joshua Tree.** "Joshua Tree status" reads the OS's version, open pull requests and whether its test machine is running; "boot" and "stop Joshua Tree" start and stop it headless, asking first; "what did Joshua Tree say" reads its serial log; "type ls into Joshua Tree" sends it keystrokes, asking first; "screenshot Joshua Tree" saves its screen for her eyes, and "what is Joshua Tree showing" looks in one go.
 - **Shortcuts she writes.** "Make a shortcut that says good morning" shows the steps, asks first, then saves a Shortcut you add yourself in the Shortcuts app. Four simple actions only (say, notify, open a link, volume), and she never runs or schedules it.
