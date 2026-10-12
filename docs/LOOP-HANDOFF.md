@@ -8,7 +8,7 @@ A round ends with a fix shipped or an honest "not yet" for that part. Every ship
 
 ## Where things stand
 
-- **Live:** v5.12.3, released 2026-10-12 00:31 UTC (tag and GitHub release). v5.12.3 adds code blocks with a Copy button in the Mac app, on the phone and on the landing, makes the phone app build for Mac, and fixes model labels.
+- **Live:** v5.14.0 adds Samantha Sans, her own typeface, on the site and in the Mac and iPhone apps. Before it, v5.12.3 added code blocks with a Copy button in the Mac app, on the phone and on the landing, makes the phone app build for Mac, and fixes model labels.
 - **Shipped earlier today, from v5.11.4 on:** the live demo on the landing page is back (it had been dead since v5.9.0, a syntax error in its script); the Mac app keeps focus, ships its icon and keeps her weights in its own Application Support folder; a time-zone bug on the landing page is fixed; training run 23 became the hands picker (v5.12.0); the landing shows her flat mascot icon; the phone bridge takes signed requests; the iPhone app runs her exact tools in JavaScriptCore and loads her models with MLX Swift on the phone, with the Mac optional; the iPhone app has a splash screen.
 - **Picker:** training run 23, shipped as v5.12.0. Sealed 619-sentence test: 351 right picks (v5.0 had 317), 79 wrong (126), 27 past the guard (30), about 4 percent refusals. The under-2-percent refusal goal is still open. Weights: https://huggingface.co/trommatic/samantha-hands-1.5b-mlx. The 0.5B GGUF for Windows and Linux stays at trommatic/samantha-hands-gguf.
 - **Grades so far:** the iOS simulator walkthrough of eight questions graded A-. The landing demo recorded 8/8. No part has an A+ grade yet.
