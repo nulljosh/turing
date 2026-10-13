@@ -110,6 +110,7 @@ struct Composer: View {
     @Environment(Store.self) private var store
     @State private var text = ""
     @FocusState private var focused: Bool
+    private var voice = Voice.shared
 
     var body: some View {
         HStack(alignment: .bottom, spacing: 8) {
@@ -121,13 +122,24 @@ struct Composer: View {
                 .foregroundStyle(Theme.ink)
                 .frame(minHeight: 36)
                 .onSubmit(send)
-            Button(action: send) {
-                Image(systemName: "arrow.up").font(.system(size: 16, weight: .bold)).foregroundStyle(.white)
-                    .frame(width: 32, height: 32).background(Theme.accent).clipShape(Circle())
+            if text.trimmingCharacters(in: .whitespaces).isEmpty || voice.listening {
+                // Mic: tap to talk, tap again to send what she heard. Her answer is read back to you.
+                Button(action: talk) {
+                    Image(systemName: voice.listening ? "stop.fill" : "mic").font(.system(size: 16, weight: .semibold))
+                        .foregroundStyle(voice.listening ? Theme.paper : Theme.ink)
+                        .frame(width: 32, height: 32).background(voice.listening ? Theme.ink : Color.clear).clipShape(Circle())
+                }
+                .disabled(store.busy)
+                .accessibilityLabel(voice.listening ? "Stop and send" : "Talk")
+            } else {
+                Button(action: send) {
+                    Image(systemName: "arrow.up").font(.system(size: 16, weight: .bold)).foregroundStyle(.white)
+                        .frame(width: 32, height: 32).background(Theme.accent).clipShape(Circle())
+                }
+                .opacity(store.busy ? 0.4 : 1)
+                .disabled(store.busy)
+                .accessibilityLabel("Send")
             }
-            .opacity(text.trimmingCharacters(in: .whitespaces).isEmpty || store.busy ? 0.4 : 1)
-            .disabled(text.trimmingCharacters(in: .whitespaces).isEmpty || store.busy)
-            .accessibilityLabel("Send")
         }
         .padding(.leading, 6).padding(.trailing, 8).padding(.vertical, 6)
         .background(Theme.field)
@@ -135,6 +147,22 @@ struct Composer: View {
         .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
         .padding(.horizontal, 12).padding(.bottom, 8).padding(.top, 6)
         .background(Theme.paper)
+        .onChange(of: voice.heard) { _, heard in if voice.listening { text = heard } }
+        .onChange(of: text) { _, _ in if !voice.listening { voice.problem = nil } }
+        .overlay(alignment: .top) {
+            if let p = voice.problem { Text(p).font(Theme.small).foregroundStyle(Theme.muted).offset(y: -18) }
+        }
+    }
+
+    private func talk() {
+        if voice.listening {
+            let line = voice.stop()
+            text = ""
+            store.send(line, byVoice: true)
+        } else {
+            focused = false
+            voice.start()
+        }
     }
 
     private func send() {

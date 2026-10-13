@@ -29,6 +29,7 @@ final class Store {
     var working: String? = nil           // "time_in(tokyo)" while she runs a tool
     var pendingConfirm: (name: String, args: [String], note: String?)? = nil
     var busy = false
+    var voiceTurn = false                // asked by voice, so the answer is spoken
     var error: String? = nil
     #if DEBUG
     var useMock = ProcessInfo.processInfo.arguments.contains("--mock")
@@ -58,7 +59,7 @@ final class Store {
     private func reloadChats() { chats = ChatStore.load() }
 
     /// One turn: your line goes in, her answer lands as a message.
-    func send(_ text: String) {
+    func send(_ text: String, byVoice: Bool = false) {
         // The iOS keyboard curls quotes ("what’s 15% of 240"); her router and the Mac expect straight ones.
         let line = text.trimmingCharacters(in: .whitespacesAndNewlines)
             .replacingOccurrences(of: "[‘’]", with: "'", options: .regularExpression)
@@ -66,14 +67,18 @@ final class Store {
         guard !line.isEmpty, !busy else { return }
         current.messages.append(Message(role: .user, text: line))
         if current.messages.count == 1 { current.retitle() }
-        busy = true; error = nil
+        busy = true; error = nil; voiceTurn = byVoice
         Task { await run(line) }
     }
 
     /// Exact tools first (instant, offline), then her models on the phone, then the Mac when it is paired.
     @MainActor
     private func run(_ line: String) async {
-        defer { busy = false; working = nil; ChatStore.save(current); reloadChats() }
+        defer {
+            busy = false; working = nil; ChatStore.save(current); reloadChats()
+            if voiceTurn, let last = current.messages.last, last.role == .assistant { Voice.shared.say(last.text) }
+            voiceTurn = false
+        }
         let twins = Twins.shared
         switch twins.route(line) {
         case .tool(let tool, let arg) where twins.runsHere(tool):

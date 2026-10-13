@@ -20,10 +20,23 @@ final class Shots: XCTestCase {
         sleep(2)
         shot("home")
 
+        // Voice: an empty composer shows the mic; tapping it asks for access, then listens.
+        XCTAssertTrue(app.buttons["Talk"].exists, "mic button missing on an empty composer")
+        app.buttons["Talk"].tap()
+        let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
+        for _ in 0..<2 {
+            sleep(2)
+            for label in ["Allow", "OK"] where springboard.buttons[label].exists { springboard.buttons[label].tap() }
+        }
+        sleep(2)
+        shot("talk")
+        if app.buttons["Stop and send"].exists { app.buttons["Stop and send"].tap(); sleep(2) }
+
         let field = app.textViews.firstMatch.exists ? app.textViews.firstMatch : app.textFields.firstMatch
         field.tap()
         field.typeText("what time is it in tokyo")
         shot("typing")
+        XCTAssertTrue(app.buttons["Send"].exists, "send button should replace the mic once there is text")
         app.buttons["Send"].tap()
         sleep(1)
         shot("working")
