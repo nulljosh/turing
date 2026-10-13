@@ -5,9 +5,12 @@ import json, sys, glob, re
 import numpy as np
 B = 2048          # hash buckets
 SCALE = 16        # weights are round(w * SCALE) before pruning
-PRUNE = 16        # drop weights below this (in SCALE units), the kernel has room for about 40KB
+PRUNE = 20        # drop weights below this (in SCALE units), the kernel has room for about 40KB
 DIV = 4           # then divide and round so every weight fits an int8
 OOS = "null"
+NULL_W = 3        # a mistake on a not-a-command row counts this much more in training
+NULL_BOOST = 10   # added to the null score after quantizing: leans toward "not a command"
+MARGIN = 10       # a tool pick whose lead over the runner-up is under this becomes null
 
 def fnv(s):
     h = 2166136261
@@ -24,13 +27,17 @@ def feats(text):
         f.add(fnv("c" + t[i:i+3]) % B)
     return sorted(f)
 
-def pick(W, bias, tools, text):
+def pick(W, bias, tools, text, margin=None):
+    margin = MARGIN if margin is None else margin
     s = list(bias)
     for h in feats(text):
         row = W[h]
         for k in range(len(s)):
             s[k] += row[k]
     best = max(range(len(s)), key=lambda k: (s[k], -k))
+    second = max(s[k] for k in range(len(s)) if k != best)
+    if tools[best] != OOS and s[best] - second < margin:
+        return OOS
     return tools[best]
 
 def load_train(p):
@@ -52,7 +59,8 @@ def fit(p, epochs=12):
             f = X[i]; s = b + W[f].sum(0); k = ti[y[i]]
             s2 = s.copy(); s2[k] = -1e9; j = int(s2.argmax())
             if s[k] - s[j] < 1.0:      # margin perceptron
-                W[f, k] += lr; W[f, j] -= lr; b[k] += lr; b[j] -= lr
+                g = lr * (NULL_W if y[i] == OOS else 1)
+                W[f, k] += g; W[f, j] -= g; b[k] += g; b[j] -= g
         lr *= 0.8
     return tools, W, b
 
@@ -67,6 +75,7 @@ def quantize(W, b):
 def train(p, out):
     tools, W, b = fit(p)
     Wi, bi = quantize(W, b)
+    bi[tools.index(OOS)] += NULL_BOOST
     json.dump({"tools": tools, "W": Wi.tolist(), "bias": bi.tolist()}, open(out, "w"))
     print("trained", len(tools), "classes,", int((Wi != 0).sum()), "weights")
 

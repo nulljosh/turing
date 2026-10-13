@@ -1,0 +1,700 @@
+{"text": "are you there", "tool": null, "arg": ""}
+{"text": "can we just chat", "tool": null, "arg": ""}
+{"text": "can you explain a blockchain in simple terms", "tool": null, "arg": ""}
+{"text": "can you explain a cache in simple terms", "tool": null, "arg": ""}
+{"text": "can you explain a chord in simple terms", "tool": null, "arg": ""}
+{"text": "can you explain a compiler in simple terms", "tool": null, "arg": ""}
+{"text": "can you explain a cron job in simple terms", "tool": null, "arg": ""}
+{"text": "can you explain a database index in simple terms", "tool": null, "arg": ""}
+{"text": "can you explain a docker container in simple terms", "tool": null, "arg": ""}
+{"text": "can you explain a firewall in simple terms", "tool": null, "arg": ""}
+{"text": "can you explain a font in simple terms", "tool": null, "arg": ""}
+{"text": "can you explain a glacier in simple terms", "tool": null, "arg": ""}
+{"text": "can you explain a haiku in simple terms", "tool": null, "arg": ""}
+{"text": "can you explain a hash table in simple terms", "tool": null, "arg": ""}
+{"text": "can you explain a kernel in simple terms", "tool": null, "arg": ""}
+{"text": "can you explain a monad in simple terms", "tool": null, "arg": ""}
+{"text": "can you explain a mutex in simple terms", "tool": null, "arg": ""}
+{"text": "can you explain a neural network in simple terms", "tool": null, "arg": ""}
+{"text": "can you explain a pixel in simple terms", "tool": null, "arg": ""}
+{"text": "can you explain a recession in simple terms", "tool": null, "arg": ""}
+{"text": "can you explain a regex in simple terms", "tool": null, "arg": ""}
+{"text": "can you explain a satellite in simple terms", "tool": null, "arg": ""}
+{"text": "can you explain a semicolon in simple terms", "tool": null, "arg": ""}
+{"text": "can you explain a uuid in simple terms", "tool": null, "arg": ""}
+{"text": "can you explain a vaccine in simple terms", "tool": null, "arg": ""}
+{"text": "can you explain a virus in simple terms", "tool": null, "arg": ""}
+{"text": "can you explain a volcano in simple terms", "tool": null, "arg": ""}
+{"text": "can you explain a vpn in simple terms", "tool": null, "arg": ""}
+{"text": "can you explain an api in simple terms", "tool": null, "arg": ""}
+{"text": "can you explain an eclipse in simple terms", "tool": null, "arg": ""}
+{"text": "can you explain an enzyme in simple terms", "tool": null, "arg": ""}
+{"text": "can you explain an operating system in simple terms", "tool": null, "arg": ""}
+{"text": "can you help me think something through", "tool": null, "arg": ""}
+{"text": "do you believe in luck", "tool": null, "arg": ""}
+{"text": "do you ever get tired of questions", "tool": null, "arg": ""}
+{"text": "do you have friends", "tool": null, "arg": ""}
+{"text": "explain how airplanes fly", "tool": null, "arg": ""}
+{"text": "explain how batteries work", "tool": null, "arg": ""}
+{"text": "explain how bread rises", "tool": null, "arg": ""}
+{"text": "explain how bridges stay up", "tool": null, "arg": ""}
+{"text": "explain how cameras work", "tool": null, "arg": ""}
+{"text": "explain how compilers work", "tool": null, "arg": ""}
+{"text": "explain how encryption works", "tool": null, "arg": ""}
+{"text": "explain how engines work", "tool": null, "arg": ""}
+{"text": "explain how fridges work", "tool": null, "arg": ""}
+{"text": "explain how gps works", "tool": null, "arg": ""}
+{"text": "explain how lightning forms", "tool": null, "arg": ""}
+{"text": "explain how magnets work", "tool": null, "arg": ""}
+{"text": "explain how memory works", "tool": null, "arg": ""}
+{"text": "explain how planes stay up", "tool": null, "arg": ""}
+{"text": "explain how rainbows form", "tool": null, "arg": ""}
+{"text": "explain how search engines work", "tool": null, "arg": ""}
+{"text": "explain how the internet works", "tool": null, "arg": ""}
+{"text": "explain how tides happen", "tool": null, "arg": ""}
+{"text": "explain how vaccines work", "tool": null, "arg": ""}
+{"text": "explain how wifi works", "tool": null, "arg": ""}
+{"text": "how come airplanes fly", "tool": null, "arg": ""}
+{"text": "how come batteries work", "tool": null, "arg": ""}
+{"text": "how come bread rises", "tool": null, "arg": ""}
+{"text": "how come bridges stay up", "tool": null, "arg": ""}
+{"text": "how come cameras work", "tool": null, "arg": ""}
+{"text": "how come compilers work", "tool": null, "arg": ""}
+{"text": "how come encryption works", "tool": null, "arg": ""}
+{"text": "how come engines work", "tool": null, "arg": ""}
+{"text": "how come fridges work", "tool": null, "arg": ""}
+{"text": "how come gps works", "tool": null, "arg": ""}
+{"text": "how come lightning forms", "tool": null, "arg": ""}
+{"text": "how come magnets work", "tool": null, "arg": ""}
+{"text": "how come memory works", "tool": null, "arg": ""}
+{"text": "how come planes stay up", "tool": null, "arg": ""}
+{"text": "how come rainbows form", "tool": null, "arg": ""}
+{"text": "how come search engines work", "tool": null, "arg": ""}
+{"text": "how come the internet works", "tool": null, "arg": ""}
+{"text": "how come tides happen", "tool": null, "arg": ""}
+{"text": "how come vaccines work", "tool": null, "arg": ""}
+{"text": "how come wifi works", "tool": null, "arg": ""}
+{"text": "how did people live before chess", "tool": null, "arg": ""}
+{"text": "how did people live before paper", "tool": null, "arg": ""}
+{"text": "how did people live before penicillin", "tool": null, "arg": ""}
+{"text": "how did people live before the bicycle", "tool": null, "arg": ""}
+{"text": "how did people live before the compass", "tool": null, "arg": ""}
+{"text": "how did people live before the internet", "tool": null, "arg": ""}
+{"text": "how did people live before the lightbulb", "tool": null, "arg": ""}
+{"text": "how did people live before the piano", "tool": null, "arg": ""}
+{"text": "how did people live before the printing press", "tool": null, "arg": ""}
+{"text": "how did people live before the telephone", "tool": null, "arg": ""}
+{"text": "how do you feel today", "tool": null, "arg": ""}
+{"text": "how many hours of sleep do i need", "tool": null, "arg": ""}
+{"text": "i don't know what to do", "tool": null, "arg": ""}
+{"text": "i just wanted to talk", "tool": null, "arg": ""}
+{"text": "i need advice", "tool": null, "arg": ""}
+{"text": "is a blockchain hard to understand", "tool": null, "arg": ""}
+{"text": "is a blockchain the same as a cache", "tool": null, "arg": ""}
+{"text": "is a blockchain the same as a chord", "tool": null, "arg": ""}
+{"text": "is a blockchain the same as a cron job", "tool": null, "arg": ""}
+{"text": "is a blockchain the same as a database index", "tool": null, "arg": ""}
+{"text": "is a blockchain the same as a firewall", "tool": null, "arg": ""}
+{"text": "is a blockchain the same as a font", "tool": null, "arg": ""}
+{"text": "is a blockchain the same as a hash table", "tool": null, "arg": ""}
+{"text": "is a blockchain the same as a kernel", "tool": null, "arg": ""}
+{"text": "is a blockchain the same as a mutex", "tool": null, "arg": ""}
+{"text": "is a blockchain the same as a neural network", "tool": null, "arg": ""}
+{"text": "is a blockchain the same as a satellite", "tool": null, "arg": ""}
+{"text": "is a blockchain the same as a uuid", "tool": null, "arg": ""}
+{"text": "is a blockchain the same as a vaccine", "tool": null, "arg": ""}
+{"text": "is a blockchain the same as a vpn", "tool": null, "arg": ""}
+{"text": "is a blockchain the same as an api", "tool": null, "arg": ""}
+{"text": "is a blockchain the same as an operating system", "tool": null, "arg": ""}
+{"text": "is a cache hard to understand", "tool": null, "arg": ""}
+{"text": "is a cache the same as a chord", "tool": null, "arg": ""}
+{"text": "is a cache the same as a database index", "tool": null, "arg": ""}
+{"text": "is a cache the same as a docker container", "tool": null, "arg": ""}
+{"text": "is a cache the same as a font", "tool": null, "arg": ""}
+{"text": "is a cache the same as a haiku", "tool": null, "arg": ""}
+{"text": "is a cache the same as a hash table", "tool": null, "arg": ""}
+{"text": "is a cache the same as a neural network", "tool": null, "arg": ""}
+{"text": "is a cache the same as a volcano", "tool": null, "arg": ""}
+{"text": "is a cache the same as an api", "tool": null, "arg": ""}
+{"text": "is a chord hard to understand", "tool": null, "arg": ""}
+{"text": "is a chord the same as a blockchain", "tool": null, "arg": ""}
+{"text": "is a chord the same as a cache", "tool": null, "arg": ""}
+{"text": "is a chord the same as a compiler", "tool": null, "arg": ""}
+{"text": "is a chord the same as a cron job", "tool": null, "arg": ""}
+{"text": "is a chord the same as a font", "tool": null, "arg": ""}
+{"text": "is a chord the same as a hash table", "tool": null, "arg": ""}
+{"text": "is a chord the same as a kernel", "tool": null, "arg": ""}
+{"text": "is a chord the same as a mutex", "tool": null, "arg": ""}
+{"text": "is a chord the same as a pixel", "tool": null, "arg": ""}
+{"text": "is a chord the same as a semicolon", "tool": null, "arg": ""}
+{"text": "is a chord the same as a virus", "tool": null, "arg": ""}
+{"text": "is a chord the same as a volcano", "tool": null, "arg": ""}
+{"text": "is a chord the same as a vpn", "tool": null, "arg": ""}
+{"text": "is a chord the same as an enzyme", "tool": null, "arg": ""}
+{"text": "is a compiler hard to understand", "tool": null, "arg": ""}
+{"text": "is a compiler the same as a blockchain", "tool": null, "arg": ""}
+{"text": "is a compiler the same as a cron job", "tool": null, "arg": ""}
+{"text": "is a compiler the same as a firewall", "tool": null, "arg": ""}
+{"text": "is a compiler the same as a font", "tool": null, "arg": ""}
+{"text": "is a compiler the same as a hash table", "tool": null, "arg": ""}
+{"text": "is a compiler the same as a monad", "tool": null, "arg": ""}
+{"text": "is a compiler the same as a pixel", "tool": null, "arg": ""}
+{"text": "is a compiler the same as a recession", "tool": null, "arg": ""}
+{"text": "is a compiler the same as a semicolon", "tool": null, "arg": ""}
+{"text": "is a compiler the same as a uuid", "tool": null, "arg": ""}
+{"text": "is a compiler the same as a virus", "tool": null, "arg": ""}
+{"text": "is a compiler the same as a vpn", "tool": null, "arg": ""}
+{"text": "is a compiler the same as an eclipse", "tool": null, "arg": ""}
+{"text": "is a compiler the same as an enzyme", "tool": null, "arg": ""}
+{"text": "is a cron job hard to understand", "tool": null, "arg": ""}
+{"text": "is a cron job the same as a compiler", "tool": null, "arg": ""}
+{"text": "is a cron job the same as a database index", "tool": null, "arg": ""}
+{"text": "is a cron job the same as a docker container", "tool": null, "arg": ""}
+{"text": "is a cron job the same as a firewall", "tool": null, "arg": ""}
+{"text": "is a cron job the same as a font", "tool": null, "arg": ""}
+{"text": "is a cron job the same as a glacier", "tool": null, "arg": ""}
+{"text": "is a cron job the same as a hash table", "tool": null, "arg": ""}
+{"text": "is a cron job the same as a monad", "tool": null, "arg": ""}
+{"text": "is a cron job the same as a neural network", "tool": null, "arg": ""}
+{"text": "is a cron job the same as a regex", "tool": null, "arg": ""}
+{"text": "is a cron job the same as a satellite", "tool": null, "arg": ""}
+{"text": "is a cron job the same as a virus", "tool": null, "arg": ""}
+{"text": "is a cron job the same as an eclipse", "tool": null, "arg": ""}
+{"text": "is a cron job the same as an enzyme", "tool": null, "arg": ""}
+{"text": "is a cron job the same as an operating system", "tool": null, "arg": ""}
+{"text": "is a database index hard to understand", "tool": null, "arg": ""}
+{"text": "is a database index the same as a cache", "tool": null, "arg": ""}
+{"text": "is a database index the same as a chord", "tool": null, "arg": ""}
+{"text": "is a database index the same as a cron job", "tool": null, "arg": ""}
+{"text": "is a database index the same as a firewall", "tool": null, "arg": ""}
+{"text": "is a database index the same as a glacier", "tool": null, "arg": ""}
+{"text": "is a database index the same as a hash table", "tool": null, "arg": ""}
+{"text": "is a database index the same as a kernel", "tool": null, "arg": ""}
+{"text": "is a database index the same as a mutex", "tool": null, "arg": ""}
+{"text": "is a database index the same as a neural network", "tool": null, "arg": ""}
+{"text": "is a database index the same as a regex", "tool": null, "arg": ""}
+{"text": "is a database index the same as a uuid", "tool": null, "arg": ""}
+{"text": "is a database index the same as a vaccine", "tool": null, "arg": ""}
+{"text": "is a database index the same as a volcano", "tool": null, "arg": ""}
+{"text": "is a database index the same as an eclipse", "tool": null, "arg": ""}
+{"text": "is a database index the same as an enzyme", "tool": null, "arg": ""}
+{"text": "is a docker container hard to understand", "tool": null, "arg": ""}
+{"text": "is a docker container the same as a cron job", "tool": null, "arg": ""}
+{"text": "is a docker container the same as a docker container", "tool": null, "arg": ""}
+{"text": "is a docker container the same as a haiku", "tool": null, "arg": ""}
+{"text": "is a docker container the same as a neural network", "tool": null, "arg": ""}
+{"text": "is a docker container the same as a satellite", "tool": null, "arg": ""}
+{"text": "is a docker container the same as a uuid", "tool": null, "arg": ""}
+{"text": "is a docker container the same as a vpn", "tool": null, "arg": ""}
+{"text": "is a docker container the same as an api", "tool": null, "arg": ""}
+{"text": "is a docker container the same as an eclipse", "tool": null, "arg": ""}
+{"text": "is a docker container the same as an operating system", "tool": null, "arg": ""}
+{"text": "is a firewall hard to understand", "tool": null, "arg": ""}
+{"text": "is a firewall the same as a blockchain", "tool": null, "arg": ""}
+{"text": "is a firewall the same as a cache", "tool": null, "arg": ""}
+{"text": "is a firewall the same as a compiler", "tool": null, "arg": ""}
+{"text": "is a firewall the same as a database index", "tool": null, "arg": ""}
+{"text": "is a firewall the same as a glacier", "tool": null, "arg": ""}
+{"text": "is a firewall the same as a mutex", "tool": null, "arg": ""}
+{"text": "is a firewall the same as a recession", "tool": null, "arg": ""}
+{"text": "is a firewall the same as a semicolon", "tool": null, "arg": ""}
+{"text": "is a firewall the same as a uuid", "tool": null, "arg": ""}
+{"text": "is a firewall the same as a vaccine", "tool": null, "arg": ""}
+{"text": "is a firewall the same as a virus", "tool": null, "arg": ""}
+{"text": "is a firewall the same as an api", "tool": null, "arg": ""}
+{"text": "is a font hard to understand", "tool": null, "arg": ""}
+{"text": "is a font the same as a cache", "tool": null, "arg": ""}
+{"text": "is a font the same as a hash table", "tool": null, "arg": ""}
+{"text": "is a font the same as a monad", "tool": null, "arg": ""}
+{"text": "is a font the same as a neural network", "tool": null, "arg": ""}
+{"text": "is a font the same as a pixel", "tool": null, "arg": ""}
+{"text": "is a font the same as a regex", "tool": null, "arg": ""}
+{"text": "is a font the same as a satellite", "tool": null, "arg": ""}
+{"text": "is a font the same as a vaccine", "tool": null, "arg": ""}
+{"text": "is a font the same as an enzyme", "tool": null, "arg": ""}
+{"text": "is a font the same as an operating system", "tool": null, "arg": ""}
+{"text": "is a glacier hard to understand", "tool": null, "arg": ""}
+{"text": "is a glacier the same as a blockchain", "tool": null, "arg": ""}
+{"text": "is a glacier the same as a chord", "tool": null, "arg": ""}
+{"text": "is a glacier the same as a compiler", "tool": null, "arg": ""}
+{"text": "is a glacier the same as a cron job", "tool": null, "arg": ""}
+{"text": "is a glacier the same as a database index", "tool": null, "arg": ""}
+{"text": "is a glacier the same as a font", "tool": null, "arg": ""}
+{"text": "is a glacier the same as a glacier", "tool": null, "arg": ""}
+{"text": "is a glacier the same as a haiku", "tool": null, "arg": ""}
+{"text": "is a glacier the same as a mutex", "tool": null, "arg": ""}
+{"text": "is a glacier the same as a pixel", "tool": null, "arg": ""}
+{"text": "is a glacier the same as a recession", "tool": null, "arg": ""}
+{"text": "is a glacier the same as a satellite", "tool": null, "arg": ""}
+{"text": "is a glacier the same as a vaccine", "tool": null, "arg": ""}
+{"text": "is a glacier the same as a virus", "tool": null, "arg": ""}
+{"text": "is a glacier the same as a volcano", "tool": null, "arg": ""}
+{"text": "is a glacier the same as a vpn", "tool": null, "arg": ""}
+{"text": "is a glacier the same as an api", "tool": null, "arg": ""}
+{"text": "is a glacier the same as an eclipse", "tool": null, "arg": ""}
+{"text": "is a haiku hard to understand", "tool": null, "arg": ""}
+{"text": "is a haiku the same as a cache", "tool": null, "arg": ""}
+{"text": "is a haiku the same as a kernel", "tool": null, "arg": ""}
+{"text": "is a haiku the same as a neural network", "tool": null, "arg": ""}
+{"text": "is a haiku the same as a pixel", "tool": null, "arg": ""}
+{"text": "is a haiku the same as a satellite", "tool": null, "arg": ""}
+{"text": "is a haiku the same as a semicolon", "tool": null, "arg": ""}
+{"text": "is a haiku the same as a virus", "tool": null, "arg": ""}
+{"text": "is a haiku the same as a volcano", "tool": null, "arg": ""}
+{"text": "is a haiku the same as a vpn", "tool": null, "arg": ""}
+{"text": "is a haiku the same as an api", "tool": null, "arg": ""}
+{"text": "is a haiku the same as an enzyme", "tool": null, "arg": ""}
+{"text": "is a hash table hard to understand", "tool": null, "arg": ""}
+{"text": "is a hash table the same as a blockchain", "tool": null, "arg": ""}
+{"text": "is a hash table the same as a compiler", "tool": null, "arg": ""}
+{"text": "is a hash table the same as a cron job", "tool": null, "arg": ""}
+{"text": "is a hash table the same as a docker container", "tool": null, "arg": ""}
+{"text": "is a hash table the same as a firewall", "tool": null, "arg": ""}
+{"text": "is a hash table the same as a glacier", "tool": null, "arg": ""}
+{"text": "is a hash table the same as a hash table", "tool": null, "arg": ""}
+{"text": "is a hash table the same as a kernel", "tool": null, "arg": ""}
+{"text": "is a hash table the same as a neural network", "tool": null, "arg": ""}
+{"text": "is a hash table the same as a satellite", "tool": null, "arg": ""}
+{"text": "is a hash table the same as a semicolon", "tool": null, "arg": ""}
+{"text": "is a hash table the same as a vaccine", "tool": null, "arg": ""}
+{"text": "is a hash table the same as an enzyme", "tool": null, "arg": ""}
+{"text": "is a hash table the same as an operating system", "tool": null, "arg": ""}
+{"text": "is a kernel hard to understand", "tool": null, "arg": ""}
+{"text": "is a kernel the same as a blockchain", "tool": null, "arg": ""}
+{"text": "is a kernel the same as a chord", "tool": null, "arg": ""}
+{"text": "is a kernel the same as a compiler", "tool": null, "arg": ""}
+{"text": "is a kernel the same as a cron job", "tool": null, "arg": ""}
+{"text": "is a kernel the same as a database index", "tool": null, "arg": ""}
+{"text": "is a kernel the same as a docker container", "tool": null, "arg": ""}
+{"text": "is a kernel the same as a haiku", "tool": null, "arg": ""}
+{"text": "is a kernel the same as a hash table", "tool": null, "arg": ""}
+{"text": "is a kernel the same as a neural network", "tool": null, "arg": ""}
+{"text": "is a kernel the same as a recession", "tool": null, "arg": ""}
+{"text": "is a kernel the same as a regex", "tool": null, "arg": ""}
+{"text": "is a kernel the same as a satellite", "tool": null, "arg": ""}
+{"text": "is a kernel the same as a semicolon", "tool": null, "arg": ""}
+{"text": "is a kernel the same as a virus", "tool": null, "arg": ""}
+{"text": "is a monad hard to understand", "tool": null, "arg": ""}
+{"text": "is a monad the same as a cache", "tool": null, "arg": ""}
+{"text": "is a monad the same as a database index", "tool": null, "arg": ""}
+{"text": "is a monad the same as a haiku", "tool": null, "arg": ""}
+{"text": "is a monad the same as a hash table", "tool": null, "arg": ""}
+{"text": "is a monad the same as a kernel", "tool": null, "arg": ""}
+{"text": "is a monad the same as a monad", "tool": null, "arg": ""}
+{"text": "is a monad the same as a neural network", "tool": null, "arg": ""}
+{"text": "is a monad the same as a pixel", "tool": null, "arg": ""}
+{"text": "is a monad the same as a satellite", "tool": null, "arg": ""}
+{"text": "is a monad the same as a uuid", "tool": null, "arg": ""}
+{"text": "is a monad the same as a virus", "tool": null, "arg": ""}
+{"text": "is a monad the same as a volcano", "tool": null, "arg": ""}
+{"text": "is a monad the same as a vpn", "tool": null, "arg": ""}
+{"text": "is a monad the same as an api", "tool": null, "arg": ""}
+{"text": "is a monad the same as an eclipse", "tool": null, "arg": ""}
+{"text": "is a mutex hard to understand", "tool": null, "arg": ""}
+{"text": "is a mutex the same as a chord", "tool": null, "arg": ""}
+{"text": "is a mutex the same as a compiler", "tool": null, "arg": ""}
+{"text": "is a mutex the same as a database index", "tool": null, "arg": ""}
+{"text": "is a mutex the same as a docker container", "tool": null, "arg": ""}
+{"text": "is a mutex the same as a firewall", "tool": null, "arg": ""}
+{"text": "is a mutex the same as a font", "tool": null, "arg": ""}
+{"text": "is a mutex the same as a glacier", "tool": null, "arg": ""}
+{"text": "is a mutex the same as a haiku", "tool": null, "arg": ""}
+{"text": "is a mutex the same as a hash table", "tool": null, "arg": ""}
+{"text": "is a mutex the same as a kernel", "tool": null, "arg": ""}
+{"text": "is a mutex the same as a recession", "tool": null, "arg": ""}
+{"text": "is a mutex the same as a regex", "tool": null, "arg": ""}
+{"text": "is a mutex the same as a semicolon", "tool": null, "arg": ""}
+{"text": "is a mutex the same as a vaccine", "tool": null, "arg": ""}
+{"text": "is a mutex the same as a virus", "tool": null, "arg": ""}
+{"text": "is a mutex the same as a volcano", "tool": null, "arg": ""}
+{"text": "is a mutex the same as a vpn", "tool": null, "arg": ""}
+{"text": "is a mutex the same as an enzyme", "tool": null, "arg": ""}
+{"text": "is a mutex the same as an operating system", "tool": null, "arg": ""}
+{"text": "is a neural network hard to understand", "tool": null, "arg": ""}
+{"text": "is a neural network the same as a blockchain", "tool": null, "arg": ""}
+{"text": "is a neural network the same as a cache", "tool": null, "arg": ""}
+{"text": "is a neural network the same as a chord", "tool": null, "arg": ""}
+{"text": "is a neural network the same as a compiler", "tool": null, "arg": ""}
+{"text": "is a neural network the same as a docker container", "tool": null, "arg": ""}
+{"text": "is a neural network the same as a firewall", "tool": null, "arg": ""}
+{"text": "is a neural network the same as a glacier", "tool": null, "arg": ""}
+{"text": "is a neural network the same as a haiku", "tool": null, "arg": ""}
+{"text": "is a neural network the same as a hash table", "tool": null, "arg": ""}
+{"text": "is a neural network the same as a pixel", "tool": null, "arg": ""}
+{"text": "is a neural network the same as a semicolon", "tool": null, "arg": ""}
+{"text": "is a neural network the same as an operating system", "tool": null, "arg": ""}
+{"text": "is a pixel hard to understand", "tool": null, "arg": ""}
+{"text": "is a pixel the same as a compiler", "tool": null, "arg": ""}
+{"text": "is a pixel the same as a font", "tool": null, "arg": ""}
+{"text": "is a pixel the same as a hash table", "tool": null, "arg": ""}
+{"text": "is a pixel the same as a pixel", "tool": null, "arg": ""}
+{"text": "is a pixel the same as a regex", "tool": null, "arg": ""}
+{"text": "is a pixel the same as a volcano", "tool": null, "arg": ""}
+{"text": "is a pixel the same as a vpn", "tool": null, "arg": ""}
+{"text": "is a pixel the same as an enzyme", "tool": null, "arg": ""}
+{"text": "is a recession hard to understand", "tool": null, "arg": ""}
+{"text": "is a recession the same as a blockchain", "tool": null, "arg": ""}
+{"text": "is a recession the same as a font", "tool": null, "arg": ""}
+{"text": "is a recession the same as a glacier", "tool": null, "arg": ""}
+{"text": "is a recession the same as a haiku", "tool": null, "arg": ""}
+{"text": "is a recession the same as a hash table", "tool": null, "arg": ""}
+{"text": "is a recession the same as a monad", "tool": null, "arg": ""}
+{"text": "is a recession the same as a regex", "tool": null, "arg": ""}
+{"text": "is a recession the same as a satellite", "tool": null, "arg": ""}
+{"text": "is a recession the same as a uuid", "tool": null, "arg": ""}
+{"text": "is a recession the same as a vaccine", "tool": null, "arg": ""}
+{"text": "is a recession the same as a volcano", "tool": null, "arg": ""}
+{"text": "is a recession the same as an eclipse", "tool": null, "arg": ""}
+{"text": "is a recession the same as an operating system", "tool": null, "arg": ""}
+{"text": "is a regex hard to understand", "tool": null, "arg": ""}
+{"text": "is a regex the same as a chord", "tool": null, "arg": ""}
+{"text": "is a regex the same as a cron job", "tool": null, "arg": ""}
+{"text": "is a regex the same as a glacier", "tool": null, "arg": ""}
+{"text": "is a regex the same as a haiku", "tool": null, "arg": ""}
+{"text": "is a regex the same as a hash table", "tool": null, "arg": ""}
+{"text": "is a regex the same as a pixel", "tool": null, "arg": ""}
+{"text": "is a regex the same as a satellite", "tool": null, "arg": ""}
+{"text": "is a regex the same as a semicolon", "tool": null, "arg": ""}
+{"text": "is a regex the same as a vpn", "tool": null, "arg": ""}
+{"text": "is a regex the same as an api", "tool": null, "arg": ""}
+{"text": "is a regex the same as an eclipse", "tool": null, "arg": ""}
+{"text": "is a regex the same as an operating system", "tool": null, "arg": ""}
+{"text": "is a satellite hard to understand", "tool": null, "arg": ""}
+{"text": "is a satellite the same as a blockchain", "tool": null, "arg": ""}
+{"text": "is a satellite the same as a cache", "tool": null, "arg": ""}
+{"text": "is a satellite the same as a docker container", "tool": null, "arg": ""}
+{"text": "is a satellite the same as a firewall", "tool": null, "arg": ""}
+{"text": "is a satellite the same as a glacier", "tool": null, "arg": ""}
+{"text": "is a satellite the same as a kernel", "tool": null, "arg": ""}
+{"text": "is a satellite the same as a mutex", "tool": null, "arg": ""}
+{"text": "is a satellite the same as a neural network", "tool": null, "arg": ""}
+{"text": "is a satellite the same as a satellite", "tool": null, "arg": ""}
+{"text": "is a satellite the same as a semicolon", "tool": null, "arg": ""}
+{"text": "is a satellite the same as a uuid", "tool": null, "arg": ""}
+{"text": "is a satellite the same as a vaccine", "tool": null, "arg": ""}
+{"text": "is a satellite the same as a vpn", "tool": null, "arg": ""}
+{"text": "is a satellite the same as an enzyme", "tool": null, "arg": ""}
+{"text": "is a semicolon hard to understand", "tool": null, "arg": ""}
+{"text": "is a semicolon the same as a chord", "tool": null, "arg": ""}
+{"text": "is a semicolon the same as a cron job", "tool": null, "arg": ""}
+{"text": "is a semicolon the same as a kernel", "tool": null, "arg": ""}
+{"text": "is a semicolon the same as a monad", "tool": null, "arg": ""}
+{"text": "is a semicolon the same as a mutex", "tool": null, "arg": ""}
+{"text": "is a semicolon the same as a neural network", "tool": null, "arg": ""}
+{"text": "is a semicolon the same as a pixel", "tool": null, "arg": ""}
+{"text": "is a semicolon the same as a virus", "tool": null, "arg": ""}
+{"text": "is a semicolon the same as a volcano", "tool": null, "arg": ""}
+{"text": "is a semicolon the same as an eclipse", "tool": null, "arg": ""}
+{"text": "is a uuid hard to understand", "tool": null, "arg": ""}
+{"text": "is a uuid the same as a blockchain", "tool": null, "arg": ""}
+{"text": "is a uuid the same as a chord", "tool": null, "arg": ""}
+{"text": "is a uuid the same as a compiler", "tool": null, "arg": ""}
+{"text": "is a uuid the same as a firewall", "tool": null, "arg": ""}
+{"text": "is a uuid the same as a glacier", "tool": null, "arg": ""}
+{"text": "is a uuid the same as a haiku", "tool": null, "arg": ""}
+{"text": "is a uuid the same as a pixel", "tool": null, "arg": ""}
+{"text": "is a uuid the same as a regex", "tool": null, "arg": ""}
+{"text": "is a uuid the same as a semicolon", "tool": null, "arg": ""}
+{"text": "is a uuid the same as a vaccine", "tool": null, "arg": ""}
+{"text": "is a uuid the same as a vpn", "tool": null, "arg": ""}
+{"text": "is a uuid the same as an api", "tool": null, "arg": ""}
+{"text": "is a vaccine hard to understand", "tool": null, "arg": ""}
+{"text": "is a vaccine the same as a blockchain", "tool": null, "arg": ""}
+{"text": "is a vaccine the same as a chord", "tool": null, "arg": ""}
+{"text": "is a vaccine the same as a database index", "tool": null, "arg": ""}
+{"text": "is a vaccine the same as a docker container", "tool": null, "arg": ""}
+{"text": "is a vaccine the same as a font", "tool": null, "arg": ""}
+{"text": "is a vaccine the same as a glacier", "tool": null, "arg": ""}
+{"text": "is a vaccine the same as a kernel", "tool": null, "arg": ""}
+{"text": "is a vaccine the same as a uuid", "tool": null, "arg": ""}
+{"text": "is a vaccine the same as a vaccine", "tool": null, "arg": ""}
+{"text": "is a vaccine the same as a virus", "tool": null, "arg": ""}
+{"text": "is a virus hard to understand", "tool": null, "arg": ""}
+{"text": "is a virus the same as a cron job", "tool": null, "arg": ""}
+{"text": "is a virus the same as a docker container", "tool": null, "arg": ""}
+{"text": "is a virus the same as a haiku", "tool": null, "arg": ""}
+{"text": "is a virus the same as a kernel", "tool": null, "arg": ""}
+{"text": "is a virus the same as a mutex", "tool": null, "arg": ""}
+{"text": "is a virus the same as a recession", "tool": null, "arg": ""}
+{"text": "is a virus the same as a regex", "tool": null, "arg": ""}
+{"text": "is a virus the same as a satellite", "tool": null, "arg": ""}
+{"text": "is a virus the same as a semicolon", "tool": null, "arg": ""}
+{"text": "is a virus the same as a uuid", "tool": null, "arg": ""}
+{"text": "is a virus the same as a volcano", "tool": null, "arg": ""}
+{"text": "is a virus the same as a vpn", "tool": null, "arg": ""}
+{"text": "is a virus the same as an operating system", "tool": null, "arg": ""}
+{"text": "is a volcano hard to understand", "tool": null, "arg": ""}
+{"text": "is a volcano the same as a chord", "tool": null, "arg": ""}
+{"text": "is a volcano the same as a cron job", "tool": null, "arg": ""}
+{"text": "is a volcano the same as a hash table", "tool": null, "arg": ""}
+{"text": "is a volcano the same as a kernel", "tool": null, "arg": ""}
+{"text": "is a volcano the same as a monad", "tool": null, "arg": ""}
+{"text": "is a volcano the same as a neural network", "tool": null, "arg": ""}
+{"text": "is a volcano the same as a regex", "tool": null, "arg": ""}
+{"text": "is a volcano the same as a satellite", "tool": null, "arg": ""}
+{"text": "is a volcano the same as a semicolon", "tool": null, "arg": ""}
+{"text": "is a volcano the same as an eclipse", "tool": null, "arg": ""}
+{"text": "is a volcano the same as an enzyme", "tool": null, "arg": ""}
+{"text": "is a vpn hard to understand", "tool": null, "arg": ""}
+{"text": "is a vpn the same as a cache", "tool": null, "arg": ""}
+{"text": "is a vpn the same as a compiler", "tool": null, "arg": ""}
+{"text": "is a vpn the same as a docker container", "tool": null, "arg": ""}
+{"text": "is a vpn the same as a kernel", "tool": null, "arg": ""}
+{"text": "is a vpn the same as a monad", "tool": null, "arg": ""}
+{"text": "is a vpn the same as a mutex", "tool": null, "arg": ""}
+{"text": "is a vpn the same as a pixel", "tool": null, "arg": ""}
+{"text": "is a vpn the same as a regex", "tool": null, "arg": ""}
+{"text": "is a vpn the same as a volcano", "tool": null, "arg": ""}
+{"text": "is a vpn the same as an api", "tool": null, "arg": ""}
+{"text": "is an api hard to understand", "tool": null, "arg": ""}
+{"text": "is an api the same as a cache", "tool": null, "arg": ""}
+{"text": "is an api the same as a chord", "tool": null, "arg": ""}
+{"text": "is an api the same as a font", "tool": null, "arg": ""}
+{"text": "is an api the same as a haiku", "tool": null, "arg": ""}
+{"text": "is an api the same as a hash table", "tool": null, "arg": ""}
+{"text": "is an api the same as a kernel", "tool": null, "arg": ""}
+{"text": "is an api the same as a monad", "tool": null, "arg": ""}
+{"text": "is an api the same as a neural network", "tool": null, "arg": ""}
+{"text": "is an api the same as a regex", "tool": null, "arg": ""}
+{"text": "is an api the same as a vaccine", "tool": null, "arg": ""}
+{"text": "is an api the same as a vpn", "tool": null, "arg": ""}
+{"text": "is an api the same as an operating system", "tool": null, "arg": ""}
+{"text": "is an eclipse hard to understand", "tool": null, "arg": ""}
+{"text": "is an eclipse the same as a cron job", "tool": null, "arg": ""}
+{"text": "is an eclipse the same as a database index", "tool": null, "arg": ""}
+{"text": "is an eclipse the same as a docker container", "tool": null, "arg": ""}
+{"text": "is an eclipse the same as a firewall", "tool": null, "arg": ""}
+{"text": "is an eclipse the same as a font", "tool": null, "arg": ""}
+{"text": "is an eclipse the same as a glacier", "tool": null, "arg": ""}
+{"text": "is an eclipse the same as a haiku", "tool": null, "arg": ""}
+{"text": "is an eclipse the same as a hash table", "tool": null, "arg": ""}
+{"text": "is an eclipse the same as a kernel", "tool": null, "arg": ""}
+{"text": "is an eclipse the same as a monad", "tool": null, "arg": ""}
+{"text": "is an eclipse the same as a pixel", "tool": null, "arg": ""}
+{"text": "is an eclipse the same as a recession", "tool": null, "arg": ""}
+{"text": "is an eclipse the same as a semicolon", "tool": null, "arg": ""}
+{"text": "is an eclipse the same as a volcano", "tool": null, "arg": ""}
+{"text": "is an eclipse the same as an api", "tool": null, "arg": ""}
+{"text": "is an eclipse the same as an eclipse", "tool": null, "arg": ""}
+{"text": "is an eclipse the same as an enzyme", "tool": null, "arg": ""}
+{"text": "is an eclipse the same as an operating system", "tool": null, "arg": ""}
+{"text": "is an enzyme hard to understand", "tool": null, "arg": ""}
+{"text": "is an enzyme the same as a monad", "tool": null, "arg": ""}
+{"text": "is an enzyme the same as a mutex", "tool": null, "arg": ""}
+{"text": "is an enzyme the same as a neural network", "tool": null, "arg": ""}
+{"text": "is an enzyme the same as a semicolon", "tool": null, "arg": ""}
+{"text": "is an enzyme the same as a uuid", "tool": null, "arg": ""}
+{"text": "is an enzyme the same as a vaccine", "tool": null, "arg": ""}
+{"text": "is an enzyme the same as a volcano", "tool": null, "arg": ""}
+{"text": "is an enzyme the same as a vpn", "tool": null, "arg": ""}
+{"text": "is an enzyme the same as an eclipse", "tool": null, "arg": ""}
+{"text": "is an enzyme the same as an operating system", "tool": null, "arg": ""}
+{"text": "is an operating system hard to understand", "tool": null, "arg": ""}
+{"text": "is an operating system the same as a blockchain", "tool": null, "arg": ""}
+{"text": "is an operating system the same as a firewall", "tool": null, "arg": ""}
+{"text": "is an operating system the same as a font", "tool": null, "arg": ""}
+{"text": "is an operating system the same as a glacier", "tool": null, "arg": ""}
+{"text": "is an operating system the same as a hash table", "tool": null, "arg": ""}
+{"text": "is an operating system the same as a kernel", "tool": null, "arg": ""}
+{"text": "is an operating system the same as a monad", "tool": null, "arg": ""}
+{"text": "is an operating system the same as a mutex", "tool": null, "arg": ""}
+{"text": "is an operating system the same as a satellite", "tool": null, "arg": ""}
+{"text": "is an operating system the same as a virus", "tool": null, "arg": ""}
+{"text": "is an operating system the same as a volcano", "tool": null, "arg": ""}
+{"text": "is an operating system the same as an api", "tool": null, "arg": ""}
+{"text": "is an operating system the same as an operating system", "tool": null, "arg": ""}
+{"text": "is it true that bats are blind", "tool": null, "arg": ""}
+{"text": "is it true that cracking knuckles causes arthritis", "tool": null, "arg": ""}
+{"text": "is it true that goldfish only remember for three seconds", "tool": null, "arg": ""}
+{"text": "is it true that lightning never strikes twice", "tool": null, "arg": ""}
+{"text": "is it true that the great wall is visible from space", "tool": null, "arg": ""}
+{"text": "is it true that we only use ten percent of our brains", "tool": null, "arg": ""}
+{"text": "is there life on other planets", "tool": null, "arg": ""}
+{"text": "tell me about yourself", "tool": null, "arg": ""}
+{"text": "what is love", "tool": null, "arg": ""}
+{"text": "what makes a good friend", "tool": null, "arg": ""}
+{"text": "what would happen if airplanes fly stopped", "tool": null, "arg": ""}
+{"text": "what would happen if batteries work stopped", "tool": null, "arg": ""}
+{"text": "what would happen if bread rises stopped", "tool": null, "arg": ""}
+{"text": "what would happen if bridges stay up stopped", "tool": null, "arg": ""}
+{"text": "what would happen if cameras work stopped", "tool": null, "arg": ""}
+{"text": "what would happen if compilers work stopped", "tool": null, "arg": ""}
+{"text": "what would happen if encryption works stopped", "tool": null, "arg": ""}
+{"text": "what would happen if engines work stopped", "tool": null, "arg": ""}
+{"text": "what would happen if fridges work stopped", "tool": null, "arg": ""}
+{"text": "what would happen if gps works stopped", "tool": null, "arg": ""}
+{"text": "what would happen if lightning forms stopped", "tool": null, "arg": ""}
+{"text": "what would happen if magnets work stopped", "tool": null, "arg": ""}
+{"text": "what would happen if memory works stopped", "tool": null, "arg": ""}
+{"text": "what would happen if planes stay up stopped", "tool": null, "arg": ""}
+{"text": "what would happen if rainbows form stopped", "tool": null, "arg": ""}
+{"text": "what would happen if search engines work stopped", "tool": null, "arg": ""}
+{"text": "what would happen if the internet works stopped", "tool": null, "arg": ""}
+{"text": "what would happen if tides happen stopped", "tool": null, "arg": ""}
+{"text": "what would happen if vaccines work stopped", "tool": null, "arg": ""}
+{"text": "what would happen if wifi works stopped", "tool": null, "arg": ""}
+{"text": "what's it like being you", "tool": null, "arg": ""}
+{"text": "what's the meaning of life", "tool": null, "arg": ""}
+{"text": "what's your name again", "tool": null, "arg": ""}
+{"text": "whats a blockchain used for", "tool": null, "arg": ""}
+{"text": "whats a cache used for", "tool": null, "arg": ""}
+{"text": "whats a chord used for", "tool": null, "arg": ""}
+{"text": "whats a compiler used for", "tool": null, "arg": ""}
+{"text": "whats a cron job used for", "tool": null, "arg": ""}
+{"text": "whats a database index used for", "tool": null, "arg": ""}
+{"text": "whats a docker container used for", "tool": null, "arg": ""}
+{"text": "whats a firewall used for", "tool": null, "arg": ""}
+{"text": "whats a font used for", "tool": null, "arg": ""}
+{"text": "whats a glacier used for", "tool": null, "arg": ""}
+{"text": "whats a haiku used for", "tool": null, "arg": ""}
+{"text": "whats a hash table used for", "tool": null, "arg": ""}
+{"text": "whats a kernel used for", "tool": null, "arg": ""}
+{"text": "whats a monad used for", "tool": null, "arg": ""}
+{"text": "whats a mutex used for", "tool": null, "arg": ""}
+{"text": "whats a neural network used for", "tool": null, "arg": ""}
+{"text": "whats a pixel used for", "tool": null, "arg": ""}
+{"text": "whats a recession used for", "tool": null, "arg": ""}
+{"text": "whats a regex used for", "tool": null, "arg": ""}
+{"text": "whats a satellite used for", "tool": null, "arg": ""}
+{"text": "whats a semicolon used for", "tool": null, "arg": ""}
+{"text": "whats a uuid used for", "tool": null, "arg": ""}
+{"text": "whats a vaccine used for", "tool": null, "arg": ""}
+{"text": "whats a virus used for", "tool": null, "arg": ""}
+{"text": "whats a volcano used for", "tool": null, "arg": ""}
+{"text": "whats a vpn used for", "tool": null, "arg": ""}
+{"text": "whats an api used for", "tool": null, "arg": ""}
+{"text": "whats an eclipse used for", "tool": null, "arg": ""}
+{"text": "whats an enzyme used for", "tool": null, "arg": ""}
+{"text": "whats an operating system used for", "tool": null, "arg": ""}
+{"text": "whats the point of a blockchain", "tool": null, "arg": ""}
+{"text": "whats the point of a cache", "tool": null, "arg": ""}
+{"text": "whats the point of a chord", "tool": null, "arg": ""}
+{"text": "whats the point of a compiler", "tool": null, "arg": ""}
+{"text": "whats the point of a cron job", "tool": null, "arg": ""}
+{"text": "whats the point of a database index", "tool": null, "arg": ""}
+{"text": "whats the point of a docker container", "tool": null, "arg": ""}
+{"text": "whats the point of a firewall", "tool": null, "arg": ""}
+{"text": "whats the point of a font", "tool": null, "arg": ""}
+{"text": "whats the point of a glacier", "tool": null, "arg": ""}
+{"text": "whats the point of a haiku", "tool": null, "arg": ""}
+{"text": "whats the point of a hash table", "tool": null, "arg": ""}
+{"text": "whats the point of a kernel", "tool": null, "arg": ""}
+{"text": "whats the point of a monad", "tool": null, "arg": ""}
+{"text": "whats the point of a mutex", "tool": null, "arg": ""}
+{"text": "whats the point of a neural network", "tool": null, "arg": ""}
+{"text": "whats the point of a pixel", "tool": null, "arg": ""}
+{"text": "whats the point of a recession", "tool": null, "arg": ""}
+{"text": "whats the point of a regex", "tool": null, "arg": ""}
+{"text": "whats the point of a satellite", "tool": null, "arg": ""}
+{"text": "whats the point of a semicolon", "tool": null, "arg": ""}
+{"text": "whats the point of a uuid", "tool": null, "arg": ""}
+{"text": "whats the point of a vaccine", "tool": null, "arg": ""}
+{"text": "whats the point of a virus", "tool": null, "arg": ""}
+{"text": "whats the point of a volcano", "tool": null, "arg": ""}
+{"text": "whats the point of a vpn", "tool": null, "arg": ""}
+{"text": "whats the point of an api", "tool": null, "arg": ""}
+{"text": "whats the point of an eclipse", "tool": null, "arg": ""}
+{"text": "whats the point of an enzyme", "tool": null, "arg": ""}
+{"text": "whats the point of an operating system", "tool": null, "arg": ""}
+{"text": "who invented chess", "tool": null, "arg": ""}
+{"text": "who invented paper", "tool": null, "arg": ""}
+{"text": "who invented penicillin", "tool": null, "arg": ""}
+{"text": "who invented the bicycle", "tool": null, "arg": ""}
+{"text": "who invented the compass", "tool": null, "arg": ""}
+{"text": "who invented the internet", "tool": null, "arg": ""}
+{"text": "who invented the lightbulb", "tool": null, "arg": ""}
+{"text": "who invented the piano", "tool": null, "arg": ""}
+{"text": "who invented the printing press", "tool": null, "arg": ""}
+{"text": "who invented the telephone", "tool": null, "arg": ""}
+{"text": "why do birds dream", "tool": null, "arg": ""}
+{"text": "why do birds feel nostalgic", "tool": null, "arg": ""}
+{"text": "why do birds forget things", "tool": null, "arg": ""}
+{"text": "why do birds get bored", "tool": null, "arg": ""}
+{"text": "why do birds get hiccups", "tool": null, "arg": ""}
+{"text": "why do birds love music", "tool": null, "arg": ""}
+{"text": "why do birds procrastinate", "tool": null, "arg": ""}
+{"text": "why do birds sleep so much", "tool": null, "arg": ""}
+{"text": "why do birds sneeze", "tool": null, "arg": ""}
+{"text": "why do birds yawn", "tool": null, "arg": ""}
+{"text": "why do cats dream", "tool": null, "arg": ""}
+{"text": "why do cats feel nostalgic", "tool": null, "arg": ""}
+{"text": "why do cats forget things", "tool": null, "arg": ""}
+{"text": "why do cats get bored", "tool": null, "arg": ""}
+{"text": "why do cats get hiccups", "tool": null, "arg": ""}
+{"text": "why do cats love music", "tool": null, "arg": ""}
+{"text": "why do cats procrastinate", "tool": null, "arg": ""}
+{"text": "why do cats sleep so much", "tool": null, "arg": ""}
+{"text": "why do cats sneeze", "tool": null, "arg": ""}
+{"text": "why do cats yawn", "tool": null, "arg": ""}
+{"text": "why do dogs dream", "tool": null, "arg": ""}
+{"text": "why do dogs feel nostalgic", "tool": null, "arg": ""}
+{"text": "why do dogs forget things", "tool": null, "arg": ""}
+{"text": "why do dogs get bored", "tool": null, "arg": ""}
+{"text": "why do dogs get hiccups", "tool": null, "arg": ""}
+{"text": "why do dogs love music", "tool": null, "arg": ""}
+{"text": "why do dogs procrastinate", "tool": null, "arg": ""}
+{"text": "why do dogs sleep so much", "tool": null, "arg": ""}
+{"text": "why do dogs sneeze", "tool": null, "arg": ""}
+{"text": "why do dogs yawn", "tool": null, "arg": ""}
+{"text": "why do kids dream", "tool": null, "arg": ""}
+{"text": "why do kids feel nostalgic", "tool": null, "arg": ""}
+{"text": "why do kids forget things", "tool": null, "arg": ""}
+{"text": "why do kids get bored", "tool": null, "arg": ""}
+{"text": "why do kids get hiccups", "tool": null, "arg": ""}
+{"text": "why do kids love music", "tool": null, "arg": ""}
+{"text": "why do kids procrastinate", "tool": null, "arg": ""}
+{"text": "why do kids sleep so much", "tool": null, "arg": ""}
+{"text": "why do kids sneeze", "tool": null, "arg": ""}
+{"text": "why do kids yawn", "tool": null, "arg": ""}
+{"text": "why do people dream", "tool": null, "arg": ""}
+{"text": "why do people feel nostalgic", "tool": null, "arg": ""}
+{"text": "why do people forget things", "tool": null, "arg": ""}
+{"text": "why do people get bored", "tool": null, "arg": ""}
+{"text": "why do people get hiccups", "tool": null, "arg": ""}
+{"text": "why do people love music", "tool": null, "arg": ""}
+{"text": "why do people procrastinate", "tool": null, "arg": ""}
+{"text": "why do people sleep so much", "tool": null, "arg": ""}
+{"text": "why do people sneeze", "tool": null, "arg": ""}
+{"text": "why do people yawn", "tool": null, "arg": ""}
+{"text": "why do we have seasons", "tool": null, "arg": ""}
+{"text": "why does everyone dream", "tool": null, "arg": ""}
+{"text": "why does everyone feel nostalgic", "tool": null, "arg": ""}
+{"text": "why does everyone forget things", "tool": null, "arg": ""}
+{"text": "why does everyone get bored", "tool": null, "arg": ""}
+{"text": "why does everyone get hiccups", "tool": null, "arg": ""}
+{"text": "why does everyone love music", "tool": null, "arg": ""}
+{"text": "why does everyone procrastinate", "tool": null, "arg": ""}
+{"text": "why does everyone sleep so much", "tool": null, "arg": ""}
+{"text": "why does everyone sneeze", "tool": null, "arg": ""}
+{"text": "why does everyone yawn", "tool": null, "arg": ""}
+{"text": "why does my brain dream", "tool": null, "arg": ""}
+{"text": "why does my brain feel nostalgic", "tool": null, "arg": ""}
+{"text": "why does my brain forget things", "tool": null, "arg": ""}
+{"text": "why does my brain get bored", "tool": null, "arg": ""}
+{"text": "why does my brain get hiccups", "tool": null, "arg": ""}
+{"text": "why does my brain love music", "tool": null, "arg": ""}
+{"text": "why does my brain procrastinate", "tool": null, "arg": ""}
+{"text": "why does my brain sleep so much", "tool": null, "arg": ""}
+{"text": "why does my brain sneeze", "tool": null, "arg": ""}
+{"text": "why does my brain yawn", "tool": null, "arg": ""}
+{"text": "why does my cat dream", "tool": null, "arg": ""}
+{"text": "why does my cat feel nostalgic", "tool": null, "arg": ""}
+{"text": "why does my cat forget things", "tool": null, "arg": ""}
+{"text": "why does my cat get bored", "tool": null, "arg": ""}
+{"text": "why does my cat get hiccups", "tool": null, "arg": ""}
+{"text": "why does my cat love music", "tool": null, "arg": ""}
+{"text": "why does my cat procrastinate", "tool": null, "arg": ""}
+{"text": "why does my cat sleep so much", "tool": null, "arg": ""}
+{"text": "why does my cat sneeze", "tool": null, "arg": ""}
+{"text": "why does my cat yawn", "tool": null, "arg": ""}
+{"text": "why does nobody dream", "tool": null, "arg": ""}
+{"text": "why does nobody feel nostalgic", "tool": null, "arg": ""}
+{"text": "why does nobody forget things", "tool": null, "arg": ""}
+{"text": "why does nobody get bored", "tool": null, "arg": ""}
+{"text": "why does nobody get hiccups", "tool": null, "arg": ""}
+{"text": "why does nobody love music", "tool": null, "arg": ""}
+{"text": "why does nobody procrastinate", "tool": null, "arg": ""}
+{"text": "why does nobody sleep so much", "tool": null, "arg": ""}
+{"text": "why does nobody sneeze", "tool": null, "arg": ""}
+{"text": "why does nobody yawn", "tool": null, "arg": ""}
+{"text": "why is the sky blue", "tool": null, "arg": ""}

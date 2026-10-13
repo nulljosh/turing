@@ -1,0 +1,720 @@
+{"text": "are you a robot", "tool": null, "arg": ""}
+{"text": "can ancient rome make you happier", "tool": null, "arg": ""}
+{"text": "can black holes make you happier", "tool": null, "arg": ""}
+{"text": "can board games make you happier", "tool": null, "arg": ""}
+{"text": "can chess make you happier", "tool": null, "arg": ""}
+{"text": "can coffee make you happier", "tool": null, "arg": ""}
+{"text": "can cold showers make you happier", "tool": null, "arg": ""}
+{"text": "can cryptocurrency make you happier", "tool": null, "arg": ""}
+{"text": "can cycling make you happier", "tool": null, "arg": ""}
+{"text": "can dinosaurs make you happier", "tool": null, "arg": ""}
+{"text": "can electric cars make you happier", "tool": null, "arg": ""}
+{"text": "can film photography make you happier", "tool": null, "arg": ""}
+{"text": "can freelancing make you happier", "tool": null, "arg": ""}
+{"text": "can gardening make you happier", "tool": null, "arg": ""}
+{"text": "can hiking make you happier", "tool": null, "arg": ""}
+{"text": "can intermittent fasting make you happier", "tool": null, "arg": ""}
+{"text": "can jazz make you happier", "tool": null, "arg": ""}
+{"text": "can journaling make you happier", "tool": null, "arg": ""}
+{"text": "can learning guitar make you happier", "tool": null, "arg": ""}
+{"text": "can marathon running make you happier", "tool": null, "arg": ""}
+{"text": "can mechanical keyboards make you happier", "tool": null, "arg": ""}
+{"text": "can meditation make you happier", "tool": null, "arg": ""}
+{"text": "can minimalism make you happier", "tool": null, "arg": ""}
+{"text": "can podcasts make you happier", "tool": null, "arg": ""}
+{"text": "can productivity apps make you happier", "tool": null, "arg": ""}
+{"text": "can quantum computers make you happier", "tool": null, "arg": ""}
+{"text": "can remote work make you happier", "tool": null, "arg": ""}
+{"text": "can sleep make you happier", "tool": null, "arg": ""}
+{"text": "can social media make you happier", "tool": null, "arg": ""}
+{"text": "can sourdough bread make you happier", "tool": null, "arg": ""}
+{"text": "can space travel make you happier", "tool": null, "arg": ""}
+{"text": "can startups make you happier", "tool": null, "arg": ""}
+{"text": "can the stock market make you happier", "tool": null, "arg": ""}
+{"text": "can tiny houses make you happier", "tool": null, "arg": ""}
+{"text": "can video games make you happier", "tool": null, "arg": ""}
+{"text": "can vinyl records make you happier", "tool": null, "arg": ""}
+{"text": "can woodworking make you happier", "tool": null, "arg": ""}
+{"text": "can you keep a secret", "tool": null, "arg": ""}
+{"text": "can you recommend a good board game", "tool": null, "arg": ""}
+{"text": "can you recommend a good book", "tool": null, "arg": ""}
+{"text": "can you recommend a good breakfast", "tool": null, "arg": ""}
+{"text": "can you recommend a good city to visit", "tool": null, "arg": ""}
+{"text": "can you recommend a good hobby", "tool": null, "arg": ""}
+{"text": "can you recommend a good laptop for students", "tool": null, "arg": ""}
+{"text": "can you recommend a good movie", "tool": null, "arg": ""}
+{"text": "can you recommend a good playlist for working", "tool": null, "arg": ""}
+{"text": "can you recommend a good podcast", "tool": null, "arg": ""}
+{"text": "can you recommend a good programming language", "tool": null, "arg": ""}
+{"text": "can you recommend a good text editor", "tool": null, "arg": ""}
+{"text": "can you recommend a good way to relax", "tool": null, "arg": ""}
+{"text": "do you dream", "tool": null, "arg": ""}
+{"text": "do you get bored", "tool": null, "arg": ""}
+{"text": "do you like music", "tool": null, "arg": ""}
+{"text": "do you think ancient rome is worth it", "tool": null, "arg": ""}
+{"text": "do you think artificial intelligence is worth it", "tool": null, "arg": ""}
+{"text": "do you think black holes is worth it", "tool": null, "arg": ""}
+{"text": "do you think board games is worth it", "tool": null, "arg": ""}
+{"text": "do you think chess is worth it", "tool": null, "arg": ""}
+{"text": "do you think coffee is worth it", "tool": null, "arg": ""}
+{"text": "do you think cold showers is worth it", "tool": null, "arg": ""}
+{"text": "do you think cryptocurrency is worth it", "tool": null, "arg": ""}
+{"text": "do you think cycling is worth it", "tool": null, "arg": ""}
+{"text": "do you think dinosaurs is worth it", "tool": null, "arg": ""}
+{"text": "do you think electric cars is worth it", "tool": null, "arg": ""}
+{"text": "do you think film photography is worth it", "tool": null, "arg": ""}
+{"text": "do you think freelancing is worth it", "tool": null, "arg": ""}
+{"text": "do you think gardening is worth it", "tool": null, "arg": ""}
+{"text": "do you think hiking is worth it", "tool": null, "arg": ""}
+{"text": "do you think intermittent fasting is worth it", "tool": null, "arg": ""}
+{"text": "do you think journaling is worth it", "tool": null, "arg": ""}
+{"text": "do you think learning guitar is worth it", "tool": null, "arg": ""}
+{"text": "do you think marathon running is worth it", "tool": null, "arg": ""}
+{"text": "do you think mechanical keyboards is worth it", "tool": null, "arg": ""}
+{"text": "do you think meditation is worth it", "tool": null, "arg": ""}
+{"text": "do you think minimalism is worth it", "tool": null, "arg": ""}
+{"text": "do you think open source software is worth it", "tool": null, "arg": ""}
+{"text": "do you think podcasts is worth it", "tool": null, "arg": ""}
+{"text": "do you think productivity apps is worth it", "tool": null, "arg": ""}
+{"text": "do you think quantum computers is worth it", "tool": null, "arg": ""}
+{"text": "do you think remote work is worth it", "tool": null, "arg": ""}
+{"text": "do you think sleep is worth it", "tool": null, "arg": ""}
+{"text": "do you think social media is worth it", "tool": null, "arg": ""}
+{"text": "do you think sourdough bread is worth it", "tool": null, "arg": ""}
+{"text": "do you think space travel is worth it", "tool": null, "arg": ""}
+{"text": "do you think startups is worth it", "tool": null, "arg": ""}
+{"text": "do you think the ocean is worth it", "tool": null, "arg": ""}
+{"text": "do you think the stock market is worth it", "tool": null, "arg": ""}
+{"text": "do you think tiny houses is worth it", "tool": null, "arg": ""}
+{"text": "do you think video games is worth it", "tool": null, "arg": ""}
+{"text": "do you think vinyl records is worth it", "tool": null, "arg": ""}
+{"text": "do you think woodworking is worth it", "tool": null, "arg": ""}
+{"text": "explain ancient rome like im five", "tool": null, "arg": ""}
+{"text": "explain artificial intelligence like im five", "tool": null, "arg": ""}
+{"text": "explain black holes like im five", "tool": null, "arg": ""}
+{"text": "explain chess like im five", "tool": null, "arg": ""}
+{"text": "explain coffee like im five", "tool": null, "arg": ""}
+{"text": "explain cold showers like im five", "tool": null, "arg": ""}
+{"text": "explain cryptocurrency like im five", "tool": null, "arg": ""}
+{"text": "explain cycling like im five", "tool": null, "arg": ""}
+{"text": "explain dinosaurs like im five", "tool": null, "arg": ""}
+{"text": "explain electric cars like im five", "tool": null, "arg": ""}
+{"text": "explain film photography like im five", "tool": null, "arg": ""}
+{"text": "explain freelancing like im five", "tool": null, "arg": ""}
+{"text": "explain gardening like im five", "tool": null, "arg": ""}
+{"text": "explain hiking like im five", "tool": null, "arg": ""}
+{"text": "explain intermittent fasting like im five", "tool": null, "arg": ""}
+{"text": "explain jazz like im five", "tool": null, "arg": ""}
+{"text": "explain journaling like im five", "tool": null, "arg": ""}
+{"text": "explain learning guitar like im five", "tool": null, "arg": ""}
+{"text": "explain marathon running like im five", "tool": null, "arg": ""}
+{"text": "explain mechanical keyboards like im five", "tool": null, "arg": ""}
+{"text": "explain meditation like im five", "tool": null, "arg": ""}
+{"text": "explain minimalism like im five", "tool": null, "arg": ""}
+{"text": "explain open source software like im five", "tool": null, "arg": ""}
+{"text": "explain podcasts like im five", "tool": null, "arg": ""}
+{"text": "explain productivity apps like im five", "tool": null, "arg": ""}
+{"text": "explain quantum computers like im five", "tool": null, "arg": ""}
+{"text": "explain remote work like im five", "tool": null, "arg": ""}
+{"text": "explain sleep like im five", "tool": null, "arg": ""}
+{"text": "explain social media like im five", "tool": null, "arg": ""}
+{"text": "explain sourdough bread like im five", "tool": null, "arg": ""}
+{"text": "explain space travel like im five", "tool": null, "arg": ""}
+{"text": "explain the ocean like im five", "tool": null, "arg": ""}
+{"text": "explain the stock market like im five", "tool": null, "arg": ""}
+{"text": "explain tiny houses like im five", "tool": null, "arg": ""}
+{"text": "explain video games like im five", "tool": null, "arg": ""}
+{"text": "explain vinyl records like im five", "tool": null, "arg": ""}
+{"text": "explain woodworking like im five", "tool": null, "arg": ""}
+{"text": "give me a fun fact", "tool": null, "arg": ""}
+{"text": "good one", "tool": null, "arg": ""}
+{"text": "hey there", "tool": null, "arg": ""}
+{"text": "hmm let me think", "tool": null, "arg": ""}
+{"text": "how are you doing", "tool": null, "arg": ""}
+{"text": "how do i get better at calculus", "tool": null, "arg": ""}
+{"text": "how do i get better at cooking", "tool": null, "arg": ""}
+{"text": "how do i get better at design", "tool": null, "arg": ""}
+{"text": "how do i get better at drawing", "tool": null, "arg": ""}
+{"text": "how do i get better at french", "tool": null, "arg": ""}
+{"text": "how do i get better at go", "tool": null, "arg": ""}
+{"text": "how do i get better at javascript", "tool": null, "arg": ""}
+{"text": "how do i get better at machine learning", "tool": null, "arg": ""}
+{"text": "how do i get better at negotiating", "tool": null, "arg": ""}
+{"text": "how do i get better at photography", "tool": null, "arg": ""}
+{"text": "how do i get better at piano", "tool": null, "arg": ""}
+{"text": "how do i get better at public speaking", "tool": null, "arg": ""}
+{"text": "how do i get better at python", "tool": null, "arg": ""}
+{"text": "how do i get better at rust", "tool": null, "arg": ""}
+{"text": "how do i get better at spanish", "tool": null, "arg": ""}
+{"text": "how do i get better at statistics", "tool": null, "arg": ""}
+{"text": "how do i get better at writing", "tool": null, "arg": ""}
+{"text": "how do i learn calculus without a teacher", "tool": null, "arg": ""}
+{"text": "how do i learn cooking without a teacher", "tool": null, "arg": ""}
+{"text": "how do i learn design without a teacher", "tool": null, "arg": ""}
+{"text": "how do i learn drawing without a teacher", "tool": null, "arg": ""}
+{"text": "how do i learn french without a teacher", "tool": null, "arg": ""}
+{"text": "how do i learn go without a teacher", "tool": null, "arg": ""}
+{"text": "how do i learn javascript without a teacher", "tool": null, "arg": ""}
+{"text": "how do i learn machine learning without a teacher", "tool": null, "arg": ""}
+{"text": "how do i learn negotiating without a teacher", "tool": null, "arg": ""}
+{"text": "how do i learn photography without a teacher", "tool": null, "arg": ""}
+{"text": "how do i learn piano without a teacher", "tool": null, "arg": ""}
+{"text": "how do i learn public speaking without a teacher", "tool": null, "arg": ""}
+{"text": "how do i learn python without a teacher", "tool": null, "arg": ""}
+{"text": "how do i learn rust without a teacher", "tool": null, "arg": ""}
+{"text": "how do i learn spanish without a teacher", "tool": null, "arg": ""}
+{"text": "how do i learn statistics without a teacher", "tool": null, "arg": ""}
+{"text": "how do i learn swimming without a teacher", "tool": null, "arg": ""}
+{"text": "how do i learn writing without a teacher", "tool": null, "arg": ""}
+{"text": "how long does it take to learn calculus", "tool": null, "arg": ""}
+{"text": "how long does it take to learn cooking", "tool": null, "arg": ""}
+{"text": "how long does it take to learn design", "tool": null, "arg": ""}
+{"text": "how long does it take to learn drawing", "tool": null, "arg": ""}
+{"text": "how long does it take to learn french", "tool": null, "arg": ""}
+{"text": "how long does it take to learn go", "tool": null, "arg": ""}
+{"text": "how long does it take to learn javascript", "tool": null, "arg": ""}
+{"text": "how long does it take to learn machine learning", "tool": null, "arg": ""}
+{"text": "how long does it take to learn negotiating", "tool": null, "arg": ""}
+{"text": "how long does it take to learn photography", "tool": null, "arg": ""}
+{"text": "how long does it take to learn piano", "tool": null, "arg": ""}
+{"text": "how long does it take to learn public speaking", "tool": null, "arg": ""}
+{"text": "how long does it take to learn python", "tool": null, "arg": ""}
+{"text": "how long does it take to learn rust", "tool": null, "arg": ""}
+{"text": "how long does it take to learn spanish", "tool": null, "arg": ""}
+{"text": "how long does it take to learn statistics", "tool": null, "arg": ""}
+{"text": "how long does it take to learn swimming", "tool": null, "arg": ""}
+{"text": "how long does it take to learn writing", "tool": null, "arg": ""}
+{"text": "how was your day", "tool": null, "arg": ""}
+{"text": "how's it going", "tool": null, "arg": ""}
+{"text": "i feel tired", "tool": null, "arg": ""}
+{"text": "i'm bored", "tool": null, "arg": ""}
+{"text": "is it worth learning calculus these days", "tool": null, "arg": ""}
+{"text": "is it worth learning cooking these days", "tool": null, "arg": ""}
+{"text": "is it worth learning design these days", "tool": null, "arg": ""}
+{"text": "is it worth learning drawing these days", "tool": null, "arg": ""}
+{"text": "is it worth learning french these days", "tool": null, "arg": ""}
+{"text": "is it worth learning go these days", "tool": null, "arg": ""}
+{"text": "is it worth learning javascript these days", "tool": null, "arg": ""}
+{"text": "is it worth learning machine learning these days", "tool": null, "arg": ""}
+{"text": "is it worth learning negotiating these days", "tool": null, "arg": ""}
+{"text": "is it worth learning photography these days", "tool": null, "arg": ""}
+{"text": "is it worth learning piano these days", "tool": null, "arg": ""}
+{"text": "is it worth learning public speaking these days", "tool": null, "arg": ""}
+{"text": "is it worth learning python these days", "tool": null, "arg": ""}
+{"text": "is it worth learning rust these days", "tool": null, "arg": ""}
+{"text": "is it worth learning spanish these days", "tool": null, "arg": ""}
+{"text": "is it worth learning statistics these days", "tool": null, "arg": ""}
+{"text": "is it worth learning swimming these days", "tool": null, "arg": ""}
+{"text": "is it worth learning writing these days", "tool": null, "arg": ""}
+{"text": "lol nice", "tool": null, "arg": ""}
+{"text": "never mind", "tool": null, "arg": ""}
+{"text": "ok cool", "tool": null, "arg": ""}
+{"text": "say something nice", "tool": null, "arg": ""}
+{"text": "should i learn calculus or calculus", "tool": null, "arg": ""}
+{"text": "should i learn calculus or cooking", "tool": null, "arg": ""}
+{"text": "should i learn calculus or statistics", "tool": null, "arg": ""}
+{"text": "should i learn calculus or swimming", "tool": null, "arg": ""}
+{"text": "should i learn cooking or cooking", "tool": null, "arg": ""}
+{"text": "should i learn cooking or design", "tool": null, "arg": ""}
+{"text": "should i learn cooking or piano", "tool": null, "arg": ""}
+{"text": "should i learn cooking or rust", "tool": null, "arg": ""}
+{"text": "should i learn cooking or writing", "tool": null, "arg": ""}
+{"text": "should i learn design or javascript", "tool": null, "arg": ""}
+{"text": "should i learn design or rust", "tool": null, "arg": ""}
+{"text": "should i learn design or writing", "tool": null, "arg": ""}
+{"text": "should i learn drawing or design", "tool": null, "arg": ""}
+{"text": "should i learn drawing or go", "tool": null, "arg": ""}
+{"text": "should i learn drawing or photography", "tool": null, "arg": ""}
+{"text": "should i learn drawing or spanish", "tool": null, "arg": ""}
+{"text": "should i learn french or design", "tool": null, "arg": ""}
+{"text": "should i learn french or machine learning", "tool": null, "arg": ""}
+{"text": "should i learn french or spanish", "tool": null, "arg": ""}
+{"text": "should i learn go or design", "tool": null, "arg": ""}
+{"text": "should i learn go or drawing", "tool": null, "arg": ""}
+{"text": "should i learn go or machine learning", "tool": null, "arg": ""}
+{"text": "should i learn go or negotiating", "tool": null, "arg": ""}
+{"text": "should i learn go or statistics", "tool": null, "arg": ""}
+{"text": "should i learn go or writing", "tool": null, "arg": ""}
+{"text": "should i learn javascript or drawing", "tool": null, "arg": ""}
+{"text": "should i learn javascript or photography", "tool": null, "arg": ""}
+{"text": "should i learn javascript or public speaking", "tool": null, "arg": ""}
+{"text": "should i learn javascript or rust", "tool": null, "arg": ""}
+{"text": "should i learn javascript or writing", "tool": null, "arg": ""}
+{"text": "should i learn machine learning or statistics", "tool": null, "arg": ""}
+{"text": "should i learn negotiating or cooking", "tool": null, "arg": ""}
+{"text": "should i learn negotiating or drawing", "tool": null, "arg": ""}
+{"text": "should i learn negotiating or french", "tool": null, "arg": ""}
+{"text": "should i learn negotiating or machine learning", "tool": null, "arg": ""}
+{"text": "should i learn negotiating or negotiating", "tool": null, "arg": ""}
+{"text": "should i learn negotiating or python", "tool": null, "arg": ""}
+{"text": "should i learn negotiating or spanish", "tool": null, "arg": ""}
+{"text": "should i learn negotiating or statistics", "tool": null, "arg": ""}
+{"text": "should i learn photography or cooking", "tool": null, "arg": ""}
+{"text": "should i learn photography or go", "tool": null, "arg": ""}
+{"text": "should i learn photography or photography", "tool": null, "arg": ""}
+{"text": "should i learn photography or python", "tool": null, "arg": ""}
+{"text": "should i learn photography or rust", "tool": null, "arg": ""}
+{"text": "should i learn photography or statistics", "tool": null, "arg": ""}
+{"text": "should i learn photography or swimming", "tool": null, "arg": ""}
+{"text": "should i learn piano or calculus", "tool": null, "arg": ""}
+{"text": "should i learn piano or photography", "tool": null, "arg": ""}
+{"text": "should i learn piano or piano", "tool": null, "arg": ""}
+{"text": "should i learn public speaking or cooking", "tool": null, "arg": ""}
+{"text": "should i learn public speaking or drawing", "tool": null, "arg": ""}
+{"text": "should i learn public speaking or go", "tool": null, "arg": ""}
+{"text": "should i learn public speaking or public speaking", "tool": null, "arg": ""}
+{"text": "should i learn public speaking or rust", "tool": null, "arg": ""}
+{"text": "should i learn public speaking or swimming", "tool": null, "arg": ""}
+{"text": "should i learn public speaking or writing", "tool": null, "arg": ""}
+{"text": "should i learn python or cooking", "tool": null, "arg": ""}
+{"text": "should i learn python or french", "tool": null, "arg": ""}
+{"text": "should i learn python or go", "tool": null, "arg": ""}
+{"text": "should i learn python or javascript", "tool": null, "arg": ""}
+{"text": "should i learn python or python", "tool": null, "arg": ""}
+{"text": "should i learn python or rust", "tool": null, "arg": ""}
+{"text": "should i learn python or swimming", "tool": null, "arg": ""}
+{"text": "should i learn rust or javascript", "tool": null, "arg": ""}
+{"text": "should i learn rust or negotiating", "tool": null, "arg": ""}
+{"text": "should i learn rust or photography", "tool": null, "arg": ""}
+{"text": "should i learn rust or piano", "tool": null, "arg": ""}
+{"text": "should i learn rust or python", "tool": null, "arg": ""}
+{"text": "should i learn spanish or cooking", "tool": null, "arg": ""}
+{"text": "should i learn spanish or drawing", "tool": null, "arg": ""}
+{"text": "should i learn spanish or photography", "tool": null, "arg": ""}
+{"text": "should i learn spanish or swimming", "tool": null, "arg": ""}
+{"text": "should i learn statistics or go", "tool": null, "arg": ""}
+{"text": "should i learn statistics or public speaking", "tool": null, "arg": ""}
+{"text": "should i learn statistics or spanish", "tool": null, "arg": ""}
+{"text": "should i learn swimming or cooking", "tool": null, "arg": ""}
+{"text": "should i learn swimming or design", "tool": null, "arg": ""}
+{"text": "should i learn swimming or french", "tool": null, "arg": ""}
+{"text": "should i learn swimming or negotiating", "tool": null, "arg": ""}
+{"text": "should i learn swimming or statistics", "tool": null, "arg": ""}
+{"text": "should i learn writing or cooking", "tool": null, "arg": ""}
+{"text": "should i learn writing or french", "tool": null, "arg": ""}
+{"text": "should i learn writing or python", "tool": null, "arg": ""}
+{"text": "should i learn writing or swimming", "tool": null, "arg": ""}
+{"text": "should i learn writing or writing", "tool": null, "arg": ""}
+{"text": "surprise me", "tool": null, "arg": ""}
+{"text": "tell me a joke", "tool": null, "arg": ""}
+{"text": "tell me something interesting about ancient rome", "tool": null, "arg": ""}
+{"text": "tell me something interesting about artificial intelligence", "tool": null, "arg": ""}
+{"text": "tell me something interesting about board games", "tool": null, "arg": ""}
+{"text": "tell me something interesting about chess", "tool": null, "arg": ""}
+{"text": "tell me something interesting about coffee", "tool": null, "arg": ""}
+{"text": "tell me something interesting about cold showers", "tool": null, "arg": ""}
+{"text": "tell me something interesting about cryptocurrency", "tool": null, "arg": ""}
+{"text": "tell me something interesting about cycling", "tool": null, "arg": ""}
+{"text": "tell me something interesting about dinosaurs", "tool": null, "arg": ""}
+{"text": "tell me something interesting about electric cars", "tool": null, "arg": ""}
+{"text": "tell me something interesting about film photography", "tool": null, "arg": ""}
+{"text": "tell me something interesting about freelancing", "tool": null, "arg": ""}
+{"text": "tell me something interesting about gardening", "tool": null, "arg": ""}
+{"text": "tell me something interesting about hiking", "tool": null, "arg": ""}
+{"text": "tell me something interesting about intermittent fasting", "tool": null, "arg": ""}
+{"text": "tell me something interesting about jazz", "tool": null, "arg": ""}
+{"text": "tell me something interesting about journaling", "tool": null, "arg": ""}
+{"text": "tell me something interesting about learning guitar", "tool": null, "arg": ""}
+{"text": "tell me something interesting about marathon running", "tool": null, "arg": ""}
+{"text": "tell me something interesting about mechanical keyboards", "tool": null, "arg": ""}
+{"text": "tell me something interesting about meditation", "tool": null, "arg": ""}
+{"text": "tell me something interesting about minimalism", "tool": null, "arg": ""}
+{"text": "tell me something interesting about open source software", "tool": null, "arg": ""}
+{"text": "tell me something interesting about productivity apps", "tool": null, "arg": ""}
+{"text": "tell me something interesting about quantum computers", "tool": null, "arg": ""}
+{"text": "tell me something interesting about remote work", "tool": null, "arg": ""}
+{"text": "tell me something interesting about sleep", "tool": null, "arg": ""}
+{"text": "tell me something interesting about social media", "tool": null, "arg": ""}
+{"text": "tell me something interesting about sourdough bread", "tool": null, "arg": ""}
+{"text": "tell me something interesting about space travel", "tool": null, "arg": ""}
+{"text": "tell me something interesting about startups", "tool": null, "arg": ""}
+{"text": "tell me something interesting about the ocean", "tool": null, "arg": ""}
+{"text": "tell me something interesting about the stock market", "tool": null, "arg": ""}
+{"text": "tell me something interesting about tiny houses", "tool": null, "arg": ""}
+{"text": "tell me something interesting about video games", "tool": null, "arg": ""}
+{"text": "tell me something interesting about woodworking", "tool": null, "arg": ""}
+{"text": "thanks a lot", "tool": null, "arg": ""}
+{"text": "that was funny", "tool": null, "arg": ""}
+{"text": "what are you thinking about", "tool": null, "arg": ""}
+{"text": "what do you think about ancient rome", "tool": null, "arg": ""}
+{"text": "what do you think about artificial intelligence", "tool": null, "arg": ""}
+{"text": "what do you think about black holes", "tool": null, "arg": ""}
+{"text": "what do you think about board games", "tool": null, "arg": ""}
+{"text": "what do you think about chess", "tool": null, "arg": ""}
+{"text": "what do you think about coffee", "tool": null, "arg": ""}
+{"text": "what do you think about cold showers", "tool": null, "arg": ""}
+{"text": "what do you think about cryptocurrency", "tool": null, "arg": ""}
+{"text": "what do you think about cycling", "tool": null, "arg": ""}
+{"text": "what do you think about dinosaurs", "tool": null, "arg": ""}
+{"text": "what do you think about electric cars", "tool": null, "arg": ""}
+{"text": "what do you think about film photography", "tool": null, "arg": ""}
+{"text": "what do you think about freelancing", "tool": null, "arg": ""}
+{"text": "what do you think about gardening", "tool": null, "arg": ""}
+{"text": "what do you think about hiking", "tool": null, "arg": ""}
+{"text": "what do you think about intermittent fasting", "tool": null, "arg": ""}
+{"text": "what do you think about jazz", "tool": null, "arg": ""}
+{"text": "what do you think about journaling", "tool": null, "arg": ""}
+{"text": "what do you think about learning guitar", "tool": null, "arg": ""}
+{"text": "what do you think about marathon running", "tool": null, "arg": ""}
+{"text": "what do you think about mechanical keyboards", "tool": null, "arg": ""}
+{"text": "what do you think about meditation", "tool": null, "arg": ""}
+{"text": "what do you think about minimalism", "tool": null, "arg": ""}
+{"text": "what do you think about open source software", "tool": null, "arg": ""}
+{"text": "what do you think about podcasts", "tool": null, "arg": ""}
+{"text": "what do you think about productivity apps", "tool": null, "arg": ""}
+{"text": "what do you think about quantum computers", "tool": null, "arg": ""}
+{"text": "what do you think about remote work", "tool": null, "arg": ""}
+{"text": "what do you think about sleep", "tool": null, "arg": ""}
+{"text": "what do you think about social media", "tool": null, "arg": ""}
+{"text": "what do you think about sourdough bread", "tool": null, "arg": ""}
+{"text": "what do you think about space travel", "tool": null, "arg": ""}
+{"text": "what do you think about startups", "tool": null, "arg": ""}
+{"text": "what do you think about the ocean", "tool": null, "arg": ""}
+{"text": "what do you think about the stock market", "tool": null, "arg": ""}
+{"text": "what do you think about video games", "tool": null, "arg": ""}
+{"text": "what do you think about vinyl records", "tool": null, "arg": ""}
+{"text": "what do you think about woodworking", "tool": null, "arg": ""}
+{"text": "what should i have for dinner", "tool": null, "arg": ""}
+{"text": "what should i name my dog", "tool": null, "arg": ""}
+{"text": "what's your favorite color", "tool": null, "arg": ""}
+{"text": "whats a good way to get started with calculus", "tool": null, "arg": ""}
+{"text": "whats a good way to get started with cooking", "tool": null, "arg": ""}
+{"text": "whats a good way to get started with design", "tool": null, "arg": ""}
+{"text": "whats a good way to get started with drawing", "tool": null, "arg": ""}
+{"text": "whats a good way to get started with french", "tool": null, "arg": ""}
+{"text": "whats a good way to get started with go", "tool": null, "arg": ""}
+{"text": "whats a good way to get started with javascript", "tool": null, "arg": ""}
+{"text": "whats a good way to get started with machine learning", "tool": null, "arg": ""}
+{"text": "whats a good way to get started with negotiating", "tool": null, "arg": ""}
+{"text": "whats a good way to get started with photography", "tool": null, "arg": ""}
+{"text": "whats a good way to get started with piano", "tool": null, "arg": ""}
+{"text": "whats a good way to get started with public speaking", "tool": null, "arg": ""}
+{"text": "whats a good way to get started with python", "tool": null, "arg": ""}
+{"text": "whats a good way to get started with rust", "tool": null, "arg": ""}
+{"text": "whats a good way to get started with spanish", "tool": null, "arg": ""}
+{"text": "whats a good way to get started with statistics", "tool": null, "arg": ""}
+{"text": "whats a good way to get started with swimming", "tool": null, "arg": ""}
+{"text": "whats a good way to get started with writing", "tool": null, "arg": ""}
+{"text": "whats the best board game in your opinion", "tool": null, "arg": ""}
+{"text": "whats the best book in your opinion", "tool": null, "arg": ""}
+{"text": "whats the best breakfast in your opinion", "tool": null, "arg": ""}
+{"text": "whats the best city to visit in your opinion", "tool": null, "arg": ""}
+{"text": "whats the best hobby in your opinion", "tool": null, "arg": ""}
+{"text": "whats the best laptop for students in your opinion", "tool": null, "arg": ""}
+{"text": "whats the best movie in your opinion", "tool": null, "arg": ""}
+{"text": "whats the best playlist for working in your opinion", "tool": null, "arg": ""}
+{"text": "whats the best podcast in your opinion", "tool": null, "arg": ""}
+{"text": "whats the best programming language in your opinion", "tool": null, "arg": ""}
+{"text": "whats the best text editor in your opinion", "tool": null, "arg": ""}
+{"text": "whats the best thing about ancient rome", "tool": null, "arg": ""}
+{"text": "whats the best thing about artificial intelligence", "tool": null, "arg": ""}
+{"text": "whats the best thing about black holes", "tool": null, "arg": ""}
+{"text": "whats the best thing about board games", "tool": null, "arg": ""}
+{"text": "whats the best thing about chess", "tool": null, "arg": ""}
+{"text": "whats the best thing about coffee", "tool": null, "arg": ""}
+{"text": "whats the best thing about cold showers", "tool": null, "arg": ""}
+{"text": "whats the best thing about cryptocurrency", "tool": null, "arg": ""}
+{"text": "whats the best thing about cycling", "tool": null, "arg": ""}
+{"text": "whats the best thing about electric cars", "tool": null, "arg": ""}
+{"text": "whats the best thing about film photography", "tool": null, "arg": ""}
+{"text": "whats the best thing about freelancing", "tool": null, "arg": ""}
+{"text": "whats the best thing about gardening", "tool": null, "arg": ""}
+{"text": "whats the best thing about hiking", "tool": null, "arg": ""}
+{"text": "whats the best thing about jazz", "tool": null, "arg": ""}
+{"text": "whats the best thing about journaling", "tool": null, "arg": ""}
+{"text": "whats the best thing about learning guitar", "tool": null, "arg": ""}
+{"text": "whats the best thing about marathon running", "tool": null, "arg": ""}
+{"text": "whats the best thing about mechanical keyboards", "tool": null, "arg": ""}
+{"text": "whats the best thing about meditation", "tool": null, "arg": ""}
+{"text": "whats the best thing about minimalism", "tool": null, "arg": ""}
+{"text": "whats the best thing about open source software", "tool": null, "arg": ""}
+{"text": "whats the best thing about podcasts", "tool": null, "arg": ""}
+{"text": "whats the best thing about public speaking", "tool": null, "arg": ""}
+{"text": "whats the best thing about quantum computers", "tool": null, "arg": ""}
+{"text": "whats the best thing about remote work", "tool": null, "arg": ""}
+{"text": "whats the best thing about sleep", "tool": null, "arg": ""}
+{"text": "whats the best thing about social media", "tool": null, "arg": ""}
+{"text": "whats the best thing about sourdough bread", "tool": null, "arg": ""}
+{"text": "whats the best thing about space travel", "tool": null, "arg": ""}
+{"text": "whats the best thing about startups", "tool": null, "arg": ""}
+{"text": "whats the best thing about the ocean", "tool": null, "arg": ""}
+{"text": "whats the best thing about the stock market", "tool": null, "arg": ""}
+{"text": "whats the best thing about video games", "tool": null, "arg": ""}
+{"text": "whats the best thing about vinyl records", "tool": null, "arg": ""}
+{"text": "whats the best thing about woodworking", "tool": null, "arg": ""}
+{"text": "whats the best way to relax in your opinion", "tool": null, "arg": ""}
+{"text": "whats the difference between calculus and cooking", "tool": null, "arg": ""}
+{"text": "whats the difference between calculus and negotiating", "tool": null, "arg": ""}
+{"text": "whats the difference between calculus and rust", "tool": null, "arg": ""}
+{"text": "whats the difference between cooking and calculus", "tool": null, "arg": ""}
+{"text": "whats the difference between cooking and cooking", "tool": null, "arg": ""}
+{"text": "whats the difference between cooking and javascript", "tool": null, "arg": ""}
+{"text": "whats the difference between cooking and piano", "tool": null, "arg": ""}
+{"text": "whats the difference between cooking and spanish", "tool": null, "arg": ""}
+{"text": "whats the difference between cooking and writing", "tool": null, "arg": ""}
+{"text": "whats the difference between design and calculus", "tool": null, "arg": ""}
+{"text": "whats the difference between design and javascript", "tool": null, "arg": ""}
+{"text": "whats the difference between design and public speaking", "tool": null, "arg": ""}
+{"text": "whats the difference between design and swimming", "tool": null, "arg": ""}
+{"text": "whats the difference between drawing and javascript", "tool": null, "arg": ""}
+{"text": "whats the difference between drawing and negotiating", "tool": null, "arg": ""}
+{"text": "whats the difference between drawing and public speaking", "tool": null, "arg": ""}
+{"text": "whats the difference between drawing and spanish", "tool": null, "arg": ""}
+{"text": "whats the difference between french and cooking", "tool": null, "arg": ""}
+{"text": "whats the difference between french and design", "tool": null, "arg": ""}
+{"text": "whats the difference between french and piano", "tool": null, "arg": ""}
+{"text": "whats the difference between go and calculus", "tool": null, "arg": ""}
+{"text": "whats the difference between go and drawing", "tool": null, "arg": ""}
+{"text": "whats the difference between go and javascript", "tool": null, "arg": ""}
+{"text": "whats the difference between go and machine learning", "tool": null, "arg": ""}
+{"text": "whats the difference between go and python", "tool": null, "arg": ""}
+{"text": "whats the difference between go and rust", "tool": null, "arg": ""}
+{"text": "whats the difference between go and writing", "tool": null, "arg": ""}
+{"text": "whats the difference between javascript and drawing", "tool": null, "arg": ""}
+{"text": "whats the difference between javascript and french", "tool": null, "arg": ""}
+{"text": "whats the difference between javascript and python", "tool": null, "arg": ""}
+{"text": "whats the difference between javascript and spanish", "tool": null, "arg": ""}
+{"text": "whats the difference between machine learning and drawing", "tool": null, "arg": ""}
+{"text": "whats the difference between machine learning and french", "tool": null, "arg": ""}
+{"text": "whats the difference between machine learning and javascript", "tool": null, "arg": ""}
+{"text": "whats the difference between machine learning and piano", "tool": null, "arg": ""}
+{"text": "whats the difference between machine learning and public speaking", "tool": null, "arg": ""}
+{"text": "whats the difference between machine learning and python", "tool": null, "arg": ""}
+{"text": "whats the difference between negotiating and javascript", "tool": null, "arg": ""}
+{"text": "whats the difference between negotiating and piano", "tool": null, "arg": ""}
+{"text": "whats the difference between negotiating and public speaking", "tool": null, "arg": ""}
+{"text": "whats the difference between negotiating and swimming", "tool": null, "arg": ""}
+{"text": "whats the difference between photography and french", "tool": null, "arg": ""}
+{"text": "whats the difference between photography and piano", "tool": null, "arg": ""}
+{"text": "whats the difference between photography and python", "tool": null, "arg": ""}
+{"text": "whats the difference between piano and spanish", "tool": null, "arg": ""}
+{"text": "whats the difference between public speaking and javascript", "tool": null, "arg": ""}
+{"text": "whats the difference between public speaking and machine learning", "tool": null, "arg": ""}
+{"text": "whats the difference between public speaking and negotiating", "tool": null, "arg": ""}
+{"text": "whats the difference between python and calculus", "tool": null, "arg": ""}
+{"text": "whats the difference between python and public speaking", "tool": null, "arg": ""}
+{"text": "whats the difference between python and python", "tool": null, "arg": ""}
+{"text": "whats the difference between python and rust", "tool": null, "arg": ""}
+{"text": "whats the difference between python and spanish", "tool": null, "arg": ""}
+{"text": "whats the difference between rust and go", "tool": null, "arg": ""}
+{"text": "whats the difference between rust and javascript", "tool": null, "arg": ""}
+{"text": "whats the difference between rust and swimming", "tool": null, "arg": ""}
+{"text": "whats the difference between rust and writing", "tool": null, "arg": ""}
+{"text": "whats the difference between spanish and calculus", "tool": null, "arg": ""}
+{"text": "whats the difference between spanish and french", "tool": null, "arg": ""}
+{"text": "whats the difference between spanish and negotiating", "tool": null, "arg": ""}
+{"text": "whats the difference between spanish and python", "tool": null, "arg": ""}
+{"text": "whats the difference between spanish and statistics", "tool": null, "arg": ""}
+{"text": "whats the difference between statistics and design", "tool": null, "arg": ""}
+{"text": "whats the difference between statistics and french", "tool": null, "arg": ""}
+{"text": "whats the difference between statistics and go", "tool": null, "arg": ""}
+{"text": "whats the difference between statistics and python", "tool": null, "arg": ""}
+{"text": "whats the difference between statistics and rust", "tool": null, "arg": ""}
+{"text": "whats the difference between statistics and statistics", "tool": null, "arg": ""}
+{"text": "whats the difference between statistics and writing", "tool": null, "arg": ""}
+{"text": "whats the difference between swimming and cooking", "tool": null, "arg": ""}
+{"text": "whats the difference between swimming and french", "tool": null, "arg": ""}
+{"text": "whats the difference between swimming and rust", "tool": null, "arg": ""}
+{"text": "whats the difference between swimming and writing", "tool": null, "arg": ""}
+{"text": "whats the difference between writing and french", "tool": null, "arg": ""}
+{"text": "whats the difference between writing and negotiating", "tool": null, "arg": ""}
+{"text": "whats the difference between writing and python", "tool": null, "arg": ""}
+{"text": "whats the difference between writing and spanish", "tool": null, "arg": ""}
+{"text": "whats the difference between writing and statistics", "tool": null, "arg": ""}
+{"text": "whats the difference between writing and swimming", "tool": null, "arg": ""}
+{"text": "whats the future of ancient rome", "tool": null, "arg": ""}
+{"text": "whats the future of artificial intelligence", "tool": null, "arg": ""}
+{"text": "whats the future of black holes", "tool": null, "arg": ""}
+{"text": "whats the future of board games", "tool": null, "arg": ""}
+{"text": "whats the future of chess", "tool": null, "arg": ""}
+{"text": "whats the future of coffee", "tool": null, "arg": ""}
+{"text": "whats the future of cryptocurrency", "tool": null, "arg": ""}
+{"text": "whats the future of cycling", "tool": null, "arg": ""}
+{"text": "whats the future of dinosaurs", "tool": null, "arg": ""}
+{"text": "whats the future of electric cars", "tool": null, "arg": ""}
+{"text": "whats the future of film photography", "tool": null, "arg": ""}
+{"text": "whats the future of freelancing", "tool": null, "arg": ""}
+{"text": "whats the future of gardening", "tool": null, "arg": ""}
+{"text": "whats the future of hiking", "tool": null, "arg": ""}
+{"text": "whats the future of intermittent fasting", "tool": null, "arg": ""}
+{"text": "whats the future of jazz", "tool": null, "arg": ""}
+{"text": "whats the future of journaling", "tool": null, "arg": ""}
+{"text": "whats the future of learning guitar", "tool": null, "arg": ""}
+{"text": "whats the future of marathon running", "tool": null, "arg": ""}
+{"text": "whats the future of mechanical keyboards", "tool": null, "arg": ""}
+{"text": "whats the future of meditation", "tool": null, "arg": ""}
+{"text": "whats the future of minimalism", "tool": null, "arg": ""}
+{"text": "whats the future of open source software", "tool": null, "arg": ""}
+{"text": "whats the future of podcasts", "tool": null, "arg": ""}
+{"text": "whats the future of productivity apps", "tool": null, "arg": ""}
+{"text": "whats the future of public speaking", "tool": null, "arg": ""}
+{"text": "whats the future of quantum computers", "tool": null, "arg": ""}
+{"text": "whats the future of remote work", "tool": null, "arg": ""}
+{"text": "whats the future of sleep", "tool": null, "arg": ""}
+{"text": "whats the future of social media", "tool": null, "arg": ""}
+{"text": "whats the future of sourdough bread", "tool": null, "arg": ""}
+{"text": "whats the future of space travel", "tool": null, "arg": ""}
+{"text": "whats the future of startups", "tool": null, "arg": ""}
+{"text": "whats the future of the ocean", "tool": null, "arg": ""}
+{"text": "whats the future of the stock market", "tool": null, "arg": ""}
+{"text": "whats the future of tiny houses", "tool": null, "arg": ""}
+{"text": "whats the future of video games", "tool": null, "arg": ""}
+{"text": "whats the future of vinyl records", "tool": null, "arg": ""}
+{"text": "whats the future of woodworking", "tool": null, "arg": ""}
+{"text": "whats the secret to a good career", "tool": null, "arg": ""}
+{"text": "whats the secret to being productive", "tool": null, "arg": ""}
+{"text": "whats the secret to eating healthy", "tool": null, "arg": ""}
+{"text": "whats the secret to getting fit", "tool": null, "arg": ""}
+{"text": "whats the secret to learning faster", "tool": null, "arg": ""}
+{"text": "whats the secret to making friends", "tool": null, "arg": ""}
+{"text": "whats the secret to remembering names", "tool": null, "arg": ""}
+{"text": "whats the secret to saving money", "tool": null, "arg": ""}
+{"text": "whats the secret to staying calm", "tool": null, "arg": ""}
+{"text": "whats the secret to staying focused", "tool": null, "arg": ""}
+{"text": "whats the secret to waking up early", "tool": null, "arg": ""}
+{"text": "whats the secret to writing well", "tool": null, "arg": ""}
+{"text": "whats up", "tool": null, "arg": ""}
+{"text": "whats your opinion on ancient rome", "tool": null, "arg": ""}
+{"text": "whats your opinion on artificial intelligence", "tool": null, "arg": ""}
+{"text": "whats your opinion on black holes", "tool": null, "arg": ""}
+{"text": "whats your opinion on board games", "tool": null, "arg": ""}
+{"text": "whats your opinion on chess", "tool": null, "arg": ""}
+{"text": "whats your opinion on coffee", "tool": null, "arg": ""}
+{"text": "whats your opinion on cold showers", "tool": null, "arg": ""}
+{"text": "whats your opinion on cryptocurrency", "tool": null, "arg": ""}
+{"text": "whats your opinion on cycling", "tool": null, "arg": ""}
+{"text": "whats your opinion on dinosaurs", "tool": null, "arg": ""}
+{"text": "whats your opinion on electric cars", "tool": null, "arg": ""}
+{"text": "whats your opinion on film photography", "tool": null, "arg": ""}
+{"text": "whats your opinion on freelancing", "tool": null, "arg": ""}
+{"text": "whats your opinion on gardening", "tool": null, "arg": ""}
+{"text": "whats your opinion on hiking", "tool": null, "arg": ""}
+{"text": "whats your opinion on intermittent fasting", "tool": null, "arg": ""}
+{"text": "whats your opinion on jazz", "tool": null, "arg": ""}
+{"text": "whats your opinion on journaling", "tool": null, "arg": ""}
+{"text": "whats your opinion on learning guitar", "tool": null, "arg": ""}
+{"text": "whats your opinion on marathon running", "tool": null, "arg": ""}
+{"text": "whats your opinion on mechanical keyboards", "tool": null, "arg": ""}
+{"text": "whats your opinion on meditation", "tool": null, "arg": ""}
+{"text": "whats your opinion on minimalism", "tool": null, "arg": ""}
+{"text": "whats your opinion on open source software", "tool": null, "arg": ""}
+{"text": "whats your opinion on podcasts", "tool": null, "arg": ""}
+{"text": "whats your opinion on productivity apps", "tool": null, "arg": ""}
+{"text": "whats your opinion on public speaking", "tool": null, "arg": ""}
+{"text": "whats your opinion on remote work", "tool": null, "arg": ""}
+{"text": "whats your opinion on social media", "tool": null, "arg": ""}
+{"text": "whats your opinion on sourdough bread", "tool": null, "arg": ""}
+{"text": "whats your opinion on space travel", "tool": null, "arg": ""}
+{"text": "whats your opinion on startups", "tool": null, "arg": ""}
+{"text": "whats your opinion on the ocean", "tool": null, "arg": ""}
+{"text": "whats your opinion on the stock market", "tool": null, "arg": ""}
+{"text": "whats your opinion on tiny houses", "tool": null, "arg": ""}
+{"text": "whats your opinion on video games", "tool": null, "arg": ""}
+{"text": "whats your opinion on vinyl records", "tool": null, "arg": ""}
+{"text": "whats your opinion on woodworking", "tool": null, "arg": ""}
+{"text": "who is the best at calculus", "tool": null, "arg": ""}
+{"text": "who is the best at cooking", "tool": null, "arg": ""}
+{"text": "who is the best at design", "tool": null, "arg": ""}
+{"text": "who is the best at drawing", "tool": null, "arg": ""}
+{"text": "who is the best at french", "tool": null, "arg": ""}
+{"text": "who is the best at go", "tool": null, "arg": ""}
+{"text": "who is the best at javascript", "tool": null, "arg": ""}
+{"text": "who is the best at machine learning", "tool": null, "arg": ""}
+{"text": "who is the best at photography", "tool": null, "arg": ""}
+{"text": "who is the best at piano", "tool": null, "arg": ""}
+{"text": "who is the best at public speaking", "tool": null, "arg": ""}
+{"text": "who is the best at python", "tool": null, "arg": ""}
+{"text": "who is the best at rust", "tool": null, "arg": ""}
+{"text": "who is the best at spanish", "tool": null, "arg": ""}
+{"text": "who is the best at statistics", "tool": null, "arg": ""}
+{"text": "who is the best at swimming", "tool": null, "arg": ""}
+{"text": "who is the best at writing", "tool": null, "arg": ""}
+{"text": "why is ancient rome so expensive", "tool": null, "arg": ""}
+{"text": "why is ancient rome so overrated", "tool": null, "arg": ""}
+{"text": "why is artificial intelligence so addictive", "tool": null, "arg": ""}
+{"text": "why is artificial intelligence so controversial", "tool": null, "arg": ""}
+{"text": "why is artificial intelligence so expensive", "tool": null, "arg": ""}
+{"text": "why is artificial intelligence so overrated", "tool": null, "arg": ""}
+{"text": "why is black holes so expensive", "tool": null, "arg": ""}
+{"text": "why is black holes so popular", "tool": null, "arg": ""}
+{"text": "why is black holes so slow", "tool": null, "arg": ""}
+{"text": "why is chess so controversial", "tool": null, "arg": ""}
+{"text": "why is coffee so controversial", "tool": null, "arg": ""}
+{"text": "why is coffee so hard", "tool": null, "arg": ""}
+{"text": "why is coffee so overrated", "tool": null, "arg": ""}
+{"text": "why is cold showers so slow", "tool": null, "arg": ""}
+{"text": "why is cryptocurrency so addictive", "tool": null, "arg": ""}
+{"text": "why is cryptocurrency so complicated", "tool": null, "arg": ""}
+{"text": "why is cryptocurrency so expensive", "tool": null, "arg": ""}
+{"text": "why is cryptocurrency so popular", "tool": null, "arg": ""}
+{"text": "why is cycling so addictive", "tool": null, "arg": ""}
+{"text": "why is cycling so expensive", "tool": null, "arg": ""}
+{"text": "why is cycling so slow", "tool": null, "arg": ""}
+{"text": "why is dinosaurs so slow", "tool": null, "arg": ""}
+{"text": "why is electric cars so hard", "tool": null, "arg": ""}
+{"text": "why is electric cars so overrated", "tool": null, "arg": ""}
+{"text": "why is electric cars so popular", "tool": null, "arg": ""}
+{"text": "why is electric cars so slow", "tool": null, "arg": ""}
+{"text": "why is film photography so addictive", "tool": null, "arg": ""}
+{"text": "why is film photography so hard", "tool": null, "arg": ""}
+{"text": "why is film photography so slow", "tool": null, "arg": ""}
+{"text": "why is freelancing so complicated", "tool": null, "arg": ""}
+{"text": "why is freelancing so popular", "tool": null, "arg": ""}
+{"text": "why is gardening so overrated", "tool": null, "arg": ""}
+{"text": "why is gardening so popular", "tool": null, "arg": ""}
+{"text": "why is hiking so addictive", "tool": null, "arg": ""}
+{"text": "why is hiking so hard", "tool": null, "arg": ""}
+{"text": "why is hiking so popular", "tool": null, "arg": ""}
+{"text": "why is intermittent fasting so hard", "tool": null, "arg": ""}
+{"text": "why is intermittent fasting so popular", "tool": null, "arg": ""}
+{"text": "why is jazz so complicated", "tool": null, "arg": ""}
+{"text": "why is journaling so complicated", "tool": null, "arg": ""}
+{"text": "why is learning guitar so popular", "tool": null, "arg": ""}
+{"text": "why is learning guitar so slow", "tool": null, "arg": ""}
+{"text": "why is marathon running so complicated", "tool": null, "arg": ""}
+{"text": "why is marathon running so popular", "tool": null, "arg": ""}
+{"text": "why is mechanical keyboards so addictive", "tool": null, "arg": ""}
+{"text": "why is mechanical keyboards so hard", "tool": null, "arg": ""}
+{"text": "why is mechanical keyboards so slow", "tool": null, "arg": ""}
+{"text": "why is meditation so controversial", "tool": null, "arg": ""}
+{"text": "why is minimalism so addictive", "tool": null, "arg": ""}
+{"text": "why is minimalism so hard", "tool": null, "arg": ""}
+{"text": "why is minimalism so popular", "tool": null, "arg": ""}
+{"text": "why is podcasts so addictive", "tool": null, "arg": ""}
+{"text": "why is podcasts so complicated", "tool": null, "arg": ""}
+{"text": "why is podcasts so controversial", "tool": null, "arg": ""}
+{"text": "why is productivity apps so addictive", "tool": null, "arg": ""}
+{"text": "why is public speaking so controversial", "tool": null, "arg": ""}
+{"text": "why is public speaking so expensive", "tool": null, "arg": ""}
+{"text": "why is public speaking so slow", "tool": null, "arg": ""}
+{"text": "why is quantum computers so addictive", "tool": null, "arg": ""}
+{"text": "why is quantum computers so hard", "tool": null, "arg": ""}
+{"text": "why is quantum computers so overrated", "tool": null, "arg": ""}
+{"text": "why is quantum computers so popular", "tool": null, "arg": ""}
+{"text": "why is remote work so addictive", "tool": null, "arg": ""}
+{"text": "why is remote work so hard", "tool": null, "arg": ""}
+{"text": "why is sleep so controversial", "tool": null, "arg": ""}
+{"text": "why is sleep so overrated", "tool": null, "arg": ""}
+{"text": "why is social media so addictive", "tool": null, "arg": ""}
+{"text": "why is social media so hard", "tool": null, "arg": ""}
+{"text": "why is social media so popular", "tool": null, "arg": ""}
+{"text": "why is sourdough bread so addictive", "tool": null, "arg": ""}
+{"text": "why is sourdough bread so expensive", "tool": null, "arg": ""}
+{"text": "why is sourdough bread so popular", "tool": null, "arg": ""}
+{"text": "why is startups so overrated", "tool": null, "arg": ""}
+{"text": "why is the ocean so hard", "tool": null, "arg": ""}
+{"text": "why is the ocean so slow", "tool": null, "arg": ""}
+{"text": "why is the stock market so complicated", "tool": null, "arg": ""}
+{"text": "why is the stock market so expensive", "tool": null, "arg": ""}
+{"text": "why is video games so complicated", "tool": null, "arg": ""}
+{"text": "why is video games so expensive", "tool": null, "arg": ""}
+{"text": "why is video games so popular", "tool": null, "arg": ""}
+{"text": "why is video games so slow", "tool": null, "arg": ""}
+{"text": "why is vinyl records so controversial", "tool": null, "arg": ""}
+{"text": "why is vinyl records so hard", "tool": null, "arg": ""}
+{"text": "why is vinyl records so slow", "tool": null, "arg": ""}
+{"text": "why is woodworking so controversial", "tool": null, "arg": ""}
+{"text": "why is woodworking so hard", "tool": null, "arg": ""}
+{"text": "will you remember this", "tool": null, "arg": ""}
+{"text": "you around", "tool": null, "arg": ""}
+{"text": "you're pretty smart", "tool": null, "arg": ""}
