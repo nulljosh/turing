@@ -93,7 +93,6 @@ Ask her to draft something in our voice, or answer a question about one of our o
 - [ ] Picker trick: constrained output. Tried once (round six, tool-name logits trie) and it collapsed accuracy instead of helping; worth another look feeding the prefix through the chat template's own generation-prompt path
 - [ ] Picker trick: train on her mistakes. Write new templates for the kinds of wording she misses, never copy test cases into training
 - [ ] Picker trick: teacher and student. Have the local 8B write varied phrasings per tool with labels, train on those alongside the templates
-- [ ] Picker trick: more "not a command" and "not sure" examples so she abstains instead of guessing
 - [ ] Picker trick: preference pairs. Every "wrong, I meant X" in ~/.samantha/feedback.jsonl is a bad pick and a good one; train on the pair with DPO (TRL) once there are 60+ rows, not just the good half
 - [ ] Outside benchmark: score her on the Berkeley Function Calling Leaderboard next to other small models, so her numbers are not only our own test sets
 - [ ] From Joshua's notebook (2026-10-04), key phrases she should handle:
