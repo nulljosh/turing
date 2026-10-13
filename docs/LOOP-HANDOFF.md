@@ -1,4 +1,4 @@
-# Turing loop handoff (2026-10-12, 3 a.m.)
+# Turing loop handoff (2026-10-12, evening)
 
 ## What the loop is
 
@@ -11,6 +11,9 @@ A major ships only when its roadmap family is finished and checked: the badge st
 - **Live:** v7.0.0, earned. Memory reads back on the Mac and the phone, the Mac morning brief, Shortcuts she writes (6.1), and memory in your own iCloud Drive on request. The Mac app with 7.0 is signed, notarized and uploaded. v6.0.0 put her on a real Pi 4; v5.14.0 gave her Samantha Sans; docs/BRAND.md and /brand.html hold the brand kit.
 - **Joshua Tree PR 537** (list and read the card) is a draft behind main and needs a rebase by the Joshua Tree session. Do not touch it from here.
 - **Pi shell:** the console should boot to zsh or bash with Samantha as a command (docs/PI.md). It changes the words Joshua tests with, so it waits for a go-ahead and lives in the Joshua Tree repo on a branch with a PR.
+- **8.0 picker rounds are at the noise floor:** run 23 stays shipped. A retrain moves about 25 of 4,455 pooled rows by itself, and the leftover mistakes are 3 or 4 rows each. More teacher rows cannot be measured; only a new idea (relabeled dev sets, a different model) restarts 8.0.
+- **10.0 is under way in Joshua Tree:** 3.8.0 merged (small picker in C, `pick` and `pickcheck`), PR 578 (3.8.1, abstains on chat) waits on ci-local. Bars: parity 100 percent (met), pooled tool-level right rate at least 80 percent (81.2 met), false tool calls on not-a-command sentences no higher than run 23's 5 percent (7 percent, missed). Until the third bar is met the name stays "small picker".
+- **9.0 is Joshua's:** it needs his signed iPhone build and the Yeti mic; nothing to build until then except what he asks for.
 - **Disk:** about 12 GB free. Other sessions' builds eat it; only clean what this session made.
 - **Sealed sets** heldout4, heldout7 and heldout12 are read as counts only, never as text.
 
@@ -52,6 +55,16 @@ The 10.0 bar, written 2026-10-12 before any measurement. A 1.5B model cannot run
 5. Commit by exact path, push, then check every workflow run (test, release, deploy) and the live `/stats.json`.
 6. One line to Joshua only when something shipped, broke, or needs him.
 
+## Hard-won rules
+
+- A Kaggle output download of the 3 GB model breaks with IncompleteRead about half the time. Fetch only the merged model, in a retry loop: `uvx kaggle kernels output OWNER/KERNEL -p DIR -o -q --file-pattern 'hands-merged/'`, up to six tries with a 20 second sleep, and trust only "DL rc=0" plus a 3.1 GB `model.safetensors`.
+- Compare rounds on the pooled nine dev sets, never one set, and treat anything under about 25 rows as noise. Never read a sealed set to break a tie.
+- Joshua Tree PRs: work in a worktree off fresh `origin/main` (no "samantha" in the path); `VERSION`, `landing/version.txt` and `landing/index.html` conflict on every main move, so take main's side and set the new number; regenerate `docs/TESTING.md` with `tools/gen/testing-doc.py`; new check scripts use `mktemp -d`, never a fixed /tmp path (tmp-paths-check); every new source file gets an ARCHITECTURE row; `git push` runs a fast hook only, `tools/ci-local.sh` must pass before `gh pr ready`.
+- Before `ci-local`, run `pgrep -fl "ci-suite|ci-local|qemu-system"`. Another session's QEMU is not mine: never kill it. If it is there and Joshua says hurry, run anyway and rerun only a shard that fails; kill only processes whose cwd is my own worktree.
+- Python in a pipeline: write results to a file; numpy in-place masking through the builtin `abs()` once flipped signs silently, so use `np.where(np.abs(x) < t, 0, x)`.
+- The kernel's room is shared: `tools/checks/bss-margin-check.py` wants 16KB free. The picker may use about 40KB of it; say the number in the PR.
+- When a major bar is missed, write the miss in this file the same day. Never move a bar after a measurement.
+
 ## Needs Joshua
 
 - Clicking any macOS permission prompt (she never does).
@@ -62,5 +75,5 @@ The 10.0 bar, written 2026-10-12 before any measurement. A 1.5B model cannot run
 ## Restart prompt
 
 ```
-/loop until v10, then keep going toward v100, overnight and all week: read docs/LOOP-HANDOFF.md first and follow its ladder, pace and wake steps. Versions are earned: a major only when a roadmap family or phase completes, never bumped to hit a number. Gate every push on exit codes. Hard stop and /checkpoint at 90 percent usage. Never weaken a guard, never kill a process she did not start.
+/loop until v10, then keep going toward v100, overnight and all week: read docs/LOOP-HANDOFF.md first and follow its ladder, pace, wake steps and hard-won rules. On every wake start with the usage line, then the state of open PRs and runs, then do exactly one slice and log it. Versions are earned: a major only when a roadmap family or phase completes and its written bar is met, never bumped to hit a number, never move a bar after measuring. Gate every push on exit codes and ci-local before a Joshua Tree PR leaves draft. Keep replies to Joshua to two lines. If nothing is safe to do, say so in one line and sleep 30 minutes; re-arm every time. Hard stop and /checkpoint at 90 percent usage. Never weaken a guard, never kill a process she did not start, never print a token.
 ```
