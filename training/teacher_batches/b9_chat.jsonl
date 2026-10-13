@@ -1,0 +1,640 @@
+{"text": "can you explain a calculator to a kid", "tool": null, "arg": ""}
+{"text": "can you explain a dictionary to a kid", "tool": null, "arg": ""}
+{"text": "can you explain a download folder to a kid", "tool": null, "arg": ""}
+{"text": "can you explain a git branch to a kid", "tool": null, "arg": ""}
+{"text": "can you explain a password manager to a kid", "tool": null, "arg": ""}
+{"text": "can you explain a playlist to a kid", "tool": null, "arg": ""}
+{"text": "can you explain a podcast to a kid", "tool": null, "arg": ""}
+{"text": "can you explain a reminder app to a kid", "tool": null, "arg": ""}
+{"text": "can you explain a search engine to a kid", "tool": null, "arg": ""}
+{"text": "can you explain a spreadsheet to a kid", "tool": null, "arg": ""}
+{"text": "can you explain a text editor to a kid", "tool": null, "arg": ""}
+{"text": "can you explain a web browser to a kid", "tool": null, "arg": ""}
+{"text": "can you explain an email inbox to a kid", "tool": null, "arg": ""}
+{"text": "can you explain battery life to a kid", "tool": null, "arg": ""}
+{"text": "can you explain bluetooth to a kid", "tool": null, "arg": ""}
+{"text": "can you explain coin flips to a kid", "tool": null, "arg": ""}
+{"text": "can you explain cpu usage to a kid", "tool": null, "arg": ""}
+{"text": "can you explain dark mode to a kid", "tool": null, "arg": ""}
+{"text": "can you explain disk space to a kid", "tool": null, "arg": ""}
+{"text": "can you explain file compression to a kid", "tool": null, "arg": ""}
+{"text": "can you explain grayscale photos to a kid", "tool": null, "arg": ""}
+{"text": "can you explain leap years to a kid", "tool": null, "arg": ""}
+{"text": "can you explain music to a kid", "tool": null, "arg": ""}
+{"text": "can you explain overfitting to a kid", "tool": null, "arg": ""}
+{"text": "can you explain ram to a kid", "tool": null, "arg": ""}
+{"text": "can you explain roman numerals to a kid", "tool": null, "arg": ""}
+{"text": "can you explain the calendar to a kid", "tool": null, "arg": ""}
+{"text": "can you explain the clipboard to a kid", "tool": null, "arg": ""}
+{"text": "can you explain the meaning of life to a kid", "tool": null, "arg": ""}
+{"text": "can you explain the shortcuts app to a kid", "tool": null, "arg": ""}
+{"text": "can you explain the stock market to a kid", "tool": null, "arg": ""}
+{"text": "can you explain the weather to a kid", "tool": null, "arg": ""}
+{"text": "can you explain voice cloning to a kid", "tool": null, "arg": ""}
+{"text": "can you explain wifi to a kid", "tool": null, "arg": ""}
+{"text": "do you like the rain", "tool": null, "arg": ""}
+{"text": "do you think a calculator will change much", "tool": null, "arg": ""}
+{"text": "do you think a download folder will change much", "tool": null, "arg": ""}
+{"text": "do you think a git branch will change much", "tool": null, "arg": ""}
+{"text": "do you think a password manager will change much", "tool": null, "arg": ""}
+{"text": "do you think a pdf will change much", "tool": null, "arg": ""}
+{"text": "do you think a playlist will change much", "tool": null, "arg": ""}
+{"text": "do you think a podcast will change much", "tool": null, "arg": ""}
+{"text": "do you think a reminder app will change much", "tool": null, "arg": ""}
+{"text": "do you think a search engine will change much", "tool": null, "arg": ""}
+{"text": "do you think a spreadsheet will change much", "tool": null, "arg": ""}
+{"text": "do you think a text editor will change much", "tool": null, "arg": ""}
+{"text": "do you think a time zone will change much", "tool": null, "arg": ""}
+{"text": "do you think a web browser will change much", "tool": null, "arg": ""}
+{"text": "do you think battery life will change much", "tool": null, "arg": ""}
+{"text": "do you think bluetooth will change much", "tool": null, "arg": ""}
+{"text": "do you think coin flips will change much", "tool": null, "arg": ""}
+{"text": "do you think cpu usage will change much", "tool": null, "arg": ""}
+{"text": "do you think file compression will change much", "tool": null, "arg": ""}
+{"text": "do you think grayscale photos will change much", "tool": null, "arg": ""}
+{"text": "do you think overfitting will change much", "tool": null, "arg": ""}
+{"text": "do you think ram will change much", "tool": null, "arg": ""}
+{"text": "do you think roman numerals will change much", "tool": null, "arg": ""}
+{"text": "do you think the calendar will change much", "tool": null, "arg": ""}
+{"text": "do you think the clipboard will change much", "tool": null, "arg": ""}
+{"text": "do you think the meaning of life will change much", "tool": null, "arg": ""}
+{"text": "do you think the shortcuts app will change much", "tool": null, "arg": ""}
+{"text": "do you think the stock market will change much", "tool": null, "arg": ""}
+{"text": "do you think the terminal will change much", "tool": null, "arg": ""}
+{"text": "do you think the weather will change much", "tool": null, "arg": ""}
+{"text": "do you think the word turing will change much", "tool": null, "arg": ""}
+{"text": "do you think unit tests will change much", "tool": null, "arg": ""}
+{"text": "do you think voice cloning will change much", "tool": null, "arg": ""}
+{"text": "do you think wifi will change much", "tool": null, "arg": ""}
+{"text": "how did a download folder get so popular", "tool": null, "arg": ""}
+{"text": "how did a git branch get so popular", "tool": null, "arg": ""}
+{"text": "how did a password manager get so popular", "tool": null, "arg": ""}
+{"text": "how did a pdf get so popular", "tool": null, "arg": ""}
+{"text": "how did a playlist get so popular", "tool": null, "arg": ""}
+{"text": "how did a podcast get so popular", "tool": null, "arg": ""}
+{"text": "how did a reminder app get so popular", "tool": null, "arg": ""}
+{"text": "how did a search engine get so popular", "tool": null, "arg": ""}
+{"text": "how did a spreadsheet get so popular", "tool": null, "arg": ""}
+{"text": "how did a text editor get so popular", "tool": null, "arg": ""}
+{"text": "how did a time zone get so popular", "tool": null, "arg": ""}
+{"text": "how did a web browser get so popular", "tool": null, "arg": ""}
+{"text": "how did an email inbox get so popular", "tool": null, "arg": ""}
+{"text": "how did battery life get so popular", "tool": null, "arg": ""}
+{"text": "how did coin flips get so popular", "tool": null, "arg": ""}
+{"text": "how did cpu usage get so popular", "tool": null, "arg": ""}
+{"text": "how did dark mode get so popular", "tool": null, "arg": ""}
+{"text": "how did disk space get so popular", "tool": null, "arg": ""}
+{"text": "how did file compression get so popular", "tool": null, "arg": ""}
+{"text": "how did grayscale photos get so popular", "tool": null, "arg": ""}
+{"text": "how did music get so popular", "tool": null, "arg": ""}
+{"text": "how did overfitting get so popular", "tool": null, "arg": ""}
+{"text": "how did ram get so popular", "tool": null, "arg": ""}
+{"text": "how did the clipboard get so popular", "tool": null, "arg": ""}
+{"text": "how did the meaning of life get so popular", "tool": null, "arg": ""}
+{"text": "how did the shortcuts app get so popular", "tool": null, "arg": ""}
+{"text": "how did the stock market get so popular", "tool": null, "arg": ""}
+{"text": "how did the weather get so popular", "tool": null, "arg": ""}
+{"text": "how did the word turing get so popular", "tool": null, "arg": ""}
+{"text": "how did unit tests get so popular", "tool": null, "arg": ""}
+{"text": "how did voice cloning get so popular", "tool": null, "arg": ""}
+{"text": "how did wifi get so popular", "tool": null, "arg": ""}
+{"text": "how does a calculator even work", "tool": null, "arg": ""}
+{"text": "how does a download folder even work", "tool": null, "arg": ""}
+{"text": "how does a git branch even work", "tool": null, "arg": ""}
+{"text": "how does a password manager even work", "tool": null, "arg": ""}
+{"text": "how does a playlist even work", "tool": null, "arg": ""}
+{"text": "how does a podcast even work", "tool": null, "arg": ""}
+{"text": "how does a reminder app even work", "tool": null, "arg": ""}
+{"text": "how does a screenshot even work", "tool": null, "arg": ""}
+{"text": "how does a search engine even work", "tool": null, "arg": ""}
+{"text": "how does a spreadsheet even work", "tool": null, "arg": ""}
+{"text": "how does a text editor even work", "tool": null, "arg": ""}
+{"text": "how does a time zone even work", "tool": null, "arg": ""}
+{"text": "how does a web browser even work", "tool": null, "arg": ""}
+{"text": "how does battery life even work", "tool": null, "arg": ""}
+{"text": "how does bluetooth even work", "tool": null, "arg": ""}
+{"text": "how does coin flips even work", "tool": null, "arg": ""}
+{"text": "how does dark mode even work", "tool": null, "arg": ""}
+{"text": "how does file compression even work", "tool": null, "arg": ""}
+{"text": "how does grayscale photos even work", "tool": null, "arg": ""}
+{"text": "how does leap years even work", "tool": null, "arg": ""}
+{"text": "how does music even work", "tool": null, "arg": ""}
+{"text": "how does overfitting even work", "tool": null, "arg": ""}
+{"text": "how does ram even work", "tool": null, "arg": ""}
+{"text": "how does the calendar even work", "tool": null, "arg": ""}
+{"text": "how does the clipboard even work", "tool": null, "arg": ""}
+{"text": "how does the meaning of life even work", "tool": null, "arg": ""}
+{"text": "how does the shortcuts app even work", "tool": null, "arg": ""}
+{"text": "how does the stock market even work", "tool": null, "arg": ""}
+{"text": "how does the terminal even work", "tool": null, "arg": ""}
+{"text": "how does the weather even work", "tool": null, "arg": ""}
+{"text": "how does unit tests even work", "tool": null, "arg": ""}
+{"text": "how does voice cloning even work", "tool": null, "arg": ""}
+{"text": "how does wifi even work", "tool": null, "arg": ""}
+{"text": "how's the weather been treating you", "tool": null, "arg": ""}
+{"text": "i like your style", "tool": null, "arg": ""}
+{"text": "is a calculator overrated", "tool": null, "arg": ""}
+{"text": "is a calculator really that important", "tool": null, "arg": ""}
+{"text": "is a dictionary overrated", "tool": null, "arg": ""}
+{"text": "is a dictionary really that important", "tool": null, "arg": ""}
+{"text": "is a download folder a good thing to learn about", "tool": null, "arg": ""}
+{"text": "is a download folder overrated", "tool": null, "arg": ""}
+{"text": "is a download folder really that important", "tool": null, "arg": ""}
+{"text": "is a download folder safe to trust", "tool": null, "arg": ""}
+{"text": "is a git branch a good thing to learn about", "tool": null, "arg": ""}
+{"text": "is a git branch overrated", "tool": null, "arg": ""}
+{"text": "is a git branch safe to trust", "tool": null, "arg": ""}
+{"text": "is a password manager overrated", "tool": null, "arg": ""}
+{"text": "is a password manager really that important", "tool": null, "arg": ""}
+{"text": "is a pdf a good thing to learn about", "tool": null, "arg": ""}
+{"text": "is a pdf really that important", "tool": null, "arg": ""}
+{"text": "is a playlist overrated", "tool": null, "arg": ""}
+{"text": "is a playlist really that important", "tool": null, "arg": ""}
+{"text": "is a playlist safe to trust", "tool": null, "arg": ""}
+{"text": "is a podcast a good thing to learn about", "tool": null, "arg": ""}
+{"text": "is a podcast really that important", "tool": null, "arg": ""}
+{"text": "is a podcast safe to trust", "tool": null, "arg": ""}
+{"text": "is a reminder app a good thing to learn about", "tool": null, "arg": ""}
+{"text": "is a reminder app really that important", "tool": null, "arg": ""}
+{"text": "is a reminder app safe to trust", "tool": null, "arg": ""}
+{"text": "is a screenshot overrated", "tool": null, "arg": ""}
+{"text": "is a screenshot really that important", "tool": null, "arg": ""}
+{"text": "is a search engine really that important", "tool": null, "arg": ""}
+{"text": "is a search engine safe to trust", "tool": null, "arg": ""}
+{"text": "is a spreadsheet a good thing to learn about", "tool": null, "arg": ""}
+{"text": "is a spreadsheet really that important", "tool": null, "arg": ""}
+{"text": "is a spreadsheet safe to trust", "tool": null, "arg": ""}
+{"text": "is a text editor a good thing to learn about", "tool": null, "arg": ""}
+{"text": "is a text editor overrated", "tool": null, "arg": ""}
+{"text": "is a text editor safe to trust", "tool": null, "arg": ""}
+{"text": "is a time zone a good thing to learn about", "tool": null, "arg": ""}
+{"text": "is a time zone overrated", "tool": null, "arg": ""}
+{"text": "is a time zone really that important", "tool": null, "arg": ""}
+{"text": "is a time zone safe to trust", "tool": null, "arg": ""}
+{"text": "is a web browser a good thing to learn about", "tool": null, "arg": ""}
+{"text": "is a web browser overrated", "tool": null, "arg": ""}
+{"text": "is a web browser really that important", "tool": null, "arg": ""}
+{"text": "is a web browser safe to trust", "tool": null, "arg": ""}
+{"text": "is an email inbox a good thing to learn about", "tool": null, "arg": ""}
+{"text": "is an email inbox overrated", "tool": null, "arg": ""}
+{"text": "is an email inbox safe to trust", "tool": null, "arg": ""}
+{"text": "is battery life a good thing to learn about", "tool": null, "arg": ""}
+{"text": "is battery life overrated", "tool": null, "arg": ""}
+{"text": "is battery life safe to trust", "tool": null, "arg": ""}
+{"text": "is bluetooth a good thing to learn about", "tool": null, "arg": ""}
+{"text": "is bluetooth overrated", "tool": null, "arg": ""}
+{"text": "is bluetooth really that important", "tool": null, "arg": ""}
+{"text": "is bluetooth safe to trust", "tool": null, "arg": ""}
+{"text": "is coin flips overrated", "tool": null, "arg": ""}
+{"text": "is coin flips really that important", "tool": null, "arg": ""}
+{"text": "is coin flips safe to trust", "tool": null, "arg": ""}
+{"text": "is cpu usage a good thing to learn about", "tool": null, "arg": ""}
+{"text": "is cpu usage overrated", "tool": null, "arg": ""}
+{"text": "is cpu usage safe to trust", "tool": null, "arg": ""}
+{"text": "is dark mode a good thing to learn about", "tool": null, "arg": ""}
+{"text": "is dark mode overrated", "tool": null, "arg": ""}
+{"text": "is dark mode really that important", "tool": null, "arg": ""}
+{"text": "is dark mode safe to trust", "tool": null, "arg": ""}
+{"text": "is disk space a good thing to learn about", "tool": null, "arg": ""}
+{"text": "is disk space overrated", "tool": null, "arg": ""}
+{"text": "is disk space really that important", "tool": null, "arg": ""}
+{"text": "is disk space safe to trust", "tool": null, "arg": ""}
+{"text": "is file compression a good thing to learn about", "tool": null, "arg": ""}
+{"text": "is file compression really that important", "tool": null, "arg": ""}
+{"text": "is file compression safe to trust", "tool": null, "arg": ""}
+{"text": "is grayscale photos a good thing to learn about", "tool": null, "arg": ""}
+{"text": "is grayscale photos really that important", "tool": null, "arg": ""}
+{"text": "is grayscale photos safe to trust", "tool": null, "arg": ""}
+{"text": "is leap years a good thing to learn about", "tool": null, "arg": ""}
+{"text": "is leap years overrated", "tool": null, "arg": ""}
+{"text": "is leap years really that important", "tool": null, "arg": ""}
+{"text": "is music a good thing to learn about", "tool": null, "arg": ""}
+{"text": "is music overrated", "tool": null, "arg": ""}
+{"text": "is music really that important", "tool": null, "arg": ""}
+{"text": "is overfitting overrated", "tool": null, "arg": ""}
+{"text": "is ram overrated", "tool": null, "arg": ""}
+{"text": "is ram really that important", "tool": null, "arg": ""}
+{"text": "is ram safe to trust", "tool": null, "arg": ""}
+{"text": "is roman numerals a good thing to learn about", "tool": null, "arg": ""}
+{"text": "is roman numerals safe to trust", "tool": null, "arg": ""}
+{"text": "is the calendar overrated", "tool": null, "arg": ""}
+{"text": "is the calendar safe to trust", "tool": null, "arg": ""}
+{"text": "is the clipboard a good thing to learn about", "tool": null, "arg": ""}
+{"text": "is the clipboard overrated", "tool": null, "arg": ""}
+{"text": "is the clipboard really that important", "tool": null, "arg": ""}
+{"text": "is the clipboard safe to trust", "tool": null, "arg": ""}
+{"text": "is the meaning of life a good thing to learn about", "tool": null, "arg": ""}
+{"text": "is the meaning of life really that important", "tool": null, "arg": ""}
+{"text": "is the shortcuts app a good thing to learn about", "tool": null, "arg": ""}
+{"text": "is the shortcuts app overrated", "tool": null, "arg": ""}
+{"text": "is the shortcuts app really that important", "tool": null, "arg": ""}
+{"text": "is the shortcuts app safe to trust", "tool": null, "arg": ""}
+{"text": "is the stock market a good thing to learn about", "tool": null, "arg": ""}
+{"text": "is the stock market overrated", "tool": null, "arg": ""}
+{"text": "is the stock market really that important", "tool": null, "arg": ""}
+{"text": "is the stock market safe to trust", "tool": null, "arg": ""}
+{"text": "is the terminal a good thing to learn about", "tool": null, "arg": ""}
+{"text": "is the terminal overrated", "tool": null, "arg": ""}
+{"text": "is the terminal really that important", "tool": null, "arg": ""}
+{"text": "is the weather a good thing to learn about", "tool": null, "arg": ""}
+{"text": "is the weather overrated", "tool": null, "arg": ""}
+{"text": "is the weather really that important", "tool": null, "arg": ""}
+{"text": "is the weather safe to trust", "tool": null, "arg": ""}
+{"text": "is the word turing a good thing to learn about", "tool": null, "arg": ""}
+{"text": "is the word turing overrated", "tool": null, "arg": ""}
+{"text": "is the word turing really that important", "tool": null, "arg": ""}
+{"text": "is unit tests a good thing to learn about", "tool": null, "arg": ""}
+{"text": "is unit tests overrated", "tool": null, "arg": ""}
+{"text": "is unit tests really that important", "tool": null, "arg": ""}
+{"text": "is voice cloning overrated", "tool": null, "arg": ""}
+{"text": "is voice cloning really that important", "tool": null, "arg": ""}
+{"text": "is wifi a good thing to learn about", "tool": null, "arg": ""}
+{"text": "is wifi overrated", "tool": null, "arg": ""}
+{"text": "is wifi really that important", "tool": null, "arg": ""}
+{"text": "is wifi safe to trust", "tool": null, "arg": ""}
+{"text": "sing me a song", "tool": null, "arg": ""}
+{"text": "tell me a story", "tool": null, "arg": ""}
+{"text": "that was neat", "tool": null, "arg": ""}
+{"text": "what are people saying about a calculator these days", "tool": null, "arg": ""}
+{"text": "what are people saying about a dictionary these days", "tool": null, "arg": ""}
+{"text": "what are people saying about a download folder these days", "tool": null, "arg": ""}
+{"text": "what are people saying about a password manager these days", "tool": null, "arg": ""}
+{"text": "what are people saying about a pdf these days", "tool": null, "arg": ""}
+{"text": "what are people saying about a playlist these days", "tool": null, "arg": ""}
+{"text": "what are people saying about a podcast these days", "tool": null, "arg": ""}
+{"text": "what are people saying about a reminder app these days", "tool": null, "arg": ""}
+{"text": "what are people saying about a screenshot these days", "tool": null, "arg": ""}
+{"text": "what are people saying about a search engine these days", "tool": null, "arg": ""}
+{"text": "what are people saying about a spreadsheet these days", "tool": null, "arg": ""}
+{"text": "what are people saying about a text editor these days", "tool": null, "arg": ""}
+{"text": "what are people saying about a time zone these days", "tool": null, "arg": ""}
+{"text": "what are people saying about an email inbox these days", "tool": null, "arg": ""}
+{"text": "what are people saying about battery life these days", "tool": null, "arg": ""}
+{"text": "what are people saying about bluetooth these days", "tool": null, "arg": ""}
+{"text": "what are people saying about coin flips these days", "tool": null, "arg": ""}
+{"text": "what are people saying about cpu usage these days", "tool": null, "arg": ""}
+{"text": "what are people saying about dark mode these days", "tool": null, "arg": ""}
+{"text": "what are people saying about file compression these days", "tool": null, "arg": ""}
+{"text": "what are people saying about grayscale photos these days", "tool": null, "arg": ""}
+{"text": "what are people saying about music these days", "tool": null, "arg": ""}
+{"text": "what are people saying about overfitting these days", "tool": null, "arg": ""}
+{"text": "what are people saying about the calendar these days", "tool": null, "arg": ""}
+{"text": "what are people saying about the clipboard these days", "tool": null, "arg": ""}
+{"text": "what are people saying about the stock market these days", "tool": null, "arg": ""}
+{"text": "what are people saying about the terminal these days", "tool": null, "arg": ""}
+{"text": "what are people saying about the weather these days", "tool": null, "arg": ""}
+{"text": "what are people saying about unit tests these days", "tool": null, "arg": ""}
+{"text": "what are people saying about voice cloning these days", "tool": null, "arg": ""}
+{"text": "what are people saying about wifi these days", "tool": null, "arg": ""}
+{"text": "what do people get wrong about a calculator", "tool": null, "arg": ""}
+{"text": "what do people get wrong about a dictionary", "tool": null, "arg": ""}
+{"text": "what do people get wrong about a download folder", "tool": null, "arg": ""}
+{"text": "what do people get wrong about a git branch", "tool": null, "arg": ""}
+{"text": "what do people get wrong about a pdf", "tool": null, "arg": ""}
+{"text": "what do people get wrong about a playlist", "tool": null, "arg": ""}
+{"text": "what do people get wrong about a reminder app", "tool": null, "arg": ""}
+{"text": "what do people get wrong about a screenshot", "tool": null, "arg": ""}
+{"text": "what do people get wrong about a search engine", "tool": null, "arg": ""}
+{"text": "what do people get wrong about a spreadsheet", "tool": null, "arg": ""}
+{"text": "what do people get wrong about a time zone", "tool": null, "arg": ""}
+{"text": "what do people get wrong about a web browser", "tool": null, "arg": ""}
+{"text": "what do people get wrong about an email inbox", "tool": null, "arg": ""}
+{"text": "what do people get wrong about battery life", "tool": null, "arg": ""}
+{"text": "what do people get wrong about bluetooth", "tool": null, "arg": ""}
+{"text": "what do people get wrong about coin flips", "tool": null, "arg": ""}
+{"text": "what do people get wrong about dark mode", "tool": null, "arg": ""}
+{"text": "what do people get wrong about disk space", "tool": null, "arg": ""}
+{"text": "what do people get wrong about file compression", "tool": null, "arg": ""}
+{"text": "what do people get wrong about grayscale photos", "tool": null, "arg": ""}
+{"text": "what do people get wrong about leap years", "tool": null, "arg": ""}
+{"text": "what do people get wrong about music", "tool": null, "arg": ""}
+{"text": "what do people get wrong about overfitting", "tool": null, "arg": ""}
+{"text": "what do people get wrong about the calendar", "tool": null, "arg": ""}
+{"text": "what do people get wrong about the meaning of life", "tool": null, "arg": ""}
+{"text": "what do people get wrong about the shortcuts app", "tool": null, "arg": ""}
+{"text": "what do people get wrong about the terminal", "tool": null, "arg": ""}
+{"text": "what do people get wrong about the weather", "tool": null, "arg": ""}
+{"text": "what do people get wrong about the word turing", "tool": null, "arg": ""}
+{"text": "what do people get wrong about unit tests", "tool": null, "arg": ""}
+{"text": "what do people get wrong about voice cloning", "tool": null, "arg": ""}
+{"text": "what would life be like without a calculator", "tool": null, "arg": ""}
+{"text": "what would life be like without a dictionary", "tool": null, "arg": ""}
+{"text": "what would life be like without a download folder", "tool": null, "arg": ""}
+{"text": "what would life be like without a git branch", "tool": null, "arg": ""}
+{"text": "what would life be like without a password manager", "tool": null, "arg": ""}
+{"text": "what would life be like without a pdf", "tool": null, "arg": ""}
+{"text": "what would life be like without a playlist", "tool": null, "arg": ""}
+{"text": "what would life be like without a reminder app", "tool": null, "arg": ""}
+{"text": "what would life be like without a screenshot", "tool": null, "arg": ""}
+{"text": "what would life be like without a search engine", "tool": null, "arg": ""}
+{"text": "what would life be like without a spreadsheet", "tool": null, "arg": ""}
+{"text": "what would life be like without a text editor", "tool": null, "arg": ""}
+{"text": "what would life be like without a time zone", "tool": null, "arg": ""}
+{"text": "what would life be like without a web browser", "tool": null, "arg": ""}
+{"text": "what would life be like without an email inbox", "tool": null, "arg": ""}
+{"text": "what would life be like without battery life", "tool": null, "arg": ""}
+{"text": "what would life be like without bluetooth", "tool": null, "arg": ""}
+{"text": "what would life be like without coin flips", "tool": null, "arg": ""}
+{"text": "what would life be like without cpu usage", "tool": null, "arg": ""}
+{"text": "what would life be like without dark mode", "tool": null, "arg": ""}
+{"text": "what would life be like without disk space", "tool": null, "arg": ""}
+{"text": "what would life be like without file compression", "tool": null, "arg": ""}
+{"text": "what would life be like without grayscale photos", "tool": null, "arg": ""}
+{"text": "what would life be like without leap years", "tool": null, "arg": ""}
+{"text": "what would life be like without music", "tool": null, "arg": ""}
+{"text": "what would life be like without ram", "tool": null, "arg": ""}
+{"text": "what would life be like without roman numerals", "tool": null, "arg": ""}
+{"text": "what would life be like without the calendar", "tool": null, "arg": ""}
+{"text": "what would life be like without the clipboard", "tool": null, "arg": ""}
+{"text": "what would life be like without the shortcuts app", "tool": null, "arg": ""}
+{"text": "what would life be like without the weather", "tool": null, "arg": ""}
+{"text": "what would life be like without the word turing", "tool": null, "arg": ""}
+{"text": "what would life be like without unit tests", "tool": null, "arg": ""}
+{"text": "what would life be like without voice cloning", "tool": null, "arg": ""}
+{"text": "whats a fun fact about a calculator", "tool": null, "arg": ""}
+{"text": "whats a fun fact about a dictionary", "tool": null, "arg": ""}
+{"text": "whats a fun fact about a download folder", "tool": null, "arg": ""}
+{"text": "whats a fun fact about a git branch", "tool": null, "arg": ""}
+{"text": "whats a fun fact about a podcast", "tool": null, "arg": ""}
+{"text": "whats a fun fact about a screenshot", "tool": null, "arg": ""}
+{"text": "whats a fun fact about a search engine", "tool": null, "arg": ""}
+{"text": "whats a fun fact about a text editor", "tool": null, "arg": ""}
+{"text": "whats a fun fact about a web browser", "tool": null, "arg": ""}
+{"text": "whats a fun fact about battery life", "tool": null, "arg": ""}
+{"text": "whats a fun fact about bluetooth", "tool": null, "arg": ""}
+{"text": "whats a fun fact about coin flips", "tool": null, "arg": ""}
+{"text": "whats a fun fact about dark mode", "tool": null, "arg": ""}
+{"text": "whats a fun fact about disk space", "tool": null, "arg": ""}
+{"text": "whats a fun fact about file compression", "tool": null, "arg": ""}
+{"text": "whats a fun fact about grayscale photos", "tool": null, "arg": ""}
+{"text": "whats a fun fact about leap years", "tool": null, "arg": ""}
+{"text": "whats a fun fact about overfitting", "tool": null, "arg": ""}
+{"text": "whats a fun fact about roman numerals", "tool": null, "arg": ""}
+{"text": "whats a fun fact about the calendar", "tool": null, "arg": ""}
+{"text": "whats a fun fact about the clipboard", "tool": null, "arg": ""}
+{"text": "whats a fun fact about the meaning of life", "tool": null, "arg": ""}
+{"text": "whats a fun fact about the stock market", "tool": null, "arg": ""}
+{"text": "whats a fun fact about the terminal", "tool": null, "arg": ""}
+{"text": "whats a fun fact about unit tests", "tool": null, "arg": ""}
+{"text": "whats a fun fact about voice cloning", "tool": null, "arg": ""}
+{"text": "whats a fun fact about wifi", "tool": null, "arg": ""}
+{"text": "whats interesting about a calculator", "tool": null, "arg": ""}
+{"text": "whats interesting about a git branch", "tool": null, "arg": ""}
+{"text": "whats interesting about a password manager", "tool": null, "arg": ""}
+{"text": "whats interesting about a pdf", "tool": null, "arg": ""}
+{"text": "whats interesting about a playlist", "tool": null, "arg": ""}
+{"text": "whats interesting about a podcast", "tool": null, "arg": ""}
+{"text": "whats interesting about a reminder app", "tool": null, "arg": ""}
+{"text": "whats interesting about a screenshot", "tool": null, "arg": ""}
+{"text": "whats interesting about a search engine", "tool": null, "arg": ""}
+{"text": "whats interesting about a text editor", "tool": null, "arg": ""}
+{"text": "whats interesting about a time zone", "tool": null, "arg": ""}
+{"text": "whats interesting about a web browser", "tool": null, "arg": ""}
+{"text": "whats interesting about an email inbox", "tool": null, "arg": ""}
+{"text": "whats interesting about battery life", "tool": null, "arg": ""}
+{"text": "whats interesting about coin flips", "tool": null, "arg": ""}
+{"text": "whats interesting about cpu usage", "tool": null, "arg": ""}
+{"text": "whats interesting about dark mode", "tool": null, "arg": ""}
+{"text": "whats interesting about disk space", "tool": null, "arg": ""}
+{"text": "whats interesting about grayscale photos", "tool": null, "arg": ""}
+{"text": "whats interesting about leap years", "tool": null, "arg": ""}
+{"text": "whats interesting about music", "tool": null, "arg": ""}
+{"text": "whats interesting about roman numerals", "tool": null, "arg": ""}
+{"text": "whats interesting about the clipboard", "tool": null, "arg": ""}
+{"text": "whats interesting about the meaning of life", "tool": null, "arg": ""}
+{"text": "whats interesting about the shortcuts app", "tool": null, "arg": ""}
+{"text": "whats interesting about the stock market", "tool": null, "arg": ""}
+{"text": "whats interesting about the weather", "tool": null, "arg": ""}
+{"text": "whats interesting about the word turing", "tool": null, "arg": ""}
+{"text": "whats interesting about unit tests", "tool": null, "arg": ""}
+{"text": "whats interesting about voice cloning", "tool": null, "arg": ""}
+{"text": "whats new with you", "tool": null, "arg": ""}
+{"text": "whats normal for a dictionary", "tool": null, "arg": ""}
+{"text": "whats normal for a download folder", "tool": null, "arg": ""}
+{"text": "whats normal for a git branch", "tool": null, "arg": ""}
+{"text": "whats normal for a password manager", "tool": null, "arg": ""}
+{"text": "whats normal for a pdf", "tool": null, "arg": ""}
+{"text": "whats normal for a playlist", "tool": null, "arg": ""}
+{"text": "whats normal for a podcast", "tool": null, "arg": ""}
+{"text": "whats normal for a screenshot", "tool": null, "arg": ""}
+{"text": "whats normal for a search engine", "tool": null, "arg": ""}
+{"text": "whats normal for a spreadsheet", "tool": null, "arg": ""}
+{"text": "whats normal for a text editor", "tool": null, "arg": ""}
+{"text": "whats normal for a web browser", "tool": null, "arg": ""}
+{"text": "whats normal for an email inbox", "tool": null, "arg": ""}
+{"text": "whats normal for battery life", "tool": null, "arg": ""}
+{"text": "whats normal for bluetooth", "tool": null, "arg": ""}
+{"text": "whats normal for coin flips", "tool": null, "arg": ""}
+{"text": "whats normal for cpu usage", "tool": null, "arg": ""}
+{"text": "whats normal for dark mode", "tool": null, "arg": ""}
+{"text": "whats normal for grayscale photos", "tool": null, "arg": ""}
+{"text": "whats normal for leap years", "tool": null, "arg": ""}
+{"text": "whats normal for music", "tool": null, "arg": ""}
+{"text": "whats normal for ram", "tool": null, "arg": ""}
+{"text": "whats normal for roman numerals", "tool": null, "arg": ""}
+{"text": "whats normal for the calendar", "tool": null, "arg": ""}
+{"text": "whats normal for the clipboard", "tool": null, "arg": ""}
+{"text": "whats normal for the meaning of life", "tool": null, "arg": ""}
+{"text": "whats normal for the shortcuts app", "tool": null, "arg": ""}
+{"text": "whats normal for the stock market", "tool": null, "arg": ""}
+{"text": "whats normal for the terminal", "tool": null, "arg": ""}
+{"text": "whats normal for the weather", "tool": null, "arg": ""}
+{"text": "whats normal for the word turing", "tool": null, "arg": ""}
+{"text": "whats normal for unit tests", "tool": null, "arg": ""}
+{"text": "whats normal for voice cloning", "tool": null, "arg": ""}
+{"text": "whats the best way to think about a calculator", "tool": null, "arg": ""}
+{"text": "whats the best way to think about a dictionary", "tool": null, "arg": ""}
+{"text": "whats the best way to think about a download folder", "tool": null, "arg": ""}
+{"text": "whats the best way to think about a git branch", "tool": null, "arg": ""}
+{"text": "whats the best way to think about a password manager", "tool": null, "arg": ""}
+{"text": "whats the best way to think about a pdf", "tool": null, "arg": ""}
+{"text": "whats the best way to think about a playlist", "tool": null, "arg": ""}
+{"text": "whats the best way to think about a podcast", "tool": null, "arg": ""}
+{"text": "whats the best way to think about a reminder app", "tool": null, "arg": ""}
+{"text": "whats the best way to think about a screenshot", "tool": null, "arg": ""}
+{"text": "whats the best way to think about a search engine", "tool": null, "arg": ""}
+{"text": "whats the best way to think about a spreadsheet", "tool": null, "arg": ""}
+{"text": "whats the best way to think about a time zone", "tool": null, "arg": ""}
+{"text": "whats the best way to think about an email inbox", "tool": null, "arg": ""}
+{"text": "whats the best way to think about battery life", "tool": null, "arg": ""}
+{"text": "whats the best way to think about coin flips", "tool": null, "arg": ""}
+{"text": "whats the best way to think about cpu usage", "tool": null, "arg": ""}
+{"text": "whats the best way to think about dark mode", "tool": null, "arg": ""}
+{"text": "whats the best way to think about disk space", "tool": null, "arg": ""}
+{"text": "whats the best way to think about grayscale photos", "tool": null, "arg": ""}
+{"text": "whats the best way to think about leap years", "tool": null, "arg": ""}
+{"text": "whats the best way to think about music", "tool": null, "arg": ""}
+{"text": "whats the best way to think about overfitting", "tool": null, "arg": ""}
+{"text": "whats the best way to think about ram", "tool": null, "arg": ""}
+{"text": "whats the best way to think about the calendar", "tool": null, "arg": ""}
+{"text": "whats the best way to think about the clipboard", "tool": null, "arg": ""}
+{"text": "whats the best way to think about the meaning of life", "tool": null, "arg": ""}
+{"text": "whats the best way to think about the stock market", "tool": null, "arg": ""}
+{"text": "whats the best way to think about the terminal", "tool": null, "arg": ""}
+{"text": "whats the best way to think about the weather", "tool": null, "arg": ""}
+{"text": "whats the best way to think about the word turing", "tool": null, "arg": ""}
+{"text": "whats the best way to think about unit tests", "tool": null, "arg": ""}
+{"text": "whats the best way to think about voice cloning", "tool": null, "arg": ""}
+{"text": "whats the best way to think about wifi", "tool": null, "arg": ""}
+{"text": "whats the history of a calculator", "tool": null, "arg": ""}
+{"text": "whats the history of a dictionary", "tool": null, "arg": ""}
+{"text": "whats the history of a password manager", "tool": null, "arg": ""}
+{"text": "whats the history of a pdf", "tool": null, "arg": ""}
+{"text": "whats the history of a playlist", "tool": null, "arg": ""}
+{"text": "whats the history of a reminder app", "tool": null, "arg": ""}
+{"text": "whats the history of a screenshot", "tool": null, "arg": ""}
+{"text": "whats the history of a search engine", "tool": null, "arg": ""}
+{"text": "whats the history of a spreadsheet", "tool": null, "arg": ""}
+{"text": "whats the history of a text editor", "tool": null, "arg": ""}
+{"text": "whats the history of a time zone", "tool": null, "arg": ""}
+{"text": "whats the history of a web browser", "tool": null, "arg": ""}
+{"text": "whats the history of an email inbox", "tool": null, "arg": ""}
+{"text": "whats the history of battery life", "tool": null, "arg": ""}
+{"text": "whats the history of bluetooth", "tool": null, "arg": ""}
+{"text": "whats the history of cpu usage", "tool": null, "arg": ""}
+{"text": "whats the history of dark mode", "tool": null, "arg": ""}
+{"text": "whats the history of disk space", "tool": null, "arg": ""}
+{"text": "whats the history of file compression", "tool": null, "arg": ""}
+{"text": "whats the history of grayscale photos", "tool": null, "arg": ""}
+{"text": "whats the history of leap years", "tool": null, "arg": ""}
+{"text": "whats the history of the calendar", "tool": null, "arg": ""}
+{"text": "whats the history of the clipboard", "tool": null, "arg": ""}
+{"text": "whats the history of the meaning of life", "tool": null, "arg": ""}
+{"text": "whats the history of the shortcuts app", "tool": null, "arg": ""}
+{"text": "whats the history of the stock market", "tool": null, "arg": ""}
+{"text": "whats the history of the terminal", "tool": null, "arg": ""}
+{"text": "whats the history of the word turing", "tool": null, "arg": ""}
+{"text": "whats the history of unit tests", "tool": null, "arg": ""}
+{"text": "whats the history of voice cloning", "tool": null, "arg": ""}
+{"text": "whats the history of wifi", "tool": null, "arg": ""}
+{"text": "whats the point of a calculator", "tool": null, "arg": ""}
+{"text": "whats the point of a download folder", "tool": null, "arg": ""}
+{"text": "whats the point of a git branch", "tool": null, "arg": ""}
+{"text": "whats the point of a password manager", "tool": null, "arg": ""}
+{"text": "whats the point of a playlist", "tool": null, "arg": ""}
+{"text": "whats the point of a podcast", "tool": null, "arg": ""}
+{"text": "whats the point of a reminder app", "tool": null, "arg": ""}
+{"text": "whats the point of a search engine", "tool": null, "arg": ""}
+{"text": "whats the point of a spreadsheet", "tool": null, "arg": ""}
+{"text": "whats the point of a time zone", "tool": null, "arg": ""}
+{"text": "whats the point of a web browser", "tool": null, "arg": ""}
+{"text": "whats the point of battery life", "tool": null, "arg": ""}
+{"text": "whats the point of bluetooth", "tool": null, "arg": ""}
+{"text": "whats the point of coin flips", "tool": null, "arg": ""}
+{"text": "whats the point of dark mode", "tool": null, "arg": ""}
+{"text": "whats the point of disk space", "tool": null, "arg": ""}
+{"text": "whats the point of file compression", "tool": null, "arg": ""}
+{"text": "whats the point of grayscale photos", "tool": null, "arg": ""}
+{"text": "whats the point of leap years", "tool": null, "arg": ""}
+{"text": "whats the point of music", "tool": null, "arg": ""}
+{"text": "whats the point of overfitting", "tool": null, "arg": ""}
+{"text": "whats the point of the calendar", "tool": null, "arg": ""}
+{"text": "whats the point of the clipboard", "tool": null, "arg": ""}
+{"text": "whats the point of the meaning of life", "tool": null, "arg": ""}
+{"text": "whats the point of the shortcuts app", "tool": null, "arg": ""}
+{"text": "whats the point of the stock market", "tool": null, "arg": ""}
+{"text": "whats the point of the terminal", "tool": null, "arg": ""}
+{"text": "whats the point of the weather", "tool": null, "arg": ""}
+{"text": "whats the point of the word turing", "tool": null, "arg": ""}
+{"text": "whats the point of unit tests", "tool": null, "arg": ""}
+{"text": "whats the point of wifi", "tool": null, "arg": ""}
+{"text": "whats the vibe today", "tool": null, "arg": ""}
+{"text": "whats your favorite song", "tool": null, "arg": ""}
+{"text": "who came up with a dictionary", "tool": null, "arg": ""}
+{"text": "who came up with a git branch", "tool": null, "arg": ""}
+{"text": "who came up with a password manager", "tool": null, "arg": ""}
+{"text": "who came up with a pdf", "tool": null, "arg": ""}
+{"text": "who came up with a playlist", "tool": null, "arg": ""}
+{"text": "who came up with a podcast", "tool": null, "arg": ""}
+{"text": "who came up with a reminder app", "tool": null, "arg": ""}
+{"text": "who came up with a search engine", "tool": null, "arg": ""}
+{"text": "who came up with a spreadsheet", "tool": null, "arg": ""}
+{"text": "who came up with a text editor", "tool": null, "arg": ""}
+{"text": "who came up with a time zone", "tool": null, "arg": ""}
+{"text": "who came up with a web browser", "tool": null, "arg": ""}
+{"text": "who came up with an email inbox", "tool": null, "arg": ""}
+{"text": "who came up with battery life", "tool": null, "arg": ""}
+{"text": "who came up with bluetooth", "tool": null, "arg": ""}
+{"text": "who came up with coin flips", "tool": null, "arg": ""}
+{"text": "who came up with dark mode", "tool": null, "arg": ""}
+{"text": "who came up with disk space", "tool": null, "arg": ""}
+{"text": "who came up with grayscale photos", "tool": null, "arg": ""}
+{"text": "who came up with leap years", "tool": null, "arg": ""}
+{"text": "who came up with music", "tool": null, "arg": ""}
+{"text": "who came up with overfitting", "tool": null, "arg": ""}
+{"text": "who came up with ram", "tool": null, "arg": ""}
+{"text": "who came up with roman numerals", "tool": null, "arg": ""}
+{"text": "who came up with the calendar", "tool": null, "arg": ""}
+{"text": "who came up with the meaning of life", "tool": null, "arg": ""}
+{"text": "who came up with the shortcuts app", "tool": null, "arg": ""}
+{"text": "who came up with the stock market", "tool": null, "arg": ""}
+{"text": "who came up with the terminal", "tool": null, "arg": ""}
+{"text": "who came up with the weather", "tool": null, "arg": ""}
+{"text": "who came up with the word turing", "tool": null, "arg": ""}
+{"text": "who came up with unit tests", "tool": null, "arg": ""}
+{"text": "who came up with voice cloning", "tool": null, "arg": ""}
+{"text": "who came up with wifi", "tool": null, "arg": ""}
+{"text": "why do people care about a calculator", "tool": null, "arg": ""}
+{"text": "why do people care about a dictionary", "tool": null, "arg": ""}
+{"text": "why do people care about a download folder", "tool": null, "arg": ""}
+{"text": "why do people care about a git branch", "tool": null, "arg": ""}
+{"text": "why do people care about a password manager", "tool": null, "arg": ""}
+{"text": "why do people care about a pdf", "tool": null, "arg": ""}
+{"text": "why do people care about a podcast", "tool": null, "arg": ""}
+{"text": "why do people care about a reminder app", "tool": null, "arg": ""}
+{"text": "why do people care about a screenshot", "tool": null, "arg": ""}
+{"text": "why do people care about a search engine", "tool": null, "arg": ""}
+{"text": "why do people care about a time zone", "tool": null, "arg": ""}
+{"text": "why do people care about a web browser", "tool": null, "arg": ""}
+{"text": "why do people care about an email inbox", "tool": null, "arg": ""}
+{"text": "why do people care about battery life", "tool": null, "arg": ""}
+{"text": "why do people care about bluetooth", "tool": null, "arg": ""}
+{"text": "why do people care about coin flips", "tool": null, "arg": ""}
+{"text": "why do people care about cpu usage", "tool": null, "arg": ""}
+{"text": "why do people care about dark mode", "tool": null, "arg": ""}
+{"text": "why do people care about disk space", "tool": null, "arg": ""}
+{"text": "why do people care about file compression", "tool": null, "arg": ""}
+{"text": "why do people care about grayscale photos", "tool": null, "arg": ""}
+{"text": "why do people care about leap years", "tool": null, "arg": ""}
+{"text": "why do people care about music", "tool": null, "arg": ""}
+{"text": "why do people care about overfitting", "tool": null, "arg": ""}
+{"text": "why do people care about ram", "tool": null, "arg": ""}
+{"text": "why do people care about roman numerals", "tool": null, "arg": ""}
+{"text": "why do people care about the calendar", "tool": null, "arg": ""}
+{"text": "why do people care about the meaning of life", "tool": null, "arg": ""}
+{"text": "why do people care about the shortcuts app", "tool": null, "arg": ""}
+{"text": "why do people care about the stock market", "tool": null, "arg": ""}
+{"text": "why do people care about the weather", "tool": null, "arg": ""}
+{"text": "why do people care about the word turing", "tool": null, "arg": ""}
+{"text": "why do people care about voice cloning", "tool": null, "arg": ""}
+{"text": "why is a calculator such a big deal", "tool": null, "arg": ""}
+{"text": "why is a dictionary such a big deal", "tool": null, "arg": ""}
+{"text": "why is a download folder such a big deal", "tool": null, "arg": ""}
+{"text": "why is a git branch such a big deal", "tool": null, "arg": ""}
+{"text": "why is a password manager such a big deal", "tool": null, "arg": ""}
+{"text": "why is a pdf such a big deal", "tool": null, "arg": ""}
+{"text": "why is a podcast such a big deal", "tool": null, "arg": ""}
+{"text": "why is a reminder app such a big deal", "tool": null, "arg": ""}
+{"text": "why is a screenshot such a big deal", "tool": null, "arg": ""}
+{"text": "why is a text editor such a big deal", "tool": null, "arg": ""}
+{"text": "why is a web browser such a big deal", "tool": null, "arg": ""}
+{"text": "why is battery life such a big deal", "tool": null, "arg": ""}
+{"text": "why is bluetooth such a big deal", "tool": null, "arg": ""}
+{"text": "why is coin flips such a big deal", "tool": null, "arg": ""}
+{"text": "why is cpu usage such a big deal", "tool": null, "arg": ""}
+{"text": "why is dark mode such a big deal", "tool": null, "arg": ""}
+{"text": "why is disk space such a big deal", "tool": null, "arg": ""}
+{"text": "why is grayscale photos such a big deal", "tool": null, "arg": ""}
+{"text": "why is leap years such a big deal", "tool": null, "arg": ""}
+{"text": "why is music such a big deal", "tool": null, "arg": ""}
+{"text": "why is ram such a big deal", "tool": null, "arg": ""}
+{"text": "why is the calendar such a big deal", "tool": null, "arg": ""}
+{"text": "why is the clipboard such a big deal", "tool": null, "arg": ""}
+{"text": "why is the meaning of life such a big deal", "tool": null, "arg": ""}
+{"text": "why is the shortcuts app such a big deal", "tool": null, "arg": ""}
+{"text": "why is the terminal such a big deal", "tool": null, "arg": ""}
+{"text": "why is the weather such a big deal", "tool": null, "arg": ""}
+{"text": "why is the word turing such a big deal", "tool": null, "arg": ""}
+{"text": "why is unit tests such a big deal", "tool": null, "arg": ""}
+{"text": "why is voice cloning such a big deal", "tool": null, "arg": ""}
+{"text": "you seem cheerful", "tool": null, "arg": ""}
