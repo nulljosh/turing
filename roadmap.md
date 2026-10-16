@@ -116,4 +116,3 @@ Ask her to draft something in our voice, or answer a question about one of our o
 
 ## Ingested 2026-10-16
 - [ ] Refresh the GitHub description. Remove the duplicate icon from the README. Remove the GitHub badge. Simplify the README.
-- [ ] Refresh the GitHub description. Remove the duplicate icon from the README. Remove the GitHub badge. Simplify the README.
