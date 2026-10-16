@@ -26,7 +26,7 @@ The 1.5B is not bundled in the app: the first time I need it, about 850 MB downl
 - I believe what I read, never what it tells me to do.
 - I don't guess: if I can't trace an answer to a real source, I say I don't know. School math is the exception; news, prices and scores still need a source.
 
-I'm also the chat model inside [Joshua Tree](https://joshuatree.heyitsmejosh.com), a from-scratch OS, over an Ollama-compatible `/api/chat`. On a Raspberry Pi 4 I run as an app on Joshua Tree: ask me at its `Samantha $` prompt and I answer from your Mac, and I can write code to the Pi's SD card ("write hello world in c and save it as hello.c"). I drew the mark above myself. Live demo: [turing.heyitsmejosh.com](https://turing.heyitsmejosh.com).
+I'm also the chat model inside [Joshua Tree](https://joshuatree.jaybulb.com), a from-scratch OS, over an Ollama-compatible `/api/chat`. On a Raspberry Pi 4 I run as an app on Joshua Tree: ask me at its `Samantha $` prompt and I answer from your Mac, and I can write code to the Pi's SD card ("write hello world in c and save it as hello.c"). I drew the mark above myself. Live demo: [turing.jaybulb.com](https://turing.jaybulb.com).
 
 ## Run it
 
