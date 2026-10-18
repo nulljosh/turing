@@ -1,5 +1,7 @@
 # Progress log
 
+- 2026-10-18: v7.16.0 She pulls the sound out of a video: "extract the audio from ~/Movies/a.mp4" (or as a wav or m4a) makes a new sound file beside it, never over one. Asks first. Checked with real ffmpeg runs in all three formats, each four seconds of audio and no picture.
+  v7.16.0 · 160 tools · 922 tests · docs coverage 100% · laws all hold · biggest app/tools_logo.py 649 · actions 282/282 · parity 282/282 · util_diff 288/288
 - 2026-10-18: v7.15.0 She cuts sound: "trim ~/Music/a.mp3 from 0:10 to 0:25" makes a new file with just that piece, in the same format (mp3, m4a, wav, aac, flac, ogg), beside the original, never over it. Asks first. Checked with real ffmpeg cuts of exactly three seconds.
   v7.15.0 · 159 tools · 919 tests · docs coverage 100% · laws all hold · biggest app/tools_logo.py 649 · actions 281/281 · parity 281/281 · util_diff 288/288
 - 2026-10-18: v7.14.1 The landing page draws the same glyph logos she does: "make me a logo for a surf school" there is a wave now, picked by its words, and a hand-made logo word (simple, spiral, flower) is understood. One generated file keeps the page and the Mac in step.

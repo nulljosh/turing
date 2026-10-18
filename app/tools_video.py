@@ -1,7 +1,8 @@
 """Samantha's video tools. video_info reads a video inside the home folder (.mp4, .mov, .m4v, .mkv, .webm) and says how
 long it is, how big, and its picture and sound, read only. trim_video (a write, asks first) cuts a clip between two
 times, vertical_video (a write, asks first) centre-crops a video to 9:16 for a phone, and trim_audio (a write, asks
-first) cuts a piece out of a sound file (.mp3, .m4a, .wav, .aac, .flac, .ogg). Each write makes a new file
+first) cuts a piece out of a sound file (.mp3, .m4a, .wav, .aac, .flac, .ogg), and extract_audio (a write, asks first)
+pulls the sound out of a video into an .mp3, .m4a or .wav. Each write makes a new file
 beside the original, never over an existing one. They run ffmpeg and ffprobe. Same home-folder rule as tools_files:
 home only, nothing hidden. tests/test_video.py mocks subprocess, so no real ffmpeg run happens there.
 """
@@ -147,7 +148,37 @@ def trim_audio(request):
     return f"Cut {start} to {end} into {_short(out)}."
 
 
-TOOLS = (video_info, trim_video, vertical_video, trim_audio)
+def extract_audio(request):
+    """Pull the sound out of a video inside the home folder into an .mp3, .m4a or .wav. Takes 'path<TAB>format'. Makes <name>.<format> beside it, never over a file. Asks first."""
+    path, _, fmt = request.partition("\t")
+    fmt = fmt.strip().lower().lstrip(".")
+    full = _video(path)
+    if not full:
+        return f"No video {path.strip()} I am allowed to open."
+    if fmt not in ("mp3", "m4a", "wav"):
+        return f"I can make mp3, m4a or wav, not {fmt or 'nothing'}."
+    out = os.path.splitext(full)[0] + "." + fmt
+    if os.path.exists(out):
+        return f"{_short(out)} already exists."
+    if tools_files.HEADLESS:
+        return f"Pulled the sound into {_short(out)}."
+    exe = _exe("ffmpeg")
+    if not exe:
+        return _NO_FFMPEG
+    tmp = os.path.splitext(full)[0] + ".part." + fmt  # the extension picks the codec
+    try:
+        done = subprocess.run([exe, "-hide_banner", "-loglevel", "error", "-i", full, "-vn", tmp], capture_output=True, timeout=900)
+    except (OSError, subprocess.SubprocessError):
+        return "ffmpeg did not finish."
+    if done.returncode != 0 or not os.path.exists(tmp):
+        if os.path.exists(tmp):
+            os.remove(tmp)
+        return f"ffmpeg could not pull sound from {_short(full)}."
+    os.replace(tmp, out)
+    return f"Pulled the sound into {_short(out)}."
+
+
+TOOLS = (video_info, trim_video, vertical_video, trim_audio, extract_audio)
 
 _I = re.I
 _EXT = r"(\S+\.(?:mp4|mov|m4v|mkv|webm))"
@@ -159,6 +190,8 @@ ROUTES = (
     (re.compile(r"^make (?:the |my )?" + _EXT + r" (?:vertical|portrait)$", _I), "vertical_video", lambda m: m.group(1)),
     (re.compile(r"^make a (?:vertical|portrait) (?:version|copy) of (?:the |my )?" + _EXT + "$", _I), "vertical_video", lambda m: m.group(1)),
     (re.compile(r"^(?:trim|cut|clip) (?:the |my )?(\S+\.(?:mp3|m4a|wav|aac|flac|ogg)) from (\S+) (?:to|until) (\S+)$", _I), "trim_audio", lambda m: "\t".join(m.groups())),
+    (re.compile(r"^(?:extract|pull|rip|get) (?:the )?(?:audio|sound) (?:out )?(?:of|from) (?:the |my )?" + _EXT + r"(?: (?:as|to|into) (?:an? )?\.?(mp3|m4a|wav))?$", _I), "extract_audio",
+     lambda m: m.group(1) + "\t" + (m.group(2) or "mp3")),
 )
 
 
