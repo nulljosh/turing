@@ -1,4 +1,4 @@
-# Turing loop handoff (2026-10-18, night)
+# Turing loop handoff (2026-10-18, late night)
 
 ## What the loop is
 
@@ -8,22 +8,20 @@ A major ships only when its roadmap family is finished and checked: the badge st
 
 ## Where things stand
 
-- **Live:** v7.4.0 on turing.jaybulb.com (the old heyitsmejosh.com host lapsed). Since 7.0: download_file (a web address into Downloads, public hosts, 200 MB cap, never overwrites, asks first), Hacker News in research, `chat.py --character NAME`, blank-target and no-argument write guards (7.2.1 and 7.2.2), and headless Blender reads and renders (blender_info, render_blend). 151 tools. Docs moved into docs/ with a /docs skill; the brand kit, icon and favicons are cut from one master. Memory reads back on the Mac and the phone, the Mac morning brief, Shortcuts she writes (6.1), and memory in your own iCloud Drive on request. v6.0.0 put her on a real Pi 4; v5.14.0 gave her Samantha Sans.
-- **Roadmap:** lives at docs/roadmap.md now, not the repo root. Checkpoint's issue sync reads only the root, so it skips this repo until that is fixed.
+- **Live:** v7.6.0 on turing.jaybulb.com. 7.5 added video_info, trim_video and vertical_video through ffmpeg; 7.6 added a Berkeley function-calling (BFCL v3 simple) harness in eval/bfcl.py, where her picker scores 321 of 400 (80.3 percent), misses mostly argument spelling. Before that, v7.4.0 (the old heyitsmejosh.com host lapsed). Since 7.0: download_file (a web address into Downloads, public hosts, 200 MB cap, never overwrites, asks first), Hacker News in research, `chat.py --character NAME`, blank-target and no-argument write guards (7.2.1 and 7.2.2), and headless Blender reads and renders (blender_info, render_blend). 151 tools. Docs moved into docs/ with a /docs skill; the brand kit, icon and favicons are cut from one master. Memory reads back on the Mac and the phone, the Mac morning brief, Shortcuts she writes (6.1), and memory in your own iCloud Drive on request. v6.0.0 put her on a real Pi 4; v5.14.0 gave her Samantha Sans.
+- **Roadmap:** lives at docs/roadmap.md. Checkpoint's issue sync now reads docs/roadmap.md too.
 - **Joshua Tree PR 537** (list and read the card) is a draft behind main and needs a rebase by the Joshua Tree session. Do not touch it from here.
 - **Pi shell:** the console should boot to zsh or bash with Samantha as a command (docs/PI.md). It changes the words Joshua tests with, so it waits for a go-ahead and lives in the Joshua Tree repo on a branch with a PR.
 - **8.0 picker rounds are at the noise floor:** run 23 stays shipped. A retrain moves about 25 of 4,455 pooled rows by itself, and the leftover mistakes are 3 or 4 rows each. More teacher rows cannot be measured; only a new idea (relabeled dev sets, a different model) restarts 8.0.
 - **10.0 is nearly there in Joshua Tree:** 3.8.0 (small picker in C, `pick` and `pickcheck`) and 3.8.3 (abstains on chat) are merged; PR 596 (3.8.4, leaves questions about its own topics alone) waits on ci-local. Measured on the nine dev sets: parity 297 of 297 in QEMU (met), tool-level right rate 81.2 percent against the 80 percent bar (met), false tool calls on chat sentences 20 of 434 (4.6 percent) against run 23's 22 (5.1 percent) (met). Caveat to say every time: the chat rows were written after reading the dev sets' mistakes, so the numbers are tuned to dev; the sealed sets are unread. The 10.0 tag needs PR 596 merged, the docs and whitepaper refresh, and Joshua's real-mic test; the name "her picker in C" is earned only on those dev numbers, so say so.
 - **9.0 is Joshua's:** it needs his signed iPhone build and the Yeti mic; nothing to build until then except what he asks for.
 - **Disk:** about 12 GB free. Other sessions' builds eat it; only clean what this session made.
-- **Room benchmark (side work, not on the ladder):** a separate test in ~/Documents/room-bench, not in this repo. Each model builds one walkable three.js room.html of Joshua's bedroom from photos (round 1 used four photos, round 2 nine). Runs so far: Sonnet (top level plus r1 to r3), Opus, Fable and Haiku, all round 2 at the top level. Automatic scores out of 100: Sonnet 99.3, Fable 98.6, Haiku 98.6, Opus 97.3. Joshua judged Opus the best by eye, so the scorer and his eye disagree. The scorer counted 252 listed objects for Sonnet against 117 for Opus, so it may reward listing more; that is the first thing to check before trusting the number. Samantha's run is in progress (runs/samantha has notes.txt with her photo answers and no room.html yet). The folder is not a git repo and holds private photos: never commit, push or copy photos anywhere outside it.
+- **Room benchmark (side work, done):** ~/Documents/room-bench, not a git repo, private photos, never commit or copy them. Final scores out of 100 (rubric v2, which rewards listing objects, so the eye decides): Sonnet 99.3, Opus 97.3, Fable 97.3 (best by eye), Haiku 94.0, Samantha 51.1. Samantha's 9B cannot hold her own previous file inside oMLX's memory ceiling, so each self-fix round was a rewrite. COMPARISON.md there has the write-up.
 - **Sealed sets** heldout4, heldout7 and heldout12 are read as counts only, never as text.
 
 ## Next, in order
 
-1. Samantha's room run: when runs/samantha/room.html exists, score it with `python3 ~/Documents/room-bench/score_room.py ~/Documents/room-bench/runs/samantha` and compare against the four runs above.
-2. Decide how the scorer treats listed objects before reading any total as a ranking.
-3. Turing itself: the 8.0 slices below are still the ladder. Nothing in this session changed the 8.0 bar.
+1. Turing itself: the 8.0 slices below are still the ladder. Nothing in this session changed the 8.0 bar.
 
 ## The ladder
 
