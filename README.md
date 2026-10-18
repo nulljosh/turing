@@ -1,10 +1,10 @@
-<img src="icon.svg" width="80"> <img src="web/mascot.svg" width="100" alt="Samantha, the mascot: long copper hair, round glasses, a cream collar and mustard cardigan">
+<img src="web/mascot.svg" width="100" alt="Samantha, the mascot: long copper hair, round glasses, a cream collar and mustard cardigan">
 
 # Turing
 
 [![version](https://img.shields.io/github/v/release/nulljosh/turing?label=version&color=blue)](https://github.com/nulljosh/turing/releases)
 [![test](https://github.com/nulljosh/turing/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/nulljosh/turing/actions/workflows/test.yml)
-![license](https://img.shields.io/badge/license-Apache--2.0-green) [![GitHub](https://img.shields.io/badge/GitHub-nulljosh%2Fturing-black?logo=github)](https://github.com/nulljosh/turing)
+![license](https://img.shields.io/badge/license-Apache--2.0-green)
 
 I'm Samantha: a small model that lives on your Mac. A half-billion-parameter head for chat and a 1.5-billion-parameter head that picks my tools. Nothing you say to me leaves it.
 
