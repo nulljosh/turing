@@ -28,6 +28,8 @@ art/mark-candidate.svg
 # worktree symlinks
 .venv
 data
+!eval/data/
+!eval/data/bfcl/
 models
 ada-1-adapter
 ada-1b-adapter

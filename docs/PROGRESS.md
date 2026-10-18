@@ -1,5 +1,6 @@
 # Progress log
 
+- 2026-10-18: v7.6.0 Outside benchmark: the Berkeley Function Calling Leaderboard's simple split, 400 questions graded by its own rules. Her 1.5B picker gets 321 of 400 (80.3%) on schemas she has never seen.
 - 2026-10-18: v7.5.0 🎉 She can work on videos: how long one is, trim a clip between two times, and make a vertical 9:16 copy for a phone. Each asks first and makes a new file beside the original, never over one. Real ffmpeg run checked: a 6 second test video became a 3 second clip and a 1080x1920 vertical.
   v7.5.0 · 151 tools · 843 tests · docs coverage 100% · laws all hold · biggest eval/gen_heldout2.py 647 · actions 272/272 · parity 272/272 · util_diff 288/288
 
