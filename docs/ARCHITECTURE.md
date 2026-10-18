@@ -185,6 +185,10 @@ Once she is trained, `app/ask.py` and `app/chat.py` handle questions. Before ans
 | `web/index.html` | Landing page. Loss chart, training status, painter demo, project roadmap. |
 | `web/brand.html` | The brand kit as a page: mascot, colors, Samantha Sans specimen, shapes, voice. Same tokens as the landing, no script. |
 | `docs/BRAND.md` | The brand kit in words, for GitHub. |
+| `brand/tokens.css` | The landing's design tokens as one stylesheet, for anything that wants them. |
+| `brand/mark.svg` | The mascot, copied from web/mascot.svg. |
+| `brand/icon-1024.png` | The app icon master: opaque, no alpha; web icons and favicons are cut from it. |
+| `web/favicon-32.png`, `web/apple-touch-icon.png` | Browser tab and home-screen icons, cut from brand/icon-1024.png. |
 | `docs/STORE.md` | The App Store plan at $1: what the listing leads with, the answers Apple asks for, what blocks the Mac and the iPhone, and the order of work. Nothing in it is submitted. |
 | `docs/WHITEPAPER.md` | How she works, in one page. |
 | `docs/roadmap.md` | The plan, the majors and the open gaps. |

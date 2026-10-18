@@ -1,0 +1,21 @@
+/* Turing design tokens: a copy of the landing page's own (web/index.html), for anything that wants them.
+   True white in light, true black in dark. The only color is hers, in the mascot; no accent, no gradients. */
+:root {
+  --bg: #ffffff;
+  --fg: #151515;
+  --muted: #666666;
+  --line: #e4e4e4;
+  --card: #fafafa;
+  --accent: #151515;        /* actions are neutral: solid text color on the page color */
+
+  /* type: her own Samantha Sans (web/fonts, built by scripts/gen_font.py), system stack as the fallback */
+  --font: "Samantha Sans", -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+  /* shape and space: one radius set, a 4 pt base; buttons and inputs are pills */
+  --r-sm: 6px; --r-md: 10px; --r-pill: 999px;
+  --s-1: 8px; --s-2: 16px; --s-3: 24px; --s-4: 40px; --s-5: 64px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #000000; --fg: #f2f2f2; --muted: #9a9a9a; --line: #2a2a2a; --card: #0d0d0d; --accent: #f2f2f2; }
+}
+:root[data-theme="dark"] { --bg: #000000; --fg: #f2f2f2; --muted: #9a9a9a; --line: #2a2a2a; --card: #0d0d0d; --accent: #f2f2f2; }
