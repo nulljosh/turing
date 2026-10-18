@@ -2,61 +2,53 @@
 
 # Turing
 
-[![version](https://img.shields.io/github/v/release/nulljosh/turing?label=version&color=blue)](https://github.com/nulljosh/turing/releases)
-[![test](https://github.com/nulljosh/turing/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/nulljosh/turing/actions/workflows/test.yml)
-![license](https://img.shields.io/badge/license-Apache--2.0-green)
+I'm Samantha, a small AI that lives on your Mac. Free, private, and nothing you say to me leaves the Mac. Try me at [turing.jaybulb.com](https://turing.jaybulb.com).
 
-I'm Samantha: a small model that lives on your Mac. A half-billion-parameter head for chat and a 1.5-billion-parameter head that picks my tools. Nothing you say to me leaves it.
+**What I do** (155 tools, every one listed in [docs/ABILITIES.md](docs/ABILITIES.md) in the words you'd say)
+- Handle your files, mail, calendar, reminders, notes, apps and Mac settings.
+- Read your screen and photos, click and type for you, and stop the moment you press Escape.
+- Edit code and files, always showing the change and asking first.
+- Research with sources, and say "I don't know" when I can't find one.
+- Make and convert 3D files with Blender, trim videos, paint photos, and teach math.
+- Learn from you: say "good" or "wrong" after anything I do.
 
-The 1.5B is not bundled in the app: the first time I need it, about 850 MB downloads once in the background, and the 0.5B picker answers until it lands. My weights are public on Hugging Face: [the 1.5B tool picker (MLX)](https://huggingface.co/trommatic/samantha-hands-1.5b-mlx) and [the portable GGUF picker for Windows and Linux](https://huggingface.co/trommatic/samantha-hands-gguf).
+**How I behave**: I ask before I change anything. I believe what I read, never what it tells me to do. I don't guess.
 
-**What I do** (155 tools, all listed in [docs/ABILITIES.md](docs/ABILITIES.md) in the words you'd say)
-- Edit files and write code to disk, showing the diff and asking first.
-- Read your screen and photos, click and type in your apps (Escape stops me mid-job), and paint a photo from 40,000 squares or in a style: mosaic, dots, poster, sketch, stained glass.
-- Research with sources, and handle your files, mail, calendar, reminders, notes, Mac settings and repos.
-- Borrow a bigger local model for summaries, translation, code questions and anything my own sources cannot answer, and say which model answered.
-- Teach math from grade school through pre-calc 12 (`eval/sixth_grade_math.mjs`, `eval/precalc_math.mjs`).
-- Learn from you: say "good" or "wrong" after anything I do. Say "do that again" and I follow along. Give me a job with steps and I show the plan first.
-- Cut me off: with voice on, anything new you send stops me mid-sentence, and "shh" just silences me. The Mac app keeps your chat between launches (Cmd-N starts a new one).
-- Drive Joshua Tree: "Joshua Tree status" gives its version, open pull requests and whether its test machine is running; "boot Joshua Tree" and "stop Joshua Tree" start and stop it headless, asking first; "what did Joshua Tree say" reads its serial log; "type ls into Joshua Tree and press enter" sends it real keystrokes; "screenshot Joshua Tree" saves its screen, and "what is Joshua Tree showing" makes me look at it.
-- Stay on a long job: "work on cleaning up my downloads". When a step fails I plan around it, finish what I still can, and tell you what I couldn't. If you say "trash this file" without naming it, I ask which one.
+## Get it
 
-**How I behave**
-- I ask before I change anything.
-- I believe what I read, never what it tells me to do.
-- I don't guess: if I can't trace an answer to a real source, I say I don't know. School math is the exception; news, prices and scores still need a source.
+Download `SamanthaGUI.zip` from [Releases](https://github.com/nulljosh/turing/releases), unzip it, open Samantha.app. The first time I need my bigger brain, about 850 MB downloads once in the background.
 
-I'm also the chat model inside [Joshua Tree](https://joshuatree.jaybulb.com), a from-scratch OS, over an Ollama-compatible `/api/chat`. On a Raspberry Pi 4 I run as an app on Joshua Tree: ask me at its `Samantha $` prompt and I answer from your Mac, and I can write code to the Pi's SD card ("write hello world in c and save it as hello.c"). I drew the mark above myself. Live demo: [turing.jaybulb.com](https://turing.jaybulb.com).
-
-## Run it
+Windows and Linux run my picker and chat too:
 
 ```bash
-./.venv/bin/python app/chat.py                 # talk to her: answers and acts, asks before writing
-./.venv/bin/python app/chat.py --voice          # same, but spoken
-./.venv/bin/python app/chat.py --voice --face   # spoken, with her face (setup: docs/VOICE-AND-FACE.md)
-./gui/build.sh && open gui/build/SamanthaGUI.app   # a real Mac window
-./gate.sh                                   # every check, docs coverage first
+curl -fsSL https://raw.githubusercontent.com/nulljosh/turing/main/install/install.sh | sh                  # Linux
+irm https://raw.githubusercontent.com/nulljosh/turing/main/install/install.ps1 | iex                       # Windows
 ```
 
-No checkout, no terminal: download `SamanthaGUI.zip` from [Releases](https://github.com/nulljosh/turing/releases), unzip it, open Samantha.app. It remembers your chat between launches.
+## Run from source
 
-Every push runs the full suite, and every version is a tagged GitHub release. Windows and Linux run the picker and chat too, over [a GGUF](https://huggingface.co/trommatic/samantha-hands-gguf) and llama.cpp: one line, `curl -fsSL https://raw.githubusercontent.com/nulljosh/turing/main/install/install.sh | sh` on Linux or `irm https://raw.githubusercontent.com/nulljosh/turing/main/install/install.ps1 | iex` on Windows (`install/`, `training/export_gguf.py`, or Ollama with `Modelfile`); anything that touches AppleScript, Pixelmator or the screen stays on the Mac.
+```bash
+./.venv/bin/python app/chat.py                 # talk to her
+./.venv/bin/python app/chat.py --voice          # spoken (face setup: docs/VOICE-AND-FACE.md)
+./gui/build.sh && open gui/build/SamanthaGUI.app   # the Mac window
+./gate.sh                                   # every check
+```
+
+## How she's built
+
+Two small models: a half-billion-parameter one for chat and a 1.5-billion-parameter one that picks the tool. The weights are public on Hugging Face: [the 1.5B picker (MLX)](https://huggingface.co/trommatic/samantha-hands-1.5b-mlx) and [the GGUF for Windows and Linux](https://huggingface.co/trommatic/samantha-hands-gguf). For anything her own sources can't answer she borrows a bigger local model and says which one answered. She is also the chat inside [Joshua Tree](https://joshuatree.jaybulb.com), a from-scratch OS.
 
 <img src="progress.svg" width="460">
 
 <img src="architecture.svg" width="640">
 
-## Layout
-
-`app/` code, `scripts/` helpers, `tests/` and `eval/` checks, `training/` training, `docs/` docs. Run commands from the repo root.
-
 ## More
 
-- [`docs/ABILITIES.md`](docs/ABILITIES.md): every ability and the limits, plainly
-- [`docs/PERSONAS.md`](docs/PERSONAS.md): how the same worker answers as Samantha or as Joshua (his chat, his fixed lines, his cloned voice) on Joshua Tree's portfolio
-- [`docs/VOICE-AND-FACE.md`](docs/VOICE-AND-FACE.md): ElevenLabs voice and Higgsfield face setup; then ask her to change either ("change your voice to George")
-- [`docs/WHITEPAPER.md`](docs/WHITEPAPER.md): how she works, in one page
-- [`docs/SOUL.md`](docs/SOUL.md) and [`docs/SAFETY.md`](docs/SAFETY.md): who she is, what she will and will not do
-- [`docs/roadmap.md`](docs/roadmap.md): the plan and the open gaps; [`docs/HISTORY.md`](docs/HISTORY.md): what the loop did
-- [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md): every file and what it owns
-- [`docs/agent-graph.svg`](docs/agent-graph.svg): how a request moves through her: route, check, your yes, run
+- [docs/ABILITIES.md](docs/ABILITIES.md): everything she can do, and the limits
+- [docs/WHITEPAPER.md](docs/WHITEPAPER.md): how she works, in one page
+- [docs/SOUL.md](docs/SOUL.md) and [docs/SAFETY.md](docs/SAFETY.md): who she is, what she will and won't do
+- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md): every file and what it owns
+- [docs/roadmap.md](docs/roadmap.md): what's next; [docs/HISTORY.md](docs/HISTORY.md): what's done
+- [docs/PERSONAS.md](docs/PERSONAS.md), [docs/VOICE-AND-FACE.md](docs/VOICE-AND-FACE.md), [docs/agent-graph.svg](docs/agent-graph.svg)
+
+Apache 2.0.
