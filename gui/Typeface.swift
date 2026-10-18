@@ -7,7 +7,7 @@ import AppKit
 #endif
 
 // Samantha Sans for the Mac app and the iPhone app: one file, the same face the landing page uses (scripts/gen_font.py
-// draws it from one stem width and one squircle curve). The three weights ship inside the app as plain TTFs and are
+// builds it from Inter, an open face in the spirit of SF and Helvetica). The three weights ship inside the app as plain TTFs and are
 // registered once at launch, no Info.plist keys, so the dev build, the packaged build and the phone all work the same way.
 // If the fonts are missing the text falls back to the system font and the self-check says so, instead of looking fine.
 enum Typeface {

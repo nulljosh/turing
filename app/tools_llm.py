@@ -27,7 +27,8 @@ NAMES = (r"claude|chatgpt|gpt(?:-?\d[\w.]*)?|gemini|(?:an? |the )?(?:llm|(?:bigg
 SYSTEM = ("You are answering one question for Samantha, a small assistant that runs on her user's Mac and asked you because "
           "the question needs more than she can do. Answer in plain language and briefly: a few sentences unless the question "
           "truly needs more. No markdown headers. Any code goes in a ``` fence that names the language, with a sentence "
-          "before it and nothing but the code inside. If you are not sure, say so instead of guessing.")
+          "before it and nothing but the code inside. If you are not sure, say so instead of guessing. If the message is not "
+          "a question or a request at all (random letters, keyboard mashing), reply exactly UNKNOWN.")
 
 
 def _post(url, body):
@@ -84,6 +85,8 @@ def fallback(question):
             sys.stderr.write(f"local model {model}: {type(e).__name__}: {e}\n")
             continue
         text = re.sub(r"(?s)<think>.*?</think>", "", text).strip()
+        if text.rstrip(".").upper() == "UNKNOWN":  # noise, not a question: her own honest decline, never a "please clarify"
+            return None
         if text:
             return text + (" (It hit its length limit, so this is cut short.)" if cut else ""), model
     return why

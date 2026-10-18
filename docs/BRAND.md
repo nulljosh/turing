@@ -22,12 +22,14 @@ Every app icon goes through the icon composer skill. Never put text in an icon.
 | `--fg` | #f2f2f2 | #151515 |
 | `--muted` | #9a9a9a | #666666 |
 | `--line` | #2a2a2a | #e4e4e4 |
-| `--ember` (decor) | #b8b8b8 | #151515 |
+| `--accent` / `--ember` | #e0825a | #b5502c |
 
-Color belongs to the mascot. Terracotta #b5502c appears only on the iOS Send and Yes buttons. Banned: yellow, orange, teal, purple, gradients, a second accent. Send is neutral on the web: solid text color on the page color.
+One accent: terracotta, from her copper hair, #b5502c in light and #e0825a in dark (white text on the light one, black on the dark one, both past 4.5:1). It goes on Send, links, focus rings, selection, the live bar, the sliders and the main button; the iPhone app already wore it on Send and Yes. Everything else stays black, white and gray. Banned: yellow, teal, purple, gradients, a second accent. Joshua asked for color on 2026-10-18; before that the web was fully neutral.
 
 ## Type
-Samantha Sans, proportional, three weights (Regular 400, Medium 500, Semibold 600), built by `scripts/gen_font.py` into `web/fonts`. Sans-serif only in the UI, no monospace UI; code blocks stay monospace. Figures are tabular. The apps register it through `gui/Typeface.swift` and fall back to the system font. Samantha Sans is the one custom typeface in the house: Joshua rejected Talli Sans and wants system type elsewhere, but chose to keep hers (2026-10-17). It is hers alone; no other app copies it.
+Samantha Sans, three weights (Regular 400, Medium 500, Semibold 600), built by `scripts/gen_font.py` into `web/fonts`. Since 2026-10-18 it is Inter, the open face drawn in the spirit of SF and Helvetica, renamed for her under its SIL Open Font License; the hand-drawn monoline cut before it read too technical. Letters and figures are proportional. Sans-serif only in the UI, no monospace UI; code blocks stay monospace. The apps register it through `gui/Typeface.swift` and fall back to the system font. Samantha Sans is the one custom typeface in the house: Joshua rejected Talli Sans and wants system type elsewhere, but chose to keep hers (2026-10-17). It is hers alone; no other app copies it.
+
+Scale: five sizes. Display 28 to 40 (500, tracking -0.02em), title 26 (500, -0.01em), body 17 (400), small 14 (400, muted), label 12 (600, caps, +0.07em). Line height 1.6 for reading, 1.15 for headlines. The tokens are `--t-*` and `--track-*` in `brand/tokens.css`. Fallback stack: SF, Helvetica Neue, Helvetica, Lato.
 
 ## Space and shape
 Radius `--r-sm` 6, `--r-md` 10, `--r-pill` 999. Spacing `--s-1` to `--s-5`: 8, 16, 24, 40, 64. Buttons and inputs are pills.

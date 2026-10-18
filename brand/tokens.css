@@ -1,21 +1,25 @@
 /* Turing design tokens: a copy of the landing page's own (web/index.html), for anything that wants them.
-   True white in light, true black in dark. The only color is hers, in the mascot; no accent, no gradients. */
+   True white in light, true black in dark. One accent, terracotta from her copper hair; no gradients, no second color. */
 :root {
   --bg: #ffffff;
   --fg: #151515;
   --muted: #666666;
   --line: #e4e4e4;
   --card: #fafafa;
-  --accent: #151515;        /* actions are neutral: solid text color on the page color */
+  --accent: #b5502c;        /* terracotta: actions, links, focus, the live bar */
+  --on-accent: #ffffff;
 
-  /* type: her own Samantha Sans (web/fonts, built by scripts/gen_font.py), system stack as the fallback */
-  --font: "Samantha Sans", -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  /* type: Samantha Sans (Inter under its OFL, web/fonts, built by scripts/gen_font.py), SF then Helvetica then Lato as the fallback */
+  --font: "Samantha Sans", -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Lato, Arial, sans-serif;
+  /* scale: five sizes, weights 400 body, 500 headings, 600 labels and emphasis; display sizes track tighter, small caps labels looser */
+  --t-label: 12px; --t-small: 14px; --t-body: 17px; --t-title: 26px; --t-display: clamp(28px, 5vw, 40px);
+  --track-display: -0.02em; --track-title: -0.01em; --track-label: 0.07em;
 
-  /* shape and space: one radius set, a 4 pt base; buttons and inputs are pills */
+  /* shape and space: one radius set, an 8 pt grid; buttons and inputs are pills */
   --r-sm: 6px; --r-md: 10px; --r-pill: 999px;
   --s-1: 8px; --s-2: 16px; --s-3: 24px; --s-4: 40px; --s-5: 64px;
 }
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) { --bg: #000000; --fg: #f2f2f2; --muted: #9a9a9a; --line: #2a2a2a; --card: #0d0d0d; --accent: #f2f2f2; }
+  :root:not([data-theme="light"]) { --bg: #000000; --fg: #f2f2f2; --muted: #9a9a9a; --line: #2a2a2a; --card: #0d0d0d; --accent: #e0825a; --on-accent: #000000; }
 }
-:root[data-theme="dark"] { --bg: #000000; --fg: #f2f2f2; --muted: #9a9a9a; --line: #2a2a2a; --card: #0d0d0d; --accent: #f2f2f2; }
+:root[data-theme="dark"] { --bg: #000000; --fg: #f2f2f2; --muted: #9a9a9a; --line: #2a2a2a; --card: #0d0d0d; --accent: #e0825a; --on-accent: #000000; }

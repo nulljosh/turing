@@ -1,5 +1,7 @@
 # Progress log
 
+- 2026-10-18: v7.7.0 🎉 A new face: Samantha Sans is now built on Inter, the open typeface drawn in the spirit of SF and Helvetica, renamed for her under its open font license, with letters and figures spaced to their own widths. The hand-drawn cut read too techy. Also, random keystrokes are a decline again instead of a "could you clarify", so Nimble falls through cleanly.
+  v7.7.0 · 151 tools · 869 tests · docs coverage 100% · laws all hold · biggest eval/gen_heldout2.py 647 · actions 272/272 · parity 272/272 · util_diff 288/288
 - 2026-10-18: v7.6.1 The Berkeley benchmark now compares strings exactly the way the leaderboard does (ignoring case, spaces and punctuation, and a number sent as text counts as wrong), so her score sits on the same scale as everyone else's: 325 of 400 (81.3%).
   v7.6.1 · 151 tools · 868 tests · docs coverage 100% · laws all hold · biggest eval/gen_heldout2.py 647 · actions 272/272 · parity 272/272 · util_diff 288/288
 - 2026-10-18: v7.6.0 Outside benchmark: the Berkeley Function Calling Leaderboard's simple split, 400 questions graded by its own rules. Her 1.5B picker gets 321 of 400 (80.3%) on schemas she has never seen.

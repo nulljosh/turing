@@ -42,13 +42,13 @@
       })();
     </script>
     <style>
-      /* Design system: pure black, one neutral accent (ember, now gray) used sparingly for text/decor only. */
-      :root{--bg:#000000;--fg:#f2f2f2;--muted:#9a9a9a;--line:#2a2a2a;--accent:#f2f2f2;--ember:#b8b8b8;--ember-ink:#f2f2f2;
+      /* Design system: pure black or white, one accent: terracotta, her copper hair (ember). Actions, links, focus and the live bar wear it; nothing else gets color. */
+      :root{--bg:#000000;--fg:#f2f2f2;--muted:#9a9a9a;--line:#2a2a2a;--accent:#e0825a;--on-accent:#000000;--ember:#e0825a;--ember-ink:#e0825a;
         --hero-bg:#0a0a0a;--card-bg:#0d0d0d;
         --tk-k:#7aa7ff;--tk-s:#6fcf8e;--tk-n:#ff8a80;--tk-c:#a0a0a0;
         --r-sm:6px;--r-md:10px;--r-pill:999px;--s-1:8px;--s-2:16px;--s-3:24px;--s-4:40px;--s-5:64px}
       :root{color-scheme:dark}
-      :root[data-theme="light"]{color-scheme:light;--bg:#ffffff;--fg:#151515;--muted:#666;--line:#e4e4e4;--accent:#151515;--ember:#151515;--ember-ink:#151515;--hero-bg:#f4f4f4;--card-bg:#fafafa;--tk-k:#0b57d0;--tk-s:#1a7f37;--tk-n:#b3261e;--tk-c:#6b6b6b}
+      :root[data-theme="light"]{color-scheme:light;--bg:#ffffff;--fg:#151515;--muted:#666;--line:#e4e4e4;--accent:#b5502c;--on-accent:#ffffff;--ember:#b5502c;--ember-ink:#b5502c;--hero-bg:#f4f4f4;--card-bg:#fafafa;--tk-k:#0b57d0;--tk-s:#1a7f37;--tk-n:#b3261e;--tk-c:#6b6b6b}
       .wrap.roll{animation:roll 1.1s ease-in-out}
       @keyframes roll{to{transform:rotate(360deg)}}
       section.lit{animation:lit 1.6s ease-out}
@@ -59,7 +59,7 @@
       *{box-sizing:border-box}
       button,input,select,textarea{font-family:inherit}
       html{background:var(--bg)}
-      body{margin:0;background:var(--bg);color:var(--fg);font-family:"Samantha Sans",-apple-system,BlinkMacSystemFont,"SF Pro Text",Helvetica,Arial,sans-serif;
+      body{margin:0;background:var(--bg);color:var(--fg);font-family:"Samantha Sans",-apple-system,BlinkMacSystemFont,"SF Pro Text",Helvetica,Lato,Arial,sans-serif;
         line-height:1.6;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;font-feature-settings:"kern","liga";overflow-x:hidden}
       h1,h2,h3{font-weight:500}
       b,strong{font-weight:600}
@@ -76,10 +76,9 @@
       .pill{display:inline-flex;align-items:center;justify-content:center;padding:9px 18px;border-radius:var(--r-pill);
         font-size:14px;font-weight:500;text-decoration:none;white-space:nowrap;min-height:40px}
       .pill-dark{background:#1c1c1c;color:#f2f2f2;border:1px solid var(--line)}
-      .pill-light{background:#f2f2f2;color:#0a0a0a}
+      .pill-light{background:var(--accent);color:var(--on-accent)}
       :root[data-theme="light"] .pill-dark{background:#151515;color:#fff}
-      :root[data-theme="light"] .pill-light{background:#151515;color:#fff}
-      .pill:hover{opacity:.85}
+            .pill:hover{opacity:.85}
       .pill[hidden]{display:none}
       .nav-links{display:flex;gap:4px;align-items:center}
       .nav-link{padding:8px 12px;border-radius:var(--r-pill);font-size:14px;color:var(--muted);text-decoration:none;min-height:40px;display:inline-flex;align-items:center}
@@ -94,7 +93,7 @@
 
       /* Hero: full-bleed dark band holding title + the live demo as hero media. */
       .hero{background:var(--hero-bg);padding:56px 20px 64px;text-align:center}
-      .hero h1{font-family:inherit;font-size:clamp(26px,4.6vw,38px);line-height:1.15;letter-spacing:-0.01em;font-weight:500;margin:0 auto 14px;max-width:720px}
+      .hero h1{font-family:inherit;font-size:clamp(26px,4.6vw,38px);line-height:1.15;letter-spacing:-0.02em;font-weight:500;margin:0 auto 14px;max-width:720px}
       .hero .sub{color:var(--muted);font-size:16px;max-width:560px;margin:0 auto 28px}
       .status{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);
         border:1px solid var(--line);border-radius:999px;padding:4px 12px;margin-bottom:20px}
@@ -108,7 +107,7 @@
       .wide{max-width:1000px;margin:0 auto;padding:0 20px}
       section{margin-top:72px}
       .hero-media{max-width:1000px;margin:0 auto;padding:0 20px}
-      h2{font-size:clamp(22px,4vw,26px);line-height:1.25;letter-spacing:-0.01em;font-weight:500;color:var(--fg);margin:0 0 12px}
+      h2{font-size:clamp(22px,4vw,26px);line-height:1.25;letter-spacing:-0.015em;font-weight:500;color:var(--fg);margin:0 0 12px}
       h2::before{content:none}
       p{font-size:17px;color:var(--fg)}
       p.sub{color:var(--muted);font-size:16px}
@@ -193,11 +192,11 @@
 
       a{color:inherit;text-decoration-color:var(--ember);text-decoration-thickness:2px;text-underline-offset:3px}
       a:hover{color:var(--ember-ink)}
-      ::selection{background:var(--ember);color:var(--bg)}
+      ::selection{background:var(--ember);color:var(--on-accent)}
       input[type=range]{accent-color:var(--ember)}
-      #chat-send{background:var(--fg)!important;border-color:var(--fg)!important;color:var(--bg)!important;border-radius:var(--r-pill)!important}
+      #chat-send{background:var(--accent)!important;border-color:var(--accent)!important;color:var(--on-accent)!important;border-radius:var(--r-pill)!important}
       #chat-send:hover{opacity:.86}
-      #chat-send:focus-visible{outline:2px solid var(--fg);outline-offset:3px}
+      #chat-send:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
       #chat-input:focus{outline:2px solid var(--ember);outline-offset:1px}
       .bar-fill.now{background:var(--ember)}
       .stat-value{color:var(--fg)}

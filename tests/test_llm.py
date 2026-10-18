@@ -113,6 +113,18 @@ class AskLLM(unittest.TestCase):
         self.assertIn("cut short", self.ask("q", ollama=ollama("partial", done="length"))[0])
         self.assertEqual(self.ask("q", omlx=omlx("   "))[0], f"{tools_llm.MODEL} sent back no answer.")
 
+    def test_noise_is_a_decline_not_an_answer(self):
+        """The big model calling a message noise (UNKNOWN) gives no fallback, so serve.py says UNKNOWN to Nimble."""
+        f = FakeServers(omlx=omlx("UNKNOWN."))
+        with mock.patch("urllib.request.urlopen", f), mock.patch.dict(os.environ, {}, clear=False):
+            os.environ.pop("SAMANTHA_NO_LLM", None)
+            self.assertIsNone(tools_llm.fallback("asdkjfhaskdjfh"))
+            self.assertIn("reply exactly UNKNOWN", f.calls[-1][1]["messages"][0]["content"])
+        f = FakeServers(omlx=omlx("Rayleigh scattering."))
+        with mock.patch("urllib.request.urlopen", f), mock.patch.dict(os.environ, {}, clear=False):
+            os.environ.pop("SAMANTHA_NO_LLM", None)
+            self.assertEqual(tools_llm.fallback("why is the sky blue"), ("Rayleigh scattering.", tools_llm.MODEL))
+
     def test_every_error_is_a_sentence(self):
         """Nothing running, model missing, server error, still loading, a garbled reply: each gets an honest reply."""
         self.assertIn("could not reach a local model", self.ask("q")[0])

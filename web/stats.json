@@ -1,5 +1,5 @@
 {
-  "version": "7.6.1",
+  "version": "7.7.0",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -207,21 +207,9 @@
         "total": 17,
         "documented": 17
       },
-      "scripts/font_caps.py": {
-        "total": 38,
-        "documented": 38
-      },
-      "scripts/font_glyphs.py": {
-        "total": 36,
-        "documented": 36
-      },
-      "scripts/font_marks.py": {
-        "total": 34,
-        "documented": 34
-      },
       "scripts/gen_font.py": {
-        "total": 11,
-        "documented": 11
+        "total": 5,
+        "documented": 5
       },
       "scripts/gen_jt_docs.py": {
         "total": 13,
@@ -476,8 +464,8 @@
         "documented": 11
       },
       "tests/test_llm.py": {
-        "total": 21,
-        "documented": 21
+        "total": 22,
+        "documented": 22
       },
       "tests/test_mail_send.py": {
         "total": 26,
