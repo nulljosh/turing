@@ -27,7 +27,6 @@ Not data centres or training data: the gaps we can actually close. Each round pi
 - [ ] **Remembers the conversation.** Started in 4.12: "do that again", "same but for nimble", "what about tomorrow", "open it" work for every tool from a ten-turn history; a past result never supplies a command (law 10). Closes at 7.0 with memory across sessions.
 - [ ] **Thinks for herself.** Real answers come from the borrowed 9B; eyes and voice are small models that miss details. Target: 8.0, distillation from frontier teachers.
 - [ ] **Learns from use.** Started in 4.11: say "good", "wrong" or "wrong, I meant X" after any answer and it is saved on the Mac (~/.samantha/feedback.jsonl); training/feedback_to_data.py turns corrections into picker training rows, never copying test phrasings. Closes when the next retrain actually uses them.
-- [x] **Doesn't believe everything she reads.** Closed in 7.2.2: reads are fenced (law 9), never replayed (law 10), can't change a plan (law 11), and every write a model proposes is checked against your own words before it can even ask you (law 12, all 56 write tools: arguments traced to your sentence, screen clicks by their own check, and the six writes with no argument now need the request to name them).
 
 - **4.18, edit a video.** Trim a clip, cut a section out, mute it, make a GIF, change the speed, burn in captions from her own transcript. ffmpeg on the Mac, every write asks first and saves a new file beside the original.
 
@@ -109,7 +108,6 @@ Ask her to draft something in our voice, or answer a question about one of our o
 - [ ] Landing demo logo is too basic: real design pass, the SVG bloom rules look thin next to the real tool
 - [ ] Two-step picking: pick a family first, then a tool inside it, so no single choice is bigger than about twelve
 - [ ] System family, the rest: brightness and turning bluetooth on or off (this Mac has no CLI for either and nothing gets installed; dark mode, running apps, quit an app, bluetooth status and Do Not Disturb via a Shortcut shipped in 4.8)
-- [ ] Browser family, the rest: download a file
 - [ ] Blender family (Blender 5.2 LTS installed, headless): render a scene, make a simple 3D object, turn a logo into 3D text, convert between 3D formats, report what's in a file
 - [ ] Sharp paintings: merge same-color neighbor cells so each layer buys more picture
 
