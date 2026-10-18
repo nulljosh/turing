@@ -78,7 +78,7 @@
     [/^(?:set |turn )?(?:the )?volume (\d{1,3})\b/i, function (m) { return ["set_volume", m[1]]; }],
     [/^(?:turn )?(?:the |it )?(?:volume )?(up|down)$|^(?:turn )?(?:the )?volume (up|down)$|^(louder|quieter)$/i,
      function (m) { return ["set_volume", /up|louder/i.test(m[1] || m[2] || m[3]) ? "up" : "down"]; }],
-    [/^mute\b/i, function () { return ["set_volume", "0"]; }],
+    [/^mute\b(?!.*\.(?:mp4|mov|m4v|mkv|webm)$)/i, function () { return ["set_volume", "0"]; }],
     [/^(?:how(?:'s| is) (?:my |the )?battery|battery(?: level| status)?$|what(?:'s| is) (?:my |the )?battery|how much battery)/i, function () { return ["battery", ""]; }],
     [/^say (.+)$/i, function (m) { return ["say", m[1]]; }],
     [/^(?:list|show)(?: me)? (?:the )?(?:files|folder|contents) (?:in|of|at) (.+)$/i, function (m) { return ["list_dir", m[1]]; }],
@@ -755,9 +755,9 @@
   }
   // the ten that read or touch a real Mac. The stand-in Mac on this page has no disk, network or clipboard to show.
   var REAL_MAC = "That one reads your real Mac, and this stand-in has no disk, memory or network. Run her on a Mac and it answers.";
-  ["disk_space", "uptime", "memory_usage", "cpu_load", "ip_address", "wifi_name", "system_info", "copy_to_clipboard", "sleep_display", "reveal_in_finder", "list_shortcuts", "run_shortcut", "list_mcp_tools", "call_mcp_tool", "list_tabs", "switch_tab", "close_tab", "read_tab", "read_screen", "read_document", "find_in_document", "ask_document", "ask_screen", "transcribe_video", "unread_mail", "find_file", "recent_downloads", "download_file", "folder_size", "move_file", "copy_file", "rename_file", "zip_file", "unzip_file", "trash_file", "blender_info", "render_blend", "video_info", "check_page", "trim_audio", "extract_audio", "convert_3d", "make_3d", "text_3d", "trim_video", "vertical_video"]
+  ["disk_space", "uptime", "memory_usage", "cpu_load", "ip_address", "wifi_name", "system_info", "copy_to_clipboard", "sleep_display", "reveal_in_finder", "list_shortcuts", "run_shortcut", "list_mcp_tools", "call_mcp_tool", "list_tabs", "switch_tab", "close_tab", "read_tab", "read_screen", "read_document", "find_in_document", "ask_document", "ask_screen", "transcribe_video", "unread_mail", "find_file", "recent_downloads", "download_file", "folder_size", "move_file", "copy_file", "rename_file", "zip_file", "unzip_file", "trash_file", "blender_info", "render_blend", "video_info", "check_page", "trim_audio", "extract_audio", "mute_video", "convert_3d", "make_3d", "text_3d", "trim_video", "vertical_video"]
     .forEach(function (name) { U[name] = function () { return REAL_MAC; }; });
-  U.NEEDS_MAC = ["disk_space", "uptime", "memory_usage", "cpu_load", "ip_address", "wifi_name", "system_info", "copy_to_clipboard", "sleep_display", "reveal_in_finder", "list_shortcuts", "run_shortcut", "list_mcp_tools", "call_mcp_tool", "list_tabs", "switch_tab", "close_tab", "read_tab", "read_screen", "read_document", "find_in_document", "ask_document", "ask_screen", "transcribe_video", "unread_mail", "find_file", "recent_downloads", "download_file", "folder_size", "move_file", "copy_file", "rename_file", "zip_file", "unzip_file", "trash_file", "blender_info", "render_blend", "video_info", "check_page", "trim_audio", "extract_audio", "convert_3d", "make_3d", "text_3d", "trim_video", "vertical_video"];
+  U.NEEDS_MAC = ["disk_space", "uptime", "memory_usage", "cpu_load", "ip_address", "wifi_name", "system_info", "copy_to_clipboard", "sleep_display", "reveal_in_finder", "list_shortcuts", "run_shortcut", "list_mcp_tools", "call_mcp_tool", "list_tabs", "switch_tab", "close_tab", "read_tab", "read_screen", "read_document", "find_in_document", "ask_document", "ask_screen", "transcribe_video", "unread_mail", "find_file", "recent_downloads", "download_file", "folder_size", "move_file", "copy_file", "rename_file", "zip_file", "unzip_file", "trash_file", "blender_info", "render_blend", "video_info", "check_page", "trim_audio", "extract_audio", "mute_video", "convert_3d", "make_3d", "text_3d", "trim_video", "vertical_video"];
 
   // the image tools, same table as tools_image.ROUTES and ahead of the utilities. The stand-in Mac has no photos on disk.
   var P = "(?:the )?(?:image |photo |picture |pic )?(?:at )?(\\S+\\.(?:jpe?g|png|heic|webp|tiff?))";
@@ -798,6 +798,8 @@
     [/^(?:how long is|what(?:'s| is) in|inspect) (?:the |my )?(\S+\.(?:mp4|mov|m4v|mkv|webm))$/i, function (m) { return ["video_info", m[1]]; }],
     [/^(?:trim|cut|clip) (?:the |my )?(\S+\.(?:mp4|mov|m4v|mkv|webm)) from (\S+) (?:to|until) (\S+)$/i, function (m) { return ["trim_video", m[1] + "\t" + m[2] + "\t" + m[3]]; }],
     [/^(?:trim|cut|clip) (?:the |my )?(\S+\.(?:mp3|m4a|wav|aac|flac|ogg)) from (\S+) (?:to|until) (\S+)$/i, function (m) { return ["trim_audio", m[1] + "\t" + m[2] + "\t" + m[3]]; }],
+    [/^(?:mute|silence) (?:the |my )?(\S+\.(?:mp4|mov|m4v|mkv|webm))$/i, function (m) { return ["mute_video", m[1]]; }],
+    [/^(?:remove|strip|drop) the (?:audio|sound) (?:from|of) (?:the |my )?(\S+\.(?:mp4|mov|m4v|mkv|webm))$/i, function (m) { return ["mute_video", m[1]]; }],
     [/^(?:extract|pull|rip|get) (?:the )?(?:audio|sound) (?:out )?(?:of|from) (?:the |my )?(\S+\.(?:mp4|mov|m4v|mkv|webm))(?: (?:as|to|into) (?:an? )?\.?(mp3|m4a|wav))?$/i, function (m) { return ["extract_audio", m[1] + "\t" + (m[2] || "mp3")]; }],
     [/^make (?:the |my )?(\S+\.(?:mp4|mov|m4v|mkv|webm)) (?:vertical|portrait)$/i, function (m) { return ["vertical_video", m[1]]; }],
     [/^make a (?:vertical|portrait) (?:version|copy) of (?:the |my )?(\S+\.(?:mp4|mov|m4v|mkv|webm))$/i, function (m) { return ["vertical_video", m[1]]; }],

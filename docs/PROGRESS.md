@@ -1,5 +1,7 @@
 # Progress log
 
+- 2026-10-18: v7.17.0 She makes a silent copy of a video: "mute ~/Movies/a.mp4" (or "remove the audio from ~/Movies/a.mp4") writes a new -muted.mp4 beside it, never over one. Asks first. Checked with a real ffmpeg run: the copy keeps its picture and has no sound; a second run is refused as already there.
+  v7.17.0 · 161 tools · 924 tests · docs coverage 100% · laws all hold · biggest app/tools_logo.py 649 · actions 283/283 · parity 283/283 · util_diff 288/288
 - 2026-10-18: v7.16.1 The landing demo makes symbols, wordmarks and avatars too, not just logos: "make me a symbol for a surf school", "a wordmark for Brine, a surf school", "an avatar for Sam". Same names and rules as on the Mac; the avatar's face comes from a small hash here and from the name's sha256 there. Checked by the page test in a real browser.
   v7.16.1 · 160 tools · 922 tests · docs coverage 100% · laws all hold · biggest app/tools_logo.py 649 · actions 282/282 · parity 282/282 · util_diff 288/288
 - 2026-10-18: v7.16.0 She pulls the sound out of a video: "extract the audio from ~/Movies/a.mp4" (or as a wav or m4a) makes a new sound file beside it, never over one. Asks first. Checked with real ffmpeg runs in all three formats, each four seconds of audio and no picture.

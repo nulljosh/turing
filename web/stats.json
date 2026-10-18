@@ -1,5 +1,5 @@
 {
-  "version": "7.16.1",
+  "version": "7.17.0",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -192,8 +192,8 @@
         "documented": 27
       },
       "app/tools_video.py": {
-        "total": 10,
-        "documented": 10
+        "total": 11,
+        "documented": 11
       },
       "app/tools_write.py": {
         "total": 8,
@@ -592,8 +592,8 @@
         "documented": 25
       },
       "tests/test_video.py": {
-        "total": 32,
-        "documented": 32
+        "total": 36,
+        "documented": 36
       },
       "tests/test_voice.py": {
         "total": 27,
@@ -668,7 +668,7 @@
   "measured": {
     "tools": {
       "before": 0,
-      "after": 160
+      "after": 161
     },
     "actions_eval": "77/77",
     "knowledge_sweep": {

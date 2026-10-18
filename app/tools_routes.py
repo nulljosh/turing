@@ -72,7 +72,7 @@ def install(t):
         (re.compile(r"^(?:set |turn )?(?:the )?volume (\d{1,3})\b", re.I), lambda m: t.set_volume(m.group(1))),
         (re.compile(r"^(?:turn )?(?:the |it )?(?:volume )?(up|down)$|^(?:turn )?(?:the )?volume (up|down)$|^(louder|quieter)$", re.I),
          lambda m: t.set_volume("up" if (m.group(1) or m.group(2) or m.group(3)).lower() in ("up", "louder") else "down")),
-        (re.compile(r"^mute\b", re.I), lambda m: t.set_volume(0)),
+        (re.compile(r"^mute\b(?!.*\.(?:mp4|mov|m4v|mkv|webm)$)", re.I), lambda m: t.set_volume(0)),
         (re.compile(r"^(?:how(?:'s| is) (?:my |the )?battery|battery(?: level| status)?$|what(?:'s| is) (?:my |the )?battery|how much battery)", re.I), lambda m: t.battery()),
         (re.compile(r"^say (.+)$", re.I), lambda m: t.say(m.group(1))),
         (re.compile(r"^(?:list|show)(?: me)? (?:the )?(?:files|folder|contents) (?:in|of|at) (.+)$", re.I), lambda m: t.list_dir(m.group(1))),

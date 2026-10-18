@@ -2,7 +2,7 @@
 long it is, how big, and its picture and sound, read only. trim_video (a write, asks first) cuts a clip between two
 times, vertical_video (a write, asks first) centre-crops a video to 9:16 for a phone, and trim_audio (a write, asks
 first) cuts a piece out of a sound file (.mp3, .m4a, .wav, .aac, .flac, .ogg), and extract_audio (a write, asks first)
-pulls the sound out of a video into an .mp3, .m4a or .wav. Each write makes a new file
+pulls the sound out of a video into an .mp3, .m4a or .wav, and mute_video (a write, asks first) makes a silent copy of a video. Each write makes a new file
 beside the original, never over an existing one. They run ffmpeg and ffprobe. Same home-folder rule as tools_files:
 home only, nothing hidden. tests/test_video.py mocks subprocess, so no real ffmpeg run happens there.
 """
@@ -178,7 +178,16 @@ def extract_audio(request):
     return f"Pulled the sound into {_short(out)}."
 
 
-TOOLS = (video_info, trim_video, vertical_video, trim_audio, extract_audio)
+def mute_video(path):
+    """Make a silent copy of a video inside the home folder: <name>-muted.mp4 beside it, never over a file. Asks first."""
+    full = _video(path)
+    if not full:
+        return f"No video {path.strip()} I am allowed to open."
+    out, why = _make(full, "muted", ["-an"])
+    return why or f"Made a silent copy at {_short(out)}."
+
+
+TOOLS = (video_info, trim_video, vertical_video, trim_audio, extract_audio, mute_video)
 
 _I = re.I
 _EXT = r"(\S+\.(?:mp4|mov|m4v|mkv|webm))"
@@ -192,6 +201,8 @@ ROUTES = (
     (re.compile(r"^(?:trim|cut|clip) (?:the |my )?(\S+\.(?:mp3|m4a|wav|aac|flac|ogg)) from (\S+) (?:to|until) (\S+)$", _I), "trim_audio", lambda m: "\t".join(m.groups())),
     (re.compile(r"^(?:extract|pull|rip|get) (?:the )?(?:audio|sound) (?:out )?(?:of|from) (?:the |my )?" + _EXT + r"(?: (?:as|to|into) (?:an? )?\.?(mp3|m4a|wav))?$", _I), "extract_audio",
      lambda m: m.group(1) + "\t" + (m.group(2) or "mp3")),
+    (re.compile(r"^(?:mute|silence) (?:the |my )?" + _EXT + "$", _I), "mute_video", lambda m: m.group(1)),
+    (re.compile(r"^(?:remove|strip|drop) the (?:audio|sound) (?:from|of) (?:the |my )?" + _EXT + "$", _I), "mute_video", lambda m: m.group(1)),
 )
 
 
@@ -200,8 +211,9 @@ def demo():
     assert ROUTES[0][0].match("how long is ~/Movies/a.mov") and not ROUTES[0][0].match("how long is the movie")
     assert ROUTES[1][0].match("trim ~/Movies/a.mp4 from 0:10 to 0:25") and not ROUTES[1][0].match("trim my hedge")
     assert ROUTES[2][0].match("make ~/a.mp4 vertical") and ROUTES[3][0].match("make a vertical version of ~/a.mp4")
+    assert ROUTES[-2][0].match("mute ~/Movies/a.mp4") and ROUTES[-1][0].match("remove the audio from ~/a.mov") and not ROUTES[-2][0].match("mute the volume")
     assert _clock(83) == "1:23" and _clock(3725) == "1:02:05"
-    assert "allowed" in video_info("~/.ssh/a.mp4") and "allowed" in vertical_video("/etc/a.mp4")
+    assert "allowed" in video_info("~/.ssh/a.mp4") and "allowed" in vertical_video("/etc/a.mp4") and "allowed" in mute_video("~/.ssh/a.mp4")
     assert all(f.__doc__ for f in TOOLS)
     print("tools_video ok")
 

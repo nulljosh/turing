@@ -257,16 +257,50 @@ class Extract(Base):
         self.assertFalse(os.path.exists(os.path.join(tools_files.HOME, "Movies", "a.mp3")))
 
 
+class Mute(Base):
+    """mute_video: a silent copy of a video, <name>-muted.mp4 beside it."""
+
+    def test_route_and_refusals(self):
+        """Both phrasings route; a hidden file and an existing copy are plain replies; "mute the volume" is not a video."""
+        routes = [r for r in tools_video.ROUTES if r[1] == "mute_video"]
+        self.assertEqual(len(routes), 2)
+        self.assertEqual(routes[0][2](routes[0][0].match("mute my ~/Movies/a.mp4")), "~/Movies/a.mp4")
+        self.assertEqual(routes[1][2](routes[1][0].match("remove the audio from ~/a.mov")), "~/a.mov")
+        self.assertFalse(any(r[0].match("mute the volume") for r in routes))
+        with mock.patch.object(tools_video.subprocess, "run") as run:
+            self.assertIn("allowed", tools_video.mute_video(os.path.join(tools_files.HOME, ".hidden", "secret.mp4")))
+            open(os.path.join(tools_files.HOME, "Movies", "a-muted.mp4"), "wb").close()
+            self.assertEqual(tools_video.mute_video(self.clip), "~/Movies/a-muted.mp4 already exists.")
+        run.assert_not_called()
+
+    def test_headless_and_run(self):
+        """Headless names the file and runs nothing; a live run passes -an and moves the .part file into place."""
+        with mock.patch.object(tools_video.subprocess, "run") as run:
+            self.assertEqual(tools_video.mute_video(self.clip), "Made a silent copy at ~/Movies/a-muted.mp4.")
+        run.assert_not_called()
+
+        def fake(cmd, **kw):
+            """A stand-in that writes the output the way ffmpeg would."""
+            open(cmd[-1], "wb").write(b"x")
+            return subprocess.CompletedProcess(cmd, 0, stdout=b"", stderr=b"")
+        with mock.patch.object(tools_files, "HEADLESS", False), mock.patch.object(tools_video, "_exe", return_value="ffmpeg"), \
+                mock.patch.object(tools_video.subprocess, "run", side_effect=fake) as run:
+            self.assertEqual(tools_video.mute_video(self.clip), "Made a silent copy at ~/Movies/a-muted.mp4.")
+        self.assertIn("-an", run.call_args[0][0])
+        self.assertTrue(os.path.exists(os.path.join(tools_files.HOME, "Movies", "a-muted.mp4")))
+        self.assertFalse(os.path.exists(os.path.join(tools_files.HOME, "Movies", "a-muted.mp4.part.mp4")))
+
+
 class Registry(unittest.TestCase):
     """The three tools are registered, documented, and the two writes ask first."""
 
     def test_names(self):
         """Names match TOOLS and each has a docstring."""
-        self.assertEqual({f.__name__ for f in tools_video.TOOLS}, {"video_info", "trim_video", "vertical_video", "trim_audio", "extract_audio"})
+        self.assertEqual({f.__name__ for f in tools_video.TOOLS}, {"video_info", "trim_video", "vertical_video", "trim_audio", "extract_audio", "mute_video"})
         self.assertTrue(all(f.__doc__ for f in tools_video.TOOLS))
         import tools
         self.assertTrue({"video_info", "trim_video", "vertical_video", "trim_audio", "extract_audio"} <= set(tools.TOOLS))
-        self.assertTrue({"trim_video", "vertical_video", "trim_audio", "extract_audio"} <= tools.WRITES and "video_info" not in tools.WRITES)
+        self.assertTrue({"trim_video", "vertical_video", "trim_audio", "extract_audio", "mute_video"} <= tools.WRITES and "video_info" not in tools.WRITES)
 
 
 if __name__ == "__main__":
