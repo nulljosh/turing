@@ -291,16 +291,67 @@ class Mute(Base):
         self.assertFalse(os.path.exists(os.path.join(tools_files.HOME, "Movies", "a-muted.mp4.part.mp4")))
 
 
+class Gif(Base):
+    """make_gif: a few seconds of a video as a looping .gif beside it."""
+
+    def test_routes_and_refusals(self):
+        """Three phrasings route; the length cap, bad times, a hidden file and an existing gif are plain replies that run nothing."""
+        routes = [r for r in tools_video.ROUTES if r[1] == "make_gif"]
+        self.assertEqual(len(routes), 3)
+        self.assertEqual(routes[0][2](routes[0][0].match("make a gif of ~/Movies/a.mp4 from 0:10 to 0:15")), "~/Movies/a.mp4\t0:10\t0:15")
+        self.assertEqual(routes[1][2](routes[1][0].match("make a gif from ~/a.mov")), "~/a.mov")
+        self.assertEqual(routes[2][2](routes[2][0].match("make ~/a.mp4 into a gif")), "~/a.mp4")
+        with mock.patch.object(tools_video.subprocess, "run") as run:
+            self.assertIn("allowed", tools_video.make_gif(os.path.join(tools_files.HOME, ".hidden", "secret.mp4")))
+            self.assertIn("at most 30 seconds", tools_video.make_gif(self.clip + "\t0:00\t1:00"))
+            self.assertIn("at most 30 seconds", tools_video.make_gif(self.clip + "\t0:20\t0:10"))
+            self.assertIn("Give the times", tools_video.make_gif(self.clip + "\tsoon\t0:10"))
+            open(os.path.join(tools_files.HOME, "Movies", "a.gif"), "wb").close()
+            self.assertEqual(tools_video.make_gif(self.clip), "~/Movies/a.gif already exists.")
+        run.assert_not_called()
+
+    def test_headless_and_run(self):
+        """Headless names the file and runs nothing; a live run uses the palette filter and the times, and moves the .part file into place."""
+        with mock.patch.object(tools_video.subprocess, "run") as run:
+            self.assertEqual(tools_video.make_gif(self.clip + "\t0:10\t0:15"), "Made a gif at ~/Movies/a.gif.")
+        run.assert_not_called()
+
+        def fake(cmd, **kw):
+            """A stand-in that writes the output the way ffmpeg would."""
+            open(cmd[-1], "wb").write(b"x")
+            return subprocess.CompletedProcess(cmd, 0, stdout=b"", stderr=b"")
+        with mock.patch.object(tools_files, "HEADLESS", False), mock.patch.object(tools_video, "_exe", return_value="ffmpeg"), \
+                mock.patch.object(tools_video.subprocess, "run", side_effect=fake) as run:
+            self.assertEqual(tools_video.make_gif(self.clip), "Made a gif at ~/Movies/a.gif.")
+        cmd = run.call_args[0][0]
+        self.assertEqual((cmd[cmd.index("-ss") + 1], cmd[cmd.index("-to") + 1]), ("0", "5"))
+        self.assertIn("palettegen", cmd[cmd.index("-vf") + 1])
+        self.assertTrue(os.path.exists(os.path.join(tools_files.HOME, "Movies", "a.gif")))
+        self.assertFalse(os.path.exists(os.path.join(tools_files.HOME, "Movies", "a.part.gif")))
+
+    def test_failures(self):
+        """No ffmpeg, a hang and a bad exit are plain replies and leave no gif."""
+        with mock.patch.object(tools_files, "HEADLESS", False), mock.patch.object(tools_video, "_exe", return_value=None):
+            self.assertEqual(tools_video.make_gif(self.clip), tools_video._NO_FFMPEG)
+        with mock.patch.object(tools_files, "HEADLESS", False), mock.patch.object(tools_video, "_exe", return_value="ffmpeg"), \
+                mock.patch.object(tools_video.subprocess, "run", side_effect=subprocess.TimeoutExpired("ffmpeg", 300)):
+            self.assertEqual(tools_video.make_gif(self.clip), "ffmpeg did not finish.")
+        with mock.patch.object(tools_files, "HEADLESS", False), mock.patch.object(tools_video, "_exe", return_value="ffmpeg"), \
+                mock.patch.object(tools_video.subprocess, "run", return_value=subprocess.CompletedProcess([], 1, stdout=b"", stderr=b"")):
+            self.assertIn("could not make a gif", tools_video.make_gif(self.clip))
+        self.assertFalse(os.path.exists(os.path.join(tools_files.HOME, "Movies", "a.gif")))
+
+
 class Registry(unittest.TestCase):
     """The three tools are registered, documented, and the two writes ask first."""
 
     def test_names(self):
         """Names match TOOLS and each has a docstring."""
-        self.assertEqual({f.__name__ for f in tools_video.TOOLS}, {"video_info", "trim_video", "vertical_video", "trim_audio", "extract_audio", "mute_video"})
+        self.assertEqual({f.__name__ for f in tools_video.TOOLS}, {"video_info", "trim_video", "vertical_video", "trim_audio", "extract_audio", "mute_video", "make_gif"})
         self.assertTrue(all(f.__doc__ for f in tools_video.TOOLS))
         import tools
         self.assertTrue({"video_info", "trim_video", "vertical_video", "trim_audio", "extract_audio"} <= set(tools.TOOLS))
-        self.assertTrue({"trim_video", "vertical_video", "trim_audio", "extract_audio", "mute_video"} <= tools.WRITES and "video_info" not in tools.WRITES)
+        self.assertTrue({"trim_video", "vertical_video", "trim_audio", "extract_audio", "mute_video", "make_gif"} <= tools.WRITES and "video_info" not in tools.WRITES)
 
 
 if __name__ == "__main__":
