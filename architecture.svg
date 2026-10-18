@@ -5,8 +5,8 @@
 </style>
 <text x="320" y="28" fill="var(--ink)" font-size="16" font-weight="600" text-anchor="middle">Turing Architecture</text>
 <rect width="166" height="40" x="41" y="55" fill="var(--box)" stroke="var(--line)" rx="8"/>
-<text x="124" y="72" fill="var(--ink)" font-size="12" text-anchor="middle">Mac app, terminal</text>
-<text x="124" y="86" fill="var(--ink)" font-size="12" text-anchor="middle">gui/, app/chat.py</text>
+<text x="124" y="72" fill="var(--ink)" font-size="12" text-anchor="middle">Mac app, iPhone, terminal</text>
+<text x="124" y="86" fill="var(--ink)" font-size="12" text-anchor="middle">gui/, ios/, app/chat.py</text>
 <rect width="166" height="40" x="237" y="55" fill="var(--box)" stroke="var(--line)" rx="8"/>
 <text x="320" y="72" fill="var(--ink)" font-size="12" text-anchor="middle">Landing page</text>
 <text x="320" y="86" fill="var(--ink)" font-size="12" text-anchor="middle">demo, draw anything</text>
@@ -18,7 +18,7 @@
 <text x="99" y="175" fill="var(--ink)" font-size="10" font-weight="500" text-anchor="middle">asks before writes</text>
 <rect width="117" height="40" x="188" y="145" fill="var(--accent)" fill-opacity=".15" stroke="var(--accent)" rx="8"/>
 <text x="246" y="162" fill="var(--ink)" font-size="11" font-weight="500" text-anchor="middle">app/tools.py</text>
-<text x="246" y="176" fill="var(--ink)" font-size="11" font-weight="500" text-anchor="middle">router, 136 tools</text>
+<text x="246" y="176" fill="var(--ink)" font-size="11" font-weight="500" text-anchor="middle">router, 145 tools</text>
 <rect width="117" height="40" x="335" y="145" fill="var(--accent)" fill-opacity=".15" stroke="var(--accent)" rx="8"/>
 <text x="393" y="162" fill="var(--ink)" font-size="12" font-weight="500" text-anchor="middle">app/mcp_server.py</text>
 <text x="393" y="176" fill="var(--ink)" font-size="12" font-weight="500" text-anchor="middle">her tools out</text>

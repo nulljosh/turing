@@ -2,7 +2,7 @@
 
 > Priority tier 5 (2026-10-17): exploratory, this year. Order: live blockers, ship pushes, active features, portfolio, exploratory. See ~/Documents/Code/LOOP-HANDOFF.md.
 
-Samantha is a small local model (Qwen, fine-tuned) with hands: she can open apps, browse, read your files, answer from your notes, and act on your Mac, entirely offline, no account, nothing sent out. v4.16.3 is live, with code in app/, helpers in scripts/, and supporting documents in docs/. She has 126 tools. Her own picker gets 343 of 465 blind test phrasings right, with 17 wrong picks past the safety guard and 36 right picks refused. She knows 62 of 65 held-out facts with nothing confidently wrong. She runs natively on the Mac, and the picker and chat both run on Windows and Linux too. The installer is signed with Developer ID and notarized, so it opens on a stranger's Mac with no warning.
+Samantha is a small local model (Qwen, fine-tuned) with hands: she can open apps, browse, read your files, answer from your notes, and act on your Mac, entirely offline, no account, nothing sent out. v7.0.0 is live (2026-10-12), with code in app/, helpers in scripts/, and every markdown file in docs/. She has 145 tools, remembers you across sessions, runs on a Raspberry Pi 4 as an app on Joshua Tree, and her picker is training run 23 (1.5B, public on Hugging Face). She knows 62 of 65 held-out facts with nothing confidently wrong. The Mac installer is signed with Developer ID and notarized. Next major: 8.0 (distillation); the picker rounds are at the noise floor, so it waits on a new idea. See [LOOP-HANDOFF.md](LOOP-HANDOFF.md) for the bar.
 
 Full phase-by-phase history lives in `docs/HISTORY.md` and the picker's model comparisons in `docs/BAKEOFF.md`.
 

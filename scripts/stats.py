@@ -75,13 +75,13 @@ def check_house_docs():
     """Check which house docs exist."""
     docs = {
         "README.md": Path("README.md").exists(),
-        "WHITEPAPER.md": Path("WHITEPAPER.md").exists(),
+        "WHITEPAPER.md": Path("docs/WHITEPAPER.md").exists(),
         "FAQ.md": Path("docs/FAQ.md").exists(),
-        "TROUBLESHOOTING.md": Path("training/TROUBLESHOOTING.md").exists(),
+        "TROUBLESHOOTING.md": Path("docs/TROUBLESHOOTING.md").exists(),
         "CLAUDE.md": Path("CLAUDE.md").exists(),
-        "roadmap.md": Path("roadmap.md").exists(),
+        "roadmap.md": Path("docs/roadmap.md").exists(),
         "LICENSE": Path("LICENSE").exists(),
-        "SECURITY.md": Path("SECURITY.md").exists(),
+        "SECURITY.md": Path("docs/SECURITY.md").exists(),
         "architecture.svg": Path("architecture.svg").exists(),
         "icon.svg": Path("icon.svg").exists()
     }
