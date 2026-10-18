@@ -165,6 +165,14 @@ def _model_opinion(request, tool, args):
     return bool(got.get("related")) if isinstance(got, dict) and "related" in got else None
 
 
+# Writes with no argument an injected instruction could steer still need the request to be about them: a model
+# that proposes "boot Joshua Tree" for "check my battery" is refused before anyone is asked. (press_key is the screen
+# family's own check; its key name is not attacker content.)
+_NO_ARG_EVIDENCE = {"jt_boot": r"joshua ?tree|\bjt\b", "jt_stop": r"joshua ?tree|\bjt\b", "jt_look": r"joshua ?tree|\bjt\b",
+                    "run_tests": r"\btests?\b|\bsuite\b|\bpass(?:es|ing)\b", "sleep_display": r"sleep|screen|display|monitor|dark|\boff\b",
+                    "keep_look": r"\bkeep\b|\bsave\b|\blook\b|\bthat\b"}
+
+
 def check(user_request, tool, args):
     """Is this WRITE the user's own request accounts for? (ok, why): why is a plain description of the
     action for the refusal line ("I stopped: that step would {why}, which you didn't ask for."), only
@@ -180,6 +188,8 @@ def check(user_request, tool, args):
         return (True, why) if ok else (False, reason)
 
     request_lower = request.lower()
+    if tool in _NO_ARG_EVIDENCE and not re.search(_NO_ARG_EVIDENCE[tool], request_lower):
+        return False, why
     verdicts = [_term_ok(t, request_lower) for t in _key_terms(tool, args)]
     if any(v is False for v in verdicts):
         return False, why
