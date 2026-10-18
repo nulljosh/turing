@@ -1,5 +1,7 @@
 # Progress log
 
+- 2026-10-18: v7.9.1 The landing page footer is an engraved harbour in terracotta hatching, ported from Atlin's footer shader: it animates only while on screen, holds one still frame for reduced motion, and follows the theme.
+  v7.9.1 · 152 tools · 884 tests · docs coverage 100% · laws all hold · biggest eval/gen_heldout2.py 647 · actions 274/274 · parity 274/274 · util_diff 288/288
 - 2026-10-18: v7.9.0 She learns from what she could not do, without anyone telling her: every command no tool took, or a tool that broke, is noted on the Mac (~/.samantha/misses.jsonl, local only), "how am I rating you" counts them, and each loop wake the teacher labels them into training rows for her next picker round.
   v7.9.0 · 152 tools · 884 tests · docs coverage 100% · laws all hold · biggest eval/gen_heldout2.py 647 · actions 274/274 · parity 274/274 · util_diff 288/288
 - 2026-10-18: v7.8.0 🎉 She can check a web page for you: "why is ~/room.html black" opens it in headless Chrome with the network off and says what is wrong, the errors it threw and where, anything it needed from the internet, and whether the picture is black, blown out, very dark or flat. It is the eyes of her room-benchmark self-fix loop as a tool of its own, read only, home folder only. On her own room it says: very dark, brightness 24 of 255.
