@@ -8,8 +8,8 @@ A major ships only when its roadmap family is finished and checked: the badge st
 
 ## Where things stand
 
-- **Live:** v7.9.1 on turing.jaybulb.com, with the engraved harbour footer on the landing page (the shader is ported from Atlin's).
-- **Pushed, not live yet:** v7.10.0 (c056c99). convert_3d converts glb, gltf, obj, stl, ply and fbx through headless Blender, asks first and never overwrites. 153 tools, 890 tests. Its test run was still going at checkpoint; the deploy follows a green run.
+- **Live:** v7.10.0 on turing.jaybulb.com (confirmed on /stats.json after the 18:08 UTC deploy). It adds convert_3d, which converts glb, gltf, obj, stl, ply and fbx through headless Blender, asks first and never overwrites. 153 tools, 890 tests. Before it, v7.9.1 put the engraved harbour footer on the landing page (the shader is ported from Atlin's).
+- **Test run:** the post-deploy test run for the handoff commit (137456f) was still going at checkpoint; the release and deploy for v7.10.0 were green.
 - **Shipped before that:** v7.9.0 notes every command she could not do in ~/.samantha/misses.jsonl for the teacher (the file is still empty). v7.8.0 adds check_page, a read-only page checker. v7.7.0 rebuilt the face as Samantha Sans on Inter (OFL kept), with one terracotta accent (#b5502c light, #e0825a dark) and gibberish as a decline again. v7.6.1 fixed how BFCL strings are scored: her picker passes 325 of 400 (81.3 percent) on the function-calling benchmark in eval/bfcl.py. v7.5.0 added video_info, trim_video and vertical_video through ffmpeg.
 - **Roadmap:** docs/roadmap.md, which the checkpoint's issue sync reads. Issue #107 (Blender family) stays open for "a simple 3D object" and "a logo as 3D text".
 - **Joshua Tree 10.0 (the picker in C):** PR 596 (3.9.2, the small picker leaves its own topics alone) is merged on GitHub, dated 2026-10-13. The 10.0 tag still needs the docs and whitepaper refresh and Joshua's real-mic test. Caveat to say every time: the chat rows were written after reading the dev sets' mistakes, so the numbers are tuned to dev; the sealed sets are unread.
