@@ -14,6 +14,7 @@ import re
 import unicodedata
 
 import tools_blender
+import tools_video
 import tools_character
 import tools_dev
 import tools_files
@@ -105,6 +106,7 @@ def install(t):
     _ROUTES = _ROUTES + tuple((pat, _util_route(name, arg)) for pat, name, arg in tools_image.ROUTES)
     _ROUTES = _ROUTES + tuple((pat, _util_route(name, arg)) for pat, name, arg in tools_files.ROUTES)  # find a file, downloads, folder size
     _ROUTES = _ROUTES + tuple((pat, _util_route(name, arg)) for pat, name, arg in tools_blender.ROUTES)  # 3D files: what is in one, render a .blend
+    _ROUTES = _ROUTES + tuple((pat, _util_route(name, arg)) for pat, name, arg in tools_video.ROUTES)  # videos: how long, trim, vertical
     _ROUTES = _ROUTES + tuple((pat, _util_route(name, arg)) for pat, name, arg in tools_util.ROUTES)  # 31 utility tools: math, text, dice, this Mac's vitals
     # organizer's, system's and dev's own phrasings go in FRONT of everything above: "search notes for X" would
     # otherwise be swallowed by the "search ... for" catch-all, and "quit spotify"/"run the tests" by nothing today either

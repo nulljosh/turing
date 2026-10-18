@@ -1,7 +1,10 @@
 # Progress log
 
+- 2026-10-18: v7.5.0 🎉 She can work on videos: how long one is, trim a clip between two times, and make a vertical 9:16 copy for a phone. Each asks first and makes a new file beside the original, never over one. Real ffmpeg run checked: a 6 second test video became a 3 second clip and a 1080x1920 vertical.
+  v7.5.0 · 151 tools · 843 tests · docs coverage 100% · laws all hold · biggest eval/gen_heldout2.py 647 · actions 272/272 · parity 272/272 · util_diff 288/288
+
 - 2026-10-18: v7.4.0 🎉 She can open a 3D file and say what is in it, and render a Blender scene to a picture (asks first, never overwrites). First half of issue 107.
-  v7.4.0 · 148 tools · 833 tests · docs coverage 100% · laws all hold · biggest eval/gen_heldout2.py 647 · actions 269/269 · parity 269/269 · util_diff 288/288
+  v7.4.0 · 151 tools · 833 tests · docs coverage 100% · laws all hold · biggest eval/gen_heldout2.py 647 · actions 269/269 · parity 269/269 · util_diff 288/288
 
 - 2026-10-18: v7.3.0 🎉 `chat.py --character joshua` switches her face and voice to any saved character by name. First half of issue 115.
   v7.3.0 · 146 tools · 819 tests · docs coverage 100% · laws all hold · biggest eval/gen_heldout2.py 647 · actions 267/267 · parity 267/267 · util_diff 288/288

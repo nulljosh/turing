@@ -35,7 +35,7 @@ NOT_FOR_MODELS = {"ask_llm", "see_screen", "see_image", "see_camera", "jt_look",
 # Desktop, a Shortcut, the clipboard, a dark screen. The harness asks before any of these run.
 WRITES = {"ask_llm", "see_screen", "see_image", "see_camera", "click_text", "type_text", "press_key", "ask_screen", "read_screen", "remember", "forget", "close_tab", "call_mcp_tool", "new_note", "new_reminder", "make_logo", "paint_image", "run_shortcut", "make_shortcut", "keep_memory", "copy_to_clipboard", "sleep_display", "save_research", "write_document", "run_code", "code",
           "remove_background", "upscale_image", "enhance_image", "grayscale_image", "rotate_image", "flip_image",
-          "resize_image", "crop_square", "convert_image", "download_file", "render_blend", "move_file", "copy_file", "rename_file", "zip_file", "unzip_file", "trash_file",
+          "resize_image", "crop_square", "convert_image", "download_file", "render_blend", "trim_video", "vertical_video", "move_file", "copy_file", "rename_file", "zip_file", "unzip_file", "trash_file",
           "complete_reminder", "add_event", "append_note", "quit_app", "do_not_disturb", "run_tests", "set_voice", "restyle", "keep_look", "send_email", "jt_boot", "jt_stop", "jt_type", "jt_look"}
 
 
@@ -56,6 +56,7 @@ _EVIDENCE = {
     "bluetooth_status": r"bluetooth", "calendar_tomorrow": r"tomorrow|\btmrw\b|\btmr\b",
     "running_apps": r"running|active apps?|active programs|open apps|apps open|what's open|apps are open|application|programs|\bhave open\b|apps? (?:are )?(?:currently |now )?(?:open|visible)|visible apps\b",
     "blender_info": r"blender|\.blend|\.glb|\.obj|\.fbx|3d|scene", "render_blend": r"render|blender|\.blend",
+    "video_info": r"video|\.mp4|\.mov|\.mkv|\.webm|how long|clip", "trim_video": r"trim|cut|clip|\.mp4|\.mov|\.mkv|\.webm|video", "vertical_video": r"vertical|portrait|9:16|phone|\.mp4|\.mov|\.mkv|\.webm|video",
     "download_file": r"download|\bdl\b|save (?:this|that|it) from|grab (?:the )?file", "recent_downloads": r"download|off the (?:net|internet|web)", "unread_mail": r"mail|email|inbox|unread|messages",
     "git_status": r"status|\bchange\b|changed|changes|uncommitted|dirty|\bdiff\b|\bbranch\b|ahead|behind|\bgit\b", "recent_commits": r"commit",
     "run_tests": r"\btest|\bsuite\b|\bpasses\b|\bpassing\b", "open_prs": r"\bprs?\b|pull request|waiting (?:for|on) (?:a )?review",
