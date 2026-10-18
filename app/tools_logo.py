@@ -14,6 +14,7 @@ import time
 import urllib.error
 import urllib.request
 
+import tools_glyphs
 import tools_image
 
 PXM = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "pixelmator", "pxm.py")  # paint_image's magick engine only
@@ -38,7 +39,7 @@ def _inside_home(path):
 # A 1.7B picks well and composes badly: left to write layers itself it put a
 # pink rectangle over everything and set "TURING" at 360pt, and pxm rejected
 # the spec. So she chooses, the harness lays out. Three choices, all enums.
-PALETTES = {"ember": ("#15110D", "#F4C893", "#E8A96A"), "ink": ("#101418", "#FFFFFF", "#F2B33D"),
+PALETTES = {"ember": ("#15110D", "#F4C893", "#E8A96A"), "ink": ("#101418", "#FFFFFF", "#B5502C"),
             "forest": ("#0F1A14", "#E9F2EA", "#6FBF73"), "signal": ("#16161A", "#FFFFFF", "#E5484D"),
             "paper": ("#F3EDE2", "#1A1410", "#C2562D")}
 _LOGO_SCHEMA = {"type": "object", "required": ["palette", "motif"], "properties": {
@@ -223,6 +224,10 @@ def _mvg(layers):
             lines.append(f"roundRectangle {cx - w / 2},{cy - h / 2} {cx + w / 2},{cy + h / 2} {r},{r}")
         elif l["type"] == "ellipse":
             lines.append(f"ellipse {cx},{cy} {w / 2},{h / 2} 0,360")
+        elif l["type"] == "path":
+            lines.append("stroke-linecap round")
+            lines.append("stroke-linejoin round")
+            lines.append(f"path '{l['d']}'")
         elif l["type"] == "star":
             pts = _star_polygon(cx, cy, w, h, l.get("points", 5), l.get("radius", 50))
             lines.append("polygon " + " ".join(f"{x:.2f},{y:.2f}" for x, y in pts))
@@ -232,37 +237,72 @@ def _mvg(layers):
     return "\n".join(lines)
 
 
+_WANTS_BLOOM = re.compile(r"\b(?:spiral|flower|sunflower|bloom|petals?)\b", re.I)
+
+
+def _pick(prompt, schema):
+    """Her model's choice for one design, as a dict from the schema's enums and ranges."""
+    body = json.dumps({"model": _tools().AGENT_MODEL, "stream": False, "think": False, "format": schema,
+                       "messages": [{"role": "user", "content": prompt}]}).encode()
+    with urllib.request.urlopen(urllib.request.Request(_tools().OLLAMA_CHAT, body, {"Content-Type": "application/json"}), timeout=180) as r:
+        return json.loads(json.load(r)["message"]["content"])
+
+
+def _glyph_design(description):
+    """The default design: a bold glyph that means the subject. The keyword table wins when the subject names it
+    plainly; her model picks the rest and the palette. With no model and no keyword, her flower bloom."""
+    kw = tools_glyphs.keyword_glyph(description)
+    prompt = ("Pick one icon glyph that means this subject, and a tile color. glyphs: " + ", ".join(tools_glyphs.GLYPHS) +
+              ". palette: " + ", ".join(tools_glyphs.GLYPH_PALETTES) + ". Subject: " + description)
+    try:
+        pick = _pick(prompt, tools_glyphs.GLYPH_SCHEMA)
+    except Exception:  # ponytail: no model is fine when the keywords already know the glyph
+        pick = None
+    if not kw and not pick:
+        return {"style": "flower", "palette": "paper"}, _flower_layers("paper", 89, "circle")
+    palette = pick["palette"] if pick else list(tools_glyphs.GLYPH_PALETTES)[sum(map(ord, description)) % len(tools_glyphs.GLYPH_PALETTES)]
+    chose = {"glyph": kw or pick["glyph"], "palette": palette}
+    return chose, tools_glyphs.glyph_layers(chose["glyph"], palette)
+
+
 def make_logo(description):
-    """Design a logo icon and draw it with ImageMagick. It always makes an icon with no text. Default is a golden spiral; say 'complex' for an intricate one or 'simple' for a plain shape."""
+    """Design a logo icon and draw it with ImageMagick. It always makes an icon with no text. The default is a bold glyph that means the subject (a wave for a surf school, bread for a bakery); say 'spiral' or 'flower' for her golden spiral, 'complex' for an intricate one or 'simple' for a plain shape."""
     fancy = bool(_WANTS_COMPLEX.search(description))
     simple = not fancy and bool(_WANTS_SIMPLE.search(description))
-    pal = ("palette: ember (warm amber on dark), ink (white and gold on near-black), forest (green on dark), signal (red on dark), "
+    bloom = not fancy and not simple and bool(_WANTS_BLOOM.search(description))
+    pal = ("palette: ember (warm amber on dark), ink (white and terracotta on near-black), forest (green on dark), signal (red on dark), "
            "paper (dark on cream). ")
-    if fancy:
-        prompt = ("Pick an icon logo with no letters or text at all. " + pal + "This one should be intricate, so be bold with the numbers. "
-                  "rings: concentric rings. rays: marks around the rim. ray_style: bars, dots or stars. orbit_dots: dots circling inside. "
-                  "star_points: points on the centre burst. Logo for: " + description)
-    elif simple:
-        prompt = "Pick a simple icon logo with no letters or text at all. " + pal + "motif: ring, spark, bars or dot. Logo for: " + description
-    else:
-        prompt = ("Pick an icon logo, no letters or text at all. " + pal + "cells: how many cells spiral out from the centre, a Fibonacci "
-                  "number reads best. shape: circle or square. lit: how many cells glow in the accent color. "
-                  "style: spiral (open cells, best big) or flower (packed petals round one bright core, reads even as a tiny tab icon). "
-                  "Logo for: " + description)
-    body = json.dumps({"model": _tools().AGENT_MODEL, "stream": False, "think": False, "format": _COMPLEX_SCHEMA if fancy else _LOGO_SCHEMA if simple else _BLOOM_SCHEMA,
-                       "messages": [{"role": "user", "content": prompt}]}).encode()
     try:
-        with urllib.request.urlopen(urllib.request.Request(_tools().OLLAMA_CHAT, body, {"Content-Type": "application/json"}), timeout=180) as r:
-            pick = json.loads(json.load(r)["message"]["content"])
-        layers = _complex_layers(**pick) if fancy else _logo_layers(**pick) if simple else _bloom_layers(**pick)
+        if fancy:
+            pick = _pick("Pick an icon logo with no letters or text at all. " + pal + "This one should be intricate, so be bold with the numbers. "
+                         "rings: concentric rings. rays: marks around the rim. ray_style: bars, dots or stars. orbit_dots: dots circling inside. "
+                         "star_points: points on the centre burst. Logo for: " + description, _COMPLEX_SCHEMA)
+            layers = _complex_layers(**pick)
+        elif simple:
+            pick = _pick("Pick a simple icon logo with no letters or text at all. " + pal + "motif: ring, spark, bars or dot. Logo for: " + description,
+                         _LOGO_SCHEMA)
+            layers = _logo_layers(**pick)
+        elif bloom:
+            pick = _pick("Pick an icon logo, no letters or text at all. " + pal + "cells: how many cells spiral out from the centre, a Fibonacci "
+                         "number reads best. shape: circle or square. lit: how many cells glow in the accent color. "
+                         "style: spiral (open cells, best big) or flower (packed petals round one bright core, reads even as a tiny tab icon). "
+                         "Logo for: " + description, _BLOOM_SCHEMA)
+            layers = _bloom_layers(**pick)
+        else:
+            pick, layers = _glyph_design(description)
     except Exception as e:
         return f"I couldn't draft the design: {e}"
     out = tools_image.output("samantha-logo.png")
     if os.path.exists(out):
         os.remove(out)  # a stale file must not read as a fresh success
+    shutil.rmtree(tools_image.output("samantha-logo.icon"), ignore_errors=True)  # nor a bundle from an older logo
     result = _run(["magick", "-size", "1024x1024", "xc:none", "-draw", _mvg(layers), out], timeout=60)
-    chose = ", ".join(f"{k} {v}" for k, v in pick.items())
-    return (f"I went with {chose}. {len(layers)} layers, built with ImageMagick, saved to {out}."
+    chose, extra = ", ".join(f"{k} {v}" for k, v in pick.items()), ""
+    if "glyph" in pick and os.path.exists(out):  # and the Icon Composer bundle, the way every fleet icon is made
+        bundle = tools_glyphs.icon_bundle(pick["glyph"], pick["palette"], tools_image.output("samantha-logo.icon"),
+                                          lambda ls, png: _run(["magick", "-size", "1024x1024", "xc:none", "-draw", _mvg(ls), png], timeout=60))
+        extra = f", with an Icon Composer bundle at {bundle}"
+    return (f"I went with {chose}. {len(layers)} layers, built with ImageMagick, saved to {out}{extra}."
             if os.path.exists(out) else f"ImageMagick refused my design: {result[-300:]}")
 
 
@@ -339,6 +379,8 @@ def layers_to_svg(layers, note=""):
             pts = " ".join(f"{num(cx + (R if k % 2 == 0 else r) * math.cos(math.pi * k / n - math.pi / 2))},"
                            f"{num(cy + (R if k % 2 == 0 else r) * h / w * math.sin(math.pi * k / n - math.pi / 2))}" for k in range(2 * n))
             out.append(f'  <polygon points="{pts}"{paint(l)}{turn}/>')
+        elif l["type"] == "path":
+            out.append(f'  <path d="{l["d"]}"{paint(l)} stroke-linecap="round" stroke-linejoin="round"/>')
         else:
             raise ValueError(f"no SVG for a {l['type']} layer")
     return "\n".join(out + ["</svg>"]) + "\n"

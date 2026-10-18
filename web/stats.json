@@ -1,5 +1,5 @@
 {
-  "version": "7.12.0",
+  "version": "7.13.0",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -115,6 +115,10 @@
         "total": 21,
         "documented": 21
       },
+      "app/tools_glyphs.py": {
+        "total": 7,
+        "documented": 7
+      },
       "app/tools_gui.py": {
         "total": 11,
         "documented": 11
@@ -132,8 +136,8 @@
         "documented": 8
       },
       "app/tools_logo.py": {
-        "total": 29,
-        "documented": 29
+        "total": 31,
+        "documented": 31
       },
       "app/tools_mail_send.py": {
         "total": 2,
@@ -418,6 +422,10 @@
       "tests/test_gguf_parity.py": {
         "total": 1,
         "documented": 1
+      },
+      "tests/test_glyphs.py": {
+        "total": 12,
+        "documented": 12
       },
       "tests/test_guard_probes.py": {
         "total": 5,

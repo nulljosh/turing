@@ -1,5 +1,7 @@
 # Progress log
 
+- 2026-10-18: v7.13.0 🎉 Her logos mean something now: "make me a logo for a surf school" draws a bold white wave on a colored tile (20 glyphs: bread for a bakery, a cup for coffee, a network for Turing), picked by keyword first and her model second, and saves an Icon Composer bundle beside the PNG. Yellow is gone from her palettes. The spiral, simple and complex styles stay on request.
+  v7.13.0 · 155 tools · 908 tests · docs coverage 100% · laws all hold · biggest app/tools_logo.py 649 · actions 277/277 · parity 277/277 · util_diff 288/288
 - 2026-10-18: v7.12.0 She makes logos in 3D: "make 3D text Turing at ~/Documents/logo.glb" turns a few words into thick 3D letters through Blender, in glb, obj, stl, ply, fbx or blend, asks first, never over a file. Checked with real runs read back by blender_info.
   v7.12.0 · 155 tools · 900 tests · docs coverage 100% · laws all hold · biggest eval/gen_heldout2.py 647 · actions 277/277 · parity 277/277 · util_diff 288/288
 - 2026-10-18: v7.11.0 She makes simple 3D shapes: "make a cube at ~/Documents/box.glb" (also sphere, cone, cylinder, torus, as glb, obj, stl, ply, fbx or blend) through Blender, asks first, never over a file. Checked with six real shape and format runs read back by blender_info.
