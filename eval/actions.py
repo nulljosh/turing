@@ -247,6 +247,7 @@ CASES = [
     ("mute ~/Movies/a.mp4", "mute_video", "~/Movies/a.mp4"),
     ("make a gif of ~/Movies/a.mp4 from 0:10 to 0:15", "make_gif", "~/Movies/a.mp4\t0:10\t0:15"),
     ("speed up ~/Movies/a.mp4 2x", "speed_video", "~/Movies/a.mp4\t2x"),
+    ("remove 0:10 to 0:15 from ~/Movies/a.mp4", "cut_out_video", "~/Movies/a.mp4\t0:10\t0:15"),
     ("zip ~/Desktop/photos", "zip_file", "~/Desktop/photos"),
     ("unzip ~/Downloads/a.zip", "unzip_file", "~/Downloads/a.zip"),
     ("trash ~/Desktop/a.txt", "trash_file", "~/Desktop/a.txt"),

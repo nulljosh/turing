@@ -1,5 +1,7 @@
 # Progress log
 
+- 2026-10-18: v7.20.0 She cuts a section out of a video: "remove 0:10 to 0:15 from ~/Movies/a.mp4" drops that stretch from the picture and the sound, joins the rest and writes a new -cut.mp4 beside it, never over a file. Asks first. Checked with a real ffmpeg run: 10 seconds minus a 3 second section came out 7 seconds with sound.
+  v7.20.0 · 164 tools · 931 tests · docs coverage 100% · laws all hold · biggest app/tools_logo.py 649 · actions 286/286 · parity 286/286 · util_diff 288/288
 - 2026-10-18: v7.19.1 Her logos know garage doors: "make me a logo for Big Ben Garage Door" draws a roofline over three door panels (a new glyph, 21 now, picked by garage, overhead door or door opener) on a colored tile, in the Mac tool and the landing demo. Made first for a real business, Big Ben Garage Doors, in red, blue and black.
   v7.19.1 · 163 tools · 929 tests · docs coverage 100% · laws all hold · biggest app/tools_logo.py 649 · actions 285/285 · parity 285/285 · util_diff 288/288
 - 2026-10-18: v7.19.0 She changes a video's speed: "speed up ~/Movies/a.mp4 2x" or "slow down ~/Movies/a.mp4 to 0.5x" writes a new copy (like a-2x.mp4) at 0.25x to 4x, picture and sound kept in step, never over a file. Asks first. Checked with real ffmpeg runs: 8 seconds became 4 at 2x, 2 at 4x and 32 at 0.25x, and a video with no sound works too.

@@ -2,7 +2,7 @@
 long it is, how big, and its picture and sound, read only. trim_video (a write, asks first) cuts a clip between two
 times, vertical_video (a write, asks first) centre-crops a video to 9:16 for a phone, and trim_audio (a write, asks
 first) cuts a piece out of a sound file (.mp3, .m4a, .wav, .aac, .flac, .ogg), and extract_audio (a write, asks first)
-pulls the sound out of a video into an .mp3, .m4a or .wav, mute_video (a write, asks first) makes a silent copy of a video, make_gif (a write, asks first) turns up to 30 seconds of one into a looping .gif, and speed_video (a write, asks first) makes a copy at 0.25x to 4x speed. Each write makes a new file
+pulls the sound out of a video into an .mp3, .m4a or .wav, mute_video (a write, asks first) makes a silent copy of a video, make_gif (a write, asks first) turns up to 30 seconds of one into a looping .gif, speed_video (a write, asks first) makes a copy at 0.25x to 4x speed, and cut_out_video (a write, asks first) removes a section from the middle and joins the rest. Each write makes a new file
 beside the original, never over an existing one. They run ffmpeg and ffprobe. Same home-folder rule as tools_files:
 home only, nothing hidden. tests/test_video.py mocks subprocess, so no real ffmpeg run happens there.
 """
@@ -257,7 +257,23 @@ def speed_video(request):
     return why or f"Made a {label} copy at {_short(out)}."
 
 
-TOOLS = (video_info, trim_video, vertical_video, trim_audio, extract_audio, mute_video, make_gif, speed_video)
+def cut_out_video(request):
+    """Remove a section from the middle of a video inside the home folder and join what is left. Takes 'path<TAB>start<TAB>end' with times like 0:10 or 25. Makes <name>-cut.mp4 beside it, never over a file. Asks first."""
+    parts = [p.strip() for p in request.split("\t")]
+    if len(parts) != 3:
+        return "Say which video and the section to remove, like: remove 0:10 to 0:15 from ~/Movies/a.mp4."
+    full = _video(parts[0])
+    if not full:
+        return f"No video {parts[0]} I am allowed to open."
+    start, end = parts[1], parts[2]
+    if not (_TIME.match(start) and _TIME.match(end)) or _secs(end) <= _secs(start):
+        return "Give the times like 0:10 and 0:15, with the end after the start."
+    gone = f"between(t,{_secs(start):g},{_secs(end):g})"  # drop those frames and samples, then close the gap
+    out, why = _make(full, "cut", ["-vf", f"select='not({gone})',setpts=N/FRAME_RATE/TB", "-af", f"aselect='not({gone})',asetpts=N/SR/TB"])
+    return why or f"Removed {start} to {end} into {_short(out)}."
+
+
+TOOLS = (video_info, trim_video, vertical_video, trim_audio, extract_audio, mute_video, make_gif, speed_video, cut_out_video)
 
 _I = re.I
 _EXT = r"(\S+\.(?:mp4|mov|m4v|mkv|webm))"
@@ -278,6 +294,8 @@ ROUTES = (
     (re.compile(r"^(?:make|turn) (?:the |my )?" + _EXT + " into a gif$", _I), "make_gif", lambda m: m.group(1)),
     (re.compile(r"^(?:speed up|fast forward) (?:the |my )?" + _EXT + r"(?: (?:by|to|at))? (\d{1,2}(?:\.\d{1,2})?x?)$", _I), "speed_video", lambda m: "\t".join(m.groups())),
     (re.compile(r"^slow down (?:the |my )?" + _EXT + r" to (\d{1,2}(?:\.\d{1,2})?x?)$", _I), "speed_video", lambda m: "\t".join(m.groups())),
+    (re.compile(r"^(?:remove|delete|cut out) (?:the part from |the section from |from )?(\S+) (?:to|until) (\S+) (?:from|of|in) (?:the |my )?" + _EXT + "$", _I), "cut_out_video",
+     lambda m: "\t".join((m.group(3), m.group(1), m.group(2)))),
 )
 
 
@@ -290,9 +308,10 @@ def demo():
     assert by("mute_video")[0].match("mute ~/Movies/a.mp4") and by("mute_video")[1].match("remove the audio from ~/a.mov") and not by("mute_video")[0].match("mute the volume")
     assert by("make_gif")[0].match("make a gif of ~/a.mp4 from 0:10 to 0:15") and by("make_gif")[2].match("make ~/a.mov into a gif") and not by("make_gif")[2].match("make dinner into a gif")
     assert by("speed_video")[0].match("speed up ~/a.mp4 2x") and by("speed_video")[1].match("slow down ~/a.mp4 to 0.5x") and not by("speed_video")[0].match("speed up my laptop")
+    assert by("cut_out_video")[0].match("remove 0:10 to 0:15 from ~/Movies/a.mp4") and not by("cut_out_video")[0].match("remove 0:10 to 0:15 from my notes")
     assert _secs("1:02:03") == 3723 and _secs("7.5") == 7.5
     assert _clock(83) == "1:23" and _clock(3725) == "1:02:05"
-    assert "allowed" in video_info("~/.ssh/a.mp4") and "allowed" in vertical_video("/etc/a.mp4") and "allowed" in mute_video("~/.ssh/a.mp4") and "allowed" in make_gif("/etc/a.mp4") and "allowed" in speed_video("/etc/a.mp4\t2")
+    assert "allowed" in video_info("~/.ssh/a.mp4") and "allowed" in vertical_video("/etc/a.mp4") and "allowed" in mute_video("~/.ssh/a.mp4") and "allowed" in make_gif("/etc/a.mp4") and "allowed" in speed_video("/etc/a.mp4\t2") and "allowed" in cut_out_video("/etc/a.mp4\t0\t1")
     assert all(f.__doc__ for f in TOOLS)
     print("tools_video ok")
 

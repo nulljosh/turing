@@ -378,16 +378,52 @@ class Speed(Base):
             self.assertEqual(cmd[cmd.index("-af") + 1], want, speed)
 
 
+class CutOut(Base):
+    """cut_out_video: a section removed from the middle, the two ends joined, into <name>-cut.mp4."""
+
+    def test_routes_and_refusals(self):
+        """The route reorders to path, start, end; bad times, a hidden file and an existing copy are plain replies that run nothing."""
+        route = next(r for r in tools_video.ROUTES if r[1] == "cut_out_video")
+        self.assertEqual(route[2](route[0].match("remove 0:10 to 0:15 from ~/Movies/a.mp4")), "~/Movies/a.mp4\t0:10\t0:15")
+        self.assertFalse(route[0].match("remove 0:10 to 0:15 from my notes"))
+        with mock.patch.object(tools_video.subprocess, "run") as run:
+            self.assertIn("allowed", tools_video.cut_out_video(os.path.join(tools_files.HOME, ".hidden", "secret.mp4") + "\t1\t2"))
+            self.assertIn("Say which video", tools_video.cut_out_video(self.clip))
+            for bad in ("soon\t0:10", "0:20\t0:10", "5\t5"):
+                self.assertIn("end after the start", tools_video.cut_out_video(self.clip + "\t" + bad), bad)
+            open(os.path.join(tools_files.HOME, "Movies", "a-cut.mp4"), "wb").close()
+            self.assertEqual(tools_video.cut_out_video(self.clip + "\t0:10\t0:15"), "~/Movies/a-cut.mp4 already exists.")
+        run.assert_not_called()
+
+    def test_headless_and_run(self):
+        """Headless names the file; a live run drops the section from picture and sound and closes the gap."""
+        with mock.patch.object(tools_video.subprocess, "run") as run:
+            self.assertEqual(tools_video.cut_out_video(self.clip + "\t0:10\t0:15"), "Removed 0:10 to 0:15 into ~/Movies/a-cut.mp4.")
+        run.assert_not_called()
+
+        def fake(cmd, **kw):
+            """A stand-in that writes the output the way ffmpeg would."""
+            open(cmd[-1], "wb").write(b"x")
+            return subprocess.CompletedProcess(cmd, 0, stdout=b"", stderr=b"")
+        with mock.patch.object(tools_files, "HEADLESS", False), mock.patch.object(tools_video, "_exe", return_value="ffmpeg"), \
+                mock.patch.object(tools_video.subprocess, "run", side_effect=fake) as run:
+            tools_video.cut_out_video(self.clip + "\t0:10\t0:15")
+        cmd = run.call_args[0][0]
+        self.assertIn("not(between(t,10,15))", cmd[cmd.index("-vf") + 1])
+        self.assertIn("aselect", cmd[cmd.index("-af") + 1])
+        self.assertTrue(os.path.exists(os.path.join(tools_files.HOME, "Movies", "a-cut.mp4")))
+
+
 class Registry(unittest.TestCase):
     """The three tools are registered, documented, and the two writes ask first."""
 
     def test_names(self):
         """Names match TOOLS and each has a docstring."""
-        self.assertEqual({f.__name__ for f in tools_video.TOOLS}, {"video_info", "trim_video", "vertical_video", "trim_audio", "extract_audio", "mute_video", "make_gif", "speed_video"})
+        self.assertEqual({f.__name__ for f in tools_video.TOOLS}, {"video_info", "trim_video", "vertical_video", "trim_audio", "extract_audio", "mute_video", "make_gif", "speed_video", "cut_out_video"})
         self.assertTrue(all(f.__doc__ for f in tools_video.TOOLS))
         import tools
         self.assertTrue({"video_info", "trim_video", "vertical_video", "trim_audio", "extract_audio"} <= set(tools.TOOLS))
-        self.assertTrue({"trim_video", "vertical_video", "trim_audio", "extract_audio", "mute_video", "make_gif", "speed_video"} <= tools.WRITES and "video_info" not in tools.WRITES)
+        self.assertTrue({"trim_video", "vertical_video", "trim_audio", "extract_audio", "mute_video", "make_gif", "speed_video", "cut_out_video"} <= tools.WRITES and "video_info" not in tools.WRITES)
 
 
 if __name__ == "__main__":
