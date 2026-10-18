@@ -27,6 +27,7 @@ from tools_image import remove_background, upscale_image, enhance_image, graysca
 from tools_files import find_file, recent_downloads, download_file, folder_size, move_file, copy_file, rename_file, zip_file, unzip_file, trash_file
 from tools_blender import blender_info, render_blend  # noqa: E402
 from tools_video import video_info, trim_video, vertical_video  # noqa: E402
+from tools_page import check_page  # noqa: E402
 
 AGENT_MODEL = "qwen3:1.7b"  # 8B was right but 7.6GB and minutes per run; 1.7B is right in 5s once the harness prefetches
 OLLAMA_CHAT = "http://localhost:11434/api/chat"
@@ -313,7 +314,7 @@ TOOLS = {f.__name__: f for f in (open_app, open_url, web_search, current_tab, re
                                      music, weather, timer, new_note, new_reminder, calendar_today, unread_mail, needs_attention, morning_brief, free_when,
                                      remove_background, upscale_image, enhance_image, grayscale_image, rotate_image, flip_image, resize_image, crop_square, convert_image, image_info,
                                      find_file, recent_downloads, download_file, folder_size, move_file, copy_file, rename_file, zip_file, unzip_file, trash_file,
-                                     blender_info, render_blend, video_info, trim_video, vertical_video)}
+                                     blender_info, render_blend, video_info, trim_video, vertical_video, check_page)}
 TOOLS.update({f.__name__: f for f in tools_util.TOOLS})
 globals().update({f.__name__: f for f in tools_util.TOOLS})  # eval/actions.py swaps every TOOLS name on this module for a recorder
 

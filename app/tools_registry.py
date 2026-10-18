@@ -56,7 +56,7 @@ _EVIDENCE = {
     "bluetooth_status": r"bluetooth", "calendar_tomorrow": r"tomorrow|\btmrw\b|\btmr\b",
     "running_apps": r"running|active apps?|active programs|open apps|apps open|what's open|apps are open|application|programs|\bhave open\b|apps? (?:are )?(?:currently |now )?(?:open|visible)|visible apps\b",
     "blender_info": r"blender|\.blend|\.glb|\.obj|\.fbx|3d|scene", "render_blend": r"render|blender|\.blend",
-    "video_info": r"video|\.mp4|\.mov|\.mkv|\.webm|how long|clip", "trim_video": r"trim|cut|clip|\.mp4|\.mov|\.mkv|\.webm|video", "vertical_video": r"vertical|portrait|9:16|phone|\.mp4|\.mov|\.mkv|\.webm|video",
+    "check_page": r"page|site|html|check|test|debug|black|blank|broken", "video_info": r"video|\.mp4|\.mov|\.mkv|\.webm|how long|clip", "trim_video": r"trim|cut|clip|\.mp4|\.mov|\.mkv|\.webm|video", "vertical_video": r"vertical|portrait|9:16|phone|\.mp4|\.mov|\.mkv|\.webm|video",
     "download_file": r"download|\bdl\b|save (?:this|that|it) from|grab (?:the )?file", "recent_downloads": r"download|off the (?:net|internet|web)", "unread_mail": r"mail|email|inbox|unread|messages",
     "git_status": r"status|\bchange\b|changed|changes|uncommitted|dirty|\bdiff\b|\bbranch\b|ahead|behind|\bgit\b", "recent_commits": r"commit",
     "run_tests": r"\btest|\bsuite\b|\bpasses\b|\bpassing\b", "open_prs": r"\bprs?\b|pull request|waiting (?:for|on) (?:a )?review",

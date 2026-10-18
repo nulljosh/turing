@@ -1,5 +1,5 @@
 {
-  "version": "7.7.0",
+  "version": "7.8.0",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -142,6 +142,10 @@
       "app/tools_organizer.py": {
         "total": 7,
         "documented": 7
+      },
+      "app/tools_page.py": {
+        "total": 6,
+        "documented": 6
       },
       "app/tools_profile.py": {
         "total": 5,
@@ -495,6 +499,10 @@
         "total": 32,
         "documented": 32
       },
+      "tests/test_page.py": {
+        "total": 21,
+        "documented": 21
+      },
       "tests/test_phone_bridge.py": {
         "total": 15,
         "documented": 15
@@ -640,7 +648,7 @@
   "measured": {
     "tools": {
       "before": 0,
-      "after": 151
+      "after": 152
     },
     "actions_eval": "77/77",
     "knowledge_sweep": {

@@ -1,5 +1,7 @@
 # Progress log
 
+- 2026-10-18: v7.8.0 🎉 She can check a web page for you: "why is ~/room.html black" opens it in headless Chrome with the network off and says what is wrong, the errors it threw and where, anything it needed from the internet, and whether the picture is black, blown out, very dark or flat. It is the eyes of her room-benchmark self-fix loop as a tool of its own, read only, home folder only. On her own room it says: very dark, brightness 24 of 255.
+  v7.8.0 · 152 tools · 879 tests · docs coverage 100% · laws all hold · biggest eval/gen_heldout2.py 647 · actions 274/274 · parity 274/274 · util_diff 288/288
 - 2026-10-18: v7.7.0 🎉 A new face: Samantha Sans is now built on Inter, the open typeface drawn in the spirit of SF and Helvetica, renamed for her under its open font license, with letters and figures spaced to their own widths. The hand-drawn cut read too techy. Also, random keystrokes are a decline again instead of a "could you clarify", so Nimble falls through cleanly.
   v7.7.0 · 151 tools · 869 tests · docs coverage 100% · laws all hold · biggest eval/gen_heldout2.py 647 · actions 272/272 · parity 272/272 · util_diff 288/288
 - 2026-10-18: v7.6.1 The Berkeley benchmark now compares strings exactly the way the leaderboard does (ignoring case, spaces and punctuation, and a number sent as text counts as wrong), so her score sits on the same scale as everyone else's: 325 of 400 (81.3%).

@@ -755,9 +755,9 @@
   }
   // the ten that read or touch a real Mac. The stand-in Mac on this page has no disk, network or clipboard to show.
   var REAL_MAC = "That one reads your real Mac, and this stand-in has no disk, memory or network. Run her on a Mac and it answers.";
-  ["disk_space", "uptime", "memory_usage", "cpu_load", "ip_address", "wifi_name", "system_info", "copy_to_clipboard", "sleep_display", "reveal_in_finder", "list_shortcuts", "run_shortcut", "list_mcp_tools", "call_mcp_tool", "list_tabs", "switch_tab", "close_tab", "read_tab", "read_screen", "read_document", "find_in_document", "ask_document", "ask_screen", "transcribe_video", "unread_mail", "find_file", "recent_downloads", "download_file", "folder_size", "move_file", "copy_file", "rename_file", "zip_file", "unzip_file", "trash_file", "blender_info", "render_blend", "video_info", "trim_video", "vertical_video"]
+  ["disk_space", "uptime", "memory_usage", "cpu_load", "ip_address", "wifi_name", "system_info", "copy_to_clipboard", "sleep_display", "reveal_in_finder", "list_shortcuts", "run_shortcut", "list_mcp_tools", "call_mcp_tool", "list_tabs", "switch_tab", "close_tab", "read_tab", "read_screen", "read_document", "find_in_document", "ask_document", "ask_screen", "transcribe_video", "unread_mail", "find_file", "recent_downloads", "download_file", "folder_size", "move_file", "copy_file", "rename_file", "zip_file", "unzip_file", "trash_file", "blender_info", "render_blend", "video_info", "check_page", "trim_video", "vertical_video"]
     .forEach(function (name) { U[name] = function () { return REAL_MAC; }; });
-  U.NEEDS_MAC = ["disk_space", "uptime", "memory_usage", "cpu_load", "ip_address", "wifi_name", "system_info", "copy_to_clipboard", "sleep_display", "reveal_in_finder", "list_shortcuts", "run_shortcut", "list_mcp_tools", "call_mcp_tool", "list_tabs", "switch_tab", "close_tab", "read_tab", "read_screen", "read_document", "find_in_document", "ask_document", "ask_screen", "transcribe_video", "unread_mail", "find_file", "recent_downloads", "download_file", "folder_size", "move_file", "copy_file", "rename_file", "zip_file", "unzip_file", "trash_file", "blender_info", "render_blend", "video_info", "trim_video", "vertical_video"];
+  U.NEEDS_MAC = ["disk_space", "uptime", "memory_usage", "cpu_load", "ip_address", "wifi_name", "system_info", "copy_to_clipboard", "sleep_display", "reveal_in_finder", "list_shortcuts", "run_shortcut", "list_mcp_tools", "call_mcp_tool", "list_tabs", "switch_tab", "close_tab", "read_tab", "read_screen", "read_document", "find_in_document", "ask_document", "ask_screen", "transcribe_video", "unread_mail", "find_file", "recent_downloads", "download_file", "folder_size", "move_file", "copy_file", "rename_file", "zip_file", "unzip_file", "trash_file", "blender_info", "render_blend", "video_info", "check_page", "trim_video", "vertical_video"];
 
   // the image tools, same table as tools_image.ROUTES and ahead of the utilities. The stand-in Mac has no photos on disk.
   var P = "(?:the )?(?:image |photo |picture |pic )?(?:at )?(\\S+\\.(?:jpe?g|png|heic|webp|tiff?))";
@@ -792,7 +792,9 @@
     [/^(?:how long is|what(?:'s| is) in|inspect) (?:the |my )?(\S+\.(?:mp4|mov|m4v|mkv|webm))$/i, function (m) { return ["video_info", m[1]]; }],
     [/^(?:trim|cut|clip) (?:the |my )?(\S+\.(?:mp4|mov|m4v|mkv|webm)) from (\S+) (?:to|until) (\S+)$/i, function (m) { return ["trim_video", m[1] + "\t" + m[2] + "\t" + m[3]]; }],
     [/^make (?:the |my )?(\S+\.(?:mp4|mov|m4v|mkv|webm)) (?:vertical|portrait)$/i, function (m) { return ["vertical_video", m[1]]; }],
-    [/^make a (?:vertical|portrait) (?:version|copy) of (?:the |my )?(\S+\.(?:mp4|mov|m4v|mkv|webm))$/i, function (m) { return ["vertical_video", m[1]]; }]
+    [/^make a (?:vertical|portrait) (?:version|copy) of (?:the |my )?(\S+\.(?:mp4|mov|m4v|mkv|webm))$/i, function (m) { return ["vertical_video", m[1]]; }],
+    [/^(?:check|test|debug|open and check) (?:the |my )?(?:page |site )?(\S+\.html?)$/i, function (m) { return ["check_page", m[1]]; }],
+    [/^why is (?:the |my )?(?:page |site )?(\S+\.html?) (?:black|blank|empty|broken|dark|not working|not loading)$/i, function (m) { return ["check_page", m[1]]; }]
   ]);
   U.ask_llm = function () { return "On her real Mac she hands a hard question to another LLM running there: name one (ask qwen, ask llama, ask gemma) or say ask claude for the biggest. She asks you first and nothing leaves the Mac. This page never sends your words anywhere but its own lookup."; };
   U.NEEDS_MAC.push("ask_llm");
