@@ -8,7 +8,7 @@ A major ships only when its roadmap family is finished and checked: the badge st
 
 ## Where things stand
 
-- **Live:** v7.20.0 on turing.jaybulb.com (confirmed on /stats.json, 164 tools). Since 7.16: mute_video, make_gif, speed_video, cut_out_video (the video edits from roadmap 4.18; burn-in captions is left), symbols, wordmarks and avatars in the landing demo, and a garage glyph for logos made for Big Ben Garage Doors.
+- **Live:** v7.21.0 on turing.jaybulb.com (confirmed on /stats.json, 165 tools). Since 7.16: mute_video, make_gif, speed_video, cut_out_video, join_videos (the video edits from roadmap 4.18; burn-in captions is left), symbols, wordmarks and avatars in the landing demo, and a garage glyph for logos made for Big Ben Garage Doors.
 - **Test run:** the post-deploy test run for the handoff commit (137456f) was still going at checkpoint; the release and deploy for v7.10.0 were green.
 - **Shipped before that:** v7.9.0 notes every command she could not do in ~/.samantha/misses.jsonl for the teacher (the file is still empty). v7.8.0 adds check_page, a read-only page checker. v7.7.0 rebuilt the face as Samantha Sans on Inter (OFL kept), with one terracotta accent (#b5502c light, #e0825a dark) and gibberish as a decline again. v7.6.1 fixed how BFCL strings are scored: her picker passes 325 of 400 (81.3 percent) on the function-calling benchmark in eval/bfcl.py. v7.5.0 added video_info, trim_video and vertical_video through ffmpeg.
 - **Roadmap:** docs/roadmap.md, which the checkpoint's issue sync reads. Issue #107 (Blender family) stays open for "a simple 3D object" and "a logo as 3D text".
