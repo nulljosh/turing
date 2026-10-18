@@ -232,6 +232,7 @@ CASES = [
     ("what is in ~/Documents/scene.blend", "blender_info", "~/Documents/scene.blend"),
     ("render ~/Documents/scene.blend", "render_blend", "~/Documents/scene.blend"),
     ("convert ~/Documents/model.glb to obj", "convert_3d", "~/Documents/model.glb\tobj"),
+    ("make a cube at ~/Documents/box.glb", "make_3d", "cube\t~/Documents/box.glb"),
     ("how long is ~/Movies/a.mp4", "video_info", "~/Movies/a.mp4"),
     ("check ~/Sites/index.html", "check_page", "~/Sites/index.html"),
     ("why is ~/room.html black", "check_page", "~/room.html"),

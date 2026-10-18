@@ -25,7 +25,7 @@ import tools_util
 import tools_image  # noqa: E402
 from tools_image import remove_background, upscale_image, enhance_image, grayscale_image, rotate_image, flip_image, resize_image, crop_square, convert_image, image_info
 from tools_files import find_file, recent_downloads, download_file, folder_size, move_file, copy_file, rename_file, zip_file, unzip_file, trash_file
-from tools_blender import blender_info, render_blend, convert_3d  # noqa: E402
+from tools_blender import blender_info, render_blend, convert_3d, make_3d  # noqa: E402
 from tools_video import video_info, trim_video, vertical_video  # noqa: E402
 from tools_page import check_page  # noqa: E402
 
@@ -314,7 +314,7 @@ TOOLS = {f.__name__: f for f in (open_app, open_url, web_search, current_tab, re
                                      music, weather, timer, new_note, new_reminder, calendar_today, unread_mail, needs_attention, morning_brief, free_when,
                                      remove_background, upscale_image, enhance_image, grayscale_image, rotate_image, flip_image, resize_image, crop_square, convert_image, image_info,
                                      find_file, recent_downloads, download_file, folder_size, move_file, copy_file, rename_file, zip_file, unzip_file, trash_file,
-                                     blender_info, render_blend, convert_3d, video_info, trim_video, vertical_video, check_page)}
+                                     blender_info, render_blend, convert_3d, make_3d, video_info, trim_video, vertical_video, check_page)}
 TOOLS.update({f.__name__: f for f in tools_util.TOOLS})
 globals().update({f.__name__: f for f in tools_util.TOOLS})  # eval/actions.py swaps every TOOLS name on this module for a recorder
 

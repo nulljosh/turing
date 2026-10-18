@@ -1,7 +1,8 @@
 """Samantha's Blender tools. blender_info reads a 3D file inside the home folder (.blend, .glb, .gltf, .obj, .fbx) and
 says how many objects and vertices it holds, read only. render_blend (a write, asks first) renders frame 1 of a .blend
 to a PNG named like it, in the same folder, never over an existing file. convert_3d (a write, asks first) turns one
-3D file into glb, obj, stl, ply or fbx beside it, never over an existing file. All run Blender headless (blender -b).
+3D file into glb, obj, stl, ply or fbx beside it, never over an existing file. make_3d (a write, asks first) makes a cube, sphere, cone, cylinder or torus as a new
+3D file, never over an existing one. All run Blender headless (blender -b).
 Same home-folder rule as tools_files: home only, nothing hidden. tests/test_blender.py mocks subprocess, so no real
 Blender run happens there.
 """
@@ -186,7 +187,69 @@ def convert_3d(spec):
     return f"Converted to {_short(out)}{extra}."
 
 
-TOOLS = (blender_info, render_blend, convert_3d)
+_SHAPES = ("cube", "sphere", "cone", "cylinder", "torus")
+
+# Runs inside Blender: an empty scene, one primitive, exported by the extension of the file asked for.
+_MAKE_SCRIPT = '''import bpy, os, sys
+shape, out = sys.argv[sys.argv.index("--") + 1:][:2]
+bpy.ops.wm.read_factory_settings(use_empty=True)
+add = {"cube": bpy.ops.mesh.primitive_cube_add, "sphere": bpy.ops.mesh.primitive_uv_sphere_add, "cone": bpy.ops.mesh.primitive_cone_add,
+       "cylinder": bpy.ops.mesh.primitive_cylinder_add, "torus": bpy.ops.mesh.primitive_torus_add}[shape]
+add()
+ext = out.lower().rsplit(".", 1)[-1]
+if ext == "glb":
+    bpy.ops.export_scene.gltf(filepath=out, export_format="GLB")
+elif ext == "obj":
+    bpy.ops.wm.obj_export(filepath=out)
+elif ext == "stl":
+    bpy.ops.wm.stl_export(filepath=out)
+elif ext == "ply":
+    bpy.ops.wm.ply_export(filepath=out)
+elif ext == "fbx":
+    bpy.ops.export_scene.fbx(filepath=out)
+else:
+    bpy.ops.wm.save_as_mainfile(filepath=out)
+'''
+
+
+def make_3d(spec):
+    """Make a simple 3D shape (cube, sphere, cone, cylinder or torus) as a new .glb, .obj, .stl, .ply, .fbx or .blend file inside the home folder: "SHAPE\\tPATH". Never over an existing file. Asks first."""
+    shape, _, path = (spec or "").partition("\t")
+    shape = shape.strip().lower()
+    full = _home(path)
+    if shape not in _SHAPES:
+        return f"I can make a cube, sphere, cone, cylinder or torus, not {shape or 'nothing'}."
+    if not full or not full.lower().endswith(_FORMATS) or not os.path.isdir(os.path.dirname(full)):
+        return f"I can only make a {shape} as a .glb, .obj, .stl, .ply, .fbx or .blend file in a folder I am allowed to use."
+    if os.path.exists(full):
+        return f"{_short(full)} already exists."
+    if tools_files.HEADLESS:
+        return f"Made a {shape} at {_short(full)}."
+    exe = _blender()
+    if not exe:
+        return _NO_BLENDER
+    with tempfile.TemporaryDirectory() as tmp:
+        script = os.path.join(tmp, "make.py")
+        with open(script, "w") as f:
+            f.write(_MAKE_SCRIPT)
+        made_dir = os.path.join(tmp, "out")
+        os.makedirs(made_dir)
+        try:
+            subprocess.run([exe, "-b", "-P", script, "--", shape, os.path.join(made_dir, os.path.basename(full))], capture_output=True, timeout=180)
+        except (OSError, subprocess.SubprocessError):
+            return "Blender did not finish making it."
+        made = sorted(os.listdir(made_dir))
+        if os.path.basename(full) not in made:
+            return f"Blender could not make a {shape}."
+        beside = [os.path.join(os.path.dirname(full), name) for name in made]
+        if any(os.path.exists(b) for b in beside):  # an .obj's .mtl counts too: nothing already there is ever replaced
+            return f"{_short(next(b for b in beside if os.path.exists(b)))} already exists."
+        for name, dest in zip(made, beside):
+            shutil.move(os.path.join(made_dir, name), dest)
+    return f"Made a {shape} at {_short(full)}."
+
+
+TOOLS = (blender_info, render_blend, convert_3d, make_3d)
 
 _I = re.I
 # (pattern, tool name, what to hand it), same shape as tools_files.ROUTES. Only a path ending in a 3D extension or
@@ -194,6 +257,7 @@ _I = re.I
 ROUTES = (
     (re.compile(r"^(?:what(?:'s| is) in|inspect) (?:the |my )?(\S+\.(?:blend|glb|gltf|obj|fbx|stl|ply))$", _I), "blender_info", lambda m: m.group(1)),
     (re.compile(r"^render (?:the |my )?(\S+\.blend)$", _I), "render_blend", lambda m: m.group(1)),
+    (re.compile(r"^(?:make|create|build) (?:me )?(?:a |an )?(?:3d |3-d )?(cube|sphere|cone|cylinder|torus)(?: (?:at|as|in|to|called|named))? (?:the |my )?(\S+\.(?:blend|glb|gltf|obj|fbx|stl|ply))$", _I), "make_3d", lambda m: m.group(1).lower() + "\t" + m.group(2)),
     (re.compile(r"^convert (?:the |my )?(\S+\.(?:blend|glb|gltf|obj|fbx|stl|ply)) (?:to|into) (?:a |an )?\.?(glb|obj|stl|ply|fbx)$", _I), "convert_3d", lambda m: m.group(1) + "\t" + m.group(2)),
 )
 

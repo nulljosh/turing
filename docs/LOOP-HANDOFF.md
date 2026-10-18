@@ -23,7 +23,7 @@ A major ships only when its roadmap family is finished and checked: the badge st
 ## Next, in order
 
 1. Teach from her misses (every wake, step 6). misses.jsonl is empty so far; when it has rows, they are the first thing the next picker round trains on.
-2. Blender family (#107): convert_3d is done. Next a simple 3D object, then a logo as 3D text. Check each with a real Blender round trip, read back by blender_info.
+2. Blender family (#107): convert_3d and make_3d (simple shapes) are done. Next a logo as 3D text. Check each with a real Blender round trip, read back by blender_info.
 3. 8.0 picker: the bar is unchanged. Round 25 tries weighting the teacher and miss rows, or teaching only the tools the dev sets miss, everything else equal.
 4. Audio (Yeti record, transcribe, file to the vault) waits on Joshua clicking the microphone prompt once.
 

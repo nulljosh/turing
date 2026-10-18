@@ -251,13 +251,71 @@ class Convert(Base):
         self.assertIn("could not convert", got)
 
 
+class Make(Base):
+    """make_3d: five shapes, a new file only, nothing hidden, never over a file."""
+
+    def fake(self, cmd, **kwargs):
+        """Write the file named last on the command line, like the script would."""
+        with open(cmd[-1], "wb") as f:
+            f.write(b"x")
+        return subprocess.CompletedProcess(cmd, 0, stdout="", stderr="")
+
+    def test_route(self):
+        """make a cube at PATH hands make_3d the shape and path; plain make requests are left alone."""
+        got = None
+        for pat, name, arg in tools_blender.ROUTES:
+            m = pat.match("make a 3d sphere ~/Documents/ball.stl")
+            if m:
+                got = (name, arg(m))
+        self.assertEqual(got, ("make_3d", "sphere\t~/Documents/ball.stl"))
+        self.assertFalse(any(p.match("make a note about cubes") for p, _, _ in tools_blender.ROUTES))
+
+    def test_refusals(self):
+        """An unknown shape, a hidden folder, a missing folder and a wrong extension run nothing."""
+        d = os.path.join(tools_files.HOME, "Documents")
+        with mock.patch.object(tools_blender.subprocess, "run") as run:
+            self.assertIn("not teapot", tools_blender.make_3d("teapot\t" + d + "/a.glb"))
+            self.assertIn("allowed", tools_blender.make_3d("cube\t" + tools_files.HOME + "/.hidden/a.glb"))
+            self.assertIn("allowed", tools_blender.make_3d("cube\t" + tools_files.HOME + "/nope/a.glb"))
+            self.assertIn("allowed", tools_blender.make_3d("cube\t" + d + "/a.txt"))
+        run.assert_not_called()
+
+    def test_never_overwrites(self):
+        """A file already there is named and left alone."""
+        with mock.patch.object(tools_blender.subprocess, "run") as run:
+            self.assertEqual(tools_blender.make_3d("cube\t" + self.scene), "~/Documents/scene.blend already exists.")
+        run.assert_not_called()
+
+    def test_headless_runs_nothing(self):
+        """Headless answers and writes nothing."""
+        with mock.patch.object(tools_files, "HEADLESS", True), mock.patch.object(tools_blender.subprocess, "run") as run:
+            self.assertEqual(tools_blender.make_3d("cone\t" + tools_files.HOME + "/Documents/c.glb"), "Made a cone at ~/Documents/c.glb.")
+        run.assert_not_called()
+
+    def test_makes_the_file(self):
+        """A live run moves what Blender wrote beside, and the script names the shape and the file."""
+        with mock.patch.object(tools_files, "HEADLESS", False), mock.patch.object(tools_blender, "_blender", return_value="blender"), \
+                mock.patch.object(tools_blender.subprocess, "run", side_effect=self.fake) as run:
+            got = tools_blender.make_3d("torus\t" + tools_files.HOME + "/Documents/ring.obj")
+        self.assertEqual(got, "Made a torus at ~/Documents/ring.obj.")
+        self.assertTrue(os.path.exists(os.path.join(tools_files.HOME, "Documents", "ring.obj")))
+        self.assertEqual(run.call_args[0][0][-2], "torus")
+        self.assertEqual(run.call_args[1]["timeout"], 180)
+
+    def test_blender_made_nothing(self):
+        """A Blender that writes nothing is a plain reply."""
+        with mock.patch.object(tools_files, "HEADLESS", False), mock.patch.object(tools_blender, "_blender", return_value="blender"), \
+                mock.patch.object(tools_blender.subprocess, "run", return_value=subprocess.CompletedProcess([], 0, stdout="", stderr="")):
+            self.assertIn("could not make", tools_blender.make_3d("cube\t" + tools_files.HOME + "/Documents/b.glb"))
+
+
 class Shape(unittest.TestCase):
     """Every tool is documented and listed."""
 
     def test_tools_documented(self):
         """Each tool has a docstring, and the TOOLS tuple names both."""
         self.assertTrue(all(f.__doc__ for f in tools_blender.TOOLS))
-        self.assertEqual({f.__name__ for f in tools_blender.TOOLS}, {"blender_info", "render_blend", "convert_3d"})
+        self.assertEqual({f.__name__ for f in tools_blender.TOOLS}, {"blender_info", "render_blend", "convert_3d", "make_3d"})
 
 
 if __name__ == "__main__":
