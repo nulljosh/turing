@@ -1,17 +1,20 @@
 """Deep research: "research X" reads several sources and writes a short brief that cites them. Wikipedia's top
-articles for the topic, her offline library, your own notes, and a page named right in the question (a URL, or a
-site named when Wikipedia has no article) are the sources; the passages that matter go to the biggest local model
+articles for the topic, the Hacker News stories about it, her offline library, your own notes, and a page named right
+in the question (a URL, or a site named when Wikipedia has no article) are the sources; the passages that matter go to the biggest local model
 (tools_llm: oMLX, then Ollama), which writes four to six sentences with a [n] after each claim. Then the brief is
 checked: a sentence with a number no source contains, or with no citation, is dropped, and if nothing survives she
 says so. A named page that will not read back (JS-only, blocked, down) is admitted honestly, not silently dropped.
 "Tell me more about X" reuses the sources already gathered for the last brief before it searches again. Nothing
-leaves the Mac except the Wikipedia reads and any page fetch the question itself named.
+leaves the Mac except the Wikipedia and Hacker News searches and any page fetch the question itself named.
 """
+import json
 import os
 import re
 import urllib.parse
+import urllib.request
 
 ARTICLES = 4  # Wikipedia articles read per topic
+STORIES = 5  # Hacker News stories read per topic
 PASSAGE = 1800  # characters of each source handed to the writer
 PROMPT = ("Write a research brief on: {topic}\n\nUse ONLY the numbered sources below. Write four to six plain sentences. "
           "After every sentence put the number of the source it came from in brackets, like [2]. If the sources do not "
@@ -48,11 +51,30 @@ def _wikipedia(topic):
     return out
 
 
+def _hacker_news(topic):
+    """(name, text) for the top Hacker News stories on a topic: title, link and points. [] on any network or JSON error."""
+    url = "https://hn.algolia.com/api/v1/search?" + urllib.parse.urlencode(
+        {"query": topic, "tags": "story", "hitsPerPage": STORIES})
+    try:
+        req = urllib.request.Request(url, headers={"user-agent": "turing-ask/1.0"})
+        with urllib.request.urlopen(req, timeout=8) as r:
+            hits = json.load(r).get("hits", [])
+        out = []
+        for hit in hits[:STORIES]:
+            title = (hit.get("title") or "").strip()
+            if title:
+                link = hit.get("url") or f"https://news.ycombinator.com/item?id={hit.get('objectID')}"
+                out.append((f"Hacker News: {title}", f"{title}\n{link}\n{hit.get('points') or 0} points"))
+        return out
+    except Exception:
+        return []
+
+
 def sources(topic):
     """Every source for a topic as (name, passage), the parts of each that share the most words with the topic."""
     import library
     import tools_util
-    found = _wikipedia(topic)
+    found = _wikipedia(topic) + _hacker_news(topic)
     page_url = _named_page(topic)
     if page_url:
         from ask_web import fetch_text

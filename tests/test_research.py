@@ -2,6 +2,7 @@
 
 Run: python3 tests/test_research.py
 """
+import json
 import os
 import sys
 import tempfile
@@ -53,6 +54,30 @@ class Research(unittest.TestCase):
         """The ways people ask for research."""
         self.assertEqual(tools.plan("research the silk road"), [("research", ("the silk road",))])
         self.assertEqual(tools.plan("deep dive into kinship"), [("research", ("kinship",))])
+
+
+class HackerNews(unittest.TestCase):
+    """The Hacker News source: Algolia's search, with urllib stood in for so nothing hits the network."""
+
+    def test_stories_come_back_as_named_pairs(self):
+        """Each hit is a (name, text) pair named Hacker News: <title>, with its link and points in the text."""
+        canned = {"hits": [{"title": "Gutenberg press revisited", "url": "https://example.com/press", "points": 120,
+                            "objectID": "1"},
+                           {"title": "Ask HN: printing?", "url": None, "points": 5, "objectID": "2"}]}
+        with mock.patch("urllib.request.urlopen") as u:
+            u.return_value.__enter__.return_value.read.return_value = json.dumps(canned).encode()
+            pairs = tools_research._hacker_news("printing press")
+        self.assertEqual([name for name, _ in pairs],
+                         ["Hacker News: Gutenberg press revisited", "Hacker News: Ask HN: printing?"])
+        self.assertIn("https://example.com/press", pairs[0][1])
+        self.assertIn("120 points", pairs[0][1])
+        self.assertIn("news.ycombinator.com/item?id=2", pairs[1][1])  # no link: the story's own HN page
+        self.assertIn("hn.algolia.com/api/v1/search", u.call_args[0][0].full_url)
+
+    def test_network_error_is_silent(self):
+        """A network failure gives an empty list, never an exception."""
+        with mock.patch("urllib.request.urlopen", side_effect=OSError("network down")):
+            self.assertEqual(tools_research._hacker_news("printing press"), [])
 
 
 class FetchText(unittest.TestCase):
