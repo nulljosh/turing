@@ -1,5 +1,7 @@
 # Progress log
 
+- 2026-10-18: v7.14.0 She makes more than icons: "make a symbol for a surf school" gives the glyph alone, "make a wordmark for Wavecrest, a surf school" sets the name beside it in Samantha Sans, and "make an avatar for Alex" draws a friendly flat face from a name, the same face every time. New files only, asks first.
+  v7.14.0 · 158 tools · 913 tests · docs coverage 100% · laws all hold · biggest app/tools_logo.py 649 · actions 280/280 · parity 280/280 · util_diff 288/288
 - 2026-10-18: v7.13.0 🎉 Her logos mean something now: "make me a logo for a surf school" draws a bold white wave on a colored tile (20 glyphs: bread for a bakery, a cup for coffee, a network for Turing), picked by keyword first and her model second, and saves an Icon Composer bundle beside the PNG. Yellow is gone from her palettes. The spiral, simple and complex styles stay on request.
   v7.13.0 · 155 tools · 908 tests · docs coverage 100% · laws all hold · biggest app/tools_logo.py 649 · actions 277/277 · parity 277/277 · util_diff 288/288
 - 2026-10-18: v7.12.0 She makes logos in 3D: "make 3D text Turing at ~/Documents/logo.glb" turns a few words into thick 3D letters through Blender, in glb, obj, stl, ply, fbx or blend, asks first, never over a file. Checked with real runs read back by blender_info.

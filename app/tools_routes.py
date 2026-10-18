@@ -14,6 +14,7 @@ import re
 import unicodedata
 
 import tools_blender
+import tools_mark
 import tools_video
 import tools_page
 import tools_character
@@ -107,6 +108,7 @@ def install(t):
     _ROUTES = _ROUTES + tuple((pat, _util_route(name, arg)) for pat, name, arg in tools_image.ROUTES)
     _ROUTES = _ROUTES + tuple((pat, _util_route(name, arg)) for pat, name, arg in tools_files.ROUTES)  # find a file, downloads, folder size
     _ROUTES = _ROUTES + tuple((pat, _util_route(name, arg)) for pat, name, arg in tools_blender.ROUTES)  # 3D files: what is in one, render a .blend
+    _ROUTES = _ROUTES + tuple((pat, _util_route(name, arg)) for pat, name, arg in tools_mark.ROUTES)  # a symbol, a wordmark, an avatar
     _ROUTES = _ROUTES + tuple((pat, _util_route(name, arg)) for pat, name, arg in tools_video.ROUTES)  # videos: how long, trim, vertical
     _ROUTES = _ROUTES + tuple((pat, _util_route(name, arg)) for pat, name, arg in tools_page.ROUTES)  # a page: why is it black or broken
     _ROUTES = _ROUTES + tuple((pat, _util_route(name, arg)) for pat, name, arg in tools_util.ROUTES)  # 31 utility tools: math, text, dice, this Mac's vitals

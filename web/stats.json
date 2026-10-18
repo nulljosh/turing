@@ -1,5 +1,5 @@
 {
-  "version": "7.13.0",
+  "version": "7.14.0",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -142,6 +142,10 @@
       "app/tools_mail_send.py": {
         "total": 2,
         "documented": 2
+      },
+      "app/tools_mark.py": {
+        "total": 6,
+        "documented": 6
       },
       "app/tools_organizer.py": {
         "total": 7,
@@ -483,6 +487,10 @@
         "total": 26,
         "documented": 26
       },
+      "tests/test_mark.py": {
+        "total": 11,
+        "documented": 11
+      },
       "tests/test_mcp.py": {
         "total": 12,
         "documented": 12
@@ -656,7 +664,7 @@
   "measured": {
     "tools": {
       "before": 0,
-      "after": 155
+      "after": 158
     },
     "actions_eval": "77/77",
     "knowledge_sweep": {
