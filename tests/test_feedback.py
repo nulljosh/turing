@@ -207,5 +207,66 @@ class FeedbackToDataTests(unittest.TestCase):
         self.assertIn(reserved_query.lower().rstrip(".?!"), feedback_to_data.reserved_phrases())
 
 
+class MissTests(unittest.TestCase):
+    """She notes what she could not do on her own, and a headless run never touches the real file."""
+
+    def setUp(self):
+        """A scratch misses file, and no feedback file either."""
+        self.dir = tempfile.mkdtemp()
+        self.misses = os.path.join(self.dir, "misses.jsonl")
+        os.environ["SAMANTHA_MISSES"] = self.misses
+        os.environ["SAMANTHA_FEEDBACK"] = os.path.join(self.dir, "feedback.jsonl")
+
+    def tearDown(self):
+        """Drop the scratch paths."""
+        os.environ.pop("SAMANTHA_MISSES", None)
+        os.environ.pop("SAMANTHA_FEEDBACK", None)
+
+    def lines(self):
+        """The noted misses, as parsed rows."""
+        import json
+        if not os.path.exists(self.misses):
+            return []
+        with open(self.misses) as f:
+            return [json.loads(x) for x in f if x.strip()]
+
+    def test_an_unknown_command_is_noted(self):
+        """A sentence no tool takes is noted as unknown, with her words."""
+        from unittest import mock
+        with mock.patch.object(tools, "do", return_value=None):
+            reply = harness.Session().ask("frobnicate the quarterly widgets")
+        self.assertIn("not a command I know", reply)
+        self.assertEqual([(r["query"], r["why"]) for r in self.lines()], [("frobnicate the quarterly widgets", "unknown")])
+
+    def test_a_broken_tool_is_noted_with_its_error(self):
+        """A tool that throws is noted with the error, and she still answers."""
+        from unittest import mock
+        with mock.patch.object(tools, "do", side_effect=OSError("no such app")):
+            harness.Session().ask("open the frobnicator")
+        self.assertTrue(self.lines()[0]["why"].startswith("broke: OSError: no such app"))
+
+    def test_a_question_handed_on_is_not_a_miss(self):
+        """With or_none, a sentence that is not a command goes to the question chain and is not noted."""
+        from unittest import mock
+        with mock.patch.object(tools, "do", return_value=None):
+            self.assertIsNone(harness.Session().ask("why is the sky blue", or_none=True))
+        self.assertEqual(self.lines(), [])
+
+    def test_headless_without_a_path_writes_nothing(self):
+        """Tests and evals run headless: with no SAMANTHA_MISSES set, nothing is written anywhere."""
+        os.environ.pop("SAMANTHA_MISSES", None)
+        home = tempfile.mkdtemp()
+        from unittest import mock
+        with mock.patch.dict(os.environ, {"HOME": home}):
+            feedback.note_miss("anything", "unknown")
+        self.assertFalse(os.path.exists(os.path.join(home, ".samantha")))
+
+    def test_the_summary_counts_them(self):
+        """"how am I rating you" also says how many misses she has noted."""
+        feedback.note_miss("one", "unknown")
+        feedback.note_miss("two", "unknown")
+        self.assertIn("noted 2 things I could not do", feedback.feedback_summary())
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -8,7 +8,7 @@ A major ships only when its roadmap family is finished and checked: the badge st
 
 ## Where things stand
 
-- **Live:** v7.8.0 (check_page, a read-only page checker, 152 tools). Before it, v7.7.0 (Samantha Sans rebuilt on Inter, SF and Helvetica in spirit; noise is a decline again). Before it, v7.6.1 on turing.jaybulb.com. 7.5 added video_info, trim_video and vertical_video through ffmpeg; 7.6 added a Berkeley function-calling (BFCL v3 simple) harness in eval/bfcl.py, where her picker scores 325 of 400 (81.3 percent) under the leaderboard's own string rules (7.6.1), misses mostly argument spelling. Before that, v7.4.0 (the old heyitsmejosh.com host lapsed). Since 7.0: download_file (a web address into Downloads, public hosts, 200 MB cap, never overwrites, asks first), Hacker News in research, `chat.py --character NAME`, blank-target and no-argument write guards (7.2.1 and 7.2.2), and headless Blender reads and renders (blender_info, render_blend). 151 tools. Docs moved into docs/ with a /docs skill; the brand kit, icon and favicons are cut from one master. Memory reads back on the Mac and the phone, the Mac morning brief, Shortcuts she writes (6.1), and memory in your own iCloud Drive on request. v6.0.0 put her on a real Pi 4; v5.14.0 gave her Samantha Sans.
+- **Live:** v7.9.0 (she notes her own misses for the teacher). Before it, v7.8.0 (check_page, a read-only page checker, 152 tools). Before it, v7.7.0 (Samantha Sans rebuilt on Inter, SF and Helvetica in spirit; noise is a decline again). Before it, v7.6.1 on turing.jaybulb.com. 7.5 added video_info, trim_video and vertical_video through ffmpeg; 7.6 added a Berkeley function-calling (BFCL v3 simple) harness in eval/bfcl.py, where her picker scores 325 of 400 (81.3 percent) under the leaderboard's own string rules (7.6.1), misses mostly argument spelling. Before that, v7.4.0 (the old heyitsmejosh.com host lapsed). Since 7.0: download_file (a web address into Downloads, public hosts, 200 MB cap, never overwrites, asks first), Hacker News in research, `chat.py --character NAME`, blank-target and no-argument write guards (7.2.1 and 7.2.2), and headless Blender reads and renders (blender_info, render_blend). 151 tools. Docs moved into docs/ with a /docs skill; the brand kit, icon and favicons are cut from one master. Memory reads back on the Mac and the phone, the Mac morning brief, Shortcuts she writes (6.1), and memory in your own iCloud Drive on request. v6.0.0 put her on a real Pi 4; v5.14.0 gave her Samantha Sans.
 - **Roadmap:** lives at docs/roadmap.md. Checkpoint's issue sync now reads docs/roadmap.md too.
 - **Joshua Tree PR 537** (list and read the card) is a draft behind main and needs a rebase by the Joshua Tree session. Do not touch it from here.
 - **Pi shell:** the console should boot to zsh or bash with Samantha as a command (docs/PI.md). It changes the words Joshua tests with, so it waits for a go-ahead and lives in the Joshua Tree repo on a branch with a PR.
@@ -21,7 +21,10 @@ A major ships only when its roadmap family is finished and checked: the badge st
 
 ## Next, in order
 
-1. Turing itself: the 8.0 slices below are still the ladder. Nothing in this session changed the 8.0 bar.
+1. Teach from her misses (Every wake, step 6). The log started in 7.9.0 and is empty until she is used; when it holds rows, they are the first thing the next picker round trains on.
+2. Blender family (#107): convert_3d next ("convert ~/a.glb to obj", glb, gltf, obj, stl, ply, fbx through headless Blender, a write that asks first, new file beside the original), then a simple 3D object, then a logo as 3D text. Check each with a real Blender round trip read back by blender_info.
+3. 8.0 picker: the bar is unchanged. Round 25 tries weighting the teacher and miss rows, or teaching only the tools the dev sets miss, everything else equal.
+4. Audio (Yeti record, transcribe, file to the vault) waits on Joshua clicking the microphone prompt once.
 
 ## The ladder
 
@@ -59,7 +62,9 @@ The 10.0 bar, written 2026-10-12 before any measurement. A 1.5B model cannot run
 3. Take the next ladder item. Build it in the smallest slice that ships.
 4. Gate every push on exit codes: `scratchpad/gate.sh` style, the full CI set, with `./.venv/bin/python` (the shell's python3 is 3.9). Write python output to a file, never through grep.
 5. Commit by exact path, push, then check every workflow run (test, release, deploy) and the live `/stats.json`.
-6. One line to Joshua only when something shipped, broke, or needs him.
+6. Teach her what she missed: if `~/.samantha/misses.jsonl` or `~/.samantha/feedback.jsonl` grew since the last wake, label each new line as {"text","tool","arg"} (the tool she should have used, or null when no tool fits) into a scratchpad batch, run `training/extra_to_data.py BATCH --out training/teacher_batches/misses-DATE.jsonl`, and log the count here. Never label a sealed or dev-set phrasing. This is the recursive half of 8.0: her own misses become the next round's rows.
+7. Rewrite "Where things stand" and "Next, in order" in this file so a fresh session can pick up cold.
+8. One line to Joshua only when something shipped, broke, or needs him.
 
 ## Hard-won rules
 

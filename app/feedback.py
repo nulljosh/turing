@@ -27,6 +27,36 @@ def _path():
     return os.path.expanduser(os.environ.get("SAMANTHA_FEEDBACK", "~/.samantha/feedback.jsonl"))
 
 
+def _misses_path():
+    """Where she notes what she could not do: ~/.samantha/misses.jsonl, or SAMANTHA_MISSES (the tests use it)."""
+    return os.path.expanduser(os.environ.get("SAMANTHA_MISSES", "~/.samantha/misses.jsonl"))
+
+
+def note_miss(query, why):
+    """Note, without being asked, a command she could not do: the words and why ("unknown", or the error that broke
+    the tool). Nobody has to say "wrong" for her to learn from it: the loop's teacher labels these into training rows
+    (training/extra_to_data.py), so each retrain covers what she missed last week. Local only. Headless runs (tests,
+    evals) never write here unless SAMANTHA_MISSES points somewhere, so a test can never touch the real file."""
+    if os.environ.get("SAMANTHA_HEADLESS") and not os.environ.get("SAMANTHA_MISSES"):
+        return
+    path = _misses_path()
+    try:
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        with open(path, "a") as f:
+            f.write(json.dumps({"ts": time.strftime("%Y-%m-%dT%H:%M:%S"), "query": query[:300], "why": why[:200]}) + "\n")
+    except OSError:
+        pass  # a full disk or a locked folder never costs her the reply
+
+
+def _misses():
+    """How many misses she has noted so far."""
+    try:
+        with open(_misses_path()) as f:
+            return sum(1 for line in f if line.strip())
+    except OSError:
+        return 0
+
+
 def match(text):
     """A rating verdict in a raw message: (rating, correction), rating +1 or -1 and correction the text after
     "I meant" or None, or plain None when the message is not a rating at all. Tight on purpose, matched whole:
@@ -91,12 +121,13 @@ def _entries():
 def feedback_summary():
     """How she is rated so far: an up/down count and the last five downs with their corrections. Read only,
     private, so only asked for by name, never a model's own pick."""
-    entries = _entries()
+    entries, missed = _entries(), _misses()
+    noted = f"I also noted {missed} thing{'s' if missed != 1 else ''} I could not do, for my next lesson." if missed else ""
     if not entries:
-        return "No feedback yet."
+        return " ".join(x for x in ("No feedback yet.", noted) if x)
     up = sum(1 for e in entries if e.get("rating", 0) > 0)
     down = sum(1 for e in entries if e.get("rating", 0) < 0)
-    lines = [f"{up} up, {down} down."]
+    lines = [f"{up} up, {down} down." + (" " + noted if noted else "")]
     for e in reversed([e for e in entries if e.get("rating", 0) < 0][-5:]):
         note = f" (meant: {e['correction']})" if e.get("correction") else ""
         lines.append(f"- {e.get('query', '')}{note}")
@@ -127,19 +158,23 @@ def demo():
     assert parse_calls(["  [open_url(github.com)]"]) == ("open_url", ("github.com",))
     assert parse_calls([]) == ("answer", ())
     import tempfile
-    old = os.environ.get("SAMANTHA_FEEDBACK")
-    os.environ["SAMANTHA_FEEDBACK"] = os.path.join(tempfile.mkdtemp(), "feedback.jsonl")
+    old, old_m = os.environ.get("SAMANTHA_FEEDBACK"), os.environ.get("SAMANTHA_MISSES")
+    tmp = tempfile.mkdtemp()
+    os.environ["SAMANTHA_FEEDBACK"], os.environ["SAMANTHA_MISSES"] = os.path.join(tmp, "feedback.jsonl"), os.path.join(tmp, "misses.jsonl")
     try:
         assert feedback_summary() == "No feedback yet."
+        note_miss("frobnicate the thing", "unknown")
+        assert feedback_summary() == "No feedback yet. I also noted 1 thing I could not do, for my next lesson."
         assert record("what is turing", "answer", (), "a project", 1) == "Noted."
         assert record("open chrome", "open_app", ("safari",), "Opened.", -1, "open safari") == "Noted, I'll learn from that."
         s = feedback_summary()
         assert "1 up, 1 down." in s and "open chrome" in s and "meant: open safari" in s
     finally:
-        if old is None:
-            os.environ.pop("SAMANTHA_FEEDBACK", None)
-        else:
-            os.environ["SAMANTHA_FEEDBACK"] = old
+        for key, was in (("SAMANTHA_FEEDBACK", old), ("SAMANTHA_MISSES", old_m)):
+            if was is None:
+                os.environ.pop(key, None)
+            else:
+                os.environ[key] = was
     print("feedback ok")
 
 

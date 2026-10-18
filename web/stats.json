@@ -1,5 +1,5 @@
 {
-  "version": "7.8.0",
+  "version": "7.9.0",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -32,8 +32,8 @@
         "documented": 8
       },
       "app/feedback.py": {
-        "total": 8,
-        "documented": 8
+        "total": 11,
+        "documented": 11
       },
       "app/followup.py": {
         "total": 6,
@@ -404,8 +404,8 @@
         "documented": 3
       },
       "tests/test_feedback.py": {
-        "total": 31,
-        "documented": 31
+        "total": 40,
+        "documented": 40
       },
       "tests/test_files.py": {
         "total": 21,

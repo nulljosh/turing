@@ -93,8 +93,11 @@ class Session:
         except Exception as e:
             # one tool breaking (a missing command, a hung app) is a reply, never the end of the conversation
             result = failed(calls, e)
+            feedback.note_miss(q, f"broke: {type(e).__name__}: {e}")
         if result is None and or_none:
             return None
+        if not result:
+            feedback.note_miss(q, "unknown")
         result = result or "That is not a command I know. Ask me a question, or tell me to do something."
         self.history.append({"q": q, "calls": calls, "result": result})
         return result
