@@ -24,7 +24,7 @@ import untrusted
 import tools_util
 import tools_image  # noqa: E402
 from tools_image import remove_background, upscale_image, enhance_image, grayscale_image, rotate_image, flip_image, resize_image, crop_square, convert_image, image_info
-from tools_files import find_file, recent_downloads, folder_size, move_file, copy_file, rename_file, zip_file, unzip_file, trash_file
+from tools_files import find_file, recent_downloads, download_file, folder_size, move_file, copy_file, rename_file, zip_file, unzip_file, trash_file
 
 AGENT_MODEL = "qwen3:1.7b"  # 8B was right but 7.6GB and minutes per run; 1.7B is right in 5s once the harness prefetches
 OLLAMA_CHAT = "http://localhost:11434/api/chat"
@@ -310,7 +310,7 @@ TOOLS = {f.__name__: f for f in (open_app, open_url, web_search, current_tab, re
                                      clipboard, set_volume, battery, say, list_dir, read_file, make_logo, paint_image,
                                      music, weather, timer, new_note, new_reminder, calendar_today, unread_mail, needs_attention, morning_brief, free_when,
                                      remove_background, upscale_image, enhance_image, grayscale_image, rotate_image, flip_image, resize_image, crop_square, convert_image, image_info,
-                                     find_file, recent_downloads, folder_size, move_file, copy_file, rename_file, zip_file, unzip_file, trash_file)}
+                                     find_file, recent_downloads, download_file, folder_size, move_file, copy_file, rename_file, zip_file, unzip_file, trash_file)}
 TOOLS.update({f.__name__: f for f in tools_util.TOOLS})
 globals().update({f.__name__: f for f in tools_util.TOOLS})  # eval/actions.py swaps every TOOLS name on this module for a recorder
 

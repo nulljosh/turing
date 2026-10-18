@@ -26,7 +26,7 @@ Both install llama-cpp-python, download this file, and start her chat. The Windo
 
 She also runs as an app on Joshua Tree on a Raspberry Pi, and can write code to its card. She remembers what you tell her, can keep it in your own iCloud Drive, and writes Shortcuts you add yourself.
 
-145 tools on your own computer: files, apps, calendar, reminders, mail, music, screen, explain a codebase, teach a topic, email a contact by name (asks first). Anything that writes, sends or clicks asks first. The tools that drive a Mac's screen and apps stay on the Mac.
+146 tools on your own computer: files, apps, calendar, reminders, mail, music, screen, explain a codebase, teach a topic, email a contact by name (asks first). Anything that writes, sends or clicks asks first. The tools that drive a Mac's screen and apps stay on the Mac.
 
 ## Limits
 

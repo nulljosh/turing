@@ -1,5 +1,5 @@
 {
-  "version": "7.0.0",
+  "version": "7.1.0",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -108,8 +108,8 @@
         "documented": 11
       },
       "app/tools_files.py": {
-        "total": 16,
-        "documented": 16
+        "total": 21,
+        "documented": 21
       },
       "app/tools_gui.py": {
         "total": 11,
@@ -396,8 +396,8 @@
         "documented": 31
       },
       "tests/test_files.py": {
-        "total": 15,
-        "documented": 15
+        "total": 21,
+        "documented": 21
       },
       "tests/test_followup.py": {
         "total": 30,
@@ -620,7 +620,7 @@
   "measured": {
     "tools": {
       "before": 0,
-      "after": 145
+      "after": 146
     },
     "actions_eval": "77/77",
     "knowledge_sweep": {

@@ -1,5 +1,5 @@
 """Samantha's file tools. Reads: find a file by name (Spotlight), the newest downloads, how big a folder is.
-Writes: move, copy, rename, zip, unzip, trash (Finder's Trash, never a hard delete), each asking first.
+Writes: download a web address, move, copy, rename, zip, unzip, trash (Finder's Trash, never a hard delete), each asking first.
 Everything stays inside the home folder and skips hidden files, same rule as read_document. tests/test_files.py
 runs the write half on scratch files in a temp home.
 """
@@ -240,8 +240,77 @@ def trash_file(path):
         subprocess.run(["osascript", "-e", script, full], capture_output=True, text=True, timeout=30)
     return f"Moved {_short(full)} to the Trash."
 
+_MAX_DOWNLOAD = 200 * 1024 * 1024
 
-TOOLS = (find_file, recent_downloads, folder_size, move_file, copy_file, rename_file, zip_file, unzip_file, trash_file)
+
+def _public_host(host):
+    """True when every address the host resolves to is a public one: a download never reaches localhost or the home network."""
+    import ipaddress
+    import socket
+    try:
+        return all(ipaddress.ip_address(a[4][0]).is_global for a in socket.getaddrinfo(host, None))
+    except (OSError, ValueError):
+        return False
+
+
+def _download_name(url):
+    """A safe file name for a URL: the last path piece, letters digits dot dash underscore, never hidden, never empty."""
+    from urllib.parse import urlparse, unquote
+    base = os.path.basename(unquote(urlparse(url).path).rstrip("/"))
+    base = re.sub(r"[^\w.\- ]", "_", base).strip().lstrip(".")
+    return base[:120] or "download"
+
+
+def download_file(url):
+    """Download a web address, named in your own words, into ~/Downloads. https or http only, public hosts only, 200 MB at most, never over an existing file. Asks first."""
+    import urllib.request
+    from urllib.parse import urlparse
+    url = url.strip().strip("'\"")
+    u = urlparse(url)
+    if u.scheme not in ("http", "https") or not u.hostname:
+        return "Give me a full web address that starts with https://."
+    if not _public_host(u.hostname):
+        return f"I only download from the public internet, not {u.hostname}."
+    out = os.path.join(HOME, "Downloads", _download_name(url))
+    if os.path.exists(out):
+        return f"{_short(out)} already exists."
+    if HEADLESS:
+        return f"Downloaded to {_short(out)}."
+
+    class _Hop(urllib.request.HTTPRedirectHandler):
+        """Every redirect hop has to be a public https or http host too."""
+        def redirect_request(self, req, fp, code, msg, headers, newurl):
+            """Refuse a redirect to a private host or another scheme."""
+            n = urlparse(newurl)
+            if n.scheme not in ("http", "https") or not n.hostname or not _public_host(n.hostname):
+                raise OSError("redirected somewhere I will not go")
+            return super().redirect_request(req, fp, code, msg, headers, newurl)
+
+    os.makedirs(os.path.dirname(out), exist_ok=True)
+    part = out + ".part"
+    try:
+        req = urllib.request.Request(url, headers={"User-Agent": "Samantha"})
+        with urllib.request.build_opener(_Hop).open(req, timeout=30) as r, open(part, "wb") as f:
+            if int(r.headers.get("Content-Length") or 0) > _MAX_DOWNLOAD:
+                raise OSError("too big")
+            got = 0
+            while True:
+                chunk = r.read(1 << 16)
+                if not chunk:
+                    break
+                got += len(chunk)
+                if got > _MAX_DOWNLOAD:
+                    raise OSError("too big")
+                f.write(chunk)
+        os.replace(part, out)
+    except (OSError, ValueError) as e:
+        if os.path.exists(part):
+            os.remove(part)
+        return f"I could not download that: {'it is over 200 MB' if str(e) == 'too big' else e}."
+    return f"Downloaded {_size(got)} to {_short(out)}."
+
+
+TOOLS = (find_file, recent_downloads, download_file, folder_size, move_file, copy_file, rename_file, zip_file, unzip_file, trash_file)
 
 _I = re.I
 # (pattern, tool name, what to hand it), same shape as tools_util.ROUTES. A file name is one word with an extension,
@@ -249,6 +318,7 @@ _I = re.I
 ROUTES = (
     (re.compile(r"^(?:find|locate|where(?:'s| is)|search for)(?: the| my| a)?(?: file)?(?: called| named)? (\S+\.\w{1,5})$", _I), "find_file", lambda m: m.group(1)),
     (re.compile(r"^(?:what(?:'s| is) in |show(?: me)? |list )?(?:my )?(?:recent |latest |newest )?downloads$|^what did i (?:just )?download$", _I), "recent_downloads", lambda m: "5"),
+    (re.compile(r"^download (?:the file (?:at|from) |this (?:file )?(?:from )?)?(https?://\S+)$", _I), "download_file", lambda m: m.group(1)),
     (re.compile(r"^(?:how big is|(?:what(?:'s| is) the )?size of|folder size (?:of|for)) (?:the |my )?(?:folder )?(\S+)$", _I), "folder_size", lambda m: m.group(1)),
     # the write half: every path is one word (~/Desktop/x.txt), so a sentence with spaces never becomes a file op
     (re.compile(r"^move (?:the )?(?:file |folder )?(\S+) (?:to|into) (?:the )?(?:folder )?(\S+)$", _I), "move_file", lambda m: m.group(1) + "\t" + m.group(2)),

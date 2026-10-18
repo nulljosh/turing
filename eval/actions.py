@@ -228,6 +228,7 @@ CASES = [
     ("move ~/Desktop/a.txt to ~/Documents", "move_file", "~/Desktop/a.txt\t~/Documents"),
     ("copy the file ~/Desktop/a.txt into ~/Documents", "copy_file", "~/Desktop/a.txt\t~/Documents"),
     ("rename ~/Desktop/a.txt to b.txt", "rename_file", "~/Desktop/a.txt\tb.txt"),
+    ("download https://example.com/a.pdf", "download_file", "https://example.com/a.pdf"),
     ("zip ~/Desktop/photos", "zip_file", "~/Desktop/photos"),
     ("unzip ~/Downloads/a.zip", "unzip_file", "~/Downloads/a.zip"),
     ("trash ~/Desktop/a.txt", "trash_file", "~/Desktop/a.txt"),

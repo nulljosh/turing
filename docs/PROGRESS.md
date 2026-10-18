@@ -1,5 +1,8 @@
 # Progress log
 
+- 2026-10-18: v7.1.0 🎉 She downloads a web address you give her into your Downloads folder: public sites only, 200 MB at most, never over a file that is there, asks first. Closes issue 105.
+  v7.1.0 · 146 tools · 809 tests · docs coverage 100% · laws all hold · biggest eval/gen_heldout2.py 647 · actions 267/267 · parity 267/267 · util_diff 288/288
+
 - 2026-10-12: v7.0.0 🎉 She remembers and comes to you. Her memory is read back into answers on the Mac and the phone, the Mac greets you with a morning brief, she writes Shortcuts you add yourself, and on request she keeps her memory in your own iCloud Drive ("keep my memory in iCloud"), merged so no fact is lost. Nothing runs on a timer behind your back and nothing of ours sits in a cloud. The phone reading the iCloud copy waits on a signed build.
   v7.0.0 · 145 tools · 806 tests · docs coverage 100% · laws all hold · biggest eval/gen_heldout2.py 647 · actions 266/266 · parity 266/266 · util_diff 288/288
 

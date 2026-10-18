@@ -51,7 +51,56 @@ class Pure(unittest.TestCase):
         self.assertEqual(route("zip ~/Documents/x"), ("zip_file", "~/Documents/x"))
         self.assertEqual(route("unzip ~/x.zip"), ("unzip_file", "~/x.zip"))
         self.assertEqual(route("throw away old.txt"), ("trash_file", "old.txt"))
+        self.assertEqual(route("download https://example.com/a.pdf"), ("download_file", "https://example.com/a.pdf"))
+        self.assertEqual(route("download the file from https://example.com/a.pdf")[0], "download_file")
         self.assertEqual(route("move my notes to the cloud")[0], None)  # spaces: never a file op
+
+
+class Download(unittest.TestCase):
+    """download_file against a throwaway local server, with the public-host check stubbed where it must let localhost through."""
+
+    def setUp(self):
+        """A temp home and a one-file server."""
+        import http.server
+        import threading
+        self.home = tempfile.mkdtemp()
+        self.patches = [mock.patch.object(tools_files, "HOME", self.home), mock.patch.object(tools_files, "HEADLESS", False)]
+        for p in self.patches:
+            p.start()
+        root = tempfile.mkdtemp()
+        with open(os.path.join(root, "a b.txt"), "w") as f:
+            f.write("hello")
+        handler = lambda *a, **k: http.server.SimpleHTTPRequestHandler(*a, directory=root, **k)  # noqa: E731
+        self.srv = http.server.ThreadingHTTPServer(("127.0.0.1", 0), handler)
+        threading.Thread(target=self.srv.serve_forever, daemon=True).start()
+        self.url = f"http://127.0.0.1:{self.srv.server_port}/a%20b.txt"
+
+    def tearDown(self):
+        """Stop the server and the patches."""
+        self.srv.shutdown()
+        self.srv.server_close()
+        for p in self.patches:
+            p.stop()
+        shutil.rmtree(self.home, ignore_errors=True)
+
+    def test_private_hosts_refused(self):
+        """localhost and the home network are never fetched, and a non-web address is turned away."""
+        self.assertIn("public internet", tools_files.download_file(self.url))
+        self.assertIn("public internet", tools_files.download_file("http://192.168.1.1/x"))
+        self.assertIn("https://", tools_files.download_file("file:///etc/passwd"))
+
+    def test_download_and_no_overwrite(self):
+        """A public host (stubbed) saves into Downloads under a safe name and never overwrites."""
+        with mock.patch.object(tools_files, "_public_host", return_value=True):
+            self.assertIn("Downloaded 5 bytes to ~/Downloads/a b.txt", tools_files.download_file(self.url))
+            self.assertEqual(open(os.path.join(self.home, "Downloads", "a b.txt")).read(), "hello")
+            self.assertIn("already exists", tools_files.download_file(self.url))
+
+    def test_name_is_safe(self):
+        """Paths in the URL never leave Downloads and a hidden or empty name gets a plain one."""
+        self.assertNotIn("/", tools_files._download_name("https://x.com/a/..%2f..%2fetc%2fpasswd"))
+        self.assertEqual(tools_files._download_name("https://x.com/"), "download")
+        self.assertFalse(tools_files._download_name("https://x.com/.bashrc").startswith("."))
 
 
 class Writes(unittest.TestCase):
