@@ -59,13 +59,15 @@ class LooseCompare(unittest.TestCase):
     def test_numbers_compare_as_floats(self):
         """10, 10.0 and "10" are the same value; 10 and 11 are not."""
         self.assertTrue(bfcl.loose(10, 10.0))
-        self.assertTrue(bfcl.loose("10", 10))
+        self.assertFalse(bfcl.loose("10", 10))  # BFCL wants a number, not a quoted one
         self.assertFalse(bfcl.loose(10, 11))
 
     def test_strings_ignore_case_and_outer_space(self):
         """" Paris " matches "paris"."""
         self.assertTrue(bfcl.loose(" Paris ", "paris"))
         self.assertFalse(bfcl.loose("Paris", "London"))
+        self.assertTrue(bfcl.loose("New York, NY", "new york ny"))
+        self.assertFalse(bfcl.loose("the Eiffel Tower", "Eiffel Tower"))
 
     def test_bool_is_not_a_number(self):
         """True does not equal 1 in an argument."""

@@ -4,7 +4,8 @@ Outside benchmark: the BFCL v3 `simple` split, 400 cases. Each case is one user 
 (sometimes several to pick from, always one right answer). The model gets the schema, answers with one JSON object
 {"name": ..., "arguments": {...}}, and is scored the BFCL "AST" way: the function name must match, every required
 argument must be present with a value in the possible-answer set, and no argument outside the answer may appear.
-Values compare loosely: numbers as floats, strings case-insensitive and stripped.
+Values compare as BFCL's checker does: numbers by value (a quoted "5" is not a number), strings with case, spaces
+and the punctuation , . / - _ * ^ ignored.
 
 The data (about 340 KB for both files) is cached under eval/data/bfcl/ and fetched once from Hugging Face.
 Model calls go to the oMLX OpenAI-style endpoint on localhost:8000. --dry scores the possible answers themselves,
@@ -100,28 +101,29 @@ def parse_call(text):
 
 
 def number(x):
-    """Return x as a float when it is a number or a numeric string, else None. Booleans are not numbers here."""
-    if isinstance(x, bool):
+    """Return x as a float when it is a JSON number, else None. Booleans and numeric strings are not numbers, as in BFCL."""
+    if isinstance(x, bool) or not isinstance(x, (int, float)):
         return None
-    if isinstance(x, (int, float)):
-        return float(x)
-    if isinstance(x, str):
-        try:
-            return float(x.strip())
-        except ValueError:
-            return None
-    return None
+    return float(x)
+
+
+def standardize(text):
+    """BFCL's standardize_string: drop spaces and , . / - _ * ^, lowercase, single quotes to double."""
+    return re.sub(r"[ ,./\-_*^]", "", text).lower().replace("'", '"')
 
 
 def loose(got, want):
-    """Compare two argument values the way the scorer does: numbers as floats, strings case-insensitive and stripped."""
+    """Compare two argument values the way BFCL's AST checker does: numbers by value, strings standardized.
+
+    ponytail: int and float compare by value; BFCL also fails a float where the schema says integer, add the
+    schema type here if a model ever leans on that."""
     if isinstance(got, bool) or isinstance(want, bool):
         return got is want
     a, b = number(got), number(want)
     if a is not None and b is not None:
         return a == b
     if isinstance(got, str) and isinstance(want, str):
-        return got.strip().lower() == want.strip().lower()
+        return standardize(got) == standardize(want)
     if isinstance(got, list) and isinstance(want, list):
         return len(got) == len(want) and all(loose(g, w) for g, w in zip(got, want))
     if isinstance(got, dict) and isinstance(want, dict):
