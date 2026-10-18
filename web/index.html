@@ -713,7 +713,7 @@ irm https://raw.githubusercontent.com/nulljosh/turing/main/install/install.ps1 |
         var limitHtml = '<div class="limitations"><p class="limitations-title">Limitations</p>' +
           '<p>Her own 1.5B picker chooses tools. It is not inside the app: the first time she needs it, about 850 MB downloads once in the background from Hugging Face, and until it lands the smaller 0.5B picker answers. On 869 sealed sentences she never trained on (two sets nobody tuned to), version 5.11 picks the right tool for 802 (5.6: 801, 5.1: 788) and the wrong tool for 45 (39, 53); 20 wrong picks get past her guard (19, 19) and 39 right picks are refused (40, 45). On 360 fresh messy phrasings, 325 right (5.6: 323). She now knows the Joshua Tree family by wording (86 of 93 test phrasings). About 5 percent of right commands are still left undone against a goal of under 2. Multi-step work borrows a 1.7B, and planning around a failure an 8B. ' +
           'Knowledge is 62 of 65 with zero confidently wrong. ' +
-          'Logos are dial choices from a fixed set; her mark she drew herself. ' +
+          'Logos are picks from a fixed set (a glyph that means the subject, here chosen by its words); her mark she drew herself. ' +
           'The picker and chat now run on Windows and Linux too, through llama.cpp, and she is an app on Joshua Tree. The Mac tools stay on the Mac.</p></div>';
 
         placeholder.parentNode.innerHTML = '<h2>Results</h2>' + html + benchHtml + '<details class="more"><summary>Docs and limits</summary>' + docsHtml + limitHtml + '</details>';
@@ -792,6 +792,7 @@ if(navigator.clipboard)navigator.clipboard.writeText(c).then(done,done);else don
 </script>
     <script src="samantha.js"></script>
     <script src="highlight.js"></script>
+    <script src="glyphs.js"></script>
     <script src="demo.js"></script>
   <script src="paint.js" defer></script>
     <script>

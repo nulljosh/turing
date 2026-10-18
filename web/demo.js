@@ -95,7 +95,7 @@
   }
 
   // ---- logos: the same layout rules as tools._logo_layers and _complex_layers, drawn as SVG ----
-  var PALETTES = { ember: ['#15110D', '#F4C893', '#E8A96A'], ink: ['#101418', '#FFFFFF', '#F2B33D'], forest: ['#0F1A14', '#E9F2EA', '#6FBF73'],
+  var PALETTES = { ember: ['#15110D', '#F4C893', '#E8A96A'], ink: ['#101418', '#FFFFFF', '#B5502C'], forest: ['#0F1A14', '#E9F2EA', '#6FBF73'],
                    signal: ['#16161A', '#FFFFFF', '#E5484D'], paper: ['#F3EDE2', '#1A1410', '#C2562D'] };
   var NS = 'http://www.w3.org/2000/svg';
   function svg(tag, attrs) {
@@ -137,10 +137,32 @@
     return { svg: root, text: 'I went with palette ' + palette + ', cells ' + cells + ', shape ' + shape + ', style ' + style + (flower ? '' : ', lit ' + lit) + '. ' + drawn +
              ' layers, no text. Here a hash of your words turns the dials. On the Mac her 1.7B picks them.' };
   }
+  // Default: a glyph that means the subject (tools_glyphs, drawn from web/glyphs.js, which is generated from it). The keywords pick it here;
+  // on the Mac her model can too. No keyword means no glyph, and the spiral draws instead.
+  function drawGlyph(desc) {
+    var G = window.SAMANTHA_GLYPHS, name = null, i;
+    if (!G) return null;
+    var plain = desc.normalize('NFD').replace(/[\u0300-\u036f]/g, '');  // cafe for café, as tools_glyphs does
+    Object.keys(G.glyphs).some(function (n) {
+      if (new RegExp('\\b(?:' + G.glyphs[n].words + ')(?:s|es|ing|er|ers)?\\b', 'i').test(plain)) { name = n; return true; }
+      return false;
+    });
+    if (!name) return null;
+    var names = Object.keys(G.palettes), sum = 0, palette;
+    for (i = 0; i < desc.length; i++) sum += desc.charCodeAt(i);  // the Mac's no-model pick: tools_logo._glyph_design
+    palette = names[sum % names.length];
+    var root = svg('svg', { viewBox: '0 0 1024 1024', role: 'img', 'aria-label': 'A logo: a ' + name + ' glyph, no text' });
+    root.appendChild(svg('rect', { x: 72, y: 72, width: 880, height: 880, rx: 200, fill: G.palettes[palette][1] }));
+    G.glyphs[name].layers.forEach(function (l) {
+      if (l.type === 'path') root.appendChild(svg('path', { d: l.d, fill: 'none', stroke: l.stroke, 'stroke-width': l.stroke_width, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }));
+      else root.appendChild(svg('ellipse', { cx: l.cx, cy: l.cy, rx: l.width / 2, ry: l.height / 2, fill: l.fill || 'none', stroke: l.stroke || 'none', 'stroke-width': l.stroke_width || 0 }));
+    });
+    return { svg: root, text: 'I went with glyph ' + name + ', palette ' + palette + '. ' + (G.glyphs[name].layers.length + 1) + ' layers, no text. Here the words pick the glyph. On the Mac her 1.7B does too.' };
+  }
   function drawLogo(desc) {
     var fancy = /\b(?:complex|intricate|detailed|elaborate|ornate|fancy|crazy|insane)\b/i.test(desc);
     var simple = !fancy && /\b(?:simple|minimal|minimalist|clean|plain)\b/i.test(desc);
-    if (!fancy && !simple) return drawBloom(desc);
+    if (!fancy && !simple) return (/\b(?:spiral|flower|sunflower|bloom|petals?)\b/i.test(desc) ? null : drawGlyph(desc)) || drawBloom(desc);
     var h = hash(desc.toLowerCase()), names = Object.keys(PALETTES), palette = names[h % names.length], p = PALETTES[palette];
     var tile = p[0], ink = p[1], accent = p[2], C = 512;
     var root = svg('svg', { viewBox: '0 0 1024 1024', role: 'img', 'aria-label': 'An icon logo, no text' });
@@ -705,7 +727,7 @@
   // ---- idle reel: if nobody types, she shows what she does. Silent, and it stops the moment you touch anything ----
   var REEL = [
     // pictures first: the part nobody has seen a 0.5B do
-    'paint the mona lisa', 'draw a lighthouse at dusk', 'make me a complex logo for a surf school', 'paint the eniac', 'paint the last supper as a mosaic', 'draw a fox in the snow',
+    'paint the mona lisa', 'draw a lighthouse at dusk', 'make me a logo for a surf school', 'paint the eniac', 'paint the last supper as a mosaic', 'draw a fox in the snow',
     // her Mac: apps, the web, sound, the screen
     'open chrome and go to en.wikipedia.org/wiki/Alan_Turing', 'set the volume to 40', 'play some music', 'skip this song', 'take a screenshot', 'what apps are running', 'joshua tree status', 'how much disk space is free', 'is bluetooth on', 'uptime',
     // notes, reminders, calendar, time

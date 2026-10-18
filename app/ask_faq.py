@@ -15,7 +15,7 @@ PROJECT_KEYWORDS = {
 
 
 # precision-sensitive facts: generation invents plausible-but-wrong specifics
-# for these even with the right source in context (see docs/results/2026-09-13-rag2.md),
+# for these even with the right source in context (see docs/EARLY-RESULTS.md, the RAG round 2 section),
 # so pull the answer straight from the retrieved text instead of trusting the model
 EXTRACTORS = [
     (re.compile(r"\blicen[cs]e\b", re.I), re.compile(r"\b(MIT|Apache-2\.0|GPL-?v?\d|BSD-\d-Clause)\b")),

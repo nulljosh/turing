@@ -7,6 +7,7 @@ import json
 import os
 import re
 import shutil
+import unicodedata
 
 # One accent per tile, white glyph on top: (light, deep), the Icon Composer gradient runs light to deep and the flat
 # PNG uses deep. No yellow, teal, purple, brown or beige (the design system).
@@ -45,7 +46,7 @@ GLYPHS = {
     "book": (r"book|read|library|school|learn|study|course|teach|tutor|class|education|story", _p(
         "M 512 360 C 440 310 330 300 232 320 L 232 712 C 330 692 440 702 512 752 C 584 702 694 692 792 712 L 792 320 C 694 300 584 310 512 360 Z",
         "M 512 360 L 512 752")),
-    "cup": (r"coffee|cafe|café|tea|espresso|latte|cup|mug|brew", _p(
+    "cup": (r"coffee|cafe|tea|espresso|latte|cup|mug|brew", _p(
         "M 292 452 L 292 640 C 292 712 344 752 412 752 L 492 752 C 560 752 612 712 612 640 L 612 452 Z",
         "M 612 492 C 732 492 732 640 612 640", "M 392 232 C 352 292 432 316 392 372", "M 512 232 C 472 292 552 316 512 372")),
     "dumbbell": (r"gym|fitness|workout|lift|strength|train|muscle|crossfit|weights|sport", _p(
@@ -85,7 +86,7 @@ GLYPHS = {
 
 def keyword_glyph(description):
     """The glyph whose keywords the subject names plainly, or None. Whole words only, first match in table order."""
-    text = description.lower()
+    text = "".join(c for c in unicodedata.normalize("NFD", description.lower()) if not unicodedata.combining(c))  # cafe for café
     for name, (words, _) in GLYPHS.items():
         if re.search(rf"\b(?:{words})(?:s|es|ing|er|ers)?\b", text):
             return name

@@ -1,5 +1,5 @@
 {
-  "version": "7.14.0",
+  "version": "7.14.1",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -223,6 +223,10 @@
         "total": 5,
         "documented": 5
       },
+      "scripts/gen_glyphs_js.py": {
+        "total": 2,
+        "documented": 2
+      },
       "scripts/gen_jt_docs.py": {
         "total": 13,
         "documented": 13
@@ -428,8 +432,8 @@
         "documented": 1
       },
       "tests/test_glyphs.py": {
-        "total": 12,
-        "documented": 12
+        "total": 15,
+        "documented": 15
       },
       "tests/test_guard_probes.py": {
         "total": 5,

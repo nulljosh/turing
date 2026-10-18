@@ -2,7 +2,7 @@
 
 > Priority tier 5 (2026-10-17): exploratory, this year. Order: live blockers, ship pushes, active features, portfolio, exploratory. See ~/Documents/Code/LOOP-HANDOFF.md.
 
-Samantha is a small local model (Qwen, fine-tuned) with hands: she can open apps, browse, read your files, answer from your notes, and act on your Mac, entirely offline, no account, nothing sent out. v7.0.0 is live (2026-10-12), with code in app/, helpers in scripts/, and every markdown file in docs/. She has 151 tools, remembers you across sessions, runs on a Raspberry Pi 4 as an app on Joshua Tree, and her picker is training run 23 (1.5B, public on Hugging Face). She knows 62 of 65 held-out facts with nothing confidently wrong. The Mac installer is signed with Developer ID and notarized. Next major: 8.0 (distillation); the picker rounds are at the noise floor, so it waits on a new idea. See [LOOP-HANDOFF.md](LOOP-HANDOFF.md) for the bar.
+Samantha is a small local model (Qwen, fine-tuned) with hands: she can open apps, browse, read your files, answer from your notes, and act on your Mac, entirely offline, no account, nothing sent out. v7.14.1 is live (2026-10-18), with code in app/, helpers in scripts/, and every markdown file in docs/. She has 151 tools, remembers you across sessions, runs on a Raspberry Pi 4 as an app on Joshua Tree, and her picker is training run 23 (1.5B, public on Hugging Face). She knows 62 of 65 held-out facts with nothing confidently wrong. The Mac installer is signed with Developer ID and notarized. Next major: 8.0 (distillation); the picker rounds are at the noise floor, so it waits on a new idea. See [LOOP-HANDOFF.md](LOOP-HANDOFF.md) for the bar.
 
 Full phase-by-phase history lives in `docs/HISTORY.md` and the picker's model comparisons in `docs/BAKEOFF.md`.
 
@@ -105,12 +105,9 @@ Ask her to draft something in our voice, or answer a question about one of our o
   - [ ] "build me a game with Unreal Engine": hand off to the Unreal pipeline (the unreal-game skill) from her chat
 - [ ] Hugging Face page: publish the GGUF and the adapter with a model card (what she does, the measured numbers, the limits); needs Joshua's HF token
 - [ ] PaintBar (moved to nulljosh/paintbar): share its background setting with Samantha's own paint tool, add launch at login
-- [ ] Landing demo logo is too basic: real design pass, the SVG bloom rules look thin next to the real tool
 - [ ] Two-step picking: pick a family first, then a tool inside it, so no single choice is bigger than about twelve
 - [ ] System family, the rest: brightness and turning bluetooth on or off (this Mac has no CLI for either and nothing gets installed; dark mode, running apps, quit an app, bluetooth status and Do Not Disturb via a Shortcut shipped in 4.8)
 - [ ] Sharp paintings: merge same-color neighbor cells so each layer buys more picture
 
 ## Ingested 2026-10-02
 - [ ] Landing page demo should start simple and progressively take on harder tasks.
-
-## Ingested 2026-10-16

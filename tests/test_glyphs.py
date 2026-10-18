@@ -54,6 +54,34 @@ class Style(unittest.TestCase):
                 self.assertIn('<path d="M', svg)
 
 
+class Twin(unittest.TestCase):
+    """The landing page draws the same glyphs: web/glyphs.js is generated from tools_glyphs, and its keyword patterns agree."""
+
+    def test_generated_file_is_current(self):
+        """Nobody hand-edits web/glyphs.js: it equals what scripts/gen_glyphs_js.py writes."""
+        import subprocess
+        root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        done = subprocess.run([sys.executable, os.path.join(root, "scripts", "gen_glyphs_js.py"), "--check"], capture_output=True, text=True)
+        self.assertEqual(done.returncode, 0, done.stdout)
+
+    def test_js_keywords_match_python(self):
+        """The same subjects pick the same glyph in JavaScript and Python (needs node, skipped without it)."""
+        import json
+        import shutil
+        import subprocess
+        node = shutil.which("node")
+        if not node:
+            self.skipTest("no node")
+        root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        subjects = ["a surf school", "my bakery", "turing", "a coffee shop", "a gym", "dog grooming", "a quantum widget co", "she said apple", "hiking trails", "a caf\u00e9"]
+        js = ("global.window = {}; require(%s); const G = window.SAMANTHA_GLYPHS;"
+              "console.log(JSON.stringify(%s.map(s => { s = s.normalize('NFD').replace(/[\\u0300-\\u036f]/g, ''); for (const n of Object.keys(G.glyphs)) "
+              "{ if (new RegExp('\\\\b(?:' + G.glyphs[n].words + ')(?:s|es|ing|er|ers)?\\\\b', 'i').test(s)) return n; } return null; })))"
+              % (json.dumps(os.path.join(root, "web", "glyphs.js")), json.dumps(subjects)))
+        out = subprocess.run([node, "-e", js], capture_output=True, text=True)
+        self.assertEqual(json.loads(out.stdout), [tools_glyphs.keyword_glyph(s) for s in subjects], out.stderr)
+
+
 class Bundle(unittest.TestCase):
     """The Icon Composer bundle: icon.json in the brand kit's shape, the glyph as its one layer."""
 
