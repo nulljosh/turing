@@ -139,7 +139,7 @@
   }
   // Default: a glyph that means the subject (tools_glyphs, drawn from web/glyphs.js, which is generated from it). The keywords pick it here;
   // on the Mac her model can too. No keyword means no glyph, and the spiral draws instead.
-  function drawGlyph(desc) {
+  function pickGlyph(desc) {
     var G = window.SAMANTHA_GLYPHS, name = null, i;
     if (!G) return null;
     var plain = desc.normalize('NFD').replace(/[\u0300-\u036f]/g, '');  // cafe for café, as tools_glyphs does
@@ -148,16 +148,76 @@
       return false;
     });
     if (!name) return null;
-    var names = Object.keys(G.palettes), sum = 0, palette;
+    var names = Object.keys(G.palettes), sum = 0;
     for (i = 0; i < desc.length; i++) sum += desc.charCodeAt(i);  // the Mac's no-model pick: tools_logo._glyph_design
-    palette = names[sum % names.length];
+    return { G: G, name: name, palette: names[sum % names.length] };
+  }
+  function glyphShapes(root, G, name, accent) {
+    G.glyphs[name].layers.forEach(function (l) {
+      var c = function (v) { return accent && v === '#FFFFFF' ? accent : v; };
+      if (l.type === 'path') root.appendChild(svg('path', { d: l.d, fill: 'none', stroke: c(l.stroke), 'stroke-width': l.stroke_width, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }));
+      else root.appendChild(svg('ellipse', { cx: l.cx, cy: l.cy, rx: l.width / 2, ry: l.height / 2, fill: c(l.fill) || 'none', stroke: c(l.stroke) || 'none', 'stroke-width': l.stroke_width || 0 }));
+    });
+  }
+  function drawGlyph(desc) {
+    var pick = pickGlyph(desc);
+    if (!pick) return null;
+    var G = pick.G, name = pick.name, palette = pick.palette;
     var root = svg('svg', { viewBox: '0 0 1024 1024', role: 'img', 'aria-label': 'A logo: a ' + name + ' glyph, no text' });
     root.appendChild(svg('rect', { x: 72, y: 72, width: 880, height: 880, rx: 200, fill: G.palettes[palette][1] }));
-    G.glyphs[name].layers.forEach(function (l) {
-      if (l.type === 'path') root.appendChild(svg('path', { d: l.d, fill: 'none', stroke: l.stroke, 'stroke-width': l.stroke_width, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }));
-      else root.appendChild(svg('ellipse', { cx: l.cx, cy: l.cy, rx: l.width / 2, ry: l.height / 2, fill: l.fill || 'none', stroke: l.stroke || 'none', 'stroke-width': l.stroke_width || 0 }));
-    });
+    glyphShapes(root, G, name, null);
     return { svg: root, text: 'I went with glyph ' + name + ', palette ' + palette + '. ' + (G.glyphs[name].layers.length + 1) + ' layers, no text. Here the words pick the glyph. On the Mac her 1.7B does too.' };
+  }
+  // Symbol: the glyph alone in its accent, no tile. No keyword means her flower, as on the Mac.
+  var NAME = /^[A-Za-z0-9][A-Za-z0-9 .&'-]{0,23}$/;
+  function drawSymbol(desc) {
+    var pick = pickGlyph(desc);
+    if (!pick) { var f = drawBloom(desc); return { svg: f.svg, text: 'No glyph for that, so my flower. On the Mac the symbol is a PNG and an SVG on your Desktop.' }; }
+    var root = svg('svg', { viewBox: '0 0 1024 1024', role: 'img', 'aria-label': 'A symbol: a ' + pick.name + ' glyph, no text' });
+    glyphShapes(root, pick.G, pick.name, pick.G.palettes[pick.palette][1]);
+    return { svg: root, text: 'I went with glyph ' + pick.name + ', palette ' + pick.palette + '. The glyph alone, no tile, no text. On the Mac it is a PNG and an SVG on your Desktop.' };
+  }
+  // Wordmark: that symbol beside the name, set in Samantha Sans. "Name, a bakery" picks the glyph from the part after the comma.
+  function drawWordmark(desc) {
+    var i = desc.indexOf(','), name = (i < 0 ? desc : desc.slice(0, i)).trim().replace(/\s+/g, ' ');
+    if (!NAME.test(name)) return { text: 'I can set a name of up to 24 letters, numbers and spaces.' };
+    var about = i < 0 ? name : desc.slice(i + 1).trim() || name, pick = pickGlyph(about);
+    var w = 460 + name.length * 120, root = svg('svg', { viewBox: '0 0 ' + w + ' 400', role: 'img', 'aria-label': 'A wordmark: ' + name });
+    var g = svg('g', { transform: 'translate(10 10) scale(0.37)' });
+    if (pick) glyphShapes(g, pick.G, pick.name, pick.G.palettes[pick.palette][1]); else Array.prototype.slice.call(drawBloom(about).svg.childNodes).forEach(function (n) { g.appendChild(n); });
+    root.appendChild(g);
+    var t = svg('text', { x: 400, y: 268, 'font-size': 200, 'font-weight': 600, 'font-family': '"Samantha Sans", system-ui, sans-serif', fill: '#111111' });
+    t.textContent = name;
+    root.appendChild(t);
+    return { svg: root, text: 'I paired ' + (pick ? 'glyph ' + pick.name : 'my flower') + ' with ' + name + '. On the Mac it is a PNG on your Desktop.' };
+  }
+  // Avatar: a flat face from a name, the same face every time. The Mac picks the parts from the name's sha256; here a small hash does.
+  var BACKS = ['#B5502C', '#0071E3', '#2F8F5B', '#D93A3F', '#111111', '#E0825A', '#2997FF'], SKIN = ['#FFFFFF', '#F4D9C6', '#E6B994', '#C98B65', '#8D5A3C', '#F1E4D3'];
+  var MOUTH = ['M 392 640 C 452 712 572 712 632 640', 'M 392 660 L 632 660', 'M 372 620 C 432 760 592 760 652 620'];
+  function drawAvatar(desc) {
+    var name = desc.trim().replace(/\s+/g, ' ');
+    if (!NAME.test(name)) return { text: 'I can draw an avatar for a name of up to 24 letters, numbers and spaces.' };
+    var a = hash(name.toLowerCase()), b = hash(name.toLowerCase() + '!');
+    var h = [a & 255, (a >>> 8) & 255, (a >>> 16) & 255, (a >>> 24) & 255, b & 255, (b >>> 8) & 255];
+    var gap = 104 + h[3] % 40, eye = 44 + h[4] % 24, ink = '#111111';
+    var root = svg('svg', { viewBox: '0 0 1024 1024', role: 'img', 'aria-label': 'An avatar for ' + name });
+    root.appendChild(svg('ellipse', { cx: 512, cy: 512, rx: 500, ry: 500, fill: BACKS[h[0] % BACKS.length] }));
+    root.appendChild(svg('ellipse', { cx: 512, cy: 540, rx: 300, ry: 320, fill: SKIN[h[1] % SKIN.length] }));
+    [-1, 1].forEach(function (side) { root.appendChild(svg('ellipse', { cx: 512 + side * gap, cy: 500, rx: eye / 2, ry: eye * 1.15 / 2, fill: ink })); });
+    var stroke = function (d, w) { root.appendChild(svg('path', { d: d, fill: 'none', stroke: ink, 'stroke-width': w, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' })); };
+    stroke(MOUTH[h[2] % MOUTH.length], 36);
+    var extra = h[5] % 4;
+    if (extra === 1) {
+      [-1, 1].forEach(function (side) { root.appendChild(svg('ellipse', { cx: 512 + side * gap, cy: 500, rx: 75, ry: 75, fill: 'none', stroke: ink, 'stroke-width': 20 })); });
+      stroke('M ' + (512 - gap + 75) + ' 500 L ' + (512 + gap - 75) + ' 500', 20);
+    } else if (extra === 2) stroke('M 232 440 C 232 250 792 250 792 440', 72);
+    else if (extra === 3) stroke('M 432 250 C 452 170 552 170 592 250', 60);
+    return { svg: root, text: 'Drew an avatar for ' + name + '. Same name, same face, every time. On the Mac it is a round PNG and an SVG on your Desktop.' };
+  }
+  function show(mark) {
+    if (!mark.svg) return mark.text;
+    win('Logo', 'Logo', function (b) { b.appendChild(mark.svg.cloneNode(true)); });
+    return { text: mark.text, node: mark.svg };
   }
   function drawLogo(desc) {
     var fancy = /\b(?:complex|intricate|detailed|elaborate|ornate|fancy|crazy|insane)\b/i.test(desc);
@@ -333,6 +393,9 @@
       win('Logo', 'Logo', function (b) { b.appendChild(logo.svg.cloneNode(true)); });
       return { text: logo.text, node: logo.svg };
     },
+    make_symbol: function (desc) { return show(drawSymbol(desc)); },
+    make_wordmark: function (desc) { return show(drawWordmark(desc)); },
+    make_avatar: function (desc) { return show(drawAvatar(desc)); },
     music: function (c) {
       if (c === 'playing') return desk.playing ? TRACKS[desk.track][0] + ' by Samantha' : 'Nothing is playing.';
       if (c === 'play') desk.playing = true;
