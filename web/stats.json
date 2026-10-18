@@ -1,5 +1,5 @@
 {
-  "version": "7.5.0",
+  "version": "7.6.0",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -279,6 +279,10 @@
         "total": 5,
         "documented": 5
       },
+      "eval/bfcl.py": {
+        "total": 14,
+        "documented": 14
+      },
       "eval/constrain.py": {
         "total": 4,
         "documented": 4
@@ -358,6 +362,10 @@
       "tests/test_badge.py": {
         "total": 11,
         "documented": 11
+      },
+      "tests/test_bfcl.py": {
+        "total": 30,
+        "documented": 30
       },
       "tests/test_blender.py": {
         "total": 25,
