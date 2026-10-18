@@ -2,7 +2,7 @@
 says how many objects and vertices it holds, read only. render_blend (a write, asks first) renders frame 1 of a .blend
 to a PNG named like it, in the same folder, never over an existing file. convert_3d (a write, asks first) turns one
 3D file into glb, obj, stl, ply or fbx beside it, never over an existing file. make_3d (a write, asks first) makes a cube, sphere, cone, cylinder or torus as a new
-3D file, never over an existing one. All run Blender headless (blender -b).
+3D file, never over an existing one. text_3d does the same for a few words of thick 3D text. All run Blender headless (blender -b).
 Same home-folder rule as tools_files: home only, nothing hidden. tests/test_blender.py mocks subprocess, so no real
 Blender run happens there.
 """
@@ -249,7 +249,70 @@ def make_3d(spec):
     return f"Made a {shape} at {_short(full)}."
 
 
-TOOLS = (blender_info, render_blend, convert_3d, make_3d)
+# Runs inside Blender: the words as a thick 3D text object, turned into a mesh, exported by the extension of the file.
+_TEXT_SCRIPT = '''import bpy, sys
+words, out = sys.argv[sys.argv.index("--") + 1:][:2]
+bpy.ops.wm.read_factory_settings(use_empty=True)
+bpy.ops.object.text_add()
+obj = bpy.context.object
+obj.data.body = words
+obj.data.extrude = 0.15
+obj.data.align_x = "CENTER"
+bpy.ops.object.convert(target="MESH")
+ext = out.lower().rsplit(".", 1)[-1]
+if ext == "glb":
+    bpy.ops.export_scene.gltf(filepath=out, export_format="GLB")
+elif ext == "obj":
+    bpy.ops.wm.obj_export(filepath=out)
+elif ext == "stl":
+    bpy.ops.wm.stl_export(filepath=out)
+elif ext == "ply":
+    bpy.ops.wm.ply_export(filepath=out)
+elif ext == "fbx":
+    bpy.ops.export_scene.fbx(filepath=out)
+else:
+    bpy.ops.wm.save_as_mainfile(filepath=out)
+'''
+
+
+def text_3d(spec):
+    """Make words (up to 30 letters, numbers and spaces) into a thick 3D text file, as a new .glb, .obj, .stl, .ply, .fbx or .blend inside the home folder: "WORDS\\tPATH". Never over an existing file. Asks first."""
+    words, _, path = (spec or "").partition("\t")
+    words = " ".join(words.split())
+    full = _home(path)
+    if not re.fullmatch(r"[A-Za-z0-9 ]{1,30}", words):
+        return "I can make 3D text from up to 30 letters, numbers and spaces."
+    if not full or not full.lower().endswith(_FORMATS) or not os.path.isdir(os.path.dirname(full)):
+        return "I can only make 3D text as a .glb, .obj, .stl, .ply, .fbx or .blend file in a folder I am allowed to use."
+    if os.path.exists(full):
+        return f"{_short(full)} already exists."
+    if tools_files.HEADLESS:
+        return f"Made 3D text of {words} at {_short(full)}."
+    exe = _blender()
+    if not exe:
+        return _NO_BLENDER
+    with tempfile.TemporaryDirectory() as tmp:
+        script = os.path.join(tmp, "text.py")
+        with open(script, "w") as f:
+            f.write(_TEXT_SCRIPT)
+        made_dir = os.path.join(tmp, "out")
+        os.makedirs(made_dir)
+        try:
+            subprocess.run([exe, "-b", "-P", script, "--", words, os.path.join(made_dir, os.path.basename(full))], capture_output=True, timeout=180)
+        except (OSError, subprocess.SubprocessError):
+            return "Blender did not finish making it."
+        made = sorted(os.listdir(made_dir))
+        if os.path.basename(full) not in made:
+            return "Blender could not make that text."
+        beside = [os.path.join(os.path.dirname(full), name) for name in made]
+        if any(os.path.exists(b) for b in beside):  # an .obj's .mtl counts too: nothing already there is ever replaced
+            return f"{_short(next(b for b in beside if os.path.exists(b)))} already exists."
+        for name, dest in zip(made, beside):
+            shutil.move(os.path.join(made_dir, name), dest)
+    return f"Made 3D text of {words} at {_short(full)}."
+
+
+TOOLS = (blender_info, render_blend, convert_3d, make_3d, text_3d)
 
 _I = re.I
 # (pattern, tool name, what to hand it), same shape as tools_files.ROUTES. Only a path ending in a 3D extension or
@@ -258,6 +321,7 @@ ROUTES = (
     (re.compile(r"^(?:what(?:'s| is) in|inspect) (?:the |my )?(\S+\.(?:blend|glb|gltf|obj|fbx|stl|ply))$", _I), "blender_info", lambda m: m.group(1)),
     (re.compile(r"^render (?:the |my )?(\S+\.blend)$", _I), "render_blend", lambda m: m.group(1)),
     (re.compile(r"^(?:make|create|build) (?:me )?(?:a |an )?(?:3d |3-d )?(cube|sphere|cone|cylinder|torus)(?: (?:at|as|in|to|called|named))? (?:the |my )?(\S+\.(?:blend|glb|gltf|obj|fbx|stl|ply))$", _I), "make_3d", lambda m: m.group(1).lower() + "\t" + m.group(2)),
+    (re.compile(r"^(?:make|create|build) (?:me )?(?:a |an )?(?:3d |3-d )text (?:of |saying |that says )?[\"\u201c']?([A-Za-z0-9 ]+?)[\"\u201d']? (?:at|as|in|to|called|named) (?:the |my )?(\S+\.(?:blend|glb|gltf|obj|fbx|stl|ply))$", _I), "text_3d", lambda m: m.group(1) + "\t" + m.group(2)),
     (re.compile(r"^convert (?:the |my )?(\S+\.(?:blend|glb|gltf|obj|fbx|stl|ply)) (?:to|into) (?:a |an )?\.?(glb|obj|stl|ply|fbx)$", _I), "convert_3d", lambda m: m.group(1) + "\t" + m.group(2)),
 )
 

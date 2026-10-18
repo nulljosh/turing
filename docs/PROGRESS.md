@@ -1,5 +1,7 @@
 # Progress log
 
+- 2026-10-18: v7.12.0 She makes logos in 3D: "make 3D text Turing at ~/Documents/logo.glb" turns a few words into thick 3D letters through Blender, in glb, obj, stl, ply, fbx or blend, asks first, never over a file. Checked with real runs read back by blender_info.
+  v7.12.0 · 155 tools · 900 tests · docs coverage 100% · laws all hold · biggest eval/gen_heldout2.py 647 · actions 277/277 · parity 277/277 · util_diff 288/288
 - 2026-10-18: v7.11.0 She makes simple 3D shapes: "make a cube at ~/Documents/box.glb" (also sphere, cone, cylinder, torus, as glb, obj, stl, ply, fbx or blend) through Blender, asks first, never over a file. Checked with six real shape and format runs read back by blender_info.
   v7.11.0 · 154 tools · 896 tests · docs coverage 100% · laws all hold · biggest eval/gen_heldout2.py 647 · actions 276/276 · parity 276/276 · util_diff 288/288
 - 2026-10-18: v7.10.0 She converts 3D files: "convert ~/Documents/model.glb to obj" makes glb, obj, stl, ply or fbx beside the original through Blender, asks first, never over a file (an .obj's .mtl included). Checked with a real glb to obj and stl round trip read back by blender_info.

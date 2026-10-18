@@ -309,13 +309,56 @@ class Make(Base):
             self.assertIn("could not make", tools_blender.make_3d("cube\t" + tools_files.HOME + "/Documents/b.glb"))
 
 
+class Text(Base):
+    """text_3d: a few safe words, a new file only, nothing hidden, never over a file."""
+
+    def fake(self, cmd, **kwargs):
+        """Write the file named last on the command line, like the script would."""
+        with open(cmd[-1], "wb") as f:
+            f.write(b"x")
+        return subprocess.CompletedProcess(cmd, 0, stdout="", stderr="")
+
+    def test_route(self):
+        """make 3d text WORDS at PATH hands text_3d the words and path, quoted or not."""
+        for text, want in (("make 3d text Turing at ~/a.glb", "Turing\t~/a.glb"), ('make a 3d text "Hello World" as ~/b.stl', "Hello World\t~/b.stl")):
+            got = [(n, a(m)) for p, n, a in tools_blender.ROUTES for m in [p.match(text)] if m]
+            self.assertEqual(got[0], ("text_3d", want))
+
+    def test_refusals(self):
+        """Odd characters, too long, hidden folder, wrong extension: a plain reply and nothing run."""
+        d = os.path.join(tools_files.HOME, "Documents")
+        with mock.patch.object(tools_blender.subprocess, "run") as run:
+            self.assertIn("up to 30", tools_blender.text_3d("a;rm -rf\t" + d + "/a.glb"))
+            self.assertIn("up to 30", tools_blender.text_3d("x" * 31 + "\t" + d + "/a.glb"))
+            self.assertIn("up to 30", tools_blender.text_3d("\t" + d + "/a.glb"))
+            self.assertIn("allowed", tools_blender.text_3d("Hi\t" + tools_files.HOME + "/.hidden/a.glb"))
+            self.assertIn("allowed", tools_blender.text_3d("Hi\t" + d + "/a.txt"))
+            self.assertEqual(tools_blender.text_3d("Hi\t" + self.scene), "~/Documents/scene.blend already exists.")
+        run.assert_not_called()
+
+    def test_headless_runs_nothing(self):
+        """Headless answers and writes nothing."""
+        with mock.patch.object(tools_files, "HEADLESS", True), mock.patch.object(tools_blender.subprocess, "run") as run:
+            self.assertEqual(tools_blender.text_3d("Hi  there\t" + tools_files.HOME + "/Documents/t.glb"), "Made 3D text of Hi there at ~/Documents/t.glb.")
+        run.assert_not_called()
+
+    def test_makes_the_file(self):
+        """A live run hands the words to Blender as an argument, not code, and moves the file beside."""
+        with mock.patch.object(tools_files, "HEADLESS", False), mock.patch.object(tools_blender, "_blender", return_value="blender"), \
+                mock.patch.object(tools_blender.subprocess, "run", side_effect=self.fake) as run:
+            got = tools_blender.text_3d("Turing\t" + tools_files.HOME + "/Documents/logo.obj")
+        self.assertEqual(got, "Made 3D text of Turing at ~/Documents/logo.obj.")
+        self.assertEqual(run.call_args[0][0][-2], "Turing")
+        self.assertTrue(os.path.exists(os.path.join(tools_files.HOME, "Documents", "logo.obj")))
+
+
 class Shape(unittest.TestCase):
     """Every tool is documented and listed."""
 
     def test_tools_documented(self):
         """Each tool has a docstring, and the TOOLS tuple names both."""
         self.assertTrue(all(f.__doc__ for f in tools_blender.TOOLS))
-        self.assertEqual({f.__name__ for f in tools_blender.TOOLS}, {"blender_info", "render_blend", "convert_3d", "make_3d"})
+        self.assertEqual({f.__name__ for f in tools_blender.TOOLS}, {"blender_info", "render_blend", "convert_3d", "make_3d", "text_3d"})
 
 
 if __name__ == "__main__":
