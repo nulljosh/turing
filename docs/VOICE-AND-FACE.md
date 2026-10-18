@@ -52,6 +52,8 @@ Or just ask her. "Change your look: ginger with glasses" or "make yourself a red
 
 ```bash
 ./.venv/bin/python app/chat.py --voice --face
+# another saved character's face and voice, by name (the folders in ~/.samantha/characters):
+./.venv/bin/python app/chat.py --voice --face --character joshua
 ```
 
 A window opens on `localhost`. She breathes and blinks while idle, nods while you talk, and talks while her voice plays.

@@ -473,6 +473,12 @@ def tui():
 
 
 if __name__ == "__main__":
+    if "--character" in sys.argv:  # before voice and face are imported: both read the character folder once, at import
+        import tools_character
+        i = sys.argv.index("--character") + 1
+        folder, why = tools_character.use_character(sys.argv[i] if i < len(sys.argv) else "")
+        if why:
+            sys.exit(why)
     if "--voice" in sys.argv:
         import voice
         wake = None

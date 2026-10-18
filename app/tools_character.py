@@ -30,6 +30,20 @@ def _character():
     return os.path.expanduser(os.environ.get("SAMANTHA_CHARACTER", "~/.samantha/characters/samantha"))
 
 
+def use_character(name):
+    """Switch to another saved character by name for this run (chat.py --character joshua): sets SAMANTHA_CHARACTER
+    to ~/.samantha/characters/<name>, which her voice and face both read. The name is one plain word, never a path.
+    Returns (folder, None), or (None, why) when the name is not a saved character."""
+    name = str(name or "").strip()
+    if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_-]*", name):
+        return None, f"A character name is one plain word, not {name or 'nothing'}."
+    folder = os.path.join(os.path.expanduser("~/.samantha/characters"), name)
+    if not os.path.isdir(folder):
+        return None, f"I have no character called {name}. Saved ones: {', '.join(sorted(os.listdir(os.path.dirname(folder)))) or 'none'}."
+    os.environ["SAMANTHA_CHARACTER"] = folder
+    return folder, None
+
+
 def _staging():
     """Where restyle puts a new portrait: beside the live one, never over it."""
     return os.path.join(_character(), "staged")

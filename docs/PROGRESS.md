@@ -1,5 +1,8 @@
 # Progress log
 
+- 2026-10-18: v7.3.0 🎉 `chat.py --character joshua` switches her face and voice to any saved character by name. First half of issue 115.
+  v7.3.0 · 146 tools · 819 tests · docs coverage 100% · laws all hold · biggest eval/gen_heldout2.py 647 · actions 267/267 · parity 267/267 · util_diff 288/288
+
 - 2026-10-18: v7.2.2. The six writes with no argument (boot or stop Joshua Tree, run the tests, sleep the screen, keep a look) now need your request to name them before a model's idea of them can even ask you. Closes issue 101.
   v7.2.2 · 146 tools · 818 tests · docs coverage 100% · laws all hold · biggest eval/gen_heldout2.py 647 · actions 267/267 · parity 267/267 · util_diff 288/288
 

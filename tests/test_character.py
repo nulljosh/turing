@@ -206,5 +206,21 @@ class Wiring(unittest.TestCase):
                 self.assertEqual(harness.Session(confirm=lambda n, a: False, log=lambda l: None).ask(q), "Okay, I will not.")
 
 
+class UseCharacter(unittest.TestCase):
+    """chat.py --character NAME: a saved character by name, never a path."""
+
+    def test_names_are_plain_words_and_must_exist(self):
+        """A path, an empty name and an unknown name are turned away; a saved one sets the env var."""
+        for bad in ("", "../etc", "a/b", ".hidden"):
+            self.assertIsNotNone(tc.use_character(bad)[1], bad)
+        with tempfile.TemporaryDirectory() as home, mock.patch.dict(os.environ, {"HOME": home}):
+            os.makedirs(os.path.join(home, ".samantha", "characters", "ada"))
+            self.assertIn("no character called nobody", tc.use_character("nobody")[1])
+            folder, why = tc.use_character("ada")
+            self.assertIsNone(why)
+            self.assertEqual(os.environ["SAMANTHA_CHARACTER"], folder)
+            self.assertTrue(folder.endswith("characters/ada"))
+
+
 if __name__ == "__main__":
     unittest.main()

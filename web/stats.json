@@ -1,5 +1,5 @@
 {
-  "version": "7.2.2",
+  "version": "7.3.0",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -88,8 +88,8 @@
         "documented": 23
       },
       "app/tools_character.py": {
-        "total": 13,
-        "documented": 13
+        "total": 14,
+        "documented": 14
       },
       "app/tools_code.py": {
         "total": 7,
@@ -352,8 +352,8 @@
         "documented": 11
       },
       "tests/test_character.py": {
-        "total": 24,
-        "documented": 24
+        "total": 26,
+        "documented": 26
       },
       "tests/test_chat.py": {
         "total": 27,
