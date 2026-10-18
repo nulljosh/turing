@@ -1,5 +1,7 @@
 # Progress log
 
+- 2026-10-18: v7.10.0 She converts 3D files: "convert ~/Documents/model.glb to obj" makes glb, obj, stl, ply or fbx beside the original through Blender, asks first, never over a file (an .obj's .mtl included). Checked with a real glb to obj and stl round trip read back by blender_info.
+  v7.10.0 · 153 tools · 890 tests · docs coverage 100% · laws all hold · biggest eval/gen_heldout2.py 647 · actions 275/275 · parity 275/275 · util_diff 288/288
 - 2026-10-18: v7.9.1 The landing page footer is an engraved harbour in terracotta hatching, ported from Atlin's footer shader: it animates only while on screen, holds one still frame for reduced motion, and follows the theme.
   v7.9.1 · 152 tools · 884 tests · docs coverage 100% · laws all hold · biggest eval/gen_heldout2.py 647 · actions 274/274 · parity 274/274 · util_diff 288/288
 - 2026-10-18: v7.9.0 She learns from what she could not do, without anyone telling her: every command no tool took, or a tool that broke, is noted on the Mac (~/.samantha/misses.jsonl, local only), "how am I rating you" counts them, and each loop wake the teacher labels them into training rows for her next picker round.

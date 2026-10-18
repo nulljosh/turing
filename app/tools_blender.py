@@ -1,6 +1,7 @@
 """Samantha's Blender tools. blender_info reads a 3D file inside the home folder (.blend, .glb, .gltf, .obj, .fbx) and
 says how many objects and vertices it holds, read only. render_blend (a write, asks first) renders frame 1 of a .blend
-to a PNG named like it, in the same folder, never over an existing file. Both run Blender headless (blender -b).
+to a PNG named like it, in the same folder, never over an existing file. convert_3d (a write, asks first) turns one
+3D file into glb, obj, stl, ply or fbx beside it, never over an existing file. All run Blender headless (blender -b).
 Same home-folder rule as tools_files: home only, nothing hidden. tests/test_blender.py mocks subprocess, so no real
 Blender run happens there.
 """
@@ -18,7 +19,7 @@ HOME = tools_files.HOME
 _home = tools_files._home
 _short = tools_files._short
 
-_FORMATS = (".blend", ".glb", ".gltf", ".obj", ".fbx")
+_FORMATS = (".blend", ".glb", ".gltf", ".obj", ".fbx", ".stl", ".ply")
 _NO_BLENDER = "Blender is not installed here, so I cannot open 3D files."
 
 # Runs inside Blender (blender -b -P script.py -- file). Opens a .blend, or imports anything else into an empty scene,
@@ -34,6 +35,10 @@ else:
         bpy.ops.import_scene.gltf(filepath=path)
     elif ext == "obj":
         bpy.ops.wm.obj_import(filepath=path)
+    elif ext == "stl":
+        bpy.ops.wm.stl_import(filepath=path)
+    elif ext == "ply":
+        bpy.ops.wm.ply_import(filepath=path)
     else:
         bpy.ops.import_scene.fbx(filepath=path)
 objs = list(bpy.data.objects)
@@ -49,7 +54,7 @@ def _blender():
 
 
 def blender_info(path):
-    """What is in a 3D file inside the home folder (.blend, .glb, .gltf, .obj, .fbx): object count, object names and vertex total. Read only."""
+    """What is in a 3D file inside the home folder (.blend, .glb, .gltf, .obj, .fbx, .stl, .ply): object count, object names and vertex total. Read only."""
     full = _home(path)
     if not full or not os.path.isfile(full) or not full.lower().endswith(_FORMATS):
         return f"No 3D file {path.strip()} I am allowed to open."
@@ -104,14 +109,92 @@ def render_blend(path):
     return f"Rendered frame 1 to {_short(out)}."
 
 
-TOOLS = (blender_info, render_blend)
+_IN = (".blend", ".glb", ".gltf", ".obj", ".fbx", ".stl", ".ply")
+_OUT = ("glb", "obj", "stl", "ply", "fbx")
+
+# Runs inside Blender (blender -b -P script.py -- source out_dir ext). Opens or imports the source, then exports the
+# whole scene as one new file named like it into out_dir (an .obj also writes its .mtl beside it).
+_CONVERT_SCRIPT = '''import bpy, os, sys
+src, out_dir, ext = sys.argv[sys.argv.index("--") + 1:][:3]
+low = src.lower()
+if low.endswith(".blend"):
+    bpy.ops.wm.open_mainfile(filepath=src)
+else:
+    bpy.ops.wm.read_factory_settings(use_empty=True)
+    if low.endswith((".glb", ".gltf")):
+        bpy.ops.import_scene.gltf(filepath=src)
+    elif low.endswith(".obj"):
+        bpy.ops.wm.obj_import(filepath=src)
+    elif low.endswith(".stl"):
+        bpy.ops.wm.stl_import(filepath=src)
+    elif low.endswith(".ply"):
+        bpy.ops.wm.ply_import(filepath=src)
+    else:
+        bpy.ops.import_scene.fbx(filepath=src)
+dest = os.path.join(out_dir, os.path.splitext(os.path.basename(src))[0] + "." + ext)
+if ext == "glb":
+    bpy.ops.export_scene.gltf(filepath=dest, export_format="GLB")
+elif ext == "obj":
+    bpy.ops.wm.obj_export(filepath=dest)
+elif ext == "stl":
+    bpy.ops.wm.stl_export(filepath=dest)
+elif ext == "ply":
+    bpy.ops.wm.ply_export(filepath=dest)
+else:
+    bpy.ops.export_scene.fbx(filepath=dest)
+'''
+
+
+def convert_3d(spec):
+    """Convert a 3D file inside the home folder (.blend, .glb, .gltf, .obj, .fbx, .stl, .ply) to glb, obj, stl, ply or fbx: "PATH\\tFORMAT". A new file beside the original, never over one. Asks first."""
+    path, _, fmt = (spec or "").partition("\t")
+    fmt = fmt.strip().lower().lstrip(".")
+    full = _home(path)
+    if not full or not os.path.isfile(full) or not full.lower().endswith(_IN):
+        return f"No 3D file {path.strip()} I am allowed to convert."
+    if fmt not in _OUT:
+        return f"I can make glb, obj, stl, ply or fbx, not {fmt or 'nothing'}."
+    if full.lower().endswith("." + fmt):
+        return f"{_short(full)} is already {fmt}."
+    out = os.path.splitext(full)[0] + "." + fmt
+    if os.path.exists(out):
+        return f"{_short(out)} already exists."
+    if tools_files.HEADLESS:
+        return f"Converted to {_short(out)}."
+    exe = _blender()
+    if not exe:
+        return _NO_BLENDER
+    with tempfile.TemporaryDirectory() as tmp:
+        script = os.path.join(tmp, "convert.py")
+        with open(script, "w") as f:
+            f.write(_CONVERT_SCRIPT)
+        made_dir = os.path.join(tmp, "out")
+        os.makedirs(made_dir)
+        try:
+            subprocess.run([exe, "-b", "-P", script, "--", full, made_dir, fmt], capture_output=True, timeout=300)
+        except (OSError, subprocess.SubprocessError):
+            return "Blender did not finish the conversion."
+        made = sorted(os.listdir(made_dir))
+        if os.path.basename(out) not in made:
+            return f"Blender could not convert {_short(full)} to {fmt}."
+        beside = [os.path.join(os.path.dirname(full), name) for name in made]
+        if any(os.path.exists(b) for b in beside):  # an .obj's .mtl counts too: nothing already there is ever replaced
+            return f"{_short(next(b for b in beside if os.path.exists(b)))} already exists."
+        for name, dest in zip(made, beside):
+            shutil.move(os.path.join(made_dir, name), dest)
+    extra = f" (and {', '.join(os.path.basename(b) for b in beside if b != out)})" if len(beside) > 1 else ""
+    return f"Converted to {_short(out)}{extra}."
+
+
+TOOLS = (blender_info, render_blend, convert_3d)
 
 _I = re.I
 # (pattern, tool name, what to hand it), same shape as tools_files.ROUTES. Only a path ending in a 3D extension or
 # .blend matches, so "render my notes" and "inspect the logs" stay with the other tools.
 ROUTES = (
-    (re.compile(r"^(?:what(?:'s| is) in|inspect) (?:the |my )?(\S+\.(?:blend|glb|gltf|obj|fbx))$", _I), "blender_info", lambda m: m.group(1)),
+    (re.compile(r"^(?:what(?:'s| is) in|inspect) (?:the |my )?(\S+\.(?:blend|glb|gltf|obj|fbx|stl|ply))$", _I), "blender_info", lambda m: m.group(1)),
     (re.compile(r"^render (?:the |my )?(\S+\.blend)$", _I), "render_blend", lambda m: m.group(1)),
+    (re.compile(r"^convert (?:the |my )?(\S+\.(?:blend|glb|gltf|obj|fbx|stl|ply)) (?:to|into) (?:a |an )?\.?(glb|obj|stl|ply|fbx)$", _I), "convert_3d", lambda m: m.group(1) + "\t" + m.group(2)),
 )
 
 
@@ -119,7 +202,8 @@ def demo():
     """Self-check: the routes and the headless answer, no Blender run."""
     assert ROUTES[0][0].match("what's in ~/Documents/scene.blend") and ROUTES[0][0].match("inspect ~/x.glb")
     assert ROUTES[1][0].match("render ~/Documents/scene.blend") and not ROUTES[1][0].match("render my notes")
-    assert "not" in blender_info("~/.ssh/key.blend") and "allowed" in render_blend("/etc/x.blend")
+    assert ROUTES[2][0].match("convert ~/a.glb to obj") and not ROUTES[2][0].match("convert cat.png to jpg")
+    assert "not" in blender_info("~/.ssh/key.blend") and "allowed" in render_blend("/etc/x.blend") and "allowed" in convert_3d("/etc/x.glb\tobj")
     assert all(f.__doc__ for f in TOOLS)
     print("tools_blender ok")
 

@@ -1,5 +1,5 @@
 {
-  "version": "7.9.1",
+  "version": "7.10.0",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -88,8 +88,8 @@
         "documented": 23
       },
       "app/tools_blender.py": {
-        "total": 4,
-        "documented": 4
+        "total": 5,
+        "documented": 5
       },
       "app/tools_character.py": {
         "total": 14,
@@ -360,8 +360,8 @@
         "documented": 30
       },
       "tests/test_blender.py": {
-        "total": 25,
-        "documented": 25
+        "total": 35,
+        "documented": 35
       },
       "tests/test_character.py": {
         "total": 26,
@@ -648,7 +648,7 @@
   "measured": {
     "tools": {
       "before": 0,
-      "after": 152
+      "after": 153
     },
     "actions_eval": "77/77",
     "knowledge_sweep": {

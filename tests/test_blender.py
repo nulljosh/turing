@@ -178,13 +178,86 @@ class Render(Base):
         self.assertFalse(os.path.exists(os.path.join(tools_files.HOME, "Documents", "scene.png")))
 
 
+class Convert(Base):
+    """convert_3d: refuses what it should, never overwrites, moves what Blender made beside the file."""
+
+    def setUp(self):
+        """Add a .glb to the temp home."""
+        super().setUp()
+        self.glb = os.path.join(tools_files.HOME, "Documents", "model.glb")
+        open(self.glb, "wb").close()
+
+    def run_convert(self, spec, made=("model.obj", "model.mtl")):
+        """Run convert_3d live with a fake Blender that writes the files named in made."""
+        def fake(cmd, **kwargs):
+            """Write the output files into the folder the script was given."""
+            for name in made:
+                with open(os.path.join(cmd[-2], name), "wb") as f:
+                    f.write(b"x")
+            return subprocess.CompletedProcess(cmd, 0, stdout="", stderr="")
+        with mock.patch.object(tools_files, "HEADLESS", False), \
+                mock.patch.object(tools_blender, "_blender", return_value="blender"), \
+                mock.patch.object(tools_blender.subprocess, "run", side_effect=fake) as run:
+            return tools_blender.convert_3d(spec), run
+
+    def test_route(self):
+        """convert A to B hands convert_3d the path and format, tab separated."""
+        for pat, name, arg in tools_blender.ROUTES:
+            m = pat.match("convert ~/Documents/model.glb to obj")
+            if m:
+                self.assertEqual((name, arg(m)), ("convert_3d", "~/Documents/model.glb\tobj"))
+                return
+        self.fail("no convert route")
+
+    def test_refusals(self):
+        """Outside home, a missing file, a wrong format and the same format are plain replies and run nothing."""
+        with mock.patch.object(tools_blender.subprocess, "run") as run:
+            self.assertIn("allowed", tools_blender.convert_3d("/etc/x.glb\tobj"))
+            self.assertIn("allowed", tools_blender.convert_3d("~/Documents/none.glb\tobj"))
+            self.assertIn("not xyz", tools_blender.convert_3d(self.glb + "\txyz"))
+            self.assertIn("already glb", tools_blender.convert_3d(self.glb + "\tglb"))
+        run.assert_not_called()
+
+    def test_headless_runs_nothing(self):
+        """Headless answers and writes nothing."""
+        with mock.patch.object(tools_files, "HEADLESS", True), mock.patch.object(tools_blender.subprocess, "run") as run:
+            self.assertEqual(tools_blender.convert_3d(self.glb + "\tobj"), "Converted to ~/Documents/model.obj.")
+        run.assert_not_called()
+
+    def test_moves_files_beside(self):
+        """The .obj and its .mtl both land beside the original."""
+        got, _ = self.run_convert(self.glb + "\tobj")
+        self.assertEqual(got, "Converted to ~/Documents/model.obj (and model.mtl).")
+        for name in ("model.obj", "model.mtl"):
+            self.assertTrue(os.path.exists(os.path.join(tools_files.HOME, "Documents", name)))
+
+    def test_never_overwrites(self):
+        """An existing output, or an existing .mtl, stops the conversion and nothing is replaced."""
+        with open(os.path.join(tools_files.HOME, "Documents", "model.mtl"), "wb") as f:
+            f.write(b"mine")
+        got, _ = self.run_convert(self.glb + "\tobj")
+        self.assertIn("already exists", got)
+        with open(os.path.join(tools_files.HOME, "Documents", "model.mtl"), "rb") as f:
+            self.assertEqual(f.read(), b"mine")
+        self.assertFalse(os.path.exists(os.path.join(tools_files.HOME, "Documents", "model.obj")))
+        open(os.path.join(tools_files.HOME, "Documents", "model.stl"), "wb").close()
+        with mock.patch.object(tools_blender.subprocess, "run") as run:
+            self.assertIn("already exists", tools_blender.convert_3d(self.glb + "\tstl"))
+        run.assert_not_called()
+
+    def test_blender_made_nothing(self):
+        """A Blender that writes no file is a plain reply."""
+        got, _ = self.run_convert(self.glb + "\tobj", made=())
+        self.assertIn("could not convert", got)
+
+
 class Shape(unittest.TestCase):
     """Every tool is documented and listed."""
 
     def test_tools_documented(self):
         """Each tool has a docstring, and the TOOLS tuple names both."""
         self.assertTrue(all(f.__doc__ for f in tools_blender.TOOLS))
-        self.assertEqual({f.__name__ for f in tools_blender.TOOLS}, {"blender_info", "render_blend"})
+        self.assertEqual({f.__name__ for f in tools_blender.TOOLS}, {"blender_info", "render_blend", "convert_3d"})
 
 
 if __name__ == "__main__":
