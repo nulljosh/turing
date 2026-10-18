@@ -1,5 +1,7 @@
 # Progress log
 
+- 2026-10-18: v7.19.1 Her logos know garage doors: "make me a logo for Big Ben Garage Door" draws a roofline over three door panels (a new glyph, 21 now, picked by garage, overhead door or door opener) on a colored tile, in the Mac tool and the landing demo. Made first for a real business, Big Ben Garage Doors, in red, blue and black.
+  v7.19.1 · 163 tools · 929 tests · docs coverage 100% · laws all hold · biggest app/tools_logo.py 649 · actions 285/285 · parity 285/285 · util_diff 288/288
 - 2026-10-18: v7.19.0 She changes a video's speed: "speed up ~/Movies/a.mp4 2x" or "slow down ~/Movies/a.mp4 to 0.5x" writes a new copy (like a-2x.mp4) at 0.25x to 4x, picture and sound kept in step, never over a file. Asks first. Checked with real ffmpeg runs: 8 seconds became 4 at 2x, 2 at 4x and 32 at 0.25x, and a video with no sound works too.
   v7.19.0 · 163 tools · 929 tests · docs coverage 100% · laws all hold · biggest app/tools_logo.py 649 · actions 285/285 · parity 285/285 · util_diff 288/288
 - 2026-10-18: v7.18.0 She makes a gif from a video: "make a gif of ~/Movies/a.mp4 from 0:10 to 0:15" (or just the video, for its first 5 seconds) writes a looping 480-wide .gif beside it, never over one, at most 30 seconds. Asks first. Checked with a real ffmpeg run: a 3 second slice came out 480x270 and 3.0 seconds; a second run is refused as already there.

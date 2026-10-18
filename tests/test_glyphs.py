@@ -17,7 +17,8 @@ class Keywords(unittest.TestCase):
     def test_plain_subjects(self):
         """A surf school is a wave, a bakery is bread, a gym a dumbbell, Turing a network."""
         for text, want in (("a surf school", "wave"), ("my bakery", "bread"), ("a gym", "dumbbell"), ("turing", "network"),
-                           ("a coffee shop", "cup"), ("hiking trails", "mountain"), ("dog grooming", "paw")):
+                           ("a coffee shop", "cup"), ("hiking trails", "mountain"), ("dog grooming", "paw"),
+                           ("Big Ben Garage Door", "garage"), ("a house for rent", "house")):
             self.assertEqual(tools_glyphs.keyword_glyph(text), want, text)
 
     def test_no_partial_words(self):

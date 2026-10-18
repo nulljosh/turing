@@ -53,6 +53,8 @@ GLYPHS = {
         "M 332 512 L 692 512", "M 332 380 L 332 644", "M 232 440 L 232 584", "M 692 380 L 692 644", "M 792 440 L 792 584")),
     "heart": (r"love|heart|dating|care|health|kind|charity|wedding|valentine|clinic", _p(
         "M 512 772 C 312 640 232 540 252 440 C 272 330 412 300 512 412 C 612 300 752 330 772 440 C 792 540 712 640 512 772 Z")),
+    "garage": (r"garage|overhead door|sectional door|door opener", _p(
+        "M 212 816 L 212 472 L 512 232 L 812 472 L 812 816", "M 352 556 L 672 556", "M 352 666 L 672 666", "M 352 776 L 672 776")),
     "house": (r"house|home|real estate|rent|apartment|property|realtor|stay|hotel|room", _p(
         "M 232 512 L 512 272 L 792 512", "M 312 452 L 312 772 L 712 772 L 712 452", "M 452 772 L 452 612 L 572 612 L 572 772")),
     "eye": (r"eye|vision|see|watch|optic|view|look|camera|photo|lens|security", _p(

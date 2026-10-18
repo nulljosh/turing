@@ -171,6 +171,35 @@ window.SAMANTHA_GLYPHS = {
     }
    ]
   },
+  "garage": {
+   "words": "garage|overhead door|sectional door|door opener",
+   "layers": [
+    {
+     "type": "path",
+     "stroke": "#FFFFFF",
+     "stroke_width": 72,
+     "d": "M 212 816 L 212 472 L 512 232 L 812 472 L 812 816"
+    },
+    {
+     "type": "path",
+     "stroke": "#FFFFFF",
+     "stroke_width": 72,
+     "d": "M 352 556 L 672 556"
+    },
+    {
+     "type": "path",
+     "stroke": "#FFFFFF",
+     "stroke_width": 72,
+     "d": "M 352 666 L 672 666"
+    },
+    {
+     "type": "path",
+     "stroke": "#FFFFFF",
+     "stroke_width": 72,
+     "d": "M 352 776 L 672 776"
+    }
+   ]
+  },
   "house": {
    "words": "house|home|real estate|rent|apartment|property|realtor|stay|hotel|room",
    "layers": [
