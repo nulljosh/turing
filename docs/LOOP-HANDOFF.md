@@ -1,4 +1,4 @@
-# Turing loop handoff (2026-10-18, late night)
+# Turing loop handoff (2026-10-18, late morning)
 
 ## What the loop is
 
@@ -8,21 +8,22 @@ A major ships only when its roadmap family is finished and checked: the badge st
 
 ## Where things stand
 
-- **Live:** v7.9.1 (engraved harbour footer on the landing page). v7.10.0 (convert_3d, 153 tools) is shipping. Before them, v7.9.0 (she notes her own misses for the teacher). Before it, v7.8.0 (check_page, a read-only page checker, 152 tools). Before it, v7.7.0 (Samantha Sans rebuilt on Inter, SF and Helvetica in spirit; noise is a decline again). Before it, v7.6.1 on turing.jaybulb.com. 7.5 added video_info, trim_video and vertical_video through ffmpeg; 7.6 added a Berkeley function-calling (BFCL v3 simple) harness in eval/bfcl.py, where her picker scores 325 of 400 (81.3 percent) under the leaderboard's own string rules (7.6.1), misses mostly argument spelling. Before that, v7.4.0 (the old heyitsmejosh.com host lapsed). Since 7.0: download_file (a web address into Downloads, public hosts, 200 MB cap, never overwrites, asks first), Hacker News in research, `chat.py --character NAME`, blank-target and no-argument write guards (7.2.1 and 7.2.2), and headless Blender reads and renders (blender_info, render_blend). 151 tools. Docs moved into docs/ with a /docs skill; the brand kit, icon and favicons are cut from one master. Memory reads back on the Mac and the phone, the Mac morning brief, Shortcuts she writes (6.1), and memory in your own iCloud Drive on request. v6.0.0 put her on a real Pi 4; v5.14.0 gave her Samantha Sans.
-- **Roadmap:** lives at docs/roadmap.md. Checkpoint's issue sync now reads docs/roadmap.md too.
-- **Joshua Tree PR 537** (list and read the card) is a draft behind main and needs a rebase by the Joshua Tree session. Do not touch it from here.
-- **Pi shell:** the console should boot to zsh or bash with Samantha as a command (docs/PI.md). It changes the words Joshua tests with, so it waits for a go-ahead and lives in the Joshua Tree repo on a branch with a PR.
-- **8.0 picker rounds are at the noise floor:** run 23 stays shipped. A retrain moves about 25 of 4,455 pooled rows by itself, and the leftover mistakes are 3 or 4 rows each. More teacher rows cannot be measured; only a new idea (relabeled dev sets, a different model) restarts 8.0.
-- **10.0 is nearly there in Joshua Tree:** 3.8.0 (small picker in C, `pick` and `pickcheck`) and 3.8.3 (abstains on chat) are merged; PR 596 (3.8.4, leaves questions about its own topics alone) waits on ci-local. Measured on the nine dev sets: parity 297 of 297 in QEMU (met), tool-level right rate 81.2 percent against the 80 percent bar (met), false tool calls on chat sentences 20 of 434 (4.6 percent) against run 23's 22 (5.1 percent) (met). Caveat to say every time: the chat rows were written after reading the dev sets' mistakes, so the numbers are tuned to dev; the sealed sets are unread. The 10.0 tag needs PR 596 merged, the docs and whitepaper refresh, and Joshua's real-mic test; the name "her picker in C" is earned only on those dev numbers, so say so.
+- **Live:** v7.9.1 on turing.jaybulb.com, with the engraved harbour footer on the landing page (the shader is ported from Atlin's).
+- **Pushed, not live yet:** v7.10.0 (c056c99). convert_3d converts glb, gltf, obj, stl, ply and fbx through headless Blender, asks first and never overwrites. 153 tools, 890 tests. Its test run was still going at checkpoint; the deploy follows a green run.
+- **Shipped before that:** v7.9.0 notes every command she could not do in ~/.samantha/misses.jsonl for the teacher (the file is still empty). v7.8.0 adds check_page, a read-only page checker. v7.7.0 rebuilt the face as Samantha Sans on Inter (OFL kept), with one terracotta accent (#b5502c light, #e0825a dark) and gibberish as a decline again. v7.6.1 fixed how BFCL strings are scored: her picker passes 325 of 400 (81.3 percent) on the function-calling benchmark in eval/bfcl.py. v7.5.0 added video_info, trim_video and vertical_video through ffmpeg.
+- **Roadmap:** docs/roadmap.md, which the checkpoint's issue sync reads. Issue #107 (Blender family) stays open for "a simple 3D object" and "a logo as 3D text".
+- **Joshua Tree 10.0 (the picker in C):** PR 596 (3.9.2, the small picker leaves its own topics alone) is merged on GitHub, dated 2026-10-13. The 10.0 tag still needs the docs and whitepaper refresh and Joshua's real-mic test. Caveat to say every time: the chat rows were written after reading the dev sets' mistakes, so the numbers are tuned to dev; the sealed sets are unread.
+- **8.0 picker rounds are at the noise floor:** run 23 stays shipped. A retrain moves about 25 of 4,455 pooled rows by itself, and the leftover mistakes are 3 or 4 rows each. Only a new idea (relabeled dev sets, a different model) restarts 8.0.
 - **9.0 is Joshua's:** it needs his signed iPhone build and the Yeti mic; nothing to build until then except what he asks for.
-- **Disk:** about 12 GB free. Other sessions' builds eat it; only clean what this session made.
+- **Pi shell:** the boot-to-shell flip (docs/PI.md) still waits for Joshua's go-ahead.
+- **Disk:** 11Gi free on the internal drive. Other sessions' builds eat it; only clean what this session made.
 - **Room benchmark (side work, done):** ~/Documents/room-bench, not a git repo, private photos, never commit or copy them. Final scores out of 100 (rubric v2, which rewards listing objects, so the eye decides): Sonnet 99.3, Opus 97.3, Fable 97.3 (best by eye), Haiku 94.0, Samantha 51.1. Samantha's 9B cannot hold her own previous file inside oMLX's memory ceiling, so each self-fix round was a rewrite. COMPARISON.md there has the write-up.
 - **Sealed sets** heldout4, heldout7 and heldout12 are read as counts only, never as text.
 
 ## Next, in order
 
-1. Teach from her misses (Every wake, step 6). The log started in 7.9.0 and is empty until she is used; when it holds rows, they are the first thing the next picker round trains on.
-2. Blender family (#107): convert_3d next ("convert ~/a.glb to obj", glb, gltf, obj, stl, ply, fbx through headless Blender, a write that asks first, new file beside the original), then a simple 3D object, then a logo as 3D text. Check each with a real Blender round trip read back by blender_info.
+1. Teach from her misses (every wake, step 6). misses.jsonl is empty so far; when it has rows, they are the first thing the next picker round trains on.
+2. Blender family (#107): convert_3d is done. Next a simple 3D object, then a logo as 3D text. Check each with a real Blender round trip, read back by blender_info.
 3. 8.0 picker: the bar is unchanged. Round 25 tries weighting the teacher and miss rows, or teaching only the tools the dev sets miss, everything else equal.
 4. Audio (Yeti record, transcribe, file to the vault) waits on Joshua clicking the microphone prompt once.
 
