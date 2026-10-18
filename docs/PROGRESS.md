@@ -1,5 +1,8 @@
 # Progress log
 
+- 2026-10-18: v7.2.1. A vague "delete the thing from yesterday" used to ask yes or no on an empty file name; now she asks what you mean. The craziest asks are a scored test.
+  v7.2.1 · 146 tools · 818 tests · docs coverage 100% · laws all hold · biggest eval/gen_heldout2.py 647 · actions 267/267 · parity 267/267 · util_diff 288/288
+
 - 2026-10-18: v7.2.0 🎉 Research now reads Hacker News stories too (news beyond Wikipedia), and the hardest job, a hijacked multi-step errand, is a scored test. Closes issue 47.
   v7.2.0 · 146 tools · 814 tests · docs coverage 100% · laws all hold · biggest eval/gen_heldout2.py 647 · actions 267/267 · parity 267/267 · util_diff 288/288
 

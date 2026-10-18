@@ -1,5 +1,5 @@
 {
-  "version": "7.2.0",
+  "version": "7.2.1",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -72,8 +72,8 @@
         "documented": 9
       },
       "app/tools.py": {
-        "total": 32,
-        "documented": 32
+        "total": 33,
+        "documented": 33
       },
       "app/tools_agent.py": {
         "total": 9,
@@ -418,6 +418,10 @@
       "tests/test_hands_data.py": {
         "total": 4,
         "documented": 4
+      },
+      "tests/test_hard_asks.py": {
+        "total": 7,
+        "documented": 7
       },
       "tests/test_hard_jobs.py": {
         "total": 11,

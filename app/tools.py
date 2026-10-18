@@ -508,6 +508,9 @@ def do(query, log=None, confirm=None):
     picked = pick(query)
     if picked and picked[0] == "ask":
         return picked[1]
+    blank = _blank_target(picked[1] if picked[0] == "unsure" else picked[0], picked[2] if picked[0] == "unsure" else picked[1]) if picked else None
+    if blank:
+        return blank
     if picked and picked[0] == "unsure":  # her 1.5B was not sure of the tool: run it only on a yes, and never without someone to ask
         if not confirm or not confirm(picked[1], (picked[2],)):
             return None if not confirm else "Okay, I will not."
@@ -520,6 +523,16 @@ def do(query, log=None, confirm=None):
         fn = TOOLS[picked[0]]
         return fn(picked[1]) if fn.__code__.co_argcount else fn()
     return agent(query, log=log, confirm=confirm) if picked or is_action(query) else None
+
+
+def _blank_target(name, arg):
+    """The question to ask when a write that needs something to act on was picked with nothing to act on ("delete the
+    thing from yesterday" picked trash_file with no path): she asks what, never a yes or no on a blank. None otherwise."""
+    fn = TOOLS.get(name)
+    if name not in WRITES or fn is None or str(arg or "").strip():
+        return None
+    needed = fn.__code__.co_argcount - len(fn.__defaults__ or ())
+    return f"What should I {name.split('_')[0]}? Name it and I will ask before I do it." if needed > 0 else None
 
 
 def demo():
