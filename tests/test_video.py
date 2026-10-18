@@ -414,16 +414,96 @@ class CutOut(Base):
         self.assertTrue(os.path.exists(os.path.join(tools_files.HOME, "Movies", "a-cut.mp4")))
 
 
+class Join(Base):
+    """join_videos: two videos one after the other into <first>-joined.mp4."""
+
+    def setUp(self):
+        """A second video beside the first."""
+        super().setUp()
+        self.other = os.path.join(tools_files.HOME, "Movies", "b.mp4")
+        open(self.other, "wb").close()
+        self.req = self.clip + "\t" + self.other
+
+    def _run(self, sound_a, sound_b):
+        """Run join_videos live with a stand-in ffprobe that reports sound per file and a stand-in ffmpeg that writes the output."""
+        calls = []
+
+        def fake(cmd, **kw):
+            """ffprobe answers per file; ffmpeg writes its output file."""
+            calls.append(cmd)
+            if "ffprobe" in cmd[0]:
+                has = sound_a if cmd[-1] == self.clip else sound_b
+                return subprocess.CompletedProcess(cmd, 0, stdout="audio\n" if has else "", stderr="")
+            open(cmd[-1], "wb").write(b"x")
+            return subprocess.CompletedProcess(cmd, 0, stdout=b"", stderr=b"")
+        with mock.patch.object(tools_files, "HEADLESS", False), mock.patch.object(tools_video, "_exe", side_effect=lambda n: n), \
+                mock.patch.object(tools_video.subprocess, "run", side_effect=fake):
+            return tools_video.join_videos(self.req), calls
+
+    def test_routes_and_refusals(self):
+        """Both phrasings route; a wrong count, a hidden file and an existing result are plain replies that run nothing."""
+        routes = [r for r in tools_video.ROUTES if r[1] == "join_videos"]
+        self.assertEqual(routes[0][2](routes[0][0].match("join ~/Movies/a.mp4 and ~/b.mov")), "~/Movies/a.mp4\t~/b.mov")
+        self.assertEqual(routes[1][2](routes[1][0].match("put my ~/a.mp4 and ~/b.mp4 together")), "~/a.mp4\t~/b.mp4")
+        self.assertFalse(any(r[0].match("join the club") for r in routes))
+        with mock.patch.object(tools_video.subprocess, "run") as run:
+            self.assertIn("Say which two", tools_video.join_videos(self.clip))
+            self.assertIn("allowed", tools_video.join_videos(self.clip + "\t" + os.path.join(tools_files.HOME, ".hidden", "secret.mp4")))
+            open(os.path.join(tools_files.HOME, "Movies", "a-joined.mp4"), "wb").close()
+            self.assertEqual(tools_video.join_videos(self.req), "~/Movies/a-joined.mp4 already exists.")
+        run.assert_not_called()
+
+    def test_headless(self):
+        """Headless names the file and runs nothing."""
+        with mock.patch.object(tools_video.subprocess, "run") as run:
+            self.assertEqual(tools_video.join_videos(self.req), "Joined them into ~/Movies/a-joined.mp4.")
+        run.assert_not_called()
+
+    def test_with_and_without_sound(self):
+        """Both with sound joins the picture and the sound; both without joins the picture alone; one of each is refused before ffmpeg runs."""
+        said, calls = self._run(True, True)
+        self.assertEqual(said, "Joined them into ~/Movies/a-joined.mp4.")
+        graph = calls[-1][calls[-1].index("-filter_complex") + 1]
+        self.assertIn("concat=n=2:v=1:a=1", graph)
+        self.assertTrue(os.path.exists(os.path.join(tools_files.HOME, "Movies", "a-joined.mp4")))
+        os.remove(os.path.join(tools_files.HOME, "Movies", "a-joined.mp4"))
+        said, calls = self._run(False, False)
+        self.assertIn("a=0", calls[-1][calls[-1].index("-filter_complex") + 1])
+        os.remove(os.path.join(tools_files.HOME, "Movies", "a-joined.mp4"))
+        said, calls = self._run(True, False)
+        self.assertIn("One of them has sound", said)
+        self.assertFalse(any("ffmpeg" in c[0] for c in calls))
+        self.assertFalse(os.path.exists(os.path.join(tools_files.HOME, "Movies", "a-joined.mp4")))
+
+    def test_failures(self):
+        """A hang and a bad exit are plain replies and leave no file."""
+        def probe_then(result):
+            """ffprobe says both have sound; ffmpeg does what the test says."""
+            def fake(cmd, **kw):
+                """ffprobe reports sound; ffmpeg raises or returns the given result."""
+                if "ffprobe" in cmd[0]:
+                    return subprocess.CompletedProcess(cmd, 0, stdout="audio\n", stderr="")
+                if isinstance(result, Exception):
+                    raise result
+                return result
+            return fake
+        for result, want in ((subprocess.TimeoutExpired("ffmpeg", 1800), "ffmpeg did not finish."), (subprocess.CompletedProcess([], 1, stdout=b"", stderr=b""), "could not join")):
+            with mock.patch.object(tools_files, "HEADLESS", False), mock.patch.object(tools_video, "_exe", side_effect=lambda n: n), \
+                    mock.patch.object(tools_video.subprocess, "run", side_effect=probe_then(result)):
+                self.assertIn(want, tools_video.join_videos(self.req))
+        self.assertFalse(os.path.exists(os.path.join(tools_files.HOME, "Movies", "a-joined.mp4")))
+
+
 class Registry(unittest.TestCase):
     """The three tools are registered, documented, and the two writes ask first."""
 
     def test_names(self):
         """Names match TOOLS and each has a docstring."""
-        self.assertEqual({f.__name__ for f in tools_video.TOOLS}, {"video_info", "trim_video", "vertical_video", "trim_audio", "extract_audio", "mute_video", "make_gif", "speed_video", "cut_out_video"})
+        self.assertEqual({f.__name__ for f in tools_video.TOOLS}, {"video_info", "trim_video", "vertical_video", "trim_audio", "extract_audio", "mute_video", "make_gif", "speed_video", "cut_out_video", "join_videos"})
         self.assertTrue(all(f.__doc__ for f in tools_video.TOOLS))
         import tools
         self.assertTrue({"video_info", "trim_video", "vertical_video", "trim_audio", "extract_audio"} <= set(tools.TOOLS))
-        self.assertTrue({"trim_video", "vertical_video", "trim_audio", "extract_audio", "mute_video", "make_gif", "speed_video", "cut_out_video"} <= tools.WRITES and "video_info" not in tools.WRITES)
+        self.assertTrue({"trim_video", "vertical_video", "trim_audio", "extract_audio", "mute_video", "make_gif", "speed_video", "cut_out_video", "join_videos"} <= tools.WRITES and "video_info" not in tools.WRITES)
 
 
 if __name__ == "__main__":

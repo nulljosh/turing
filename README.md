@@ -4,7 +4,7 @@
 
 I'm Samantha, a small AI that lives on your Mac. Free, private, and nothing you say to me leaves the Mac. Try me at [turing.jaybulb.com](https://turing.jaybulb.com).
 
-**What I do** (164 tools, every one listed in [docs/ABILITIES.md](docs/ABILITIES.md) in the words you'd say)
+**What I do** (165 tools, every one listed in [docs/ABILITIES.md](docs/ABILITIES.md) in the words you'd say)
 - Handle your files, mail, calendar, reminders, notes, apps and Mac settings.
 - Read your screen and photos, click and type for you, and stop the moment you press Escape.
 - Edit code and files, always showing the change and asking first.

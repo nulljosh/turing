@@ -2,7 +2,7 @@
 long it is, how big, and its picture and sound, read only. trim_video (a write, asks first) cuts a clip between two
 times, vertical_video (a write, asks first) centre-crops a video to 9:16 for a phone, and trim_audio (a write, asks
 first) cuts a piece out of a sound file (.mp3, .m4a, .wav, .aac, .flac, .ogg), and extract_audio (a write, asks first)
-pulls the sound out of a video into an .mp3, .m4a or .wav, mute_video (a write, asks first) makes a silent copy of a video, make_gif (a write, asks first) turns up to 30 seconds of one into a looping .gif, speed_video (a write, asks first) makes a copy at 0.25x to 4x speed, and cut_out_video (a write, asks first) removes a section from the middle and joins the rest. Each write makes a new file
+pulls the sound out of a video into an .mp3, .m4a or .wav, mute_video (a write, asks first) makes a silent copy of a video, make_gif (a write, asks first) turns up to 30 seconds of one into a looping .gif, speed_video (a write, asks first) makes a copy at 0.25x to 4x speed, cut_out_video (a write, asks first) removes a section from the middle and joins the rest, and join_videos (a write, asks first) puts two videos one after the other. Each write makes a new file
 beside the original, never over an existing one. They run ffmpeg and ffprobe. Same home-folder rule as tools_files:
 home only, nothing hidden. tests/test_video.py mocks subprocess, so no real ffmpeg run happens there.
 """
@@ -273,7 +273,59 @@ def cut_out_video(request):
     return why or f"Removed {start} to {end} into {_short(out)}."
 
 
-TOOLS = (video_info, trim_video, vertical_video, trim_audio, extract_audio, mute_video, make_gif, speed_video, cut_out_video)
+def _has_sound(path):
+    """True when the video has an audio stream (ffprobe), False when not or when ffprobe cannot say."""
+    exe = _exe("ffprobe")
+    try:
+        got = subprocess.run([exe, "-v", "error", "-select_streams", "a", "-show_entries", "stream=codec_type", "-of", "csv=p=0", path],
+                             capture_output=True, text=True, timeout=60).stdout
+    except (OSError, subprocess.SubprocessError, TypeError):
+        return False
+    return bool(got.strip())
+
+
+def join_videos(request):
+    """Put two videos inside the home folder one after the other. Takes 'first<TAB>second'. Makes <first>-joined.mp4 beside the first, 1280x720 at 30 frames, never over a file. Both need sound or neither does. Asks first."""
+    parts = [p.strip() for p in request.split("\t")]
+    if len(parts) != 2:
+        return "Say which two videos, like: join ~/Movies/a.mp4 and ~/Movies/b.mp4."
+    first, second = _video(parts[0]), _video(parts[1])
+    if not first or not second:
+        return f"No video {parts[0] if not first else parts[1]} I am allowed to open."
+    out = os.path.splitext(first)[0] + "-joined.mp4"
+    if os.path.exists(out):
+        return f"{_short(out)} already exists."
+    if tools_files.HEADLESS:
+        return f"Joined them into {_short(out)}."
+    exe = _exe("ffmpeg")
+    if not exe or not _exe("ffprobe"):
+        return _NO_FFMPEG
+    sound = _has_sound(first)
+    if sound != _has_sound(second):
+        return "One of them has sound and the other does not. Mute the first one with mute_video, or the other way round, and ask again."
+    pic = "scale=1280:720:force_original_aspect_ratio=decrease,pad=1280:720:(ow-iw)/2:(oh-ih)/2,setsar=1,fps=30,format=yuv420p"
+    if sound:
+        aud = "aresample=44100,aformat=channel_layouts=stereo"
+        graph = f"[0:v]{pic}[v0];[1:v]{pic}[v1];[0:a]{aud}[a0];[1:a]{aud}[a1];[v0][a0][v1][a1]concat=n=2:v=1:a=1[v][a]"
+        maps = ["-map", "[v]", "-map", "[a]", "-c:a", "aac"]
+    else:
+        graph = f"[0:v]{pic}[v0];[1:v]{pic}[v1];[v0][v1]concat=n=2:v=1:a=0[v]"
+        maps = ["-map", "[v]"]
+    tmp = out + ".part.mp4"
+    try:
+        done = subprocess.run([exe, "-hide_banner", "-loglevel", "error", "-i", first, "-i", second, "-filter_complex", graph, *maps, "-c:v", "libx264", tmp],
+                              capture_output=True, timeout=1800)
+    except (OSError, subprocess.SubprocessError):
+        return "ffmpeg did not finish."
+    if done.returncode != 0 or not os.path.exists(tmp):
+        if os.path.exists(tmp):
+            os.remove(tmp)
+        return f"ffmpeg could not join {_short(first)} and {_short(second)}."
+    os.replace(tmp, out)
+    return f"Joined them into {_short(out)}."
+
+
+TOOLS = (video_info, trim_video, vertical_video, trim_audio, extract_audio, mute_video, make_gif, speed_video, cut_out_video, join_videos)
 
 _I = re.I
 _EXT = r"(\S+\.(?:mp4|mov|m4v|mkv|webm))"
@@ -296,6 +348,8 @@ ROUTES = (
     (re.compile(r"^slow down (?:the |my )?" + _EXT + r" to (\d{1,2}(?:\.\d{1,2})?x?)$", _I), "speed_video", lambda m: "\t".join(m.groups())),
     (re.compile(r"^(?:remove|delete|cut out) (?:the part from |the section from |from )?(\S+) (?:to|until) (\S+) (?:from|of|in) (?:the |my )?" + _EXT + "$", _I), "cut_out_video",
      lambda m: "\t".join((m.group(3), m.group(1), m.group(2)))),
+    (re.compile(r"^(?:join|merge|combine|stitch) (?:the |my )?" + _EXT + r" (?:and|with|to|then) (?:the |my )?" + _EXT + "$", _I), "join_videos", lambda m: "\t".join(m.groups())),
+    (re.compile(r"^put (?:the |my )?" + _EXT + r" and (?:the |my )?" + _EXT + " together$", _I), "join_videos", lambda m: "\t".join(m.groups())),
 )
 
 
@@ -309,9 +363,10 @@ def demo():
     assert by("make_gif")[0].match("make a gif of ~/a.mp4 from 0:10 to 0:15") and by("make_gif")[2].match("make ~/a.mov into a gif") and not by("make_gif")[2].match("make dinner into a gif")
     assert by("speed_video")[0].match("speed up ~/a.mp4 2x") and by("speed_video")[1].match("slow down ~/a.mp4 to 0.5x") and not by("speed_video")[0].match("speed up my laptop")
     assert by("cut_out_video")[0].match("remove 0:10 to 0:15 from ~/Movies/a.mp4") and not by("cut_out_video")[0].match("remove 0:10 to 0:15 from my notes")
+    assert by("join_videos")[0].match("join ~/a.mp4 and ~/b.mov") and by("join_videos")[1].match("put ~/a.mp4 and ~/b.mp4 together") and not by("join_videos")[0].match("join the club")
     assert _secs("1:02:03") == 3723 and _secs("7.5") == 7.5
     assert _clock(83) == "1:23" and _clock(3725) == "1:02:05"
-    assert "allowed" in video_info("~/.ssh/a.mp4") and "allowed" in vertical_video("/etc/a.mp4") and "allowed" in mute_video("~/.ssh/a.mp4") and "allowed" in make_gif("/etc/a.mp4") and "allowed" in speed_video("/etc/a.mp4\t2") and "allowed" in cut_out_video("/etc/a.mp4\t0\t1")
+    assert "allowed" in video_info("~/.ssh/a.mp4") and "allowed" in vertical_video("/etc/a.mp4") and "allowed" in mute_video("~/.ssh/a.mp4") and "allowed" in make_gif("/etc/a.mp4") and "allowed" in speed_video("/etc/a.mp4\t2") and "allowed" in cut_out_video("/etc/a.mp4\t0\t1") and "allowed" in join_videos("/etc/a.mp4\t/etc/b.mp4")
     assert all(f.__doc__ for f in TOOLS)
     print("tools_video ok")
 
