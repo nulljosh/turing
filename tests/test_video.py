@@ -342,16 +342,52 @@ class Gif(Base):
         self.assertFalse(os.path.exists(os.path.join(tools_files.HOME, "Movies", "a.gif")))
 
 
+class Speed(Base):
+    """speed_video: a copy at 0.25x to 4x, picture and sound kept in step."""
+
+    def test_routes_and_refusals(self):
+        """Both phrasings route; a bad or out-of-range speed and a hidden file are plain replies that run nothing."""
+        routes = [r for r in tools_video.ROUTES if r[1] == "speed_video"]
+        self.assertEqual(routes[0][2](routes[0][0].match("speed up ~/Movies/a.mp4 by 2x")), "~/Movies/a.mp4\t2x")
+        self.assertEqual(routes[1][2](routes[1][0].match("slow down my ~/a.mov to 0.5x")), "~/a.mov\t0.5x")
+        self.assertFalse(any(r[0].match("speed up my laptop") for r in routes))
+        with mock.patch.object(tools_video.subprocess, "run") as run:
+            self.assertIn("allowed", tools_video.speed_video(os.path.join(tools_files.HOME, ".hidden", "secret.mp4") + "\t2"))
+            for bad in ("", "fast", "0.1x", "5x", "-2x", "99x"):
+                self.assertIn("0.25x to 4x", tools_video.speed_video(self.clip + "\t" + bad), bad)
+            open(os.path.join(tools_files.HOME, "Movies", "a-2x.mp4"), "wb").close()
+            self.assertEqual(tools_video.speed_video(self.clip + "\t2x"), "~/Movies/a-2x.mp4 already exists.")
+        run.assert_not_called()
+
+    def test_headless_and_run(self):
+        """Headless names the file; a live run sets the picture and chains atempo so 4x and 0.25x stay inside ffmpeg's 0.5 to 2 stage range."""
+        with mock.patch.object(tools_video.subprocess, "run") as run:
+            self.assertEqual(tools_video.speed_video(self.clip + "\t0.5"), "Made a 0.5x copy at ~/Movies/a-0_5x.mp4.")
+        run.assert_not_called()
+
+        def fake(cmd, **kw):
+            """A stand-in that writes the output the way ffmpeg would."""
+            open(cmd[-1], "wb").write(b"x")
+            return subprocess.CompletedProcess(cmd, 0, stdout=b"", stderr=b"")
+        for speed, want in (("2x", "atempo=2"), ("4x", "atempo=2.0,atempo=2"), ("0.25x", "atempo=0.5,atempo=0.5"), ("1.5", "atempo=1.5")):
+            with mock.patch.object(tools_files, "HEADLESS", False), mock.patch.object(tools_video, "_exe", return_value="ffmpeg"), \
+                    mock.patch.object(tools_video.subprocess, "run", side_effect=fake) as run:
+                tools_video.speed_video(self.clip + "\t" + speed)
+            cmd = run.call_args[0][0]
+            self.assertIn("setpts=PTS/", cmd[cmd.index("-vf") + 1])
+            self.assertEqual(cmd[cmd.index("-af") + 1], want, speed)
+
+
 class Registry(unittest.TestCase):
     """The three tools are registered, documented, and the two writes ask first."""
 
     def test_names(self):
         """Names match TOOLS and each has a docstring."""
-        self.assertEqual({f.__name__ for f in tools_video.TOOLS}, {"video_info", "trim_video", "vertical_video", "trim_audio", "extract_audio", "mute_video", "make_gif"})
+        self.assertEqual({f.__name__ for f in tools_video.TOOLS}, {"video_info", "trim_video", "vertical_video", "trim_audio", "extract_audio", "mute_video", "make_gif", "speed_video"})
         self.assertTrue(all(f.__doc__ for f in tools_video.TOOLS))
         import tools
         self.assertTrue({"video_info", "trim_video", "vertical_video", "trim_audio", "extract_audio"} <= set(tools.TOOLS))
-        self.assertTrue({"trim_video", "vertical_video", "trim_audio", "extract_audio", "mute_video", "make_gif"} <= tools.WRITES and "video_info" not in tools.WRITES)
+        self.assertTrue({"trim_video", "vertical_video", "trim_audio", "extract_audio", "mute_video", "make_gif", "speed_video"} <= tools.WRITES and "video_info" not in tools.WRITES)
 
 
 if __name__ == "__main__":

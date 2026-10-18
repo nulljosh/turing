@@ -2,7 +2,7 @@
 long it is, how big, and its picture and sound, read only. trim_video (a write, asks first) cuts a clip between two
 times, vertical_video (a write, asks first) centre-crops a video to 9:16 for a phone, and trim_audio (a write, asks
 first) cuts a piece out of a sound file (.mp3, .m4a, .wav, .aac, .flac, .ogg), and extract_audio (a write, asks first)
-pulls the sound out of a video into an .mp3, .m4a or .wav, mute_video (a write, asks first) makes a silent copy of a video, and make_gif (a write, asks first) turns up to 30 seconds of one into a looping .gif. Each write makes a new file
+pulls the sound out of a video into an .mp3, .m4a or .wav, mute_video (a write, asks first) makes a silent copy of a video, make_gif (a write, asks first) turns up to 30 seconds of one into a looping .gif, and speed_video (a write, asks first) makes a copy at 0.25x to 4x speed. Each write makes a new file
 beside the original, never over an existing one. They run ffmpeg and ffprobe. Same home-folder rule as tools_files:
 home only, nothing hidden. tests/test_video.py mocks subprocess, so no real ffmpeg run happens there.
 """
@@ -231,7 +231,33 @@ def make_gif(request):
     return f"Made a gif at {_short(out)}."
 
 
-TOOLS = (video_info, trim_video, vertical_video, trim_audio, extract_audio, mute_video, make_gif)
+_SPEED = re.compile(r"^\d{1,2}(?:\.\d{1,2})?x?$", re.I)  # 2, 2x, 0.5x, 1.25
+
+
+def speed_video(request):
+    """Make a copy of a video inside the home folder at a new speed, 0.25x to 4x. Takes 'path<TAB>speed' like 2 or 0.5x. Makes <name>-<speed>x.mp4 beside it, never over a file. Asks first."""
+    path, _, raw = request.partition("\t")
+    full = _video(path)
+    if not full:
+        return f"No video {path.strip()} I am allowed to open."
+    raw = raw.strip().lower()
+    if not _SPEED.match(raw) or not 0.25 <= float(raw.rstrip("x")) <= 4:
+        return "Give a speed from 0.25x to 4x, like 2x or 0.5x."
+    f = float(raw.rstrip("x"))
+    label = f"{f:g}x"
+    chain, left = [], f  # ffmpeg's atempo takes 0.5 to 2 per stage, so 4x and 0.25x are two stages
+    while left > 2:
+        chain.append("atempo=2.0")
+        left /= 2
+    while left < 0.5:
+        chain.append("atempo=0.5")
+        left *= 2
+    chain.append(f"atempo={left:g}")
+    out, why = _make(full, label.replace(".", "_"), ["-vf", f"setpts=PTS/{f:g}", "-af", ",".join(chain)])
+    return why or f"Made a {label} copy at {_short(out)}."
+
+
+TOOLS = (video_info, trim_video, vertical_video, trim_audio, extract_audio, mute_video, make_gif, speed_video)
 
 _I = re.I
 _EXT = r"(\S+\.(?:mp4|mov|m4v|mkv|webm))"
@@ -250,6 +276,8 @@ ROUTES = (
     (re.compile(r"^(?:make|turn) (?:a |the |my )?(?:gif|animation) (?:of|from|out of) (?:the |my )?" + _EXT + r" from (\S+) (?:to|until) (\S+)$", _I), "make_gif", lambda m: "\t".join(m.groups())),
     (re.compile(r"^(?:make|turn) (?:a |the |my )?(?:gif|animation) (?:of|from|out of) (?:the |my )?" + _EXT + "$", _I), "make_gif", lambda m: m.group(1)),
     (re.compile(r"^(?:make|turn) (?:the |my )?" + _EXT + " into a gif$", _I), "make_gif", lambda m: m.group(1)),
+    (re.compile(r"^(?:speed up|fast forward) (?:the |my )?" + _EXT + r"(?: (?:by|to|at))? (\d{1,2}(?:\.\d{1,2})?x?)$", _I), "speed_video", lambda m: "\t".join(m.groups())),
+    (re.compile(r"^slow down (?:the |my )?" + _EXT + r" to (\d{1,2}(?:\.\d{1,2})?x?)$", _I), "speed_video", lambda m: "\t".join(m.groups())),
 )
 
 
@@ -258,11 +286,13 @@ def demo():
     assert ROUTES[0][0].match("how long is ~/Movies/a.mov") and not ROUTES[0][0].match("how long is the movie")
     assert ROUTES[1][0].match("trim ~/Movies/a.mp4 from 0:10 to 0:25") and not ROUTES[1][0].match("trim my hedge")
     assert ROUTES[2][0].match("make ~/a.mp4 vertical") and ROUTES[3][0].match("make a vertical version of ~/a.mp4")
-    assert ROUTES[-5][0].match("mute ~/Movies/a.mp4") and ROUTES[-4][0].match("remove the audio from ~/a.mov") and not ROUTES[-5][0].match("mute the volume")
-    assert ROUTES[-3][0].match("make a gif of ~/a.mp4 from 0:10 to 0:15") and ROUTES[-1][0].match("make ~/a.mov into a gif") and not ROUTES[-1][0].match("make dinner into a gif")
+    by = lambda name: [r[0] for r in ROUTES if r[1] == name]
+    assert by("mute_video")[0].match("mute ~/Movies/a.mp4") and by("mute_video")[1].match("remove the audio from ~/a.mov") and not by("mute_video")[0].match("mute the volume")
+    assert by("make_gif")[0].match("make a gif of ~/a.mp4 from 0:10 to 0:15") and by("make_gif")[2].match("make ~/a.mov into a gif") and not by("make_gif")[2].match("make dinner into a gif")
+    assert by("speed_video")[0].match("speed up ~/a.mp4 2x") and by("speed_video")[1].match("slow down ~/a.mp4 to 0.5x") and not by("speed_video")[0].match("speed up my laptop")
     assert _secs("1:02:03") == 3723 and _secs("7.5") == 7.5
     assert _clock(83) == "1:23" and _clock(3725) == "1:02:05"
-    assert "allowed" in video_info("~/.ssh/a.mp4") and "allowed" in vertical_video("/etc/a.mp4") and "allowed" in mute_video("~/.ssh/a.mp4") and "allowed" in make_gif("/etc/a.mp4")
+    assert "allowed" in video_info("~/.ssh/a.mp4") and "allowed" in vertical_video("/etc/a.mp4") and "allowed" in mute_video("~/.ssh/a.mp4") and "allowed" in make_gif("/etc/a.mp4") and "allowed" in speed_video("/etc/a.mp4\t2")
     assert all(f.__doc__ for f in TOOLS)
     print("tools_video ok")
 

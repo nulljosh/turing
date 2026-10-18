@@ -1,5 +1,7 @@
 # Progress log
 
+- 2026-10-18: v7.19.0 She changes a video's speed: "speed up ~/Movies/a.mp4 2x" or "slow down ~/Movies/a.mp4 to 0.5x" writes a new copy (like a-2x.mp4) at 0.25x to 4x, picture and sound kept in step, never over a file. Asks first. Checked with real ffmpeg runs: 8 seconds became 4 at 2x, 2 at 4x and 32 at 0.25x, and a video with no sound works too.
+  v7.19.0 · 163 tools · 929 tests · docs coverage 100% · laws all hold · biggest app/tools_logo.py 649 · actions 285/285 · parity 285/285 · util_diff 288/288
 - 2026-10-18: v7.18.0 She makes a gif from a video: "make a gif of ~/Movies/a.mp4 from 0:10 to 0:15" (or just the video, for its first 5 seconds) writes a looping 480-wide .gif beside it, never over one, at most 30 seconds. Asks first. Checked with a real ffmpeg run: a 3 second slice came out 480x270 and 3.0 seconds; a second run is refused as already there.
   v7.18.0 · 162 tools · 927 tests · docs coverage 100% · laws all hold · biggest app/tools_logo.py 649 · actions 284/284 · parity 284/284 · util_diff 288/288
 - 2026-10-18: v7.17.0 She makes a silent copy of a video: "mute ~/Movies/a.mp4" (or "remove the audio from ~/Movies/a.mp4") writes a new -muted.mp4 beside it, never over one. Asks first. Checked with a real ffmpeg run: the copy keeps its picture and has no sound; a second run is refused as already there.
