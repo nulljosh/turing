@@ -1,5 +1,7 @@
 # Progress log
 
+- 2026-10-18: v7.15.0 She cuts sound: "trim ~/Music/a.mp3 from 0:10 to 0:25" makes a new file with just that piece, in the same format (mp3, m4a, wav, aac, flac, ogg), beside the original, never over it. Asks first. Checked with real ffmpeg cuts of exactly three seconds.
+  v7.15.0 · 159 tools · 919 tests · docs coverage 100% · laws all hold · biggest app/tools_logo.py 649 · actions 281/281 · parity 281/281 · util_diff 288/288
 - 2026-10-18: v7.14.1 The landing page draws the same glyph logos she does: "make me a logo for a surf school" there is a wave now, picked by its words, and a hand-made logo word (simple, spiral, flower) is understood. One generated file keeps the page and the Mac in step.
   v7.14.1 · 158 tools · 915 tests · docs coverage 100% · laws all hold · biggest app/tools_logo.py 649 · actions 280/280 · parity 280/280 · util_diff 288/288
 - 2026-10-18: v7.14.0 She makes more than icons: "make a symbol for a surf school" gives the glyph alone, "make a wordmark for Wavecrest, a surf school" sets the name beside it in Samantha Sans, and "make an avatar for Alex" draws a friendly flat face from a name, the same face every time. New files only, asks first.

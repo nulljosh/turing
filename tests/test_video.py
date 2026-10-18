@@ -153,16 +153,74 @@ class Writes(Base):
         self.assertFalse(os.path.exists(os.path.join(tools_files.HOME, "Movies", "a-vertical.mp4")))
 
 
+class Audio(Base):
+    """trim_audio: a sound file, two times, a new file in the same format."""
+
+    def setUp(self):
+        """Add a sound file to the temp home."""
+        super().setUp()
+        self.song = os.path.join(tools_files.HOME, "Movies", "song.mp3")
+        open(self.song, "wb").close()
+
+    def test_route_and_refusals(self):
+        """The route hands over path, start and end; a video, a hidden file, a bad time and a missing time are plain replies."""
+        route = next(r for r in tools_video.ROUTES if r[1] == "trim_audio")
+        m = route[0].match("cut ~/Music/a.mp3 from 0:10 to 0:25")
+        self.assertEqual(route[2](m), "~/Music/a.mp3\t0:10\t0:25")
+        self.assertIsNone(route[0].match("trim ~/Movies/a.mp4 from 0:10 to 0:25"))
+        with mock.patch.object(tools_video.subprocess, "run") as run:
+            self.assertIn("allowed", tools_video.trim_audio(self.clip + "\t1\t2"))  # a video
+            self.assertIn("allowed", tools_video.trim_audio(os.path.join(tools_files.HOME, ".hidden", "x.mp3") + "\t1\t2"))
+            self.assertIn("Give the times", tools_video.trim_audio(self.song + "\tsoon\t2"))
+            self.assertIn("Say which", tools_video.trim_audio(self.song))
+        run.assert_not_called()
+
+    def test_headless_and_never_overwrites(self):
+        """Headless names the new file and runs nothing; an existing clip is left alone."""
+        with mock.patch.object(tools_video.subprocess, "run") as run:
+            self.assertEqual(tools_video.trim_audio(self.song + "\t0:10\t0:25"), "Cut 0:10 to 0:25 into ~/Movies/song-clip.mp3.")
+            open(os.path.join(tools_files.HOME, "Movies", "song-clip.mp3"), "wb").close()
+            self.assertEqual(tools_video.trim_audio(self.song + "\t0:10\t0:25"), "~/Movies/song-clip.mp3 already exists.")
+        run.assert_not_called()
+
+    def test_real_run_command(self):
+        """Not headless: ffmpeg gets the times and no picture, writes a .part file, and it moves into place."""
+        def fake(cmd, **kw):
+            """A stand-in that writes the output the way ffmpeg would."""
+            open(cmd[-1], "wb").write(b"x")
+            return subprocess.CompletedProcess(cmd, 0, stdout=b"", stderr=b"")
+        with mock.patch.object(tools_files, "HEADLESS", False), mock.patch.object(tools_video, "_exe", return_value="ffmpeg"), \
+                mock.patch.object(tools_video.subprocess, "run", side_effect=fake) as run:
+            got = tools_video.trim_audio(self.song + "\t2\t5")
+        cmd = run.call_args[0][0]
+        self.assertEqual(got, "Cut 2 to 5 into ~/Movies/song-clip.mp3.")
+        self.assertEqual((cmd[cmd.index("-ss") + 1], cmd[cmd.index("-to") + 1], "-vn" in cmd), ("2", "5", True))
+        self.assertTrue(os.path.exists(os.path.join(tools_files.HOME, "Movies", "song-clip.mp3")))
+        self.assertFalse(os.path.exists(os.path.join(tools_files.HOME, "Movies", "song-clip.part.mp3")))
+
+    def test_failures(self):
+        """No ffmpeg, a hang and a bad exit are plain replies and leave no partial file."""
+        with mock.patch.object(tools_files, "HEADLESS", False), mock.patch.object(tools_video, "_exe", return_value=None):
+            self.assertEqual(tools_video.trim_audio(self.song + "\t1\t2"), tools_video._NO_FFMPEG)
+        with mock.patch.object(tools_files, "HEADLESS", False), mock.patch.object(tools_video, "_exe", return_value="ffmpeg"), \
+                mock.patch.object(tools_video.subprocess, "run", side_effect=subprocess.TimeoutExpired("ffmpeg", 300)):
+            self.assertEqual(tools_video.trim_audio(self.song + "\t1\t2"), "ffmpeg did not finish.")
+        with mock.patch.object(tools_files, "HEADLESS", False), mock.patch.object(tools_video, "_exe", return_value="ffmpeg"), \
+                mock.patch.object(tools_video.subprocess, "run", return_value=subprocess.CompletedProcess([], 1, stdout=b"", stderr=b"")):
+            self.assertIn("could not cut", tools_video.trim_audio(self.song + "\t1\t2"))
+        self.assertFalse(os.path.exists(os.path.join(tools_files.HOME, "Movies", "song-clip.mp3")))
+
+
 class Registry(unittest.TestCase):
     """The three tools are registered, documented, and the two writes ask first."""
 
     def test_names(self):
         """Names match TOOLS and each has a docstring."""
-        self.assertEqual({f.__name__ for f in tools_video.TOOLS}, {"video_info", "trim_video", "vertical_video"})
+        self.assertEqual({f.__name__ for f in tools_video.TOOLS}, {"video_info", "trim_video", "vertical_video", "trim_audio"})
         self.assertTrue(all(f.__doc__ for f in tools_video.TOOLS))
         import tools
-        self.assertTrue({"video_info", "trim_video", "vertical_video"} <= set(tools.TOOLS))
-        self.assertTrue({"trim_video", "vertical_video"} <= tools.WRITES and "video_info" not in tools.WRITES)
+        self.assertTrue({"video_info", "trim_video", "vertical_video", "trim_audio"} <= set(tools.TOOLS))
+        self.assertTrue({"trim_video", "vertical_video", "trim_audio"} <= tools.WRITES and "video_info" not in tools.WRITES)
 
 
 if __name__ == "__main__":

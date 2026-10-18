@@ -242,6 +242,7 @@ CASES = [
     ("why is ~/room.html black", "check_page", "~/room.html"),
     ("trim ~/Movies/a.mp4 from 0:10 to 0:25", "trim_video", "~/Movies/a.mp4\t0:10\t0:25"),
     ("make ~/Movies/a.mp4 vertical", "vertical_video", "~/Movies/a.mp4"),
+    ("trim ~/Music/a.mp3 from 0:10 to 0:25", "trim_audio", "~/Music/a.mp3\t0:10\t0:25"),
     ("zip ~/Desktop/photos", "zip_file", "~/Desktop/photos"),
     ("unzip ~/Downloads/a.zip", "unzip_file", "~/Downloads/a.zip"),
     ("trash ~/Desktop/a.txt", "trash_file", "~/Desktop/a.txt"),

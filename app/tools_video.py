@@ -1,6 +1,7 @@
 """Samantha's video tools. video_info reads a video inside the home folder (.mp4, .mov, .m4v, .mkv, .webm) and says how
 long it is, how big, and its picture and sound, read only. trim_video (a write, asks first) cuts a clip between two
-times, and vertical_video (a write, asks first) centre-crops a video to 9:16 for a phone. Each write makes a new file
+times, vertical_video (a write, asks first) centre-crops a video to 9:16 for a phone, and trim_audio (a write, asks
+first) cuts a piece out of a sound file (.mp3, .m4a, .wav, .aac, .flac, .ogg). Each write makes a new file
 beside the original, never over an existing one. They run ffmpeg and ffprobe. Same home-folder rule as tools_files:
 home only, nothing hidden. tests/test_video.py mocks subprocess, so no real ffmpeg run happens there.
 """
@@ -17,6 +18,7 @@ _home = tools_files._home
 _short = tools_files._short
 
 _FORMATS = (".mp4", ".mov", ".m4v", ".mkv", ".webm")
+_AUDIO = (".mp3", ".m4a", ".wav", ".aac", ".flac", ".ogg")
 _NO_FFMPEG = "ffmpeg is not installed here, so I cannot work on videos."
 _TIME = re.compile(r"^\d+(?::\d{1,2}){0,2}(?:\.\d+)?$")  # 25, 0:25, 1:02:03, 7.5
 
@@ -112,7 +114,40 @@ def vertical_video(path):
     return why or f"Made a vertical version at {_short(out)}."
 
 
-TOOLS = (video_info, trim_video, vertical_video)
+def trim_audio(request):
+    """Cut a piece out of a sound file inside the home folder (.mp3, .m4a, .wav, .aac, .flac, .ogg). Takes 'path<TAB>start<TAB>end' with times like 0:10 or 25. Makes <name>-clip beside it, same format. Asks first."""
+    parts = [p.strip() for p in request.split("\t")]
+    if len(parts) != 3:
+        return "Say which sound file and the two times, like: trim ~/Music/a.mp3 from 0:10 to 0:25."
+    full = _home(parts[0])
+    if not full or not os.path.isfile(full) or not full.lower().endswith(_AUDIO):
+        return f"No sound file {parts[0]} I am allowed to open."
+    start, end = parts[1], parts[2]
+    if not (_TIME.match(start) and _TIME.match(end)):
+        return "Give the times like 0:10 or 25."
+    base, ext = os.path.splitext(full)
+    out = base + "-clip" + ext
+    if os.path.exists(out):
+        return f"{_short(out)} already exists."
+    if tools_files.HEADLESS:
+        return f"Cut {start} to {end} into {_short(out)}."
+    exe = _exe("ffmpeg")
+    if not exe:
+        return _NO_FFMPEG
+    tmp = base + "-clip.part" + ext  # the extension picks the codec
+    try:
+        done = subprocess.run([exe, "-hide_banner", "-loglevel", "error", "-i", full, "-ss", start, "-to", end, "-vn", tmp], capture_output=True, timeout=300)
+    except (OSError, subprocess.SubprocessError):
+        return "ffmpeg did not finish."
+    if done.returncode != 0 or not os.path.exists(tmp):
+        if os.path.exists(tmp):
+            os.remove(tmp)
+        return f"ffmpeg could not cut that from {_short(full)}."
+    os.replace(tmp, out)
+    return f"Cut {start} to {end} into {_short(out)}."
+
+
+TOOLS = (video_info, trim_video, vertical_video, trim_audio)
 
 _I = re.I
 _EXT = r"(\S+\.(?:mp4|mov|m4v|mkv|webm))"
@@ -123,6 +158,7 @@ ROUTES = (
     (re.compile(r"^(?:trim|cut|clip) (?:the |my )?" + _EXT + r" from (\S+) (?:to|until) (\S+)$", _I), "trim_video", lambda m: "\t".join(m.groups())),
     (re.compile(r"^make (?:the |my )?" + _EXT + r" (?:vertical|portrait)$", _I), "vertical_video", lambda m: m.group(1)),
     (re.compile(r"^make a (?:vertical|portrait) (?:version|copy) of (?:the |my )?" + _EXT + "$", _I), "vertical_video", lambda m: m.group(1)),
+    (re.compile(r"^(?:trim|cut|clip) (?:the |my )?(\S+\.(?:mp3|m4a|wav|aac|flac|ogg)) from (\S+) (?:to|until) (\S+)$", _I), "trim_audio", lambda m: "\t".join(m.groups())),
 )
 
 
