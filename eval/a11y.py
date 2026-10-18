@@ -10,7 +10,7 @@ import urllib.request
 
 from playwright.sync_api import sync_playwright
 
-URL = sys.argv[1] if len(sys.argv) > 1 else "https://turing.heyitsmejosh.com"
+URL = sys.argv[1] if len(sys.argv) > 1 else "https://turing.jaybulb.com"
 AXE = "https://cdn.jsdelivr.net/npm/axe-core@4.10.2/axe.min.js"
 RUN = ("() => axe.run(document, {runOnly: {type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'best-practice']}})"
        ".then(r => r.violations.map(v => v.id + ' x' + v.nodes.length + ': ' + v.help))")

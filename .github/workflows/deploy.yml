@@ -27,7 +27,7 @@ jobs:
     env:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-      SITE: https://turing.heyitsmejosh.com
+      SITE: https://turing.jaybulb.com
     steps:
       - uses: actions/checkout@v4
         with:
@@ -55,8 +55,8 @@ jobs:
         run: |
           V=$(tr -d '[:space:]' < VERSION)
           for i in 1 2 3 4 5 6 7 8 9 10 11 12; do
-            got=$(curl -fsS "$SITE/stats.json?v=$GITHUB_RUN_ID" | python3 -c "import json,sys; print(json.load(sys.stdin).get('version',''))" || true)
-            [ "$got" = "$V" ] && curl -fsS -o /dev/null "$SITE/" && { echo "live: v$V"; echo "Deployed v$V to $SITE" >> "$GITHUB_STEP_SUMMARY"; exit 0; }
+            got=$(curl -fsS -m 15 "$SITE/stats.json?v=$GITHUB_RUN_ID" | python3 -c "import json,sys; print(json.load(sys.stdin).get('version',''))" || true)
+            [ "$got" = "$V" ] && curl -fsS -m 15 -o /dev/null "$SITE/" && { echo "live: v$V"; echo "Deployed v$V to $SITE" >> "$GITHUB_STEP_SUMMARY"; exit 0; }
             echo "live page says '$got', want '$V', waiting"; sleep 10
           done
           echo "::error::Deployed, but $SITE never served v$V"; exit 1

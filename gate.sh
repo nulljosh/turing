@@ -51,9 +51,9 @@ if [ "$1" = "--full" ]; then
 
 	python3 eval/smoke_images.py 2>&1 | tail -3 || true
 	python3 eval/smoke_images.py >/dev/null 2>&1 || { echo "FAIL image tools smoke run"; exit 1; }
-	.venv/bin/python eval/a11y.py https://turing.heyitsmejosh.com 2>&1 | tail -5 || true  # shown, and the release reads it
-	.venv/bin/python eval/a11y.py https://turing.heyitsmejosh.com >/dev/null 2>&1 || { echo "FAIL accessibility audit"; exit 1; }
-	if .venv/bin/python eval/web_demo.py https://turing.heyitsmejosh.com 2>&1 | grep -q "^ok:"; then
+	.venv/bin/python eval/a11y.py https://turing.jaybulb.com 2>&1 | tail -5 || true  # shown, and the release reads it
+	.venv/bin/python eval/a11y.py https://turing.jaybulb.com >/dev/null 2>&1 || { echo "FAIL accessibility audit"; exit 1; }
+	if .venv/bin/python eval/web_demo.py https://turing.jaybulb.com 2>&1 | grep -q "^ok:"; then
 		WEB_OK="1"
 	else
 		WEB_OK="0"

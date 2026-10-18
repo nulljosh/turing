@@ -370,7 +370,7 @@ def icon_svg():
         return _icon_svg_from(f.read())
 
 
-DRAW_ENDPOINT = "https://turing.heyitsmejosh.com/api/draw"
+DRAW_ENDPOINT = "https://turing.jaybulb.com/api/draw"
 # The woman-with-a-mind family: same 1970s copperplate engraving, oval frame and ribbon every time (the rules of
 # the mark), only the shape of her mind changes. Never the word apple: the model draws a literal apple for it.
 MARK_SUBJECTS = ["a constellation of stars", "a burst of rays of thought", "a lattice of connected nodes", "an open book of stars"]

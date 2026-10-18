@@ -10,7 +10,7 @@ const S = globalThis.Samantha;
 const READER = "@cf/meta/llama-3.2-3b-instruct";  // the 1B said Peter S. Fischer wrote 1984, off the Murder, She Wrote page
 const TIME_RELATIVE = /\b(last night|tonight|this (?:morning|afternoon|evening|weekend|week)|right now|currently|at the moment|today's|yesterday's|tomorrow's|this year's|this season's|latest|breaking)\b/i;
 const DECLINE = "I couldn't find anything on that, so I'm not going to make something up.";
-const UA = { "User-Agent": "Samantha landing demo (turing.heyitsmejosh.com)" };
+const UA = { "User-Agent": "Samantha landing demo (turing.jaybulb.com)" };
 
 const QUESTION_PREFIX = /^(what'?s?|who'?s?|when'?s?|where'?s?|why|how)\s+(is|are|was|were|does|do|did)\s+(the\s+)?/i;
 const LOOKUP_PREFIX = /^(?:tell me (?:about|of)|explain|describe|define|what do you know about)\s+(?:the\s+)?/i;
@@ -369,7 +369,7 @@ async function ask(env, query) {
   return { answer: DECLINE };
 }
 
-const HOME = "https://turing.heyitsmejosh.com";
+const HOME = "https://turing.jaybulb.com";
 
 // The image model behind "draw anything". Flux schnell makes a picture in four steps; the page rebuilds it from squares.
 const DRAWER = "@cf/black-forest-labs/flux-1-schnell";
@@ -460,7 +460,7 @@ export default {
     // From this site, from the Joshua Tree demo (its v86 network relay proxies server-to-server,
     // so it never actually sends an Origin header either, same as the kernel's own raw HTTP client
     // hitting this straight over the internet with no browser at all), or from no Origin at all.
-    if (from && !["turing.heyitsmejosh.com", "joshuatree.heyitsmejosh.com", "localhost", "127.0.0.1"].includes(from))
+    if (from && !["turing.jaybulb.com", "turing.heyitsmejosh.com", "joshuatree.jaybulb.com", "joshuatree.heyitsmejosh.com", "localhost", "127.0.0.1"].includes(from))
       return new Response("Not from here", { status: 403 });
     const ip = request.headers.get("cf-connecting-ip") || "anon";
     if (env.LIMIT && !(await env.LIMIT.limit({ key: ip })).success) {
