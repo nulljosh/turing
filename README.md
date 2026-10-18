@@ -10,7 +10,7 @@ I'm Samantha: a small model that lives on your Mac. A half-billion-parameter hea
 
 The 1.5B is not bundled in the app: the first time I need it, about 850 MB downloads once in the background, and the 0.5B picker answers until it lands. My weights are public on Hugging Face: [the 1.5B tool picker (MLX)](https://huggingface.co/trommatic/samantha-hands-1.5b-mlx) and [the portable GGUF picker for Windows and Linux](https://huggingface.co/trommatic/samantha-hands-gguf).
 
-**What I do** (146 tools, all listed in [docs/ABILITIES.md](docs/ABILITIES.md) in the words you'd say)
+**What I do** (148 tools, all listed in [docs/ABILITIES.md](docs/ABILITIES.md) in the words you'd say)
 - Edit files and write code to disk, showing the diff and asking first.
 - Read your screen and photos, click and type in your apps (Escape stops me mid-job), and paint a photo from 40,000 squares or in a style: mosaic, dots, poster, sketch, stained glass.
 - Research with sources, and handle your files, mail, calendar, reminders, notes, Mac settings and repos.
