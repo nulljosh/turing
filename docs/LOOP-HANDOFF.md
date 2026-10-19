@@ -24,7 +24,7 @@ A major ships only when its roadmap family is finished and checked: the badge st
 
 1. Teach from her misses (every wake, step 6). misses.jsonl is empty so far; when it has rows, they are the first thing the next picker round trains on.
 2. Blender family (#107): Blender family done (#107 closed, every tool checked with real Blender runs). Check each with a real Blender round trip, read back by blender_info.
-3. 8.0 picker: the bar is unchanged. Round 25 tries weighting the teacher and miss rows, or teaching only the tools the dev sets miss, everything else equal.
+3. 8.0 picker: the bar is unchanged. Rounds 25 and 26 (targeted rows, two seeds) and round 27 (Qwen3 1.7B base, pool 4068/203/100/142) all failed to beat run 23. Round 28 is Qwen3 4B on Kaggle v28; a 4B picker is about 2.3GB at 4 bits against 844MB shipped, so weigh the size before shipping. Fetched Kaggle output needs two config patches before mlx_lm.convert: add a top-level rope_theta to config.json and drop extra_special_tokens from tokenizer_config.json.
 4. Audio (Yeti record, transcribe, file to the vault) waits on Joshua clicking the microphone prompt once.
 
 ## The ladder
