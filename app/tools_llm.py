@@ -1,5 +1,5 @@
 """Samantha asks another LLM: for the questions a 0.5B model cannot think through, she hands them to a bigger model
-running on this Mac. Name one ("ask qwen ...", "ask llama ...", "ask gemma ...") and she finds it on oMLX (:8000) or
+running on this Mac. Name one ("ask qwen ...", "ask hermes ...", "ask llama ...", "ask gemma ...") and she finds it on oMLX (:8000) or
 Ollama (:11434); say "ask claude", "ask gpt" or "ask an llm" and she uses the biggest one, oMLX's Qwen3.5-9B first,
 then Ollama's qwen3:8b. Nothing leaves the Mac and no API key is needed. Only by name, and every answer names the model.
 
@@ -23,7 +23,7 @@ LIMIT = 20000  # characters; a longer question is refused, never silently cut
 ANY = re.compile(r"^(?:claude|chatgpt|gpt[\w.-]*|gemini|(?:an? |the )?(?:llm|ai|(?:bigger|big) model))$", re.I)
 # every name the route takes, shared with the empty-ask route in tools.py and mirrored in web/samantha.js
 NAMES = (r"claude|chatgpt|gpt(?:-?\d[\w.]*)?|gemini|(?:an? |the )?(?:llm|(?:bigger|big) model)"
-         r"|qwen[\w.:-]*|llama[\w.:-]*|mistral[\w.:-]*|gemma[\w.:-]*|phi[\w.:-]*|deepseek[\w.:-]*")
+         r"|qwen[\w.:-]*|hermes[\w.:-]*|llama[\w.:-]*|mistral[\w.:-]*|gemma[\w.:-]*|phi[\w.:-]*|deepseek[\w.:-]*")
 SYSTEM = ("You are answering one question for Samantha, a small assistant that runs on her user's Mac and asked you because "
           "the question needs more than she can do. Answer in plain language and briefly: a few sentences unless the question "
           "truly needs more. No markdown headers. Any code goes in a ``` fence that names the language, with a sentence "
