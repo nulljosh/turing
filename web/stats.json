@@ -1,5 +1,5 @@
 {
-  "version": "7.21.0",
+  "version": "7.21.1",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -416,8 +416,8 @@
         "documented": 3
       },
       "tests/test_feedback.py": {
-        "total": 40,
-        "documented": 40
+        "total": 41,
+        "documented": 41
       },
       "tests/test_files.py": {
         "total": 21,

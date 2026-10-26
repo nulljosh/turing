@@ -20,6 +20,8 @@ A major ships only when its roadmap family is finished and checked: the badge st
 - **Room benchmark (side work, done):** ~/Documents/room-bench, not a git repo, private photos, never commit or copy them. Final scores out of 100 (rubric v2, which rewards listing objects, so the eye decides): Sonnet 99.3, Opus 97.3, Fable 97.3 (best by eye), Haiku 94.0, Samantha 51.1. Samantha's 9B cannot hold her own previous file inside oMLX's memory ceiling, so each self-fix round was a rewrite. COMPARISON.md there has the write-up.
 - **Sealed sets** heldout4, heldout7 and heldout12 are read as counts only, never as text.
 
+- **2026-10-26: Kaggle is down.** The account (joshuatrommel) is suspended, so the token gets 401 and round 28 (Qwen3 4B, v28) can never be fetched. An appeal went in through kaggle.com/contact the same morning; no reason was emailed. Until it clears, no picker round runs. The backup GPU is Colab's free T4 (docs/KAGGLE.md says kaggle_train.py runs there too), but it needs the browser. v7.21.1 fixed the misses log: every real chat asks with or_none, which returned before noting a miss, so misses.jsonl had never been written.
+
 ## Next, in order
 
 1. Teach from her misses (every wake, step 6). misses.jsonl is empty so far; when it has rows, they are the first thing the next picker round trains on.

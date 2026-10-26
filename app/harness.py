@@ -95,6 +95,11 @@ class Session:
             result = failed(calls, e)
             feedback.note_miss(q, f"broke: {type(e).__name__}: {e}")
         if result is None and or_none:
+            # every real chat (app pipe, terminal, voice) asks with or_none, so a command she took for one and could
+            # not do comes back here as None, not "". Note it before chat answers, or the misses file stays empty.
+            # ponytail: is_action's verb list is the ceiling; "set my wallpaper" still slips through as a question.
+            if tools.is_action(q):
+                feedback.note_miss(q, "unknown")
             return None
         if not result:
             feedback.note_miss(q, "unknown")

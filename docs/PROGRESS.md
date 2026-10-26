@@ -1,5 +1,7 @@
 # Progress log
 
+- 2026-10-26: v7.21.1 She notes the commands she could not do again. Every real chat (the app, the terminal, voice) hands a non-command on to the question chain, and that path returned before noting anything, so ~/.samantha/misses.jsonl stayed empty since 7.9. Now a sentence she took for a command and could not do is noted first, then answered. Picker training is paused: Kaggle suspended the account and an appeal is in.
+  v7.21.1 · 165 tools · 936 tests · docs coverage 100% · laws all hold · biggest app/tools_logo.py 649 · actions 287/287 · parity 287/287 · util_diff 288/288
 - 2026-10-18: v7.21.0 She joins two videos: "join ~/Movies/a.mp4 and ~/Movies/b.mp4" puts them one after the other into a new -joined.mp4 (1280x720, 30 frames, clips of different sizes are fitted with bars), never over a file. Both need sound or neither does, and she says so if not. Asks first. Checked with real ffmpeg runs: a 3 second and a 2 second clip of different sizes came out 5 seconds with sound, two silent clips came out 4 seconds.
   v7.21.0 · 165 tools · 935 tests · docs coverage 100% · laws all hold · biggest app/tools_logo.py 649 · actions 287/287 · parity 287/287 · util_diff 288/288
 - 2026-10-18: v7.20.0 She cuts a section out of a video: "remove 0:10 to 0:15 from ~/Movies/a.mp4" drops that stretch from the picture and the sound, joins the rest and writes a new -cut.mp4 beside it, never over a file. Asks first. Checked with a real ffmpeg run: 10 seconds minus a 3 second section came out 7 seconds with sound.

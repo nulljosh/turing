@@ -252,6 +252,13 @@ class MissTests(unittest.TestCase):
             self.assertIsNone(harness.Session().ask("why is the sky blue", or_none=True))
         self.assertEqual(self.lines(), [])
 
+    def test_a_command_she_could_not_do_in_chat_is_a_miss(self):
+        """With or_none, a sentence she took for a command that came back empty is noted, then handed on."""
+        from unittest import mock
+        with mock.patch.object(tools, "do", return_value=None):
+            self.assertIsNone(harness.Session().ask("make me a sandwich", or_none=True))
+        self.assertEqual([(r["query"], r["why"]) for r in self.lines()], [("make me a sandwich", "unknown")])
+
     def test_headless_without_a_path_writes_nothing(self):
         """Tests and evals run headless: with no SAMANTHA_MISSES set, nothing is written anywhere."""
         os.environ.pop("SAMANTHA_MISSES", None)
