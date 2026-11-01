@@ -118,4 +118,3 @@ Source: Apple Note, screenshot `notes/attachments/2026-10-19/turing-1.png` (turi
 - [ ] Landing: hero needs a background color and a parallax animation.
 
 ## Ingested 2026-10-30
-- [x] (11-01: terracotta house band with Ada Lovelace in halftone and ruled cells; H1 stays the CTA) Landing page needs Hermes' style
