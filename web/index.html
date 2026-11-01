@@ -53,15 +53,12 @@
       @keyframes roll{to{transform:rotate(360deg)}}
       section.lit{animation:lit 1.6s ease-out}
       @keyframes lit{0%,60%{outline:3px solid var(--fg);outline-offset:8px}100%{outline:3px solid transparent;outline-offset:8px}}
-      @font-face{font-family:"Samantha Sans";font-weight:400;font-display:swap;src:url(fonts/SamanthaSans-Regular.woff2) format("woff2")}
-      @font-face{font-family:"Samantha Sans";font-weight:500;font-display:swap;src:url(fonts/SamanthaSans-Medium.woff2) format("woff2")}
-      @font-face{font-family:"Samantha Sans";font-weight:600;font-display:swap;src:url(fonts/SamanthaSans-Semibold.woff2) format("woff2")}
       *{box-sizing:border-box}
       button,input,select,textarea{font-family:inherit}
       html{background:var(--bg)}
-      body{margin:0;background:var(--bg);color:var(--fg);font-family:"Samantha Sans",-apple-system,BlinkMacSystemFont,"SF Pro Text",Helvetica,Lato,Arial,sans-serif;
+      body{margin:0;background:var(--bg);color:var(--fg);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",Helvetica,Lato,Arial,sans-serif;
         line-height:1.6;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;font-feature-settings:"kern","liga";overflow-x:hidden}
-      h1,h2,h3{font-weight:500}
+      h1,h2,h3{font-weight:700}
       b,strong{font-weight:600}
 
       /* Top nav: wordmark left, dark pill + white pill right. */
@@ -352,6 +349,7 @@
       .try .card{text-align:left;display:flex;flex-direction:column}
       .try .desk-space{min-height:240px}
 </style>
+    <link rel="stylesheet" href="hero.css?v=1">
   </head>
   <body id="top">
     <a class="skip" href="#content">Skip to content</a>
@@ -403,7 +401,8 @@
 
     <div class="wrap">
       <header class="hero">
-        <div class="hero-mascot"><img class="mascot" src="mascot.svg" alt="Samantha" width="112" height="112"></div>
+        <div class="hero-bg" aria-hidden="true" inert><div class="twall" id="twall"></div></div>
+        <div class="hero-copy"><div class="hero-mascot"><img class="mascot" src="mascot.svg" alt="Samantha" width="112" height="112"></div>
         <p class="hero-label">Turing, a small model on your Mac</p>
         <h1 class="hero-h1">Meet Samantha.</h1>
         <p class="sub">A small AI that lives on your Mac. Free, private, and it runs itself through everything she can do while you watch.</p>
@@ -412,6 +411,7 @@
           <button type="button" class="pill pill-dark copy-install" aria-label="Copy the install command">Copy install command</button>
           <button type="button" class="pill pill-dark install-app" hidden>Install app</button>
         </div>
+      </div>
       </header>
 
       <section class="tband" aria-labelledby="tband-h">
@@ -847,6 +847,7 @@ if(navigator.clipboard)navigator.clipboard.writeText(c).then(done,done);else don
     <script src="highlight.js"></script>
     <script src="glyphs.js"></script>
     <script src="demo.js"></script>
+    <script src="hero.js?v=1"></script>
   <script src="paint.js" defer></script>
     <script>
       /* The footer plate: the shader below is Atlin's engraved harbour, two ridges, a skyline and water that mirrors it,
