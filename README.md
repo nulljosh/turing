@@ -1,7 +1,5 @@
 <img src="web/mascot.svg" width="100" alt="Samantha, the mascot: long copper hair, round glasses, a cream collar and mustard cardigan">
 
-# Turing
-
 I'm Samantha, a small AI that lives on your Mac. Free, private, and nothing you say to me leaves the Mac. Try me at [turing.jaybulb.com](https://turing.jaybulb.com).
 
 **What I do** (165 tools, every one listed in [docs/ABILITIES.md](docs/ABILITIES.md) in the words you'd say)
