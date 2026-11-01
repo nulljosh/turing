@@ -439,7 +439,8 @@
 
   // ---- the page is hers too. Every change is local to this visitor and undone by "reset the page". ----
   var wrap = document.querySelector('.wrap'), h1 = document.querySelector('h1'), tagline = document.querySelector('header .sub');
-  var original = { h1: h1.textContent, tagline: tagline.textContent };
+  var narr = document.querySelector('.try-line') || tagline;   // her running commentary sits by the demo, not in the hero
+  var original = { h1: h1.textContent, tagline: tagline.textContent, narr: narr.textContent };
   var paintNames = ['Mona Lisa', 'The Last Supper', 'The ENIAC'];
   function sections() { return Array.prototype.slice.call(document.querySelectorAll('section')).filter(function (x) { return x.querySelector('h2'); }); }
   function names() { return sections().map(function (x) { return x.querySelector('h2').textContent; }); }
@@ -640,9 +641,9 @@
   var typing = 0, backTimer = 0, userTagline = false;
   function say_hero(text) {
     clearTimeout(typing); clearTimeout(backTimer);
-    if (reduceMotion) { tagline.textContent = text; return; }
+    if (reduceMotion) { narr.textContent = text; return; }
     var i = 0;
-    (function type() { tagline.textContent = text.slice(0, ++i); if (i < text.length) typing = setTimeout(type, 16); })();
+    (function type() { narr.textContent = text.slice(0, ++i); if (i < text.length) typing = setTimeout(type, 16); })();
   }
   var STORY = {
     paint: function () { return 'Rebuilding a painting from 30,000 squares.'; },
@@ -674,7 +675,7 @@
     if (userTagline || tool === 'set_tagline') return;
     var line = (STORY[tool] || function () { return 'Using her ' + tool.replace(/_/g, ' ') + ' tool. No model needed.'; })(String(arg || ''));
     say_hero(line);
-    backTimer = setTimeout(function () { say_hero(original.tagline); }, 7000);
+    backTimer = setTimeout(function () { say_hero(original.narr); }, 7000);
   }
 
   function runTool(tool, arg) {
