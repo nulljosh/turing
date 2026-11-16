@@ -10,27 +10,30 @@ A major ships only when its roadmap family is finished and checked. A number is 
 
 ## Where things stand
 
-- **Live:** v7.22.2, 166 tools. v7.22.0 added caption_video: an .srt or .vtt beside a video becomes a captions track, nothing burned in (Homebrew's ffmpeg has no libass or drawtext). v7.22.1 fixed the landing chat typing and queues messages behind a Send now button. v7.22.2 brought the footer engraving, the orb logo and the diner painting in the demo reel.
-- **Parked:** caption_video writing its own .srt from her Whisper transcript sits in git stash `caption-transcript`. It ships as 7.23.0 after one real Whisper run. Take it with `git stash apply` by name. Never pop or drop it.
-- **Kaggle works again** (password reset and a new API token, 2026-11-16). A Qwen3.5-2B picker round is training there now. Score it against run 23 when it finishes.
-- **LaCie is gone.** The uv cache, the repo's .venv and Ollama's models point at real folders on the internal disk now. The 9B model and the other LaCie data are lost until a new drive. Sealed heldout7 lived only on the LaCie and is lost. heldout12 is in eval/. The internal disk has little room, so check free space before anything over a gigabyte.
+- **Live:** v7.22.3 (on origin/main; CI test run was still in progress at this update), 166 tools. v7.22.3 makes a missing local model a plain reply in write_code and edit_file, never file content.
+- **Training runs without Claude:** `.github/workflows/train.yml` plus `training/kaggle/nightly.py` run every 8 hours. Each run logs the finished Kaggle round to `eval/kaggle-nightly.log` and starts the next one, rotating Qwen3.5-2B, Qwen2.5-1.5B and Qwen3.5-0.8B. The KAGGLE_API_TOKEN secret is set and the workflow is green. Next base to add: Gemma 4 E2B.
+- **Trailer:** three takes of Samantha driving the real Mac with screen recording. Take 3 was cut and sent to Joshua; not graded yet.
+- Previous live: v7.22.2, 166 tools. v7.22.0 added caption_video: an .srt or .vtt beside a video becomes a captions track, nothing burned in (Homebrew's ffmpeg has no libass or drawtext). v7.22.1 fixed the landing chat typing and queues messages behind a Send now button. v7.22.2 brought the footer engraving, the orb logo and the diner painting in the demo reel.
+- **Parked:** caption_video writing its own .srt from her Whisper transcript (7.23.0) is uncommitted in the working tree: app/tools_video.py, app/voice.py, tests/test_video.py. It needs one real Whisper run before it ships. Leave those files uncommitted until then. The older copy sits in git stash `caption-transcript`; take it with `git stash apply` by name. Never pop or drop it.
+- **Kaggle works again** (password reset and a new API token, 2026-11-16). The nightly workflow keeps rounds running; a Qwen3.5-2B round is the latest. Score each finished round against run 23 when it lands in eval/kaggle-nightly.log.
+- **LaCie is gone.** The uv cache, the repo's .venv and Ollama's models point at real folders on the internal disk now. The 9B model and the other LaCie data are lost until a new drive. Sealed heldout7 lived only on the LaCie and is lost. heldout12 is in eval/. The internal disk is at 13 GB free after cleanup (target was 20 GB), so check free space before anything over a gigabyte.
 - **Picker:** run 23 (4,052 of 4,455 pooled dev rows) is still the shipped picker. Rounds 27 and 28 did not clearly beat it. The local q35r1 MLX run is superseded by the Kaggle round. 8.0 restarts only with a new idea: a newer base such as the Qwen3.5-2B round, relabeled dev sets, or a different model.
 - **10.0 slice 1 is merged** (3.8.0, PR 577). The Python reference and kernel/picker.c match on all 297 golden sentences. The safety bar is missed: the small picker calls a tool on 115 of 434 not-a-command rows (26 percent), where run 23 manages 22 (5 percent). It stays "a small picker distilled from her". The next slice teaches it to abstain.
 - **Joshua Tree 10.0 tag** still needs the docs and whitepaper refresh and Joshua's real-mic test. Caveat to say every time: the chat rows were written after reading the dev sets' mistakes, so the numbers are tuned to dev; the sealed sets are unread.
 - **9.0 is Joshua's:** it needs his signed iPhone build and the Yeti mic.
 - **Pi shell:** the boot-to-shell flip (docs/PI.md) still waits for Joshua's go-ahead.
-- **Hero reel:** the web-demo cut was rejected. Next is a reel recorded on the real Mac, 12 abilities in 30 seconds.
+- **Hero reel:** the web-demo cut was rejected. Three real-Mac takes exist; take 3 is with Joshua for grading.
 - **Roadmap:** docs/roadmap.md, which the checkpoint's issue sync reads. Issue #107 (Blender family) stays open for "a simple 3D object" and "a logo as 3D text".
 - **Sealed sets** heldout4, heldout7 and heldout12 are read as counts only, never as text.
 
 ## Next, in order
 
-1. Score the Kaggle Qwen3.5-2B round against run 23 on the pooled dev sets, never a sealed set. Ship only if it clears the 8.0 bar below. A miss gets written here the same day.
-2. Ship 7.23.0: take the `caption-transcript` stash by name, run one real Whisper transcript, then release.
-3. Teach from her misses (every wake, step 6). ~/.samantha/misses.jsonl is still absent (no real chats since 7.21.1).
-4. Read heldout12 once, as counts, only if the round clears the bar.
-5. Record the hero reel on the real Mac: her driving it, 12 abilities in 30 seconds.
-6. A GitHub Actions nightly job that pushes the Kaggle kernel, so training runs without Claude. Not started.
+1. Score each finished Kaggle round (logged in eval/kaggle-nightly.log) against run 23 on the pooled dev sets, never a sealed set. Ship only if it clears the 8.0 bar below. A miss gets written here the same day.
+2. Add Gemma 4 E2B to the nightly rotation in training/kaggle/nightly.py.
+3. Ship 7.23.0: finish the uncommitted caption files (or the `caption-transcript` stash by name), run one real Whisper transcript, then release.
+4. Teach from her misses (every wake, step 6). ~/.samantha/misses.jsonl is still absent (no real chats since 7.21.1).
+5. Read heldout12 once, as counts, only if the round clears the bar.
+6. Grade trailer take 3 to A+ and put it in the landing hero. It is the real-Mac reel: her driving it, 12 abilities in 30 seconds.
 7. Video family leftovers, then the next roadmap minor, one ability per minor.
 8. Audio (Yeti) waits on Joshua clicking the microphone prompt once.
 
