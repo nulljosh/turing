@@ -72,10 +72,14 @@ def _land(path, new_text, name, log=None, confirm=None):
 def _rewrite(path, instruction, name, log=None, confirm=None):
     """Have the biggest local model rewrite the text at path to follow instruction, then _land it."""
     import tools_llm
-    new = tools_llm.ask_llm(EDIT_PROMPT.format(instruction=instruction, text=open(path).read()))
-    new = new.rsplit("\n(Answered by", 1)[0].strip()
-    if not new or new.startswith(("I could not", "The local model")):
-        return f"I could not rewrite that: {new or 'the local model sent back nothing'}."
+    reply = tools_llm.ask_llm(EDIT_PROMPT.format(instruction=instruction, text=open(path).read()))
+    # every real answer ends with ask_llm's "(Answered by ...)" line; anything else is it saying why it could not
+    # (no model, model not pulled, still loading), and that text must never land in the file (2026-11-16)
+    if "\n(Answered by" not in reply:
+        return f"I could not rewrite that: {reply or 'the local model sent back nothing'}"
+    new = reply.rsplit("\n(Answered by", 1)[0].strip()
+    if not new:
+        return "I could not rewrite that: the local model sent back nothing."
     return _land(path, new + "\n", name, log, confirm)
 
 
@@ -131,9 +135,12 @@ def write_code(request, path, log=None, confirm=None):
             "rb": "Ruby", "go": "Go", "rs": "Rust", "c": "C"}.get(full.rsplit(".", 1)[-1].lower(), "")
     import tools_llm
     from tools_code import _extract_code
-    code = _extract_code(tools_llm.ask_llm(CODE_PROMPT.format(lang=lang, request=request.strip())))
-    if not code or code.startswith(("I could not", "The local model")):
-        return f"I could not write that: {code or 'the local model sent back nothing'}."
+    reply = tools_llm.ask_llm(CODE_PROMPT.format(lang=lang, request=request.strip()))
+    if "\n(Answered by" not in reply:  # ask_llm explaining why it could not answer, never code (see _rewrite)
+        return f"I could not write that: {reply or 'the local model sent back nothing'}"
+    code = _extract_code(reply)
+    if not code:
+        return "I could not write that: the local model sent back nothing."
     return _land(full, code + "\n", "write_code", log, confirm)
 
 

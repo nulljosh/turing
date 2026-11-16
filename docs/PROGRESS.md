@@ -1,5 +1,7 @@
 # Progress log
 
+- 2026-11-16: v7.22.3 A missing model is a reply, never file content: write_code and edit_file now land text only when the local model really answered (ask_llm's own footer). Found on camera while recording the trailer: today.py held "The model qwen3:8b is not on this Mac yet" after a yes. A test pins it.
+  v7.22.3 · 166 tools · 940 tests · docs coverage 100% · laws all hold · biggest app/tools_logo.py 649 · actions 289/289 · parity 289/289 · util_diff 288/288
 - 2026-11-16: v7.22.2 The landing footer is now an engraving of a language model writing (tokens fill in, attention arcs reach back, a faint field of weights), in the same terracotta hatching, and the cartoon mascot is a simple logo: a terracotta orb with five voice bars. The hero's fake chat wall is gone; real footage goes there once it is good enough. The demo reel opens with an original painting of an all-night diner.
   v7.22.2 · 166 tools · 938 tests · docs coverage 100% · laws all hold · biggest app/tools_logo.py 649 · actions 289/289 · parity 289/289 · util_diff 288/288
 - 2026-11-16: v7.22.1 The landing chat types fluid and quick again: two timers shared one name, so the hero's timer id became the typing delay and replies came out in slow chunks or all at once; now a steady 200 characters a second. A message sent while she answers waits above the box (typing again replaces it) with Send now to cut in, like Claude Code's queue. Checked in headless Chrome.

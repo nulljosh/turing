@@ -1,5 +1,5 @@
 {
-  "version": "7.22.2",
+  "version": "7.22.3",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -192,8 +192,8 @@
         "documented": 27
       },
       "app/tools_video.py": {
-        "total": 18,
-        "documented": 18
+        "total": 21,
+        "documented": 21
       },
       "app/tools_write.py": {
         "total": 8,
@@ -216,8 +216,8 @@
         "documented": 10
       },
       "app/voice.py": {
-        "total": 17,
-        "documented": 17
+        "total": 18,
+        "documented": 18
       },
       "scripts/gen_font.py": {
         "total": 5,
@@ -592,8 +592,8 @@
         "documented": 25
       },
       "tests/test_video.py": {
-        "total": 63,
-        "documented": 63
+        "total": 65,
+        "documented": 65
       },
       "tests/test_voice.py": {
         "total": 27,
@@ -604,8 +604,8 @@
         "documented": 7
       },
       "tests/test_write.py": {
-        "total": 23,
-        "documented": 23
+        "total": 24,
+        "documented": 24
       },
       "training/dev_to_data.py": {
         "total": 3,

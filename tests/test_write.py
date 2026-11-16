@@ -175,6 +175,23 @@ class WriteCode(unittest.TestCase):
         with mock.patch("tools_llm.ask_llm", side_effect=AssertionError("called")):
             self.assertIn("only write inside", tools_write.write_code("print hi", "/tmp/hi.py"))
 
+    def test_a_missing_model_never_lands_in_the_file(self):
+        """ask_llm's own failure lines (no footer) are a reply, never file content: 2026-11-16 today.py held
+        "The model qwen3:8b is not on this Mac yet" after a yes. Same for edit_file."""
+        for why in ("The model qwen3:8b is not on this Mac yet: run ollama pull qwen3:8b, then ask again.",
+                    "I do not have a qwen model on this Mac.", "qwen3:8b sent back no answer."):
+            with tempfile.TemporaryDirectory() as tmp, \
+                    mock.patch("os.path.expanduser", side_effect=lambda p: p.replace("~", os.path.realpath(tmp))), \
+                    mock.patch("tools_llm.ask_llm", return_value=why):
+                home = os.path.realpath(tmp)
+                got = tools_write.write_code("print hi", "hi.py", confirm=lambda n, a: True)
+                self.assertTrue(got.startswith("I could not write that"), got)
+                self.assertFalse(os.path.exists(f"{home}/Desktop/hi.py"))
+                os.makedirs(f"{home}/Documents")
+                open(f"{home}/Documents/n.md", "w").write("keep me\n")
+                self.assertIn("could not rewrite", tools_write.edit_file("~/Documents/n.md", "shorter", confirm=lambda n, a: True))
+                self.assertEqual(open(f"{home}/Documents/n.md").read(), "keep me\n")
+
     def test_routes_end_to_end(self):
         """Both phrasings reach write_code through tools.do, and "write a doc about x" still does not."""
         with mock.patch("tools_write.write_code", return_value="Wrote x.") as wc:
