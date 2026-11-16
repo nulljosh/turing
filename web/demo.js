@@ -8,7 +8,7 @@
   var transcript = $('chat-transcript'), input = $('chat-input'), space = $('desk-space'), statusEl = $('chat-status');
   var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var typing = reduceMotion ? 0 : 14;
-  var isLive = false, busy = false, reel = false, idleTimer = 0, reelTimer = 0, lastUser = 0, pending = null, lastCommand = null;
+  var isLive = false, busy = false, rush = false, queued = null, reel = false, idleTimer = 0, reelTimer = 0, lastUser = 0, pending = null, lastCommand = null;
   var LOCAL = 'http://localhost:8127/v1/chat/completions';
 
   function el(tag, cls, text) {
@@ -492,7 +492,7 @@
         .catch(function () { statusEl.textContent = was; return 'I could not reach my image model just now.'; });
     },
     set_heading: function (text) { h1.textContent = text.slice(0, 60); go(document.querySelector('header')); return 'The title now says "' + h1.textContent + '". Only on your screen.'; },
-    set_tagline: function (text) { userTagline = true; clearTimeout(typing); clearTimeout(backTimer); tagline.textContent = text.slice(0, 120); go(document.querySelector('header')); return 'Tagline changed.'; },
+    set_tagline: function (text) { userTagline = true; clearTimeout(heroTyping); clearTimeout(backTimer); tagline.textContent = text.slice(0, 120); go(document.querySelector('header')); return 'Tagline changed.'; },
     scroll_to: function (where) {
       var w = where.toLowerCase().trim();
       if (w === 'down' || w === 'up') { window.scrollBy({ top: (w === 'down' ? 1 : -1) * window.innerHeight * 0.8, behavior: reduceMotion ? 'auto' : 'smooth' }); return 'Scrolled ' + w + '.'; }
@@ -530,7 +530,7 @@
       return 'Wheee.';
     },
     reset_page: function () {
-      h1.textContent = original.h1; userTagline = false; clearTimeout(typing); clearTimeout(backTimer); tagline.textContent = original.tagline; h1.style.color = ''; zoom = 1; wrap.style.zoom = '';
+      h1.textContent = original.h1; userTagline = false; clearTimeout(heroTyping); clearTimeout(backTimer); tagline.textContent = original.tagline; h1.style.color = ''; zoom = 1; wrap.style.zoom = '';
       window.setTheme((function () { try { return localStorage.getItem('turing-theme'); } catch (e) { return null; } })() || window.systemTheme());
       sections().forEach(function (x) { x.style.display = ''; });
       if (window.speechSynthesis) speechSynthesis.cancel();
@@ -606,7 +606,7 @@
       });
     }
     (function type() {
-      i = typing ? Math.min(text.length, i + (code ? 8 : 3)) : text.length;
+      i = typing && !rush ? Math.min(text.length, i + (code ? 8 : 3)) : text.length;
       fill(text.slice(0, i));
       transcript.scrollTop = transcript.scrollHeight;
       if (i < text.length) return setTimeout(type, typing);
@@ -638,12 +638,12 @@
   }
 
   // ---- the hero line narrates the demo: what she is doing right now, typed out, then back to the tagline. Joshua Tree's eyebrow does the same. ----
-  var typing = 0, backTimer = 0, userTagline = false;
+  var heroTyping = 0, backTimer = 0, userTagline = false;
   function say_hero(text) {
-    clearTimeout(typing); clearTimeout(backTimer);
+    clearTimeout(heroTyping); clearTimeout(backTimer);
     if (reduceMotion) { narr.textContent = text; return; }
     var i = 0;
-    (function type() { narr.textContent = text.slice(0, ++i); if (i < text.length) typing = setTimeout(type, 16); })();
+    (function type() { narr.textContent = text.slice(0, ++i); if (i < text.length) heroTyping = setTimeout(type, 16); })();
   }
   var STORY = {
     paint: function () { return 'Rebuilding a painting from 30,000 squares.'; },
@@ -765,17 +765,33 @@
       .catch(function () { return { text: "I couldn't reach my lookup just now." }; });
   }
 
+  // Typed while she answers: held, shown above the box like Claude Code's queue. Typing again overwrites it;
+  // Send now finishes her current reply at once and sends it.
+  function showQueued() {
+    if (!queued) {
+      queued = el('div', 'chat-queued');
+      queued.style.cssText = 'display:none;align-items:center;gap:8px;font-size:13px;color:var(--muted);padding:4px 2px';
+      var now = el('button', 'chat-send-now', 'Send now'); now.type = 'button';
+      now.style.cssText = 'font:inherit;font-size:13px;padding:2px 10px;border:1px solid var(--line);border-radius:var(--r-pill);background:var(--bg);color:var(--fg);cursor:pointer';
+      now.onclick = function () { rush = true; };
+      queued.appendChild(el('span', 'chat-queued-text')); queued.appendChild(now);
+      input.parentNode.parentNode.insertBefore(queued, input.parentNode);
+    }
+    queued.style.display = pending ? 'flex' : 'none';
+    if (pending) queued.firstChild.textContent = 'Queued: ' + pending.q;
+  }
+
   function send(question, done) {
     var q = (question || input.value).trim().slice(0, 200);
     if (!q) return;
     // She is still answering: don't drop what was typed, hold it and send it the moment she's free.
-    if (busy) { pending = { q: q, done: done }; input.value = ''; return; }
+    if (busy) { pending = { q: q, done: done }; input.value = ''; showQueued(); return; }
     busy = true;
     input.value = '';
     addUser(q);
     var finish = function () {
-      busy = false; paintBar(); if (done) done();
-      if (pending) { var p = pending; pending = null; send(p.q, p.done); }
+      busy = false; rush = false; paintBar(); if (done) done();
+      if (pending) { var p = pending; pending = null; showQueued(); send(p.q, p.done); }
     };
     if (isLive) {
       fetch(LOCAL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ model: 'samantha', messages: [{ role: 'user', content: q }] }) })
