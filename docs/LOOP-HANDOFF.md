@@ -1,4 +1,4 @@
-# Turing loop handoff (2026-10-18, late morning)
+# Turing loop handoff (2026-11-16)
 
 ## What the loop is
 
@@ -8,7 +8,8 @@ A major ships only when its roadmap family is finished and checked: the badge st
 
 ## Where things stand
 
-- **Live:** v7.21.0 on turing.jaybulb.com (confirmed on /stats.json, 165 tools). Since 7.16: mute_video, make_gif, speed_video, cut_out_video, join_videos (the video edits from roadmap 4.18; burn-in captions is left), symbols, wordmarks and avatars in the landing demo, and a garage glyph for logos made for Big Ben Garage Doors.
+- **2026-11-16:** v7.22.0 ships caption_video (166 tools): an .srt or .vtt beside a video becomes a captions track you turn on, nothing burned in (Homebrew's ffmpeg has no libass or drawtext). Kaggle still answers 401, so no Kaggle rounds. The LaCie drive is gone: ~/.cache/uv and the repo's .venv were dead links into it and are now real (.venv is uv Python 3.12 with fonttools and brotli; the CI set runs through scratchpad gate.sh, which runs every `run:` line in test.yml). Sealed heldout7 lived only on the LaCie and is lost; heldout12 is in eval/. Every rule below that says /Volumes/LaCie now means the internal disk, about 14 GB free, so anything over a gigabyte needs room checked first.
+- **Live before that:** v7.21.2 (moved off retiring Workers AI models).
 - **Test run:** the post-deploy test run for the handoff commit (137456f) was still going at checkpoint; the release and deploy for v7.10.0 were green.
 - **Shipped before that:** v7.9.0 notes every command she could not do in ~/.samantha/misses.jsonl for the teacher (the file is still empty). v7.8.0 adds check_page, a read-only page checker. v7.7.0 rebuilt the face as Samantha Sans on Inter (OFL kept), with one terracotta accent (#b5502c light, #e0825a dark) and gibberish as a decline again. v7.6.1 fixed how BFCL strings are scored: her picker passes 325 of 400 (81.3 percent) on the function-calling benchmark in eval/bfcl.py. v7.5.0 added video_info, trim_video and vertical_video through ffmpeg.
 - **Roadmap:** docs/roadmap.md, which the checkpoint's issue sync reads. Issue #107 (Blender family) stays open for "a simple 3D object" and "a logo as 3D text".
@@ -24,10 +25,11 @@ A major ships only when its roadmap family is finished and checked: the badge st
 
 ## Next, in order
 
-1. Teach from her misses (every wake, step 6). misses.jsonl is empty so far; when it has rows, they are the first thing the next picker round trains on.
-2. Blender family (#107): Blender family done (#107 closed, every tool checked with real Blender runs). Check each with a real Blender round trip, read back by blender_info.
-3. 8.0 picker: the bar is unchanged. Rounds 25 and 26 (targeted rows, two seeds) and round 27 (Qwen3 1.7B base, pool 4068/203/100/142) all failed to beat run 23. Round 28 is Qwen3 4B on Kaggle v28; a 4B picker is about 2.3GB at 4 bits against 844MB shipped, so weigh the size before shipping. Fetched Kaggle output needs two config patches before mlx_lm.convert: add a top-level rope_theta to config.json and drop extra_special_tokens from tokenizer_config.json.
-4. Audio (Yeti record, transcribe, file to the vault) waits on Joshua clicking the microphone prompt once.
+1. Teach from her misses (every wake, step 6). ~/.samantha/misses.jsonl is still absent (no real chats since 7.21.1).
+2. Picker on a new base, locally: Qwen3.5-0.8B with mlx_lm LoRA through training/run_lora_capped.py (4 GB cap, refuses under 6 GB free), scored on the pooled dev sets against run 23 (4,052 right). This is the new idea 8.0 needs. Check free memory first; never two model runs at once.
+3. caption_video from her own transcript: mlx_whisper's timed segments written to an .srt, then the same track.
+4. Video family leftovers, then the next roadmap minor (repeating reminders, GUI multi-step), one ability per minor.
+5. Audio (Yeti) waits on Joshua clicking the microphone prompt once. Kaggle waits on the appeal.
 
 ## The ladder
 

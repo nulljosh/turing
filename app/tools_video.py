@@ -2,7 +2,8 @@
 long it is, how big, and its picture and sound, read only. trim_video (a write, asks first) cuts a clip between two
 times, vertical_video (a write, asks first) centre-crops a video to 9:16 for a phone, and trim_audio (a write, asks
 first) cuts a piece out of a sound file (.mp3, .m4a, .wav, .aac, .flac, .ogg), and extract_audio (a write, asks first)
-pulls the sound out of a video into an .mp3, .m4a or .wav, mute_video (a write, asks first) makes a silent copy of a video, make_gif (a write, asks first) turns up to 30 seconds of one into a looping .gif, speed_video (a write, asks first) makes a copy at 0.25x to 4x speed, cut_out_video (a write, asks first) removes a section from the middle and joins the rest, and join_videos (a write, asks first) puts two videos one after the other. Each write makes a new file
+pulls the sound out of a video into an .mp3, .m4a or .wav, mute_video (a write, asks first) makes a silent copy of a video, make_gif (a write, asks first) turns up to 30 seconds of one into a looping .gif, speed_video (a write, asks first) makes a copy at 0.25x to 4x speed, cut_out_video (a write, asks first) removes a section from the middle and joins the rest, and join_videos (a write, asks first) puts two videos one after the other, and caption_video (a write, asks first) adds a
+captions track from an .srt or .vtt. Each write makes a new file
 beside the original, never over an existing one. They run ffmpeg and ffprobe. Same home-folder rule as tools_files:
 home only, nothing hidden. tests/test_video.py mocks subprocess, so no real ffmpeg run happens there.
 """
@@ -325,7 +326,47 @@ def join_videos(request):
     return f"Joined them into {_short(out)}."
 
 
-TOOLS = (video_info, trim_video, vertical_video, trim_audio, extract_audio, mute_video, make_gif, speed_video, cut_out_video, join_videos)
+_SUBS = (".srt", ".vtt")
+
+
+def caption_video(request):
+    """Add a captions track to a video inside the home folder from an .srt or .vtt file. Takes 'video' (uses the .srt beside it) or 'video<TAB>captions'. Makes <name>-captioned.mp4 beside it, picture and sound copied untouched, never over a file. Asks first."""
+    video, _, subs = request.partition("\t")
+    full = _video(video)
+    if not full:
+        return f"No video {video.strip()} I am allowed to open."
+    if subs.strip():
+        sub = _home(subs)
+    else:  # ponytail: only the same-name .srt/.vtt beside it; making one from her own transcript is the next step
+        sub = next((c for c in (os.path.splitext(full)[0] + e for e in _SUBS) if os.path.isfile(c)), None)
+        if not sub:
+            return f"I need captions for {_short(full)}: put a .srt beside it with the same name, or say which .srt to use."
+    if not sub or not os.path.isfile(sub) or not sub.lower().endswith(_SUBS):
+        return f"No captions file {subs.strip()} I am allowed to open (.srt or .vtt)."
+    out = os.path.splitext(full)[0] + "-captioned.mp4"
+    if os.path.exists(out):
+        return f"{_short(out)} already exists."
+    if tools_files.HEADLESS:
+        return f"Added the captions in {_short(out)}."
+    exe = _exe("ffmpeg")
+    if not exe:
+        return _NO_FFMPEG
+    # ponytail: a captions track you turn on (QuickTime, iPhone, VLC), not burned in: Homebrew's ffmpeg has no libass
+    tmp = out + ".part.mp4"
+    try:
+        done = subprocess.run([exe, "-hide_banner", "-loglevel", "error", "-i", full, "-i", sub, "-map", "0:v", "-map", "0:a?", "-map", "1:0",
+                               "-c:v", "copy", "-c:a", "copy", "-c:s", "mov_text", "-metadata:s:s:0", "language=eng", tmp], capture_output=True, timeout=900)
+    except (OSError, subprocess.SubprocessError):
+        return "ffmpeg did not finish."
+    if done.returncode != 0 or not os.path.exists(tmp):
+        if os.path.exists(tmp):
+            os.remove(tmp)
+        return f"ffmpeg could not add {_short(sub)} to {_short(full)}."
+    os.replace(tmp, out)
+    return f"Added the captions in {_short(out)}. Turn them on with the captions button when it plays."
+
+
+TOOLS = (video_info, trim_video, vertical_video, trim_audio, extract_audio, mute_video, make_gif, speed_video, cut_out_video, join_videos, caption_video)
 
 _I = re.I
 _EXT = r"(\S+\.(?:mp4|mov|m4v|mkv|webm))"
@@ -350,6 +391,10 @@ ROUTES = (
      lambda m: "\t".join((m.group(3), m.group(1), m.group(2)))),
     (re.compile(r"^(?:join|merge|combine|stitch) (?:the |my )?" + _EXT + r" (?:and|with|to|then) (?:the |my )?" + _EXT + "$", _I), "join_videos", lambda m: "\t".join(m.groups())),
     (re.compile(r"^put (?:the |my )?" + _EXT + r" and (?:the |my )?" + _EXT + " together$", _I), "join_videos", lambda m: "\t".join(m.groups())),
+    (re.compile(r"^(?:add|put) (?:the )?(?:captions|subtitles|subs) (?:to|on) (?:the |my )?" + _EXT + "$", _I), "caption_video", lambda m: m.group(1)),
+    (re.compile(r"^(?:caption|subtitle) (?:the |my )?" + _EXT + "$", _I), "caption_video", lambda m: m.group(1)),
+    (re.compile(r"^(?:add|put) (?:the )?(?:captions|subtitles|subs) (?:from )?(\S+\.(?:srt|vtt)) (?:to|on|into) (?:the |my )?" + _EXT + "$", _I), "caption_video", lambda m: m.group(2) + "\t" + m.group(1)),
+    (re.compile(r"^(?:caption|subtitle) (?:the |my )?" + _EXT + r" (?:with|from|using) (\S+\.(?:srt|vtt))$", _I), "caption_video", lambda m: "\t".join(m.groups())),
 )
 
 
@@ -364,6 +409,9 @@ def demo():
     assert by("speed_video")[0].match("speed up ~/a.mp4 2x") and by("speed_video")[1].match("slow down ~/a.mp4 to 0.5x") and not by("speed_video")[0].match("speed up my laptop")
     assert by("cut_out_video")[0].match("remove 0:10 to 0:15 from ~/Movies/a.mp4") and not by("cut_out_video")[0].match("remove 0:10 to 0:15 from my notes")
     assert by("join_videos")[0].match("join ~/a.mp4 and ~/b.mov") and by("join_videos")[1].match("put ~/a.mp4 and ~/b.mp4 together") and not by("join_videos")[0].match("join the club")
+    assert by("caption_video")[0].match("add captions to ~/a.mp4") and by("caption_video")[3].match("caption ~/a.mp4 with ~/a.srt") and not by("caption_video")[0].match("add captions to my photo")
+    assert by("caption_video")[2].match("add subtitles from ~/a.srt to ~/a.mov").group(2) == "~/a.mov"
+    assert "allowed" in caption_video("/etc/a.mp4") and "allowed" in caption_video("~/.ssh/a.mp4")
     assert _secs("1:02:03") == 3723 and _secs("7.5") == 7.5
     assert _clock(83) == "1:23" and _clock(3725) == "1:02:05"
     assert "allowed" in video_info("~/.ssh/a.mp4") and "allowed" in vertical_video("/etc/a.mp4") and "allowed" in mute_video("~/.ssh/a.mp4") and "allowed" in make_gif("/etc/a.mp4") and "allowed" in speed_video("/etc/a.mp4\t2") and "allowed" in cut_out_video("/etc/a.mp4\t0\t1") and "allowed" in join_videos("/etc/a.mp4\t/etc/b.mp4")

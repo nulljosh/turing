@@ -494,16 +494,62 @@ class Join(Base):
         self.assertFalse(os.path.exists(os.path.join(tools_files.HOME, "Movies", "a-joined.mp4")))
 
 
+class Caption(Base):
+    """caption_video: an .srt or .vtt as a captions track, <name>-captioned.mp4 beside the video."""
+
+    def test_routes_and_refusals(self):
+        """Four phrasings route; no captions file, a hidden one, a non-caption file and an existing copy are plain replies that run nothing."""
+        routes = [r for r in tools_video.ROUTES if r[1] == "caption_video"]
+        self.assertEqual(len(routes), 4)
+        hit = lambda t: next(r[2](r[0].match(t)) for r in routes if r[0].match(t))
+        self.assertEqual(hit("add captions to my ~/Movies/a.mp4"), "~/Movies/a.mp4")
+        self.assertEqual(hit("subtitle ~/a.mov"), "~/a.mov")
+        self.assertEqual(hit("add subtitles from ~/a.srt to ~/Movies/a.mp4"), "~/Movies/a.mp4\t~/a.srt")
+        self.assertEqual(hit("caption ~/Movies/a.mp4 with ~/a.vtt"), "~/Movies/a.mp4\t~/a.vtt")
+        self.assertFalse(any(r[0].match("add captions to my photo") for r in routes))
+        with mock.patch.object(tools_video.subprocess, "run") as run:
+            self.assertIn("put a .srt beside it", tools_video.caption_video(self.clip))
+            open(os.path.join(tools_files.HOME, ".hidden", "a.srt"), "w").close()
+            self.assertIn("allowed", tools_video.caption_video(self.clip + "\t" + os.path.join(tools_files.HOME, ".hidden", "a.srt")))
+            open(os.path.join(tools_files.HOME, "notes.txt"), "w").close()
+            self.assertIn("allowed", tools_video.caption_video(self.clip + "\t~/notes.txt"))
+            self.assertIn("allowed", tools_video.caption_video(os.path.join(tools_files.HOME, ".hidden", "secret.mp4")))
+            open(os.path.join(tools_files.HOME, "Movies", "a.srt"), "w").close()
+            open(os.path.join(tools_files.HOME, "Movies", "a-captioned.mp4"), "wb").close()
+            self.assertEqual(tools_video.caption_video(self.clip), "~/Movies/a-captioned.mp4 already exists.")
+        run.assert_not_called()
+
+    def test_headless_and_run(self):
+        """Headless names the file and runs nothing; a live run copies picture and sound, adds mov_text, and moves the .part file into place."""
+        open(os.path.join(tools_files.HOME, "Movies", "a.srt"), "w").close()
+        with mock.patch.object(tools_video.subprocess, "run") as run:
+            self.assertEqual(tools_video.caption_video(self.clip), "Added the captions in ~/Movies/a-captioned.mp4.")
+        run.assert_not_called()
+
+        def fake(cmd, **kw):
+            """A stand-in that writes the output the way ffmpeg would."""
+            open(cmd[-1], "wb").write(b"x")
+            return subprocess.CompletedProcess(cmd, 0, stdout=b"", stderr=b"")
+        with mock.patch.object(tools_files, "HEADLESS", False), mock.patch.object(tools_video, "_exe", return_value="ffmpeg"), \
+                mock.patch.object(tools_video.subprocess, "run", side_effect=fake) as run:
+            self.assertIn("Added the captions in ~/Movies/a-captioned.mp4.", tools_video.caption_video(self.clip))
+        cmd = run.call_args[0][0]
+        self.assertIn("mov_text", cmd)
+        self.assertEqual(cmd[cmd.index("-c:v") + 1], "copy")
+        self.assertTrue(os.path.exists(os.path.join(tools_files.HOME, "Movies", "a-captioned.mp4")))
+        self.assertFalse(os.path.exists(os.path.join(tools_files.HOME, "Movies", "a-captioned.mp4.part.mp4")))
+
+
 class Registry(unittest.TestCase):
     """The three tools are registered, documented, and the two writes ask first."""
 
     def test_names(self):
         """Names match TOOLS and each has a docstring."""
-        self.assertEqual({f.__name__ for f in tools_video.TOOLS}, {"video_info", "trim_video", "vertical_video", "trim_audio", "extract_audio", "mute_video", "make_gif", "speed_video", "cut_out_video", "join_videos"})
+        self.assertEqual({f.__name__ for f in tools_video.TOOLS}, {"video_info", "trim_video", "vertical_video", "trim_audio", "extract_audio", "mute_video", "make_gif", "speed_video", "cut_out_video", "join_videos", "caption_video"})
         self.assertTrue(all(f.__doc__ for f in tools_video.TOOLS))
         import tools
         self.assertTrue({"video_info", "trim_video", "vertical_video", "trim_audio", "extract_audio"} <= set(tools.TOOLS))
-        self.assertTrue({"trim_video", "vertical_video", "trim_audio", "extract_audio", "mute_video", "make_gif", "speed_video", "cut_out_video", "join_videos"} <= tools.WRITES and "video_info" not in tools.WRITES)
+        self.assertTrue({"trim_video", "vertical_video", "trim_audio", "extract_audio", "mute_video", "make_gif", "speed_video", "cut_out_video", "join_videos", "caption_video"} <= tools.WRITES and "video_info" not in tools.WRITES)
 
 
 if __name__ == "__main__":
