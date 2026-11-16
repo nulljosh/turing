@@ -1,0 +1,46 @@
+name: train
+
+# Training without Claude or the Mac: every 8 hours, log the last Kaggle round and start the next one.
+# Kaggle's free GPU quota is the limit. Results land in eval/kaggle-nightly.log as a [skip ci] commit.
+on:
+  schedule:
+    - cron: "17 */8 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: train
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  round:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -q kaggle six
+      - name: Skip green without a token
+        id: token
+        env:
+          KAGGLE_API_TOKEN: ${{ secrets.KAGGLE_API_TOKEN }}
+        run: |
+          if [ -z "$KAGGLE_API_TOKEN" ]; then echo "::notice::No KAGGLE_API_TOKEN secret, nothing to train."; echo "ok=0" >> "$GITHUB_OUTPUT"; else echo "ok=1" >> "$GITHUB_OUTPUT"; fi
+      - name: Log the last round, start the next
+        if: steps.token.outputs.ok == '1'
+        env:
+          KAGGLE_API_TOKEN: ${{ secrets.KAGGLE_API_TOKEN }}
+        run: python3 training/kaggle/nightly.py
+      - name: Commit the log
+        if: steps.token.outputs.ok == '1'
+        run: |
+          git config user.name "turing-train"
+          git config user.email "turing-train@users.noreply.github.com"
+          git add eval/kaggle-nightly.log
+          git diff --cached --quiet && exit 0
+          git commit -m "train: log a Kaggle round [skip ci]"
+          git pull --rebase -q && git push
