@@ -1,14 +1,11 @@
-/* Hero: one conversation with Samantha behind the copy, from her own FAQ; blended into the page,
+/* Hero: real footage of Samantha working (cut from the live demo), dithered, scanlined and blended into the page,
    parallax in hero.js. */
 .hero{position:relative;isolation:isolate;overflow:hidden}
 .hero .hero-copy{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center}
 .hero::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse 56% 50% at 50% 50%,var(--bg) 50%,transparent 100%)}
 .hero::after{content:"";position:absolute;left:0;right:0;bottom:0;height:28%;z-index:1;pointer-events:none;background:linear-gradient(transparent,var(--bg))}
 .hero .hero-bg{position:absolute;inset:0;z-index:0;pointer-events:none;transform:translate3d(0,var(--py,0),0);will-change:transform}
-.twall{height:100%;max-width:1440px;margin:0 auto;padding:32px 48px;display:flex;flex-direction:column;justify-content:flex-end;gap:20px;overflow:hidden;opacity:.8;text-align:left}
-.twall .me{align-self:flex-end;max-width:36%;margin:0;padding:10px 16px;border-radius:18px 18px 4px 18px;background:var(--accent);color:var(--on-accent);font-size:17px;line-height:24px}
-.twall .her{align-self:flex-start;display:flex;gap:12px;align-items:flex-start;max-width:36%}
-.twall .her img{width:32px;height:32px;border-radius:50%;flex:none}
-.twall .her p{margin:0;font-size:17px;line-height:26px;color:var(--fg)}
-@media (max-width:900px){.twall{padding:24px}.twall .me,.twall .her{max-width:44%}}
-@media (max-width:560px){.twall{padding:16px;opacity:.5}.twall .me,.twall .her{max-width:88%}.hero::before{background:radial-gradient(ellipse 120% 46% at 50% 50%,var(--bg) 62%,transparent 100%)}}
+.hero-reel{width:100%;height:100%;object-fit:cover;opacity:.55;filter:saturate(.9);-webkit-mask:radial-gradient(ellipse 34% 62% at 50% 46%,#000 55%,transparent 100%);mask:radial-gradient(ellipse 34% 62% at 50% 46%,#000 55%,transparent 100%)}
+/* scanlines over the real footage, the house CRT look; the footage itself is bayer-dithered when it is cut */
+.hero .hero-bg::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(to bottom,transparent 0 2px,rgba(0,0,0,.22) 2px 3px);pointer-events:none}
+@media (max-width:560px){.hero-reel{opacity:.4}.hero::before{background:radial-gradient(ellipse 120% 46% at 50% 50%,var(--bg) 62%,transparent 100%)}}

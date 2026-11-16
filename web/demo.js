@@ -807,7 +807,7 @@
   // ---- idle reel: if nobody types, she shows what she does. Silent, and it stops the moment you touch anything ----
   var REEL = [
     // pictures first: the part nobody has seen a 0.5B do
-    'paint the mona lisa', 'draw a lighthouse at dusk', 'make me a logo for a surf school', 'paint the eniac', 'paint the last supper as a mosaic', 'draw a fox in the snow',
+    'draw an all-night diner glowing on a dark empty city corner, oil painting', 'paint the mona lisa', 'draw a lighthouse at dusk', 'make me a logo for a surf school', 'paint the eniac', 'paint the last supper as a mosaic', 'draw a fox in the snow',
     // her Mac: apps, the web, sound, the screen
     'open chrome and go to en.wikipedia.org/wiki/Alan_Turing', 'set the volume to 40', 'play some music', 'skip this song', 'take a screenshot', 'what apps are running', 'joshua tree status', 'how much disk space is free', 'is bluetooth on', 'uptime',
     // notes, reminders, calendar, time

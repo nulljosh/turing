@@ -185,7 +185,7 @@
   .foot-bar { max-width: 880px; margin: 0 auto; padding: 18px 20px 0; border-top: 1px solid var(--line); }
   .foot-bar .foot-meta { margin: 0; text-align: left; color: var(--muted); font-size: 12.5px; line-height: 1.9; }
   .foot-bar .foot-meta a { color: var(--muted); }
-  /* Footer plate: an engraved harbour drawn by one fragment shader (the same scene as Atlin's footer, hatched in her
+  /* Footer plate: an engraved language model writing, drawn by one fragment shader (the same scene as Atlin's footer, hatched in her
      terracotta on the page color). No images, no gradients: every tone is ink lines. Hidden without WebGL. */
   .foot-scene { display: block; width: 100%; height: clamp(200px, 30vw, 360px); margin-top: 24px; --scene-paper: var(--bg); --scene-ink: var(--accent); }
   @media (max-width: 700px) { .foot-dir { grid-template-columns: repeat(2, 1fr); } }
@@ -401,8 +401,8 @@
 
     <div class="wrap">
       <header class="hero">
-        <div class="hero-bg" aria-hidden="true" inert><div class="twall" id="twall"></div></div>
-        <div class="hero-copy"><div class="hero-mascot"><img class="mascot" src="mascot.svg" alt="Samantha" width="112" height="112"></div>
+        
+        <div class="hero-copy"><div class="hero-mascot"><img class="mascot" src="logo.svg" alt="Samantha" width="112" height="112"></div>
         <p class="hero-label">Turing, a small model on your Mac</p>
         <h1 class="hero-h1">Meet Samantha.</h1>
         <p class="sub">A small AI that lives on your Mac. Free, private, and it runs itself through everything she can do while you watch.</p>
@@ -589,7 +589,7 @@ irm https://raw.githubusercontent.com/nulljosh/turing/main/install/install.ps1 |
         </div>
       </section>
 
-      <div class="mark-foot"><img class="mascot" src="mascot.svg" alt="Samantha" width="240" height="240"></div>
+      <div class="mark-foot"><img class="mascot" src="logo.svg" alt="Samantha" width="240" height="240"></div>
       </main>
       <footer>
         <div class="foot-rule" aria-hidden="true"><span>Turing</span><span>A small model, trained in the open</span></div>
@@ -850,7 +850,7 @@ if(navigator.clipboard)navigator.clipboard.writeText(c).then(done,done);else don
     <script src="hero.js?v=2"></script>
   <script src="paint.js" defer></script>
     <script>
-      /* The footer plate: the shader below is Atlin's engraved harbour, two ridges, a skyline and water that mirrors it,
+      /* The footer plate: an engraving of a language model writing (tokens, causal attention arcs, a field of weights),
          every tone a hatch of ink lines. Only animates while on screen; a still frame with reduced motion; hidden without WebGL. */
       (function () {
         var canvas = document.querySelector('.foot-scene');
@@ -866,15 +866,11 @@ uniform float dpr;
 
 float hash(float n) { return fract(sin(n) * 43758.5453); }
 float hash2(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
-float noise(float x) { float i = floor(x), f = fract(x); return mix(hash(i), hash(i + 1.0), f * f * (3.0 - 2.0 * f)); }
 float noise2(vec2 p) {
   vec2 i = floor(p), f = fract(p);
   vec2 u = f * f * (3.0 - 2.0 * f);
   return mix(mix(hash2(i), hash2(i + vec2(1, 0)), u.x), mix(hash2(i + vec2(0, 1)), hash2(i + vec2(1, 1)), u.x), u.y);
 }
-// Two octaves only: the big shapes a light would actually catch.
-float lo(float x) { return noise(x) * 0.5 + noise(x * 2.03) * 0.25; }
-float fbm(float x) { float v = 0.0, a = 0.5; for (int i = 0; i < 5; i++) { v += a * noise(x); x *= 2.03; a *= 0.5; } return v; }
 
 // Ink lines at angle a, spacing s pixels. Returns 1 where ink falls for tone t.
 float hatch(vec2 px, float a, float s, float t) {
@@ -882,49 +878,52 @@ float hatch(vec2 px, float a, float s, float t) {
   return 1.0 - smoothstep(t - 0.12, t + 0.12, d);
 }
 
-// Tone of the scene above the waterline, 0 = paper, 1 = solid ink. kind picks the hatch.
+// The plate is a language model writing: a row of tokens fills in left to right, each new token throws attention
+// arcs back to a few earlier ones (causal, never forward), and a faint matrix of weights breathes above.
+// Tone 0 = paper, 1 = solid ink; kind picks the hatch angle.
+const float N = 28.0;
+float tokX(float i) { return (i + 0.5) / N; }
 float scene(vec2 uv, out float kind) {
-  float x = uv.x * res.x / res.y;
-  float back = 0.40 + fbm(x * 0.9 + 4.0) * 0.42;
-  float front = 0.31 + fbm(x * 1.8 + 11.0) * 0.20;
-  // A skyline in the middle third: towers of hashed height, a few tall ones.
-  float col = floor(uv.x * 64.0);
-  float band = smoothstep(0.22, 0.32, uv.x) * (1.0 - smoothstep(0.70, 0.82, uv.x));
-  float tower = 0.30 + band * (0.04 + pow(hash(col), 2.5) * 0.24);
+  float asp = res.x / res.y;
+  float cur = mod(floor(time * 0.9), N + 6.0);  // the token being written; a short pause on the full line, then a new one
   kind = 0.0;
-  if (uv.y < tower && band > 0.05) {
+  float i = floor(uv.x * N), fx = fract(uv.x * N);
+  if (uv.y > 0.10 && uv.y < 0.19 && fx > 0.14 && fx < 0.86) {
     kind = 2.0;
-    float win = step(0.55, fract(uv.x * 256.0)) * step(0.5, fract(uv.y * 120.0));
-    return 0.78 - win * 0.45;
+    if (i > cur) return 0.10;
+    return i == cur ? 0.96 : 0.6;
   }
-  // Light from the left: slopes facing away from it take more ink.
-  float slopeF = (lo(x * 1.8 + 11.08) - lo(x * 1.8 + 10.92)) / 0.16;
-  float slopeB = (lo(x * 0.9 + 4.08) - lo(x * 0.9 + 3.92)) / 0.16;
-  if (uv.y < front) { kind = 1.0; return clamp(0.45 + slopeF * 0.35 + (front - uv.y) * 0.9, 0.2, 0.9); }
-  if (uv.y < back) { kind = 3.0; return clamp(0.24 + slopeB * 0.3 + (back - uv.y) * 0.6, 0.08, 0.7); }
-  // Sky: a few soft clouds, barely inked.
-  float c = noise2(vec2(x * 2.0 + time * 0.01, uv.y * 5.0));
-  return smoothstep(0.62, 0.9, c) * 0.18 * smoothstep(0.55, 0.9, uv.y);
+  if (uv.y > 0.19) {
+    float best = 0.0;
+    for (int k = 1; k < 28; k++) {
+      float t = float(k);
+      if (t > cur) break;
+      for (int h = 0; h < 2; h++) {
+        float back = 1.0 + floor(hash(t * 7.0 + float(h) * 13.0) * min(t, 8.0));
+        float b = t - back;
+        vec2 c = vec2((tokX(t) + tokX(b)) * 0.5 * asp, 0.19);
+        float r = (tokX(t) - tokX(b)) * 0.5 * asp;
+        float d = abs(length(vec2(uv.x * asp, uv.y) - c) - r);
+        float w = 0.003 + 0.005 * hash(t + float(h) * 3.1);
+        float on = 1.0 - smoothstep(w, w + 0.003, d);
+        best = max(best, on * (t == cur ? 0.95 : 0.4 + 0.3 * hash(t * 3.0 + float(h))));
+      }
+    }
+    if (best > 0.0) { kind = 1.0; return best; }
+  }
+  vec2 g = vec2(uv.x * asp, uv.y) * 18.0;
+  float wv = noise2(floor(g) * 0.35 + vec2(time * 0.05, 0.0));
+  kind = 3.0;
+  return (1.0 - smoothstep(0.16, 0.22, length(fract(g) - 0.5))) * wv * 0.26 * smoothstep(0.25, 0.85, uv.y);
 }
 
 void main() {
   vec2 px = gl_FragCoord.xy;
   vec2 uv = px / res;
-  float water = 0.30;
   float kind;
-  float tone;
-  if (uv.y < water) {
-    // Mirror the town into the water, broken up by slow ripples.
-    float ripple = sin(uv.y * 220.0 - time * 0.8) * 0.004 + (noise2(vec2(uv.x * 40.0, uv.y * 90.0 + time * 0.2)) - 0.5) * 0.01;
-    vec2 m = vec2(uv.x + ripple, water + (water - uv.y) * 0.9);
-    float depth = uv.y / water;
-    tone = scene(m, kind) * 0.45 * depth + 0.06;
-    kind = 4.0;
-  } else {
-    tone = scene(uv, kind);
-  }
+  float tone = scene(uv, kind);
   float s = 4.0 * dpr;
-  float a = kind == 2.0 ? 0.0 : kind == 4.0 ? 1.5708 : kind == 1.0 ? 0.785 : kind == 3.0 ? -0.6 : 0.35;
+  float a = kind == 2.0 ? 0.0 : kind == 1.0 ? 0.785 : kind == 3.0 ? -0.6 : 0.35;
   float lines = hatch(px, a, s, tone);
   // A cross hatch in the darkest places, like a real engraving.
   lines = max(lines, hatch(px, a + 1.5708, s, tone - 0.55));
