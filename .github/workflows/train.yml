@@ -40,6 +40,7 @@ jobs:
         run: |
           git config user.name "turing-train"
           git config user.email "turing-train@users.noreply.github.com"
+          [ -f eval/kaggle-nightly.log ] || exit 0  # a busy kernel logs nothing
           git add eval/kaggle-nightly.log
           git diff --cached --quiet && exit 0
           git commit -m "train: log a Kaggle round [skip ci]"
