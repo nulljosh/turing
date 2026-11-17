@@ -5,7 +5,6 @@
 ## Ingested 2026-11-13
 
 ## Ingested 2026-11-16
-- [ ] Redo the logo: the terracotta orb with five voice bars still sucks (Joshua). Use the /icon skill: a bold, original mark in her terracotta, made with Icon Composer, then the landing, favicons and app icon together.
 - [ ] (Note "Turing") Refresh the GitHub description: simpler, less verbose. GitHub README has a stale logo/mascot.
 - [ ] (Turing) Scrolling the page kills the demo immediately. Fix it.
 - [ ] (Turing) Replies are too verbose. Why does she mention Cloudflare? Screenshot: "An image model on Cloudflare imagined it, and I am rebuilding it from 30,000 squares." (notes/attachments/2026-11-16/22160-1.png).
