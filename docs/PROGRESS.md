@@ -1,5 +1,7 @@
 # Progress log
 
+- 2026-11-17: v7.25.1 The trailer and the screenshots on the landing no longer show test files sitting on the Mac's desktop: the icon column is painted out of the footage with the wallpaper beside it.
+  v7.25.1 · 168 tools · 944 tests · docs coverage 100% · laws all hold · biggest app/tools_logo.py 650 · actions 293/293 · parity 293/293 · util_diff 288/288
 - 2026-11-17: v7.25.0 🎉 She grabs a still from a video: "grab a still from ~/Movies/a.mp4 at 0:12" (or "screenshot a.mp4 at 30", or no time for the first frame) saves a-frame.png beside it. Checked on a real clip, and a time past the end gets a plain answer, not an empty file.
   v7.25.0 · 168 tools · 944 tests · docs coverage 100% · laws all hold · biggest app/tools_logo.py 650 · actions 293/293 · parity 293/293 · util_diff 288/288
 - 2026-11-17: v7.24.0 🎉 She compresses video: "compress ~/Movies/a.mp4" or "make my a.mov smaller" makes a-small.mp4 beside it (at most 1280 wide) and says both sizes. A real 1080p clip went from 1.6 MB to 430 KB with its sound. Also: "compress" on a video no longer zips it.
