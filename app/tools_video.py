@@ -274,6 +274,20 @@ def cut_out_video(request):
     return why or f"Removed {start} to {end} into {_short(out)}."
 
 
+def compress_video(path):
+    """Make a smaller copy of a video inside the home folder: <name>-small.mp4 beside it, at most 1280 wide, never over a file. Asks first."""
+    full = _video(path)
+    if not full:
+        return f"No video {path.strip()} I am allowed to open."
+    out, why = _make(full, "small", ["-vf", "scale='min(1280,iw)':-2", "-crf", "28", "-preset", "veryfast", "-b:a", "96k"])
+    if why:
+        return why
+    if not os.path.exists(out):
+        return f"Made a smaller copy at {_short(out)}."
+    before, after = os.path.getsize(full), os.path.getsize(out)
+    return f"Made a smaller copy at {_short(out)}: {tools_files._size(before)} down to {tools_files._size(after)}."
+
+
 def _has_sound(path):
     """True when the video has an audio stream (ffprobe), False when not or when ffprobe cannot say."""
     exe = _exe("ffprobe")
@@ -415,6 +429,8 @@ ROUTES = (
     (re.compile(r"^(?:trim|cut|clip) (?:the |my )?(\S+\.(?:mp3|m4a|wav|aac|flac|ogg)) from (\S+) (?:to|until) (\S+)$", _I), "trim_audio", lambda m: "\t".join(m.groups())),
     (re.compile(r"^(?:extract|pull|rip|get) (?:the )?(?:audio|sound) (?:out )?(?:of|from) (?:the |my )?" + _EXT + r"(?: (?:as|to|into) (?:an? )?\.?(mp3|m4a|wav))?$", _I), "extract_audio",
      lambda m: m.group(1) + "\t" + (m.group(2) or "mp3")),
+    (re.compile(r"^(?:compress|shrink) (?:the |my )?" + _EXT + "$", _I), "compress_video", lambda m: m.group(1)),
+    (re.compile(r"^make (?:the |my )?" + _EXT + " smaller$", _I), "compress_video", lambda m: m.group(1)),
     (re.compile(r"^(?:mute|silence) (?:the |my )?" + _EXT + "$", _I), "mute_video", lambda m: m.group(1)),
     (re.compile(r"^(?:remove|strip|drop) the (?:audio|sound) (?:from|of) (?:the |my )?" + _EXT + "$", _I), "mute_video", lambda m: m.group(1)),
     (re.compile(r"^(?:make|turn) (?:a |the |my )?(?:gif|animation) (?:of|from|out of) (?:the |my )?" + _EXT + r" from (\S+) (?:to|until) (\S+)$", _I), "make_gif", lambda m: "\t".join(m.groups())),

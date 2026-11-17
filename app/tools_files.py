@@ -324,7 +324,7 @@ ROUTES = (
     (re.compile(r"^move (?:the )?(?:file |folder )?(\S+) (?:to|into) (?:the )?(?:folder )?(\S+)$", _I), "move_file", lambda m: m.group(1) + "\t" + m.group(2)),
     (re.compile(r"^copy (?:the )?(?:file |folder )?(\S+) (?:to|into) (?:the )?(?:folder )?(\S+)$", _I), "copy_file", lambda m: m.group(1) + "\t" + m.group(2)),
     (re.compile(r"^rename (?:the )?(?:file |folder )?(\S+) (?:to|as) (\S+)$", _I), "rename_file", lambda m: m.group(1) + "\t" + m.group(2)),
-    (re.compile(r"^(?:zip|compress|archive) (?:the )?(?:file |folder )?(\S+)$", _I), "zip_file", lambda m: m.group(1)),
+    (re.compile(r"^(?:zip|archive|compress(?! (?:the )?(?:file |folder )?\S+\.(?:mp4|mov|m4v|mkv|webm)$)) (?:the )?(?:file |folder )?(\S+)$", _I), "zip_file", lambda m: m.group(1)),
     (re.compile(r"^(?:unzip|extract|unarchive) (?:the )?(?:file |zip )?(\S+)$", _I), "unzip_file", lambda m: m.group(1)),
     (re.compile(r"^(?:trash|delete|remove|throw away|throw out) (?:the )?(?:file |folder )?(\S+)$", _I), "trash_file", lambda m: m.group(1)),
 )

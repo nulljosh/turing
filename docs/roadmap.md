@@ -119,16 +119,9 @@ Source: Apple Note, screenshot `notes/attachments/2026-10-19/turing-1.png` (turi
 ## Ingested 2026-10-30
 
 ## Ingested 2026-11-16 (Joshua, landing and direction)
-- [ ] Hero: no chat box. A short looping video montage of what she does (drives the Mac, writes code, edits video, makes images, plays his games), real screen recordings with the house dither and scanlines.
-- [ ] Every ability on the landing is a short video demo, not a list or a stock image. The Victorian princess art goes; real recordings win.
-- [ ] Chat demo: queue messages while she answers (like Claude Code), with "send now" to cut in and an edit to overwrite the queued one.
+- [ ] A short video card per ability (cut from the trailer footage), if the trailer alone does not carry it.
 - [ ] Chat demo: answers type out fluid and quick like a typewriter, not in slow chunks.
-- [ ] Footer: keep the shader, swap the harbour skyline for something about language models (tokens, attention, weights).
-- [ ] Mascot: simplify into an icon or logo mark.
 - [ ] Coding with a loop: "loop until the tests pass" style keywords like Claude Code, building on write_code and run_tests.
 - [ ] Always-on training: a rented GPU at $10 to $20 a month runs a picker round whenever her misses grow, recursively. Kaggle (free) is the base while the account works; Modal or RunPod is the paid fallback, CLI-driven, no browser. Needs Joshua's signup and card. Nothing runs on his Mac on a timer (house rule); a cloud job is fine.
 - [ ] Niche skills as their own small trained heads: tutoring math, playing his games, any subject he wants a specialist for.
 - [ ] Picker base refresh (researched 2026-11-16 on Hugging Face): the shipped picker is still Qwen2.5-1.5B from 2024. There is no small Qwen4 yet (only a hosted qwen4-max preview). Candidates, all with MLX builds: Gemma 4 E2B-it (Apache 2.0, plain transformer, fastest to train here), Granite 4.2 3B (Apache 2.0, Aug 2026), Qwen3.5-2B and 0.8B (Apache 2.0, Feb 2026; hybrid layers train slowly in MLX), LFM3-1.7B (Liquid, Oct 23 2026, newest, LFM licence with a revenue cap). For the computer-use goal, Microsoft Fara1.5-4B (MIT, July 2026) is a screen agent worth trying beside the picker. Order: Gemma 4 E2B, then Granite 4.2 3B, then LFM3.
-- [ ] Train without Claude (Joshua 2026-11-16): a scheduled GitHub Actions workflow (cloud, not the Mac) pushes the Kaggle kernel nightly with the newest data and her misses, the kernel scores itself on the pooled dev sets with transformers, and the run's numbers land in eval/picker-rounds.log via a bot commit. Kaggle's 30 free GPU hours a week cover about 15 rounds. Shipping a winner still needs one sealed-set read and a human yes. KAGGLE_API_TOKEN goes in repo secrets.
-- [ ] Hero reel, done right (Joshua 2026-11-16 on the first cut: "paintings aren't as good as she's made, it stalls, only 2 things happen"): record her driving the real Mac (open apps, click, type, write code to a file and run its tests, edit a video, make a logo) as 2 to 3 second hard cuts, about 12 abilities in 30 seconds, never a stall; paintings from pxm.py's magick engine at full quality, not the web demo's 30k-square repaint. Needs one Screen Recording permission from Joshua. The rejected cut is in the session scratchpad.
-- [ ] Landing, left from the 2026-11-16 pass: a video card per ability instead of the list (cut from the same demo recording), re-record the hero once the diner painting is in the reel, the Ada band to a dithered still of real footage.
