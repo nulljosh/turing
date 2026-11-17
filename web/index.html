@@ -318,12 +318,8 @@
       @media (max-width:700px){.can{grid-template-columns:1fr;gap:24px}}
       pre{overflow-wrap:anywhere;max-width:100%}
 
-      /* The house band (cyllene/landing is the reference): full bleed terracotta, Ada Lovelace in halftone dots
-         (art/ada.png, dithered from Margaret Carpenter's public domain portrait), a giant line, then ruled cells. */
+      /* The house band (cyllene/landing is the reference): full bleed terracotta, a giant line, then ruled cells. */
       .tband{position:relative;width:100vw;left:50%;margin:var(--s-5) 0 0 -50vw;background:#a8492a;color:#fff;overflow:hidden}
-      .tband-art{position:relative;aspect-ratio:19/10;max-height:70vh;width:100%}
-      .tband-art::before{content:"";position:absolute;inset:0;background:#f3b296;-webkit-mask:url(art/ada.png) center/cover no-repeat;mask:url(art/ada.png) center/cover no-repeat}
-      .tband-art::after{content:"";position:absolute;inset:50% 0 0;background:linear-gradient(transparent,#a8492a 85%)}
       .tband-copy{position:relative;margin-top:-10vw;padding:0 var(--s-3) var(--s-5);text-align:center}
       .tband-copy p{text-align:center;margin-left:auto;margin-right:auto}
       .tband-label{font-size:12px;line-height:16px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#ffe2d6;margin:0 0 var(--s-2)}
@@ -417,7 +413,6 @@
       </header>
 
       <section class="tband" aria-labelledby="tband-h">
-        <div class="tband-art" aria-hidden="true"></div>
         <div class="tband-copy">
           <p class="tband-label">Small, on your Mac, yours</p>
           <h2 id="tband-h">A model you can read</h2>
