@@ -1,6 +1,6 @@
 """She believes what she reads, never what it says to do. A web page, mail, a document, a note, the
 screen, an MCP result, a transcript: all of it is text someone else wrote, not the user. This module
-makes that structural, law 9 in LAWS.md: the router and picker refuse anything marked untrusted, and
+makes that structural, law 9 in SAFETY.md: the router and picker refuse anything marked untrusted, and
 any model prompt that carries a reading tool's result fences it as data, never as an instruction.
 Kept its own file, not folded into tools.py (law 8, file size); tools.py imports what it needs.
 """

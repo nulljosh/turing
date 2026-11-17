@@ -91,7 +91,7 @@ jobs:
       - run: python3 tests/test_untrusted.py
       # law 12: a model-driven loop's own WRITE proposal still has to trace to what the user asked
       - run: python3 tests/test_intent.py
-      # the laws in docs/LAWS.md, checked against every tool
+      # the laws in docs/SAFETY.md, checked against every tool
       - run: python3 eval/laws.py
       # GGUF backend (Windows/Linux path, llama-cpp-python, CPU): pip only, no MLX, no internet
       # beyond the wheel. Skips cleanly and prints why when models/samantha-hands.gguf isn't

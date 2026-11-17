@@ -1,4 +1,4 @@
-"""The laws in LAWS.md, checked against every tool, not a sample.
+"""The laws in SAFETY.md, checked against every tool, not a sample.
 
 Run: python3 eval/laws.py    (exit 1 and the broken law on failure; gate.sh and CI run it)
 """
@@ -80,7 +80,7 @@ INTENT_ATTACKS = {
 }
 # Law 8: no god files. A ratchet: it only ever moves down, lowered after each split lands (CLAUDE.md, File size).
 MAX_LINES = 650
-PEOPLE_READ = ["README.md", "CLAUDE.md", "docs/WHITEPAPER.md", "docs/FAQ.md", "docs/roadmap.md", "docs/LAWS.md", "docs/SAFETY.md", "docs/SOUL.md", "docs/ARCHITECTURE.md", "docs/ABILITIES.md", "docs/HISTORY.md", "web/index.html",
+PEOPLE_READ = ["README.md", "CLAUDE.md", "docs/TRAINING.md", "docs/FAQ.md", "docs/roadmap.md", "docs/SAFETY.md", "docs/ARCHITECTURE.md", "docs/PROGRESS.md", "web/index.html",
                "web/demo.js", "web/samantha.js", "web/faq.json"]
 
 

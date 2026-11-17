@@ -88,7 +88,7 @@ _EVIDENCE = {
     # Round thirteen: these no-argument or thin-argument tools had zero _EVIDENCE at all, so an
     # empty or coincidentally-present argument passed the guard for any sentence, including
     # chit-chat and trivia that never named the tool's own domain. Words drawn from each tool's
-    # own docstring/ABILITIES.md line, not copied from any held-out or test phrasing.
+    # own docstring/ARCHITECTURE.md line, not copied from any held-out or test phrasing.
     "calendar_today": r"today|schedule|agenda|calendar|what's on|plans today|my day|happening today",
     "current_date": r"\bdate\b|what day|today's date|which day",
     "feedback_summary": r"feedback|rating|rate you|how am i rating|thumbs|track record|how(?:'?m| am) i doing",

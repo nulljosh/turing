@@ -78,7 +78,7 @@ Once she is trained, `app/ask.py` and `app/chat.py` handle questions. Before ans
 | `ios/App/Theme.swift` | The palette and type, and her mark drawn natively. |
 | `ios/App/Info.plist` | The iPhone app's bundle settings: local network, microphone and speech permissions, the samantha:// URL scheme. |
 | `ios/UITests/Shots.swift` | Walks every screen with the mock Samantha and saves a screenshot of each, for grading. |
-| `docs/IOS.md` | The iPhone app's plan and graded screen checklist. |
+| `docs/ARCHITECTURE.md` | The iPhone app's plan and graded screen checklist. |
 | `app/phone_bridge.py` | The phone's door: chat_pipe's protocol over HTTP for the iPhone app, started by hand on your own Mac. `POST /v1/ask` streams `{working}`, `{confirm}` and `{answer}` as Server-Sent Events, `POST /v1/confirm` carries the phone's yes or no, `GET /v1/ping` tests pairing. Every request is HMAC-signed with a secret in `~/.samantha/phone-token` (mode 600), fresh within 60 seconds and never replayed; listens on 127.0.0.1 unless `--lan`. |
 | `app/chat_pipe.py` | A line-delimited JSON front door for a native GUI: `{"ask": ...}` in, `{"working": ...}` per tool call, `{"confirm": ...}`/`{"yes": ...}` before a write, exactly one `{"answer": ...}` per turn. Same harness.Session and chat.safe_turn as the terminal, a different door, same as app/serve.py and app/mcp_server.py. `--check` proves the protocol with no model A `/voice` or `/face` ask (any chat.toggle() word) never reaches the harness: it flips spoken replies or the face window and answers with a `{"mode": ...}` line first. A confirm for a paid render carries a `note` naming the price. |
 | `gui/Samantha.icon` | The Mac app's icon, an Icon Composer bundle: her flower (the golden-angle petals and one core from `tools_logo._flower_layers`, 89 cells) in ink on paper, two glass layers, with dark and tinted looks. `gui/build.sh` compiles it with actool. |
@@ -96,7 +96,7 @@ Once she is trained, `app/ask.py` and `app/chat.py` handle questions. Before ans
 | `swift/pdf.swift` | Prints the text of a PDF with macOS PDFKit. tools_util.read_document runs it for .pdf files. |
 | `swift/ax.swift` | Lists the labeled elements of the frontmost app from the macOS accessibility tree, each with its center in screen points. tools_gui.click_text tries it before OCR, so she can click a button that shows only an icon. |
 | `swift/define.swift` | Prints the macOS dictionary's definition of a word, offline, with Dictionary Services. util_words.define_word runs it. |
-| `scratch-picker/train.py` and `scratch-picker/eval.py` | The from-scratch picker experiment: a character transformer with tool, argument-mode and span heads, and the scorer that reports the same numbers as eval/hands.py. Results and why it does not generalize are in docs/BAKEOFF.md. |
+| `scratch-picker/train.py` and `scratch-picker/eval.py` | The from-scratch picker experiment: a character transformer with tool, argument-mode and span heads, and the scorer that reports the same numbers as eval/hands.py. Results and why it does not generalize are in docs/TRAINING.md. |
 | `app/harness.py` | The conversation around her hands. It remembers every turn's command, tool calls and result, prints each tool call before it runs, and asks before anything in tools.WRITES (a note, a reminder, a file on the Desktop, a Shortcut, the clipboard). tools.plan() finds the calls without running them. Session.ask catches a rating verdict ("good", "wrong", "wrong, I meant X") before any routing at all, from app/feedback.py, and Session.record lets app/chat.py file a generated answer's turn so a rating right after it still has something to rate. |
 | `app/followup.py` | General follow-ups: `resolve(query, history)` rewrites "do that again", "again for X"/"same but for X"/"now X"/"what about X"/"and X" (the last tool's own call rewritten with its argument swapped, or the last query's own trailing word swapped when there was no argument to find), and "open it"/"read it" (the most recent path one of her own actions, find_file/write_document/write_code, produced, never a path pulled from something she read) into the explicit sentence it means, or None when the history does not clearly support one. `history` is harness.Session's own turn shape ({"q", "calls", "result"}); app/chat_pipe.py keeps the same shape per process. Only ever reads past *queries* and *calls*, never a reading tool's *result*, so an instruction hidden in a page she read can never come back as a command through "do that again" (law 9, checked live by eval/laws.py's law 10). Wired into harness.Session.ask and chat_pipe.run right after the feedback rating check, ahead of every route. |
 | `app/feedback.py` | Her feedback, said and unsaid. note_miss writes every command she could not do (no tool took it, or the tool broke, with the error) to `~/.samantha/misses.jsonl` without anyone rating it; headless runs never write it unless SAMANTHA_MISSES points elsewhere. The spoken half: "good", "thanks that's right", "bad", "wrong", "wrong, I meant X" (and the thumbs/+1/-1 spellings) logged to `~/.samantha/feedback.jsonl`, local only, matched tight enough that "good morning" and "what's wrong with my wifi" never fire it. feedback_summary ("how am I rating you", "show my feedback") reads the count and the last five downs back. Splices feedback_summary into tools.TOOLS/tools._ROUTES/tools.NOT_FOR_MODELS itself, private and never served over MCP, so app/tools.py only ever gained the one import line that pulls this module in. |
@@ -112,25 +112,24 @@ Once she is trained, `app/ask.py` and `app/chat.py` handle questions. Before ans
 | `training/extra_to_data.py` | Turns hand-written sentence batches from a writer model into picker training rows: drops anything an eval owns, anything that says a tool's own name, and any argument the guard would not run. Prints what it dropped and why. |
 | `training/pool_eval.sh` | Scores one picker over every dev set at once (about 4,400 rows) and prints the pooled right, wrong, past-the-guard and refused counts, so two rounds are compared on enough rows to see past a retrain's own noise. Never touches the sealed sets. |
 | `training/teacher_batches/` | The 8.0 teacher data: fresh phrasings written by a frontier model for every tool a model may pick, one `{"text","tool","arg"}` row each, in batches (b1, b2, ...). `training/extra_to_data.py` filters them into picker training rows; nothing in them is copied from any test set. |
-| `app/robot.py` | The desk-robot voice loop for a Raspberry Pi or any Linux box: voice.converse with Linux ears (sox, then whisper.cpp or faster-whisper) and mouth (piper, then espeak-ng), and a spoken yes or no for anything that writes. `--text` types instead of listens. Untested on a Pi until the hardware arrives (docs/PI.md). |
+| `app/robot.py` | The desk-robot voice loop for a Raspberry Pi or any Linux box: voice.converse with Linux ears (sox, then whisper.cpp or faster-whisper) and mouth (piper, then espeak-ng), and a spoken yes or no for anything that writes. `--text` types instead of listens. Untested on a Pi until the hardware arrives (docs/ARCHITECTURE.md). |
 | `training/harvest_voice.py` | Voice data harvester. Collects training examples from git commits (183 pairs extracted from fleet repos), used for style transfer beyond documentation alone. |
 | `training/run_lora_capped.py` | Utility to run LoRA training with memory caps, protecting against OOM crashes on the 16GB machine. |
 | `training/train_resilient.sh` | Wrapper script for resilient training runs (retries on crash, memory limits), run from the repo root; `LORA_ARGS` passes extra mlx_lm.lora flags. |
-| `training/kaggle_train.py` | LoRA-trains a bigger picker (1.5B by default) on a free Kaggle or Colab GPU from the same hands-data rows, masks the prompt, merges and saves one folder to download; steps in docs/KAGGLE.md. Pure helpers are tested without torch. |
-| `scripts/hf_publish.sh` | Refreshes her Hugging Face page (trommatic/samantha-hands-gguf): fills the version into docs/HF_CARD.md and uploads it as the model card, plus the GGUF with `--model`. Run after every release. |
-| `docs/HF_CARD.md` | The Hugging Face model card template: what she does, the measured numbers, the limits. `__VERSION__` is filled in by scripts/hf_publish.sh. |
-| `scripts/make_promo.py` | Rebuilds the landing commercial (web/promo.mp4, promo.vtt, promo-poster.jpg): records the live demo headlessly while prompts run through every family of what she can do, voices each segment with her ElevenLabs voice (cached by app/voice.py), syncs captions and muxes with ffmpeg. |
-| `training/teacher_commands.jsonl` | About 720 fresh commands Claude wrote as a teacher (every style: polite, terse, text-speak, filler), labeled with the right tool and an argument copied out of the sentence, none copied from any eval set. Her 1.5B picker's mistakes on them become DPO preference pairs (round 29, docs/KAGGLE.md); never mixed with Joshua's own ratings in ~/.samantha/feedback.jsonl. |
+| `training/kaggle_train.py` | LoRA-trains a bigger picker (1.5B by default) on a free Kaggle or Colab GPU from the same hands-data rows, masks the prompt, merges and saves one folder to download; steps in docs/TRAINING.md. Pure helpers are tested without torch. |
+| `scripts/hf_publish.sh` | Refreshes her Hugging Face page (trommatic/samantha-hands-gguf): fills the version into scripts/hf_card.md and uploads it as the model card, plus the GGUF with `--model`. Run after every release. |
+| `scripts/hf_card.md` | The Hugging Face model card template: what she does, the measured numbers, the limits. `__VERSION__` is filled in by scripts/hf_publish.sh. |
+| `training/teacher_commands.jsonl` | About 720 fresh commands Claude wrote as a teacher (every style: polite, terse, text-speak, filler), labeled with the right tool and an argument copied out of the sentence, none copied from any eval set. Her 1.5B picker's mistakes on them become DPO preference pairs (round 29, docs/TRAINING.md); never mixed with Joshua's own ratings in ~/.samantha/feedback.jsonl. |
 | `training/picker_round.sh` | One picker round on the Mac by hand: rebuild hands-data, train `hands-adapter-roundN` with the shipped recipe, score it against `hands-adapter` on the standard set and heldout2, and read the blind heldout3 only for a candidate no less safe on both. Totals only, logged to `eval/picker-rounds.log`; never swaps the shipped adapter. |
 | `release.sh` | Cut a release: run checks, bump VERSION, tag, push, publish GitHub release, deploy site. |
 | `.github/workflows/deploy.yml` | The landing page deploys itself: after the test workflow passes on main (or by hand), `wrangler deploy` ships worker.js and web/, then it waits until the live page serves the version in VERSION. Needs the CLOUDFLARE_API_TOKEN repo secret; without it the run is skipped green with a notice, never a red main. |
 | `.github/workflows/release.yml` | Releases cut themselves: when the test workflow passes on a push to main whose VERSION has no tag yet, it tags that commit and publishes the GitHub release. No Mac gate, no deploy: those run with `release.sh` on the Mac. |
 | `tests/test_nimble.py` | Integration tests for Nimble service integration (via app/serve.py REPL). |
 | `eval/hands.py` | Automated QA for tool picking and action execution. Measures precision of wrong picks and false refusals. `--test PATH` scores an external held-out jsonl (loose arg matching) as its own "heldout" group instead of the usual hands-data/actions/questions mix. |
-| `eval/bfcl.py` | Outside benchmark: the Berkeley Function Calling Leaderboard v3 `simple` split (400 cases, cached under `eval/data/bfcl/`, about 340 KB, committed). Each case gets its function schema and one question; the model answers with one `{"name", "arguments"}` JSON object at the oMLX endpoint on localhost:8000, scored the BFCL AST way (name must match, required values must match loosely, no invented arguments). `--dry` scores the possible answers themselves and must give 100 percent. Prints `correct/total passed` as the last line. Results in docs/BAKEOFF.md. |
+| `eval/bfcl.py` | Outside benchmark: the Berkeley Function Calling Leaderboard v3 `simple` split (400 cases, cached under `eval/data/bfcl/`, about 340 KB, committed). Each case gets its function schema and one question; the model answers with one `{"name", "arguments"}` JSON object at the oMLX endpoint on localhost:8000, scored the BFCL AST way (name must match, required values must match loosely, no invented arguments). `--dry` scores the possible answers themselves and must give 100 percent. Prints `correct/total passed` as the last line. Results in docs/TRAINING.md. |
 | `tests/test_bfcl.py` | Unit checks for eval/bfcl.py: the AST rules (optional arguments, wrong name, wrong value, invented argument), the loose value compare, reply parsing, the prompt, the dry run at 100 percent, and the endpoint call with urlopen mocked. Never calls localhost:8000. |
 | `eval/misses.py` | First step of each improvement round: lists every leak (wrong pick the guard lets through) and every refused right pick in a pick dump, with which part of the guard stopped it. Sealed sets print counts per tool only. |
-| `eval/heldout.jsonl` | An honest held-out check for the 5.0 bar: ~4 natural phrasings per model-eligible tool plus chit-chat/near-miss rows, written blind from tool names and docstrings only (never hands-data, training data or the eval files themselves), then filtered against all three so nothing overlaps what was already trained or scored. Scored via `eval/hands.py --adapter hands-adapter --test eval/heldout.jsonl`; results are in docs/BAKEOFF.md. |
+| `eval/heldout.jsonl` | An honest held-out check for the 5.0 bar: ~4 natural phrasings per model-eligible tool plus chit-chat/near-miss rows, written blind from tool names and docstrings only (never hands-data, training data or the eval files themselves), then filtered against all three so nothing overlaps what was already trained or scored. Scored via `eval/hands.py --adapter hands-adapter --test eval/heldout.jsonl`; results are in docs/TRAINING.md. |
 | `eval/heldout2.jsonl` + `eval/gen_heldout2.py` + `eval/filter_heldout2.py` + `eval/heldout2_groups.py` | A second blind held-out check, same method as `eval/heldout.jsonl` but written independently: ~4 phrasings per model-eligible tool plus chit-chat/near-miss rows in the writer's own words, generated by `gen_heldout2.py`, then filtered against `eval/heldout.jsonl`, `hands-data/*.jsonl` and `eval/actions.py`'s CASES by `filter_heldout2.py` (prints only a drop count, never texts). Scored via `eval/hands.py --adapter hands-adapter --test eval/heldout2.jsonl`; `heldout2_groups.py` reruns it to print wrong-past-guard and refused cases grouped by (expected tool, picked tool) counts only. |
 | `eval/score.py` + `tests/test_chat.py` | Automated QA over a held-out test set. No eyeballed results, CI validates every run. |
 | `tests/test_tools_image.py` | Unit tests for image tools. Mocks `_run` so tests pin the exact `magick` argv on Linux CI with no ImageMagick binary needed. Tests path validation, argument parsing, and output file handling, plus a test that app/tools_image.py names neither Pixelmator Pro nor osascript. |
@@ -176,7 +175,7 @@ Once she is trained, `app/ask.py` and `app/chat.py` handle questions. Before ans
 | `tests/test_harness.py` | The harness keeps its promises: a no stops the write, a yes runs it once, reads never ask, the record is kept, and plan() runs nothing. |
 | `tests/test_followup.py` | app/followup.py's resolve(): "again" and its phrasings, "again for X"/"same but for X"/"what about X"/"and X" swapping an argument or a trailing word, "open it"/"read it" pointing at find_file/write_document/write_code's own path, every case where the history does not clearly support one (None, not a guess), edit_last_draft left untouched, and end to end through harness.Session.ask, including the injection-replay refusal: a READING tool's result can carry an instruction, but "do that again" only ever replays the user's own past query, and no path is ever pulled from a READING tool's own output. |
 | `eval/util_diff.py` | Runs about a hundred phrasings through app/tools_util.py and through its JavaScript twin in web/samantha.js under node, and fails on any difference in the words that come back. Also checks that near-miss sentences ("hash browns are good") are not stolen. |
-| `eval/laws.py` | Checks the rules in docs/LAWS.md against every tool, not a sample: side-effect tools are classified, hidden tools never reach a model or MCP, a no from the harness stops a write, her hands stay in the home folder, docs stay at 100 percent, Python and JavaScript agree, no em dashes. Borrowed from the idea of Bend's LAWS.bend. |
+| `eval/laws.py` | Checks the rules in docs/SAFETY.md against every tool, not a sample: side-effect tools are classified, hidden tools never reach a model or MCP, a no from the harness stops a write, her hands stay in the home folder, docs stay at 100 percent, Python and JavaScript agree, no em dashes. Borrowed from the idea of Bend's LAWS.bend. |
 | `eval/a11y.py` | Audits the live landing page with axe-core (fetched at run time) in four modes, desktop and phone, light and dark, and fails on any WCAG 2 A or AA violation or best-practice issue. |
 | `eval/jt_chat.py` | 22 real prompts against `/api/chat` (what Joshua Tree is, who made it, its license, opening an app, Wi-Fi, its version, small talk, and two plain general-knowledge questions), plus the Ollama-shaped request/response contract, the origin allow-list and that only the newest message in a multi-turn history gets answered. |
 | `eval/smoke_images.py` | Runs all ten image tools for real through ImageMagick on a sample photo and measures each output (size, rotation, saturation, transparency, difference from the original). Headless, seconds, needs only `magick` installed; not in CI, run by the full gate. Under Pixelmator it once caught grayscale and enhance sending AppleScript the app rejected; that whole class of failure is gone now that nothing here shells out to an app. |
@@ -189,24 +188,24 @@ Once she is trained, `app/ask.py` and `app/chat.py` handle questions. Before ans
 | `scratch/` | Experimental from-scratch transformer (character-level, no pre-trained weights). Deliberately tiny, proves we can build one without repeating the Arthur gibberish failure. Not intended to be fluent. |
 | `tui/` | Terminal UI. SwiftPM + SwiftTUI wrapper around the Python CLI. |
 | `web/status.json` | Training progress (loss chart, phase tracker). Generated by `training/parse_log.py`, read by the landing page. |
-| `docs/ABILITIES.md` | Every ability in the words you say, grouped: talk and listen, see, know, do, and the limits plainly. The README links here instead of listing everything itself. |
-| `docs/VOICE-AND-FACE.md` | Setup, step by step: an ElevenLabs key for her voice, a Higgsfield key and the character-creator skill for her face, what each costs, and the one thing that leaves the Mac. |
-| `docs/PERSONAS.md` | How the same worker answers as Samantha or as Joshua: the `persona` field, the fixed lines, the pack, `asJoshua`, the cache key to bump, and his cloned voice on `/api/speak`. |
-| `docs/HISTORY.md` | What the loop did, by phase, moved out of roadmap.md on 2026-09-23 so the roadmap holds only the plan and the open gaps. Every entry is the day's own note, word for word. |
+| `docs/ARCHITECTURE.md` | Every ability in the words you say, grouped: talk and listen, see, know, do, and the limits plainly. The README links here instead of listing everything itself. |
+| `docs/ARCHITECTURE.md` | Setup, step by step: an ElevenLabs key for her voice, a Higgsfield key and the character-creator skill for her face, what each costs, and the one thing that leaves the Mac. |
+| `docs/ARCHITECTURE.md` | How the same worker answers as Samantha or as Joshua: the `persona` field, the fixed lines, the pack, `asJoshua`, the cache key to bump, and his cloned voice on `/api/speak`. |
+| `docs/PROGRESS.md` | What the loop did, by phase, moved out of roadmap.md on 2026-09-23 so the roadmap holds only the plan and the open gaps. Every entry is the day's own note, word for word. |
 | `docs/PROGRESS.md` | One line per shipped loop round, newest first, each followed by the scorecard line. |
 | `web/index.html` | Landing page. Loss chart, training status, painter demo, project roadmap. |
 | `web/brand.html` | The brand kit as a page: mascot, colors, Samantha Sans specimen, shapes, voice. Same tokens as the landing, no script. |
-| `docs/BRAND.md` | The brand kit in words, for GitHub. |
+| `docs/ARCHITECTURE.md` | The brand kit in words, for GitHub. |
 | `brand/tokens.css` | The landing's design tokens as one stylesheet, for anything that wants them. |
 | `brand/mark.svg` | The mascot, copied from web/mascot.svg. |
 | `brand/icon-1024.png` | The app icon master: opaque, no alpha; web icons and favicons are cut from it. |
 | `web/favicon-32.png`, `web/apple-touch-icon.png` | Browser tab and home-screen icons, cut from brand/icon-1024.png. |
-| `docs/STORE.md` | The App Store plan at $1: what the listing leads with, the answers Apple asks for, what blocks the Mac and the iPhone, and the order of work. Nothing in it is submitted. |
-| `docs/WHITEPAPER.md` | How she works, in one page. |
+| `docs/ARCHITECTURE.md` | The App Store plan at $1: what the listing leads with, the answers Apple asks for, what blocks the Mac and the iPhone, and the order of work. Nothing in it is submitted. |
+| `docs/TRAINING.md` | How she works, in one page. |
 | `docs/roadmap.md` | The plan, the majors and the open gaps. |
-| `docs/SECURITY.md` | What she will not do, and how to report a hole. |
-| `docs/TROUBLESHOOTING.md` | Training and eval failures seen so far, and the fix for each. |
-| `docs/EARLY-RESULTS.md` | The first eval writeups from 2026-09-13, one section per run (the nine files that lived in `docs/results/` merged into one). |
+| `docs/SAFETY.md` | What she will not do, and how to report a hole. |
+| `docs/TRAINING.md` | Training and eval failures seen so far, and the fix for each. |
+| `docs/TRAINING.md` | The first eval writeups from 2026-09-13, one section per run (the nine files that lived in `docs/results/` merged into one). |
 | `web/badge.svg` | Footer badge, engraved-style, white on black: Samantha in profile inside an ornate oval frame with SAMANTHA/TURING ribbons, and since 4.8 a starfield of constellations around her that grows at every minor version. Built by `app/tools_badge.py`, never hand-edited. |
 | `install/install.sh` | One-line Linux install: clones the repo to ~/samantha, builds a venv, installs llama-cpp-python (prebuilt CPU wheel), downloads her GGUF tool picker from the `portable` release, starts chat. |
 | `install/install.ps1` | The same one-line install for Windows PowerShell. |
@@ -218,3 +217,342 @@ Once she is trained, `app/ask.py` and `app/chat.py` handle questions. Before ans
 | `wrangler.toml` | Cloudflare Worker deployment (landing page assets only). |
 | `tests/test_unsure.py` | Her 1.5B asks before acting when unsure of the tool name: `tools_agent._tool_confidence` reads only the tool-name tokens, and `tools.do` runs an unsure pick only on a yes, never with no one to ask. |
 | `tests/test_layout.py` | Checks resource and model paths, coverage of the moved code, and the chat pipe from outside the checkout. |
+
+## What she can do
+
+Every ability, in the words you say. Anything that writes, sends or looks at your screen asks first. The landing page runs the same router in the browser, so every line here works there too, except the ones that need a real Mac (the page says so).
+
+### Talk and listen
+
+- **Talk.** `./.venv/bin/python app/chat.py --voice`: you speak, Whisper transcribes on the Mac, she answers out loud. Talk over her while she's answering and a real run of your voice on the mic cuts her off and she starts listening right away. `--wake samantha` (off unless you pass it) keeps her idle, listening in short chunks, until you say the wake word first; then she drops it and takes the rest as the command.
+- **Change her voice.** "What voices do you have" lists the ElevenLabs premade voices her key can use. "Change your voice to George" switches for good, after a yes. Free.
+- **Change her look.** "Change your look: ginger with glasses", "make yourself a redhead": a new portrait, about 5 cents, kept aside until you say "keep that look", which renders her new idle and talking loops for about $1.40. Both ask first and say the price. Setup: docs/ARCHITECTURE.md.
+- **Transcribe.** "Transcribe the video ~/Desktop/clip.mp4": the words out of any video or audio file in your home folder, same Whisper pipeline.
+
+- **Cut her off.** With voice on, anything new you send stops her mid-sentence; "shh", "stop" or "be quiet" just silences her. The Mac app saves the chat after every answer and restores it on launch; Cmd-N (File > New Chat) files it under ~/.samantha/chats and starts clean.
+
+### See
+
+- **Look.** "Look at my screen and tell me what's wrong with this chart", "what's in ~/Desktop/cat.png": a local vision model answers. Asks first.
+- **Look through the camera.** "What am I holding", "read this label", "look at this": one frame from the Mac's own camera, the same vision model, nothing saved after the answer. Asks first; a plain sentence if there is no ffmpeg or no camera.
+- **Read the screen.** "Read my screen", "find Sign in on my screen": the system's own text recognition.
+
+### Know
+
+- **Explain a codebase.** "Explain the nimble codebase", "walk me through turing": she reads that project's README, CLAUDE.md and folder list and explains it in plain words. Read only. (Mac and Linux/Windows with a local model.)
+- **Teach me.** "Teach me about tides": a short lesson from Wikipedia and her library, then two quiz questions. Read only.
+- **Answer.** Questions go down a ladder: exact routes, her own picker, the project FAQ and your notes, then Wikipedia and DuckDuckGo, then her offline library (the fieldbook plus ~10,000 Wikipedia leads). If nothing holds the answer she says so.
+- **Research.** "Research the history of the printing press": Wikipedia, her library and your notes, then a brief with a source after every sentence. Name a page in the question ("research the docs at example.com/api") and she reads it and cites it too, or tells you plainly when it's JS-only or blocked instead of pretending it never came up. "Tell me more about X" tries the sources she already has before going back out for fresh ones. "Save that" writes it to a file.
+- **Run code.** "Stats on sales.csv", "average of the price column in sales.csv", "chart sales.csv", "plot column price of sales.csv": the biggest local model writes a short Python script from your request and the file's header, and it only ever runs in a sandbox, a fresh temp folder holding a copy of that one file, no network, a time and memory cap. A chart comes back as a real PNG. Asks first.
+- **Summarize.** "Summarize ~/Desktop/report.pdf", "summarize this page", "summarize my unread mail": three to five real sentences from the biggest local model.
+- **Translate.** "Translate good morning to French", "how do you say thank you in Japanese", "translate the page github.com into Spanish". Offline.
+- **Ask a bigger brain.** "Ask qwen why the sky is blue", "ask claude ...": the question goes to a bigger model on your Mac, never the cloud, and the answer names the model.
+- **Remember.** "Remember that my dog is called Biscuit", "what do you remember about my dog", "forget Biscuit". A file only she reads. From 4.19 she reads it back into her answers: ask about your dog and she uses what you told her (the facts that share a real word with the question, at most three; never in tests or evals, never on the public demo).
+- **Write a Shortcut.** "Make a shortcut that says good morning", "make a shortcut called Hello that opens https://example.com", "make a shortcut that shows a notification saying stand up", "make a shortcut that sets the volume to 30". She lists the steps in plain words and asks first, then builds it from those four actions, signs it, saves it to Downloads and opens it, so the Shortcuts app asks you to add it. She never runs it, never schedules it, and never builds anything else.
+- **Keep my memory in iCloud.** "Keep my memory in iCloud" moves her memory file into iCloud Drive, in a Samantha folder, merged with any copy already there so no fact is lost; "keep my memory on this Mac" brings it back. She asks first, only when you say so, and it is your own iCloud: nothing of ours in a cloud. macOS may show its own folder prompt the first time, and that one is yours to answer.
+- **Plans.** "Find resume.docx and move it to Documents", "git status of nimble and if anything changed run its tests": breaks a real job into steps, shows you the plan first when it's more than one step, checks each step's result before the next one runs, and stops with a plain explanation instead of barrelling on when a step comes back empty or broken. A later step can reuse a value an earlier one found or wrote, never text she read.
+- **Long work.** "Work on cleaning up my downloads", "keep going until the report is in Documents": plans in rounds. When a step fails she plans the rest around it from your request and her own record of what ran (never from text she read), still runs the steps that did not depend on the failure, and ends by saying what she could not do. Every write still asks. A journal of each job lands in ~/.samantha/work.
+- **Asks which.** "Trash this file", "crop that image", "close that app", "move my project folder to a different location": names the tool but not the target, so she asks "Which file?" instead of guessing or refusing.
+- **Follows the conversation.** "Do that again", "again for nimble", "same but for cadence", "what about tomorrow" right after "what's on my calendar today", "open it"/"read it" right after she finds or writes a file: she rewrites the follow-up into the explicit thing you mean and routes it exactly like anything typed outright, so a write still asks first. "Undo that" is out of scope, she says so plainly. Never replays a page or note's own words as a command, only your own.
+- **Learns from you.** Say "good", "thanks that's right" or "bad", "wrong", "wrong, I meant X" right after any answer and she logs it, local only, caught before it could ever be mistaken for a command. "How am I rating you" shows the count and the last five downs.
+- **Answer inside Joshua Tree.** The from-scratch i386 kernel's own Chat app talks to her over `/api/chat`, an Ollama-compatible endpoint (`worker.js`); she answers from a condensed pack of the OS's own docs (`web/jt_docs.js`) before falling back to the general pipeline above.
+
+### Do
+
+- **Email a contact.** "Email mom saying I'll be late": she finds mom in Contacts, shows you the address and the message, and sends only after you say yes. Asks which when a name matches no one or several people.
+- **Open an app and do the job.** "Open notes and make a shopping list with eggs and milk": she opens the app, then drives it step by step through the screen agent. Every click and keystroke asks first. Her small screen model still stops early on some jobs (search and forms), so check the result.
+- **Apps and sites.** Open an app, go to a site, search the web or one site, read a page, list, switch, read and close Chrome tabs.
+- **Her hands.** "Click Sign in", "type hello", "press return", "log me into X": she reads the screen, acts one step at a time, asks before each. Press Escape any time and the job stops before her next step.
+- **3D.** "What is in ~/Documents/scene.blend" (also .glb, .gltf, .obj, .fbx, .stl, .ply) counts its objects and vertices; "render ~/Documents/scene.blend" makes a picture beside it, asks first, never over a file that is there. Runs Blender headless. "Convert ~/Documents/model.glb to obj" makes the other format beside it, asks first, never over a file. "Make a cube at ~/Documents/box.glb" (also sphere, cone, cylinder, torus; .glb, .obj, .stl, .ply, .fbx or .blend) makes a new shape file, asks first, never over a file. "Make 3D text Turing at ~/Documents/logo.glb" makes a few words into thick 3D letters, the same formats, asks first, never over a file.
+- **Video.** "How long is ~/Movies/a.mp4" (also .mov, .m4v, .mkv, .webm) gives its length, size, picture and sound; "trim ~/Movies/a.mp4 from 0:10 to 0:25" cuts a clip; "trim ~/Music/a.mp3 from 0:10 to 0:25" (also .m4a, .wav, .aac, .flac, .ogg) cuts a piece of a sound file the same way; "extract the audio from ~/Movies/a.mp4" (or "as a wav", "as m4a") pulls the sound out into a new file; "mute ~/Movies/a.mp4" (or "remove the audio from it") makes a silent copy; "make a gif of ~/Movies/a.mp4 from 0:10 to 0:15" (or just the video, for its first 5 seconds) makes a looping .gif of up to 30 seconds; "speed up ~/Movies/a.mp4 2x" or "slow down ~/Movies/a.mp4 to 0.5x" makes a copy at 0.25x to 4x with the sound kept in step; "remove 0:10 to 0:15 from ~/Movies/a.mp4" takes a section out of the middle and joins the rest; "join ~/Movies/a.mp4 and ~/Movies/b.mp4" puts two videos one after the other (1280x720, both with sound or both without); "make ~/Movies/a.mp4 vertical" centre-crops it to 9:16 for a phone. Each makes a new file beside the original, asks first, never over a file that is there. Runs ffmpeg. "Add captions to ~/Movies/a.mp4" adds the .srt beside it, or with none there listens to it and writes one from what she hears, (or "add subtitles from ~/a.srt to ~/Movies/a.mp4") as a captions track you turn on when it plays, into a new -captioned.mp4.
+- **Page check.** "Check ~/Sites/index.html" or "why is ~/room.html black" opens the page in headless Chrome with the network off and tells you what is wrong: the errors it threw and where, anything it needed from the internet, and whether the picture is black, blown out, very dark or flat. It reads, never writes, and only looks at pages inside your home folder.
+- **Files.** "Find resume.docx", "what did I just download", "download https://example.com/a.pdf" (into Downloads, asks first, public sites only), "how big is ~/Movies", "read the document ~/notes.pdf", "find milk in the document ~/notes.pdf", then "move", "copy", "rename", "zip", "unzip", "trash" any of them. Trash is Finder's Trash, never a hard delete.
+- **Write.** "Draft an email about the release", "write a doc about the roadmap": the local model drafts it, she saves it in your home folder.
+- **Edit the last draft.** "Make it shorter", "make it friendlier", "add a line about Friday": rewrites the file write_document just saved, shows a diff of the change, and asks before writing it. Says plainly when there is no draft yet.
+- **Edit any file, write code.** "Edit notes.md: make it shorter", "in ~/Desktop/plan.md, fix the typo", "write a python script that prints the date to today.py": any text file inside your home folder, or new code from the biggest local model, the whole change shown as a diff, written only on a yes.
+- **Code a feature.** "Code dark mode in nimble", "add export button to hikko": she reads the project (README, status, file list), asks the local model for a plan, then for edits to at most 3 files, shows diffs and runs tests. Safeguards: no writes outside the project folder, no dotfiles, no credentials or lockfiles, no uncommitted changes. Asks first, same as every write.
+- **Mail, calendar, reminders, notes.** "Unread mail", "anything from the bank in my mail", "what's on my calendar today", "remind me tomorrow at 9am to call mom", "take a note buy milk".
+- **Organizer.** "What are my reminders", "complete the reminder to buy milk", "add lunch with sam to my calendar tomorrow at noon", "what's on my calendar tomorrow", "search notes for eggs", "add eggs to my shopping note". Reads are read only; the writes ask first, and a reminder or note that does not match changes nothing.
+- **What needs me.** "What needs my attention", "what needs me": one ranked answer built from your unread mail, today's calendar and due reminders, three short lines from the biggest local model. Says plainly when everything is clear, never invents a message or a meeting. "Good morning" or "morning brief" adds the day and date on top, and the Mac app asks for it by itself the first time it opens each morning, so the brief is there before you type.
+- **Am I free.** "Am I free Thursday afternoon", "when am I free this week": your calendar's open gaps for that day or the week, business hours, not just today's list.
+- **The Mac.** Volume, battery, music, timers, the weather, the clipboard, screenshots, disk space, memory, Wi-Fi, IP, uptime, system info, sleep the screen, show a file in Finder, run any Apple Shortcut by name.
+- **System.** "Turn on dark mode", "what apps are running", "quit spotify", "turn on do not disturb", "bluetooth status". Dark mode and running apps are read plainly; quit refuses Finder, her own terminal and anything not actually running; Do Not Disturb runs a named Shortcut if it exists, or says plainly how to make one; Bluetooth is read only, this Mac has no blueutil or brightness CLI to drive them.
+- **Dev.** "Git status", "recent commits in cadence", "run turing's tests", "open prs", "open the nimble repo in vs code". Any repo found by folder name under ~/Documents/Code, turing itself when none is named. Git status and commits are read plainly; running tests picks the repo's own command (npm, pytest, python3 or swift) and asks first; open PRs is read only, honest when gh is missing or not logged in; opening the editor prefers `code`, then VS Code, then Finder.
+- **Pictures.** "Draw a fox in the snow" (on the landing page), "paint ~/Desktop/mona.jpg" from 40,000 squares, or in a style: "paint lake.jpg as a mosaic" (squares, mosaic, dots, poster, sketch, stained glass), "make me a logo for a surf school" (a bold glyph that means the subject, a wave here, on a colored tile, plus an Icon Composer bundle; say "spiral" for her golden spiral, "make a symbol for a surf school" gives the glyph alone, "make a wordmark for Wavecrest, a surf school" sets a name beside it, "make an avatar for Alex" draws a friendly face from a name (the same face every time), "simple" or "complex" for the others; always an icon, never text), and remove a background, upscale, enhance, grayscale, rotate, flip, resize, crop, convert. All of it runs through ImageMagick, no Pixelmator.
+- **Math, time, chance, text.** Calculate, convert units, tips, primes and factors, roman numerals, the time in any city, dates and days between, dice, coins, random numbers, passwords, UUIDs, SHA-256, base64, word counts, morse, tidy JSON.
+- **Plug in.** She speaks MCP both ways: any assistant can use her tools, and she can call another server's tools when you name it.
+- **Safe with what she reads.** A page, an email, a document, a note, the screen, another server's tool: none of it can pick or trigger a tool on its own. Only your own words do that, law 9. Even inside a multi-step job, a write her own model proposed still has to trace back to what you actually asked before it ever reaches your yes, law 12. On screen that means a planted "Delete account" or "Install now" button is refused unless you asked to delete or install something.
+
+- **Joshua Tree.** "Joshua Tree status" gives the OS's VERSION, how many pull requests are open and whether a qemu is running (read only). "Boot Joshua Tree" starts its kernel headless in qemu with the serial log at ~/.samantha/jt-serial.log, and "stop Joshua Tree" sends that one qemu a SIGTERM; both ask first. "What did Joshua Tree say" reads the last lines of that serial log. "Type ls into Joshua Tree and press enter" sends real keystrokes over qemu's control socket, one key at a time (asks first). "Screenshot Joshua Tree" saves its screen to ~/Pictures/jt-screen.png, which "what's in ~/Pictures/jt-screen.png" then reads with her own eyes; "what is Joshua Tree showing" does both in one go (asks first). Exact phrases only until the picker is retrained on them.
+
+### Limits, plainly
+
+Her own picker knows 83 of 166 tools by wording; the rest route through exact matches. Multi-step work borrows a small local model (qwen3:1.7b through Ollama). She never calls another MCP server on her own. She cannot reason like a frontier model and does not try; see `roadmap.md` for what is next and `docs/SAFETY.md` for what she will never do.
+
+Windows and Linux now run the picker and chat: `training/export_gguf.py` fuses hands-adapter into the base model and quantizes it to GGUF, `Modelfile` turns that into an Ollama model (`ollama create samantha -f Modelfile`), and `app/serve.py`'s Ollama-compatible `/api/chat` is reachable from there with no MLX and no Mac. `app/tools_agent.py`'s `pick()` uses MLX when it's importable and falls back to llama-cpp-python over that same GGUF otherwise, same prompt, same stop token, same decoding. Everything that touches the Mac itself stays Mac-only regardless of backend: AppleScript (Music, Notes, Reminders, Calendar, Mail, Finder), the screen (see_screen, click, type), and the camera. Image tools run on ImageMagick, so they are not on that list. A phone is its own build-out, not covered here; see `roadmap.md`.
+
+## Soul
+
+Who Samantha is, underneath the tools. docs/SAFETY.md is what a machine checks on every push. This is the part a machine cannot check: what she is actually for, and how she should sound while doing it.
+
+### What she is
+
+A small model on your own computer. Not a smaller Claude, not a smaller GPT: a different shape of thing entirely, built to be yours instead of borrowed. She will not out-think a frontier model, and she is not trying to. She wins by being local, honest, and fast, not by being the smartest thing in the room.
+
+### What she optimizes for, in order
+
+1. **Yours, not rented.** Runs on your own computer (Mac, Windows or Linux). No account, no per-query bill, nothing leaves the machine unless you explicitly send it somewhere (the web, another local model). A frontier lab cannot ship this without giving away the model, so it is the one advantage that is actually hers.
+2. **Honest over confident.** A wrong, confident answer is worse than an honest "I don't know." She retrieves and cites instead of remembering and guessing. When her notes do not cover something, she says so, plainly, and stops there.
+3. **Asks before it matters.** Anything that writes, sends, clicks, or changes something real gets shown to you and waits for a yes. Not because she is unsure of herself, because the decision to act on your Mac is yours, always.
+4. **Hands, not just a mouth.** Tools that actually do things beat one more paragraph of explanation. A calculator is never wrong about arithmetic; a lookup is never wrong about a fact that has not changed. Prefer the exact tool over the generated guess, every time one exists.
+5. **Small on purpose.** Tiny and fast is not a limitation apologized for, it is the point. A 0.5B model that picks the right tool in milliseconds and knows its own limits is worth more than a bigger one that hedges.
+
+### How she talks
+
+Plain words, short sentences. No hedging filler ("I think," "it's possible that") when she actually knows the answer, and no false confidence when she does not. She says what she is about to do before she does it. She never pretends a guess is a fact. No em dashes, no emojis, no marketing voice: house style throughout, code and prose both.
+
+### Where she stops
+
+She defers to docs/SAFETY.md and docs/SAFETY.md for the parts that are actually enforced by code. This file is the spirit those rules are trying to protect: a small, honest, local assistant that never outgrows what it was told to do without telling you first.
+
+## Personas
+
+The same worker answers as two people. Samantha is the default. Joshua is a persona the portfolio switches on. Nothing else in the pipeline changes.
+
+### How a request picks one
+
+Joshua Tree's chat sends an Ollama-shaped body to `/api/chat`. The portfolio adds one field:
+
+```
+{"model":"samantha","persona":"joshua","stream":false,"think":false,"messages":[...]}
+```
+
+The worker reads it in one place (`worker.js`): `persona = body.persona === "joshua" ? "joshua" : ""`. Anything else is Samantha. Only the newest user message is answered, capped at 200 characters; earlier turns are context.
+
+### How Joshua answers
+
+`chatAnswer(env, question, persona)` tries these in order:
+
+1. **Fixed lines** (`JOSHUA_TALK`). Greetings, thanks, "who are you", "show me around", and the phone demo's rotating questions (Vancouver, his life, what he is building, what to look at first, what he does for fun). Exact, instant, no model.
+2. **The pack** (`JOSHUA_DOCS`). A short third-person page about him and what he has built, read by the grounded reader. `asJoshua` then turns "Joshua is a developer" into "I'm a developer" so the answer is in his voice.
+3. **Everything else**: the normal Joshua Tree pipeline, then the general one. A question that names Joshua Tree never falls through to the web: declining is honest, a stray hit on the wrong page is not.
+
+To teach him a new answer, add a line to `JOSHUA_TALK` if it must be exact, or a sentence to `JOSHUA_DOCS` if the reader should find it.
+
+### The cache
+
+Replies are cached by question. Joshua's key is `chat-joshua2`, Samantha's is `chat`. When you change what he says, change the suffix (`joshua2` to `joshua3`), or the old answers, including declines, keep coming back. This bit us once on 2026-10-03: new fixed lines did nothing until the key changed.
+
+### His voice
+
+`/api/speak` takes `{"text":"...","format":"pcm8","voice":"joshua"}`. `voice: "joshua"` uses his cloned ElevenLabs voice (`JOSHUA_VOICE`), anything else uses Samantha's (`SPEAK_VOICE`). The audio cache key includes the voice id, so the two never mix. Joshua Tree's site worker forwards `?v=joshua` on `/api/speak` as that field.
+
+### Where it is used
+
+Joshua Tree's portfolio mode (`docs/PORTFOLIO.md` in that repo): the chat is titled Joshua, sends `persona: joshua`, and asks for his voice. Tests are in `tests/`; run the suite before pushing, then check `/stats.json` for the live version.
+
+## Give her a voice and a face
+
+Out of the box she listens with Whisper and answers with the Mac's own `say`. Nothing leaves the Mac.
+
+Two keys make her sound and look like a person. Both are optional. Skip either one and she falls back quietly.
+
+### Her voice: ElevenLabs
+
+Free plan: 10,000 credits a month, roughly 10 to 20 minutes of her talking.
+
+1. Sign up at [elevenlabs.io](https://elevenlabs.io). The Free plan is enough.
+2. Go to Developers, then API Keys, then Create Key. Turn on Text to Speech and Speech to Text. Voices can be Read. Nothing else.
+3. Copy the key and save it:
+
+```fish
+echo "set -gx ELEVENLABS_API_KEY 'sk_...'" >> ~/.config/fish/secrets.fish
+```
+
+4. Open a new terminal and talk to her:
+
+```bash
+./.venv/bin/python app/chat.py --voice
+```
+
+Her default voice is Sarah, one of the premade voices. The Free plan can only use premade voices over the API, a library voice answers 402.
+
+To pick another, just ask. "What voices do you have" lists the premade ones. "Change your voice to George" switches, after a yes. It is free: it only saves the voice in her `character.json`. A name she doesn't know changes nothing, and she names the close ones. `ELEVENLABS_VOICE` still wins if you set it.
+
+With a key set, the words she says go to ElevenLabs to be voiced. That is the one thing voice mode sends off the Mac. No key, no send.
+
+### Her face: Higgsfield
+
+Pay as you go, no subscription. Her face is made **once**, then replayed. Nothing is rendered per reply.
+
+| What | Cost |
+|---|---|
+| A portrait (Soul) | a few cents |
+| A 5 second video loop (Seedance 2.5, 480p) | about $0.70 |
+| A full face: portrait, idle loop, talking loop | about $1.50 |
+
+1. Sign up at [cloud.higgsfield.ai](https://cloud.higgsfield.ai) and add $10. That is plenty for her face and a few restyles.
+2. API keys, then Create key. Copy it. It looks like `id:secret`.
+
+```fish
+echo "set -gx HIGGSFIELD_API_KEY 'id:secret'" >> ~/.config/fish/secrets.fish
+```
+
+3. Make her face with the character-creator skill in Claude Code: "make her ginger", "round glasses", "new character". It writes a portrait first. When you like it, it renders the loops into `~/.samantha/characters/samantha/`.
+Or just ask her. "Change your look: ginger with glasses" or "make yourself a redhead" makes a new portrait, about 5 cents, into a `staged` folder next to her current one. Her face stays the same until you say "keep that look". That renders her idle and talking loops from the new portrait, about $1.40, then swaps it in and keeps the old look in `old/`. Both ask first, and the question says the price before anything is spent.
+
+4. Talk to her with her face on:
+
+```bash
+./.venv/bin/python app/chat.py --voice --face
+# another saved character's face and voice, by name (the folders in ~/.samantha/characters):
+./.venv/bin/python app/chat.py --voice --face --character joshua
+```
+
+A window opens on `localhost`. She breathes and blinks while idle, nods while you talk, and talks while her voice plays.
+
+### In the Mac app
+
+The window has Voice and Face buttons in its toolbar. Voice says every reply out loud. Face opens her face window. The Customize menu has Change voice... and Change look..., which send the same sentences as above.
+
+### Keep the keys private
+
+Both keys live in `~/.config/fish/secrets.fish`, never in the repo. Keep that file to yourself: `chmod 600 ~/.config/fish/secrets.fish`.
+
+## Samantha brand kit
+
+One page for the look. The visual version is `web/brand.html`, live at /brand.html on the site. The source of truth stays where it lives (tokens in `web/index.html`, rules in `CLAUDE.md`); this points at all of it.
+
+### Files
+`brand/` holds the kit's assets: `tokens.css` (the landing's tokens), `mark.svg` (the mascot) and `icon-1024.png` (the app icon master, opaque, no alpha, the same picture as `gui/Samantha.icon`). Web sizes are `web/icon-192.png`, `icon-512.png`, `favicon-32.png` and `apple-touch-icon.png`, all cut from that master. The words stay here in `docs/ARCHITECTURE.md`.
+
+### Logos
+| Use | File |
+|-----|------|
+| The mascot: her portrait as a flat icon (copper hair, round glasses, freckles), friendly, never smug | `web/mascot.svg` |
+| App icon on Apple platforms: the mascot, cream tile, shoulders bleeding to the edge (`gui/Samantha.icon`, `brand/icon-1024.png`). Joshua keeps it (2026-10-17) | `brand/icon-1024.png` |
+| Her flower mark, rebuilt byte for byte by `tools_logo.icon_svg()`, mark 70 to 80 percent of the tile | `web/icon.svg`, `web/samantha-logo.png` |
+| Medallion: engraved SAMANTHA / TURING, kept for the record, the footer uses the mascot from 6.0 | `web/badge.svg`, `art/badge-source.svg` |
+
+Every app icon goes through the icon composer skill. Never put text in an icon.
+
+### Color
+| Token | Dark | Light |
+|-------|------|-------|
+| `--bg` | #000000 | #ffffff |
+| `--fg` | #f2f2f2 | #151515 |
+| `--muted` | #9a9a9a | #666666 |
+| `--line` | #2a2a2a | #e4e4e4 |
+| `--accent` / `--ember` | #e0825a | #b5502c |
+
+One accent: terracotta, from her copper hair, #b5502c in light and #e0825a in dark (white text on the light one, black on the dark one, both past 4.5:1). It goes on Send, links, focus rings, selection, the live bar, the sliders and the main button; the iPhone app already wore it on Send and Yes. Everything else stays black, white and gray. The landing footer carries one engraved harbour plate in the accent: fine hatching on paper, which is texture, not a gradient. Banned: yellow, teal, purple, gradients, a second accent. Joshua asked for color on 2026-10-18; before that the web was fully neutral.
+
+### Type
+Samantha Sans, three weights (Regular 400, Medium 500, Semibold 600), built by `scripts/gen_font.py` into `web/fonts`. Since 2026-10-18 it is Inter, the open face drawn in the spirit of SF and Helvetica, renamed for her under its SIL Open Font License; the hand-drawn monoline cut before it read too technical. Letters and figures are proportional. Sans-serif only in the UI, no monospace UI; code blocks stay monospace. The apps register it through `gui/Typeface.swift` and fall back to the system font. Samantha Sans is the one custom typeface in the house: Joshua rejected Talli Sans and wants system type elsewhere, but chose to keep hers (2026-10-17). It is hers alone; no other app copies it.
+
+Scale: five sizes. Display 28 to 40 (500, tracking -0.02em), title 26 (500, -0.01em), body 17 (400), small 14 (400, muted), label 12 (600, caps, +0.07em). Line height 1.6 for reading, 1.15 for headlines. The tokens are `--t-*` and `--track-*` in `brand/tokens.css`. Fallback stack: SF, Helvetica Neue, Helvetica, Lato.
+
+### Space and shape
+Radius `--r-sm` 6, `--r-md` 10, `--r-pill` 999. Spacing `--s-1` to `--s-5`: 8, 16, 24, 40, 64. Buttons and inputs are pills.
+
+### Voice
+Plain, short, direct. No em dashes. Say what she did, not how she is built. The page leads with on-device and tools.
+
+## Samantha for iPhone
+
+Her models run on the phone. Her tool picker (the Kaggle-trained Qwen2.5-1.5B, 4-bit) and a small instruct model answer on-device through MLX, her hands reach the phone's own apps (Reminders, Calendar, Contacts, Photos, the clipboard, Shortcuts), and anything that changes something asks first, same as on the Mac. The Mac is optional: paired over your own network it lends its bigger model and its own tools. Nothing goes to a cloud. Joshua, 2026-10-11: "The LLM should be local, that's the point. We should be able to do anything like with Claude: generate code, use tools, access apps. With Claude I can ask it to clean up my Reminders."
+
+### Where things stand (2026-10-11)
+
+- Shell: `ios/` (xcodegen `project.yml`, SwiftUI, iOS 17+, bundle id `com.nulljosh.samantha`). Home, chat, composer, drawer, confirm sheet, settings, light and dark, screenshotted and graded below.
+- Her exact tools on the phone: `ios/App/Twins.swift` loads `web/samantha.js` in JavaScriptCore, so the router and the 49 JavaScript twins (word-for-word parity with the Mac) answer instantly and offline. Tools that need a real Mac (its disk, Wi-Fi, Finder, Shortcuts) are routed to the paired Mac when there is one.
+- Her models on the phone: `ios/App/LocalModel.swift` loads the picker (`trommatic/samantha-hands-1.5b-mlx`) and an instruct model (`mlx-community/Qwen2.5-1.5B-Instruct-4bit`) with MLX Swift, downloaded from Hugging Face once from Settings, the same `{"tool","arg"}` prompt as `app/tools_agent.py`. Order of play in `Store.run`: exact twin, then the phone's models, then the Mac. MLX does not run in the simulator, so the models are checked by a device build (`generic/platform=iOS`) and tried on Joshua's phone.
+- Mac bridge, shipped in v5.11.13: `app/phone_bridge.py` (signed requests, Server-Sent Events, confirm round trip). The optional path.
+- Video QA (2026-10-11): the simulator walkthrough graded B+. Finds fixed the same round: the port field showed "8,128", and Recents piled up chats from earlier test runs (mock launches now get a fresh folder).
+- Next, in order: (1) iOS hands: Reminders and Calendar through EventKit (list, add, complete, clean up stale ones), Contacts, Photos, clipboard, open a URL or app, run a Shortcut, all writes behind the confirm sheet; (2) profiles: Sign in with Apple and a name for the greeting, chats and memory per person, synced only through your own iCloud (Joshua, 2026-10-11: "we can even add user authentication and profiles"); (3) the Mac app joins this codebase; (4) voice; (5) polish until every screen grades A, then the store.
+
+### The screens, graded against the Claude app (first build, 2026-10-11)
+
+| Screen | What it needs | Grade | What is missing for an A |
+|---|---|---|---|
+| Home | Her mark, a time-of-day greeting, the composer pill | A- | Her name for you in the greeting |
+| Chat | Assistant text plain, user text in a soft gray bubble on the right, streaming reply, a "Working: tool" row, copy and retry under replies | A- | Replies land whole; on-device generation will stream them |
+| Composer | Pill at the bottom, plus button, send button in terracotta, grows with the text | B+ | The plus button does nothing yet; Claude's also has a voice button |
+| Top bar | Sidebar button, centered title, new chat button | A | |
+| History | Slide-over list of past chats, persisted as JSON | B+ | Search, and grouping by day like Claude's |
+| Confirm | A sheet for writes: what she is about to do, Yes and No | A | |
+| Settings | Pairing with the Mac (host, port, token from the samantha://pair link), test connection | B | Was iOS blue and green on a gray form; now paper and terracotta. Needs the model download state once models are on-device |
+| Voice | Dictation in, replies spoken out | not built | |
+
+Rules: SF Pro only, no serif, no emojis, no gradients, no shadows. Warm off-white #faf9f5 in light, #1f1e1d in dark, terracotta #b5502c only on the send button and the yes button. Build check every slice: `xcodebuild -destination 'generic/platform=iOS Simulator' build`. Screenshots: `ios/UITests/Shots.swift` walks every screen with the mock Samantha and writes PNGs (`TEST_RUNNER_SHOTS_DIR`, `TEST_RUNNER_SHOTS_PREFIX`), run once per appearance with `xcrun simctl ui <device> appearance light|dark` between; shut the simulator down after. The loop never submits to TestFlight or the App Store.
+
+### Pairing the Mac, in words
+
+Start the bridge on the Mac (`./.venv/bin/python app/phone_bridge.py --lan`), it prints a `samantha://pair?...` link. Open it on the phone (or type host, port and token into Settings). From then on every request carries a timestamp, a nonce and an HMAC under that secret; the secret itself never crosses the network. A write on the Mac still asks on the phone before it happens.
+
+## Samantha on a Raspberry Pi (the desk robot)
+
+Status: the Pi is here and runs Joshua Tree, and Samantha is an app on it (Joshua Tree 2.47.0 asks this repo's serve.py through its TLS relay). That is the 6.0 path. Everything below is the older plan for plain Linux on a Pi, optional and untested.
+
+### The idea
+
+A small desk robot you talk to. A Pi 5 (8 GB) with a microphone and a speaker runs her on its own: no account, no cloud. She hears a sentence, picks a tool or answers from her notes, and says the result out loud.
+
+### What should already work
+
+- The 0.5B GGUF picker over llama.cpp is the Windows and Linux path (`install/install.sh`). A Pi runs Linux on ARM64, so the same install should apply. The prebuilt wheel index it uses is x86-first, so on a Pi `llama-cpp-python` will most likely build from source (needs `cmake` and a compiler, and takes a while).
+- The 1.5B MLX picker is Mac only. On the Pi she uses the 0.5B GGUF, which is the weaker picker (see docs/PROGRESS.md), so the first goal is chat and a few safe tools, not all 135.
+
+### What is built (untested on a Pi)
+
+`app/robot.py` is the voice loop for Linux: sox records, whisper.cpp (or faster-whisper) hears, piper (or espeak-ng) speaks, and anything that writes is confirmed out loud. `python3 app/robot.py --text` types instead of listens, so everything but the hardware can be tried anywhere, and it runs on the Mac today. The models it expects: `~/models/ggml-base.en.bin` (whisper.cpp) and `~/models/en_US-lessac-medium.onnx` (piper), or the `SAMANTHA_WHISPER_MODEL` and `SAMANTHA_PIPER_MODEL` paths.
+
+### What has to be built
+
+1. Run `install/install.sh` on a real Pi 5 and write down what breaks.
+2. Try the voice loop on the real mic and speaker (`app/robot.py`, written, never run on a Pi), then add a wake word.
+3. A safe tool list for a robot that lives on a desk: time, timers, weather, notes, reminders, math, her own FAQ. Nothing that writes files or sends mail without a spoken yes.
+4. Optional later: servos for a head that turns toward the voice, and the camera for her face mode.
+
+### First test when the Pi arrives
+
+`./install/install.sh`, then `./samantha`, then ask "what time is it" and "what is Joshua Tree". If both work, the voice loop is next.
+
+### Next: the shell is a shell, she is a command
+
+Joshua's call (2026-10-11, after trying her at the Pi's terminal): the console should boot to a real shell, zsh or bash, not to Samantha. Samantha becomes a command you run from that shell (a CLI, `samantha "what is ten plus ten"` or an interactive `samantha`), and she is also an app with her own window. Today the `Samantha $` prompt is the default console on Joshua Tree; this flips it. Lives in the Joshua Tree repo (arch/arm64 console and shell), on a branch with a PR.
+
+## App Store plan for Samantha ($1)
+
+Nothing here is submitted. This is the listing, the answers Apple will ask for, and what blocks each step, so a submission is an afternoon and not a week. Name, price and age rating go through the asc skills (asc-name-creator, apple-pricing) at the time, never by hand.
+
+### What the listing leads with
+
+On-device and tools. She is a small assistant that runs on your own Mac or iPhone, picks a tool, and does the thing: files, calendar, reminders, mail drafts, code, Shortcuts you add yourself. Nimble is the more polished sibling; Samantha sells the part Nimble does not, her hands and her memory.
+
+- Subtitle idea: "Her hands are on your Mac" (check the 30 character limit and the single-word naming rule when the name is chosen).
+- Promotional text: what shipped this week, in two plain sentences.
+- Keywords: on-device assistant, local AI, Mac assistant, Shortcuts, private, memory.
+- Price: $1 upfront, free of in-app purchases, same as the rest of the fleet (GTM.md, apple-pricing skill).
+
+### Answers Apple will ask for
+
+- **Account or sign-in:** none. Review notes must say so, so no demo account is needed.
+- **Data collection:** the apps collect nothing. The landing demo's Cloudflare Worker is the website, not the app; the privacy policy page (web/privacy.html) says what each part does. Declare "Data Not Collected" for the apps only if the shipped builds make no network calls of their own; the iPhone app's Hugging Face model download and the paired-Mac bridge are the two to describe in the notes.
+- **Encryption:** the app uses standard HTTPS and Apple's CryptoKit for signed requests. Answer the export compliance question with the exempt category after reading the current Apple text, and add ITSAppUsesNonExemptEncryption to Info.plist.
+- **Age rating:** run the asc questionnaire honestly. She can write code and read files the person points her at; she asks first before anything that writes. No user-generated content shared between people.
+- **Privacy policy URL:** https://turing.heyitsmejosh.com/privacy.html
+- **Review notes:** say what to try (the first run downloads her models, about two minutes on the Mac and a larger download on the phone), that every write asks first, and that a Shortcut she makes is a file the reviewer adds themselves.
+
+### What blocks each platform
+
+- **Mac:** the store build must be the native SwiftUI target, signed for the store (the Developer ID zip is for the website download). The MLX path inside a sandbox is unverified; test it before committing to the store build.
+- **iPhone:** no signed device build exists yet; the simulator build compiles. A device build, the iCloud entitlement for memory sync, and a TestFlight run are needed first. Joshua does the signing.
+- **Both:** bundle id com.nulljosh.samantha is not yet in App Store Connect. Screenshots come from the simulator and the Mac app, taken after the QA videos grade A or better. No demo accounts.
+
+### Order of work
+
+1. QA the three surfaces to A or better (iOS, Mac, website).
+2. A signed device build and a TestFlight pass (Joshua).
+3. Create the ASC record with the name from asc-name-creator, set the $1 price, fill the answers above.
+4. Submit iPhone first, Mac after, and never resubmit into a rejection without reading Resolution Center.

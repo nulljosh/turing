@@ -9,7 +9,7 @@ data. Each row's label comes from somewhere trustworthy, never guessed:
 Phrasings any eval already owns are dropped (feedback_to_data.reserved_phrases).
 
 Run: ./.venv/bin/python training/dev_to_data.py DUMP [DUMP...] --out hands-data/dev.jsonl
-Then append to train.jsonl by hand and retrain (docs/KAGGLE.md). Never pass a sealed set's dump (heldout4, heldout7).
+Then append to train.jsonl by hand and retrain (docs/TRAINING.md). Never pass a sealed set's dump (heldout4, heldout7).
 """
 import collections, json, os, sys
 

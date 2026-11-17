@@ -27,7 +27,7 @@ Real QA infra: automated pass/fail scoring instead of eyeballing
 
 ## Write a one-line commit message for updating stale documentation.
 
-WHITEPAPER.md was stale: still v0.1, described RAG as a future plan
+TRAINING.md was stale: still v0.1, described RAG as a future plan
 
 ## Write a one-line commit message for fixing a false-positive matching bug.
 

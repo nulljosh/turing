@@ -9,7 +9,7 @@ or an earlier resolve() rewrite, never text she read), "calls" (harness.Session'
 lines) and "result" (what she replied). harness.Session.history and chat_pipe.py's per-process history are
 both kept in exactly this shape, so one resolver serves both fronts.
 
-Safety (LAWS.md law 9, and see eval/laws.py's law 10): a follow-up only ever pulls from two places, the
+Safety (SAFETY.md law 9, and see eval/laws.py's law 10): a follow-up only ever pulls from two places, the
 user's own past *queries* and the router's own record of which tool was *called* and with what argument
 (both of those came from words the user typed, never from a tool's output). The one exception, "open it"/
 "read it" pointing at a path, still never touches a result that a READING tool produced: _SAFE_PRODUCERS

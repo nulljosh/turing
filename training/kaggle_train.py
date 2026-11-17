@@ -4,7 +4,7 @@
 Paste this file into a Kaggle notebook (GPU on), with hands-data's train.jsonl and valid.jsonl uploaded as a dataset named
 samantha-hands. It LoRA-trains the base on the same chat rows the Mac uses (system, user words, assistant tool call), masks the
 prompt so only the tool call is learned, merges the adapter into the base and writes OUT as one folder to download.
-Steps for the Mac side (convert, score, compare) are in docs/KAGGLE.md. Untested on a real GPU until Joshua runs it.
+Steps for the Mac side (convert, score, compare) are in docs/TRAINING.md. Untested on a real GPU until Joshua runs it.
 Settings come from the environment: BASE, DATA, OUT, EPOCHS, MAXLEN. ponytail: plain Trainer, no quantization; a 1.5B fits a 16 GB card."""
 import glob
 import json

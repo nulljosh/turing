@@ -45,7 +45,7 @@
 },
 {
 "q": "What data was Samantha trained on?",
-"a": "Primarily this repo's own docs (README, WHITEPAPER, roadmap.md, TROUBLESHOOTING.md, this FAQ, and eval result writeups), repeated a few times so they are not drowned out."
+"a": "Primarily this repo's own docs (README, WHITEPAPER, roadmap.md, TRAINING.md, this FAQ, and eval result writeups), repeated a few times so they are not drowned out."
 },
 {
 "q": "Why does Samantha hallucinate, or sometimes make things up?",
@@ -65,7 +65,7 @@
 },
 {
 "q": "What tool actually runs training?",
-"a": "mlx_lm.lora, run through Apple's MLX framework, entirely on-device on this Mac Mini. No cloud GPU, no API cost. Always invoked through run_lora_capped.py, a thin wrapper that sets a Metal cache limit and memory limit before calling mlx_lm.lora's own unmodified entry point, see TROUBLESHOOTING.md for why that wrapper exists."
+"a": "mlx_lm.lora, run through Apple's MLX framework, entirely on-device on this Mac Mini. No cloud GPU, no API cost. Always invoked through run_lora_capped.py, a thin wrapper that sets a Metal cache limit and memory limit before calling mlx_lm.lora's own unmodified entry point, see TRAINING.md for why that wrapper exists."
 },
 {
 "q": "Why was run_lora_capped.py written?",
@@ -85,7 +85,7 @@
 },
 {
 "q": "Who maintains this project?",
-"a": "Joshua Trommel, listed as the author in LICENSE and WHITEPAPER.md."
+"a": "Joshua Trommel, listed as the author in LICENSE and TRAINING.md."
 },
 {
 "q": "What's blocked or paused right now?",

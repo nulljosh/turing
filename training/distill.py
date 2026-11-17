@@ -28,7 +28,7 @@ OUT = os.path.join(HERE, "data", "distill")
 DECLINE = "My notes don't cover that."
 PASSAGE = 800  # characters, what chat.py hands the model per retrieved passage
 PER_REPO = 25  # so one busy repo cannot crowd out the rest of the fleet
-NAMES = ("README.md", "WHITEPAPER.md")  # prose; CLAUDE.md and roadmap.md are terse notes that taught fragment answers
+NAMES = ("README.md", "TRAINING.md")  # prose; CLAUDE.md and roadmap.md are terse notes that taught fragment answers
 SECRET = re.compile(r"sk-[A-Za-z0-9]|ghp_|xox[bp]-|AKIA[0-9A-Z]|BEGIN [A-Z ]*KEY|api[_-]?key\s*[:=]|password\s*[:=]|token\s*[:=]", re.I)
 STOP = set("a an and are as at be by for from has have how i in is it its of on or that the this to was were what "
            "when where which who why will with you your do does did not no can so if".split())

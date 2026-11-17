@@ -6,7 +6,7 @@
 voice.converse already runs the loop (listen, harness, answer chain, say). This file only supplies what the Mac gives it for free:
 ears = sox's `rec` (voice.record) then whisper.cpp's `whisper-cli` or the faster-whisper package; mouth = piper, else espeak-ng,
 else the terminal. A write or a send is confirmed out loud ("Should I trash x? Say yes or no"), since a robot has no keyboard.
-Status: written on a Mac, untested on a Pi. docs/PI.md lists what to check first."""
+Status: written on a Mac, untested on a Pi. docs/ARCHITECTURE.md lists what to check first."""
 import os
 import shutil
 import subprocess

@@ -6,7 +6,7 @@ tool at a time with no check on what came back. Split out for size (law 8); tool
 routing here instead of agent() whenever the sentence already looks multi-step (tools._MULTISTEP) and a
 sound plan can be built; agent() is still the fallback when it cannot.
 
-Safety, the same shape as law 9/10 in LAWS.md and followup.py's _SAFE_PRODUCERS: a later step may only pull
+Safety, the same shape as law 9/10 in SAFETY.md and followup.py's _SAFE_PRODUCERS: a later step may only pull
 a value from an earlier one through an explicit "{stepN.field}" placeholder the plan itself declared, and
 only when that earlier step's tool is a SAFE producer, one whose result is something she made herself (a
 path she found or wrote), never text read from outside. run() never feeds a tool's result back to a model

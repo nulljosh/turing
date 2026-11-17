@@ -1,5 +1,5 @@
 {
-  "version": "7.23.1",
+  "version": "7.23.2",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -230,10 +230,6 @@
       "scripts/gen_jt_docs.py": {
         "total": 13,
         "documented": 13
-      },
-      "scripts/make_promo.py": {
-        "total": 9,
-        "documented": 9
       },
       "scripts/stats.py": {
         "total": 7,
@@ -640,8 +636,8 @@
         "documented": 3
       },
       "training/kaggle_train.py": {
-        "total": 11,
-        "documented": 11
+        "total": 13,
+        "documented": 13
       },
       "training/parse_log.py": {
         "total": 1,
@@ -654,13 +650,12 @@
     },
     "house_docs": {
       "README.md": true,
-      "WHITEPAPER.md": true,
+      "TRAINING.md": true,
       "FAQ.md": true,
-      "TROUBLESHOOTING.md": true,
       "CLAUDE.md": true,
       "roadmap.md": true,
       "LICENSE": true,
-      "SECURITY.md": true,
+      "SAFETY.md": true,
       "architecture.svg": true,
       "icon.svg": true
     }

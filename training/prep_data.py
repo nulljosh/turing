@@ -99,7 +99,7 @@ def collect():
     fleet_paths = []
     fleet_paths += glob.glob(f"{VAULT}/**/*.md", recursive=True)
     fleet_paths += glob.glob(f"{CODE}/**/README.md", recursive=True)
-    fleet_paths += glob.glob(f"{CODE}/**/WHITEPAPER.md", recursive=True)
+    fleet_paths += glob.glob(f"{CODE}/**/TRAINING.md", recursive=True)
     fleet_paths += glob.glob(f"{CODE}/**/roadmap.md", recursive=True)
     fleet_paths += glob.glob(f"{CODE}/**/CLAUDE.md", recursive=True)
     fleet_paths += glob.glob(f"{CODE}/*/docs/*.md")  # architecture notes, whitepaper drafts

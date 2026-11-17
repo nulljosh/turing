@@ -1,95 +1,31 @@
 # Turing
 
-Pipeline for building small language models on-device. First model: Samantha.
-Turing is the project name (fixed). Each model release gets its own name,
-not a version bump of the last one, same pattern as Claude's model names
-(Haiku, Opus, Sonnet, Fable), not "Claude-2/Claude-3". First: Samantha
-(the LoRA-on-Qwen2.5-0.5B model). Next release gets a new name, tied to
-whatever it's actually built for (a feature set, a personality, a base
-model swap), not "Samantha-2". The Qwen3.5-0.8B comparison base, if it
-ever ships as its own real model, gets a name of its own too, not a
-"-1b" suffix.
+Turing is the project; Samantha is its first model, a small on-device assistant. A future model gets a new name, never "Samantha-2".
 
-- `.venv/` holds mlx-lm. `python3 training/prep_data.py` rebuilds `data/train.jsonl`
-  and `data/valid.jsonl` from the Obsidian wiki + fleet READMEs/roadmap.md/
-  CLAUDE.md files. Never commit `data/` or `*-adapter/`, they're gitignored
-  on purpose (derived from private notes, and just weights).
-- Her tool picker is the Kaggle-trained 1.5B (`app/tools_agent.py` `_hands_model`: `SAMANTHA_HANDS`, then `models/`, then Hugging Face's cache of trommatic/samantha-hands-1.5b-mlx, fetched in the background the first time; the 0.5B answers until it lands). Windows and Linux stay on the 0.5B GGUF (trommatic/samantha-hands-gguf). Keep both Hugging Face links in the README, the landing page and the whitepaper.
-- `ada-1-adapter/` (Qwen2.5-0.5B) is the real Samantha. A second base
-  (Qwen3.5-0.8B, `ada-1b-adapter/`) was tried for Phase 3 comparison but
-  pushed the machine into near-OOM twice and got paused. This Mac Mini
-  has 16GB total, but a second model's download plus a training pass,
-  stacked on top of everything else running, was enough to drive free
-  memory down to a couple GB and crash. Never run two mlx_lm.lora jobs
-  at once. Check free memory before starting any run.
-- `scratch/` is a second, unrelated track: a genuine from-scratch
-  character-level transformer with zero borrowed weights, kept deliberately
-  tiny. It will not be fluent. That's the point, it proves we can build one
-  from nothing without repeating the earlier Arthur gibberish failure.
-- `training/parse_log.py` regenerates `web/status.json` from `train.log` after every
-  run, landing page reads it live (loss chart + roadmap tracker share the
-  same file on purpose).
-- Landing page: `.github/workflows/deploy.yml` deploys it after every green push (the Workers-scoped CLOUDFLARE_API_TOKEN repo secret has existed since 2026-09-30; it checks the live `/stats.json` version itself, and can be started by hand from the Actions tab). The Mac fallback, no asking, no token hunting: `git worktree add --detach /tmp/turing-clean HEAD && (cd /tmp/turing-clean && npx wrangler deploy); git worktree remove --force /tmp/turing-clean`, then check the live `/stats.json` version. Always from a clean HEAD, never the working tree (a builder may have half-done edits there). wrangler's OAuth login on the Mac does the auth. (The Pages deploy token in secrets.fish cannot deploy Workers; tried 2026-09-25.)
-- No daemon, no cron, training is invoked by hand every time.
-- Layout: every markdown file lives in `docs/` (WHITEPAPER, roadmap, SECURITY, TROUBLESHOOTING, EARLY-RESULTS) except README and CLAUDE.md (AGENTS.md is a symlink to it); `app/` (ask_*, tools_*, chat, harness, serve, mcp_server, library, voice), `scripts/` (stats, gen_jt_docs), `tests/` (every test_*.py, run from the root: `python3 tests/test_x.py`), `training/` (prep_data, distill, gen_hands_data, harvest_voice, run_lora_capped, train_resilient, picker_round, parse_log, TRAINING_EXAMPLES), `swift/` (ocr, pdf), `eval/`, `pixelmator/`, `gui/`, `web/`, `docs/` (FAQ, LAWS, SAFETY, SOUL, ARCHITECTURE, ABILITIES, HISTORY, PROGRESS, LOOP-HANDOFF). No loose files at the root: a new script goes in the folder that owns it.
+## Layout
+`app/` her code (router `tools.py`, `tools_*`, `harness.py`, `chat.py`, `voice.py`), `eval/` checks, `scripts/` stats and publishing, `tests/` (`python3 tests/test_x.py` from the root), `training/` data and Kaggle, `web/` the landing (turing.jaybulb.com, `worker.js`), `gui/` the Mac app, `install/` Windows and Linux. Markdown lives in `docs/` (ARCHITECTURE, TRAINING, SAFETY, FAQ, roadmap, PROGRESS, LOOP-HANDOFF). No loose files at the root. Never commit `data/`, `models/` or adapters.
 
 ## Talking to Joshua
-TLDR only. Every round that ships something adds one line, newest first, to docs/PROGRESS.md, followed by the one-line `python3 eval/scorecard.py` (version, tools, tests, docs, laws, biggest file, router agreement). A few lines at most, plain words, no walls of text, no play-by-play. Only speak up when something is done, broken, or needs him. Every release gets celebrated: one upbeat line to Joshua (and a push notification when he is away) naming what she can do now, and a 🎉 on its line in docs/PROGRESS.md.
+TLDR only. Speak up when something is done, broken, or needs him. Every shipped round adds one line, newest first, to `docs/PROGRESS.md`, then the `python3 eval/scorecard.py` line.
 
-## CI
-Every check on main and on every PR stays green, including the release and deploy workflows. Check all workflow runs after every push and merge, not just `test`. A check that cannot do its job yet (a missing secret) skips green with a notice, never red. A red check is fixed before anything else.
+## Shipping
+Work on main. Before a push run every check CI runs (`./gate.sh`, or `git config core.hooksPath .githooks` once so the pre-push hook does it). Semver is honest: patch for a fix or a landing change, minor for a new ability, major when a roadmap family completes. To release: bump `VERSION`, `python3 scripts/stats.py`, PROGRESS line, commit `Release vX.Y.Z: what shipped`. `release.yml` tags it, `deploy.yml` deploys the landing and checks the live `/stats.json` version. Check every workflow after a push; a red check is fixed first. A check that cannot run yet skips green, never red.
 
-## File size
-No god files. Past about 500 lines a file gets split by what it does, with the old module re-exporting the moved names so nothing that imports it breaks. Targets now, biggest first: web/samantha.js (893) and web/demo.js (736) are the only files over the 650 ceiling that Law 8 does not count (it checks Python), then eval/gen_heldout2.py (647), app/tools_util.py (639), pixelmator/pxm.py (636), app/tools_logo.py (607), app/tools.py (552, its regex router and text normalization in app/tools_routes.py, the organizer/system/dev registration and WRITES/NOT_FOR_MODELS/soundness guard in app/tools_registry.py, picker and agent in app/tools_agent.py), web/demo.js, web/samantha.js. Law 8 in eval/laws.py enforces a ceiling (MAX_LINES) on every Python file, CI included; lower it after each split, never raise it. One split per loop round, each behind the full check set.
+## Rules the checks enforce
+- `eval/laws.py`: anything that writes, sends or deletes is in `WRITES` and asks first; hidden tools stay in `NOT_FOR_MODELS`; every `app/` and `scripts/` file has a row in `docs/ARCHITECTURE.md`; no em dashes in docs people read; no Python file over `MAX_LINES` (lower it after a split, never raise it).
+- `scripts/stats.py --check`: every function and class has a docstring.
+- `eval/util_diff.py`: every utility has a matching JavaScript twin in `web/samantha.js`.
+- A new tool needs a docstring, a route, its JS twin, a `util_diff` case and its ARCHITECTURE row.
+- A broken tool is a reply in chat, never a crash.
 
-## Usage
-The loop watches Claude usage every round: the session's `rate_limit_info` (from `get_session`) and its running cost. While status is allowed and there is no overage, a round every 15 minutes or so. On overage or any status other than allowed, taper: one round an hour, CI checks and red fixes only, until the window resets. Say so in one line when tapering.
+## Training
+Free GPU on Kaggle, no Claude needed: `.github/workflows/train.yml` runs `training/kaggle/nightly.py` every 8 hours, logging each round to the `train-log` branch. Details in `docs/TRAINING.md`. The token lives in `~/.kaggle/access_token` and the `KAGGLE_API_TOKEN` secret; never print or commit it. Locally, never run two MLX training jobs at once and check free memory first.
 
-## Branches
-Work happens on main, no side branches and no PRs for Joshua to handle. Before every push, run the full CI check set locally (every test file, `app/tools.py`, `app/tools_util.py`, eval/actions.py, eval/web_parity.py, eval/util_diff.py, eval/laws.py, `scripts/stats.py --check`); push only when all pass. After the push, check every workflow run (test, release, deploy) and fix any red at once.
+## Landing
+Tokens at the top of `web/index.html`. One accent, terracotta (#b5502c light, #e0825a dark), no gradients, no yellow. Every section keeps its `<h2>`. Stats come from `stats.json`. `eval/a11y.py` must stay clean. The logo is `web/logo.svg`.
 
-## Releases
-Releases cut themselves. Bump `VERSION` (patch for a fix, minor for a new ability, major when a whole roadmap family or phase completes: the files family's write half is 4.0.0), run `python3 scripts/stats.py` to refresh `web/stats.json`, and commit as `Release vX.Y.Z: what shipped`. When that lands on main and CI passes, `.github/workflows/release.yml` tags it and publishes the GitHub release. Nobody runs anything by hand. `./release.sh X.Y.Z "what shipped"` on the Mac still adds the full gate (her real model, the image tools through ImageMagick, the live page) and the site deploy, whenever the Mac is used. Never leave a day's work untagged: on 2026-09-21 76 commits piled up past v0.7.4 before anyone noticed.
-
-## Kaggle training
-Free GPU training runs from the CLI, no browser: see docs/KAGGLE.md. The phone must be verified on Kaggle or kernels stop with "No GPU". The token lives in `~/.kaggle/access_token` and must never be printed or committed.
-
-## Windows and Linux
-`install/install.sh` and `install/install.ps1` run chat and the picker over a GGUF with llama.cpp. CI runs `install.ps1` on a real Windows runner (`windows_install` job in test.yml). Joshua Tree also runs her as a ring-3 app that calls this repo's `/api/chat` and `/api/pick`.
-
-## The Mac app download
-The landing's Download button points at `releases/download/mac-app/SamanthaGUI.zip` (a permanent release, so a new version tag never breaks it). After each release the CI cuts, run `./gui/package.sh` (Developer ID signed, notarized, stapled) then `gh release upload mac-app gui/dist/SamanthaGUI.zip --clobber`. The install command on the page is copied by `.copy-install`.
-
-## After every ship
-Update together, in the same pass: her Hugging Face page (`./scripts/hf_publish.sh`, card from docs/HF_CARD.md; add `--model` only when the shipped picker changes), the landing page (abilities text and the demo), README, WHITEPAPER.md (at every minor or major release: version line, what she can do, the measured numbers, limits, in plain words anyone can read), this file, `docs/ARCHITECTURE.md` (a row for every new file, checked by `eval/laws.py`), `architecture.svg` (the `architecture-svg` skill) and `progress.svg` (`python3 ~/Documents/Code/scripts/progress-svg.py .`, which reports files ARCHITECTURE.md does not name, and must say 100 percent documented). Docs coverage stays at 100 in the gate.
-From 6.0 the landing footer carried her mascot, which stays as it is; since 7.9.1 the footer itself is an engraved harbour in terracotta hatching, a WebGL shader ported from Atlin's footer (it animates only while on screen, holds one still frame for reduced motion, follows the theme, and is texture, not a gradient): the medallion motif steps below ended with the medallion, and a major no longer needs one. Before 6.0, every major release (from 4.18 on, Joshua's call: simpler, and only at majors) refreshed the footer badge (`web/badge.svg`, her engraved SAMANTHA / TURING medallion): `python3 app/tools_badge.py --version X.Y.Z` rebuilds it from the original (`art/badge-source.svg`, never edited) plus every motif in its MOTIFS table up to that version's step: each minor adds a little more sky around her (4.8 was three constellations and loose stars), thin strokes in her own ink, in open field, never over her or the words, no blur. Joshua loves this logo: each step is small and tells her story, never a redesign. Design the new step's motif, look at it at 2x, send him the before and after, then ship; it only ships when OCR still reads both words.
-
-## The gate
-`./gate.sh` runs the docs-coverage rule, then four fast checks (chat, actions, parity, tools) and compares against eval/baseline.json. `./gate.sh --full` also runs hands.py and the live web demo. Release.sh runs the full gate, so a release cannot ship on a worse number. Use `./gate.sh --update-baseline` to set new baselines only when all checks pass.
-
-## Tools and the harness
-`app/tools.py` is the router and the first 30 tools. `app/tools_util.py` adds 49 utilities and `ask_llm` (from `app/tools_llm.py`, a hard question for another LLM on this Mac, by name or the biggest, oMLX then Ollama, no key: only by name, asks first, hidden from models and MCP) (math, time, dates, chance, text, this Mac's vitals, Shortcuts) and their `ROUTES` table, which `app/tools.py` appends. Every one has a JavaScript twin in `web/samantha.js`, generated from the same table; `eval/util_diff.py` diffs the two word for word and must stay green. A new tool needs: the function with a docstring, a route, the JS route (regenerate the block from the Python table), a case in `eval/util_diff.py`, and its row in `docs/ARCHITECTURE.md`. The trained picker only knows the first 30 tools; new ones work through the router until it is retrained. The image tools have exact routes too (`tools_image.ROUTES`, ahead of the utilities so "convert cat.png to jpg" is never a unit conversion). `app/tools_research.py` is deep research (Wikipedia, library, notes, a cited brief from the local 9B, unsupported sentences dropped). `app/tools_see.py` is her eyes (see_screen, see_image: Qwen2.5-VL 3B via mlx-vlm, private, asked first). `app/tools_gui.py` is her hands on the screen (click_text finds words with ocr.swift --boxes and clicks with cliclick; type_text; press_key; all WRITES). `app/voice.py` is voice in (`app/chat.py --voice`: sox records, Whisper on MLX transcribes, the harness answers, `say` speaks). `app/library.py` is her offline library (Wikipedia's vital articles and the fieldbook in SQLite FTS5 at ~/.samantha/library); `general_knowledge` falls back to it last, and it declines anything a page does not cover. A tool that breaks, or a missing answer model, is a reply in chat, never a crash: `harness.Session.ask`, `ask.local_answer` and `chat.safe_turn` catch it.
-Anything that writes, sends or leaves a file goes in `tools.WRITES` and asks first through `app/harness.py`. Tools that fire a side effect nobody sees coming (`NOT_FOR_MODELS`) never reach a model's menu and are not served over MCP (`app/mcp_server.py`).
-The landing demo draws anything: `/api/draw` in `worker.js` runs an image model on Workers AI (5 a minute per visitor, cached a day), and `web/paint.js` rebuilds the picture from 30,000 squares. `eval/web_demo.py` covers it live.
-Logos: `make_logo` always makes an icon, never text (`app/tools_mark.py` adds make_symbol, make_wordmark and make_avatar). The default is a glyph (`app/tools_glyphs.py`): a bold white glyph that means the subject on a flat accent tile, a keyword table first and her model second, saved with an Icon Composer `.icon` bundle beside the PNG. Then three more modes: golden spiral (say "spiral" or "flower"; her model picks palette, cell count, shape and how many glow), complex (say "complex"), and simple (say "simple" or "minimal": ring, spark, bars or dot). The spiral has two styles: spiral (open cells) and flower (packed petals round one bright core, reads at 16px). Her model picks the dials, `app/tools_logo.py` lays out the layers and draws them straight to a PNG with ImageMagick (`-draw` MVG: `roundRectangle`, `ellipse`, `polygon` for stars), no Pixelmator anywhere in the path; the old Pixelmator spec at `pixelmator/examples/turing-flower.json` is history now, kept for reference only. The icon (`web/icon.svg`, `icon.svg`, `web/samantha-logo.png`) is her flower: `tools_logo.icon_svg()` rebuilds it byte for byte and `test_edges.py` fails if anyone hand-edits it. `tools_logo.layers_to_svg` draws any of her designs as an SVG, no ImageMagick needed either. `docs/icon-blueprint.svg` is generated by `tools_logo.icon_blueprint_svg()` and pinned by a test, as are the measured rules: mark 70 to 80 percent of the tile, dark ring at least a pixel at 16px, core and petals at least 7:1 on the tile.
-Painting: `pixelmator/pxm.py paint --engine magick` draws the quadtree with ImageMagick in about a second for 40,000 squares; `paint_image` calls only that engine, never Pixelmator. Six styles (`pixelmator/styles.py`: squares, mosaic, dots, poster, sketch, glass) come from one cell plan; "paint lake.jpg as a mosaic" picks one. The Pixelmator AppleScript engine still lives in `pixelmator/pxm.py` (`--engine pixelmator`) as an opt-in path nothing here calls by default.
-
-## Laws
-`docs/LAWS.md` lists the rules the repo never breaks and `eval/laws.py` checks them against every tool. The gate and CI run it first. A new tool that leaves a mark goes in `WRITES` or `NOT_FOR_MODELS`, and `eval/laws.py` fails until it is classified.
-
-## Accessibility
-`eval/a11y.py` runs axe-core against the live page in desktop, phone, light and dark, and `./gate.sh --full` fails on any violation. Keep a `<main>`, a skip link, text at 4.5:1 contrast, 44px tap targets and visible focus. Dog food it after any landing change.
-
-## Docs rule
-100 percent of functions and classes have a docstring, in `app/`, `scripts/`, `eval/` and `pixelmator/`. `python3 scripts/stats.py --check` fails otherwise, `./gate.sh` runs it first and CI runs it. Nothing gets pushed under 100.
-
-## Design system
-The landing page's tokens live at the top of `web/index.html`. True white in light mode, true black in dark. No yellow anywhere in the UI (Joshua, 2026-10-03). One accent, terracotta from her copper hair (2026-10-18, Joshua asked for color): `--accent` and `--ember` are #e0825a in dark and #b5502c in light, `--on-accent` is the text on it. It goes on Send, the main pill, link underlines, focus rings, selection, the sliders and the "now" bars. Nothing else gets color. No gradients, no second accent. Radius and spacing come from `--r-*` and `--s-*`.
-Page order is demo (it is the hero, one full screen, with a chip per feature), what she can do, results, chart. Long text sits inside `details.more` so the page stays visual. Every section keeps its `<h2>`, because her page-control demo finds sections by heading. Results tiles read `stats.json`, never hardcode them.
+## After a ship
+Keep these in step: the landing, README, `docs/TRAINING.md` (at minors), `docs/ARCHITECTURE.md`, and her Hugging Face card (`./scripts/hf_publish.sh`, card at `scripts/hf_card.md`). The Mac download is the permanent `mac-app` release: `./gui/package.sh` then `gh release upload mac-app gui/dist/SamanthaGUI.zip --clobber`.
 
 ## The loop
-`docs/LOOP-HANDOFF.md` holds the live `/loop`: what it is, where things stand, what is next, and the restart prompt. Checkpoint rewrites it. Read it before resuming.
-
-## Before you push
-
-Run `git config core.hooksPath .githooks` once per clone. The pre-push hook runs the same steps CI does, so a red build never reaches GitHub. Every worktree inherits it.
+`docs/LOOP-HANDOFF.md` holds the live `/loop` and its restart prompt. Read it before resuming.

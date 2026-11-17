@@ -46,7 +46,7 @@ A second, independent track alongside the main LoRA pipeline: a genuine from-scr
 
 ## What data was Samantha trained on?
 
-Primarily this repo's own docs (README, WHITEPAPER, roadmap.md, TROUBLESHOOTING.md, this FAQ, and eval result writeups), repeated a few times so they are not drowned out. A capped sample of the wider ~50-repo fleet's READMEs, roadmap.md files, and CLAUDE.md files, and a slice of the personal Obsidian wiki, is mixed in for house voice and variety, but capped so it cannot dominate the training data the way it did in an earlier run (see roadmap.md's progress log, run 3).
+Primarily this repo's own docs (README, WHITEPAPER, roadmap.md, TRAINING.md, this FAQ, and eval result writeups), repeated a few times so they are not drowned out. A capped sample of the wider ~50-repo fleet's READMEs, roadmap.md files, and CLAUDE.md files, and a slice of the personal Obsidian wiki, is mixed in for house voice and variety, but capped so it cannot dominate the training data the way it did in an earlier run (see roadmap.md's progress log, run 3).
 
 ## Why does Samantha hallucinate, or sometimes make things up?
 
@@ -66,7 +66,7 @@ Plain, short sentences. No em dashes anywhere, in code, UI, or prose. No emojis.
 
 ## What tool actually runs training?
 
-`mlx_lm.lora`, run through Apple's MLX framework, entirely on-device on this Mac Mini. No cloud GPU, no API cost. Always invoked through `run_lora_capped.py`, a thin wrapper that sets a Metal cache limit and memory limit before calling `mlx_lm.lora`'s own unmodified entry point, see TROUBLESHOOTING.md for why that wrapper exists.
+`mlx_lm.lora`, run through Apple's MLX framework, entirely on-device on this Mac Mini. No cloud GPU, no API cost. Always invoked through `run_lora_capped.py`, a thin wrapper that sets a Metal cache limit and memory limit before calling `mlx_lm.lora`'s own unmodified entry point, see TRAINING.md for why that wrapper exists.
 
 ## Why was run_lora_capped.py written?
 
@@ -86,7 +86,7 @@ MIT.
 
 ## Who maintains this project?
 
-Joshua Trommel, listed as the author in `LICENSE` and `WHITEPAPER.md`.
+Joshua Trommel, listed as the author in `LICENSE` and `TRAINING.md`.
 
 ## What's blocked or paused right now?
 

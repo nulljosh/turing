@@ -4,7 +4,7 @@ reads to answer questions about the OS she runs inside (worker.js's
 readJtDocs, same grounded-reader pattern as readArticle for Wikipedia).
 
 Sourced from the joshuatree repo (a sibling checkout, read-only here):
-README.md, docs/WHITEPAPER.md and docs/roadmap.md for prose, plus
+README.md, docs/TRAINING.md and docs/roadmap.md for prose, plus
 docs/ARCHITECTURE.md's own app tables and kernel/kernel.c's GUI_LABELS/
 GUI_DOCK_DEFAULT arrays for the real, current app list and dock order (a
 hand-typed list would drift the moment an app is added or reordered).
@@ -77,9 +77,9 @@ def section(title, body):
 
 
 def overview_section():
-    """What Joshua Tree is, who made it, and where to try it, from README.md + WHITEPAPER.md."""
+    """What Joshua Tree is, who made it, and where to try it, from README.md + TRAINING.md."""
     readme = read("README.md")
-    whitepaper = read("docs/WHITEPAPER.md")
+    whitepaper = read("docs/TRAINING.md")
     tagline = ""
     m = re.search(r"\n(A (?:whole computer|desktop)[ ,]+built .*?)\n", readme)
     if m:

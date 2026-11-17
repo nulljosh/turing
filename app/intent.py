@@ -3,7 +3,7 @@ stop an instruction hidden in something she read from being picked or replayed a
 they do not stop is a model-driven loop (tools_agent.agent, tools_screen_agent.screen_task, planner's
 model path) proposing a WRITE the user never asked for, with an argument it copied out of a page, a
 mail or the screen instead of the user's own words. Today only the human confirm stands between that
-proposal and running. check() is the automatic gate in front of confirm: law 12 in LAWS.md.
+proposal and running. check() is the automatic gate in front of confirm: law 12 in SAFETY.md.
 
 check(user_request, tool, args) -> (ok, why). Deterministic first, same shape as tools_registry._sound:
 for most WRITE tools the argument (a path, a name, a note's text, a question) has to be traceable to

@@ -11,7 +11,7 @@ import tools_registry
 import untrusted
 
 HANDS_ADAPTER = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "hands-adapter")
-HANDS_MODEL = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "models", "samantha-hands-1.5b-mlx")  # the Kaggle-trained 1.5B, merged (docs/KAGGLE.md); wins over the 0.5B adapter when present
+HANDS_MODEL = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "models", "samantha-hands-1.5b-mlx")  # the Kaggle-trained 1.5B, merged (docs/TRAINING.md); wins over the 0.5B adapter when present
 HANDS_REPO = "trommatic/samantha-hands-1.5b-mlx"  # the 1.5B on Hugging Face; Hugging Face's own cache keeps it after the first fetch
 HANDS_RUN = "23"  # the training run this version ships; a cached folder with an older RUN file gets refetched in the background
 HANDS_GGUF = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "models", "samantha-hands.gguf")
