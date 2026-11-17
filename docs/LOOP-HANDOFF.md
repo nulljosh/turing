@@ -10,10 +10,10 @@ A major ships only when its roadmap family is finished and checked. A number is 
 
 ## Where things stand
 
-- **Live:** v7.23.1 (a4de1b8 on origin/main; its test run was pending when I checked). 7.23.1 is the landing patch: the hero shows her working (the 30 second voiced trailer under the headline, a muted loop with controls, a soft glow of her paintings and logos behind it), a real glasses logo everywhere (round glasses with a spark in one lens: hero, nav, tab, favicons, app icons), and Gemma 4 E2B first in the nightly Kaggle rotation.
+- **Live:** v7.23.1 (a4de1b8 on origin/main). Its deploy check failed on a stale version in web/stats.json; fixed in 59e891c, which says 7.23.1. 7.23.1 is the landing patch: the hero shows her working (the 30 second voiced trailer under the headline, a muted loop with controls, a soft glow of her paintings and logos behind it), a real glasses logo everywhere (round glasses with a spark in one lens: hero, nav, tab, favicons, app icons), and Gemma 4 E2B first in the nightly Kaggle rotation.
 - **Versioning (Joshua's rule):** the landing is a patch. Only a new ability gets a minor. Loops run to a work list, never to a version number. 7.24.0 never shipped.
 - **Earlier live:** v7.23.0 (0c160ba), 166 tools. v7.23.0 makes her write captions by listening: with no .srt or .vtt beside a video she transcribes it with Whisper and adds the track; the first real test came out word for word. make_logo no longer overwrites an earlier logo (new ones get -2, -3). v7.22.3 (6b79fbf) makes a missing local model a reply in write_code and edit_file, never file content. Its test run is green on c7a9556. v7.22.3 makes a missing local model a plain reply in write_code and edit_file, never file content.
-- **Training runs without Claude:** `.github/workflows/train.yml` plus `training/kaggle/nightly.py` run every 8 hours. Each run logs the finished Kaggle round to `eval/kaggle-nightly.log` and starts the next one, rotating Qwen3.5-2B, Qwen2.5-1.5B and Qwen3.5-0.8B. The KAGGLE_API_TOKEN secret is set and the workflow is green. Next base to add: Gemma 4 E2B.
+- **Training runs without Claude (not yet green):** `.github/workflows/train.yml` plus `training/kaggle/nightly.py` run every 8 hours. Two problems fixed in code: the log could not push to protected main, so it goes to a `train-log` branch (59e891c); and the first Qwen3.5-2B round scored 0% because fp16 overflowed to NaN from step 1. Now training runs in bf16 or fp32 only, and a round stops at the first NaN (a1ea7bc). Still open: the train workflow failed on a1ea7bc and b163bd4 at the commit-the-log step. `origin/train-log` does not exist yet. The orphan-branch fix (`git rm --cached .` removed from the orphan path) is uncommitted in the working tree, so it is not on origin. A fixed round (kernel v31, Qwen3.5-2B, seed 101) was training at about 3 hours; the nightly job logs its score once the log step works.
 - **Trailer: done.** 30 seconds, 13 real things she did on this Mac (opens Calculator and Chess, types in TextEdit, finds a file in Finder, writes code, paints the Mona Lisa twice, makes two logos, captions a video by ear, answers three questions), staged on black, narrated in her own ElevenLabs voice, a tick on every cut. Joshua graded the silent version A-; the voiced one is the A+ pass. Files and scripts in ~/Movies/turing-trailer (hero-muted.mp4 is the one for the hero).
 - Previous live: v7.22.2, 166 tools. v7.22.0 added caption_video: an .srt or .vtt beside a video becomes a captions track, nothing burned in (Homebrew's ffmpeg has no libass or drawtext). v7.22.1 fixed the landing chat typing and queues messages behind a Send now button. v7.22.2 brought the footer engraving, the orb logo and the diner painting in the demo reel.
 - **Shipped:** the caption-from-transcript work (7.23.0) is in. The old git stash `caption-transcript` still exists; it is not needed any more. Leave it alone unless Joshua says otherwise.
@@ -30,11 +30,12 @@ A major ships only when its roadmap family is finished and checked. A number is 
 
 ## Next, in order
 
-1. Video abilities, one minor each: compress a video, then grab a still from one, then put a song under one.
-2. Score the Gemma 4 E2B Kaggle round against run 23 on the pooled dev sets (never a sealed set) when it lands in eval/kaggle-nightly.log. Ship only if it clears the 8.0 bar below. A miss gets written here the same day.
-3. Teach from her misses (every wake, step 6). ~/.samantha/misses.jsonl is still absent (no real chats since 7.21.1).
-4. Read heldout12 once, as counts, only if the round clears the bar.
-5. Audio (Yeti) waits on Joshua clicking the microphone prompt once.
+1. Commit the orphan-branch fix in .github/workflows/train.yml (uncommitted now), confirm the train workflow goes green and origin/train-log exists.
+2. Video abilities, one minor each: compress a video, then grab a still from one, then put a song under one.
+3. Score the fixed Qwen3.5-2B round (kernel v31) and Gemma 4 E2B against run 23 on the pooled dev sets, never a sealed set, once the log lands. Ship only if it clears the 8.0 bar below. A miss gets written here the same day.
+4. Teach from her misses (every wake, step 6). ~/.samantha/misses.jsonl is still absent (no real chats since 7.21.1).
+5. Read heldout12 once, as counts, only if the round clears the bar.
+6. Audio (Yeti) waits on Joshua clicking the microphone prompt once.
 
 ## The ladder
 
