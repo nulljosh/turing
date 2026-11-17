@@ -110,12 +110,31 @@ def main():
     tok.pad_token = tok.pad_token or tok.eos_token
     train, valid = load_rows(os.path.join(DATA, "train.jsonl"), tok), load_rows(os.path.join(DATA, "valid.jsonl"), tok)
     print(f"{len(train)} train rows, {len(valid)} valid rows, base {BASE}")
-    model = AutoModelForCausalLM.from_pretrained(BASE, torch_dtype=torch.float16, device_map="auto")
+    # fp16 overflowed Qwen3.5-2B on a T4 (grad_norm NaN from step 1, 0% picks, 2026-11-17): bf16 where the card has it,
+    # else full fp32 with checkpointing and a smaller batch so it still fits
+    bf16 = torch.cuda.is_bf16_supported()
+    model = AutoModelForCausalLM.from_pretrained(BASE, torch_dtype=torch.bfloat16 if bf16 else torch.float32, device_map="auto")
+    model.gradient_checkpointing_enable()
+    model.enable_input_require_grads()
     model = get_peft_model(model, LoraConfig(r=16, lora_alpha=32, lora_dropout=0.05, target_modules="all-linear", task_type="CAUSAL_LM"))
-    args = TrainingArguments(output_dir="/kaggle/working/run", num_train_epochs=EPOCHS, per_device_train_batch_size=8,
-                             gradient_accumulation_steps=2, learning_rate=1e-4, lr_scheduler_type="cosine", warmup_steps=30,
-                             fp16=True, logging_steps=25, eval_strategy="epoch", save_strategy="no", report_to=[], remove_unused_columns=False, seed=SEED)
-    Trainer(model=model, args=args, train_dataset=train, eval_dataset=valid, data_collator=lambda rows: {k: torch.tensor(v) for k, v in pad_batch(rows, tok.pad_token_id).items()}).train()
+    args = TrainingArguments(output_dir="/kaggle/working/run", num_train_epochs=EPOCHS, per_device_train_batch_size=4,
+                             gradient_accumulation_steps=4, learning_rate=1e-4, lr_scheduler_type="cosine", warmup_steps=30,
+                             bf16=bf16, logging_steps=25, eval_strategy="epoch", save_strategy="no", report_to=[], remove_unused_columns=False, seed=SEED)
+    from transformers import TrainerCallback
+
+    class NanStop(TrainerCallback):
+        """Stop at the first NaN gradient: a run that diverged learns nothing and only burns the free GPU quota."""
+        hit = False
+
+        def on_log(self, args, state, control, logs=None, **kw):
+            """Stop training the moment a logged grad_norm is NaN."""
+            g = (logs or {}).get("grad_norm")
+            if g is not None and g != g:
+                NanStop.hit, control.should_training_stop = True, True
+    Trainer(model=model, args=args, train_dataset=train, eval_dataset=valid, callbacks=[NanStop()],
+            data_collator=lambda rows: {k: torch.tensor(v) for k, v in pad_batch(rows, tok.pad_token_id).items()}).train()
+    if NanStop.hit:
+        sys.exit(f"grad_norm went NaN on {BASE}: stopped early, nothing saved")
     merged = model.merge_and_unload()
     pairs_path = os.path.join(DATA, "pairs.jsonl")
     held = [json.loads(line) for line in open(os.path.join(DATA, "test.jsonl" if os.path.exists(os.path.join(DATA, "test.jsonl")) else "valid.jsonl"))]
