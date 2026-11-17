@@ -30,12 +30,9 @@ A major ships only when its roadmap family is finished and checked. A number is 
 
 ## Next, in order
 
-1. Commit the orphan-branch fix in .github/workflows/train.yml (uncommitted now), confirm the train workflow goes green and origin/train-log exists.
-2. Video abilities, one minor each: compress a video, then grab a still from one, then put a song under one.
-3. Score the fixed Qwen3.5-2B round (kernel v31) and Gemma 4 E2B against run 23 on the pooled dev sets, never a sealed set, once the log lands. Ship only if it clears the 8.0 bar below. A miss gets written here the same day.
-4. Teach from her misses (every wake, step 6). ~/.samantha/misses.jsonl is still absent (no real chats since 7.21.1).
-5. Read heldout12 once, as counts, only if the round clears the bar.
-6. Audio (Yeti) waits on Joshua clicking the microphone prompt once.
+1. Simplify the README and CLAUDE.md, and cut docs/ to a few small files of at most 1000 lines each.
+2. Landing roadmap asks: drop the "What she can do" list (the video shows it); simplify "Run it yourself"; fix scrolling killing the demo; stop her replies mentioning Cloudflare; update the stale README logo.
+3. Video abilities, one minor each: compress a video, then grab a still from one, then put a song under one.
 
 ## The ladder
 
