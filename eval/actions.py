@@ -253,6 +253,8 @@ CASES = [
     ("compress ~/Movies/a.mp4", "compress_video", "~/Movies/a.mp4"),
     ("grab a still from ~/Movies/a.mp4 at 0:12", "still_frame", "~/Movies/a.mp4\t0:12"),
     ("save a frame of my ~/Movies/a.mov", "still_frame", "~/Movies/a.mov"),
+    ("add ~/Music/song.mp3 to ~/Movies/a.mp4", "add_music", "~/Movies/a.mp4\t~/Music/song.mp3"),
+    ("add music to ~/Movies/a.mp4 using ~/Music/song.m4a", "add_music", "~/Movies/a.mp4\t~/Music/song.m4a"),
     ("make my ~/Movies/a.mov smaller", "compress_video", "~/Movies/a.mov"),
     ("add subtitles from ~/Movies/a.srt to ~/Movies/a.mp4", "caption_video", "~/Movies/a.mp4\t~/Movies/a.srt"),
     ("zip ~/Desktop/photos", "zip_file", "~/Desktop/photos"),

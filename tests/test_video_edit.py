@@ -82,5 +82,57 @@ class Compress(Base):
         self.assertIn("-crf", cmd)
 
 
+class Music(Base):
+    """add_music: a song under a video, <name>-music.mp4 beside it."""
+
+    def test_routes_and_refusals(self):
+        """Both phrasings route with the video first; a hidden song, a non-audio file and an existing copy are plain replies."""
+        def route(q):
+            """The argument the add_music routes give q, or None."""
+            for pat, name, arg in tools_video.ROUTES:
+                m = pat.match(q)
+                if m and name == "add_music":
+                    return arg(m)
+        self.assertEqual(route("add ~/Music/song.mp3 to ~/Movies/a.mp4"), "~/Movies/a.mp4\t~/Music/song.mp3")
+        self.assertEqual(route("put the song ~/s.m4a under my ~/a.mov as background music"), "~/a.mov\t~/s.m4a")
+        self.assertEqual(route("add music to ~/a.mp4 using ~/s.wav"), "~/a.mp4\t~/s.wav")
+        self.assertIsNone(route("add captions from ~/a.srt to ~/a.mp4"))
+        song = os.path.join(tools_files.HOME, "Music", "song.mp3")
+        os.makedirs(os.path.dirname(song), exist_ok=True)
+        open(song, "wb").close()
+        with mock.patch.object(tools_video.subprocess, "run") as run:
+            self.assertIn("No song", tools_video.add_music(self.clip + "\t" + os.path.join(tools_files.HOME, ".hidden", "s.mp3")))
+            self.assertIn("No song", tools_video.add_music(self.clip + "\t" + self.clip))
+            self.assertEqual(tools_video.add_music(self.clip + "\t" + song), "Put ~/Music/song.mp3 under ~/Movies/a.mp4 in ~/Movies/a-music.mp4.")
+            open(os.path.join(tools_files.HOME, "Movies", "a-music.mp4"), "wb").close()
+            self.assertEqual(tools_video.add_music(self.clip + "\t" + song), "~/Movies/a-music.mp4 already exists.")
+        run.assert_not_called()
+
+    def test_mix_or_lay(self):
+        """A video with sound gets the song quieter under it; a silent one gets the song padded and cut to its length, faded out."""
+        song = os.path.join(tools_files.HOME, "Music", "song.mp3")
+        os.makedirs(os.path.dirname(song), exist_ok=True)
+        open(song, "wb").close()
+        for sound, want in ((True, "amix"), (False, "apad")):
+            out = os.path.join(tools_files.HOME, "Movies", "a-music.mp4")
+            if os.path.exists(out):
+                os.remove(out)
+
+            def fake(cmd, **kw):
+                """ffmpeg writes the output; the probe is mocked separately."""
+                open(cmd[-1], "wb").write(b"x")
+                return subprocess.CompletedProcess(cmd, 0, stdout=b"", stderr=b"")
+            with mock.patch.object(tools_files, "HEADLESS", False), mock.patch.object(tools_video, "_exe", return_value="ffmpeg"), \
+                    mock.patch.object(tools_video, "_duration", return_value=20.0), mock.patch.object(tools_video, "_has_sound", return_value=sound), \
+                    mock.patch.object(tools_video.subprocess, "run", side_effect=fake) as run:
+                self.assertIn("Put ~/Music/song.mp3", tools_video.add_music(self.clip + "\t" + song))
+            cmd = run.call_args[0][0]
+            flt = cmd[cmd.index("-filter_complex") + 1]
+            self.assertIn(want, flt)
+            self.assertIn("afade=t=out:st=18.00", flt)
+            self.assertEqual(cmd[cmd.index("-t") + 1], "20.00")
+            self.assertIn("copy", cmd)
+
+
 if __name__ == "__main__":
     unittest.main()

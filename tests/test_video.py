@@ -580,7 +580,7 @@ class Registry(unittest.TestCase):
         self.assertTrue(all(f.__doc__ for f in tools_video.TOOLS))
         import tools
         self.assertTrue({"video_info", "trim_video", "vertical_video", "trim_audio", "extract_audio"} <= set(tools.TOOLS))
-        self.assertTrue({"trim_video", "vertical_video", "trim_audio", "extract_audio", "mute_video", "make_gif", "speed_video", "cut_out_video", "join_videos", "caption_video", "compress_video", "still_frame"} <= tools.WRITES and "video_info" not in tools.WRITES)
+        self.assertTrue({"trim_video", "vertical_video", "trim_audio", "extract_audio", "mute_video", "make_gif", "speed_video", "cut_out_video", "join_videos", "caption_video", "compress_video", "still_frame", "add_music"} <= tools.WRITES and "video_info" not in tools.WRITES)
 
 
 if __name__ == "__main__":

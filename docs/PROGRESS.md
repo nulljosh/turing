@@ -1,5 +1,7 @@
 # Progress log
 
+- 2026-11-17: v7.26.0 🎉 She puts music under a video: "add ~/Music/song.mp3 to ~/Movies/a.mp4" (or "add music to a.mp4 using song.m4a") makes a-music.mp4: the song runs the video's length and fades out, and sits quieter under the video's own sound when it has some. Checked on a real clip with a voice track and on a silent one. That finishes the three video abilities (compress, still frame, music).
+  v7.26.0 · 169 tools · 946 tests · docs coverage 100% · laws all hold · biggest app/tools_logo.py 650 · actions 295/295 · parity 295/295 · util_diff 288/288
 - 2026-11-17: v7.25.1 The trailer and the screenshots on the landing no longer show test files sitting on the Mac's desktop: the icon column is painted out of the footage with the wallpaper beside it.
   v7.25.1 · 168 tools · 944 tests · docs coverage 100% · laws all hold · biggest app/tools_logo.py 650 · actions 293/293 · parity 293/293 · util_diff 288/288
 - 2026-11-17: v7.25.0 🎉 She grabs a still from a video: "grab a still from ~/Movies/a.mp4 at 0:12" (or "screenshot a.mp4 at 30", or no time for the first frame) saves a-frame.png beside it. Checked on a real clip, and a time past the end gets a plain answer, not an empty file.

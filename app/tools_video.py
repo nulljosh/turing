@@ -318,6 +318,57 @@ def still_frame(request):
     return f"Saved the frame at {at} as {_short(out)}."
 
 
+_SONGS = (".mp3", ".m4a", ".wav", ".aac", ".flac", ".ogg")
+
+
+def _duration(path):
+    """A video's length in seconds (ffprobe), or 0.0 when ffprobe cannot say."""
+    try:
+        got = subprocess.run([_exe("ffprobe"), "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", path],
+                             capture_output=True, text=True, timeout=60).stdout
+        return float(got.strip())
+    except (OSError, subprocess.SubprocessError, TypeError, ValueError):
+        return 0.0
+
+
+def add_music(request):
+    """Put a song under a video inside the home folder. Takes 'video<TAB>song' (.mp3, .m4a, .wav, .aac, .flac or .ogg). The song runs the video's length and fades out over the last 2 seconds; when the video has sound, the song sits under it, quieter. Makes <name>-music.mp4 beside it, picture copied untouched, never over a file. Asks first."""
+    video, _, song = request.partition("\t")
+    full = _video(video)
+    if not full:
+        return f"No video {video.strip()} I am allowed to open."
+    track = _home(song) if song.strip() else None
+    if not track or not os.path.isfile(track) or not track.lower().endswith(_SONGS):
+        return f"No song {song.strip()} I am allowed to open (.mp3, .m4a, .wav, .aac, .flac or .ogg)."
+    out = os.path.splitext(full)[0] + "-music.mp4"
+    if os.path.exists(out):
+        return f"{_short(out)} already exists."
+    if tools_files.HEADLESS:
+        return f"Put {_short(track)} under {_short(full)} in {_short(out)}."
+    exe = _exe("ffmpeg")
+    if not exe:
+        return _NO_FFMPEG
+    secs = _duration(full)
+    fade = f",afade=t=out:st={max(0.0, secs - 2):.2f}:d=2" if secs > 2 else ""
+    if _has_sound(full):
+        flt = f"[1:a]volume=0.35{fade}[m];[0:a][m]amix=inputs=2:duration=first:normalize=0[a]"
+    else:
+        flt = f"[1:a]apad{fade}[a]"  # a short song pads with silence; the length cap below ends it with the picture
+    length = ["-t", f"{secs:.2f}"] if secs else ["-shortest"]
+    tmp = out + ".part.mp4"
+    try:
+        done = subprocess.run([exe, "-hide_banner", "-loglevel", "error", "-i", full, "-i", track, "-filter_complex", flt, "-map", "0:v", "-map", "[a]",
+                               "-c:v", "copy", "-c:a", "aac", "-b:a", "160k", *length, tmp], capture_output=True, timeout=900)
+    except (OSError, subprocess.SubprocessError):
+        return "ffmpeg did not finish."
+    if done.returncode != 0 or not os.path.exists(tmp):
+        if os.path.exists(tmp):
+            os.remove(tmp)
+        return f"ffmpeg could not put {_short(track)} under {_short(full)}."
+    os.replace(tmp, out)
+    return f"Put {_short(track)} under {_short(full)} in {_short(out)}."
+
+
 def _has_sound(path):
     """True when the video has an audio stream (ffprobe), False when not or when ffprobe cannot say."""
     exe = _exe("ffprobe")
@@ -464,6 +515,9 @@ ROUTES = (
     (re.compile(r"^(?:grab|save|get|take|pull) (?:a |the )?(?:still|frame|still frame|screenshot|picture) (?:of|from) (?:the |my )?" + _EXT + r"(?: at (\S+))?$", _I), "still_frame",
      lambda m: m.group(1) + ("\t" + m.group(2) if m.group(2) else "")),
     (re.compile(r"^screenshot (?:the |my )?" + _EXT + r" at (\S+)$", _I), "still_frame", lambda m: "\t".join(m.groups())),
+    (re.compile(r"^(?:add|put) (?:the )?(?:song |music |track )?(\S+\.(?:mp3|m4a|wav|aac|flac|ogg)) (?:to|under|on|over|behind) (?:the |my )?" + _EXT + r"(?: as (?:background )?music)?$", _I), "add_music",
+     lambda m: m.group(2) + "\t" + m.group(1)),
+    (re.compile(r"^(?:add|put) (?:some )?(?:background )?music (?:to|under|on) (?:the |my )?" + _EXT + r" (?:using|with|from) (\S+\.(?:mp3|m4a|wav|aac|flac|ogg))$", _I), "add_music", lambda m: "\t".join(m.groups())),
     (re.compile(r"^(?:mute|silence) (?:the |my )?" + _EXT + "$", _I), "mute_video", lambda m: m.group(1)),
     (re.compile(r"^(?:remove|strip|drop) the (?:audio|sound) (?:from|of) (?:the |my )?" + _EXT + "$", _I), "mute_video", lambda m: m.group(1)),
     (re.compile(r"^(?:make|turn) (?:a |the |my )?(?:gif|animation) (?:of|from|out of) (?:the |my )?" + _EXT + r" from (\S+) (?:to|until) (\S+)$", _I), "make_gif", lambda m: "\t".join(m.groups())),
