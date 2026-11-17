@@ -1,4 +1,4 @@
-# Turing loop handoff (2026-11-16)
+# Turing loop handoff (2026-11-17)
 
 ## What the loop is
 
@@ -10,7 +10,8 @@ A major ships only when its roadmap family is finished and checked. A number is 
 
 ## Where things stand
 
-- **Live:** v7.23.1 (a4de1b8 on origin/main). Its deploy check failed on a stale version in web/stats.json; fixed in 59e891c, which says 7.23.1. 7.23.1 is the landing patch: the hero shows her working (the 30 second voiced trailer under the headline, a muted loop with controls, a soft glow of her paintings and logos behind it), a real glasses logo everywhere (round glasses with a spark in one lens: hero, nav, tab, favicons, app icons), and Gemma 4 E2B first in the nightly Kaggle rotation.
+- **Live on main (2026-11-17):** v7.25.1. Since 7.23.1: 7.23.2 made the trailer the hero, kept the demo alive while scrolling, and cut docs to 7 files. 7.24.0 added compress_video (a smaller copy of any video) and still_frame (one frame of a video as a picture). 7.25.1 built the trailer and screenshots without desktop test files. The 7.24.0 'never shipped' line below is out of date.
+- **Earlier live:** v7.23.1 (a4de1b8 on origin/main). Its deploy check failed on a stale version in web/stats.json; fixed in 59e891c, which says 7.23.1. 7.23.1 is the landing patch: the hero shows her working (the 30 second voiced trailer under the headline, a muted loop with controls, a soft glow of her paintings and logos behind it), a real glasses logo everywhere (round glasses with a spark in one lens: hero, nav, tab, favicons, app icons), and Gemma 4 E2B first in the nightly Kaggle rotation.
 - **Versioning (Joshua's rule):** the landing is a patch. Only a new ability gets a minor. Loops run to a work list, never to a version number. 7.24.0 never shipped.
 - **Earlier live:** v7.23.0 (0c160ba), 166 tools. v7.23.0 makes her write captions by listening: with no .srt or .vtt beside a video she transcribes it with Whisper and adds the track; the first real test came out word for word. make_logo no longer overwrites an earlier logo (new ones get -2, -3). v7.22.3 (6b79fbf) makes a missing local model a reply in write_code and edit_file, never file content. Its test run is green on c7a9556. v7.22.3 makes a missing local model a plain reply in write_code and edit_file, never file content.
 - **Training runs without Claude (not yet green):** `.github/workflows/train.yml` plus `training/kaggle/nightly.py` run every 8 hours. Two problems fixed in code: the log could not push to protected main, so it goes to a `train-log` branch (59e891c); and the first Qwen3.5-2B round scored 0% because fp16 overflowed to NaN from step 1. Now training runs in bf16 or fp32 only, and a round stops at the first NaN (a1ea7bc). Still open: the train workflow failed on a1ea7bc and b163bd4 at the commit-the-log step. `origin/train-log` does not exist yet. The orphan-branch fix (`git rm --cached .` removed from the orphan path) is uncommitted in the working tree, so it is not on origin. A fixed round (kernel v31, Qwen3.5-2B, seed 101) was training at about 3 hours; the nightly job logs its score once the log step works.
@@ -30,9 +31,8 @@ A major ships only when its roadmap family is finished and checked. A number is 
 
 ## Next, in order
 
-1. Simplify the README and CLAUDE.md, and cut docs/ to a few small files of at most 1000 lines each.
-2. Landing roadmap asks: drop the "What she can do" list (the video shows it); simplify "Run it yourself"; fix scrolling killing the demo; stop her replies mentioning Cloudflare; update the stale README logo.
-3. Video abilities, one minor each: compress a video, then grab a still from one, then put a song under one.
+1. Video ability, one minor: put a song under a video. Compress and still frame are done (7.24.0).
+2. Landing asks still open, check each before starting: drop the "What she can do" list (the video shows it); simplify "Run it yourself"; stop her replies mentioning Cloudflare; update the stale README logo. Scrolling killing the demo was fixed in 7.23.2. Docs cut to 7 files was done in 7.23.2.
 
 ## The ladder
 
@@ -94,5 +94,5 @@ The 10.0 bar, written 2026-10-12 before any measurement. A 1.5B model cannot run
 ## Restart prompt
 
 ```
-/loop Turing to v8.0: earn the 8.0 picker bar (Kaggle round on a newer base, sealed heldout12 read once as counts), ship 7.23.0, and each tick test for security, reliability, performance, stability and efficiency until A+; fully shipped (tag, release, deploy, live check). Stop at 85% weekly usage and /save.
+/loop Turing to v8.0: earn the 8.0 picker bar (Kaggle round on a newer base, sealed heldout12 read once as counts), ship the next video ability as a minor, and each tick test for security, reliability, performance, stability and efficiency until A+; fully shipped (tag, release, deploy, live check). Stop at 85% weekly usage and /save.
 ```
