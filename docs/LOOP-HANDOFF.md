@@ -27,14 +27,14 @@ A major ships only when its roadmap family is finished and checked. A number is 
 - **Sealed sets** heldout4, heldout7 and heldout12 are read as counts only, never as text.
 
 ## Next, in order
-
-1. Put ~/Movies/turing-trailer/hero-muted.mp4 under the landing hero headline: muted loop, tap to unmute. Joshua said Claude decides. Then release it.
-2. Score each finished Kaggle round (logged in eval/kaggle-nightly.log) against run 23 on the pooled dev sets, never a sealed set. Ship only if it clears the 8.0 bar below. A miss gets written here the same day.
-3. Add Gemma 4 E2B to the nightly rotation in training/kaggle/nightly.py.
-4. Teach from her misses (every wake, step 6). ~/.samantha/misses.jsonl is still absent (no real chats since 7.21.1).
-5. Read heldout12 once, as counts, only if the round clears the bar.
-6. Video family leftovers, then the next roadmap minor, one ability per minor.
-7. Audio (Yeti) waits on Joshua clicking the microphone prompt once.
+1. Redo the logo with the /icon skill: a bold, original mark in her terracotta, made with Icon Composer, then the landing, favicons and app icon together. Joshua says the current orb with five voice bars still sucks.
+2. Put ~/Movies/turing-trailer/hero-muted.mp4 under the landing hero headline: muted loop, tap to unmute. Joshua said Claude decides. Then release it.
+3. Score each finished Kaggle round (logged in eval/kaggle-nightly.log) against run 23 on the pooled dev sets, never a sealed set. Ship only if it clears the 8.0 bar below. A miss gets written here the same day.
+4. Add Gemma 4 E2B to the nightly rotation in training/kaggle/nightly.py.
+5. Teach from her misses (every wake, step 6). ~/.samantha/misses.jsonl is still absent (no real chats since 7.21.1).
+6. Read heldout12 once, as counts, only if the round clears the bar.
+7. Video family leftovers, then the next roadmap minor, one ability per minor.
+8. Audio (Yeti) waits on Joshua clicking the microphone prompt once.
 
 ## The ladder
 
