@@ -45,7 +45,7 @@ jobs:
           cp eval/kaggle-nightly.log /tmp/nightly.log
           git config user.name "turing-train"
           git config user.email "turing-train@users.noreply.github.com"
-          if git rev-parse -q --verify origin/train-log >/dev/null; then git switch -q -c train-log origin/train-log; else git switch -q --orphan train-log && git rm -rq --cached .; fi
+          if git rev-parse -q --verify origin/train-log >/dev/null; then git switch -q -c train-log origin/train-log; else git switch -q --orphan train-log; fi  # an orphan starts with an empty index
           mkdir -p eval && cp /tmp/nightly.log eval/kaggle-nightly.log
           git add eval/kaggle-nightly.log
           git diff --cached --quiet && exit 0
