@@ -1,5 +1,7 @@
 # Progress log
 
+- 2026-11-16: v7.23.0 🎉 She writes captions by listening: "add captions to ~/Movies/talk.mp4" with no .srt beside it transcribes the speech with Whisper, writes talk.srt and adds the track. Checked on a real clip: "Hi, I'm Samantha. I live on your Mac. Today I learned to caption videos by listening to them." word for word. Also: make_logo never overwrites an earlier logo now (each gets -2, -3), found when three logos in a row left only the last.
+  v7.23.0 · 166 tools · 940 tests · docs coverage 100% · laws all hold · biggest app/tools_logo.py 650 · actions 289/289 · parity 289/289 · util_diff 288/288
 - 2026-11-16: v7.22.3 A missing model is a reply, never file content: write_code and edit_file now land text only when the local model really answered (ask_llm's own footer). Found on camera while recording the trailer: today.py held "The model qwen3:8b is not on this Mac yet" after a yes. A test pins it.
   v7.22.3 · 166 tools · 940 tests · docs coverage 100% · laws all hold · biggest app/tools_logo.py 649 · actions 289/289 · parity 289/289 · util_diff 288/288
 - 2026-11-16: v7.22.2 The landing footer is now an engraving of a language model writing (tokens fill in, attention arcs reach back, a faint field of weights), in the same terracotta hatching, and the cartoon mascot is a simple logo: a terracotta orb with five voice bars. The hero's fake chat wall is gone; real footage goes there once it is good enough. The demo reel opens with an original painting of an all-night diner.

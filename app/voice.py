@@ -43,11 +43,17 @@ def record(path, seconds=MAX_SECONDS):
     return os.path.exists(path) and os.path.getsize(path) > 1000
 
 
-def transcribe(path):
-    """What was said in a recording, as text; "" when it was silence or Whisper only heard its usual phantoms."""
+def segments(path):
+    """What was said in a recording as timed pieces, [(start seconds, end seconds, text)], silence and phantoms dropped."""
     import mlx_whisper
     got = mlx_whisper.transcribe(path, path_or_hf_repo=MODEL, language="en", condition_on_previous_text=False)
-    text = " ".join(s["text"].strip() for s in got.get("segments", []) if s.get("no_speech_prob", 0) < 0.6).strip()
+    return [(float(s["start"]), float(s["end"]), s["text"].strip()) for s in got.get("segments", [])
+            if s.get("no_speech_prob", 0) < 0.6 and s["text"].strip() and not PHANTOMS.match(s["text"].strip())]
+
+
+def transcribe(path):
+    """What was said in a recording, as text; "" when it was silence or Whisper only heard its usual phantoms."""
+    text = " ".join(t for _, _, t in segments(path)).strip()
     return "" if PHANTOMS.match(text) else text
 
 

@@ -330,27 +330,34 @@ _SUBS = (".srt", ".vtt")
 
 
 def caption_video(request):
-    """Add a captions track to a video inside the home folder from an .srt or .vtt file. Takes 'video' (uses the .srt beside it) or 'video<TAB>captions'. Makes <name>-captioned.mp4 beside it, picture and sound copied untouched, never over a file. Asks first."""
+    """Add a captions track to a video inside the home folder. Takes 'video' (uses the .srt beside it, or writes <name>.srt there from her own Whisper transcript) or 'video<TAB>captions' (.srt or .vtt). Makes <name>-captioned.mp4 beside it, picture and sound copied untouched, never over a file. Asks first."""
     video, _, subs = request.partition("\t")
     full = _video(video)
     if not full:
         return f"No video {video.strip()} I am allowed to open."
+    made = ""
     if subs.strip():
         sub = _home(subs)
-    else:  # ponytail: only the same-name .srt/.vtt beside it; making one from her own transcript is the next step
+    else:  # the same-name .srt/.vtt beside it, or one she writes there from her own transcript
         sub = next((c for c in (os.path.splitext(full)[0] + e for e in _SUBS) if os.path.isfile(c)), None)
         if not sub:
-            return f"I need captions for {_short(full)}: put a .srt beside it with the same name, or say which .srt to use."
-    if not sub or not os.path.isfile(sub) or not sub.lower().endswith(_SUBS):
+            sub, made = os.path.splitext(full)[0] + ".srt", "transcript"
+    if not sub or (not made and not os.path.isfile(sub)) or not sub.lower().endswith(_SUBS):
         return f"No captions file {subs.strip()} I am allowed to open (.srt or .vtt)."
     out = os.path.splitext(full)[0] + "-captioned.mp4"
     if os.path.exists(out):
         return f"{_short(out)} already exists."
     if tools_files.HEADLESS:
-        return f"Added the captions in {_short(out)}."
+        return f"Added the captions in {_short(out)}" + (f", from my transcript in {_short(sub)}." if made else ".")
     exe = _exe("ffmpeg")
     if not exe:
         return _NO_FFMPEG
+    if made:
+        if not _has_sound(full):
+            return f"{_short(full)} has no sound, so there is nothing to caption."
+        why = _write_srt(full, sub)
+        if why:
+            return why
     # ponytail: a captions track you turn on (QuickTime, iPhone, VLC), not burned in: Homebrew's ffmpeg has no libass
     tmp = out + ".part.mp4"
     try:
@@ -363,7 +370,35 @@ def caption_video(request):
             os.remove(tmp)
         return f"ffmpeg could not add {_short(sub)} to {_short(full)}."
     os.replace(tmp, out)
-    return f"Added the captions in {_short(out)}. Turn them on with the captions button when it plays."
+    told = f" I wrote them from what I heard into {_short(sub)}; fix any word there and ask again." if made else ""
+    return f"Added the captions in {_short(out)}. Turn them on with the captions button when it plays.{told}"
+
+
+def _stamp(t):
+    """Seconds as an SRT time: 83.5 -> 00:01:23,500."""
+    ms = int(round(float(t) * 1000))
+    return f"{ms // 3600000:02d}:{ms // 60000 % 60:02d}:{ms // 1000 % 60:02d},{ms % 1000:03d}"
+
+
+def srt_text(pieces):
+    """[(start, end, text)] as the body of an .srt file."""
+    return "".join(f"{i}\n{_stamp(a)} --> {_stamp(b)}\n{t}\n\n" for i, (a, b, t) in enumerate(pieces, 1))
+
+
+def _write_srt(video, path):
+    """Transcribe a video with Whisper (voice.segments) into an .srt at path, never over a file. "" or a plain reason."""
+    if os.path.exists(path):
+        return f"{_short(path)} already exists."
+    try:
+        import voice
+        pieces = voice.segments(video)
+    except Exception:  # noqa: BLE001 - no Whisper, no weights, a decode error: a reply, never a crash
+        return "I could not transcribe it here, so there are no captions to add. Put a .srt beside it and ask again."
+    if not pieces:
+        return f"I heard no speech in {_short(video)}, so there is nothing to caption."
+    with open(path, "w", encoding="utf-8") as f:
+        f.write(srt_text(pieces))
+    return ""
 
 
 TOOLS = (video_info, trim_video, vertical_video, trim_audio, extract_audio, mute_video, make_gif, speed_video, cut_out_video, join_videos, caption_video)
@@ -412,6 +447,7 @@ def demo():
     assert by("caption_video")[0].match("add captions to ~/a.mp4") and by("caption_video")[3].match("caption ~/a.mp4 with ~/a.srt") and not by("caption_video")[0].match("add captions to my photo")
     assert by("caption_video")[2].match("add subtitles from ~/a.srt to ~/a.mov").group(2) == "~/a.mov"
     assert "allowed" in caption_video("/etc/a.mp4") and "allowed" in caption_video("~/.ssh/a.mp4")
+    assert _stamp(83.5) == "00:01:23,500" and srt_text([(0, 1.25, "hi")]) == "1\n00:00:00,000 --> 00:00:01,250\nhi\n\n"
     assert _secs("1:02:03") == 3723 and _secs("7.5") == 7.5
     assert _clock(83) == "1:23" and _clock(3725) == "1:02:05"
     assert "allowed" in video_info("~/.ssh/a.mp4") and "allowed" in vertical_video("/etc/a.mp4") and "allowed" in mute_video("~/.ssh/a.mp4") and "allowed" in make_gif("/etc/a.mp4") and "allowed" in speed_video("/etc/a.mp4\t2") and "allowed" in cut_out_video("/etc/a.mp4\t0\t1") and "allowed" in join_videos("/etc/a.mp4\t/etc/b.mp4")

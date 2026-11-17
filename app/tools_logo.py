@@ -292,14 +292,15 @@ def make_logo(description):
             pick, layers = _glyph_design(description)
     except Exception as e:
         return f"I couldn't draft the design: {e}"
-    out = tools_image.output("samantha-logo.png")
-    if os.path.exists(out):
-        os.remove(out)  # a stale file must not read as a fresh success
-    shutil.rmtree(tools_image.output("samantha-logo.icon"), ignore_errors=True)  # nor a bundle from an older logo
+    # a new name every time (-2, -3 ...), never over an earlier logo: 2026-11-16 three logos in a row left only the last
+    base, n = tools_image.output("samantha-logo"), 2
+    out = base + ".png"
+    while os.path.exists(out) or os.path.exists(out[:-4] + ".icon"):
+        out, n = f"{base}-{n}.png", n + 1
     result = _run(["magick", "-size", "1024x1024", "xc:none", "-draw", _mvg(layers), out], timeout=60)
     chose, extra = ", ".join(f"{k} {v}" for k, v in pick.items()), ""
     if "glyph" in pick and os.path.exists(out):  # and the Icon Composer bundle, the way every fleet icon is made
-        bundle = tools_glyphs.icon_bundle(pick["glyph"], pick["palette"], tools_image.output("samantha-logo.icon"),
+        bundle = tools_glyphs.icon_bundle(pick["glyph"], pick["palette"], out[:-4] + ".icon",
                                           lambda ls, png: _run(["magick", "-size", "1024x1024", "xc:none", "-draw", _mvg(ls), png], timeout=60))
         extra = f", with an Icon Composer bundle at {bundle}"
     return (f"I went with {chose}. {len(layers)} layers, built with ImageMagick, saved to {out}{extra}."

@@ -508,7 +508,7 @@ class Caption(Base):
         self.assertEqual(hit("caption ~/Movies/a.mp4 with ~/a.vtt"), "~/Movies/a.mp4\t~/a.vtt")
         self.assertFalse(any(r[0].match("add captions to my photo") for r in routes))
         with mock.patch.object(tools_video.subprocess, "run") as run:
-            self.assertIn("put a .srt beside it", tools_video.caption_video(self.clip))
+            self.assertIn("from my transcript in ~/Movies/a.srt", tools_video.caption_video(self.clip))
             open(os.path.join(tools_files.HOME, ".hidden", "a.srt"), "w").close()
             self.assertIn("allowed", tools_video.caption_video(self.clip + "\t" + os.path.join(tools_files.HOME, ".hidden", "a.srt")))
             open(os.path.join(tools_files.HOME, "notes.txt"), "w").close()
@@ -538,6 +538,37 @@ class Caption(Base):
         self.assertEqual(cmd[cmd.index("-c:v") + 1], "copy")
         self.assertTrue(os.path.exists(os.path.join(tools_files.HOME, "Movies", "a-captioned.mp4")))
         self.assertFalse(os.path.exists(os.path.join(tools_files.HOME, "Movies", "a-captioned.mp4.part.mp4")))
+
+    def test_from_her_transcript(self):
+        """No .srt beside it: she writes one from Whisper's timed pieces, then adds the track; silence, no sound and no Whisper are plain replies."""
+        def fake(cmd, **kw):
+            """A stand-in ffmpeg that writes its output."""
+            open(cmd[-1], "wb").write(b"x")
+            return subprocess.CompletedProcess(cmd, 0, stdout=b"", stderr=b"")
+        srt = os.path.join(tools_files.HOME, "Movies", "a.srt")
+        live = lambda: (mock.patch.object(tools_files, "HEADLESS", False), mock.patch.object(tools_video, "_exe", return_value="ffmpeg"),
+                        mock.patch.object(tools_video.subprocess, "run", side_effect=fake))
+        import voice
+        a, b, c = live()
+        with a, b, c, mock.patch.object(tools_video, "_has_sound", return_value=True), \
+                mock.patch.object(voice, "segments", return_value=[(0.5, 2.0, "Hello there"), (2.2, 3.8, "Second line")]):
+            got = tools_video.caption_video(self.clip)
+        self.assertIn("wrote them from what I heard into ~/Movies/a.srt", got)
+        self.assertEqual(open(srt).read(), "1\n00:00:00,500 --> 00:00:02,000\nHello there\n\n2\n00:00:02,200 --> 00:00:03,800\nSecond line\n\n")
+        os.remove(srt)
+        os.remove(os.path.join(tools_files.HOME, "Movies", "a-captioned.mp4"))
+        a, b, c = live()
+        with a, b, c as run, mock.patch.object(tools_video, "_has_sound", return_value=True), mock.patch.object(voice, "segments", return_value=[]):
+            self.assertIn("heard no speech", tools_video.caption_video(self.clip))
+        run.assert_not_called()
+        a, b, c = live()
+        with a, b, c as run, mock.patch.object(tools_video, "_has_sound", return_value=False):
+            self.assertIn("has no sound", tools_video.caption_video(self.clip))
+        a, b, c = live()
+        with a, b, c as run, mock.patch.object(tools_video, "_has_sound", return_value=True), mock.patch.object(voice, "segments", side_effect=ImportError):
+            self.assertIn("could not transcribe", tools_video.caption_video(self.clip))
+        run.assert_not_called()
+        self.assertFalse(os.path.exists(srt))
 
 
 class Registry(unittest.TestCase):
