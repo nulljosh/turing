@@ -30,18 +30,24 @@ jobs:
           KAGGLE_API_TOKEN: ${{ secrets.KAGGLE_API_TOKEN }}
         run: |
           if [ -z "$KAGGLE_API_TOKEN" ]; then echo "::notice::No KAGGLE_API_TOKEN secret, nothing to train."; echo "ok=0" >> "$GITHUB_OUTPUT"; else echo "ok=1" >> "$GITHUB_OUTPUT"; fi
+      - name: Bring back the round log (it lives on the train-log branch; main is protected)
+        if: steps.token.outputs.ok == '1'
+        run: git fetch -q origin train-log && git show origin/train-log:eval/kaggle-nightly.log > /tmp/l && cp /tmp/l eval/kaggle-nightly.log || true
       - name: Log the last round, start the next
         if: steps.token.outputs.ok == '1'
         env:
           KAGGLE_API_TOKEN: ${{ secrets.KAGGLE_API_TOKEN }}
         run: python3 training/kaggle/nightly.py
-      - name: Commit the log
+      - name: Commit the log to the train-log branch
         if: steps.token.outputs.ok == '1'
         run: |
+          [ -f eval/kaggle-nightly.log ] || exit 0  # a busy kernel logs nothing
+          cp eval/kaggle-nightly.log /tmp/nightly.log
           git config user.name "turing-train"
           git config user.email "turing-train@users.noreply.github.com"
-          [ -f eval/kaggle-nightly.log ] || exit 0  # a busy kernel logs nothing
+          if git rev-parse -q --verify origin/train-log >/dev/null; then git switch -q -c train-log origin/train-log; else git switch -q --orphan train-log && git rm -rq --cached .; fi
+          mkdir -p eval && cp /tmp/nightly.log eval/kaggle-nightly.log
           git add eval/kaggle-nightly.log
           git diff --cached --quiet && exit 0
-          git commit -m "train: log a Kaggle round [skip ci]"
-          git pull --rebase -q && git push
+          git commit -qm "train: log a Kaggle round"
+          git push -q origin train-log
