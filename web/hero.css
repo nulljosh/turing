@@ -1,11 +1,7 @@
-/* Hero: real footage of Samantha working (cut from the live demo), dithered, scanlined and blended into the page,
-   parallax in hero.js. */
+/* Hero: copy and the call to action, then the trailer of her real work under it. Behind it all, the same footage
+   at 320 px, blurred into a slow glow of her paintings and logos. */
 .hero{position:relative;isolation:isolate;overflow:hidden}
 .hero .hero-copy{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center}
-.hero::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse 56% 50% at 50% 50%,var(--bg) 50%,transparent 100%)}
-.hero::after{content:"";position:absolute;left:0;right:0;bottom:0;height:28%;z-index:1;pointer-events:none;background:linear-gradient(transparent,var(--bg))}
-.hero .hero-bg{position:absolute;inset:0;z-index:0;pointer-events:none;transform:translate3d(0,var(--py,0),0);will-change:transform}
-.hero-reel{width:100%;height:100%;object-fit:cover;opacity:.55;filter:saturate(.9);-webkit-mask:radial-gradient(ellipse 34% 62% at 50% 46%,#000 55%,transparent 100%);mask:radial-gradient(ellipse 34% 62% at 50% 46%,#000 55%,transparent 100%)}
-/* scanlines over the real footage, the house CRT look; the footage itself is bayer-dithered when it is cut */
-.hero .hero-bg::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(to bottom,transparent 0 2px,rgba(0,0,0,.22) 2px 3px);pointer-events:none}
-@media (max-width:560px){.hero-reel{opacity:.4}.hero::before{background:radial-gradient(ellipse 120% 46% at 50% 50%,var(--bg) 62%,transparent 100%)}}
+.hero-trailer{display:block;width:min(960px,100%);aspect-ratio:16/9;margin:40px auto 0;border:1px solid var(--line);border-radius:16px;background:#000}
+.hero-glow{position:absolute;left:-10%;top:-10%;width:120%;height:120%;object-fit:cover;filter:blur(72px) saturate(1.4);opacity:.38;z-index:0;pointer-events:none}
+:root[data-theme="light"] .hero-glow{opacity:.2}

@@ -25,8 +25,9 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(os.path.dirname(HERE))
 LOG = os.path.join(ROOT, "eval", "kaggle-nightly.log")
 KERNEL = json.load(open(os.path.join(HERE, "kernel-metadata.json")))["id"]
-# ponytail: a fixed rotation; add a base here when one earns a slot (Gemma 4 and Granite need more disk to score on the Mac)
-BASES = ["Qwen/Qwen3.5-2B", "Qwen/Qwen2.5-1.5B-Instruct", "Qwen/Qwen3.5-0.8B"]
+# ponytail: a fixed rotation; add a base here when one earns a slot. Gemma 4 E2B (Apache, built-in function calling) is
+# the best new candidate; a base the Kaggle image cannot load just logs an error round and the rotation moves on.
+BASES = ["google/gemma-4-E2B-it", "Qwen/Qwen3.5-2B", "Qwen/Qwen2.5-1.5B-Instruct", "Qwen/Qwen3.5-0.8B"]
 
 
 def kaggle(*args):
@@ -85,7 +86,7 @@ def demo():
     assert scores(log) == ("Qwen/Qwen3.5-2B", 91.5, None), scores(log)
     assert scores("nothing") == (None, None, None)
     assert scores("DPO picks the right tool on 92.0%")[2] == 92.0
-    assert next_round([]) == (BASES[0], 100) and next_round(["a"] * 4) == (BASES[1], 104)
+    assert next_round([]) == (BASES[0], 100) and next_round(["a"] * 5) == (BASES[1], 105)
     print("nightly ok")
 
 
