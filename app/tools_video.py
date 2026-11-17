@@ -288,6 +288,36 @@ def compress_video(path):
     return f"Made a smaller copy at {_short(out)}: {tools_files._size(before)} down to {tools_files._size(after)}."
 
 
+def still_frame(request):
+    """Save one frame of a video inside the home folder as a .png. Takes 'path' (the first frame) or 'path<TAB>time' like 0:12 or 12. Makes <name>-frame.png beside it, never over a file. Asks first."""
+    parts = [p.strip() for p in request.split("\t")]
+    full = _video(parts[0])
+    if not full:
+        return f"No video {parts[0]} I am allowed to open."
+    at = parts[1] if len(parts) == 2 else "0"
+    if len(parts) > 2 or not _TIME.match(at):
+        return "Give the time like 0:12 or 12, or just the video for its first frame."
+    out = os.path.splitext(full)[0] + "-frame.png"
+    if os.path.exists(out):
+        return f"{_short(out)} already exists."
+    if tools_files.HEADLESS:
+        return f"Saved the frame at {at} as {_short(out)}."
+    exe = _exe("ffmpeg")
+    if not exe:
+        return _NO_FFMPEG
+    tmp = os.path.splitext(full)[0] + "-frame.part.png"
+    try:
+        subprocess.run([exe, "-hide_banner", "-loglevel", "error", "-ss", at, "-i", full, "-frames:v", "1", tmp], capture_output=True, timeout=120)
+    except (OSError, subprocess.SubprocessError):
+        return "ffmpeg did not finish."
+    if not os.path.exists(tmp) or os.path.getsize(tmp) == 0:
+        if os.path.exists(tmp):
+            os.remove(tmp)
+        return f"There is no frame at {at} in {_short(full)}. Is the video that long?"
+    os.replace(tmp, out)
+    return f"Saved the frame at {at} as {_short(out)}."
+
+
 def _has_sound(path):
     """True when the video has an audio stream (ffprobe), False when not or when ffprobe cannot say."""
     exe = _exe("ffprobe")
@@ -431,6 +461,9 @@ ROUTES = (
      lambda m: m.group(1) + "\t" + (m.group(2) or "mp3")),
     (re.compile(r"^(?:compress|shrink) (?:the |my )?" + _EXT + "$", _I), "compress_video", lambda m: m.group(1)),
     (re.compile(r"^make (?:the |my )?" + _EXT + " smaller$", _I), "compress_video", lambda m: m.group(1)),
+    (re.compile(r"^(?:grab|save|get|take|pull) (?:a |the )?(?:still|frame|still frame|screenshot|picture) (?:of|from) (?:the |my )?" + _EXT + r"(?: at (\S+))?$", _I), "still_frame",
+     lambda m: m.group(1) + ("\t" + m.group(2) if m.group(2) else "")),
+    (re.compile(r"^screenshot (?:the |my )?" + _EXT + r" at (\S+)$", _I), "still_frame", lambda m: "\t".join(m.groups())),
     (re.compile(r"^(?:mute|silence) (?:the |my )?" + _EXT + "$", _I), "mute_video", lambda m: m.group(1)),
     (re.compile(r"^(?:remove|strip|drop) the (?:audio|sound) (?:from|of) (?:the |my )?" + _EXT + "$", _I), "mute_video", lambda m: m.group(1)),
     (re.compile(r"^(?:make|turn) (?:a |the |my )?(?:gif|animation) (?:of|from|out of) (?:the |my )?" + _EXT + r" from (\S+) (?:to|until) (\S+)$", _I), "make_gif", lambda m: "\t".join(m.groups())),

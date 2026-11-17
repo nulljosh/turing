@@ -1,5 +1,7 @@
 # Progress log
 
+- 2026-11-17: v7.25.0 🎉 She grabs a still from a video: "grab a still from ~/Movies/a.mp4 at 0:12" (or "screenshot a.mp4 at 30", or no time for the first frame) saves a-frame.png beside it. Checked on a real clip, and a time past the end gets a plain answer, not an empty file.
+  v7.25.0 · 168 tools · 944 tests · docs coverage 100% · laws all hold · biggest app/tools_logo.py 650 · actions 293/293 · parity 293/293 · util_diff 288/288
 - 2026-11-17: v7.24.0 🎉 She compresses video: "compress ~/Movies/a.mp4" or "make my a.mov smaller" makes a-small.mp4 beside it (at most 1280 wide) and says both sizes. A real 1080p clip went from 1.6 MB to 430 KB with its sound. Also: "compress" on a video no longer zips it.
   v7.24.0 · 167 tools · 942 tests · docs coverage 100% · laws all hold · biggest app/tools_logo.py 650 · actions 291/291 · parity 291/291 · util_diff 288/288
 - 2026-11-17: v7.23.2 The landing is the trailer now: real footage of her working fills the hero behind the headline, the new glasses logo opens it, her command bar sits at the bottom like a chat, and Sound on plays her voice. Scrolling no longer kills the live demo on iPhone (only a touch inside the demo takes over, and the reel rests off screen). The colour-shifting glow, the old Watch her work video and the What she can do list are gone; three real screenshots replace the portrait. Docs went from 21 files to 7, README and CLAUDE.md cut to a page each. Kaggle training is fixed: Qwen3.5-2B scored 97.5% in its own check, trained with no Claude.
