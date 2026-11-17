@@ -10,7 +10,9 @@ A major ships only when its roadmap family is finished and checked. A number is 
 
 ## Where things stand
 
-- **Live:** v7.23.0 (0c160ba on origin/main), 166 tools. v7.23.0 makes her write captions by listening: with no .srt or .vtt beside a video she transcribes it with Whisper and adds the track; the first real test came out word for word. make_logo no longer overwrites an earlier logo (new ones get -2, -3). v7.22.3 (6b79fbf) makes a missing local model a reply in write_code and edit_file, never file content. Its test run is green on c7a9556. v7.22.3 makes a missing local model a plain reply in write_code and edit_file, never file content.
+- **Live:** v7.23.1 (a4de1b8 on origin/main; its test run was pending when I checked). 7.23.1 is the landing patch: the hero shows her working (the 30 second voiced trailer under the headline, a muted loop with controls, a soft glow of her paintings and logos behind it), a real glasses logo everywhere (round glasses with a spark in one lens: hero, nav, tab, favicons, app icons), and Gemma 4 E2B first in the nightly Kaggle rotation.
+- **Versioning (Joshua's rule):** the landing is a patch. Only a new ability gets a minor. Loops run to a work list, never to a version number. 7.24.0 never shipped.
+- **Earlier live:** v7.23.0 (0c160ba), 166 tools. v7.23.0 makes her write captions by listening: with no .srt or .vtt beside a video she transcribes it with Whisper and adds the track; the first real test came out word for word. make_logo no longer overwrites an earlier logo (new ones get -2, -3). v7.22.3 (6b79fbf) makes a missing local model a reply in write_code and edit_file, never file content. Its test run is green on c7a9556. v7.22.3 makes a missing local model a plain reply in write_code and edit_file, never file content.
 - **Training runs without Claude:** `.github/workflows/train.yml` plus `training/kaggle/nightly.py` run every 8 hours. Each run logs the finished Kaggle round to `eval/kaggle-nightly.log` and starts the next one, rotating Qwen3.5-2B, Qwen2.5-1.5B and Qwen3.5-0.8B. The KAGGLE_API_TOKEN secret is set and the workflow is green. Next base to add: Gemma 4 E2B.
 - **Trailer: done.** 30 seconds, 13 real things she did on this Mac (opens Calculator and Chess, types in TextEdit, finds a file in Finder, writes code, paints the Mona Lisa twice, makes two logos, captions a video by ear, answers three questions), staged on black, narrated in her own ElevenLabs voice, a tick on every cut. Joshua graded the silent version A-; the voiced one is the A+ pass. Files and scripts in ~/Movies/turing-trailer (hero-muted.mp4 is the one for the hero).
 - Previous live: v7.22.2, 166 tools. v7.22.0 added caption_video: an .srt or .vtt beside a video becomes a captions track, nothing burned in (Homebrew's ffmpeg has no libass or drawtext). v7.22.1 fixed the landing chat typing and queues messages behind a Send now button. v7.22.2 brought the footer engraving, the orb logo and the diner painting in the demo reel.
@@ -27,14 +29,12 @@ A major ships only when its roadmap family is finished and checked. A number is 
 - **Sealed sets** heldout4, heldout7 and heldout12 are read as counts only, never as text.
 
 ## Next, in order
-1. Redo the logo with the /icon skill: a bold, original mark in her terracotta, made with Icon Composer, then the landing, favicons and app icon together. Joshua says the current orb with five voice bars still sucks.
-2. Put ~/Movies/turing-trailer/hero-muted.mp4 under the landing hero headline: muted loop, tap to unmute. Joshua said Claude decides. Then release it.
-3. Score each finished Kaggle round (logged in eval/kaggle-nightly.log) against run 23 on the pooled dev sets, never a sealed set. Ship only if it clears the 8.0 bar below. A miss gets written here the same day.
-4. Add Gemma 4 E2B to the nightly rotation in training/kaggle/nightly.py.
-5. Teach from her misses (every wake, step 6). ~/.samantha/misses.jsonl is still absent (no real chats since 7.21.1).
-6. Read heldout12 once, as counts, only if the round clears the bar.
-7. Video family leftovers, then the next roadmap minor, one ability per minor.
-8. Audio (Yeti) waits on Joshua clicking the microphone prompt once.
+
+1. Video abilities, one minor each: compress a video, then grab a still from one, then put a song under one.
+2. Score the Gemma 4 E2B Kaggle round against run 23 on the pooled dev sets (never a sealed set) when it lands in eval/kaggle-nightly.log. Ship only if it clears the 8.0 bar below. A miss gets written here the same day.
+3. Teach from her misses (every wake, step 6). ~/.samantha/misses.jsonl is still absent (no real chats since 7.21.1).
+4. Read heldout12 once, as counts, only if the round clears the bar.
+5. Audio (Yeti) waits on Joshua clicking the microphone prompt once.
 
 ## The ladder
 
