@@ -1,57 +1,46 @@
-# Turing loop handoff (2026-11-17)
+# Turing loop handoff (2026-11-17, evening)
 
 ## What the loop is
 
-A self-paced `/loop` that climbs the roadmap one earned major at a time: 8.0 now, then 9.0 and 10.0. It runs inside a Claude Code session, wakes every 20 to 30 minutes, ships one small slice per wake, and goes quiet when there is nothing safe to do. It never uses cron, launchd or a cloud routine. The Mac stays awake because Amphetamine is holding it.
+A self-paced `/loop` that works down the work list in this file, one small slice per wake, and goes quiet when there is nothing safe to do. It runs inside a Claude Code session, wakes every 20 to 30 minutes, and never uses cron, launchd or a cloud routine. The Mac stays awake because Amphetamine is holding it.
 
-Every tick also tests security, reliability, performance, stability and efficiency. The loop does not call a major done until those five reach A+. "Fully shipped" means the tag, the release, the deploy and a live check.
+Every tick tests security, reliability, performance, stability and efficiency. A slice is not done until those five reach A+. "Fully shipped" means the tag, the GitHub release, the deploy and a live check.
 
-A major ships only when its roadmap family is finished and checked. A number is never bumped to hit a target, and a bar never moves after a measurement.
+The loop runs to the end of the work list, never to a version number. A version ships when its work is finished and checked. A number is never bumped to hit a target, and a bar never moves after a measurement.
 
 ## Where things stand
 
-- **Live on main (2026-11-17):** v7.25.1. Since 7.23.1: 7.23.2 made the trailer the hero, kept the demo alive while scrolling, and cut docs to 7 files. 7.24.0 added compress_video (a smaller copy of any video) and still_frame (one frame of a video as a picture). 7.25.1 built the trailer and screenshots without desktop test files. The 7.24.0 'never shipped' line below is out of date.
-- **Earlier live:** v7.23.1 (a4de1b8 on origin/main). Its deploy check failed on a stale version in web/stats.json; fixed in 59e891c, which says 7.23.1. 7.23.1 is the landing patch: the hero shows her working (the 30 second voiced trailer under the headline, a muted loop with controls, a soft glow of her paintings and logos behind it), a real glasses logo everywhere (round glasses with a spark in one lens: hero, nav, tab, favicons, app icons), and Gemma 4 E2B first in the nightly Kaggle rotation.
-- **Versioning (Joshua's rule):** the landing is a patch. Only a new ability gets a minor. Loops run to a work list, never to a version number. 7.24.0 never shipped.
-- **Earlier live:** v7.23.0 (0c160ba), 166 tools. v7.23.0 makes her write captions by listening: with no .srt or .vtt beside a video she transcribes it with Whisper and adds the track; the first real test came out word for word. make_logo no longer overwrites an earlier logo (new ones get -2, -3). v7.22.3 (6b79fbf) makes a missing local model a reply in write_code and edit_file, never file content. Its test run is green on c7a9556. v7.22.3 makes a missing local model a plain reply in write_code and edit_file, never file content.
-- **Training runs without Claude (not yet green):** `.github/workflows/train.yml` plus `training/kaggle/nightly.py` run every 8 hours. Two problems fixed in code: the log could not push to protected main, so it goes to a `train-log` branch (59e891c); and the first Qwen3.5-2B round scored 0% because fp16 overflowed to NaN from step 1. Now training runs in bf16 or fp32 only, and a round stops at the first NaN (a1ea7bc). Still open: the train workflow failed on a1ea7bc and b163bd4 at the commit-the-log step. `origin/train-log` does not exist yet. The orphan-branch fix (`git rm --cached .` removed from the orphan path) is uncommitted in the working tree, so it is not on origin. A fixed round (kernel v31, Qwen3.5-2B, seed 101) was training at about 3 hours; the nightly job logs its score once the log step works.
-- **Trailer: done.** 30 seconds, 13 real things she did on this Mac (opens Calculator and Chess, types in TextEdit, finds a file in Finder, writes code, paints the Mona Lisa twice, makes two logos, captions a video by ear, answers three questions), staged on black, narrated in her own ElevenLabs voice, a tick on every cut. Joshua graded the silent version A-; the voiced one is the A+ pass. Files and scripts in ~/Movies/turing-trailer (hero-muted.mp4 is the one for the hero).
-- Previous live: v7.22.2, 166 tools. v7.22.0 added caption_video: an .srt or .vtt beside a video becomes a captions track, nothing burned in (Homebrew's ffmpeg has no libass or drawtext). v7.22.1 fixed the landing chat typing and queues messages behind a Send now button. v7.22.2 brought the footer engraving, the orb logo and the diner painting in the demo reel.
-- **Shipped:** the caption-from-transcript work (7.23.0) is in. The old git stash `caption-transcript` still exists; it is not needed any more. Leave it alone unless Joshua says otherwise.
-- **Kaggle works again** (password reset and a new API token, 2026-11-16). The nightly workflow keeps rounds running; a Qwen3.5-2B round is the latest. Score each finished round against run 23 when it lands in eval/kaggle-nightly.log.
-- **LaCie is gone.** The uv cache, the repo's .venv and Ollama's models point at real folders on the internal disk now. The 9B model and the other LaCie data are lost until a new drive. Sealed heldout7 lived only on the LaCie and is lost. heldout12 is in eval/. The internal disk is at 13 GB free after cleanup (target was 20 GB), so check free space before anything over a gigabyte.
-- **Picker:** run 23 (4,052 of 4,455 pooled dev rows) is still the shipped picker. Rounds 27 and 28 did not clearly beat it. The local q35r1 MLX run is superseded by the Kaggle round. 8.0 restarts only with a new idea: a newer base such as the Qwen3.5-2B round, relabeled dev sets, or a different model.
-- **10.0 slice 1 is merged** (3.8.0, PR 577). The Python reference and kernel/picker.c match on all 297 golden sentences. The safety bar is missed: the small picker calls a tool on 115 of 434 not-a-command rows (26 percent), where run 23 manages 22 (5 percent). It stays "a small picker distilled from her". The next slice teaches it to abstain.
-- **Joshua Tree 10.0 tag** still needs the docs and whitepaper refresh and Joshua's real-mic test. Caveat to say every time: the chat rows were written after reading the dev sets' mistakes, so the numbers are tuned to dev; the sealed sets are unread.
-- **9.0 is Joshua's:** it needs his signed iPhone build and the Yeti mic.
-- **Pi shell:** the boot-to-shell flip (docs/ARCHITECTURE.md) still waits for Joshua's go-ahead.
-- **Hero reel:** the web-demo cut was rejected. The real-Mac trailer is done (see above).
-- **Roadmap:** docs/roadmap.md, which the checkpoint's issue sync reads. Issue #107 (Blender family) stays open for "a simple 3D object" and "a logo as 3D text".
-- **Sealed sets** heldout4, heldout7 and heldout12 are read as counts only, never as text.
+- **Live:** v7.26.1 is on origin/main (42cb1c1): the trailer shows her booting Joshua Tree. Its release job was queued at 18:35 UTC.
+- **Video abilities: done.** compress_video (7.24.0), still_frame (7.25.0) and add_music (7.26.0). The roadmap's video track is closed.
+- **Landing:** the trailer plays full-bleed behind the headline, with a Sound on button and her command bar at the bottom. Scrolling no longer kills the live demo on iPhone. The colour glow, the old "Watch her work" video and the "What she can do" list are gone. Three real dithered screenshots replace the Ada portrait. The README shows the new logo.
+- **Docs:** 7 files in docs/ (ARCHITECTURE, TRAINING, SAFETY, FAQ, roadmap, PROGRESS, LOOP-HANDOFF). README and CLAUDE.md are a page each.
+- **Trailer:** 30 seconds, 13 real things she did on this Mac, voiced in her own ElevenLabs voice. It shows no desktop test files and it boots Joshua Tree.
+- **Versioning (Joshua's rule):** a landing change is a patch. Only a new ability gets a minor.
+- **Releases:** v7.23.2 is the latest tag and release. No tag or GitHub release exists yet for v7.24.0, v7.25.0 or v7.25.1, and v7.26.0 and v7.26.1 have none either. Commit 3d9d02f is titled "Release v7.24.0" but it is the 7.25.0 change (still_frame).
+- **Training runs without Claude:** `.github/workflows/train.yml` and `training/kaggle/nightly.py` run every 8 hours. Training is bf16 or fp32 only, and a round stops at the first NaN. The log goes to the `train-log` branch on origin (c9c6f9e). The latest round, Qwen3.5-2B, finished 2026-11-17 17:38 and scored 97.5% on its own 200-row check (sft and dpo both 97.5). It has not been compared with run 23 on the pooled dev sets.
+- **Picker:** run 23 (4,052 of 4,455 pooled dev rows right) is still the shipped picker. Rounds 27 and 28 did not clearly beat it.
+- **10.0 slice 1 is merged** (3.8.0, PR 577). The Python reference and kernel/picker.c match on all 297 golden sentences. The safety bar is missed: the small picker calls a tool on 26 percent of not-a-command rows, where run 23 manages 5 percent. It stays "a small picker distilled from her".
+- **Joshua Tree 10.0 tag** still needs the docs and whitepaper refresh and Joshua's real-mic test.
+- **Disk:** df read 34 GB available on the internal disk at the 2026-11-17 checkpoint. Check before any download over a gigabyte.
+- **LaCie is gone.** The 9B model and the data on it are lost until a new drive. Sealed heldout7 is lost. heldout12 is still in eval/.
+- **Roadmap:** docs/roadmap.md, 31 open items. Issues are in sync (issue #107 stays open for the Blender family).
 
 ## Next, in order
 
-1. Video ability, one minor: put a song under a video. Compress and still frame are done (7.24.0).
-2. Landing asks still open, check each before starting: drop the "What she can do" list (the video shows it); simplify "Run it yourself"; stop her replies mentioning Cloudflare; update the stale README logo. Scrolling killing the demo was fixed in 7.23.2. Docs cut to 7 files was done in 7.23.2.
+1. Backfill the GitHub releases and tags for v7.24.0 (commit 216280a) and v7.25.0 (commit 3d9d02f). If release.yml skipped them, create them by hand, then check v7.25.1, v7.26.0 and v7.26.1 the same way.
+2. Score the Kaggle rounds logged on the `train-log` branch (eval/kaggle-nightly.log) against run 23 on the pooled nine dev sets. Start with the 2026-11-17 Qwen3.5-2B round. Report the pooled right, wrong, past-guard and refused counts next to run 23's, and never read a sealed set to break a tie.
+3. Add a short video card per ability to the landing, only if the trailer alone does not carry compress, still frame and add music.
+4. Keep at least 20 GB free on the internal disk. It read 34 GB at the checkpoint, so re-check before a large download.
 
 ## The ladder
 
 **7.0, remembers and comes to you. Shipped 2026-10-12.** Left over for Joshua: the iPhone reading the iCloud copy needs an iCloud entitlement and a signed build.
 
-**8.0, learns from the big ones.** Distillation: a frontier model writes the hard cases and she learns them. The bar, set before any run so it cannot be bent after: on the sealed heldout12, read once as counts, right picks go above run 19's 801 of 869 pooled rate, right picks refused fall below 2 percent (run 19: 40 of 869, 4.6 percent), and wrong picks past the guard stay at or under 19. Slices, one per wake, sealed sets never read as text:
-1. Done 2026-10-12 on dev set heldout2 (the 844 MB picker fits in free memory): 452 of 500, 15 wrong picks, 7 past the guard, 6 right picks refused (1.9 percent), and the misses are single cases with no common cause (a book-a-call phrasing, "how far away is halloween", "whats inside notes.md"). The sealed refusal rate is higher (4.6 percent) because nobody tuned to those sentences, so the lever is breadth of fresh phrasings across every picker-eligible tool, not a patch for one cause.
-2. Teacher data: write fresh, messy phrasings for every tool a model may pick (not NOT_FOR_MODELS), about 25 tools and 150 rows per wake, as {"text","tool","arg"} batches in the scratchpad, then `training/extra_to_data.py BATCH --out OUT.jsonl` drops anything an eval owns, any tool-name echo and any argument the guard would not run. Never read a sealed set; never copy test phrasing.
-3. Round 24 (Kaggle v24, 2026-10-12) was rejected: heldout2 dev 445 of 500 against the shipped 452, one more wrong pick past the guard, same refusals. The flat teacher batch did not help; the next round should try weighting the teacher rows, or teaching only the tools the dev sets miss, and keep everything else equal. Round on Kaggle (docs/TRAINING.md), then eval/picker_round.sh against dev sets; reject any run that leaks more.
-4. Read heldout12 once, as counts. If the bar is met: ship the picker, whitepaper, HF card with `--model`, 8.0.0. If not, say so and keep the rounds going; never move the bar.
-Check the free memory before any local model run and never run two at once. Kaggle outputs are about 6 GB and merged models 3 GB, so check the internal disk before a download. Only the converted 844 MB MLX picker needs to be local, and only to be scored.
+**8.0, learns from the big ones.** Distillation: a frontier model writes the hard cases and she learns them. The bar was set before any run and cannot be bent after: on the sealed heldout12, read once as counts, right picks go above run 19's 801 of 869 pooled rate, right picks refused fall below 2 percent (run 19: 4.6 percent), and wrong picks past the guard stay at or under 19. Work for 8.0 is the Kaggle rounds in item 2 above, the teacher batches for every tool a model may pick (`training/extra_to_data.py`, never a sealed or dev phrasing), and her own misses (`~/.samantha/misses.jsonl`) labelled into rows each wake. Check free memory before any local model run and never run two at once.
 
-**9.0, in your pocket.** The iPhone as a thin client to the Mac over his own network, voice first. Needs a signed device build and the Yeti mic (the Mac mini has none). Joshua-gated.
+**9.0, in your pocket.** The iPhone as a thin client to the Mac over his own network, voice first. Needs a signed device build and the Yeti mic. Joshua-gated.
 
-**10.0, her own home.** Her picker in freestanding C on the Joshua Tree kernel, checked in QEMU with the network off. Joshua Tree repo, branches and PRs, draft until ci-local is green.
-
-The 10.0 bar, written 2026-10-12 before any measurement. A 1.5B model cannot run in the i386 kernel, so what ships is a small picker distilled from her: integer-only weights trained on training rows alone (never a dev or sealed row), run by freestanding C. It earns the name "her picker in C" only if all three hold. (1) Parity: the C picks match the Python reference on every golden sentence, 100 percent, checked headless in QEMU with the network off (`-nic none`), the check failing when the C is reverted. (2) Accuracy: on the pooled nine dev sets (4,455 rows) the tool-level right rate is at least 80 percent (3,564 rows), reported next to run 23's 4,052. Arguments stay with the guarded path, only the tool is picked. (3) Safety: a sentence the reference calls out of scope (tool null) is never turned into a tool call at a higher rate than run 23 manages, reported as counts. If a bar is missed, say so and keep the name "small picker"; never move the bar. Slices: a Python reference and its dev score, the C port with its QEMU check, then the Joshua Tree shell command and docs. Joshua Tree work goes in a worktree off fresh origin/main (no "samantha" in the path), a branch and a draft PR, ci-local green before ready.
-
-10.0 slice 1 done 2026-10-12: Joshua Tree PR 577 (draft, 3.8.0). Python reference `training/smallpicker/ref.py` (hashed words and letter triples, 2048 buckets, margin perceptron, int8 weights pruned to 15,571, 119 classes) scores 3,820 of 4,455 tool picks on the nine dev sets, 85.8 percent against the 80 percent bar (run 23, tool and argument together, got 4,052). The C in `kernel/picker.c` matches it on all 297 golden sentences in QEMU with `-nic none`, and the check fails when the C is changed. It costs about 57KB of the kernel's room (30KB left). Merged as 3.8.0 (PR 577, ci-local green). The safety bar (3) is MISSED, as above. Next slice: teach it to abstain (a null margin tuned on training rows only, or more not-a-command rows in training), re-measure the three bars, keep the 80 percent right-rate. The 10.0 tag waits on the whole family.
+**10.0, her own home.** A small picker in freestanding C on the Joshua Tree kernel, checked in QEMU with the network off. The three bars were written before any measurement: (1) parity, the C picks match the Python reference on every golden sentence; (2) accuracy, at least 80 percent tool-level right on the pooled nine dev sets (4,455 rows), reported next to run 23's 4,052; (3) safety, a sentence the reference calls out of scope is never turned into a tool call at a higher rate than run 23, reported as counts. If a bar is missed, say so and keep the name "small picker". Next slice: teach it to abstain, re-measure all three bars, keep the 80 percent right rate. Joshua Tree work goes in a worktree off fresh origin/main, a branch and a draft PR, with ci-local green before ready.
 
 ## Pace and stops
 
@@ -59,40 +48,41 @@ The 10.0 bar, written 2026-10-12 before any measurement. A 1.5B model cannot run
 - Under 80 percent weekly: a wake every 20 to 30 minutes, one slice per wake.
 - 80 to 84 percent: one wake an hour, CI fixes and checks only.
 - 85 percent weekly: stop the loop, run /save, and never go past it.
-- One Haiku subagent at a time, never a fan-out, and only for a slice that is code. Main session plans and merges.
+- One Haiku subagent at a time, never a fan-out, and only for a slice that is code. The main session plans and merges.
 - A wake with nothing to do says so in one line and sleeps longer. Nothing is invented to look busy.
 
 ## Every wake
 
-1. `git pull --rebase`, then `gh run list`: any red check is fixed before anything else.
+1. `git pull --rebase`, then `gh run list`. Any red check is fixed before anything else.
 2. Read the usage line and pick the pace above.
-3. Take the next ladder item. Build it in the smallest slice that ships.
-4. Gate every push on exit codes: `scratchpad/gate.sh` style, the full CI set, with `./.venv/bin/python` (the shell's python3 is 3.9). Write python output to a file, never through grep.
-5. Test the slice on the five bars: security, reliability, performance, stability and efficiency. Log the grade. A bar below A+ is the next slice.
+3. Take the next item from "Next, in order", then the next ladder slice. Build it in the smallest slice that ships.
+4. Gate every push on exit codes, with `./.venv/bin/python` (the shell's python3 is 3.9). Write python output to a file, never through grep.
+5. Test the slice on the five bars and log the grade. A bar below A+ is the next slice.
 6. Commit by exact path, push, then check every workflow run (test, release, deploy) and the live `/stats.json`.
-7. Teach her what she missed: if `~/.samantha/misses.jsonl` or `~/.samantha/feedback.jsonl` grew since the last wake, label each new line as {"text","tool","arg"} (the tool she should have used, or null when no tool fits) into a scratchpad batch, run `training/extra_to_data.py BATCH --out training/teacher_batches/misses-DATE.jsonl`, and log the count here. Never label a sealed or dev-set phrasing. This is the recursive half of 8.0: her own misses become the next round's rows.
+7. Teach her what she missed: if `~/.samantha/misses.jsonl` or `~/.samantha/feedback.jsonl` grew since the last wake, label each new line as {"text","tool","arg"} in a scratchpad batch, run `training/extra_to_data.py BATCH --out training/teacher_batches/misses-DATE.jsonl`, and log the count here. Never label a sealed or dev-set phrasing.
 8. Rewrite "Where things stand" and "Next, in order" in this file so a fresh session can pick up cold.
 9. One line to Joshua only when something shipped, broke, or needs him.
 
 ## Hard-won rules
 
 - A Kaggle output download of the 3 GB model breaks with IncompleteRead about half the time. Fetch only the merged model, in a retry loop: `uvx kaggle kernels output OWNER/KERNEL -p DIR -o -q --file-pattern 'hands-merged/'`, up to six tries with a 20 second sleep, and trust only "DL rc=0" plus a 3.1 GB `model.safetensors`.
-- Compare rounds on the pooled nine dev sets, never one set, and treat anything under about 25 rows as noise. Never read a sealed set to break a tie.
-- Joshua Tree PRs: work in a worktree off fresh `origin/main` (no "samantha" in the path); `VERSION`, `landing/version.txt` and `landing/index.html` conflict on every main move, so take main's side and set the new number; regenerate `docs/TESTING.md` with `tools/gen/testing-doc.py`; new check scripts use `mktemp -d`, never a fixed /tmp path (tmp-paths-check); every new source file gets an ARCHITECTURE row; `git push` runs a fast hook only, `tools/ci-local.sh` must pass before `gh pr ready`.
-- Before `ci-local`, run `pgrep -fl "ci-suite|ci-local|qemu-system"`. Another session's QEMU is not mine: never kill it. If it is there and Joshua says hurry, run anyway and rerun only a shard that fails; kill only processes whose cwd is my own worktree.
-- Python in a pipeline: write results to a file; numpy in-place masking through the builtin `abs()` once flipped signs silently, so use `np.where(np.abs(x) < t, 0, x)`.
+- Compare rounds on the pooled nine dev sets, never one set, and treat anything under about 25 rows as noise.
+- Joshua Tree PRs: work in a worktree off fresh `origin/main` (no "samantha" in the path). `VERSION`, `landing/version.txt` and `landing/index.html` conflict on every main move, so take main's side and set the new number. Regenerate `docs/TESTING.md` with `tools/gen/testing-doc.py`. New check scripts use `mktemp -d`, never a fixed /tmp path. Every new source file gets an ARCHITECTURE row. `tools/ci-local.sh` must pass before `gh pr ready`.
+- Before `ci-local`, run `pgrep -fl "ci-suite|ci-local|qemu-system"`. Another session's QEMU is not mine: never kill it. Kill only processes whose cwd is my own worktree.
+- Python in a pipeline: write results to a file. numpy in-place masking through the builtin `abs()` once flipped signs silently, so use `np.where(np.abs(x) < t, 0, x)`.
 - The kernel's room is shared: `tools/checks/bss-margin-check.py` wants 16KB free. The picker may use about 40KB of it; say the number in the PR.
-- When a major bar is missed, write the miss in this file the same day. Never move a bar after a measurement.
+- When a bar is missed, write the miss in this file the same day. Never move a bar after a measurement.
 
 ## Needs Joshua
 
 - Clicking any macOS permission prompt (she never does).
 - The Pi shell flip, and a Pi re-test after it.
 - iCloud entitlement, signed device build, App Store submission at $1 (name through the asc-name-creator skill, privacy URL, age rating, review notes).
+- A new drive for the LaCie data, if the 9B model is wanted back.
 - Anything that spends money or posts publicly.
 
 ## Restart prompt
 
 ```
-/loop Turing to v8.0: earn the 8.0 picker bar (Kaggle round on a newer base, sealed heldout12 read once as counts), ship the next video ability as a minor, and each tick test for security, reliability, performance, stability and efficiency until A+; fully shipped (tag, release, deploy, live check). Stop at 85% weekly usage and /save.
+/loop Turing toward 8.0, run to the end of the work list in docs/LOOP-HANDOFF.md (never a version target). Each tick QA'd and fully shipped. Stop at 85% weekly usage and /save.
 ```
