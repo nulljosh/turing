@@ -10,7 +10,7 @@ The loop runs to the end of the work list, never to a version number. A version 
 
 ## Where things stand
 
-- **Live:** v8.0.0 (2026-11-18): run 29 is the picker (nightly Qwen2.5-1.5B), the 7.27 guard refuses half as many right picks, sealed heldout15 read once and passed all three 8.0 bars. heldout12 and heldout15 are both spent; the next major needs a fresh sealed set. run 23 is kept at models/run23-mlx.
+- **Live:** v7.27.0 (2026-11-18): the guard refuses half as many right picks. **8.0 is ready, not shipped:** run 29 (nightly Qwen2.5-1.5B) passed all three 8.0 bars on sealed heldout15 (94.0 percent right, 0.3 refused, 3 past the guard). It lives at models/rnext-mlx (RUN 29, gitignored) and waits on Joshua's `env -u HF_TOKEN uvx --from huggingface_hub hf auth login`; then `hf upload trommatic/samantha-hands-1.5b-mlx models/rnext-mlx .`, HANDS_RUN to 29, VERSION 8.0.0. heldout12 and heldout15 are spent.
 - **Video abilities: done.** compress_video (7.24.0), still_frame (7.25.0) and add_music (7.26.0). The roadmap's video track is closed.
 - **Landing:** the trailer plays full-bleed behind the headline, with a Sound on button and her command bar at the bottom. Scrolling no longer kills the live demo on iPhone. The colour glow, the old "Watch her work" video and the "What she can do" list are gone. Three real dithered screenshots replace the Ada portrait. The README shows the new logo.
 - **Docs:** 7 files in docs/ (ARCHITECTURE, TRAINING, SAFETY, FAQ, roadmap, PROGRESS, LOOP-HANDOFF). README and CLAUDE.md are a page each.
