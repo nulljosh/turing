@@ -1,1 +1,2 @@
 2026-11-17 17:38 complete base=Qwen/Qwen3.5-2B sft=97.5 dpo=97.5
+2026-11-18 17:15 complete base=Qwen/Qwen2.5-1.5B-Instruct sft=97.5 dpo=97.5
