@@ -247,8 +247,10 @@ class AgentGrounding(unittest.TestCase):
         read_tab/read_page, not read_document; weather's own topic leaking into web_search; date_math
         needing a real argument. Canonical phrasings for the real tool still pass."""
         self.assertTrue(tools._sound("calculate", "8*9", "calculate 8*9"))
-        self.assertFalse(tools._sound("calculate", "2+2", "what is 2+2"))
-        self.assertFalse(tools._sound("calculate", "10 times 7", "what is 10 times 7"))
+        # 7.27: calculate() reads spoken operators now, so a sum that works out runs even after "what is"
+        self.assertTrue(tools._sound("calculate", "2+2", "what is 2+2"))
+        self.assertTrue(tools._sound("calculate", "10 times 7", "what is 10 times 7"))
+        self.assertFalse(tools._sound("calculate", "5 km in miles", "what's 5 km in miles"))
         self.assertFalse(tools._sound("calculate", "100 fahrenheit", "how many celsius is 100 fahrenheit"))
         self.assertTrue(tools._sound("open_app", "chrome", "open chrome"))
         self.assertFalse(tools._sound("open_app", "reddit", "pull up reddit"))
