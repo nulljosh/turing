@@ -1,4 +1,4 @@
-# Turing loop handoff (2026-11-17, evening)
+# Turing loop handoff (2026-11-18, morning)
 
 ## What the loop is
 
@@ -23,7 +23,7 @@ The loop runs to the end of the work list, never to a version number. A version 
 - **Joshua Tree 10.0 tag** still needs the docs and whitepaper refresh and Joshua's real-mic test.
 - **Disk:** df read 34 GB available on the internal disk at the 2026-11-17 checkpoint. Check before any download over a gigabyte.
 - **LaCie is gone.** The 9B model and the data on it are lost until a new drive. Sealed heldout7 is lost. heldout12 is still in eval/.
-- **Roadmap:** docs/roadmap.md, 31 open items. Issues are in sync (issue #107 stays open for the Blender family).
+- **Roadmap:** docs/roadmap.md, 30 open items. Issues are in sync (issue #107 stays open for the Blender family).
 
 ## Next, in order
 
