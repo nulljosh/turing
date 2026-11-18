@@ -42,7 +42,7 @@ jobs:
         if: steps.token.outputs.ok == '1'
         run: |
           [ -f eval/kaggle-nightly.log ] || exit 0  # a busy kernel logs nothing
-          cp eval/kaggle-nightly.log /tmp/nightly.log
+          mv eval/kaggle-nightly.log /tmp/nightly.log  # moved, not copied: train-log tracks it, so a leftover copy blocks the switch
           git config user.name "turing-train"
           git config user.email "turing-train@users.noreply.github.com"
           if git rev-parse -q --verify origin/train-log >/dev/null; then git switch -q -c train-log origin/train-log; else git switch -q --orphan train-log; fi  # an orphan starts with an empty index

@@ -826,7 +826,7 @@
     // images, her page, and back to the start
     'grayscale cat.png'];  // no scrolling or page resets in the reel: it yanked the page out from under a visitor
   // more phrasings for the input's autocomplete only. The reel stays short.
-  var MORE = ['scroll to the results', 'reset the page', 'boot joshua tree', 'what did joshua tree say', 'type ls into joshua tree and press enter', 'screenshot joshua tree', 'what is joshua tree showing', 'stop joshua tree', 'what are my reminders', 'search notes for eggs', 'what apps are running', 'turn on dark mode', 'git status', 'recent commits', 'take a note pick up milk', 'set a timer for 1 minute', 'open chrome and go to github.com', 'change the title to Hello there', 'draw a robot reading a book', 'draw a sailboat on a calm lake', 'imagine a city on the moon', 'do a barrel roll', 'tip on 45', 'roman numerals for 2026', 'sha256 of turing', 'base64 encode hello', 'morse sos', 'flip a coin', 'generate a strong password',
+  var MORE = ['scroll to the questions', 'reset the page', 'boot joshua tree', 'what did joshua tree say', 'type ls into joshua tree and press enter', 'screenshot joshua tree', 'what is joshua tree showing', 'stop joshua tree', 'what are my reminders', 'search notes for eggs', 'what apps are running', 'turn on dark mode', 'git status', 'recent commits', 'take a note pick up milk', 'set a timer for 1 minute', 'open chrome and go to github.com', 'change the title to Hello there', 'draw a robot reading a book', 'draw a sailboat on a calm lake', 'imagine a city on the moon', 'do a barrel roll', 'tip on 45', 'roman numerals for 2026', 'sha256 of turing', 'base64 encode hello', 'morse sos', 'flip a coin', 'generate a strong password',
               'make a uuid', 'random number between 1 and 100', 'count words in the quick brown fox', 'reverse the text hello', 'what day is it',
               'convert 5 km to miles', 'calculate 15% of 80', 'factor 84', 'time in london', 'days until halloween', 'how much disk space do i have', 'edit notes.md: make it shorter', 'write a python script that prints the date to today.py'];
   var reelAt = 0;
@@ -843,8 +843,8 @@
   }
   function idle() {
     stopReel();
-    if (reduceMotion || isLive || document.hidden || !demoSeen) return;
-    idleTimer = setTimeout(function () { if (!busy) { reel = true; desk.playing = false; nextReel(); } }, Date.now() - lastUser < 90000 ? 30000 : reelAt ? 6000 : 500);  // a visitor's own drawing stays 30 seconds
+    if (reduceMotion || isLive || document.hidden) return;
+    idleTimer = setTimeout(function () { if (busy) return idle(); reel = true; desk.playing = false; nextReel(); }, Date.now() - lastUser < 90000 ? 30000 : reelAt ? 6000 : 500);  // a visitor's own drawing stays 30 seconds
   }
 
   function startDemo() {
@@ -862,12 +862,12 @@
     stopReel();
     if (e.key === 'Enter') { e.preventDefault(); lastUser = Date.now(); send(null, idle); }
   });
-  // Only a touch inside the demo takes over. A page-wide touchstart fired on every iPhone scroll and killed the reel.
+  // Only a tap inside the demo takes over, never a scroll: on iPhone a thumb scrolling the page lands on the demo,
+  // and touchstart/pointerdown fired on that and killed the reel. A click only fires on a real tap. Scrolling never pauses it.
   var demoBox = $('demo');
-  ['pointerdown', 'touchstart'].forEach(function (ev) { demoBox.addEventListener(ev, function () { if (reel) { stopReel(); input.value = ''; } idle(); }, { capture: true, passive: true }); });
-  // Off screen, the reel rests (no painting nobody sees while you scroll); back on screen, it picks up again.
-  var demoSeen = true;
-  if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { demoSeen = es[0].isIntersecting; if (!demoSeen) stopReel(); idle(); }).observe(demoBox);
+  function takeOver() { if (reel) { stopReel(); input.value = ''; } idle(); }
+  demoBox.addEventListener('click', takeOver);
+  input.addEventListener('focus', takeOver);
   document.addEventListener('visibilitychange', idle);
 
   // ---- borrowed from Joshua Tree's landing: sections ease in on scroll, and the demo can fill the screen ----

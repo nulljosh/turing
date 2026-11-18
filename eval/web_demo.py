@@ -59,7 +59,7 @@ STEPS = [
     ("paint the mona lisa as a mosaic", "mosaic", lambda p: p.wait_for_function("document.getElementById('paint-title').textContent === 'Mona Lisa'", timeout=8000) is not None),
     ("paint the eniac", "ENIAC", lambda p: p.wait_for_function("document.getElementById('paint-title').textContent === 'The ENIAC'", timeout=8000) is not None),
     ("dark mode", "Lights off.", lambda p: p.evaluate("document.documentElement.dataset.theme") == "dark"),
-    ("scroll to the results", "Scrolled to Results.", lambda p: p.evaluate("window.scrollY") > 200),
+    ("scroll to the questions", "Scrolled to Questions.", lambda p: p.evaluate("window.scrollY") > 200),
     ("go to github", "Opened https://github.com", None),
     ("hide the questions", "Hid Questions", lambda p: p.evaluate("[...document.querySelectorAll('section')].filter(s => s.style.display === 'none').length") == 1),
     # nobody gets to inject markup through her, by rule or by model

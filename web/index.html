@@ -170,25 +170,21 @@
       .card.full .desk-space{height:min(56vh,600px)}
       .card.full canvas{max-height:52vh}
       #chat-input,#chat-send{min-height:44px;box-sizing:border-box}
-  /* Footer directory: four columns, two-by-two on phones. */
+  /* Footer: a rule, one row of links, the engraved plate. */
   footer .foot-rule { display: flex; align-items: center; gap: 16px; max-width: 880px; margin: 0 auto; padding: 14px 20px 28px; font-size: 13px; letter-spacing: .06em; font-weight: 500; color: var(--muted); }
   footer .foot-rule::before { content: ""; order: 1; flex: 1; height: 1px; background: var(--line); }
   footer .foot-rule > :first-child { order: 0; }
   footer .foot-rule > :last-child { order: 2; }
   @media (max-width: 520px) { footer .foot-rule { flex-wrap: wrap; justify-content: center; gap: 10px 16px; } footer .foot-rule::before { order: -1; flex-basis: 100%; } }
-  .foot-dir { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px 24px; max-width: 880px; margin: 0 auto; padding: 0 20px 28px; text-align: left; }
-  .foot-col h3 { margin: 0 0 8px; font-size: 12px; font-weight: 600; color: var(--fg); letter-spacing: 0.02em; }
-  .foot-col ul { list-style: none; margin: 0; padding: 0; }
-  .foot-col a { position: relative; display: inline-block; padding: 5px 0; margin: 0; color: var(--muted); text-decoration: none; font-size: 13px; line-height: 1.35; }
-  .foot-col a::after { content: ""; position: absolute; top: 50%; left: 0; transform: translateY(-50%); width: 100%; height: 44px; min-width: 44px; }
-  .foot-col a:hover { color: var(--fg); text-decoration: underline; }
+  .foot-dir { max-width: 880px; margin: 0 auto; padding: 0 20px 20px; }
+  .foot-dir a { display: inline-flex; align-items: center; min-height: 44px; color: var(--muted); text-decoration: none; font-size: 13px; }
+  .foot-dir a:hover { color: var(--fg); text-decoration: underline; }
   .foot-bar { max-width: 880px; margin: 0 auto; padding: 18px 20px 0; border-top: 1px solid var(--line); }
   .foot-bar .foot-meta { margin: 0; text-align: left; color: var(--muted); font-size: 12.5px; line-height: 1.9; }
   .foot-bar .foot-meta a { color: var(--muted); }
   /* Footer plate: an engraved language model writing, drawn by one fragment shader (the same scene as Atlin's footer, hatched in her
      terracotta on the page color). No images, no gradients: every tone is ink lines. Hidden without WebGL. */
   .foot-scene { display: block; width: 100%; height: clamp(200px, 30vw, 360px); margin-top: 24px; --scene-paper: var(--bg); --scene-ink: var(--accent); }
-  @media (max-width: 700px) { .foot-dir { grid-template-columns: repeat(2, 1fr); } }
 
       a{color:inherit;text-decoration-color:var(--ember);text-decoration-thickness:2px;text-underline-offset:3px}
       a:hover{color:var(--ember-ink)}
@@ -198,9 +194,6 @@
       #chat-send:hover{opacity:.86}
       #chat-send:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
       #chat-input:focus{outline:2px solid var(--ember);outline-offset:1px}
-      .bar-fill.now{background:var(--ember)}
-      .stat-value{color:var(--fg)}
-      .stat-tile:hover{border-color:var(--ember)}
 
       .bg-nodes{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
       .bg-nodes svg{position:absolute;opacity:.06;animation:drift 40s ease-in-out infinite;
@@ -212,7 +205,6 @@
       @keyframes drift{0%,100%{translate:0 0}50%{translate:14px -18px}}
       @media (prefers-reduced-motion:reduce){.bg-nodes svg,.dot.training,.wrap.roll{animation:none}}
 
-      .graph-explainer{font-size:13px;color:var(--muted);margin-top:10px}
 
       /* Pill tab rows: benchmark switcher and ability switcher. */
       .tab-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
@@ -220,29 +212,12 @@
         background:transparent;color:var(--muted);cursor:pointer;min-height:40px}
       .tab[aria-selected="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
       .tab:hover:not([aria-selected="true"]){border-color:var(--ember);color:var(--fg)}
-      .bench-caption{font-size:14px;color:var(--muted);margin-top:10px}
-      #bench-canvas{width:100%;height:180px;display:block}
 
       /* Pull quotes: narrower figure between sections, verbatim lines only. */
       .pull-quote{max-width:424px;margin:64px auto;padding:0 20px;text-align:center}
       .pull-quote blockquote{margin:0;font-size:21px;line-height:1.45;font-weight:500;letter-spacing:-0.005em;color:var(--fg)}
       .pull-quote cite{display:block;margin-top:14px;font-size:13px;font-style:normal;color:var(--muted)}
 
-      .stat-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px;margin-top:16px}
-      .stat-tile{border:1px solid var(--line);border-radius:10px;padding:16px;text-align:center;background:var(--card-bg)}
-      .stat-value{font-size:28px;font-weight:600;letter-spacing:-0.02em;font-variant-numeric:tabular-nums;margin:0 0 4px;color:var(--fg)}
-      .stat-label{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin:0}
-      .bar-container{display:flex;align-items:center;gap:8px;margin-top:4px}
-      .bar{flex:1;height:14px;background:var(--line);border-radius:3px;overflow:hidden}
-      .bar-fill{height:100%;background:var(--accent);transition:width 0.2s}
-      .bar-label{font-size:12px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--fg);min-width:40px;text-align:right}
-      .docs-block{margin-top:16px;padding:16px;border:1px solid var(--line);border-radius:10px}
-      .docs-title{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin:0 0 8px}
-      .docs-bar{margin-bottom:12px}
-      .docs-checklist{font-size:13px;line-height:1.6;color:var(--fg)}
-      .docs-item{margin:4px 0}
-      .docs-present::before{content:"\2713 ";color:#2e9e4a}
-      .docs-missing::before{content:"\25CB ";color:var(--muted)}
       .limitations{margin-top:16px;padding:16px;border:1px solid var(--line);border-radius:10px;font-size:13px;line-height:1.6;color:var(--fg)}
       .limitations-title{font-weight:600;margin:0 0 8px}
       .chat-tool-call{font-variant-numeric:tabular-nums;font-weight:500;font-size:12px;color:var(--muted);margin:8px 0 4px}
@@ -290,8 +265,7 @@
       .tk-k{color:var(--tk-k)}.tk-s{color:var(--tk-s)}.tk-n{color:var(--tk-n)}.tk-c{color:var(--tk-c)}
       .chat-logo svg{width:160px;height:160px}
       @media (max-width: 500px) {
-        .stat-tiles{grid-template-columns:repeat(3,1fr);gap:8px}
-        .hero{padding:40px 16px 48px}
+          .hero{padding:40px 16px 48px}
         section{margin-top:56px}
         .pull-quote{margin:48px auto}
       }
@@ -424,7 +398,6 @@
         <div class="tshots">
           <img src="shots/shot1.jpg" alt="Samantha opened Chess on a real Mac" width="960" height="540" loading="lazy">
           <img src="shots/shot2.jpg" alt="Samantha typed into TextEdit: Hi, I'm Samantha. I drive this Mac for you" width="960" height="540" loading="lazy">
-          <img src="shots/shot3.jpg" alt="Samantha showed the file she wrote in Finder" width="960" height="540" loading="lazy">
         </div>
         <div class="tcells">
           <div class="tcell"><p class="tband-label">Private</p><h3>Nothing leaves</h3><p>She runs on your Mac. No account, no server reading along.</p></div>
@@ -468,62 +441,12 @@
         </div>
       </section>
 
-      <section id="results-section">
-        <div class="col"><h2>Results</h2>
-        <div id="results-placeholder" style="font-size:13px;color:var(--muted)">Loading results...</div>
-        </div>
-      </section>
-
-      <section>
-        <div class="col"><details class="more" ontoggle="window.dispatchEvent(new Event('resize'))"><summary>How she trained: the loss curve</summary></div>
-        <div class="wide">
-        <div class="card">
-          <div id="chart-wrap">
-            <canvas id="chart" width="600" height="220"></canvas>
-          </div>
-          <div class="meta">
-            <span>Base: <b id="base">, </b></span>
-            <span>Iterations: <b id="iters">, </b></span>
-            <span>Latest train loss: <b id="loss">, </b></span>
-          </div>
-          <p class="graph-explainer">Round six of the picker, the one she runs today. The line is training loss, the dots are validation loss. Lower is better. The first validation point, logged before training started, is left off so the real curve is readable.</p>
-        </div>
-        </div>
-        </details>
-      </section>
-
-      <section id="about">
-        <div class="col">
-        <h2>About</h2>
-        <details class="more"><summary>How she was made</summary>
-        <p>Samantha is a LoRA fine-tune of a small open base model, trained on the project's own Obsidian wiki and READMEs so it actually knows the codebase and writes in house voice. No from-scratch pretraining, that path was tried once (project code name Arthur) and produced gibberish. This time: small model, real data, short loop, iterate.</p>
-        </details>
-        <details class="more"><summary>Where this is going</summary>
-        <p>A small model on your own Mac cannot out-think a frontier model, and it does not try. It wins by staying private, free per question, and honest: it looks things up instead of guessing, and it asks before it acts. Next: whole jobs done end to end, not just single steps, still asking first at every one. See <code>roadmap.md</code> for the live plan.</p>
-        </details>
-        </div>
-      </section>
-
       <section id="run">
         <div class="col">
         <h2>Run it yourself</h2>
-        <div class="card">
-          <pre id="install-cmd" style="white-space:pre-wrap;font-size:13px;margin:0;font-family:ui-monospace,Menlo,monospace">git clone https://github.com/nulljosh/turing
-cd turing
-python3 -m venv .venv &amp;&amp; ./.venv/bin/pip install mlx-lm
-./.venv/bin/python app/chat.py</pre>
-          <pre style="white-space:pre-wrap;font-size:13px;margin:14px 0 0;font-family:ui-monospace,Menlo,monospace"># Linux
-curl -fsSL https://raw.githubusercontent.com/nulljosh/turing/main/install/install.sh | sh
-
-# Windows (PowerShell)
-irm https://raw.githubusercontent.com/nulljosh/turing/main/install/install.ps1 | iex</pre>
-          <p class="sub" style="margin-top:14px;font-size:14px">The Mac app does everything. Linux and Windows get her chat and tool picker; the parts that drive your screen stay on the Mac.</p>
-          <p class="meta" style="margin-top:14px">
-            <span>Latest: <b id="version">-</b></span>
-            <span><a id="release-link" href="https://github.com/nulljosh/turing/releases">Release notes</a></span>
-            <span><a href="https://huggingface.co/trommatic/samantha-hands-1.5b-mlx">Her weights on Hugging Face</a></span>
-          </p>
-        </div>
+        <p>On a Mac, download the app above. On Linux or Windows, paste one line:</p>
+        <pre style="white-space:pre-wrap;font-size:13px;font-family:ui-monospace,Menlo,monospace">curl -fsSL https://raw.githubusercontent.com/nulljosh/turing/main/install/install.sh | sh</pre>
+        <pre style="white-space:pre-wrap;font-size:13px;font-family:ui-monospace,Menlo,monospace">irm https://raw.githubusercontent.com/nulljosh/turing/main/install/install.ps1 | iex</pre>
         </div>
       </section>
 
@@ -531,12 +454,8 @@ irm https://raw.githubusercontent.com/nulljosh/turing/main/install/install.ps1 |
         <div class="col">
         <h2>Questions</h2>
         <details class="more"><summary>Is it really private?</summary><p>Yes. She runs on your Mac. Your words, files and screen never go to a server. The demo on this page is a stand-in on Cloudflare, so type nothing you would not post.</p></details>
-        <details class="more"><summary>What does it cost?</summary><p>Nothing. No account, no key, no subscription, and no per-question fee. It runs on the chip you already paid for.</p></details>
-        <details class="more"><summary>What do I need to run her?</summary><p>A Mac with Apple silicon and a few gigabytes free. Download the app, open it once, and she sets herself up.</p></details>
-        <details class="more"><summary>Can she break my stuff?</summary><p>Not without asking. Anything that writes, sends or deletes asks first, and her hands stay in your home folder. Seven rules, checked on every push, keep it that way. <a href="https://github.com/nulljosh/turing/blob/main/docs/SAFETY.md">Read them</a>.</p></details>
-        <details class="more"><summary>Is she as smart as ChatGPT or Claude?</summary><p>No, and she does not pretend to be. She is small. She wins by being private, free per question, and honest: she looks things up and says "I don't know" instead of guessing. For a hard question she can hand it to a bigger model on your own Mac.</p></details>
-        <details class="more"><summary>Does the demo here do everything?</summary><p>It does the things a web page can: paint, draw, math, time, the stand-in Mac. Talking out loud, seeing your screen, researching and working your real apps need the Mac app.</p></details>
-        <details class="more"><summary>Where is the source?</summary><p>All of it is on <a href="https://github.com/nulljosh/turing">GitHub</a>, open and free to read.</p></details>
+        <details class="more"><summary>Can she break my stuff?</summary><p>Not without asking. Anything that writes, sends or deletes waits for your yes. <a href="https://github.com/nulljosh/turing/blob/main/docs/SAFETY.md">The rules</a>.</p></details>
+        <details class="more"><summary>Is she as smart as ChatGPT or Claude?</summary><p>No. She is small, free and private, and says "I don't know" instead of guessing.</p></details>
         </div>
       </section>
 
@@ -544,43 +463,11 @@ irm https://raw.githubusercontent.com/nulljosh/turing/main/install/install.ps1 |
       </main>
       <footer>
         <div class="foot-rule" aria-hidden="true"><span>Turing</span><span>A small model, trained in the open</span></div>
-        <nav class="foot-dir" aria-label="Footer">
-          <div class="foot-col">
-            <h3>Turing</h3>
-            <ul>
-              <li><a href="#demo">Talk to Samantha</a></li>
-              <li><a href="https://github.com/nulljosh/turing/releases">Releases</a></li>
-              <li><a href="https://github.com/nulljosh/turing/blob/main/docs/PROGRESS.md">Progress</a></li>
-              <li><a href="https://github.com/nulljosh/turing/blob/main/docs/PROGRESS.md">History</a></li>
-            </ul>
-          </div>
-          <div class="foot-col">
-            <h3>Explore</h3>
-            <ul>
-              <li><a href="#demo">Try it live</a></li>
-              <li><a href="#results-section">Results</a></li>
-              <li><a href="#run">Run it yourself</a></li>
-            </ul>
-          </div>
-          <div class="foot-col">
-            <h3>Developers</h3>
-            <ul>
-              <li><a href="https://github.com/nulljosh/turing">Source</a></li>
-              <li><a href="https://github.com/nulljosh/turing/blob/main/docs/ARCHITECTURE.md">Architecture</a></li>
-              <li><a href="https://github.com/nulljosh/turing/blob/main/docs/SAFETY.md">Safety</a></li>
-              <li><a href="https://github.com/nulljosh/turing/blob/main/docs/FAQ.md">FAQ</a></li>
-              <li><a href="https://github.com/nulljosh/turing/issues">Report a bug</a></li>
-            </ul>
-          </div>
-          <div class="foot-col">
-            <h3>Project</h3>
-            <ul>
-              <li><a href="privacy.html">Privacy</a></li>
-              <li><a href="https://github.com/nulljosh/turing/blob/main/LICENSE">License (Apache 2.0)</a></li>
-              <li><a href="https://heyitsmejosh.com">Portfolio</a></li>
-              <li><a href="#top">Back to top</a></li>
-            </ul>
-          </div>
+        <nav class="foot-dir" aria-label="Footer" style="display:flex;flex-wrap:wrap;justify-content:center;gap:0 20px">
+          <a href="https://github.com/nulljosh/turing">Source</a>
+          <a href="https://github.com/nulljosh/turing/releases">Releases</a>
+          <a href="https://huggingface.co/trommatic/samantha-hands-1.5b-mlx">Weights</a>
+          <a href="privacy.html">Privacy</a>
         </nav>
         <div class="foot-bar">
           <p class="foot-meta">Turing <span id="footver"></span> &middot; Apache License 2.0 &middot; &copy; 2026 Joshua Trommel &middot; Made with <span aria-hidden="true">&hearts;</span> in Vancouver, BC</p>
@@ -589,189 +476,7 @@ irm https://raw.githubusercontent.com/nulljosh/turing/main/install/install.ps1 |
       </footer>
     </div>
 
-    <script>
-      fetch('status.json').then(r => r.json()).then(s => {
-        document.getElementById('base').textContent = s.base;
-        const pts = s.train_loss, val = s.val_loss || [];
-        document.getElementById('iters').textContent = pts.length ? pts[pts.length-1].iter : 0;
-        document.getElementById('loss').textContent = pts.length ? pts[pts.length-1].loss.toFixed(3) : 'n/a';
-        if (!pts.length) return;
-        const firstTrainIter = pts[0].iter;
-        const valPlot = val.filter(p => p.iter >= firstTrainIter);
-        const c = document.getElementById('chart'), ctx = c.getContext('2d');
-        const dpr = window.devicePixelRatio || 1, w = c.clientWidth, h = 220, pad = 16, padL = 46, padB = 34;
-        c.width = w * dpr; c.height = h * dpr; ctx.scale(dpr, dpr);
-        const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
-        const fg = css('--fg') || '#f2f2f2', line = css('--line') || '#2a2a2a', muted = css('--muted') || '#9a9a9a';
-        const bg = css('--bg') || '#000';
-        const xs = pts.map(p => p.iter), ys = pts.concat(valPlot).map(p => p.loss);
-        const dataXMin = xs[0], dataXMax = xs[xs.length - 1];
-        const dataYMin = Math.min(...ys), dataYMax = Math.max(...ys);
-        const yPad = (dataYMax - dataYMin) * 0.1 || dataYMax * 0.1 || 1;
-        const yMin = dataYMin - yPad, yMax = dataYMax + yPad;
-
-        function niceStep(range, targetCount) {
-          const candidates = [1, 2, 2.5, 3, 4, 5, 6, 7.5, 8, 10];
-          const rough = range / targetCount;
-          const mag = Math.pow(10, Math.floor(Math.log10(rough)));
-          const norm = rough / mag;
-          const step = candidates.find(c => c >= norm) || 10;
-          return step * mag;
-        }
-
-        const X = i => padL + (i - dataXMin) / (dataXMax - dataXMin || 1) * (w - padL - pad);
-        const Y = v => h - padB - (v - yMin) / (yMax - yMin || 1) * (h - pad - padB);
-
-        ctx.font = '11px -apple-system, Helvetica, sans-serif'; ctx.fillStyle = muted; ctx.strokeStyle = line; ctx.lineWidth = 1;
-
-        ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
-        const yStep = niceStep(yMax - yMin, 4);
-        const yStart = Math.ceil(yMin / yStep) * yStep;
-        for (let v = yStart; v <= yMax; v += yStep) {
-          const y = Y(v);
-          ctx.fillText(v.toFixed(2), padL - 8, y);
-          ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(w - pad, y); ctx.stroke();
-        }
-
-        ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-        const xStep = niceStep(dataXMax, 3);
-        for (let it = 0; it <= dataXMax; it += xStep) {
-          ctx.fillText(Math.round(it), X(Math.max(it, dataXMin)), h - padB + 8);
-        }
-
-        ctx.fillStyle = muted;
-        ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
-        ctx.fillText('step', padL + (w - padL - pad) / 2, h - 4);
-        ctx.save();
-        ctx.translate(12, padB + (h - pad - padB) / 2);
-        ctx.rotate(-Math.PI / 2);
-        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-        ctx.fillText('loss', 0, 0);
-        ctx.restore();
-
-        ctx.strokeStyle = fg; ctx.lineWidth = 2; ctx.beginPath();
-        pts.forEach((p, i) => i ? ctx.lineTo(X(p.iter), Y(p.loss)) : ctx.moveTo(X(p.iter), Y(p.loss))); ctx.stroke();
-
-        valPlot.forEach(p => {
-          const x = X(p.iter), y = Y(p.loss);
-          ctx.fillStyle = bg;
-          ctx.beginPath(); ctx.arc(x, y, 3.5 + 1, 0, Math.PI * 2); ctx.fill();
-          ctx.fillStyle = fg;
-          ctx.beginPath(); ctx.arc(x, y, 3.5, 0, Math.PI * 2); ctx.fill();
-        });
-      }).catch(() => {});
-
-      fetch('https://api.github.com/repos/nulljosh/turing/releases/latest').then(r => r.json()).then(rel => {
-        if (!rel.tag_name) return;
-        document.getElementById('version').textContent = rel.tag_name;
-        document.getElementById('release-link').href = rel.html_url;
-      }).catch(() => {});
-
-      fetch('stats.json').then(r => r.json()).then(s => {
-        if (s && s.version) document.getElementById('footver').textContent = 'v' + s.version;
-        var placeholder = document.getElementById('results-placeholder');
-        if (!s || !s.measured) { placeholder.textContent = 'stats unavailable'; return; }
-
-        var m = s.measured;
-        var docsCov = s.docs_coverage.percent;
-        document.querySelectorAll('[data-stat="tools"]').forEach(function (e) { e.textContent = m.tools.after; });
-        var html = '<div class="stat-tiles">' +
-          '<div class="stat-tile"><div class="stat-value">' + m.tools.after + '</div><div class="stat-label">Tools</div></div>' +
-          '<div class="stat-tile"><div class="stat-value">' + m.knowledge_sweep.after + '</div><div class="stat-label">Knowledge</div></div>' +
-          '<div class="stat-tile"><div class="stat-value">' + docsCov + '%</div><div class="stat-label">Docs coverage</div></div>' +
-          '</div>';
-
-        // Real numbers only, read from stats.json. Each tab is one benchmark, drawn as a single bar.
-        var picker_right = parseFloat(m.picker_unseen_percent.after);
-        var tabs = [
-          {id:'picker', label:'Picker: right', value:picker_right, max:100, unit:'%',
-            caption:'Her own tool picker, right on phrasings it never saw: ' + m.picker_unseen_percent.after + '%, up from ' + m.picker_unseen_percent.before + '%.'},
-          {id:'guard', label:'Wrong past guard', value:49, max:123, unit:'', invert:true,
-            caption:'Wrong picks that still get past the guard: 49, down from 123.'},
-          {id:'refused', label:'Refused right picks', value:7, max:105, unit:'',
-            caption:'Right picks she refuses anyway: 7 of 105 by wording.'},
-          {id:'knowledge', label:'Knowledge', value:parseInt(m.knowledge_sweep.after, 10), max:65, unit:'/65',
-            caption:'Knowledge sweep: ' + m.knowledge_sweep.after + ' of 65 right, zero confidently wrong.'},
-          {id:'speed', label:'Speed', value:m.multistep_latency_seconds.after, max:60, unit:'s',
-            caption:'Latency for multistep asks: ' + m.multistep_latency_seconds.after + ' seconds, down from minutes on an 8B model.'}
-        ];
-
-        var tabsHtml = '<div class="tab-row" role="tablist" aria-label="Benchmarks">' + tabs.map(function(t, i) {
-          return '<button type="button" class="tab" role="tab" aria-selected="' + (i === 0 ? 'true' : 'false') + '" data-tab="' + t.id + '">' + t.label + '</button>';
-        }).join('') + '</div>';
-
-        var benchHtml = '<div class="card"><div id="bench-wrap">' + tabsHtml +
-          '<canvas id="bench-canvas" width="900" height="180"></canvas>' +
-          '<p class="bench-caption" id="bench-caption"></p></div></div>';
-
-        var docsHtml = '<div class="docs-block"><p class="docs-title">House docs</p><div class="docs-bar"><div class="bar-container"><div class="bar"><div class="bar-fill" style="width:' + docsCov + '%"></div></div><div class="bar-label">' + docsCov + '%</div></div></div><div class="docs-checklist">';
-        if (s.docs_coverage.house_docs) {
-          Object.keys(s.docs_coverage.house_docs).forEach(function(doc) {
-            var exists = s.docs_coverage.house_docs[doc];
-            docsHtml += '<div class="docs-item ' + (exists ? 'docs-present' : 'docs-missing') + '">' + doc + '</div>';
-          });
-        }
-        docsHtml += '</div></div>';
-
-        var limitHtml = '<div class="limitations"><p class="limitations-title">Limitations</p>' +
-          '<p>Her own 1.5B picker chooses tools. It is not inside the app: the first time she needs it, about 850 MB downloads once in the background from Hugging Face, and until it lands the smaller 0.5B picker answers. On 869 sealed sentences she never trained on (two sets nobody tuned to), version 5.11 picks the right tool for 802 (5.6: 801, 5.1: 788) and the wrong tool for 45 (39, 53); 20 wrong picks get past her guard (19, 19) and 39 right picks are refused (40, 45). On 360 fresh messy phrasings, 325 right (5.6: 323). She now knows the Joshua Tree family by wording (86 of 93 test phrasings). About 5 percent of right commands are still left undone against a goal of under 2. Multi-step work borrows a 1.7B, and planning around a failure an 8B. ' +
-          'Knowledge is 62 of 65 with zero confidently wrong. ' +
-          'Logos are picks from a fixed set (a glyph that means the subject, here chosen by its words); her mark she drew herself. ' +
-          'The picker and chat now run on Windows and Linux too, through llama.cpp, and she is an app on Joshua Tree. The Mac tools stay on the Mac.</p></div>';
-
-        placeholder.parentNode.innerHTML = '<h2>Results</h2>' + html + benchHtml + '<details class="more"><summary>Docs and limits</summary>' + docsHtml + limitHtml + '</details>';
-
-        function drawBench(t) {
-          var c = document.getElementById('bench-canvas');
-          if (!c) return;
-          var ctx = c.getContext('2d');
-          var dpr = window.devicePixelRatio || 1, w = c.clientWidth, h = 180;
-          c.width = w * dpr; c.height = h * dpr; ctx.setTransform(1,0,0,1,0,0); ctx.scale(dpr, dpr);
-          ctx.clearRect(0, 0, w, h);
-          var css = function(n) { return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); };
-          var fg = css('--fg') || '#f2f2f2', line = css('--line') || '#2a2a2a', ember = css('--ember') || '#b8b8b8';
-          var padL = 20, padR = 20, barH = 28, y = h / 2 - barH / 2;
-          var pct = Math.min(1, Math.max(0, t.value / t.max));
-          if (t.invert) pct = 1 - pct;
-          ctx.fillStyle = line;
-          roundRect(ctx, padL, y, w - padL - padR, barH, 6); ctx.fill();
-          ctx.fillStyle = ember;
-          var fillW = Math.max(6, (w - padL - padR) * pct);
-          roundRect(ctx, padL, y, fillW, barH, 6); ctx.fill();
-          ctx.fillStyle = fg; ctx.font = '600 20px -apple-system, Helvetica, sans-serif';
-          ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
-          ctx.fillText(t.value + t.unit, padL, y - 10);
-          document.getElementById('bench-caption').textContent = t.caption;
-        }
-        function roundRect(ctx, x, y, w, h, r) {
-          if (w < 2 * r) r = w / 2; if (h < 2 * r) r = h / 2;
-          ctx.beginPath();
-          ctx.moveTo(x + r, y);
-          ctx.arcTo(x + w, y, x + w, y + h, r);
-          ctx.arcTo(x + w, y + h, x, y + h, r);
-          ctx.arcTo(x, y + h, x, y, r);
-          ctx.arcTo(x, y, x + w, y, r);
-          ctx.closePath();
-        }
-        drawBench(tabs[0]);
-        document.querySelectorAll('#bench-wrap .tab').forEach(function(btn) {
-          btn.addEventListener('click', function() {
-            document.querySelectorAll('#bench-wrap .tab').forEach(function(b) { b.setAttribute('aria-selected', 'false'); });
-            btn.setAttribute('aria-selected', 'true');
-            var t = tabs.filter(function(x) { return x.id === btn.getAttribute('data-tab'); })[0];
-            if (t) drawBench(t);
-          });
-        });
-        window.addEventListener('resize', function() {
-          var sel = document.querySelector('#bench-wrap .tab[aria-selected="true"]');
-          var t = sel ? tabs.filter(function(x) { return x.id === sel.getAttribute('data-tab'); })[0] : tabs[0];
-          if (t) drawBench(t);
-        });
-      }).catch(() => {
-        var placeholder = document.getElementById('results-placeholder');
-        placeholder.textContent = 'stats unavailable';
-      });
-    </script>
+    <script>fetch('stats.json').then(function(r){return r.json()}).then(function(s){if(s&&s.version)document.getElementById('footver').textContent='v'+s.version}).catch(function(){})</script>
     <script>document.getElementById("theme-toggle").addEventListener("click",function(){setTheme(document.documentElement.getAttribute("data-theme")==="light"?"dark":"light",true)})</script>
 <script>
 (function(){var u=navigator.userAgent,p=navigator.platform||"",label=null;
@@ -796,7 +501,7 @@ if(navigator.clipboard)navigator.clipboard.writeText(c).then(done,done);else don
     <script src="samantha.js"></script>
     <script src="highlight.js"></script>
     <script src="glyphs.js"></script>
-    <script src="demo.js"></script>
+    <script src="demo.js?v=3"></script>
     <script src="hero.js?v=2"></script>
   <script src="paint.js" defer></script>
     <script>

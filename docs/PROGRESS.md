@@ -1,5 +1,6 @@
 # Progress log
 
+- 2026-11-18: v7.26.2 Scrolling over the live demo on iPhone no longer stops it: only a real tap takes over, and a reel that came due mid-painting waits instead of giving up. The Finder screenshot full of test files is gone. Everything under the demo is cut to Run it yourself, three questions and one row of footer links. Sound on works again (hero.js loaded twice). Nightly training logs commit again.
 - 2026-11-17: v7.26.1 The trailer shows her running Joshua Tree too, not just the Mac: "boot joshua tree" brings up the from-scratch OS, her own glasses in its dock.
   v7.26.1 · 169 tools · 946 tests · docs coverage 100% · laws all hold · biggest app/tools_logo.py 650 · actions 295/295 · parity 295/295 · util_diff 288/288
 - 2026-11-17: v7.26.0 🎉 She puts music under a video: "add ~/Music/song.mp3 to ~/Movies/a.mp4" (or "add music to a.mp4 using song.m4a") makes a-music.mp4: the song runs the video's length and fades out, and sits quieter under the video's own sound when it has some. Checked on a real clip with a voice track and on a silent one. That finishes the three video abilities (compress, still frame, music).
