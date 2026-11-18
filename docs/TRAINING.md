@@ -813,3 +813,8 @@ Still no daemon, no cron. You run it and it exits when done or out of retries.
 ### Training data dominated by the wrong subject
 
 If eval scores look bad and the model answers in a completely different project's voice (README badges, unrelated app names, iOS build statuses), check `prep_data.py`'s source weighting. Globbing the whole fleet with no cap means this repo's own facts become a tiny minority of the training data, and the model learns "generic fleet README voice" instead of anything specific to this project. Fix: oversample this repo's own docs, cap how much of the wider fleet gets pulled in. See `roadmap.md`'s progress log, run 3, for the concrete example.
+
+
+## 8.0 (2026-11-18)
+
+The nightly Kaggle round on Qwen2.5-1.5B beat run 23 on every pooled dev count (4069 right, 168 wrong, 83 past the guard, 117 refused, against 4052, 169, 91, 127). It missed 8.0 on sealed heldout12 because the guard refused 9.3 percent of right picks. The guard was then fixed on the dev sets only (refused 117 to 57, past the guard unchanged, the same rows), and a fresh sealed set, heldout15, was written blind from the tool list by a separate writer and committed unread. Read once, it scored 395/420 right, 0.3 percent refused and 3 past the guard: all three bars met. That round ships as run 29.

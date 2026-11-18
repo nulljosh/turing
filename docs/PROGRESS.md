@@ -1,5 +1,6 @@
 # Progress log
 
+- 2026-11-18: v8.0.0 She learns from the big ones. A new picker (run 29, Qwen2.5-1.5B trained on Kaggle's free GPU with no Claude in the loop) beat run 23 on every pooled dev count, and the guard now refuses half as many right picks (117 to 57 on dev) with no more wrong picks getting past it: plain-words sums work, and a sentence with no target gets "which file?" instead of silence. On a fresh sealed set written blind from the tool list and read once, she got 94.0 percent right, refused 0.3 percent of right picks and let 3 wrong picks past the guard, clearing all three 8.0 bars.
 - 2026-11-18: v7.26.2 Scrolling over the live demo on iPhone no longer stops it: only a real tap takes over, and a reel that came due mid-painting waits instead of giving up. The Finder screenshot full of test files is gone. Everything under the demo is cut to Run it yourself, three questions and one row of footer links. Sound on works again (hero.js loaded twice). Nightly training logs commit again.
 - 2026-11-17: v7.26.1 The trailer shows her running Joshua Tree too, not just the Mac: "boot joshua tree" brings up the from-scratch OS, her own glasses in its dock.
   v7.26.1 · 169 tools · 946 tests · docs coverage 100% · laws all hold · biggest app/tools_logo.py 650 · actions 295/295 · parity 295/295 · util_diff 288/288

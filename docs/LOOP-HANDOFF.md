@@ -10,7 +10,7 @@ The loop runs to the end of the work list, never to a version number. A version 
 
 ## Where things stand
 
-- **Live:** v7.26.1 is on origin/main (42cb1c1): the trailer shows her booting Joshua Tree. Its release job was queued at 18:35 UTC.
+- **Live:** v8.0.0 (2026-11-18): run 29 is the picker (nightly Qwen2.5-1.5B), the 7.27 guard refuses half as many right picks, sealed heldout15 read once and passed all three 8.0 bars. heldout12 and heldout15 are both spent; the next major needs a fresh sealed set. run 23 is kept at models/run23-mlx.
 - **Video abilities: done.** compress_video (7.24.0), still_frame (7.25.0) and add_music (7.26.0). The roadmap's video track is closed.
 - **Landing:** the trailer plays full-bleed behind the headline, with a Sound on button and her command bar at the bottom. Scrolling no longer kills the live demo on iPhone. The colour glow, the old "Watch her work" video and the "What she can do" list are gone. Three real dithered screenshots replace the Ada portrait. The README shows the new logo.
 - **Docs:** 7 files in docs/ (ARCHITECTURE, TRAINING, SAFETY, FAQ, roadmap, PROGRESS, LOOP-HANDOFF). README and CLAUDE.md are a page each.
