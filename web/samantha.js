@@ -387,8 +387,10 @@
     var text = expression.toLowerCase().replace(/,/g, "").trim().replace(/\?$/, "").trim();
     text = text.replace(/^(?:what(?:'s| is) )?(?:the )?(?:square root|sqrt) of (.+)$/, "sqrt($1)");
     text = text.replace(/^(.+?) squared$/, "($1)**2").replace(/^(.+?) cubed$/, "($1)**3");
-    text = text.replace(/^(.+?) (?:to the power of|to the) (.+?)(?:th|st|nd|rd)?(?: power)?$/, "($1)**($2)");
+    text = text.replace(/^(.+?) (?:to the power of|to power of|to the) (.+?)(?:th|st|nd|rd)?(?: power)?$/, "($1)**($2)");
     text = text.replace(/^(.+?) percent of (.+)$/, "$1% of $2");
+    text = /^[\d. ]+(?:plus|and)[\d. ]+$/.test(text) ? text.replace(/\s*\b(?:plus|and)\b\s*/g, "+") : text.replace(/\s*\bplus\b\s*/g, "+");
+    text = text.replace(/\s*\bdivided by\b\s*/g, "/").replace(/\s*\b(?:times|multiplied by)\b\s*/g, "*").replace(/\s*\bminus\b\s*/g, "-");
     text = text.replace(/x/g, "*").replace(/\^/g, "**");
     var m = /^(\d+(?:\.\d+)?)\s*% of (\d+(?:\.\d+)?)$/.exec(text);
     if (m) return num(parseFloat(m[1]) * parseFloat(m[2]) / 100);

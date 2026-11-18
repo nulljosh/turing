@@ -43,14 +43,14 @@ WRITES = {"ask_llm", "see_screen", "see_image", "see_camera", "click_text", "typ
 # is really about that tool. Round four confused ip_address with wifi_name and let "let me know in 10 minutes" write a note.
 _EVIDENCE = {
     "disk_space": r"disk|storage|space|drive|room|full", "uptime": r"\bup\b|uptime|restart|reboot|been on|running|booted|since boot",
-    "current_tab": r"\btab\b|page|site|browser|chrome|safari|article|reading|looking at", "list_tabs": r"\btabs\b",
+    "current_tab": r"\btab\b|page|site|browser|chrome|safari|article|reading|looking at", "list_tabs": r"\btabs\b|open in (?:the |my )?browser",
     "memory_usage": r"memory|\bram\b", "cpu_load": r"cpu|processor|load|busy|maxed|working|doing", "ip_address": r"\bip\b|address",
     "wifi_name": r"wi-?fi|network|\bssid\b", "system_info": r"system|\bmac\b|macos|chip|computer|specs|about this|\bos\b|version", "list_shortcuts": r"shortcut",
     "flip_coin": r"coin|heads|tails", "make_uuid": r"uuid|guid|unique id", "time_in": r"time|clock|late", "days_until": r"\bday|sleeps|until|till|far away|count|from now|when(?:\'s| is)",
-    "roll_dice": r"roll|dice|\bdie\b|\bd\d|throw|toss", "random_number": r"random|number", "make_password": r"password|pwd|passcode|passphrase",
-    "hash_text": r"hash|sha|checksum", "word_count": r"word|characters?\b|\blength of\b", "tip": r"\btip", "is_prime": r"prime|factor|divid", "roman_numeral": r"roman",
+    "roll_dice": r"roll|dice|\bdie\b|\bd\d|throw|toss", "random_number": r"random|number", "make_password": r"password|pwd|passcode|passphrase|something secure",
+    "hash_text": r"hash|sha|checksum", "word_count": r"word|characters?\b|\bchars?\b|\blength of\b", "tip": r"\btip", "is_prime": r"prime|factor|divid", "roman_numeral": r"roman",
     "morse_code": r"morse", "new_note": r"note|jot|write|remember|save|down", "say": r"\bsay|speak|announce|voice|aloud|out loud|words",
-    "free_when": r"\bfree\b|\bbusy\b|availab|do i have time|when am i|\bschedule\b|open slot|\bgaps?\b|\bam i open\b|\bopenings?\b",
+    "free_when": r"\bfree\b|\bbusy\b|availab|do i have time|when am i|\bschedule\b|open slot|\bgaps?\b|\bam i open\b|\bopenings?\b|fit (?:\w+ )?in\b",
     # Round eight covered 36 tools with zero picker training data; their evidence predates them (round-eight
     # gap). Words come from each tool's own docstring/templates, never copied out of eval/actions.py verbatim.
     "bluetooth_status": r"bluetooth", "calendar_tomorrow": r"tomorrow|\btmrw\b|\btmr\b",
@@ -58,22 +58,22 @@ _EVIDENCE = {
     "blender_info": r"blender|\.blend|\.glb|\.obj|\.fbx|3d|scene", "render_blend": r"render|blender|\.blend", "make_symbol": r"symbol|glyph", "make_wordmark": r"wordmark|logotype|logo", "make_avatar": r"avatar|profile|pfp", "text_3d": r"text|word|logo|letters|3d", "make_3d": r"make|create|build|cube|sphere|cone|cylinder|torus|3d", "convert_3d": r"convert|\.blend|\.glb|\.gltf|\.obj|\.fbx|\.stl|\.ply|3d|glb|obj|stl|ply|fbx",
     "check_page": r"page|site|html|check|test|debug|black|blank|broken", "caption_video": r"caption|subtitle|subs|srt|vtt|video|\.mp4|\.mov|\.mkv|\.webm", "compress_video": r"compress|shrink|smaller|size|video|\.mp4|\.mov|\.mkv|\.webm", "still_frame": r"still|frame|screenshot|picture|grab|video|\.mp4|\.mov|\.mkv|\.webm", "add_music": r"music|song|track|soundtrack|mp3|m4a|video|\.mp4|\.mov|\.mkv|\.webm", "join_videos": r"join|merge|combine|stitch|together|video|\.mp4|\.mov|\.mkv|\.webm", "cut_out_video": r"remove|delete|cut|section|part|video|\.mp4|\.mov|\.mkv|\.webm", "speed_video": r"speed|fast|slow|faster|slower|\dx|video|\.mp4|\.mov|\.mkv|\.webm", "make_gif": r"gif|animation|animate|video|\.mp4|\.mov|\.mkv|\.webm", "mute_video": r"mute|silence|silent|remove|strip|audio|sound|video|\.mp4|\.mov|\.mkv|\.webm", "extract_audio": r"extract|pull|rip|audio|sound|mp3|video|\.mp4|\.mov", "trim_audio": r"trim|cut|clip|audio|sound|\.mp3|\.m4a|\.wav|\.aac|\.flac|\.ogg", "video_info": r"video|\.mp4|\.mov|\.mkv|\.webm|how long|clip", "trim_video": r"trim|cut|clip|\.mp4|\.mov|\.mkv|\.webm|video", "vertical_video": r"vertical|portrait|9:16|phone|\.mp4|\.mov|\.mkv|\.webm|video",
     "download_file": r"download|\bdl\b|save (?:this|that|it) from|grab (?:the )?file", "recent_downloads": r"download|off the (?:net|internet|web)", "unread_mail": r"mail|email|inbox|unread|messages",
-    "git_status": r"status|\bchange\b|changed|changes|uncommitted|dirty|\bdiff\b|\bbranch\b|ahead|behind|\bgit\b", "recent_commits": r"commit",
+    "git_status": r"status|\bchange\b|changed|changes|uncommitted|dirty|\bdiff\b|\bbranch\b|ahead|behind|\bgit\b|modified|repo(?:sitory)? state", "recent_commits": r"commit|history|lately",
     "run_tests": r"\btest|\bsuite\b|\bpasses\b|\bpassing\b", "open_prs": r"\bprs?\b|pull request|waiting (?:for|on) (?:a )?review",
-    "open_in_editor": r"editor|vscode|vs code|in code|\bide\b|visual studio", "quit_app": r"quit|close|shut down|\bkill\b",
+    "open_in_editor": r"editor|vscode|vs code|in code|\bide\b|visual studio|\bproject\b|codebase|\brepo\b|'s code\b", "quit_app": r"quit|close|shut down|\bkill\b",
     "dark_mode": r"dark|\blight\b|appearance|theme", "do_not_disturb": r"disturb|\bdnd\b|focus|silence|quiet|notification",
-    "zip_file": r"\bzip\b|compress", "unzip_file": r"unzip|extract|unpack|decompress|\.zip\b", "trash_file": r"trash|delete|throw away|get rid of|\bbin (?:the |this |that |my )?(?:file|folder|directory|[~/])",
+    "zip_file": r"\bzip\b|compress|archive", "unzip_file": r"unzip|extract|unpack|decompress|\.zip\b", "trash_file": r"trash|delete|throw away|get rid of|\bbin (?:the |this |that |my )?(?:file|folder|directory|[~/])",
     "copy_file": r"\bcopy\b|duplicate|\bcp\b", "move_file": r"\bmove\b|\bput\s+(?:\S+\.\w+|~/\S+)\s+(?:in|into)\b|\bshift\b|transfer|relocate|\bdrag\b|\bmv\b", "rename_file": r"rename|new name|call it|change the name|retitle|\bname\b|\bchange\s+\S+\.\w+\s+to\s+\S+\.\w+",
-    "append_note": r"\bnotes?\b|\bappend\b.+\bto (?:my|the) [\w ]{1,30}\b(?:log|list|journal)\b", "add_event": r"calend[ae]r|event|schedule|appt|appointment|\bbook (?:a |an |my )?(?:call|meeting|appointment)\b",
+    "append_note": r"\bnotes?\b|\bappend\b.+\bto (?:my|the) [\w ]{1,30}\b(?:log|list|journal)\b", "add_event": r"calend[ae]r|\bcal\b|meeting called|event|schedule|appt|appointment|\bbook (?:a |an |my )?(?:call|meeting|appointment)\b",
     "complete_reminder": r"remind|done|finish|complete|check off|\bmark\b|tick off|cross off", "list_reminders": r"reminder|\btasks\b|to-?dos?",
     "read_page": r"\bpage\b|\barticle\b|\bstory\b|\btext\b|\bcontent\b|\bread\b|\bsays?\b|\bsaying\b|\blooking at\b|\btab\b|\bsite\b|\bwebsite\b|\burl\b|\bfetch\b|https?://|\bwww\.|\.(?:com|org|net|io|ca)\b",  # round 18: read_page had no cue, so a 0.2-sure pick ran
     "jt_status": r"joshua ?tree|\bjt\b", "jt_boot": r"joshua ?tree|\bjt\b", "jt_stop": r"joshua ?tree|\bjt\b", "jt_log": r"joshua ?tree|\bjt\b",
     "jt_screenshot": r"joshua ?tree|\bjt\b", "jt_type": r"joshua ?tree|\bjt\b", "jt_look": r"joshua ?tree|\bjt\b",  # 5.10: every jt tool needs its name said
     "search_notes": r"\bnotes?\b", "needs_attention": r"attention|needs me|focus on|deal with|need to handle|urgent|status|pending|important|needs doing|overview|priorit",
-    "folder_size": r"\bbig\b|\bsize\b|\bspace\b|take up",
+    "folder_size": r"\bbig\b|\bsize\b|\bspace\b|take up|storage",
     "research": r"research|deep dive|look into|dig into|investigate|brief on|info(?:rmation)? on|look up|read up|info(?:rmation)? about", "research_more": r"\bmore\b|deeper|expand|further|continue|again",
-    "summarize": r"summar|boil (?:it )?down|condense|\bsum(?:med)? (?:\w+ )?up\b", "transcribe_video": r"\bwrite (?:\w+ )?down\b|transcribe|spoken|\bsays? in\b|said in|captions|subtitles|what (?:was|is) said|what does (?:the |this )?(?:audio|video|clip) say",
-    "translate": r"translat|how (?:do|would|can|should) (?:you|i) say|\b(?:in|into|to) (?:french|spanish|german|italian|portuguese|dutch|japanese|chinese|mandarin|korean|russian|arabic|hindi)\b", "write_document": r"draft|write (?:me |us )?(?:a |an )?(?:doc|document|email|memo|file)|compose",
+    "summarize": r"summar|boil (?:it )?down|condense|\bsum(?:med)? (?:\w+ )?up\b", "transcribe_video": r"\bwrite (?:\w+ )?down\b|transcri|\baudio\b.*\bsay\b|spoken|\bsays? in\b|said in|captions|subtitles|what (?:was|is) said|what does (?:the |this )?(?:audio|video|clip) say",
+    "translate": r"translat|how (?:do|would|can|should) (?:you|i) say|\b(?:in|into|to) (?:french|spanish|german|italian|portuguese|dutch|japanese|chinese|mandarin|korean|russian|arabic|hindi)\b", "write_document": r"draft|(?:write|create|make)(?: up| me| us)? (?:a |an )?(?:doc|document|email|memo|file)|compose",
     # Round ten: resize_image and read_file had no evidence at all, so any wrong pick with its
     # argument copied verbatim (list_dir/read_file's own guard, or resize_image's default check,
     # never required a word about the tool itself) passed the guard automatically. "make it bigger"
@@ -91,11 +91,11 @@ _EVIDENCE = {
     # own docstring/ARCHITECTURE.md line, not copied from any held-out or test phrasing.
     "calendar_today": r"today|schedule|agenda|calendar|what's on|plans today|my day|happening today",
     "current_date": r"\bdate\b|what day|today's date|which day",
-    "feedback_summary": r"feedback|rating|rate you|how am i rating|thumbs|track record|how(?:'?m| am) i doing",
-    "list_mcp_tools": r"\bmcp\b|\bconnectors?\b|other (?:server|assistant)s?|server'?s? tools|other tools",
+    "feedback_summary": r"feedback|rating|rate you|how am i rating|thumbs|track record|how(?:'?m| am) i doing|corrections?",
+    "list_mcp_tools": r"\bmcp\b|\bconnectors?\b|other (?:server|assistant)s?|server'?s? tools|other tools|can call",
     "screenshot": r"screenshot|screen ?shot|screen ?grab|screencap|picture of (?:the |my )?screen|capture (?:the |my )?screen|pic of|what'?s (?:showing|on (?:the |my )?screen)"
                   r"|grab (?:the |my )?screen|snap (?:the |my )?screen",
-    "clipboard": r"clipboard|copied|\bcopy\b|pasteboard",
+    "clipboard": r"clipboard|copied|\bcopy\b|pasteboard|^paste\b",
     "battery": r"battery|\bcharge\b|charging|power level|plugged in|\bjuice\b|\bpower\b|battery life",
     "weather": r"weather|forecast|\brain(?:ing|y)?\b|\bsnow(?:ing|y)?\b|\btemperature\b|need a (?:jacket|coat)|umbrella|degrees out|sunny|cloudy|storm|cold (?:is it|out)"
                r"|hot (?:is it|out)|nice out|\boutside\b|\btemp\b",
@@ -107,15 +107,15 @@ _EVIDENCE = {
     "shout": r"shout|caps|upper ?case|yell|loud|capital",
     "flip_image": r"flip|mirror|upside|reverse (?:the |this |that |my )?(?:image|photo|picture|pic)\b",
     "grayscale_image": r"gr[ae]y|black and white|b&w|desaturat|monochrome|colou?r",
-    "enhance_image": r"enhance|sharpen|improve|clean up|better|fix|clear|crisp|quality|touch up|denoise|contrast|boost|brighten|\bpop\b",
+    "enhance_image": r"enhance|sharpen|improve|clean up|better|fix|clear|crisp|quality|touch up|denoise|contrast|boost|brighten|\bpop\b|beautify|polish|auto-?level",
     "new_reminder": r"remind|reminder|forget|remember|nudge|ping me|\btodo\b|to-do|\bdue\b|tell me to",
-    "paint_image": r"paint|mosaic|sketch|poster|dots|glass|squares|style|\bart\b|rebuild|pixelmator|recreate|redraw|artif",
+    "paint_image": r"paint|mosaic|sketch|poster|dots|glass|squares|style|\bart\b|rebuild|pixelmator|recreate|redraw|artif|artistic|\bdrawn\b",
     # Round sixteen: "traveling really opens your mind", "i love collecting vinyl records" fired open_app/music.
-    "open_app": r"\bopen\b|launch|start|fire up|boot|bring up|switch to|\buse\b|\brun\b|\bload\b|\bpop\b|\bapp\b",  # not "get": "when you get a sec" is filler
+    "open_app": r"\bopen\b|launch|start|fire up|boot|bring up|pull up|switch to|\buse\b|\brun\b|\bload\b|\bpop\b|\bapp\b",  # not "get": "when you get a sec" is filler
     "music": r"play|pause|resume|skip|next|previous|prev\b|song|track|music|album|artist|playing|listen|tune|\bback\b|stop|shuffle|spotify|sings?\b|singer|who is this|band",
     "set_volume": r"volume|loud|quiet|sound|mute|audio|crank|softer|turn (?:it|the sound|the music)\b|\bup\b|\bdown\b|silen",
     "make_logo": r"logo|icon|\bmark\b|emblem|badge|wordmark",
-    "remove_background": r"background|cut ?out|transparent|isolate",
+    "remove_background": r"background|cut ?out|transparent|isolate|\bbg\b|backdrop",
     "find_file": r"find|locate|where'?s|where is|look for|search for|track down|dig up",
     # base64_encode/decode, reverse_text, shout and json_pretty are deliberately left with no
     # _EVIDENCE this round: a bisection against eval/heldout.jsonl's one-line summary (never its
@@ -290,6 +290,12 @@ def _sound(tool, arg, query, sure=None):
     if re.match(r"(?:this|that|these|those)\b", arg.lower()) and \
             any(tool in members for family, (_, members) in _TARGETS.items() if family in _POINTED):
         return False
+    if tool == "calculate" and re.search(r"\d", arg) and all(n in q_lower for n in re.findall(r"\d+(?:\.\d+)?", arg)):
+        try:
+            float(tools.calculate(arg))  # 7.27: "what's 25 plus 17" was refused on its "what's"; a sum that works out runs
+            return True
+        except (TypeError, ValueError):
+            pass
     if tool in _AGAINST and re.search(_AGAINST[tool], q_lower):
         return False
     if tool in _KNOWLEDGE_SENSITIVE and _is_general_knowledge_question(q_lower):
@@ -373,7 +379,8 @@ def _sound(tool, arg, query, sure=None):
             m = re.search(r"\S+\.\w{2,5}\b", arg)
             if m:
                 a, b = (arg[:m.start()] + arg[m.end():]).strip(), m.group(0)
-        return bool(a) and bool(b) and a.lower() in q_lower and b.lower() in q_lower
+        spelled = re.sub(r"\bwhat'?s\b", "what is", q_lower)  # 7.27: she writes "what is" for "whats"
+        return bool(a) and bool(b) and (a.lower() in q_lower or a.lower() in spelled) and b.lower() in q_lower
 
     # append_note is the same content<TAB>note-name shape, but round nine showed a wrapper phrasing
     # ("append call bob to the note todo") where the model folds the note name into the copied text
@@ -384,6 +391,8 @@ def _sound(tool, arg, query, sure=None):
         if not arg.strip():
             return bool(re.search(r"dice|\bdie\b|\broll\b", q_lower)) and not re.search(r"\d", q_lower)  # plain "roll a die": her default die, nothing to invent
         m = re.fullmatch(r"(\d*)d(\d+)", arg.lower().strip()) or re.fullmatch(r"(\d+)\s+(\d+)(?: sides?)?", arg.lower().strip())  # round 32: "10 12 sides"
+        if not m and re.fullmatch(r"\d+", arg.strip()) and re.search(r"\bdice\b|\bdie\b", q_lower):
+            return re.search(rf"\b{arg.strip()}\b", q_lower) is not None  # 7.27: a copied count of dice
         return bool(m) and all(n in q_lower for n in m.groups() if n)
 
     if tool == "append_note":
@@ -437,7 +446,7 @@ def _sound(tool, arg, query, sure=None):
     if tool in ("convert_image", "rotate_image", "resize_image", "upscale_image", "grayscale_image",
                 "flip_image", "crop_square", "remove_background", "enhance_image", "image_info") and arg:
         # Round fifteen: "flip good morning backwards" is text. An image tool needs a file, or the word for one.
-        if not re.search(r"\.(?:png|jpe?g|gif|heic|webp|tiff?|bmp)\b|/", arg.lower()) and \
+        if not re.search(r"\.(?:png|jpe?g|gif|heic|webp|tiff?|bmp|psd)\b|/", arg.lower()) and \
                 not re.search(r"\b(?:image|photo|picture|pic|screenshot)s?\b", q_lower):
             return False
         if arg.lower() in q_lower:
@@ -513,7 +522,7 @@ _TARGETS = {
     "file": (r"\bfile|folder|\bdoc\b|document|\bpdf\b|\bzip\b|archive|video|audio|recording|rename|trash|\bmove\b|\bcopy\b",
              ("move_file", "copy_file", "rename_file", "trash_file", "zip_file", "unzip_file", "read_document",
               "ask_document", "find_in_document", "read_file", "transcribe_video", "list_dir")),
-    "app": (r"\bapp\b|program|window", ("quit_app",)),
+    "app": (r"\bapp\b|application|program|window", ("quit_app",)),
     "project": (r"project|repo|folder", ("open_in_editor",)),
     "text": (r"(?:in|into|to) (?:french|spanish|german|italian|portuguese|dutch|japanese|chinese|korean|russian)\b|out loud|aloud|speak|translat|morse|\bwords?\b|reverse|backwards|shout|caps|base ?64|hash|passage|text|phrase|sentence",
              ("translate", "word_count", "morse_code", "reverse_text", "shout", "base64_encode", "base64_decode",
@@ -521,7 +530,7 @@ _TARGETS = {
     # Round thirty-five: the same "which one?" for a file to show in Finder, a reminder to tick off, a note to add to, and a
     # switch never told on or off. Each still needs its own noun in the sentence (a review showed that dropping the noun makes
     # small talk draw a question), and none of them loosens what _sound lets run.
-    "finder": (r"\bfinder\b", ("reveal_in_finder",)),
+    "finder": (r"\bfinder\b|\breveal\b|\bfile\b|\bfolder\b", ("reveal_in_finder",)),
     "reminder": (r"\breminders?\b|\bto-?dos?\b", ("complete_reminder",)),
     "note": (r"\bnotes?\b", ("append_note",)),
     "switch": (r"do not disturb|\bdnd\b|focus mode", ("do_not_disturb",)),
@@ -530,7 +539,12 @@ _TARGETS = {
 _POINTED = ("image", "file", "app", "project", "finder")
 # what the sentence must say before she asks, where a tool's _EVIDENCE is too narrow to ask from (append_note's is the
 # singular "note", on purpose: the plural belongs to search_notes) or missing. Never used to decide what runs.
-_ASK_EVIDENCE = {"append_note": r"\b(?:add|append|put|jot|write)\b.*\bnotes?\b", "reveal_in_finder": r"\bfinder\b"}
+_ASK_EVIDENCE = {"append_note": r"\b(?:add|append|put|jot|write)\b.*\bnotes?\b", "reveal_in_finder": r"\bfinder\b|\breveal\b",
+                 # 7.27: the everyday words for these, used only to ask which, never to run
+                 "trash_file": r"trash|delete|throw away|get rid of|\bremove\b", "copy_file": r"\bcopy\b|duplicate|clone|\bdupe\b",
+                 "move_file": r"\bmove\b|transfer|relocate|elsewhere|somewhere else", "read_file": r"\bread\b|contents?|\bshow\b|inside",
+                 "unzip_file": r"unzip|extract|unpack|decompress|\bzip\b", "quit_app": r"quit|close|shut down|\bkill\b|\bexit\b",
+                 "write_document": r"\bwrite\b|draft|compose", "paint_image": r"paint|sketch|\bart\b|shapes|squares|mosaic"}
 _SAYS_ON_OR_OFF = r"\bon\b|\boff\b|enable|disable|\bstart\b|\bstop\b|\benter\b|\bend\b|out of|put me in|activate"
 _ASK = {"app": "Which app? Name it, like Safari.", "project": "Which project? Name it, like nimble.", "image": "Which image? Name it, like ~/Desktop/photo.jpg.", "file": "Which file? Name it, like ~/Documents/report.pdf.",
         "text": "Which words? Say them, like \"translate good morning to french\".",
@@ -543,7 +557,8 @@ _ASK = {"app": "Which app? Name it, like Safari.", "project": "Which project? Na
 # she asks for the missing piece instead of refusing: "new event" asks what and when. Asking runs nothing, so no guard is loosened.
 _NEEDS_ARG = {"add_event": "What is the event, and when?", "folder_size": "Which folder?", "list_dir": "Which folder?",
               "find_in_document": "What should I look for?", "date_math": "What dates, or how many days?",
-              "copy_file": "Which file, and where should the copy go?", "timer": "For how long?"}
+              "copy_file": "Which file, and where should the copy go?", "timer": "For how long?",
+              "zip_file": "Which file or folder should I zip?", "unzip_file": "Which zip should I open?", "write_document": "What should I write, and about what?"}
 
 
 def needs_target(tool, arg, query):
@@ -582,4 +597,14 @@ def repair(tool, arg, query):
     if tool == "translate" and "\t" not in arg and not tools.translate_pair(arg)[1]:
         m = re.search(rf"\b(?:to|into|in)\s+({tools.LANGUAGES})\b", query, re.I)
         return f"{arg}\t{m.group(1).lower()}" if m else arg
+    if tool == "roll_dice" and not arg.strip():  # 7.27: "give me d20"
+        m = re.search(r"\b\d*d\d+\b", query, re.I)
+        return m.group(0).lower() if m else arg
+    if tool == "calculate" and not arg.strip():  # 7.27: "whats sqrt of 64" picked with nothing copied
+        e = re.sub(r"^(?:um |so |hey )?(?:what(?:'s|s| is)|calculate|compute)\s+", "", query.lower()).strip(" ?")
+        try:
+            float(tools.calculate(e))
+            return e
+        except (TypeError, ValueError):
+            return arg
     return arg

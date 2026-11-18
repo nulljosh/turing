@@ -54,8 +54,11 @@ def calculate(expression):
     text = re.sub(r"^(?:what(?:'s| is) )?(?:the )?(?:square root|sqrt) of (.+)$", r"sqrt(\1)", text)
     text = re.sub(r"^(.+?) squared$", r"(\1)**2", text)
     text = re.sub(r"^(.+?) cubed$", r"(\1)**3", text)
-    text = re.sub(r"^(.+?) (?:to the power of|to the) (.+?)(?:th|st|nd|rd)?(?: power)?$", r"(\1)**(\2)", text)
+    text = re.sub(r"^(.+?) (?:to the power of|to power of|to the) (.+?)(?:th|st|nd|rd)?(?: power)?$", r"(\1)**(\2)", text)
     text = re.sub(r"^(.+?) percent of (.+)$", r"\1% of \2", text)
+    # 7.27: spoken operators ("25 plus 17", "234 divided by 6"), so a plain-words sum is not refused as unworkable
+    text = re.sub(r"\s*\b(?:plus|and)\b\s*", "+", text) if re.fullmatch(r"[\d. ]+(?:plus|and)[\d. ]+", text) else re.sub(r"\s*\bplus\b\s*", "+", text)
+    text = re.sub(r"\s*\bminus\b\s*", "-", re.sub(r"\s*\b(?:times|multiplied by)\b\s*", "*", re.sub(r"\s*\bdivided by\b\s*", "/", text)))
     text = text.replace("x", "*").replace("^", "**")
     m = re.fullmatch(r"(\d+(?:\.\d+)?)\s*% of (\d+(?:\.\d+)?)", text)
     if m:
