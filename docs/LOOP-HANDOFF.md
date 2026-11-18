@@ -1,4 +1,4 @@
-# Turing loop handoff (2026-11-18, morning)
+# Turing loop handoff (2026-11-18, afternoon)
 
 ## What the loop is
 
@@ -16,19 +16,19 @@ The loop runs to the end of the work list, never to a version number. A version 
 - **Docs:** 7 files in docs/ (ARCHITECTURE, TRAINING, SAFETY, FAQ, roadmap, PROGRESS, LOOP-HANDOFF). README and CLAUDE.md are a page each.
 - **Trailer:** 30 seconds, 13 real things she did on this Mac, voiced in her own ElevenLabs voice. It shows no desktop test files and it boots Joshua Tree.
 - **Versioning (Joshua's rule):** a landing change is a patch. Only a new ability gets a minor.
-- **Releases:** v7.23.2 is the latest tag and release. No tag or GitHub release exists yet for v7.24.0, v7.25.0 or v7.25.1, and v7.26.0 and v7.26.1 have none either. Commit 3d9d02f is titled "Release v7.24.0" but it is the 7.25.0 change (still_frame).
+- **Releases:** tags and GitHub releases exist from 7.24.0 through 8.0.0.
 - **Training runs without Claude:** `.github/workflows/train.yml` and `training/kaggle/nightly.py` run every 8 hours. Training is bf16 or fp32 only, and a round stops at the first NaN. The log goes to the `train-log` branch on origin (c9c6f9e). The latest round, Qwen3.5-2B, finished 2026-11-17 17:38 and scored 97.5% on its own 200-row check (sft and dpo both 97.5). It has not been compared with run 23 on the pooled dev sets.
-- **Picker:** run 23 (4,052 of 4,455 pooled dev rows right) is still the shipped picker. Rounds 27 and 28 did not clearly beat it.
+- **Picker:** run 29 is live (see above). Run 23 (4,052 of 4,455 pooled dev rows right) was the shipped picker until 8.0.0.
 - **10.0 slice 1 is merged** (3.8.0, PR 577). The Python reference and kernel/picker.c match on all 297 golden sentences. The safety bar is missed: the small picker calls a tool on 26 percent of not-a-command rows, where run 23 manages 5 percent. It stays "a small picker distilled from her".
 - **Joshua Tree 10.0 tag** still needs the docs and whitepaper refresh and Joshua's real-mic test.
 - **Disk:** df read 34 GB available on the internal disk at the 2026-11-17 checkpoint. Check before any download over a gigabyte.
-- **LaCie is gone.** The 9B model and the data on it are lost until a new drive. Sealed heldout7 is lost. heldout12 is still in eval/.
+- **LaCie is gone.** The 9B model and the data on it are lost until a new drive. Sealed heldout7 is lost. heldout12 and heldout15 are spent (read once).
 - **Roadmap:** docs/roadmap.md, 30 open items. Issues are in sync (issue #107 stays open for the Blender family).
 
 ## Next, in order
 
 1. Done 2026-11-18: releases and tags exist for 7.24.0 to 7.26.1. (Was: backfill the GitHub releases and tags for v7.24.0 (commit 216280a) and v7.25.0 (commit 3d9d02f). If release.yml skipped them, create them by hand, then check v7.25.1, v7.26.0 and v7.26.1 the same way.
-2. Done 2026-11-18: the nightly Qwen2.5-1.5B round beat run 23 on every pooled dev count (4069/168/83/117), then missed the 8.0 bar on sealed heldout12 (91.1 percent right, 9.3 percent refused). heldout12 is spent; write a fresh sealed set before the next 8.0 attempt and attack guard refusals first. (Was: score the Kaggle rounds logged on the `train-log` branch (eval/kaggle-nightly.log) against run 23 on the pooled nine dev sets. Start with the 2026-11-17 Qwen3.5-2B round. Report the pooled right, wrong, past-guard and refused counts next to run 23's, and never read a sealed set to break a tie.
+2. Done 2026-11-18: the nightly Qwen2.5-1.5B round beat run 23 on every pooled dev count (4069/168/83/117), then missed the 8.0 bar on sealed heldout12 (91.1 percent right, 9.3 percent refused). heldout12 and heldout15 are spent; the next major needs a fresh sealed set, written blind by a separate writer, and guard refusals come first. (Was: score the Kaggle rounds logged on the `train-log` branch (eval/kaggle-nightly.log) against run 23 on the pooled nine dev sets. Start with the 2026-11-17 Qwen3.5-2B round. Report the pooled right, wrong, past-guard and refused counts next to run 23's, and never read a sealed set to break a tie.
 3. Add a short video card per ability to the landing, only if the trailer alone does not carry compress, still frame and add music.
 4. Keep at least 20 GB free on the internal disk. It read 34 GB at the checkpoint, so re-check before a large download.
 
@@ -84,5 +84,5 @@ The loop runs to the end of the work list, never to a version number. A version 
 ## Restart prompt
 
 ```
-/loop Turing toward 8.0, run to the end of the work list in docs/LOOP-HANDOFF.md (never a version target). Each tick QA'd and fully shipped. Stop at 85% weekly usage and /save.
+/loop Turing, run to the end of the work list in docs/LOOP-HANDOFF.md (never a version target). Each tick QA'd and fully shipped. Stop at 85% weekly usage and /save.
 ```
