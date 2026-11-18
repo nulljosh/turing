@@ -28,7 +28,7 @@ The loop runs to the end of the work list, never to a version number. A version 
 ## Next, in order
 
 1. Done 2026-11-18: releases and tags exist for 7.24.0 to 7.26.1. (Was: backfill the GitHub releases and tags for v7.24.0 (commit 216280a) and v7.25.0 (commit 3d9d02f). If release.yml skipped them, create them by hand, then check v7.25.1, v7.26.0 and v7.26.1 the same way.
-2. Score the Kaggle rounds logged on the `train-log` branch (eval/kaggle-nightly.log) against run 23 on the pooled nine dev sets. Start with the 2026-11-17 Qwen3.5-2B round. Report the pooled right, wrong, past-guard and refused counts next to run 23's, and never read a sealed set to break a tie.
+2. Done 2026-11-18: the nightly Qwen2.5-1.5B round beat run 23 on every pooled dev count (4069/168/83/117), then missed the 8.0 bar on sealed heldout12 (91.1 percent right, 9.3 percent refused). heldout12 is spent; write a fresh sealed set before the next 8.0 attempt and attack guard refusals first. (Was: score the Kaggle rounds logged on the `train-log` branch (eval/kaggle-nightly.log) against run 23 on the pooled nine dev sets. Start with the 2026-11-17 Qwen3.5-2B round. Report the pooled right, wrong, past-guard and refused counts next to run 23's, and never read a sealed set to break a tie.
 3. Add a short video card per ability to the landing, only if the trailer alone does not carry compress, still frame and add music.
 4. Keep at least 20 GB free on the internal disk. It read 34 GB at the checkpoint, so re-check before a large download.
 
