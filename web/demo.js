@@ -629,7 +629,7 @@
     transcript.scrollTop = transcript.scrollHeight;
   }
   function say(_, calls, text, extra, done) {
-    text = String(text || '').replace(/^#{1,6} .*\n+/gm, '');  // the 3B likes a markdown header; a chat reply has none
+    text = String(text || '').replace(/^#{1,6} .*\n+/gm, '');  // the stand-in likes a markdown header; a chat reply has none
     var code = text.indexOf('```') >= 0;
     text = text.slice(0, code ? 2400 : 1200); // no upstream gets to fill the transcript
     var d = el('div', 'chat-message');
@@ -811,7 +811,7 @@
   function lookup(q) {
     return fetch('/api/ask', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ q: q }) })
       .then(function (res) { return res.json(); })
-      .then(function (d) { return { text: d.answer, source: d.source ? d.source + (d.read ? ', read by the 3B stand-in' : '') : '' }; })
+      .then(function (d) { return { text: d.answer, source: d.source ? d.source + (d.read ? ', read by the 70B stand-in' : '') : '' }; })
       .catch(function () { return { text: "I couldn't reach my lookup just now." }; });
   }
 
@@ -898,7 +898,7 @@
   }
 
   function startDemo() {
-    statusEl.textContent = 'Live demo. She controls the stand-in Mac and this page. Ask her to draw anything: an image model on Cloudflare imagines it and she rebuilds it from 30,000 squares. A 3B on Cloudflare stands in for the models on her Mac.';
+    statusEl.textContent = 'Live demo. She controls the stand-in Mac and this page. Ask her to draw anything: an image model on Cloudflare imagines it and she rebuilds it from 30,000 squares. A 70B on Cloudflare stands in for the small models on her Mac.';
     say(null, [], "I'm Samantha. Tell me to do something, to the Mac up there or to this page, or ask me something. Type anything.");
     // No buttons. The reel shows what she does, and the same lines feed the input's native autocomplete.
     var suggest = $('chat-suggest');

@@ -1,7 +1,7 @@
 // The landing page's lookup chain. Same steps as general_knowledge() in ask.py:
 // DuckDuckGo instant answer, then Wikipedia, and when the page found is the
 // right topic but not an answer, a small model reads it and may only answer
-// from the text. On the Mac that reader is a 1.7B under Ollama. Here a 3B on
+// from the text. On the Mac that reader is a 1.7B under Ollama. Here Llama 3.3 70B on
 // Workers AI stands in, held to the same grounding check.
 import "./web/samantha.js";
 import { JT_DOCS } from "./web/jt_docs.js";
