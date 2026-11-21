@@ -516,11 +516,17 @@
         .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
         .then(function (x) {
           statusEl.textContent = was;
-          if (!x.ok || !x.d.image) return x.d.answer || 'I could not draw that one.';
+          if (!x.ok || !x.d.image) return x.d.fallback ? fromMemory(x.d.answer) : x.d.answer || 'I could not draw that one.';
           window.samanthaPaintSrc(x.d.image, subject);
           return 'Here it is: ' + subject + '. An image model on Cloudflare imagined it, and I am rebuilding it from 30,000 squares.';
         })
-        .catch(function () { statusEl.textContent = was; return 'I could not reach my image model just now.'; });
+        .catch(function () { statusEl.textContent = was; return fromMemory("I couldn't reach my image model, so here's one I know by heart."); });
+      // The image model is out (Workers AI's free daily allowance, or the network): paint a picture she knows instead of stopping.
+      function fromMemory(why) {
+        lastPaintIndex = (lastPaintIndex + 1) % paintNames.length;
+        if (typeof window.samanthaPaint === 'function') window.samanthaPaint(lastPaintIndex, 'squares');
+        return why + ' ' + paintNames[lastPaintIndex].replace(/^The /, 'The ') + ', from 30,000 squares.';
+      }
     },
     set_heading: function (text) { h1.textContent = text.slice(0, 60); go(document.querySelector('header')); return 'The title now says "' + h1.textContent + '". Only on your screen.'; },
     set_tagline: function (text) { userTagline = true; clearTimeout(heroTyping); clearTimeout(backTimer); tagline.textContent = text.slice(0, 120); go(document.querySelector('header')); return 'Tagline changed.'; },

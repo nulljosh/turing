@@ -260,7 +260,7 @@ async function pick(env, q, sections, jt) {
     const out = await env.AI.run(PICKER, { temperature: 0, max_tokens: 60, messages: [
       { role: "system", content: PICK_SYSTEM + (jt ? JT_TOOLS : "") + (sections.length ? "\nSections on the page: " + sections.join(", ") : "") },
       { role: "user", content: q }] });
-    const text = typeof out.response === "string" ? out.response : JSON.stringifyreply(out);
+    const text = typeof out.response === "string" ? out.response : reply(out);
     got = JSON.parse((text.match(/\{[^{}]*\}/) || ["{}"])[0]);
   } catch { return { tool: null, arg: "" }; }
   const tool = got.tool, arg = String(got.arg ?? "").trim().slice(0, 120);
@@ -384,21 +384,37 @@ async function draw(env, ctx, q) {
   const key = new Request(`${HOME}/__draw/${encodeURIComponent(q.toLowerCase())}`);
   const hit = await caches.default.match(key);
   if (hit) return hit;
-  let out;
-  try { out = await env.AI.run(DRAWER, { prompt: q, steps: 4 }); } catch { out = null; }
-  if (!out || !out.image) return Response.json({ answer: "My image model is busy. Try again in a moment." }, { status: 503 });
+  let out, quota = false;
+  try { out = await env.AI.run(DRAWER, { prompt: q, steps: 4 }); } catch (e) { out = null; quota = isQuota(e); }
+  // fallback: the page paints one it knows by heart instead, so a visitor never sees a dead end
+  if (!out || !out.image) return Response.json({ answer: quota ? "I've drawn all I can for today, so here's one I know by heart." : "My image model didn't answer, so here's one I know by heart.", fallback: true }, { status: 503 });
   // only a real picture is cached: a failure must not be remembered for a day
   const res = Response.json({ image: "data:image/jpeg;base64," + out.image }, { headers: { "Cache-Control": "public, max-age=86400", "X-Content-Type-Options": "nosniff" } });
   ctx.waitUntil(caches.default.put(key, res.clone()));
   return res;
 }
 
-async function cached(ctx, kind, q, make) {
+// Workers AI's free plan stops at 10,000 neurons a day (it resets at 00:00 UTC) and then every run throws.
+const isQuota = (e) => /daily free allocation|4006/.test(String(e?.message || e));
+// Wraps env.AI for one request and remembers whether any run failed, so cached() never keeps a
+// decline that only happened because the model was out for the day.
+function watchAI(env) {
+  const seen = { failed: false };
+  if (!env.AI) return { env, seen };
+  const e = Object.create(env);
+  e.AI = { run: async (...a) => { try { return await env.AI.run(...a); } catch (err) { seen.failed = true; throw err; } } };
+  return { env: e, seen };
+}
+
+async function cached(ctx, kind, q, make, seen) {
   // the same question a day later is the same answer: no second trip to Wikipedia, no second model run
   const key = new Request(`${HOME}/__${kind}.v11/${encodeURIComponent(q.toLowerCase())}`); // bump .vN when answers change so a day-old cached answer never outlives a fix
   const hit = await caches.default.match(key);
   if (hit) return hit;
-  const res = Response.json(await make(), { headers: { "Cache-Control": "public, max-age=86400", "X-Content-Type-Options": "nosniff" } });
+  const body = await make();
+  // an answer made while the model was down is served once, never kept for a day
+  if (seen?.failed) return Response.json(body, { headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } });
+  const res = Response.json(body, { headers: { "Cache-Control": "public, max-age=86400", "X-Content-Type-Options": "nosniff" } });
   ctx.waitUntil(caches.default.put(key, res.clone()));
   return res;
 }
@@ -476,6 +492,8 @@ export default {
       return Response.json({ answer: "That's a lot of drawing for one minute. Give me a moment." }, { status: 429 });
     let body = {};
     try { body = await request.json(); } catch {}
+    const watched = watchAI(env);
+    env = watched.env;
 
     if (url.pathname === "/api/speak") {
       // every word costs real ElevenLabs credits: a tight per-visitor allowance and a hard length cap
@@ -493,7 +511,7 @@ export default {
       const q = String(last?.content || "").replace(/[\u0000-\u001f]/g, " ").trim().slice(0, 200);
       if (!q) return Response.json(ollamaReply(DECLINE), { status: 400 });
       const persona = body.persona === "joshua" ? "joshua" : "";
-      return cached(ctx, persona ? "chat-joshua2" : "chat", q, async () => ollamaReply(await chatAnswer(env, q, persona)));
+      return cached(ctx, persona ? "chat-joshua2" : "chat", q, async () => ollamaReply(await chatAnswer(env, q, persona)), watched.seen);
     }
 
     const q = String(body.q || "").replace(/[\u0000-\u001f]/g, " ").trim().slice(0, 200);
@@ -502,8 +520,8 @@ export default {
     if (url.pathname === "/api/pick") {
       const sections = (Array.isArray(body.sections) ? body.sections : []).slice(0, 12).map(x => String(x).slice(0, 60));
       const jt = body.os === "jt";
-      return cached(ctx, jt ? "pick-jt" : "pick", q, () => pick(env, q, sections, jt));
+      return cached(ctx, jt ? "pick-jt" : "pick", q, () => pick(env, q, sections, jt), watched.seen);
     }
-    return cached(ctx, "ask", q, () => ask(env, q));
+    return cached(ctx, "ask", q, () => ask(env, q), watched.seen);
   }
 };
