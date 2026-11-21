@@ -1,5 +1,6 @@
 # Progress log
 
+- 2026-11-21: v8.0.4 On a phone the hero keeps only the faint far keycaps; the mid ones sat on the headline and the lede.
 - 2026-11-21: v8.0.3 The demo stopped saying "busy": Workers AI's free 10,000 neurons a day ran out and every drawing failed with "My image model is busy". Now she says the allowance is used up and paints one she knows by heart, answers made while the model is down are never cached for a day, and the picker's `JSON.stringifyreply` typo (it threw on every OpenAI-shaped reply) is fixed.
 - 2026-11-21: v8.0.2 The landing is redesigned after Plank and Keyrate: her commands drift as keycaps around the headline, her real screen lies tilted below and flattens as you scroll, and a readout follows the video (the command, then what she said). The live demo sits on a halftone ENIAC, the numbers and three real screenshots on a Last Supper band, then how she works, install and questions. In the demo she now puts effects over the page, stacked: dither, scanlines, CRT, halftone, VHS, glitch, pixelate, thermal, night vision and more, and "remove the effects" clears them.
 - 2026-11-21: v8.0.1 The hero loop no longer carries the trailer's title cards or captions, so no video text sits behind the headline; it shows only her screen, cropped. The screenshot row has its third shot back (Calculator).

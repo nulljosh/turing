@@ -57,7 +57,7 @@
     ];
     depths.forEach(function (d, di) {
       var layer = sky.appendChild(el('div', 'layer ' + d.cls));
-      var n = few ? (d.cls === 'near' ? 0 : Math.ceil(d.n / 2)) : d.n;
+      var n = few ? (d.cls === 'far' ? Math.ceil(d.n / 2) : 0) : d.n;  // a phone's text spans the width: only the faint far keys, or they sit on the headline
       for (var i = 0; i < n; i++) {
         var side = i % 2, slot = Math.floor(i / 2), slots = Math.ceil(n / 2);
         var band = d.cls === 'far' ? 22 : 13;
