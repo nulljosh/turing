@@ -193,10 +193,16 @@ Once she is trained, `app/ask.py` and `app/chat.py` handle questions. Before ans
 | `docs/ARCHITECTURE.md` | How the same worker answers as Samantha or as Joshua: the `persona` field, the fixed lines, the pack, `asJoshua`, the cache key to bump, and his cloned voice on `/api/speak`. |
 | `docs/PROGRESS.md` | What the loop did, by phase, moved out of roadmap.md on 2026-09-23 so the roadmap holds only the plan and the open gaps. Every entry is the day's own note, word for word. |
 | `docs/PROGRESS.md` | One line per shipped loop round, newest first, each followed by the scorecard line. |
-| `web/index.html` | Landing page. Loss chart, training status, painter demo, project roadmap. |
+| `web/index.html` | Landing page, in the house layout Plank and Keyrate share: nav with the name in the middle, a hero of her commands as drifting keycaps over her real screen, the live demo on a halftone band, the ENIAC-era band of numbers and features, how she works, install, questions, engraved footer. Also holds the SVG filters for her page effects. |
+| `web/landing.css` | Every style on the landing: the tokens (dark and light), the house layout, the demo's stand-in Mac and chat, and the page effects' overlays (scanlines, grain, dots, vignette, the Bayer dither layer). No gradients. |
+| `web/hero.js` | The hero: keycaps of her commands at three depths, her screen tilted on the desk that flattens as you scroll, and the readout under the buttons that follows the video (the command, then what she said). Reduced motion gets a still scene. |
+| `web/footer.js` | The engraved footer plate, one WebGL fragment shader: a language model writing, every tone a hatch of ink lines. Animates only on screen. |
+| `web/art/` | Halftone dot masks (eniac.png, supper.png) made from the public-domain pictures beside them in web/, tinted terracotta by CSS. |
+| `web/reel/` | hero-loop.mp4 and its poster: the trailer with the title cards and captions cut and only her screen kept, so no video text sits under the headline. |
+| `web/shots/` | Three real screenshots of her on a Mac (Chess, TextEdit, Calculator) for the feature rows. |
 | `web/brand.html` | The brand kit as a page: mascot, colors, Samantha Sans specimen, shapes, voice. Same tokens as the landing, no script. |
 | `docs/ARCHITECTURE.md` | The brand kit in words, for GitHub. |
-| `brand/tokens.css` | The landing's design tokens as one stylesheet, for anything that wants them. |
+| `brand/tokens.css` | The landing's design tokens (copied from the top of web/landing.css) as one stylesheet, for anything that wants them. |
 | `brand/mark.svg` | The mascot, copied from web/mascot.svg. |
 | `brand/icon-1024.png` | The app icon master: opaque, no alpha; web icons and favicons are cut from it. |
 | `web/favicon-32.png`, `web/apple-touch-icon.png` | Browser tab and home-screen icons, cut from brand/icon-1024.png. |

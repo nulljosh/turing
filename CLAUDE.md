@@ -22,7 +22,7 @@ Work on main. Before a push run every check CI runs (`./gate.sh`, or `git config
 Free GPU on Kaggle, no Claude needed: `.github/workflows/train.yml` runs `training/kaggle/nightly.py` every 8 hours, logging each round to the `train-log` branch. Details in `docs/TRAINING.md`. The token lives in `~/.kaggle/access_token` and the `KAGGLE_API_TOKEN` secret; never print or commit it. Locally, never run two MLX training jobs at once and check free memory first.
 
 ## Landing
-Tokens at the top of `web/index.html`. One accent, terracotta (#b5502c light, #e0825a dark), no gradients, no yellow. Every section keeps its `<h2>`. Stats come from `stats.json`. `eval/a11y.py` must stay clean. The logo is `web/logo.svg`.
+Tokens at the top of `web/landing.css` (Plank and Keyrate are the layout references). One accent, terracotta (#b5502c light, #e0825a dark), no gradients, no yellow. Every section keeps its `<h2>`. Stats come from `stats.json`. `eval/a11y.py` must stay clean. The logo is `web/logo.svg`.
 
 ## After a ship
 Keep these in step: the landing, README, `docs/TRAINING.md` (at minors), `docs/ARCHITECTURE.md`, and her Hugging Face card (`./scripts/hf_publish.sh`, card at `scripts/hf_card.md`). The Mac download is the permanent `mac-app` release: `./gui/package.sh` then `gh release upload mac-app gui/dist/SamanthaGUI.zip --clobber`.

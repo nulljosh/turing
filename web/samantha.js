@@ -173,7 +173,29 @@
     return best;
   }
 
+  // Looks she can put over the whole page. Each word a visitor might use maps to one effect; they stack.
+  var EFFECTS = { dither: /dither/, scanlines: /scan ?lines?/, crt: /\bcrt\b|old (?:tv|monitor|screen)|tube/, halftone: /half ?tone|newspaper|comic|\bdots\b/,
+                  grayscale: /gr[ae]y ?scale|black and white|\bb ?& ?w\b|\bnoir\b|monochrome/, sepia: /sepia|old photo|vintage/, invert: /invert|negative/,
+                  blur: /\bblur/, pixelate: /pixel|8 ?-?bit|mosaic/, vhs: /\bvhs\b|tape|camcorder/, glitch: /glitch/, thermal: /thermal|heat ?map|infra ?red|predator/,
+                  nightvision: /night ?vision|night ?goggles/, duotone: /duo ?tone|two ?tone/, grain: /\bgrain|film|noise|grainy/ };
+  var EFFECT_WORDS = "dither(?:ed|ing)?|scan ?lines?|crt|old (?:tv|monitor|screen)|half ?tone|newspaper|comic(?: book)?|gr[ae]y ?scale|black and white|b ?& ?w|noir|monochrome|sepia|old photo|vintage|invert(?:ed)?|negative|blur(?:ry|red)?|pixel(?:ate|ated|s|ly)?|8 ?-?bit|vhs|glitch(?:y|ed)?|thermal|heat ?map|infra ?red|night ?vision|duo ?tone|two ?tone|(?:film )?grain(?:y)?|noise";
+  function effectName(word) {
+    var w = String(word || "").toLowerCase();
+    for (var k in EFFECTS) if (EFFECTS[k].test(w)) return k;
+    return null;
+  }
+  var FX_ON = new RegExp("^(?:add|apply|use|turn on|switch on|put on|put|give (?:it|the page|this page|me)|make (?:it|the page|this page|the site|everything)|go|try|do)?\\s*(?:an? |some |the |that )?(" + EFFECT_WORDS + ")(?: effects?| filters?| mode| look| style| vibes?)?(?: (?:on|to|over) (?:it|the page|this page|the site|everything|the demo))?$", "i");
+  var FX_LIKE = new RegExp("^(?:make |can you make )?(?:it|the page|this page|the site|everything)? ?(?:look|feel)s? (?:like |more like )?(?:an? |the |it'?s? on an? )?(" + EFFECT_WORDS + ")(?: effects?| filters?| footage| photo| image)?$", "i");
+  var FX_VERB = new RegExp("^(" + EFFECT_WORDS + ") (?:the |this )?(?:page|site|demo|everything|it)$", "i");
+  var FX_OFF_ONE = new RegExp("^(?:remove|turn off|switch off|stop|drop|kill|lose|no more|undo) (?:the |that |those )?(" + EFFECT_WORDS + ")(?: effects?| filters?| mode| look)?$", "i");
+  var FX_OFF_ALL = /^(?:remove|clear|turn off|switch off|stop|drop|kill|lose|undo)(?: the| all| all the| those| any| every)? (?:effects?|filters?|looks?)(?: on the page)?$|^(?:no|without) (?:effects?|filters?)$|^(?:back to )?normal(?: please)?$/i;
+
   var PAGE_ROUTES = [
+    [FX_OFF_ALL, "effect", false, "none"],
+    [FX_OFF_ONE, "effect", false, "-"],
+    [FX_ON, "effect"],
+    [FX_LIKE, "effect"],
+    [FX_VERB, "effect"],
     [/^(?:make|turn|paint|color|colour) (?:the |this )?(?:page|site|title|heading|h1|accent|everything) (red|orange|amber|gold|green|blue|pink|black|white|grey|gray)$/i, "set_color"],
     [/^(?:change|set|make|rename|update|edit) (?:the |this |your )?(?:h1|title|heading|headline|header|page title)(?: text)?(?: to(?: say)?| say| read| into)? (.+)$/i, "set_heading"],
     [/^(?:change|set|make|update) (?:the |your )?(?:tagline|subtitle|subheading)(?: to(?: say)?| say| read)? (.+)$/i, "set_tagline"],
@@ -197,7 +219,14 @@
       if (!m) continue;
       var arg = m[1] || m[2] || "";
       if (PAGE_ROUTES[i][2] && !section(arg, names)) continue;
-      return { tool: PAGE_ROUTES[i][1], arg: arg };
+      var tool = PAGE_ROUTES[i][1], fixed = PAGE_ROUTES[i][3];
+      if (tool === "effect") {
+        if (fixed === "none") return { tool: tool, arg: "none" };
+        var name = effectName(arg);
+        if (!name) continue;
+        return { tool: tool, arg: (fixed === "-" ? "-" : "") + name };
+      }
+      return { tool: tool, arg: arg };
     }
     return null;
   }
@@ -223,6 +252,7 @@
   var SPAN = ["open_app", "open_url", "web_search", "say", "make_logo", "make_symbol", "make_wordmark", "make_avatar", "new_note", "new_reminder", "set_heading", "set_tagline", "weather", "list_dir", "read_file"];
   function sound(tool, arg, query, names) {
     var q = query.toLowerCase(), a = String(arg || "").toLowerCase().trim();
+    if (tool === "effect") return a === "none" ? /effect|filter|normal/.test(q) : !!EFFECTS[a] && EFFECTS[a].test(q);
     if (FIXED[tool]) return FIXED[tool].indexOf(a) >= 0;
     if (tool === "read_mail") return MAIL_CUE.test(q) && (a === "" || q.indexOf(a) >= 0);
     if (tool === "send_mail") return MAIL_CUE.test(q) && a.length > 0 && q.indexOf(a) >= 0;
@@ -1043,5 +1073,5 @@
 
   root.Samantha = { route: route, chain: chain, exact: exact, bare: bare, urlOf: urlOf, appMatch: appMatch, APPS: APPS, SITES: SITES,
                     stem: stem, keywords: keywords, isProject: isProject, memoryContext: memoryContext,
-                    pageRoute: pageRoute, section: section, sound: sound, duration: duration, COLORS: COLORS, util: U };
+                    pageRoute: pageRoute, section: section, sound: sound, EFFECTS: EFFECTS, effectName: effectName, duration: duration, COLORS: COLORS, util: U };
 })(typeof globalThis !== "undefined" ? globalThis : this);

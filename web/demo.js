@@ -439,6 +439,37 @@
 
   // ---- the page is hers too. Every change is local to this visitor and undone by "reset the page". ----
   var wrap = document.querySelector('.wrap'), h1 = document.querySelector('h1'), tagline = document.querySelector('header .sub');
+  // page effects: filter is what goes on .wrap, over is the overlay class, moves marks the ones that animate
+  var FX = {
+    dither: { name: 'dither', filter: 'grayscale(1) contrast(40)', said: 'Dithered: every pixel is black or white now, ordered like an old Mac.' },
+    scanlines: { name: 'scanlines', over: 'scan', said: 'Scanlines on.' },
+    crt: { name: 'CRT', filter: 'contrast(1.25) saturate(1.35) blur(.4px)', over: 'scan vig flicker', moves: true, said: 'Old tube monitor: scanlines, glow and a little flicker.' },
+    halftone: { name: 'halftone', filter: 'grayscale(1) contrast(1.5)', over: 'dots', said: 'Halftone, like newsprint.' },
+    grayscale: { name: 'black and white', filter: 'grayscale(1) contrast(1.12)', said: 'Black and white.' },
+    sepia: { name: 'sepia', filter: 'sepia(.85) contrast(1.05)', said: 'Sepia, like an old photo.' },
+    invert: { name: 'invert', filter: 'invert(1) hue-rotate(180deg)', said: 'Inverted.' },
+    blur: { name: 'blur', filter: 'blur(3px)', said: 'Blurred. Say "remove blur" when your eyes need it back.' },
+    pixelate: { name: 'pixelate', filter: 'url(#fx-pixel)', said: 'Pixelated, 8-bit style.' },
+    vhs: { name: 'VHS', filter: 'url(#fx-rgb) saturate(1.5) contrast(1.1)', over: 'scan grain wobble', moves: true, said: 'VHS: colour bleed, tape grain and a wobble.' },
+    glitch: { name: 'glitch', filter: 'url(#fx-rgb)', over: 'glitch', moves: true, said: 'Glitching.' },
+    thermal: { name: 'thermal', filter: 'url(#fx-thermal)', said: 'Thermal camera.' },
+    nightvision: { name: 'night vision', filter: 'url(#fx-night)', over: 'scan grain vig', said: 'Night vision.' },
+    duotone: { name: 'duotone', filter: 'url(#fx-duo)', said: 'Duotone, in my terracotta.' },
+    grain: { name: 'film grain', over: 'grain', moves: true, said: 'Film grain on.' }
+  };
+  var fx = [], fxLayer = null;
+  function applyFx() {
+    wrap.style.filter = fx.map(function (k) { return FX[k].filter || ''; }).filter(Boolean).join(' ');
+    if (!fxLayer) { fxLayer = document.createElement('div'); fxLayer.setAttribute('aria-hidden', 'true'); fxLayer.innerHTML = '<i class="s"></i><i class="g"></i><i class="d"></i><i class="v"></i>'; document.body.appendChild(fxLayer); }
+    var over = {}; fx.forEach(function (k) { (FX[k].over || '').split(' ').forEach(function (c) { if (c) over[c] = 1; }); });
+    fxLayer.className = 'fx-layer' + Object.keys(over).map(function (c) { return ' fx-' + c; }).join('');
+    wrap.classList.toggle('fx-wobble', !!over.wobble || !!over.glitch);
+    var dith = fx.indexOf('dither') >= 0, bay = wrap.querySelector(':scope > .fx-bayer');
+    wrap.classList.toggle('fx-dither', dith);
+    if (dith && !bay) { bay = document.createElement('div'); bay.className = 'fx-bayer'; bay.setAttribute('aria-hidden', 'true'); wrap.appendChild(bay); }
+    if (!dith && bay) bay.remove();
+    document.documentElement.setAttribute('data-fx', fx.join(' '));
+  }
   var narr = document.querySelector('.try-line') || tagline;   // her running commentary sits by the demo, not in the hero
   var original = { h1: h1.textContent, tagline: tagline.textContent, narr: narr.textContent };
   var paintNames = ['Mona Lisa', 'The Last Supper', 'The ENIAC'];
@@ -524,6 +555,17 @@
       if (!reel && window.speechSynthesis) { speechSynthesis.cancel(); var u = new SpeechSynthesisUtterance(text); u.volume = desk.volume / 100; speechSynthesis.speak(u); }
       return 'Reading ' + label(n) + ' out loud. Say "pause" style commands won\'t stop me, "reset the page" will.';
     },
+    // effects stack: each adds a CSS or SVG filter on the page and maybe an overlay (scanlines, grain, vignette)
+    effect: function (name) {
+      var n = String(name || '').toLowerCase();
+      if (n === 'none') { var had = fx.length; fx = []; applyFx(); return had ? 'Effects off. Clean page.' : 'There were no effects on. Try "add scanlines" or "dither the page".'; }
+      if (n.charAt(0) === '-') { n = n.slice(1); var i = fx.indexOf(n); if (i < 0) return 'No ' + FX[n].name + ' on right now.'; fx.splice(i, 1); applyFx(); return FX[n].name.charAt(0).toUpperCase() + FX[n].name.slice(1) + ' off.'; }
+      if (!FX[n]) return "I don't know that effect. I can do " + Object.keys(FX).map(function (k) { return FX[k].name; }).join(', ') + '.';
+      if (fx.indexOf(n) >= 0) return FX[n].name.charAt(0).toUpperCase() + FX[n].name.slice(1) + ' is already on. Say "remove the effects" for a clean page.';
+      if (reduceMotion && FX[n].moves) return "Your system asked for less motion, so I'll leave " + FX[n].name + ' off.';
+      fx.push(n); applyFx();
+      return FX[n].said + (fx.length > 1 ? ' Stacked on ' + fx.slice(0, -1).map(function (k) { return FX[k].name; }).join(' and ') + '.' : '') + ' Say "remove the effects" to undo it.';
+    },
     barrel_roll: function () {
       if (reduceMotion) return "Your system asked for less motion, so I'll sit this one out.";
       wrap.classList.remove('roll'); void wrap.offsetWidth; wrap.classList.add('roll');
@@ -533,6 +575,7 @@
       h1.textContent = original.h1; userTagline = false; clearTimeout(heroTyping); clearTimeout(backTimer); tagline.textContent = original.tagline; h1.style.color = ''; zoom = 1; wrap.style.zoom = '';
       window.setTheme((function () { try { return localStorage.getItem('turing-theme'); } catch (e) { return null; } })() || window.systemTheme());
       sections().forEach(function (x) { x.style.display = ''; });
+      fx = []; applyFx();
       if (window.speechSynthesis) speechSynthesis.cancel();
       return 'Page is back to how Joshua left it.';
     }
@@ -669,6 +712,7 @@
     set_heading: function () { return 'Rewriting this page. Only on your screen.'; },
     scroll_to: function () { return 'Scrolling this page for you.'; },
     theme: function () { return 'Switching this page between light and dark.'; },
+    effect: function (a) { return a === 'none' ? 'Taking the effects off this page.' : 'Putting an effect over this page. Only on your screen.'; },
     reset_page: function () { return 'Putting the page back the way Joshua left it.'; }
   };
   function narrate(tool, arg) {

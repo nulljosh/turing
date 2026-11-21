@@ -66,6 +66,12 @@ STEPS = [
     ("change the title to <img src=x onerror=alert(1)><script>alert(2)</script>", "", lambda p: p.locator("h1 img, h1 script").count() == 0 and "<img" in p.inner_text("h1")),
     ("take a note <svg onload=alert(3)>", "Noted", lambda p: p.locator("#desk-space svg[onload]").count() == 0),
     ("go to javascript:alert(4)", "", lambda p: p.locator("a[href^='javascript']").count() == 0),
+    # page effects stack, and "remove the effects" clears them
+    ("dither the page", "Dithered", lambda p: p.locator(".wrap.fx-dither > .fx-bayer").count() == 1 and "contrast(40)" in p.evaluate("document.querySelector('.wrap').style.filter")),
+    ("add scanlines", "Stacked on dither", lambda p: p.evaluate("document.documentElement.dataset.fx") == "dither scanlines" and p.locator(".fx-layer.fx-scan").count() == 1),
+    ("make it look like an old tv", "tube monitor", lambda p: "crt" in p.evaluate("document.documentElement.dataset.fx")),
+    ("turn off scanlines", "Scanlines off", lambda p: "scanlines" not in p.evaluate("document.documentElement.dataset.fx")),
+    ("remove the effects", "Effects off", lambda p: p.evaluate("document.documentElement.dataset.fx") == "" and p.locator(".fx-bayer").count() == 0 and p.evaluate("document.querySelector('.wrap').style.filter") == ""),
     ("reset the page", "back to how Joshua left it", lambda p: p.inner_text("h1") == H1 and p.evaluate("document.documentElement.dataset.theme") == p.evaluate("(localStorage.getItem('turing-theme') || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'))")),  # reset goes back to the saved or system theme, not to no theme
     ("<img src=x onerror=alert(1)>", "", lambda p: p.locator("#chat-transcript img").count() == 0),
 ]
