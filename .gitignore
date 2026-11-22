@@ -1,6 +1,7 @@
 .venv/
 data/
 *-adapter/
+*-adapter[0-9]*/
 *.resilient.log
 train.log
 train-1b.log
