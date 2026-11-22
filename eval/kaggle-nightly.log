@@ -6,3 +6,4 @@
 2026-11-20 16:56 complete base=Qwen/Qwen3.5-2B sft=97.0 dpo=97.5
 2026-11-21 07:02 complete base=Qwen/Qwen3.5-2B sft=97.0 dpo=97.5
 2026-11-21 16:08 complete base=Qwen/Qwen3.5-0.8B sft=91.5 dpo=92.0
+2026-11-22 06:43 complete base=google/gemma-4-E2B-it sft=94.5 dpo=94.5
