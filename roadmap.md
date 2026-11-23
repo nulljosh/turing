@@ -11,3 +11,8 @@
 - [ ] (Turing) Logo should look more like an LLM or robot, not a waveform (see the logo line above). Remove the mascot and old logo everywhere (landing, favicon, app icon): just the new logo.
 - [ ] (Turing landing) Still sucks, no hero background. Remove the Victorian princess. Use screenshots of the features with dither and scanlines. Remove the typewriter animation. Hero buttons hide their text on hover?
 - [ ] (Turing trailer) New trailer is pretty good, but the dogfood folder files it creates must auto-delete after the trailer is made. Make a skill for the trailer.
+
+## Ingested 2026-11-23
+
+- [ ] **Turing**: GitHub description needs simplification
+  - Landing page demo is too fast.
