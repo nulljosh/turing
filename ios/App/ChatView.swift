@@ -60,7 +60,7 @@ struct MessageRow: View {
                         Button { store.retry() } label: { Image(systemName: "arrow.clockwise") }
                             .accessibilityLabel("Retry")
                     }
-                    .font(.system(size: 15)).foregroundStyle(Theme.muted)
+                    .font(.subheadline).foregroundStyle(Theme.muted)
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -91,7 +91,7 @@ struct CodeBlock: View {
             .padding(.horizontal, 12).padding(.vertical, 8)
             Divider().overlay(Theme.line)
             ScrollView(.horizontal, showsIndicators: false) {
-                Text(highlight(code, lang: lang)).font(.system(size: 14, design: .monospaced)).foregroundStyle(Theme.ink)
+                Text(highlight(code, lang: lang)).font(.system(.subheadline, design: .monospaced)).foregroundStyle(Theme.ink)
                     .textSelection(.enabled).fixedSize(horizontal: true, vertical: false).padding(12)
             }
         }
@@ -123,7 +123,7 @@ struct ConfirmSheet: View {
         VStack(alignment: .leading, spacing: 16) {
             Text("She wants to run").font(Theme.small).foregroundStyle(Theme.muted)
             Text(store.pendingConfirm.map { "\($0.name)(\($0.args.joined(separator: ", ")))" } ?? "")
-                .font(.system(size: 17, weight: .medium, design: .monospaced)).foregroundStyle(Theme.ink)
+                .font(.system(.body, design: .monospaced, weight: .medium)).foregroundStyle(Theme.ink)
             if let note = store.pendingConfirm?.note { Text(note).font(Theme.body).foregroundStyle(Theme.muted) }
             HStack(spacing: 12) {
                 Button("No") { store.answerConfirm(false) }

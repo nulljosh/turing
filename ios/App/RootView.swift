@@ -41,7 +41,7 @@ struct Splash: View {
     var body: some View {
         VStack(spacing: 14) {
             Mark(size: 112)
-            Text("Samantha").font(.system(size: 30, weight: .semibold))
+            Text("Samantha").font(.system(.largeTitle, weight: .semibold))
             Text("Runs on this phone.").font(.subheadline).foregroundStyle(.secondary)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -64,12 +64,12 @@ struct TopBar: View {
 
     var body: some View {
         HStack {
-            Button(action: onMenu) { Image(systemName: "line.3.horizontal").font(.system(size: 18, weight: .medium)) }
+            Button(action: onMenu) { Image(systemName: "line.3.horizontal").font(.system(.title3, weight: .medium)) }
                 .accessibilityLabel("Chats")
             Spacer()
             Text("Samantha").font(Theme.title)
             Spacer()
-            Button(action: onNew) { Image(systemName: "square.and.pencil").font(.system(size: 18, weight: .medium)) }
+            Button(action: onNew) { Image(systemName: "square.and.pencil").font(.system(.title3, weight: .medium)) }
                 .accessibilityLabel("New chat")
         }
         .foregroundStyle(Theme.ink)
@@ -125,7 +125,7 @@ struct Composer: View {
             if text.trimmingCharacters(in: .whitespaces).isEmpty || voice.listening {
                 // Mic: tap to talk, tap again to send what she heard. Her answer is read back to you.
                 Button(action: talk) {
-                    Image(systemName: voice.listening ? "stop.fill" : "mic").font(.system(size: 16, weight: .semibold))
+                    Image(systemName: voice.listening ? "stop.fill" : "mic").font(.system(.callout, weight: .semibold))
                         .foregroundStyle(voice.listening ? Theme.paper : Theme.ink)
                         .frame(width: 32, height: 32).background(voice.listening ? Theme.ink : Color.clear).clipShape(Circle())
                 }
@@ -133,7 +133,7 @@ struct Composer: View {
                 .accessibilityLabel(voice.listening ? "Stop and send" : "Talk")
             } else {
                 Button(action: send) {
-                    Image(systemName: "arrow.up").font(.system(size: 16, weight: .bold)).foregroundStyle(.white)
+                    Image(systemName: "arrow.up").font(.system(.callout, weight: .bold)).foregroundStyle(.white)
                         .frame(width: 32, height: 32).background(Theme.accent).clipShape(Circle())
                 }
                 .opacity(store.busy ? 0.4 : 1)

@@ -12,7 +12,7 @@ struct Sidebar: View {
                 Mark(size: 28)
                 Text("Samantha").font(Theme.title).foregroundStyle(Theme.ink)
                 Spacer()
-                Button(action: onClose) { Image(systemName: "xmark").font(.system(size: 15, weight: .medium)).foregroundStyle(Theme.muted) }
+                Button(action: onClose) { Image(systemName: "xmark").font(.system(.subheadline, weight: .medium)).foregroundStyle(Theme.muted) }
                     .accessibilityLabel("Close")
             }
             .padding(.horizontal, 16).padding(.top, 12).padding(.bottom, 16)
