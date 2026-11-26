@@ -16,6 +16,8 @@ import harness
 import tools
 import tools_llm
 
+tools_llm._own_ready = lambda: False  # these tests drive the local servers; her own coder has its own test below
+
 OMLX_MODELS = {"data": [{"id": "Qwen3.5-9B-OptiQ-4bit"}, {"id": "mlx-community--Llama-3.2-1B-Instruct-4bit"}]}
 OLLAMA_MODELS = {"models": [{"name": "qwen3:8b"}, {"name": "llama3.1:8b"}, {"name": "nomic-embed-text:latest"}]}
 
@@ -112,6 +114,13 @@ class AskLLM(unittest.TestCase):
         pulled = {"models": [{"name": "qwen3:1.7b", "size": 1}, {"name": "qwen3.5:4b", "size": 3}, {"name": "nomic-embed-text:latest", "size": 9}]}
         reply, f = self.ask("claude\tq", omlx=None, ollama=ollama("Because."), ollama_models=pulled)
         self.assertEqual((reply, f.chats()[-1]), ("Because.\n(Answered by qwen3.5:4b on this Mac, not by me.)", (tools_llm.OLLAMA_CHAT, "qwen3.5:4b")))
+
+    def test_her_own_coder_answers_first(self):
+        """With her coder trained here, she answers herself, in process, and no local server is called."""
+        with mock.patch("tools_llm._own_ready", return_value=True), mock.patch("tools_llm._ask_own", return_value=("fn main() {}", False)):
+            reply, f = self.ask("claude\tq", omlx=omlx("never"), ollama=ollama("never"))
+            self.assertEqual((reply, f.chats()), ("fn main() {}\n(Answered by Samantha's coder on this Mac, not by me.)", []))
+            self.assertEqual(tools_llm.fallback("q"), ("fn main() {}", tools_llm.OWN))
 
     def test_cut_and_empty(self):
         """A cut answer says so, an empty one is not passed off as an answer."""

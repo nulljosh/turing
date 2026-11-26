@@ -23,7 +23,7 @@ OUTPUT_CAP = 2000  # characters of script output ever shown back
 
 SEARCH_DIRS = ("", "Desktop", "Downloads", "Documents")
 _CSV_TOKEN = re.compile(r"(\S*\.csv)\b", re.I)
-_FENCE = re.compile(r"```(?:python)?\s*\n(.*?)```", re.S)
+_FENCE = re.compile(r"```[\w+#.-]*[ \t]*\n(.*?)```", re.S)  # any language tag: ```python, ```html, ```rust
 
 PROMPT = (
     "Write a short Python script that answers this request about a CSV file named data.csv in the current "

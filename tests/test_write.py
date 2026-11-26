@@ -192,6 +192,13 @@ class WriteCode(unittest.TestCase):
                 self.assertIn("could not rewrite", tools_write.edit_file("~/Documents/n.md", "shorter", confirm=lambda n, a: True))
                 self.assertEqual(open(f"{home}/Documents/n.md").read(), "keep me\n")
 
+    def test_any_fence_is_unwrapped(self):
+        """A reply with prose around a ```html (or ```rust) fence saves only the code, never the chat around it."""
+        from tools_code import _extract_code
+        reply = "Here is the page.\n\n```html\n<!DOCTYPE html>\n<p>hi</p>\n```\nEnjoy.\n(Answered by m on this Mac, not by me.)"
+        self.assertEqual(_extract_code(reply), "<!DOCTYPE html>\n<p>hi</p>")
+        self.assertEqual(_extract_code("```rust\nfn main() {}\n```"), "fn main() {}")
+
     def test_routes_end_to_end(self):
         """Both phrasings reach write_code through tools.do, and "write a doc about x" still does not."""
         with mock.patch("tools_write.write_code", return_value="Wrote x.") as wc:
@@ -199,6 +206,8 @@ class WriteCode(unittest.TestCase):
             self.assertEqual(wc.call_args.args[:2], ("python script that prints the date", "today.py"))
             tools.do("write hello.sh that echoes hi", confirm=lambda n, a: True)
             self.assertEqual(wc.call_args.args[:2], ("echoes hi", "hello.sh"))
+            tools.do("write a one page website for a cafe to ~/Desktop/cafe.html", confirm=lambda n, a: True)
+            self.assertEqual(wc.call_args.args[:2], ("one page website for a cafe", "~/Desktop/cafe.html"))
             wc.reset_mock()
             with mock.patch("tools_llm.ask_llm", return_value="A doc."), mock.patch("builtins.open", mock.mock_open()):
                 tools.do("write a doc about the roadmap", confirm=lambda n, a: True)

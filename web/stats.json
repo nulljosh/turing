@@ -1,5 +1,5 @@
 {
-  "version": "10.0.0",
+  "version": "10.1.0",
   "docs_coverage": {
     "percent": 100,
     "files": {
@@ -132,8 +132,8 @@
         "documented": 3
       },
       "app/tools_llm.py": {
-        "total": 8,
-        "documented": 8
+        "total": 11,
+        "documented": 11
       },
       "app/tools_logo.py": {
         "total": 31,
@@ -480,8 +480,8 @@
         "documented": 11
       },
       "tests/test_llm.py": {
-        "total": 22,
-        "documented": 22
+        "total": 24,
+        "documented": 24
       },
       "tests/test_mail_send.py": {
         "total": 26,
@@ -604,8 +604,12 @@
         "documented": 7
       },
       "tests/test_write.py": {
-        "total": 24,
-        "documented": 24
+        "total": 25,
+        "documented": 25
+      },
+      "training/coder_data.py": {
+        "total": 5,
+        "documented": 5
       },
       "training/dev_to_data.py": {
         "total": 3,

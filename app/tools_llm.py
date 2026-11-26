@@ -19,6 +19,11 @@ OLLAMA_CHAT = OLLAMA + "/api/chat"
 MODEL = os.environ.get("SAMANTHA_BIG_MODEL", "Qwen3.5-9B-OptiQ-4bit")
 OLLAMA_MODEL = os.environ.get("SAMANTHA_OLLAMA_MODEL", "qwen3:8b")
 LIMIT = 20000  # characters; a longer question is refused, never silently cut
+OWN = "Samantha's coder"  # her own LoRA, trained on our code (training/coder_data.py), run in this process
+OWN_BASE = os.environ.get("SAMANTHA_CODER_BASE", "mlx-community/Phi-4-mini-instruct-4bit")
+OWN_ADAPTER = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "models", "samantha-coder")
+OWN_MAX = 1500  # tokens
+_own = {}
 # names that mean "whichever big model you have": frontier names she cannot reach, so the biggest local one answers
 ANY = re.compile(r"^(?:claude|chatgpt|gpt[\w.-]*|gemini|(?:an? |the )?(?:llm|ai|(?:bigger|big) model))$", re.I)
 # every name the route takes, shared with the empty-ask route in tools.py and mirrored in web/samantha.js
@@ -45,6 +50,28 @@ def _get(url):
             return json.load(r)
     except (urllib.error.URLError, OSError, ValueError):
         return None
+
+
+def _own_ready():
+    """True when her coder is trained on this Mac and its base is already cached: never a download mid-chat."""
+    if not os.path.exists(os.path.join(OWN_ADAPTER, "adapters.safetensors")):
+        return False
+    try:
+        from huggingface_hub import snapshot_download
+        snapshot_download(OWN_BASE, local_files_only=True)
+        return True
+    except Exception:  # no hub package, or the base is not cached
+        return False
+
+
+def _ask_own(messages, model=OWN):
+    """Her own coder through MLX in this process, no server: (text, cut). Loaded once, on first use."""
+    from mlx_lm import generate, load
+    if "m" not in _own:
+        _own["m"], _own["t"] = load(OWN_BASE, adapter_path=OWN_ADAPTER)
+    m, t = _own["m"], _own["t"]
+    text = generate(m, t, prompt=t.apply_chat_template(messages, add_generation_prompt=True, tokenize=False), max_tokens=OWN_MAX)
+    return text, len(t.encode(text)) >= OWN_MAX
 
 
 def _ollama_default():
@@ -77,8 +104,9 @@ def fallback(question):
     if os.environ.get("SAMANTHA_NO_LLM"):
         return None
     why = None
-    for ask, model, probe in ((_ask_omlx, MODEL, OMLX + "/v1/models"), (_ask_ollama, OLLAMA_MODEL, OLLAMA + "/api/tags")):
-        if _get(probe) is None:
+    own = [(_ask_own, OWN, None)] if _own_ready() else []  # hers first; the local servers only when she has no coder
+    for ask, model, probe in own + [(_ask_omlx, MODEL, OMLX + "/v1/models"), (_ask_ollama, OLLAMA_MODEL, OLLAMA + "/api/tags")]:
+        if probe and _get(probe) is None:
             continue
         model = _ollama_default() if ask is _ask_ollama else model
         try:
@@ -90,7 +118,7 @@ def fallback(question):
                 why = (f"The big model on this Mac ({model}) is out of memory right now, so I cannot answer that. "
                        "Close something heavy and ask again.", None)  # no model answered, so no "Answered by" label
             continue
-        except (urllib.error.URLError, OSError, KeyError, IndexError, ValueError, TimeoutError) as e:
+        except (urllib.error.URLError, OSError, KeyError, IndexError, ValueError, TimeoutError, RuntimeError, MemoryError, ImportError) as e:
             sys.stderr.write(f"local model {model}: {type(e).__name__}: {e}\n")
             continue
         text = re.sub(r"(?s)<think>.*?</think>", "", text).strip()
@@ -126,7 +154,7 @@ def ask_llm(request):
     if len(q) > LIMIT:
         return f"That is too long to send in one go: {len(q):,} characters, and the limit is {LIMIT:,}. Ask about one part at a time."
     if not name or ANY.match(name):
-        tries = [(_ask_omlx, MODEL), (_ask_ollama, None)]  # None: Ollama's model is looked up only if oMLX fails
+        tries = ([(_ask_own, OWN)] if _own_ready() else []) + [(_ask_omlx, MODEL), (_ask_ollama, None)]  # None: Ollama's model is looked up only if oMLX fails
     else:
         models = installed()
         tries = [(ask, m) for ask, m in models if name.lower() in m.lower()]
@@ -146,7 +174,7 @@ def ask_llm(request):
             continue
         except TimeoutError:  # a cold model can take minutes to load; the next ask finds it warm
             return "The local model is still loading (the first ask after a while can take minutes). Ask again in a minute."
-        except (urllib.error.URLError, OSError, KeyError, IndexError, ValueError):
+        except (urllib.error.URLError, OSError, KeyError, IndexError, ValueError, RuntimeError, MemoryError, ImportError):
             continue
         text = re.sub(r"(?s)<think>.*?</think>", "", text).strip()
         if not text:

@@ -153,7 +153,7 @@ _EDIT_DRAFT = re.compile(
     r"|^(?:edit|rewrite|revise|shorten|tighten) (?:the |my |that )?(?:last )?draft(?: to)?\s*(.*)$", re.I)
 _EDIT_FILE = re.compile(r"^(?:edit|rewrite|revise|change|update) (?:the file )?" + _FILE + r"(?: to|:|,)? (?P<instr>.+)$"
                         r"|^in " + _FILE.replace("path", "path2") + r",? (?P<instr2>.+)$", re.I)
-_WRITE_CODE = re.compile(r"^write (?:me )?(?:a |some )?(?P<what>(?:\w+ )?(?:script|code|program|function|module|class)\b.*?) (?:to|as|into|in|at) " + _FILE + r"$"
+_WRITE_CODE = re.compile(r"^write (?:me )?(?:a |some )?(?P<what>(?:\w+ )?(?:script|code|program|function|module|class|page|webpage|site|website|app)\b.*?) (?:to|as|into|in|at) " + _FILE + r"$"
                          r"|^write " + _FILE.replace("path", "path2") + r"(?: that| to|:)? (?P<what2>.+)$", re.I)
 
 
