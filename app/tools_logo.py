@@ -402,9 +402,7 @@ def _icon_svg_from(inner):
     check a fresh one before it ever touches the committed file."""
     return ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">\n'
             f"  <!-- {MARK_NOTE} -->\n"
-            '  <defs><linearGradient id="al" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f7f8fa"/>'
-            '<stop offset=".55" stop-color="#d3d6db"/><stop offset="1" stop-color="#a9aeb6"/></linearGradient></defs>\n'
-            '  <rect width="200" height="200" rx="44" fill="url(#al)"/>\n'
+            '  <defs><linearGradient id="al" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f7f8fa"/><stop offset=".55" stop-color="#d3d6db"/><stop offset="1" stop-color="#a9aeb6"/></linearGradient></defs>\n  <rect width="200" height="200" rx="44" fill="url(#al)"/>\n'
             '  <g transform="translate(12,12) scale(0.171875)">\n'  # the 1024 drawing on the 200 tile with a 12 unit margin
             f"{inner}\n  </g>\n</svg>\n")
 
