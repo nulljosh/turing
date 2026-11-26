@@ -138,6 +138,12 @@ section.lit { animation: lit 1.6s ease-out; }
 .frows { border-top: 1px solid var(--band-line); }
 .frow { display: grid; grid-template-columns: 1fr 1fr; align-items: center; border-bottom: 1px solid var(--band-line); }
 .frow figure { margin: 0; padding: clamp(16px, 3vw, 40px); }
+.chatcard { background: var(--bg); color: var(--fg); border: 1px solid var(--line); border-radius: 12px; padding: 24px; box-shadow: 0 20px 50px rgba(0, 0, 0, .35); font-size: 15px; }
+.chatcard .you { margin-left: auto; width: fit-content; max-width: 85%; background: var(--bg2); border-radius: 16px; padding: 8px 14px; }
+.chatcard pre { margin: 16px 0 8px; border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; font: 14px/1.6 var(--mono); white-space: pre-wrap; }
+.chatcard .lang { display: block; font: 12px var(--font); color: color-mix(in srgb, currentColor 62%, transparent); margin-bottom: 8px; }
+.chatcard b { color: var(--tk-k); font-weight: 600; }
+.chatcard .by { font-size: 12px; color: color-mix(in srgb, currentColor 62%, transparent); }
 .frow img { display: block; width: 100%; height: auto; border-radius: 8px; box-shadow: 0 20px 50px rgba(0, 0, 0, .35); }
 .frow:nth-child(even) figure { order: 2; }
 .frow > div { padding: var(--s-4) clamp(24px, 6vw, 88px); max-width: 560px; }
