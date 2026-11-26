@@ -47,6 +47,14 @@ def _get(url):
         return None
 
 
+def _ollama_default():
+    """Ollama's model for "the biggest one here": SAMANTHA_OLLAMA_MODEL when it is pulled, else the biggest pulled
+    model that is not an embedder, else the configured name, so a 404 still says what to pull."""
+    have = [m for m in (_get(OLLAMA + "/api/tags") or {}).get("models") or [] if "embed" not in m.get("name", "embed")]
+    names = [m["name"] for m in sorted(have, key=lambda m: -m.get("size", 0))]
+    return OLLAMA_MODEL if OLLAMA_MODEL in names or not names else names[0]
+
+
 def _ask_omlx(messages, model):
     """oMLX's OpenAI-style chat: (text, cut)."""
     reply = _post(OMLX_CHAT, {"model": model, "max_tokens": 2000, "messages": messages,
@@ -72,6 +80,7 @@ def fallback(question):
     for ask, model, probe in ((_ask_omlx, MODEL, OMLX + "/v1/models"), (_ask_ollama, OLLAMA_MODEL, OLLAMA + "/api/tags")):
         if _get(probe) is None:
             continue
+        model = _ollama_default() if ask is _ask_ollama else model
         try:
             text, cut = ask([{"role": "system", "content": SYSTEM}, {"role": "user", "content": question}], model)
         except urllib.error.HTTPError as e:
@@ -117,7 +126,7 @@ def ask_llm(request):
     if len(q) > LIMIT:
         return f"That is too long to send in one go: {len(q):,} characters, and the limit is {LIMIT:,}. Ask about one part at a time."
     if not name or ANY.match(name):
-        tries = [(_ask_omlx, MODEL), (_ask_ollama, OLLAMA_MODEL)]
+        tries = [(_ask_omlx, MODEL), (_ask_ollama, None)]  # None: Ollama's model is looked up only if oMLX fails
     else:
         models = installed()
         tries = [(ask, m) for ask, m in models if name.lower() in m.lower()]
@@ -127,6 +136,7 @@ def ask_llm(request):
     messages = [{"role": "system", "content": SYSTEM}, {"role": "user", "content": q}]
     why = "I could not reach a local model. Start oMLX or Ollama, then ask again."
     for ask, model in tries:
+        model = model or _ollama_default()
         try:
             text, cut = ask(messages, model)
         except urllib.error.HTTPError as e:

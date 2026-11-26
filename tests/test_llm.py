@@ -107,6 +107,12 @@ class AskLLM(unittest.TestCase):
             reply, f = self.ask("claude\tq", omlx=down, ollama=ollama("Because."))
             self.assertEqual(reply, f"Because.\n(Answered by {tools_llm.OLLAMA_MODEL} on this Mac, not by me.)")
 
+    def test_the_default_that_is_not_pulled_falls_to_the_biggest_that_is(self):
+        """No qwen3:8b pulled: the biggest model Ollama has answers (never the embedder), not a 404."""
+        pulled = {"models": [{"name": "qwen3:1.7b", "size": 1}, {"name": "qwen3.5:4b", "size": 3}, {"name": "nomic-embed-text:latest", "size": 9}]}
+        reply, f = self.ask("claude\tq", omlx=None, ollama=ollama("Because."), ollama_models=pulled)
+        self.assertEqual((reply, f.chats()[-1]), ("Because.\n(Answered by qwen3.5:4b on this Mac, not by me.)", (tools_llm.OLLAMA_CHAT, "qwen3.5:4b")))
+
     def test_cut_and_empty(self):
         """A cut answer says so, an empty one is not passed off as an answer."""
         self.assertIn("cut short", self.ask("q", omlx=omlx("partial", finish="length"))[0])
