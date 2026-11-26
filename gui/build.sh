@@ -1,9 +1,9 @@
 #!/bin/sh
-# Builds build/SamanthaGUI.app. PythonPath and ChatPipePath point at this repo's own venv and app/chat_pipe.py,
+# Builds build/Samantha.app. PythonPath and ChatPipePath point at this repo's own venv and app/chat_pipe.py,
 # so the app drives the exact same answer chain as the terminal, one process, kept warm for the whole session.
 set -e
 cd "$(dirname "$0")"
-APP=build/SamanthaGUI.app
+APP=build/Samantha.app
 rm -rf "$APP" && mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 # her flower as a Liquid Glass icon (Samantha.icon, made in Icon Composer); actool also writes the .icns older macOS reads
 # actool wants absolute output paths: with relative ones it writes nothing and says nothing (the dist app shipped without an icon until 2026-10-11)

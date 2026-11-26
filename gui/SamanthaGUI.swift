@@ -1,6 +1,6 @@
 // SamanthaGUI: a real window instead of a terminal. Drives chat_pipe.py, her real answer chain, over stdin/stdout.
 // One file, no Xcode project, matching menubar/PaintBar.swift's pattern.
-// Build: ./build.sh   Self-check: ./build/SamanthaGUI.app/Contents/MacOS/SamanthaGUI --check
+// Build: ./build.sh   Self-check: ./build/Samantha.app/Contents/MacOS/SamanthaGUI --check
 import SwiftUI
 import Foundation
 

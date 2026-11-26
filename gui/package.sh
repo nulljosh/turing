@@ -1,5 +1,5 @@
 #!/bin/sh
-# Packages the distributable SamanthaGUI.app: builds the app, bundles a self-contained copy of her
+# Packages the distributable Samantha.app: builds the app, bundles a self-contained copy of her
 # code plus a first-run launcher (launcher.sh) that creates her own Python env in Application
 # Support on first open, signs it, then zips and (when a notary keychain profile exists) submits
 # it for notarization and staples the ticket.
@@ -8,13 +8,13 @@
 # iteration), this is what a stranger downloads: no path on their Mac points back at your repo.
 #
 # Usage: ./gui/package.sh
-# Output: gui/dist/SamanthaGUI.app (signed) and gui/dist/SamanthaGUI.zip (signed, notarized if possible)
+# Output: gui/dist/Samantha.app (signed) and gui/dist/SamanthaGUI.zip (signed, notarized if possible)
 set -e
 cd "$(dirname "$0")"
 ROOT="$(cd .. && pwd)"
-DEV_APP=build/SamanthaGUI.app
+DEV_APP=build/Samantha.app
 DIST=dist
-APP="$DIST/SamanthaGUI.app"
+APP="$DIST/Samantha.app"
 ZIP="$DIST/SamanthaGUI.zip"
 
 rm -rf "$DIST"
