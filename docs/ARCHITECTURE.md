@@ -449,9 +449,9 @@ Every app icon goes through the icon composer skill. Never put text in an icon.
 | `--fg` | #f2f2f2 | #151515 |
 | `--muted` | #9a9a9a | #666666 |
 | `--line` | #2a2a2a | #e4e4e4 |
-| `--accent` / `--ember` | #e0825a | #b5502c |
+| `--accent` / `--ember` | #d3d6db | #3a3d44 |
 
-One accent: terracotta, from her copper hair, #b5502c in light and #e0825a in dark (white text on the light one, black on the dark one, both past 4.5:1). It goes on Send, links, focus rings, selection, the live bar, the sliders and the main button; the iPhone app already wore it on Send and Yes. Everything else stays black, white and gray. The landing footer carries one engraved harbour plate in the accent: fine hatching on paper, which is texture, not a gradient. Banned: yellow, teal, purple, gradients, a second accent. Joshua asked for color on 2026-10-18; before that the web was fully neutral.
+One accent: silver aluminum, from her icon, #3a3d44 graphite in light and #d3d6db silver in dark (white text on the light one, near-black on the dark one, both past 4.5:1). It goes on Send, links, focus rings, selection, the live bar, the sliders and the main button; the iPhone app already wore it on Send and Yes. Everything else stays black, white and gray. The landing footer carries one engraved harbour plate in the accent: fine hatching on paper, which is texture, not a gradient. Banned: yellow, teal, purple, gradients, a second accent. Joshua asked for color on 2026-10-18; before that the web was fully neutral.
 
 ### Type
 Samantha Sans, three weights (Regular 400, Medium 500, Semibold 600), built by `scripts/gen_font.py` into `web/fonts`. Since 2026-10-18 it is Inter, the open face drawn in the spirit of SF and Helvetica, renamed for her under its SIL Open Font License; the hand-drawn monoline cut before it read too technical. Letters and figures are proportional. Sans-serif only in the UI, no monospace UI; code blocks stay monospace. The apps register it through `gui/Typeface.swift` and fall back to the system font. Samantha Sans is the one custom typeface in the house: Joshua rejected Talli Sans and wants system type elsewhere, but chose to keep hers (2026-10-17). It is hers alone; no other app copies it.

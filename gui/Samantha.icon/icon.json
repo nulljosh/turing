@@ -1,60 +1,14 @@
 {
   "fill-specializations": [
-    {
-      "value": {
-        "solid": "extended-srgb:0.957,0.957,0.957,1.0"
-      }
-    },
-    {
-      "appearance": "dark",
-      "value": {
-        "solid": "extended-srgb:0.16,0.15,0.14,1.0"
-      }
-    }
+    { "value": { "linear-gradient": ["extended-srgb:0.969,0.973,0.980,1.0", "extended-srgb:0.663,0.682,0.714,1.0"] } },
+    { "appearance": "dark", "value": { "linear-gradient": ["extended-srgb:0.30,0.31,0.33,1.0", "extended-srgb:0.12,0.12,0.14,1.0"] } }
   ],
   "groups": [
     {
-      "layers": [
-        {
-          "glass": false,
-          "image-name": "face.png",
-          "name": "Face"
-        }
-      ],
-      "lighting": "individual",
-      "name": "Face",
-      "shadow": {
-        "kind": "neutral",
-        "opacity": 0.3
-      },
-      "specular": true,
-      "translucency": {
-        "enabled": false,
-        "value": 0
-      }
-    },
-    {
-      "layers": [
-        {
-          "glass": false,
-          "image-name": "hair.png",
-          "name": "Hair and shoulders"
-        }
-      ],
-      "lighting": "individual",
-      "name": "Hair and shoulders",
-      "shadow": {
-        "kind": "neutral",
-        "opacity": 0.4
-      },
-      "specular": true,
-      "translucency": {
-        "enabled": false,
-        "value": 0
-      }
+      "layers": [ { "glass": true, "image-name": "glyph.png", "name": "Glasses" } ],
+      "shadow": { "kind": "neutral", "opacity": 0.3 },
+      "translucency": { "enabled": false, "value": 0 }
     }
   ],
-  "supported-platforms": {
-    "squares": "shared"
-  }
+  "supported-platforms": { "squares": "shared" }
 }

@@ -113,7 +113,7 @@ void main() {
           gl.uniform1f(u('time'), (performance.now() - start) / 1000);
           gl.uniform1f(u('dpr'), dpr);
           gl.uniform3fv(u('paper'), rgb(cs.getPropertyValue('--scene-paper').trim() || '#ffffff'));
-          gl.uniform3fv(u('ink'), rgb(cs.getPropertyValue('--scene-ink').trim() || '#b5502c'));
+          gl.uniform3fv(u('ink'), rgb(cs.getPropertyValue('--scene-ink').trim() || '#8e949d'));
           gl.drawArrays(gl.TRIANGLES, 0, 3);
         }
         function loop() { draw(); if (visible && !still) raf = requestAnimationFrame(loop); }

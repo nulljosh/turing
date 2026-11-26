@@ -454,7 +454,7 @@
     glitch: { name: 'glitch', filter: 'url(#fx-rgb)', over: 'glitch', moves: true, said: 'Glitching.' },
     thermal: { name: 'thermal', filter: 'url(#fx-thermal)', said: 'Thermal camera.' },
     nightvision: { name: 'night vision', filter: 'url(#fx-night)', over: 'scan grain vig', said: 'Night vision.' },
-    duotone: { name: 'duotone', filter: 'url(#fx-duo)', said: 'Duotone, in my terracotta.' },
+    duotone: { name: 'duotone', filter: 'url(#fx-duo)', said: 'Duotone, in my silver.' },
     grain: { name: 'film grain', over: 'grain', moves: true, said: 'Film grain on.' }
   };
   var fx = [], fxLayer = null;

@@ -2,9 +2,9 @@
 :root {
   color-scheme: dark;
   --bg: #000; --bg2: #0e0e0e; --fg: #f2f2f2; --muted: #9a9a9a; --line: #262626;
-  --accent: #e0825a; --on-accent: #000; --ember: #e0825a; --ember-ink: #e0825a; --btn: #b5502c;
-  --card-bg: #0d0d0d; --tk-k: #7aa7ff; --tk-s: #6fcf8e; --tk-n: #ff8a80; --tk-c: #a0a0a0;
-  --band: #6e2810; --band-sub: #ffd2bf; --band-art: #c7714d; --band-line: rgba(255, 255, 255, .22);
+  --accent: #d3d6db; --on-accent: #111; --ember: #c4c8cf; --ember-ink: #d3d6db; --btn: #d3d6db;
+  --card-bg: #0d0d0d; --tk-k: #f0f1f3; --tk-s: #b8bdc6; --tk-n: #9097a3; --tk-c: #a0a0a0;
+  --band: #2a2c31; --band-sub: #d9dce1; --band-art: #a9aeb6; --band-line: rgba(255, 255, 255, .22);
   --ring: color-mix(in srgb, var(--accent) 45%, transparent);
   --r-sm: 6px; --r-md: 10px; --r-pill: 999px; --r-sq: 4px;
   --s-1: 8px; --s-2: 16px; --s-3: 24px; --s-4: 40px; --s-5: 64px; --s-6: 96px;
@@ -15,7 +15,7 @@
 :root[data-theme="light"] {
   color-scheme: light;
   --bg: #fff; --bg2: #f4f5f6; --fg: #151515; --muted: #5f6368; --line: #e3e5e8;
-  --accent: #b5502c; --on-accent: #fff; --ember: #b5502c; --ember-ink: #b5502c;
-  --card-bg: #fafafa; --tk-k: #0b57d0; --tk-s: #1a7f37; --tk-n: #b3261e; --tk-c: #6b6b6b;
-  --band: #8f3517; --band-sub: #ffdccc; --band-art: #e89a78;
+  --accent: #3a3d44; --on-accent: #fff; --ember: #6b7079; --ember-ink: #3a3d44; --btn: #2a2c31;
+  --card-bg: #fafafa; --tk-k: #1c1d20; --tk-s: #4a4f58; --tk-n: #6b7079; --tk-c: #6b6b6b;
+  --band: #5b5f67; --band-sub: #eceef0; --band-art: #c4c8cf;
 }
