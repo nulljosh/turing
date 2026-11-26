@@ -696,7 +696,7 @@
   }
   var STORY = {
     paint: function () { return 'Rebuilding a painting from 30,000 squares.'; },
-    draw: function (a) { return 'Imagining ' + a.slice(0, 50) + ', then rebuilding it square by square.'; },
+    draw: function (a) { return 'Imagining ' + (a.length > 50 ? a.slice(0, 50).replace(/\s+\S*$/, '') : a) + ', then rebuilding it square by square.'; },
     make_logo: function () { return 'Designing a logo dial by dial. Her model picks, the code draws.'; },
     set_volume: function () { return 'Turning the volume on a stand-in Mac.'; },
     open_app: function () { return 'Opening an app on a stand-in Mac.'; },
