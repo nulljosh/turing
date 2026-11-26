@@ -79,12 +79,12 @@ extension Color {
 }
 
 /// Her code palette, each pair at least 4.5:1 on white and on the dark code backgrounds (checked when it was chosen):
-/// blue keywords, green strings, deep red numbers, gray comments. No yellow, orange, teal or purple anywhere in her look.
+/// blue keywords, green strings, slate numbers, gray comments. No red, yellow, orange, teal or purple anywhere in her look.
 private func codeColor(_ kind: CodeKind) -> Color? {
     switch kind {
     case .keyword: return Color(light: 0x0B57D0, dark: 0x7AA7FF)
     case .string: return Color(light: 0x1A7F37, dark: 0x6FCF8E)
-    case .number: return Color(light: 0xB3261E, dark: 0xFF8A80)
+    case .number: return Color(light: 0x4A5568, dark: 0xA0AEC0)
     case .comment: return Color(light: 0x6B6B6B, dark: 0xA0A0A0)
     case .plain: return nil
     }

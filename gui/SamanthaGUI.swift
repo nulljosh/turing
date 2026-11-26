@@ -215,7 +215,7 @@ private struct MessageRow: View {
             HStack {
                 Spacer(minLength: 40)
                 Text(body_).font(Typeface.font(.body)).padding(.horizontal, 12).padding(.vertical, 8)
-                    .background(Color.accentColor.opacity(0.18))
+                    .background(Color.primary.opacity(0.08))
                     .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
             }
         } else {
