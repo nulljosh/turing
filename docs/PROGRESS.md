@@ -1,5 +1,6 @@
 # Progress log
 
+- 2026-11-26: v10.1.3 The landing no longer implies the Mac download already has her coder: it says the coder joins the download next.
 - 2026-11-26: v10.1.2 Landing QA, second pass: the Builds row is a crisp card with her coder's real answer, readable in light and dark, and How she works names all three of her models.
 - 2026-11-26: v10.1.1 Landing QA: the Builds row shows her own coder's real answer in the Mac app, the tool count in How she works no longer breaks onto its own line, and the live demo's caption cuts a long prompt at a word, not mid-word.
 - 2026-11-26: v10.1.0 She writes her own code. Her coder is a small model trained on our own code (a LoRA on Microsoft's MIT-licensed Phi-4-mini, made in MLX on this Mac from every repo's tracked source, with vault, lockfiles, generated files and anything that looks like a secret left out). It runs inside the app with no server and no Qwen, and answers are signed "Answered by Samantha's coder". On the files held out of training its loss is 1.83 against the untrained base's 2.24. She also saves a page or a site as a file now ("write a one page website ... to ~/Desktop/site.html"), and a reply in an html or rust fence is saved as just the code.
