@@ -1,4 +1,4 @@
-# Turing loop handoff (2026-11-26, after v10.1.2)
+# Turing loop handoff (2026-11-26, after v10.1.4)
 
 ## What the loop is
 
@@ -12,7 +12,7 @@ The loop runs to the end of the work list, never to a version number. A version 
 
 ## Where things stand
 
-- **Live:** v10.1.2 (2026-11-26), tagged, released and deployed. turing.jaybulb.com/stats.json is the check.
+- **Live:** v10.1.3 (turing.jaybulb.com/stats.json). **Pushed, not released:** v10.1.4 (5aab6a8) locks the public voice: the cloned voice reads only text Turing's own chat or ask produced, whole or one sentence at a time; anything else plays in Samantha's voice, Joshua Tree's `say` command included. Tag, release and deploy are still to do.
 - **Picker, v10.0.0:** the small C picker in the Joshua Tree kernel. Parity 297 of 297 with the Python reference (QEMU, network off), 81.2 percent right on 4,455 pooled dev rows, 2.2 percent false tool calls on not-a-command rows. Any new picker claim needs a fresh sealed set; heldout12 and heldout15 are spent.
 - **Coder, v10.1.0:** she writes code herself. A LoRA on Microsoft's MIT-licensed Phi-4-mini, trained with MLX on this Mac on the tracked code of every repo under ~/Documents/Code (training/coder_data.py, with vault, lockfiles, generated and secret-looking files left out). It runs inside the app with no server. On held-out files its loss is 1.83 against the untrained base's 2.24. The adapter is models/samantha-coder, on this Mac only; it is not in the public Mac download. Answers are signed "Answered by Samantha's coder". Its first Rust fibonacci had a bug (fib(0) returned 1): useful, not reliable yet.
 - **Files:** she saves pages and sites as files ("write a one page website ... to ~/Desktop/x.html"), and an html or rust code fence is saved as only the code.
