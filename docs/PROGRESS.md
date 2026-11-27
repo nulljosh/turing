@@ -1,5 +1,6 @@
 # Progress log
 
+- 2026-11-26: v10.1.4 Security fix: nobody can make Joshua's cloned voice say what they like anymore. It only reads Turing's own answers, whole or a sentence at a time; any other text plays in Samantha's voice, including Joshua Tree's say command.
 - 2026-11-26: v10.1.3 The landing no longer implies the Mac download already has her coder: it says the coder joins the download next.
 - 2026-11-26: v10.1.2 Landing QA, second pass: the Builds row is a crisp card with her coder's real answer, readable in light and dark, and How she works names all three of her models.
 - 2026-11-26: v10.1.1 Landing QA: the Builds row shows her own coder's real answer in the Mac app, the tool count in How she works no longer breaks onto its own line, and the live demo's caption cuts a long prompt at a word, not mid-word.

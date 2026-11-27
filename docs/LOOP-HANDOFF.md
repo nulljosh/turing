@@ -30,7 +30,7 @@ The loop runs to the end of the work list, never to a version number. A version 
 3. **11.0, bars 1 and 2.** Bundle the coder into the Mac download, so the public app has it, then write the sealed 40 coding tasks with tests before running any candidate on them. Re-upload the mac-app release after the bundle is in and checked.
 4. **9.0, in your pocket (Joshua-gated).** The iPhone as a thin client to the Mac over his own network, voice first. Needs a signed device build and the Yeti mic.
 5. **Any picker claim (ongoing).** A fresh sealed set, written blind by a separate writer who has seen only the tool list, read once, with the bar written down before the read.
-6. **Joshua's open calls:** lock the public `/api/speak` voice to text Turing's own chat produced, and the iCloud entitlement for the iPhone.
+6. **Joshua's open calls:** the iCloud entitlement for the iPhone.
 
 ## The ladder
 
@@ -81,7 +81,6 @@ The loop runs to the end of the work list, never to a version number. A version 
 - A signed device build and the Yeti mic, for 9.0.
 - iCloud entitlement and App Store submission at $1 (name through the asc-name-creator skill, privacy URL, age rating, review notes).
 - A new drive for the LaCie data, if the 9B model is wanted back.
-- The `/api/speak` lock decision.
 - Anything that spends money or posts publicly.
 
 ## Restart prompt

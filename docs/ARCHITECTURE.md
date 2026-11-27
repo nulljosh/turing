@@ -352,7 +352,7 @@ Replies are cached by question. Joshua's key is `chat-joshua2`, Samantha's is `c
 
 ### His voice
 
-`/api/speak` takes `{"text":"...","format":"pcm8","voice":"joshua"}`. `voice: "joshua"` uses his cloned ElevenLabs voice (`JOSHUA_VOICE`), anything else uses Samantha's (`SPEAK_VOICE`). The audio cache key includes the voice id, so the two never mix. Joshua Tree's site worker forwards `?v=joshua` on `/api/speak` as that field.
+`/api/speak` takes `{"text":"...","format":"pcm8","voice":"joshua"}`. `voice: "joshua"` uses his cloned ElevenLabs voice (`JOSHUA_VOICE`) only when the text is an answer Turing itself gave, whole or one sentence (`markSaid`/`wasSaid`); other text, and anything else, uses Samantha's (`SPEAK_VOICE`). The audio cache key includes the voice id, so the two never mix. Joshua Tree's site worker forwards `?v=joshua` on `/api/speak` as that field.
 
 ### Where it is used
 

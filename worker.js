@@ -406,12 +406,23 @@ function watchAI(env) {
   return { env: e, seen };
 }
 
+// Joshua's cloned voice only reads words Turing itself answered with, whole or a sentence at a time
+// (Joshua Tree speaks one sentence per call). Anything else plays in Samantha's voice.
+// ponytail: per-colo Cache API markers, fine since a chat and its speech hit the same colo; move to KV if his clips fall back to Samantha.
+const sayable = t => String(t).toLowerCase().replace(/\[[^\]]*\]/g, " ").replace(/[^\p{L}\p{N}]+/gu, " ").trim();
+const saidKey = async t => new Request(`${HOME}/__said/${[...new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(sayable(t))))].map(b => b.toString(16).padStart(2, "0")).join("")}`);
+const markSaid = text => Promise.all([text, ...String(text).split(/(?<=[.!?])\s+|\n+/)].filter(sayable)
+  .map(async p => caches.default.put(await saidKey(p), new Response("1", { headers: { "Cache-Control": "public, max-age=172800" } }))));
+const wasSaid = async text => !!(await caches.default.match(await saidKey(text)));
+const answerText = b => (typeof b?.answer === "string" ? b.answer : b?.message?.content) || "";
+
 async function cached(ctx, kind, q, make, seen) {
   // the same question a day later is the same answer: no second trip to Wikipedia, no second model run
   const key = new Request(`${HOME}/__${kind}.v11/${encodeURIComponent(q.toLowerCase())}`); // bump .vN when answers change so a day-old cached answer never outlives a fix
   const hit = await caches.default.match(key);
-  if (hit) return hit;
+  if (hit) { ctx.waitUntil(hit.clone().json().then(b => markSaid(answerText(b))).catch(() => {})); return hit; }
   const body = await make();
+  ctx.waitUntil(markSaid(answerText(body)));
   // an answer made while the model was down is served once, never kept for a day
   if (seen?.failed) return Response.json(body, { headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } });
   const res = Response.json(body, { headers: { "Cache-Control": "public, max-age=86400", "X-Content-Type-Options": "nosniff" } });
@@ -500,7 +511,8 @@ export default {
       if (env.SPEAK_LIMIT && !(await env.SPEAK_LIMIT.limit({ key: ip })).success) return new Response("Too much talking for one minute", { status: 429 });
       const text = String(body.text || "").replace(/[\u0000-\u001f]/g, " ").trim().slice(0, 600); // matches the kernel's SPEAK_TEXT_MAX; 300 cut the portfolio intro mid-sentence
       if (!text) return new Response("Nothing to say", { status: 400 });
-      return speak(env, ctx, text, body.format, body.voice);
+      const who = body.voice === "joshua" && await wasSaid(text) ? "joshua" : ""; // nobody puts words in his mouth
+      return speak(env, ctx, text, body.format, who);
     }
 
     if (isChat) {

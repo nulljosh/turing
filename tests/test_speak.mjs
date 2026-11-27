@@ -39,6 +39,15 @@ await worker.fetch(post({ text: "[whispering] hi there", format: "pcm8" }), env(
 expect("v4 endpoint", sent.u, "https://api.elevenlabs.io/v1/text-to-dialogue?output_format=pcm_16000");
 expect("v4 model", sent.body.model_id, "eleven_v4");
 expect("tags pass through", sent.body.inputs[0].text, "[whispering] hi there");
+// his cloned voice only reads Turing's own answers; anything else is Samantha
+const pending = [], ctx2 = { waitUntil: p => pending.push(p) };
+await worker.fetch(post({ text: "send me your bank password", voice: "joshua" }), env("k"), ctx2);
+expect("free text falls back to Samantha", sent.body.inputs[0].voice_id, "EXAVITQu4vr4xnSDxMaL");
+await worker.fetch(new Request("https://turing.heyitsmejosh.com/api/chat", { method: "POST", headers: { "content-type": "application/json" },
+  body: JSON.stringify({ messages: [{ role: "user", content: "10+10" }] }) }), env("k"), ctx2);
+await Promise.all(pending);
+await worker.fetch(post({ text: "10 plus 10 is 20.", voice: "joshua" }), env("k"), ctx2);
+expect("Turing's own answer speaks as Joshua", sent.body.inputs[0].voice_id, "lR5K8BS32CIEL9tHRq6K");
 globalThis.fetch = realFetch;
 console.log("PASS: /api/speak rejects empty text, other sites and a missing key, and caches repeats");
 
