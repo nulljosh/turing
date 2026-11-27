@@ -26,8 +26,8 @@ The loop runs to the end of the work list, never to a version number. A version 
 ## Next, in order
 
 1. **Disk first.** Free space to 20 GB or more with /cleanup before any download or training run.
-2. **A bigger coder run on Kaggle** with more steps and the full tracked codebase, then compare its loss on held-out files with the v10.1.0 adapter (1.83) before shipping it.
-3. **Bundle the coder into the Mac download**, so the public app has it. Re-upload the mac-app release after the bundle is in and checked.
+2. **11.0, bar 3: a longer coder run.** Started 2026-11-26 at 17:30 on this Mac: 3,000 steps on the same data and split as v10.1.0, adapter in models/samantha-coder-r2, log in its run.log. Compare its held-out loss with 1.83 before it replaces models/samantha-coder.
+3. **11.0, bars 1 and 2.** Bundle the coder into the Mac download, so the public app has it, then write the sealed 40 coding tasks with tests before running any candidate on them. Re-upload the mac-app release after the bundle is in and checked.
 4. **9.0, in your pocket (Joshua-gated).** The iPhone as a thin client to the Mac over his own network, voice first. Needs a signed device build and the Yeti mic.
 5. **Any picker claim (ongoing).** A fresh sealed set, written blind by a separate writer who has seen only the tool list, read once, with the bar written down before the read.
 6. **Joshua's open calls:** lock the public `/api/speak` voice to text Turing's own chat produced, and the iCloud entitlement for the iPhone.
@@ -41,6 +41,8 @@ The loop runs to the end of the work list, never to a version number. A version 
 **9.0, in your pocket.** Open. Joshua-gated (see Next, item 4).
 
 **10.0, her own home. Shipped 2026-11-26.** A small picker in freestanding C on the Joshua Tree kernel, checked in QEMU with the network off. The three bars were written before any measurement and all three passed. The numbering skipped 9.0 on purpose, so 9.0 stays open. Joshua Tree work goes in a worktree off fresh origin/main, a branch and a draft PR, with ci-local green before ready.
+
+**11.0, her own coder.** Open. Bars, written 2026-11-26 before any of them is measured, and never moved after: (1) the coder is in the public Mac download: the app carries the adapter and fetches the Phi-4-mini base once, in the background, the first time she needs it, never mid-chat; (2) a sealed set of 40 small coding tasks, each with tests, written before any candidate is run and never trained on: she passes at least 28 of 40, and more than the untrained Phi-4-mini, every answer run in her own sandbox; (3) on the held-out files her loss stays at or below the v10.1.0 adapter's 1.83. A bar that is missed is said out loud, and the number waits.
 
 ## Pace and stops
 
